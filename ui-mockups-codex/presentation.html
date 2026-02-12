@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Deck Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        room: '#020617',
+                        surface: '#0f172a',
+                        glass: 'rgba(15, 23, 42, 0.7)',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        text_main: '#f1f5f9',
+                        text_muted: '#94a3b8',
+                        glow: '#0ea5e9',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 60px -15px rgba(14, 165, 233, 0.2)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+                        'slide': '0 20px 50px -10px rgba(0, 0, 0, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .aspect-slide { aspect-ratio: 16 / 9; }
+
+        .slide-enter {
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-text_main font-sans h-screen flex overflow-hidden selection:bg-glow selection:text-white" x-data="{ slide: 1 }">
+
+    <aside class="w-24 lg:w-64 flex flex-col shrink-0 border-r border-white/5 bg-room/50 hidden md:flex z-20">
+
+        <div class="h-16 flex items-center px-6 border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="text-text_muted hover:text-white transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <span class="font-semibold tracking-tight text-white hidden lg:block">Storyboard</span>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+
+            <div @click="slide = 1" :class="slide === 1 ? 'ring-2 ring-sky-500 bg-white/5' : 'hover:bg-white/5 border border-transparent'" class="group rounded-lg p-2 cursor-pointer transition-all">
+                <div class="aspect-slide bg-white rounded flex items-center justify-center mb-2 overflow-hidden relative">
+                    <div class="text-[8px] text-black font-serif text-center leading-tight opacity-50">CRISPR<br>Ethics</div>
+                </div>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-mono text-text_muted hidden lg:block">01. Title</span>
+                    <i class="ph ph-dots-three text-text_muted group-hover:text-white"></i>
+                </div>
+            </div>
+
+            <div @click="slide = 2" :class="slide === 2 ? 'ring-2 ring-sky-500 bg-white/5' : 'hover:bg-white/5 border border-transparent'" class="group rounded-lg p-2 cursor-pointer transition-all">
+                <div class="aspect-slide bg-white rounded flex flex-col p-1 mb-2 overflow-hidden relative opacity-80">
+                    <div class="h-1 w-1/3 bg-black mb-1"></div>
+                    <div class="h-0.5 w-full bg-gray-300 mb-0.5"></div>
+                    <div class="h-0.5 w-full bg-gray-300 mb-0.5"></div>
+                    <div class="h-0.5 w-2/3 bg-gray-300"></div>
+                </div>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-mono text-text_muted hidden lg:block">02. Context</span>
+                    <i class="ph ph-dots-three text-text_muted group-hover:text-white"></i>
+                </div>
+            </div>
+
+            <div @click="slide = 3" :class="slide === 3 ? 'ring-2 ring-sky-500 bg-white/5' : 'hover:bg-white/5 border border-transparent'" class="group rounded-lg p-2 cursor-pointer transition-all">
+                <div class="aspect-slide bg-white rounded flex gap-1 p-1 mb-2 overflow-hidden relative opacity-80">
+                    <div class="flex-1">
+                         <div class="h-1 w-full bg-black mb-1"></div>
+                         <div class="h-0.5 w-full bg-gray-300"></div>
+                    </div>
+                    <div class="w-1/3 bg-gray-200 border border-gray-300"></div>
+                </div>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-mono text-text_muted hidden lg:block">03. Data</span>
+                    <i class="ph ph-dots-three text-text_muted group-hover:text-white"></i>
+                </div>
+            </div>
+
+            <button class="w-full py-3 border border-dashed border-white/10 hover:border-white/30 rounded-lg text-text_muted hover:text-white transition-all flex items-center justify-center">
+                <i class="ph ph-plus"></i>
+            </button>
+
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full relative bg-room">
+
+        <div class="absolute inset-0 bg-gradient-radial from-sky-900/10 to-transparent opacity-50 pointer-events-none"></div>
+
+        <header class="h-16 flex items-center justify-between px-6 z-20">
+            <div class="flex items-center gap-4">
+                <span class="text-sm font-medium text-white">Defense_Deck_v1.pptx</span>
+                <span class="px-2 py-0.5 bg-white/5 rounded text-[10px] text-text_muted uppercase tracking-wider">Saved</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                 <button class="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center text-text_muted hover:text-white transition-colors" title="Layouts">
+                    <i class="ph ph-layout text-lg"></i>
+                </button>
+                 <button class="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center text-text_muted hover:text-white transition-colors" title="Theme">
+                    <i class="ph ph-paint-brush text-lg"></i>
+                </button>
+                <div class="w-px h-6 bg-white/10 mx-2"></div>
+                <button class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg font-medium text-sm shadow-lg shadow-sky-500/20 flex items-center gap-2 transition-colors">
+                    <i class="ph ph-play-circle text-lg"></i> Present
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex items-center justify-center p-8 md:p-12 overflow-hidden relative">
+
+            <div x-show="slide === 1" class="w-full max-w-5xl aspect-slide bg-white text-room shadow-slide rounded-sm p-16 md:p-24 flex flex-col justify-center relative slide-enter">
+                <h1 class="font-serif text-5xl md:text-7xl font-bold mb-6 leading-tight">CRISPR-Cas9:<br>Ethics & Efficacy</h1>
+                <div class="w-24 h-1 bg-sky-500 mb-8"></div>
+                <p class="font-serif text-xl md:text-2xl text-gray-500 italic">A Comparative Analysis of High-Fidelity Variants</p>
+                <div class="absolute bottom-8 right-8 text-xs font-mono text-gray-300 uppercase tracking-widest">ScholarSync Generated</div>
+            </div>
+
+            <div x-show="slide === 2" class="w-full max-w-5xl aspect-slide bg-white text-room shadow-slide rounded-sm p-16 md:p-24 flex flex-col relative slide-enter" style="display: none;">
+                <h2 class="font-serif text-4xl font-bold mb-12">Introduction & Context</h2>
+                <div class="space-y-8">
+                    <div class="flex items-start gap-4"><div class="w-2 h-2 rounded-full bg-sky-500 mt-3 shrink-0"></div><p class="font-serif text-2xl text-gray-800 leading-relaxed">CRISPR technology has revolutionized gene editing since 2012, offering unprecedented precision.</p></div>
+                    <div class="flex items-start gap-4"><div class="w-2 h-2 rounded-full bg-sky-500 mt-3 shrink-0"></div><p class="font-serif text-2xl text-gray-800 leading-relaxed">The primary challenge remains <strong class="text-sky-600">off-target effects</strong> in germline applications.</p></div>
+                    <div class="flex items-start gap-4"><div class="w-2 h-2 rounded-full bg-sky-500 mt-3 shrink-0"></div><p class="font-serif text-2xl text-gray-800 leading-relaxed">This study compares wild-type Cas9 against the new SpCas9-HF1 variants.</p></div>
+                </div>
+                <div class="absolute bottom-8 left-8 text-xs font-mono text-gray-300">02 / 12</div>
+            </div>
+
+            <div x-show="slide === 3" class="w-full max-w-5xl aspect-slide bg-white text-room shadow-slide rounded-sm p-16 md:p-24 flex gap-12 relative slide-enter" style="display: none;">
+                <div class="flex-1">
+                    <h2 class="font-serif text-4xl font-bold mb-8">Methodology</h2>
+                    <p class="font-serif text-xl text-gray-600 leading-loose">We used a sample size of 500 embryos to determine efficacy. The control group demonstrated significant deviation compared to the SpCas9-HF1 group.</p>
+                </div>
+                <div class="w-1/3 bg-gray-50 border border-gray-100 flex items-center justify-center relative">
+                    <div class="absolute bottom-10 left-10 right-10 top-20 flex items-end gap-2 px-4">
+                        <div class="w-1/3 bg-gray-300 h-[40%]"></div>
+                        <div class="w-1/3 bg-sky-500 h-[85%]"></div>
+                        <div class="w-1/3 bg-indigo-500 h-[92%]"></div>
+                    </div>
+                </div>
+                <div class="absolute bottom-8 left-8 text-xs font-mono text-gray-300">03 / 12</div>
+            </div>
+
+        </div>
+
+        <div class="h-32 glass-panel border-t border-white/5 shrink-0 z-30 flex">
+
+            <div class="w-64 border-r border-white/5 p-4 hidden md:block">
+                <span class="text-xs font-medium text-text_muted uppercase tracking-widest block mb-2">Speaker Timer</span>
+                <div class="text-2xl font-mono text-white">00:00</div>
+                <button class="mt-2 text-xs text-sky-400 hover:text-white flex items-center gap-1"><i class="ph ph-play"></i> Start Rehearsal</button>
+            </div>
+
+            <div class="flex-1 p-4 relative">
+                 <span class="absolute top-4 right-4 text-[10px] font-medium text-text_muted uppercase tracking-widest bg-white/5 px-2 py-1 rounded">Auto-Generated Script</span>
+
+                 <div class="h-full overflow-y-auto pr-12">
+                     <p x-show="slide === 1" class="font-serif text-lg text-white leading-relaxed">"Good morning. Today I will present our findings on CRISPR variants. As we know, precision is the holy grail of genomics. Our research focuses specifically on the ethical implications of high-fidelity variants..."</p>
+                     <p x-show="slide === 2" class="font-serif text-lg text-white leading-relaxed" style="display: none;">"Let's start with context. Since 2012, CRISPR has changed everything. But the off-target problem is what keeps clinicians up at night. We need to solve this before germline editing is viable."</p>
+                     <p x-show="slide === 3" class="font-serif text-lg text-white leading-relaxed" style="display: none;">"Looking at our methodology: We used 500 embryos. The blue bar represents the new variant. The difference in specificity is substantial."</p>
+                 </div>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

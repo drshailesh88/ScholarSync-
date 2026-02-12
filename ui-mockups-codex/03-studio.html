@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Studio - ScholarSync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="mobile-head">
+      <strong>Studio</strong>
+      <a href="index.html" class="btn soft" style="padding: 0.3rem 0.55rem;">Index</a>
+    </div>
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">S</span>
+        <span class="brand-text">ScholarSync</span>
+      </div>
+      <nav class="nav">
+        <a href="01-focus-dashboard.html">Focus Dashboard <small>01</small></a>
+        <a href="02-deep-research.html">Deep Research <small>02</small></a>
+        <a class="active" href="03-studio.html">Studio <small>03</small></a>
+        <a href="04-notebook.html">Notebook <small>04</small></a>
+        <a href="index.html">Design Index <small>00</small></a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="kicker" style="color: #c2ccd8; margin: 0 0 0.25rem;">Draft State</p>
+        <strong style="font-size: 1rem;">Auto-saved 32s ago</strong>
+        <p style="margin: 0.45rem 0 0; font-size: 0.75rem; color: #c2ccd8;">Citations linked: 14</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search">
+          <span class="kicker">Document</span>
+          <input type="text" value="The Ethics of Germline Editing in Modern Genomics" aria-label="document name" />
+        </div>
+        <div class="top-actions">
+          <span class="badge">Words: 1,248</span>
+          <a class="btn soft" href="04-notebook.html">Reasoning Map</a>
+          <a class="btn primary" href="#">Export Draft</a>
+        </div>
+      </header>
+
+      <section class="content split" style="grid-template-columns: 2fr 1fr;">
+        <article class="reveal">
+          <div class="editor" contenteditable="true" aria-label="editor">
+            <h1 style="margin-top: 0;">The Ethics of Germline Editing in Modern Genomics</h1>
+            <p>
+              The current discourse on germline intervention has shifted from speculative fear to conditional feasibility.
+              Yet that shift can mislead policy if technical progress is interpreted as ethical resolution.
+            </p>
+            <p>
+              Recent data indicates substantial reduction in off-target events under high-fidelity variants, but the evidence
+              horizon for long-term genotoxic response remains narrow. This gap is not merely technical; it is philosophical.
+              A society cannot treat uncertain intergenerational risk as a tolerable implementation detail.
+            </p>
+            <p>
+              A stronger policy framing distinguishes <em>capability</em> from <em>permission</em>. Capability asks what the tool can do under
+              controlled conditions. Permission asks what burden of proof is required before irreversible deployment.
+            </p>
+            <p class="muted" style="margin-bottom: 0;">[Continue writing...]</p>
+          </div>
+          <p class="muted" style="font-size: 0.78rem; margin-top: 0.55rem;">
+            Tip: press <span class="kbd">Cmd</span> + <span class="kbd">J</span> to request an argument stress-test without leaving the editor.
+          </p>
+        </article>
+
+        <aside class="stack reveal delay-1">
+          <section class="panel">
+            <header>
+              <h2>Assistant Signals</h2>
+            </header>
+            <div class="panel-body stack">
+              <article class="note">
+                <p class="kicker" style="margin: 0;">Logic check</p>
+                <p style="margin: 0.28rem 0 0;">Paragraph 2 uses strong certainty language while citing moderate-confidence evidence.</p>
+              </article>
+              <article class="note" style="border-left-color: var(--success);">
+                <p class="kicker" style="margin: 0;">Good move</p>
+                <p style="margin: 0.28rem 0 0;">Your capability vs permission distinction improves conceptual clarity.</p>
+              </article>
+              <a class="btn soft" href="#">Generate Counterargument</a>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header>
+              <h2>Linked Sources</h2>
+            </header>
+            <div class="panel-body stack">
+              <div>
+                <strong style="font-size: 0.92rem;">Doudna et al. (2023)</strong>
+                <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.82rem;">High-fidelity edit safety profile</p>
+              </div>
+              <div>
+                <strong style="font-size: 0.92rem;">Slaymaker et al. (2022)</strong>
+                <p class="muted" style="margin: 0.2rem 0 0; font-size: 0.82rem;">Off-target minimization methods</p>
+              </div>
+              <a class="btn soft" href="02-deep-research.html">Back to Research</a>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

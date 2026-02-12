@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - The Archive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        room: '#020617',
+                        surface: '#0f172a',
+                        glass: 'rgba(15, 23, 42, 0.7)',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        text_main: '#f1f5f9',
+                        text_muted: '#94a3b8',
+                        glow: '#0ea5e9',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 60px -15px rgba(14, 165, 233, 0.2)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .table-row-glow:hover {
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: inset 2px 0 0 #0ea5e9;
+        }
+    </style>
+</head>
+<body class="text-text_main font-sans h-screen flex overflow-hidden selection:bg-glow selection:text-white" x-data="{ active: 1, panel: true }">
+
+    <aside class="w-20 lg:w-64 flex flex-col shrink-0 border-r border-white/5 bg-room/50 hidden md:flex z-20">
+        <div class="h-20 flex items-center px-6 justify-center lg:justify-start">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="text-text_muted hover:text-white transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <span class="font-semibold tracking-tight text-white hidden lg:block">Archive</span>
+            </div>
+        </div>
+
+        <nav class="px-3 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-lg bg-white/10 text-white shadow-inner border border-white/5 ring-1 ring-white/5 justify-center lg:justify-start">
+                <i class="ph ph-folder-open text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Active Drafts</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 transition-all justify-center lg:justify-start">
+                <i class="ph ph-archive-box text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Published</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 transition-all justify-center lg:justify-start">
+                <i class="ph ph-trash text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Trash</span>
+            </a>
+        </nav>
+
+        <div class="mt-auto p-6 border-t border-white/5">
+            <a href="studio.html" class="w-full py-3 bg-white text-surface hover:bg-sky-50 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-white/10 flex items-center justify-center gap-2">
+                <i class="ph ph-plus-circle text-lg"></i>
+                <span class="hidden lg:block">New Project</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative bg-room">
+
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 md:px-12 py-12 relative z-10">
+
+            <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                <div>
+                    <h1 class="text-3xl font-serif font-light text-white mb-2">Manuscript Vault</h1>
+                    <p class="text-sm text-text_muted">12 projects total • 3 active</p>
+                </div>
+
+                <div class="relative group w-full md:w-96">
+                    <i class="ph ph-magnifying-glass absolute left-4 top-3.5 text-text_muted group-focus-within:text-sky-400 transition-colors"></i>
+                    <input type="text" placeholder="Filter archives..."
+                           class="w-full bg-surface/50 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder-white/20 focus:outline-none focus:bg-surface focus:border-sky-500/50 transition-all shadow-card">
+                </div>
+            </header>
+
+            <div class="glass-panel rounded-2xl overflow-hidden shadow-glass">
+
+                <div class="grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 bg-white/5 text-[10px] font-medium text-text_muted uppercase tracking-widest">
+                    <div class="col-span-5">Title</div>
+                    <div class="col-span-2">Status</div>
+                    <div class="col-span-2">Version</div>
+                    <div class="col-span-3 text-right">Last Modified</div>
+                </div>
+
+                <div @click="active = 1; panel = true" :class="active === 1 ? 'bg-white/5' : ''" class="grid grid-cols-12 gap-4 px-6 py-5 border-b border-white/5 table-row-glow cursor-pointer group transition-all items-center">
+                    <div class="col-span-5">
+                        <h3 class="font-serif text-lg text-white group-hover:text-sky-400 transition-colors">The Future of CRISPR</h3>
+                        <div class="flex gap-2 mt-1">
+                            <span class="text-[10px] text-text_muted bg-white/5 px-1.5 rounded">Genomics</span>
+                            <span class="text-[10px] text-text_muted bg-white/5 px-1.5 rounded">Bioethics</span>
+                        </div>
+                    </div>
+                    <div class="col-span-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_8px_#38bdf8]"></span>
+                            <span class="text-xs text-sky-400 font-medium">Drafting</span>
+                        </div>
+                    </div>
+                    <div class="col-span-2">
+                        <span class="text-xs font-mono text-text_muted">v4.2</span>
+                    </div>
+                    <div class="col-span-3 text-right text-xs text-text_muted">10:42 AM</div>
+                </div>
+
+                <div @click="active = 2; panel = true" :class="active === 2 ? 'bg-white/5' : ''" class="grid grid-cols-12 gap-4 px-6 py-5 border-b border-white/5 table-row-glow cursor-pointer group transition-all items-center">
+                    <div class="col-span-5">
+                        <h3 class="font-serif text-lg text-white group-hover:text-sky-400 transition-colors">Quantum Mechanics Review</h3>
+                        <div class="flex gap-2 mt-1"><span class="text-[10px] text-text_muted bg-white/5 px-1.5 rounded">Physics</span></div>
+                    </div>
+                    <div class="col-span-2"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span><span class="text-xs text-orange-400 font-medium">Research</span></div></div>
+                    <div class="col-span-2"><span class="text-xs font-mono text-text_muted">v1.0</span></div>
+                    <div class="col-span-3 text-right text-xs text-text_muted">Yesterday</div>
+                </div>
+
+                <div @click="active = 3; panel = true" :class="active === 3 ? 'bg-white/5' : ''" class="grid grid-cols-12 gap-4 px-6 py-5 table-row-glow cursor-pointer group transition-all items-center">
+                    <div class="col-span-5">
+                        <h3 class="font-serif text-lg text-white group-hover:text-sky-400 transition-colors">Thesis Defense Deck</h3>
+                        <div class="flex gap-2 mt-1"><span class="text-[10px] text-text_muted bg-white/5 px-1.5 rounded">Presentation</span></div>
+                    </div>
+                    <div class="col-span-2"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-xs text-emerald-400 font-medium">Final</span></div></div>
+                    <div class="col-span-2"><span class="text-xs font-mono text-text_muted">vFinal</span></div>
+                    <div class="col-span-3 text-right text-xs text-text_muted">Oct 22</div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <aside class="w-96 glass-panel border-l border-white/5 flex flex-col shrink-0 z-30 transition-transform duration-300 transform"
+           :class="panel ? 'translate-x-0' : 'translate-x-full'"
+           x-show="panel"
+           x-transition:enter="transition ease-out duration-300"
+           x-transition:enter-start="translate-x-full"
+           x-transition:enter-end="translate-x-0">
+
+        <div class="h-20 flex items-center justify-between px-6 border-b border-white/5">
+            <span class="text-xs font-medium text-text_muted uppercase tracking-widest">Inspector</span>
+            <button @click="panel = false" class="text-text_muted hover:text-white transition-colors"><i class="ph ph-x text-lg"></i></button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-8 space-y-8" x-show="active === 1">
+
+            <div class="relative group cursor-pointer">
+                <div class="absolute -inset-1 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-lg blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative bg-surface border border-white/10 rounded-lg p-6 aspect-[3/4] flex flex-col shadow-2xl">
+                    <h2 class="font-serif text-2xl text-white mb-4">The Future of CRISPR</h2>
+                    <div class="space-y-2">
+                        <div class="h-2 w-full bg-white/10 rounded"></div>
+                        <div class="h-2 w-full bg-white/10 rounded"></div>
+                        <div class="h-2 w-2/3 bg-white/10 rounded"></div>
+                    </div>
+                    <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
+                        <i class="ph ph-file-doc text-sky-400 text-xl"></i>
+                        <span class="text-[10px] text-text_muted">DOCX • 2.4MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <span class="block text-[10px] text-text_muted uppercase tracking-wide mb-1">Words</span>
+                    <span class="text-xl font-serif text-white">2,405</span>
+                </div>
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <span class="block text-[10px] text-text_muted uppercase tracking-wide mb-1">Citations</span>
+                    <span class="text-xl font-serif text-white">14</span>
+                </div>
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <span class="block text-[10px] text-text_muted uppercase tracking-wide mb-1">Reading Time</span>
+                    <span class="text-xl font-serif text-white">12m</span>
+                </div>
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <span class="block text-[10px] text-text_muted uppercase tracking-wide mb-1">Score</span>
+                    <span class="text-xl font-serif text-sky-400">92/100</span>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <a href="studio.html" class="w-full py-3 bg-sky-500 hover:bg-sky-400 text-white rounded-xl font-medium shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2 transition-all">
+                    <i class="ph ph-pen-nib"></i> Open in Studio
+                </a>
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-medium border border-white/5 transition-colors flex items-center justify-center gap-2">
+                        <i class="ph ph-export"></i> Export
+                    </button>
+                    <button class="py-3 bg-white/5 hover:bg-red-500/10 text-text_muted hover:text-red-400 rounded-xl text-xs font-medium border border-white/5 hover:border-red-500/20 transition-colors flex items-center justify-center gap-2">
+                        <i class="ph ph-trash"></i> Archive
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </aside>
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Forensic Audit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        room: '#020617',
+                        surface: '#0f172a',
+                        glass: 'rgba(15, 23, 42, 0.7)',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        text_main: '#f1f5f9',
+                        text_muted: '#94a3b8',
+                        glow: '#0ea5e9',
+                        danger: '#ef4444',
+                        ai: '#8b5cf6',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 60px -15px rgba(14, 165, 233, 0.2)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+                        'ai-glow': '0 0 15px rgba(139, 92, 246, 0.3)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scan': 'scan 3s linear infinite',
+                        'spin-slow': 'spin 4s linear infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .highlight-ai {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1), transparent);
+            border-bottom: 2px solid #8b5cf6;
+            cursor: pointer;
+        }
+        .highlight-error {
+            text-decoration: underline;
+            text-decoration-color: #ef4444;
+            text-decoration-style: wavy;
+            text-underline-offset: 4px;
+            cursor: pointer;
+        }
+        .highlight-weak {
+            background-color: rgba(251, 191, 36, 0.1);
+            border-bottom: 2px solid #f59e0b;
+            cursor: pointer;
+        }
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="text-text_main font-sans h-screen flex overflow-hidden selection:bg-glow selection:text-white" x-data="{ mode: 'scan', detail: 'ai' }">
+
+    <aside class="w-20 lg:w-64 flex flex-col shrink-0 border-r border-white/5 bg-room/50 hidden md:flex z-20">
+        <div class="h-20 flex items-center px-6">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="text-text_muted hover:text-white transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <span class="font-semibold tracking-tight text-white hidden lg:block">Forensic Lab</span>
+            </div>
+        </div>
+
+        <nav class="px-3 space-y-1 flex-1">
+            <button @click="mode = 'scan'" :class="mode === 'scan' ? 'bg-white/10 text-white shadow-inner border border-white/5 ring-1 ring-white/5' : 'text-text_muted hover:text-white hover:bg-white/5'" class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all justify-center lg:justify-start">
+                <i class="ph ph-scan text-xl" :class="mode === 'scan' ? 'text-sky-400' : ''"></i>
+                <span class="text-sm font-medium hidden lg:block">Full Audit</span>
+            </button>
+            <button @click="mode = 'ai'" :class="mode === 'ai' ? 'bg-white/10 text-white shadow-inner border border-white/5 ring-1 ring-white/5' : 'text-text_muted hover:text-white hover:bg-white/5'" class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all justify-center lg:justify-start">
+                <i class="ph ph-robot text-xl" :class="mode === 'ai' ? 'text-ai' : ''"></i>
+                <span class="text-sm font-medium hidden lg:block">Synthetic Patterns</span>
+            </button>
+            <button @click="mode = 'style'" :class="mode === 'style' ? 'bg-white/10 text-white shadow-inner border border-white/5 ring-1 ring-white/5' : 'text-text_muted hover:text-white hover:bg-white/5'" class="w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all justify-center lg:justify-start">
+                <i class="ph ph-text-aa text-xl" :class="mode === 'style' ? 'text-amber-400' : ''"></i>
+                <span class="text-sm font-medium hidden lg:block">Readability</span>
+            </button>
+        </nav>
+
+        <div class="p-6 border-t border-white/5">
+             <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] uppercase tracking-widest text-text_muted">Scan Progress</span>
+                <span class="text-[10px] font-mono text-sky-400">100%</span>
+             </div>
+             <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                 <div class="h-full w-full bg-sky-500 shadow-[0_0_10px_#0ea5e9]"></div>
+             </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative bg-room">
+
+        <div class="scan-line animate-scan"></div>
+
+        <div class="max-w-3xl mx-auto px-12 py-16 relative z-10">
+
+            <header class="flex justify-between items-center mb-12 border-b border-white/5 pb-6">
+                <div>
+                    <h1 class="text-2xl font-serif text-white">The Future of CRISPR</h1>
+                    <p class="text-xs text-text_muted mt-1 font-mono">MD5: 8A2F...92C • Word Count: 2,405</p>
+                </div>
+                <div class="flex gap-2">
+                    <span class="px-3 py-1 bg-red-500/10 text-danger border border-red-500/20 rounded text-xs font-bold uppercase tracking-wider">2 Critical</span>
+                    <span class="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded text-xs font-bold uppercase tracking-wider">4 Warn</span>
+                </div>
+            </header>
+
+            <div class="prose prose-invert prose-lg max-w-none font-serif leading-loose text-gray-300">
+                <p>
+                    The advent of Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR) has fundamentally altered the landscape of genetic engineering. Unlike previous methods, which were often cumbersome and imprecise, CRISPR-Cas9 offers a versatile tool for editing the genome.
+                </p>
+
+                <p>
+                    <span @click="detail = 'ai'" class="highlight-ai rounded px-1 transition-all hover:bg-ai/20 relative group">
+                        However, the ethical implications of germline editing remain a contentious subject. While the potential to eradicate hereditary diseases is immense, the risk of off-target effects necessitates a robust regulatory framework.
+                        <span class="absolute -top-6 left-0 bg-surface border border-white/10 text-[10px] text-ai font-sans uppercase font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                            Synthetic Probability: 92%
+                        </span>
+                    </span>
+                </p>
+
+                <p>
+                    <span @click="detail = 'style'" class="highlight-weak rounded px-1 transition-all hover:bg-amber-500/20 relative group">
+                        It has been argued by many researchers that
+                        <span class="absolute -top-6 left-0 bg-surface border border-white/10 text-[10px] text-amber-400 font-sans uppercase font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                            Passive Voice
+                        </span>
+                    </span>
+                    the primary limitation is specificity. <span @click="detail = 'error'" class="highlight-error decoration-danger relative group">
+                        Not withstanding
+                        <span class="absolute -top-6 left-0 bg-surface border border-white/10 text-[10px] text-danger font-sans uppercase font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                            Grammar: Notwithstanding
+                        </span>
+                    </span> the advancements, concerns persist.
+                </p>
+
+                <p class="opacity-50 blur-[1px]">
+                    Recent studies by Doudna et al. (2020) suggest that the off-target effects can be mitigated through the use of high-fidelity variants. This development represents a significant leap forward in our capabilities...
+                </p>
+            </div>
+
+            <div class="h-32"></div>
+        </div>
+    </main>
+
+    <aside class="w-96 glass-panel border-l border-white/5 flex flex-col shrink-0 z-30 shadow-glass">
+
+        <div class="h-20 flex items-center justify-between px-6 border-b border-white/5">
+            <span class="text-xs font-medium text-text_muted uppercase tracking-widest flex items-center gap-2">
+                <i class="ph ph-aperture text-sky-400 animate-spin-slow"></i> Diagnostics
+            </span>
+            <button class="bg-white text-room px-3 py-1 rounded font-bold text-xs hover:bg-sky-50 transition-colors">Export Report</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-8 space-y-8">
+
+            <div class="flex items-center gap-6">
+                <div class="relative w-24 h-24 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="transparent" class="text-white/5" />
+                        <circle cx="48" cy="48" r="40" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="60" class="text-sky-500" stroke-linecap="round" />
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-2xl font-bold text-white">76</span>
+                        <span class="text-[10px] uppercase text-text_muted">Score</span>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-white font-medium">Integrity Check</h3>
+                    <p class="text-xs text-text_muted mt-1">2 critical issues found.<br>Review required.</p>
+                </div>
+            </div>
+
+            <div x-show="detail === 'ai'">
+                <h4 class="text-xs font-medium text-ai uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-white/5 pb-2">
+                    <i class="ph ph-robot"></i> Synthetic Pattern Analysis
+                </h4>
+
+                <div class="bg-ai/10 border border-ai/20 rounded-xl p-4 mb-4">
+                    <p class="text-xs text-ai font-mono mb-2">SEGMENT DETECTED</p>
+                    <p class="text-sm text-gray-300 italic mb-4">"...ethical implications of germline editing..."</p>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs"><span class="text-text_muted">Perplexity</span><span class="text-white">Low (Predictable)</span></div>
+                        <div class="w-full bg-white/10 h-1 rounded-full"><div class="bg-ai h-full w-[20%]"></div></div>
+                        <div class="flex justify-between text-xs mt-2"><span class="text-text_muted">Burstiness</span><span class="text-white">Low (Robotic)</span></div>
+                        <div class="w-full bg-white/10 h-1 rounded-full"><div class="bg-ai h-full w-[35%]"></div></div>
+                    </div>
+                </div>
+
+                <button class="w-full py-2 border border-white/10 hover:bg-white/5 rounded-lg text-xs text-white transition-colors flex items-center justify-center gap-2">
+                    <i class="ph ph-magic-wand"></i> Humanize Text
+                </button>
+            </div>
+
+            <div x-show="detail === 'error'" style="display: none;">
+                <h4 class="text-xs font-medium text-danger uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-white/5 pb-2">
+                    <i class="ph ph-warning-circle"></i> Grammar & Syntax
+                </h4>
+                 <div class="bg-danger/10 border border-danger/20 rounded-xl p-4 mb-4">
+                    <p class="text-xs text-danger font-mono mb-2">ERROR TYPE: COMPOUND WORD</p>
+                    <p class="text-sm text-white mb-1"><span class="line-through text-text_muted">Not withstanding</span> -> <strong>Notwithstanding</strong></p>
+                 </div>
+                 <button class="w-full py-2 bg-white text-surface hover:bg-gray-200 rounded-lg text-xs font-bold transition-colors">
+                    Fix All Errors
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-4 border-t border-white/5">
+                <div class="bg-white/5 p-3 rounded-lg">
+                    <span class="block text-[10px] text-text_muted uppercase">Reading Grade</span>
+                    <span class="text-lg font-mono text-white">14.2</span>
+                </div>
+                <div class="bg-white/5 p-3 rounded-lg">
+                    <span class="block text-[10px] text-text_muted uppercase">Sentiment</span>
+                    <span class="text-lg font-mono text-emerald-400">Neutral</span>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+</body>
+</html>

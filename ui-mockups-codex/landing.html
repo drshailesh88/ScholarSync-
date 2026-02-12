@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - The Luminous Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        room: '#020617',
+                        surface: '#0f172a',
+                        glass: 'rgba(15, 23, 42, 0.6)',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        text_main: '#f1f5f9',
+                        text_muted: '#94a3b8',
+                        glow: '#0ea5e9',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 80px -20px rgba(14, 165, 233, 0.3)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .text-glow { text-shadow: 0 0 30px rgba(14, 165, 233, 0.5); }
+
+        .tilt-card {
+            transform: perspective(1000px) rotateX(2deg) rotateY(0deg) scale(0.95);
+            transition: transform 0.5s ease;
+        }
+        .tilt-card:hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1);
+        }
+    </style>
+</head>
+<body class="text-text_main font-sans antialiased overflow-x-hidden selection:bg-glow selection:text-white">
+
+    <nav class="fixed top-6 left-0 right-0 z-50 flex justify-center">
+        <div class="glass-panel rounded-full px-6 py-3 flex items-center gap-8 shadow-glass">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded bg-gradient-to-tr from-sky-500 to-indigo-500 flex items-center justify-center text-white text-xs">
+                    <i class="ph ph-squares-four"></i>
+                </div>
+                <span class="font-semibold tracking-tight text-sm">ScholarSync</span>
+            </div>
+
+            <div class="hidden md:flex items-center gap-6 text-xs font-medium text-text_muted">
+                <a href="#features" class="hover:text-white transition-colors">Manifesto</a>
+                <a href="#engine" class="hover:text-white transition-colors">The Engine</a>
+                <a href="#pricing" class="hover:text-white transition-colors">Membership</a>
+            </div>
+
+            <div class="w-px h-4 bg-white/10 hidden md:block"></div>
+
+            <div class="flex items-center gap-4">
+                <a href="auth.html" class="text-xs font-medium text-text_muted hover:text-white transition-colors">Sign In</a>
+                <a href="auth.html" class="bg-white text-room px-4 py-1.5 rounded-full text-xs font-bold hover:bg-sky-50 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                    Enter Workspace
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-40 pb-32 px-6 overflow-hidden">
+
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-radial from-sky-900/20 to-transparent opacity-50 blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-sky-500/20 bg-sky-500/5 text-sky-400 text-xs font-medium mb-8 animate-pulse">
+                <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+                <span>System v2.0 is Live</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-serif font-light leading-[1.1] mb-8 text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/50">
+                Think Clearly.<br>
+                <span class="italic text-glow text-white">Write Deeply.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-text_muted max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+                Escape the noise. ScholarSync is a luminous workspace designed for the flow state, combining deep research,
+                architectural outlining, and distraction-free writing.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="auth.html" class="group relative px-8 py-4 bg-sky-500 text-white rounded-full font-medium transition-all hover:scale-105 hover:shadow-glow overflow-hidden">
+                    <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                    <span class="relative flex items-center gap-2">Start Researching <i class="ph ph-arrow-right"></i></span>
+                </a>
+                <a href="#demo" class="px-8 py-4 glass-panel text-text_muted hover:text-white rounded-full font-medium transition-all hover:border-white/20">
+                    View Demo
+                </a>
+            </div>
+        </div>
+
+        <div id="demo" class="mt-24 max-w-6xl mx-auto relative group perspective-1000">
+            <div class="absolute inset-0 bg-sky-500/10 blur-[80px] -z-10 rounded-full"></div>
+
+            <div class="tilt-card glass-panel rounded-xl border border-white/10 p-2 shadow-2xl relative overflow-hidden">
+                <div class="h-10 bg-black/40 border-b border-white/5 flex items-center px-4 gap-2">
+                    <div class="flex gap-1.5">
+                        <div class="w-3 h-3 rounded-full bg-white/10"></div>
+                        <div class="w-3 h-3 rounded-full bg-white/10"></div>
+                        <div class="w-3 h-3 rounded-full bg-white/10"></div>
+                    </div>
+                    <div class="mx-auto bg-white/5 px-4 py-1 rounded-md text-[10px] text-text_muted font-mono">scholarsync.app/studio</div>
+                </div>
+                <div class="bg-surface h-[600px] flex">
+                    <div class="w-64 border-r border-white/5 p-6 hidden md:block">
+                        <div class="space-y-4">
+                            <div class="h-4 w-24 bg-white/10 rounded"></div>
+                            <div class="h-4 w-32 bg-white/5 rounded"></div>
+                            <div class="h-4 w-20 bg-white/5 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="flex-1 p-16 flex justify-center bg-room">
+                        <div class="w-full max-w-2xl bg-surface border border-white/5 rounded-lg shadow-2xl p-12">
+                            <div class="h-12 w-3/4 bg-white/10 rounded mb-8"></div>
+                            <div class="space-y-4">
+                                <div class="h-4 w-full bg-white/5 rounded"></div>
+                                <div class="h-4 w-full bg-white/5 rounded"></div>
+                                <div class="h-4 w-2/3 bg-white/5 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-10 right-10 glass-panel p-4 rounded-xl flex items-center gap-3 animate-bounce">
+                    <div class="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-white"><i class="ph ph-sparkle-fill"></i></div>
+                    <div class="text-sm text-white">Citation Audit Complete: 100% Integrity</div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section id="features" class="py-32 px-6 bg-surface relative border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <div class="glass-panel p-8 rounded-2xl hover:bg-white/5 transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 flex items-center justify-center text-sky-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="ph ph-globe-hemisphere-west text-2xl"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl text-white mb-4">Deep Research</h3>
+                    <p class="text-text_muted leading-relaxed">
+                        Don't just search. Investigate. Our engine reads 200M+ papers from PubMed and Semantic Scholar to find consensus.
+                    </p>
+                </div>
+
+                <div id="engine" class="glass-panel p-8 rounded-2xl hover:bg-white/5 transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="ph ph-brain text-2xl"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl text-white mb-4">Socratic Co-Pilot</h3>
+                    <p class="text-text_muted leading-relaxed">
+                        It does not write for you; it thinks with you. Challenge your arguments and detect weak claims in real time.
+                    </p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-2xl hover:bg-white/5 transition-colors group">
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400 mb-6 group-hover:scale-110 transition-transform">
+                        <i class="ph ph-pen-nib text-2xl"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl text-white mb-4">Luminous Editor</h3>
+                    <p class="text-text_muted leading-relaxed">
+                        A writing surface that respects focus. Automated citations and structure management built in.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="py-16 px-6 bg-room border-t border-white/5">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="font-serif text-3xl text-white mb-3">Membership</h2>
+            <p class="text-text_muted">Free tier for exploring, Pro tier for sustained research workflows.</p>
+        </div>
+    </section>
+
+    <footer class="bg-room border-t border-white/5 py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 opacity-60">
+            <div class="flex items-center gap-2">
+                <i class="ph ph-squares-four text-white"></i>
+                <span class="font-semibold text-white">ScholarSync</span>
+            </div>
+            <div class="text-sm text-text_muted flex gap-6">
+                <a href="#" class="hover:text-white">Privacy</a>
+                <a href="#" class="hover:text-white">Terms</a>
+                <a href="#" class="hover:text-white">Twitter</a>
+            </div>
+            <div class="text-sm text-text_muted">© 2026 ScholarSync Inc.</div>
+        </div>
+    </footer>
+
+</body>
+</html>
