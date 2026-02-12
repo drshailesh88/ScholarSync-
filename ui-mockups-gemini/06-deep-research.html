@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Deep Query</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ sidebar: 'open' }">
+
+    <aside class="w-16 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800 items-center py-6">
+        <div class="h-10 w-10 flex items-center justify-center text-stone-100 mb-6">
+            <i class="ph ph-squares-four text-xl"></i>
+        </div>
+
+        <nav class="flex flex-col gap-6 w-full items-center">
+            <a href="04-dashboard.html" class="p-2 text-stone-500 hover:text-stone-100 transition-colors" title="Console">
+                <i class="ph ph-monitor text-xl"></i>
+            </a>
+            <a href="#" class="p-2 text-stone-100 bg-stone-800 rounded-sm transition-colors" title="Deep Search">
+                <i class="ph ph-globe-hemisphere-west text-xl"></i>
+            </a>
+            <a href="05-studio.html" class="p-2 text-stone-500 hover:text-stone-100 transition-colors" title="Draft">
+                <i class="ph ph-pen-nib text-xl"></i>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+
+        <header class="h-20 bg-paper border-b border-stone-200 flex items-center px-8 shrink-0 z-20">
+            <div class="flex-1 max-w-4xl relative">
+                <i class="ph ph-magnifying-glass absolute left-0 top-3 text-stone-400 text-lg"></i>
+                <input type="text" value="CRISPR gene editing off-target effects consensus"
+                    class="w-full bg-transparent border-b border-stone-300 py-2 pl-8 pr-4 text-lg font-serif text-ink focus:outline-none focus:border-accent transition-colors placeholder-stone-400 font-medium"
+                    placeholder="Enter research query...">
+                <span class="absolute right-0 top-3 font-mono text-[10px] text-stone-400 uppercase tracking-widest">QUERY_ACTIVE</span>
+            </div>
+
+            <div class="ml-8 flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="font-mono text-[10px] uppercase tracking-wide text-stone-500">Source:</span>
+                    <select class="bg-stone-100 border border-stone-200 text-xs font-mono py-1 px-2 rounded-sm focus:outline-none focus:border-accent cursor-pointer">
+                        <option>PubMed + Semantic Scholar</option>
+                        <option>ArXiv Only</option>
+                        <option>ClinicalTrials.gov</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-12">
+            <div class="max-w-5xl mx-auto">
+
+                <section class="mb-12">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="font-mono text-xs text-accent uppercase tracking-widest">Executive Summary</h2>
+                        <span class="font-mono text-[10px] text-stone-400">GENERATED FROM 15 SOURCES</span>
+                    </div>
+
+                    <div class="bg-stone-50 border border-stone-200 p-8 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-accent"></div>
+
+                        <p class="font-serif text-lg text-ink leading-relaxed mb-4">
+                            <strong>Consensus:</strong> Recent literature (2020&ndash;2024) indicates a significant shift regarding off-target effects in CRISPR-Cas9. While early variants posed high risks for germline editing, the introduction of <em>high-fidelity Cas9 (SpCas9-HF1)</em> and <em>Prime Editing</em> has reduced off-target incidence by approximately <span class="bg-stone-200 px-1 text-sm font-mono border-b border-stone-400">85-90%</span> in human cell lines.
+                        </p>
+                        <p class="font-serif text-lg text-ink leading-relaxed">
+                            However, clinical application remains stalled due to the lack of longitudinal data on <span class="bg-stone-200 px-1 text-sm font-mono border-b border-stone-400">p53 activation</span> and subsequent genotoxicity.
+                        </p>
+
+                        <div class="mt-6 flex gap-4 pt-4 border-t border-stone-200">
+                            <button class="flex items-center gap-2 text-xs font-mono text-stone-500 hover:text-accent transition-colors">
+                                <i class="ph ph-copy"></i> COPY_TEXT
+                            </button>
+                            <button class="flex items-center gap-2 text-xs font-mono text-stone-500 hover:text-accent transition-colors">
+                                <i class="ph ph-quotes"></i> EXPORT_CITATION
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center gap-4 mb-6 border-b border-stone-200 pb-2">
+                        <h2 class="font-mono text-xs text-stone-400 uppercase tracking-widest">Literature Index (142)</h2>
+                        <div class="flex gap-2">
+                            <button class="text-[10px] font-mono border border-stone-300 px-2 py-0.5 rounded-sm hover:border-ink hover:bg-stone-100 transition-colors">FILTER: LAST_5_YEARS</button>
+                            <button class="text-[10px] font-mono border border-stone-300 px-2 py-0.5 rounded-sm hover:border-ink hover:bg-stone-100 transition-colors">FILTER: PDF_ONLY</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+
+                        <div class="group">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-serif text-xl text-ink font-medium leading-tight group-hover:text-accent cursor-pointer max-w-3xl">
+                                    High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects
+                                </h3>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-mono text-[10px] border border-stone-200 bg-white px-1.5 py-0.5 text-stone-500">PDF_ACCESS</span>
+                                    <span class="font-mono text-[10px] text-stone-400">Cited: 420</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 mt-2 font-mono text-xs text-stone-500">
+                                <span class="font-bold text-stone-700">Slaymaker, I.M., et al.</span>
+                                <span>&bull;</span>
+                                <span class="italic">Nature</span>
+                                <span>&bull;</span>
+                                <span>2023</span>
+                            </div>
+                            <p class="font-serif text-sm text-stone-600 mt-3 leading-relaxed max-w-4xl">
+                                ...demonstrates that structure-guided engineering of SpCas9 can eliminate off-target effects without compromising on-target activity...
+                            </p>
+                            <div class="mt-3 flex gap-4 opacity-40 group-hover:opacity-100 transition-opacity">
+                                <button class="text-[10px] font-mono text-stone-500 hover:text-ink hover:underline">ADD_TO_LIBRARY</button>
+                                <button class="text-[10px] font-mono text-stone-500 hover:text-ink hover:underline">EXTRACT_DATA</button>
+                            </div>
+                        </div>
+
+                        <div class="h-px bg-stone-100 w-full"></div>
+
+                        <div class="group">
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-serif text-xl text-ink font-medium leading-tight group-hover:text-accent cursor-pointer max-w-3xl">
+                                    Evaluation of Off-Target Effects in CRISPR-Cas9 Therapeutics
+                                </h3>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="font-mono text-[10px] border border-stone-200 bg-white px-1.5 py-0.5 text-stone-500">PDF_ACCESS</span>
+                                    <span class="font-mono text-[10px] text-stone-400">Cited: 85</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 mt-2 font-mono text-xs text-stone-500">
+                                <span class="font-bold text-stone-700">Zhang, Y., et al.</span>
+                                <span>&bull;</span>
+                                <span class="italic">Cell Review</span>
+                                <span>&bull;</span>
+                                <span>2024</span>
+                            </div>
+                            <p class="font-serif text-sm text-stone-600 mt-3 leading-relaxed max-w-4xl">
+                                ...systematic review analyzing 50 clinical trials involving CRISPR therapies, focusing on long-term safety profiles and p53 activation...
+                            </p>
+                            <div class="mt-3 flex gap-4 opacity-40 group-hover:opacity-100 transition-opacity">
+                                <button class="text-[10px] font-mono text-stone-500 hover:text-ink hover:underline">ADD_TO_LIBRARY</button>
+                                <button class="text-[10px] font-mono text-stone-500 hover:text-ink hover:underline">EXTRACT_DATA</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+    </main>
+
+    <aside class="w-80 bg-paper border-l border-stone-200 flex flex-col shrink-0 z-20">
+        <div class="h-10 bg-stone-100 border-b border-stone-200 flex items-center justify-between px-4">
+            <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">Data Extraction</span>
+            <i class="ph ph-table text-stone-400"></i>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-6">
+            <div class="border border-stone-200 bg-white">
+                <div class="bg-stone-50 px-3 py-2 border-b border-stone-200">
+                    <span class="font-mono text-[10px] font-bold text-ink">Variable: Error Rates</span>
+                </div>
+                <table class="w-full text-left">
+                    <tbody class="font-mono text-[10px]">
+                        <tr class="border-b border-stone-100">
+                            <td class="p-2 text-stone-500">Slaymaker</td>
+                            <td class="p-2 text-ink">&lt;0.1%</td>
+                        </tr>
+                        <tr class="border-b border-stone-100">
+                            <td class="p-2 text-stone-500">Zhang</td>
+                            <td class="p-2 text-ink">~1.2%</td>
+                        </tr>
+                        <tr>
+                            <td class="p-2 text-stone-500">Kleinstiver</td>
+                            <td class="p-2 text-ink">Undetected</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="w-full py-2 text-[10px] font-mono text-accent hover:bg-stone-50 transition-colors border-t border-stone-200">
+                    + ADD_COLUMN
+                </button>
+            </div>
+
+            <div>
+                 <div class="bg-stone-50 px-3 py-2 border border-stone-200 border-b-0">
+                    <span class="font-mono text-[10px] font-bold text-ink">Analyst Notes</span>
+                </div>
+                <div class="border border-stone-200 bg-white p-3 min-h-[150px] font-serif text-sm text-stone-600">
+                    &gt; Based on the filtered results, the consensus is shifting towards Prime Editing. <br><br>
+                    &gt; Would you like to refine the query to exclude "Base Editing"?
+                </div>
+                 <div class="flex mt-2 gap-2">
+                    <button class="flex-1 border border-stone-300 py-1 text-[10px] font-mono hover:border-accent hover:text-accent transition-colors">YES</button>
+                    <button class="flex-1 border border-stone-300 py-1 text-[10px] font-mono hover:border-ink hover:text-ink transition-colors">NO</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+</body>
+</html>

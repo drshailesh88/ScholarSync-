@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Deep Work Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        // The "Deep Work" Palette
+                        paper: '#f9f8f6', // Warm off-white
+                        ink: '#1a1a1a',   // Softer black
+                        accent: '#ea580c', // Burnt Orange (Focus)
+                        stone: { 100: '#f5f5f4', 200: '#e7e5e4', 800: '#292524' }
+                    },
+                    boxShadow: {
+                        'sharp': '0 1px 2px 0 rgba(0, 0, 0, 0.05)', // Minimal shadows
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white">
+
+    <aside class="w-64 bg-[#111] text-stone-200 flex flex-col shrink-0 border-r border-stone-800">
+        <div class="h-14 flex items-center px-5 border-b border-stone-800">
+            <span class="font-serif font-semibold text-xl tracking-wide text-white">ScholarSync.</span>
+        </div>
+
+        <nav class="flex-1 px-3 py-6 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-white bg-stone-800/50 border-l-2 border-accent transition-all group">
+                <i class="ph ph-squares-four text-lg"></i>
+                <span class="text-xs font-medium uppercase tracking-wider">Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-stone-400 hover:text-white transition-all group border-l-2 border-transparent">
+                <i class="ph ph-file-text text-lg"></i>
+                <span class="text-xs font-medium uppercase tracking-wider">Projects</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-stone-400 hover:text-white transition-all group border-l-2 border-transparent">
+                <i class="ph ph-books text-lg"></i>
+                <span class="text-xs font-medium uppercase tracking-wider">Library</span>
+            </a>
+
+            <div class="pt-6 mt-2">
+                <p class="px-3 text-[10px] font-mono text-stone-600 uppercase mb-2">Analysis Tools</p>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-stone-400 hover:text-white transition-all">
+                    <span class="font-mono text-xs">01</span> <span class="text-sm">Deep Research</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-stone-400 hover:text-white transition-all">
+                    <span class="font-mono text-xs">02</span> <span class="text-sm">Logic Check</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-stone-800">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-stone-700 flex items-center justify-center font-serif text-white italic">RV</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-mono text-stone-400">PRO_TIER</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto">
+        <header class="h-14 bg-paper border-b border-stone-200 flex items-center justify-between px-8 sticky top-0 z-10">
+            <div class="flex items-center gap-2 text-sm text-stone-500 font-mono">
+                <span>Workspace</span>
+                <span class="text-stone-300">/</span>
+                <span class="text-ink font-semibold">Overview</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-xs font-mono text-stone-400">SERVER STATUS: ONLINE</span>
+            </div>
+        </header>
+
+        <div class="p-8 max-w-6xl mx-auto space-y-8">
+
+            <section>
+                <h1 class="text-3xl font-serif text-ink mb-2">Research Console</h1>
+                <p class="text-stone-500 font-sans text-sm max-w-xl">
+                    "Research is to see what everybody else has seen, and to think what nobody else has thought."
+                </p>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-px bg-stone-200 border border-stone-200">
+
+                <div class="bg-paper p-6 hover:bg-white transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="ph ph-globe-hemisphere-west text-2xl text-stone-400 group-hover:text-accent transition-colors"></i>
+                        <span class="font-mono text-[10px] border border-stone-300 px-1 py-0.5 rounded-sm text-stone-500">CMD+K</span>
+                    </div>
+                    <h3 class="font-bold text-ink text-sm uppercase tracking-wide mb-1">Deep Research</h3>
+                    <p class="text-xs text-stone-500 font-mono">Query PubMed / Semantic Scholar</p>
+                </div>
+
+                <div class="bg-paper p-6 hover:bg-white transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="ph ph-pen-nib text-2xl text-stone-400 group-hover:text-accent transition-colors"></i>
+                        <span class="font-mono text-[10px] border border-stone-300 px-1 py-0.5 rounded-sm text-stone-500">CMD+N</span>
+                    </div>
+                    <h3 class="font-bold text-ink text-sm uppercase tracking-wide mb-1">Drafting Lab</h3>
+                    <p class="text-xs text-stone-500 font-mono">Distraction-free environment</p>
+                </div>
+
+                <div class="bg-paper p-6 hover:bg-white transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="ph ph-brain text-2xl text-stone-400 group-hover:text-accent transition-colors"></i>
+                    </div>
+                    <h3 class="font-bold text-ink text-sm uppercase tracking-wide mb-1">Socratic Mode</h3>
+                    <p class="text-xs text-stone-500 font-mono">Analyze arguments & logic</p>
+                </div>
+
+                <div class="bg-paper p-6 hover:bg-white transition-colors cursor-pointer group">
+                    <div class="flex justify-between items-start mb-4">
+                        <i class="ph ph-chart-bar text-2xl text-stone-400 group-hover:text-accent transition-colors"></i>
+                    </div>
+                    <h3 class="font-bold text-ink text-sm uppercase tracking-wide mb-1">Metrics</h3>
+                    <p class="text-xs text-stone-500 font-mono">Flesch-Kincaid & Bias check</p>
+                </div>
+
+            </section>
+
+            <section>
+                <div class="flex items-center justify-between mb-4 border-b border-stone-200 pb-2">
+                    <h2 class="text-sm font-bold uppercase tracking-widest text-stone-500">Active Manuscripts</h2>
+                </div>
+
+                <div class="overflow-hidden border border-stone-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-stone-100 text-[10px] font-mono text-stone-500 uppercase">
+                            <tr>
+                                <th class="px-6 py-3 border-b border-stone-200">ID</th>
+                                <th class="px-6 py-3 border-b border-stone-200">Title</th>
+                                <th class="px-6 py-3 border-b border-stone-200">Status</th>
+                                <th class="px-6 py-3 border-b border-stone-200">Word Count</th>
+                                <th class="px-6 py-3 border-b border-stone-200 text-right">Last Modified</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-xs">
+                            <tr class="bg-white hover:bg-stone-50 border-b border-stone-100 group cursor-pointer">
+                                <td class="px-6 py-4 text-stone-400">#001</td>
+                                <td class="px-6 py-4 font-sans text-sm font-medium text-ink group-hover:text-accent">CRISPR Ethics v4</td>
+                                <td class="px-6 py-4"><span class="bg-stone-100 text-stone-600 px-2 py-1 rounded-sm">In Progress</span></td>
+                                <td class="px-6 py-4">2,405</td>
+                                <td class="px-6 py-4 text-right text-stone-500">14:02 today</td>
+                            </tr>
+                            <tr class="bg-white hover:bg-stone-50 border-b border-stone-100 group cursor-pointer">
+                                <td class="px-6 py-4 text-stone-400">#002</td>
+                                <td class="px-6 py-4 font-sans text-sm font-medium text-ink group-hover:text-accent">Quantum Mechanics 101</td>
+                                <td class="px-6 py-4"><span class="bg-stone-800 text-stone-100 px-2 py-1 rounded-sm">Review</span></td>
+                                <td class="px-6 py-4">850</td>
+                                <td class="px-6 py-4 text-right text-stone-500">Yesterday</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</body>
+</html>

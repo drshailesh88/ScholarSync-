@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - The Research Workbench</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 100: '#f5f5f4', 200: '#e7e5e4', 500: '#78716c', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #e7e5e4 1px, transparent 1px), linear-gradient(to bottom, #e7e5e4 1px, transparent 1px)",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .grid-bg { background-size: 40px 40px; }
+        .border-b-1 { border-bottom-width: 1px; }
+    </style>
+</head>
+<body class="bg-paper text-ink font-sans antialiased overflow-x-hidden selection:bg-accent selection:text-white">
+
+    <nav class="fixed top-0 w-full z-50 bg-paper/90 backdrop-blur-sm border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="ph ph-squares-four text-xl text-stone-800"></i>
+                <span class="font-serif font-semibold text-xl tracking-tight text-ink">ScholarSync.</span>
+            </div>
+
+            <div class="hidden md:flex items-center gap-8 text-sm font-mono text-stone-500">
+                <a href="#manifesto" class="hover:text-accent transition-colors">Manifesto</a>
+                <a href="#features" class="hover:text-accent transition-colors">capabilities.txt</a>
+                <a href="#pricing" class="hover:text-accent transition-colors">Membership</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="03-auth-page.html" class="text-sm font-medium text-stone-600 hover:text-ink transition-colors font-mono">Log in</a>
+                <a href="03-auth-page.html" class="px-5 py-2 bg-ink text-paper text-sm font-medium border border-ink hover:bg-transparent hover:text-ink transition-all rounded-sm">
+                    Enter Workspace
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-32 pb-20 border-b border-stone-200">
+        <div class="absolute inset-0 bg-grid-pattern grid-bg opacity-[0.4] pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 border border-stone-200 bg-white mb-8">
+                <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+                <span class="text-[10px] font-mono uppercase tracking-widest text-stone-500">System v2.0 Online</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-serif font-light text-ink leading-[1.1] mb-8">
+                Thinking, amplified.<br>
+                <span class="italic text-stone-500">Writing, refined.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-stone-600 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+                An integrated research environment for the modern academic.
+                Synthesize papers, analyze arguments, and write with precision.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="03-auth-page.html" class="w-full sm:w-auto px-8 py-3 bg-accent text-white font-medium hover:bg-orange-700 transition-all flex items-center justify-center gap-2 rounded-sm shadow-sm">
+                    Begin Research <i class="ph ph-arrow-right"></i>
+                </a>
+                <a href="#demo" class="w-full sm:w-auto px-8 py-3 bg-white border border-stone-300 text-stone-700 font-medium hover:border-stone-800 transition-all flex items-center justify-center gap-2 rounded-sm font-mono text-sm">
+                    View_Demo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-stone-100 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="relative bg-paper border border-stone-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-2">
+                <div class="h-8 bg-stone-50 border-b border-stone-200 flex items-center px-4 gap-2">
+                    <div class="flex gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-stone-300"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-stone-300"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-stone-300"></div>
+                    </div>
+                    <div class="mx-auto w-1/3 h-5 bg-white border border-stone-200 rounded-sm"></div>
+                </div>
+                <div class="flex h-[500px] font-mono text-xs text-stone-400 items-center justify-center bg-white">
+                    [ Application Interface Loading... ]
+                </div>
+            </div>
+            <div class="flex justify-between mt-4 font-mono text-xs text-stone-400 uppercase tracking-widest">
+                <span>Fig. 01 — Interface Overview</span>
+                <span>ScholarSync Inc.</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-24 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-stone-200 border border-stone-200 bg-white">
+
+                <div class="p-8 hover:bg-stone-50 transition-colors group">
+                    <div class="w-10 h-10 border border-stone-200 flex items-center justify-center mb-6 group-hover:border-accent transition-colors">
+                        <i class="ph ph-files text-xl text-stone-600 group-hover:text-accent"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl text-ink mb-3">Deep Search</h3>
+                    <p class="text-stone-500 leading-relaxed text-sm">
+                        Connects directly to PubMed and Semantic Scholar. It doesn't just find papers; it reads them and extracts the consensus.
+                    </p>
+                </div>
+
+                <div class="p-8 hover:bg-stone-50 transition-colors group">
+                    <div class="w-10 h-10 border border-stone-200 flex items-center justify-center mb-6 group-hover:border-accent transition-colors">
+                        <i class="ph ph-brain text-xl text-stone-600 group-hover:text-accent"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl text-ink mb-3">Socratic Tutor</h3>
+                    <p class="text-stone-500 leading-relaxed text-sm">
+                        Upload complex PDFs. The AI uses the Socratic method to test your understanding, not just summarize.
+                    </p>
+                </div>
+
+                <div class="p-8 hover:bg-stone-50 transition-colors group">
+                    <div class="w-10 h-10 border border-stone-200 flex items-center justify-center mb-6 group-hover:border-accent transition-colors">
+                        <i class="ph ph-pen-nib text-xl text-stone-600 group-hover:text-accent"></i>
+                    </div>
+                    <h3 class="font-serif text-2xl text-ink mb-3">Draft & Cite</h3>
+                    <p class="text-stone-500 leading-relaxed text-sm">
+                        A distraction-free editor that handles citation formatting (APA, MLA, Chicago) automatically as you type.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="py-24 bg-paper">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-serif text-ink mb-4">Membership</h2>
+                <p class="font-mono text-sm text-stone-500">Transparent pricing for independent thinkers.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="border border-stone-200 bg-white p-8 hover:border-stone-400 transition-all relative">
+                    <h3 class="font-mono text-xs uppercase tracking-widest text-stone-500 mb-2">Standard</h3>
+                    <div class="text-4xl font-serif text-ink mb-6">Free</div>
+                    <ul class="space-y-3 text-sm text-stone-600 mb-8 font-mono">
+                        <li class="flex items-center gap-3"><span class="text-green-600">&#10003;</span> 5 Deep Searches/day</li>
+                        <li class="flex items-center gap-3"><span class="text-green-600">&#10003;</span> Basic Editor</li>
+                    </ul>
+                    <a href="03-auth-page.html" class="block w-full py-3 border border-stone-300 text-center text-sm font-medium hover:bg-stone-50 transition-colors">Get Started</a>
+                </div>
+
+                <div class="border border-accent bg-white p-8 relative shadow-sm">
+                    <div class="absolute top-0 right-0 bg-accent text-white text-[10px] font-bold px-2 py-1 uppercase font-mono tracking-widest">Recommended</div>
+                    <h3 class="font-mono text-xs uppercase tracking-widest text-accent mb-2">Professional</h3>
+                    <div class="text-4xl font-serif text-ink mb-6">&#8377;499<span class="text-base text-stone-400">/mo</span></div>
+                    <ul class="space-y-3 text-sm text-stone-600 mb-8 font-mono">
+                        <li class="flex items-center gap-3"><span class="text-accent">&#10003;</span> Unlimited Deep Search</li>
+                        <li class="flex items-center gap-3"><span class="text-accent">&#10003;</span> Advanced Logic Checks</li>
+                        <li class="flex items-center gap-3"><span class="text-accent">&#10003;</span> PDF/LaTeX Export</li>
+                    </ul>
+                    <a href="03-auth-page.html" class="block w-full py-3 bg-ink text-white text-center text-sm font-medium hover:bg-stone-800 transition-colors">Upgrade</a>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                 <p class="font-mono text-[10px] text-stone-400 uppercase tracking-widest flex items-center justify-center gap-2">
+                    <i class="ph ph-lock-key"></i> Payments processed securely via Razorpay
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-stone-200 bg-white py-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <span class="font-serif font-semibold text-lg">ScholarSync.</span>
+            <div class="font-mono text-xs text-stone-500 flex gap-6">
+                <a href="#" class="hover:text-ink">Terms_of_Service</a>
+                <a href="#" class="hover:text-ink">Privacy_Policy</a>
+                <a href="#" class="hover:text-ink">Contact</a>
+            </div>
+            <span class="font-mono text-xs text-stone-400">&copy; 2024</span>
+        </div>
+    </footer>
+
+</body>
+</html>

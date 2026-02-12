@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Compliance Audit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                        alert: '#b91c1c',  // Deep Red
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .match-ai { background-color: rgba(234, 88, 12, 0.1); border-bottom: 2px solid #ea580c; }
+        .match-source { background-color: rgba(185, 28, 28, 0.1); border-bottom: 2px solid #b91c1c; }
+    </style>
+</head>
+<body class="bg-stone-100 text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ report: 'source' }">
+
+    <main class="flex-1 flex flex-col h-full border-r border-stone-200 bg-white relative">
+
+        <header class="h-14 bg-paper border-b border-stone-200 flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex items-center gap-3">
+                <a href="04-dashboard.html" class="text-stone-400 hover:text-ink transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <h1 class="font-mono text-xs text-stone-500 uppercase tracking-widest">Compliance Audit: Thesis_v4.docx</h1>
+            </div>
+
+            <button class="flex items-center gap-2 px-4 py-1.5 border border-stone-300 hover:border-ink hover:bg-stone-50 transition-all text-xs font-mono uppercase tracking-wide text-ink">
+                <i class="ph ph-file-pdf"></i> Export_Report
+            </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-12 lg:p-16">
+            <div class="max-w-2xl mx-auto">
+                <h1 class="font-serif text-3xl text-ink mb-10">The Ethics of Germline Editing</h1>
+
+                <div class="prose prose-lg prose-stone max-w-none font-serif leading-loose">
+                    <p>
+                        The ability to modify the human germline represents a watershed moment in the history of science.
+                        <span class="match-ai cursor-pointer relative group">
+                            It allows for the correction of disease-causing mutations in embryos, preventing the transmission of genetic disorders to future generations.
+                            <span class="absolute -top-5 left-0 font-mono text-[10px] text-accent font-bold opacity-0 group-hover:opacity-100 transition-opacity">SYNTHETIC_PATTERN [88%]</span>
+                        </span>
+                    </p>
+
+                    <p class="mt-8">
+                        However, this power comes with significant ethical responsibilities.
+                        <span class="match-source cursor-pointer relative group">
+                            Critics argue that germline editing could lead to a new form of eugenics, where parents select for traits such as intelligence or physical appearance.
+                            <span class="absolute -top-5 left-0 font-mono text-[10px] text-alert font-bold opacity-0 group-hover:opacity-100 transition-opacity">SOURCE_MATCH: WIKIPEDIA</span>
+                        </span>
+                        This concern is not merely theoretical; it is rooted in the history of genetic discrimination.
+                    </p>
+
+                    <p class="mt-8">
+                        Furthermore, the long-term effects of off-target mutations remain unknown. A recent study by Zhang et al. (2024) demonstrated that...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="w-96 bg-paper flex flex-col shrink-0 h-full z-20">
+
+        <div class="flex border-b border-stone-200">
+            <button @click="report = 'source'" :class="report === 'source' ? 'bg-stone-200 text-ink' : 'text-stone-500 hover:text-ink'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest transition-all border-r border-stone-200">
+                Source Matching
+            </button>
+            <button @click="report = 'synthetic'" :class="report === 'synthetic' ? 'bg-stone-200 text-ink' : 'text-stone-500 hover:text-ink'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest transition-all">
+                Synthetic Patterns
+            </button>
+        </div>
+
+        <div x-show="report === 'source'" class="flex-1 overflow-y-auto">
+            <div class="p-6 border-b border-stone-200 bg-stone-100">
+                <div class="flex justify-between items-end mb-2">
+                    <span class="font-mono text-[10px] uppercase text-stone-500">Similarity Index</span>
+                    <span class="font-mono text-3xl font-bold text-alert">14%</span>
+                </div>
+                <div class="w-full bg-stone-200 h-1">
+                    <div class="bg-alert h-1 w-[14%]"></div>
+                </div>
+                <p class="font-mono text-[10px] text-stone-400 mt-2">2 SEGMENTS FLAGGED</p>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div class="group">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-mono text-[10px] uppercase text-stone-500 flex items-center gap-1">
+                            <i class="ph ph-link"></i> Wikipedia.org
+                        </span>
+                        <span class="font-mono text-[10px] text-alert font-bold">100% MATCH</span>
+                    </div>
+                    <p class="font-serif text-sm text-stone-600 border-l-2 border-alert pl-3 py-1 mb-3 bg-stone-50">
+                        "...lead to a new form of eugenics, where parents select for traits..."
+                    </p>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 border border-stone-300 text-[10px] font-mono hover:bg-white hover:border-ink transition-colors">
+                            INSERT_CITATION
+                        </button>
+                        <button class="flex-1 py-2 border border-stone-300 text-[10px] font-mono hover:bg-white hover:border-ink transition-colors">
+                            REPHRASE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="group opacity-60 hover:opacity-100 transition-opacity">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-mono text-[10px] uppercase text-stone-500 flex items-center gap-1">
+                            <i class="ph ph-article"></i> Nature.com
+                        </span>
+                        <span class="font-mono text-[10px] text-accent font-bold">24% MATCH</span>
+                    </div>
+                    <p class="font-serif text-sm text-stone-600 border-l-2 border-accent pl-3 py-1 mb-3 bg-stone-50">
+                        "...demonstrated that off-target effects remain a primary concern..."
+                    </p>
+                    <button class="w-full py-2 border border-stone-300 text-[10px] font-mono hover:bg-white hover:border-ink transition-colors">
+                        REVIEW_CONTEXT
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="report === 'synthetic'" class="flex-1 overflow-y-auto" style="display: none;">
+            <div class="p-6 border-b border-stone-200 bg-stone-100">
+                <div class="flex justify-between items-end mb-2">
+                    <span class="font-mono text-[10px] uppercase text-stone-500">Humanity Score</span>
+                    <span class="font-mono text-3xl font-bold text-accent">65%</span>
+                </div>
+                <div class="w-full bg-stone-200 h-1">
+                    <div class="bg-accent h-1 w-[65%]"></div>
+                </div>
+                <p class="font-mono text-[10px] text-stone-400 mt-2">MODERATE PROBABILITY OF AI USE</p>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div>
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="font-mono text-[10px] uppercase text-stone-500">Segment 01</span>
+                        <span class="font-mono text-[10px] text-accent font-bold">88% PROBABILITY</span>
+                    </div>
+                    <div class="bg-stone-50 border border-stone-200 p-3 mb-3">
+                        <p class="font-serif text-sm text-stone-600 italic">
+                            "It allows for the correction of disease-causing mutations..."
+                        </p>
+                        <div class="mt-2 pt-2 border-t border-stone-200">
+                             <p class="font-mono text-[10px] text-stone-400">ANOMALY: Low Perplexity / Low Burstiness</p>
+                        </div>
+                    </div>
+                    <button class="w-full py-2 bg-ink text-paper text-[10px] font-mono hover:bg-stone-800 transition-colors flex items-center justify-center gap-2">
+                        <i class="ph ph-magic-wand"></i> RESTRUCTURE_SYNTAX
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+</body>
+</html>

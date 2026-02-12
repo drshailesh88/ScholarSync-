@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Manuscript Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .editor-focus:focus { outline: none; }
+        /* Custom Scrollbar for that technical feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f5f5f4; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+    </style>
+</head>
+<body class="bg-stone-100 text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ mode: 'write', sidebar: 'research' }">
+
+    <aside class="w-64 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800">
+        <div class="h-12 flex items-center px-4 border-b border-stone-800">
+            <a href="04-dashboard.html" class="flex items-center gap-2 hover:text-white transition-colors">
+                <i class="ph ph-arrow-left"></i>
+                <span class="font-serif font-medium text-stone-200">Return to Console</span>
+            </a>
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-4">
+            <p class="px-4 text-[10px] font-mono uppercase tracking-widest text-stone-600 mb-3">Structure</p>
+            <nav class="space-y-px">
+                <a href="#" class="block px-4 py-1.5 text-xs font-mono text-stone-100 border-l-2 border-accent bg-stone-900">1.0 Introduction</a>
+                <a href="#" class="block px-4 py-1.5 text-xs font-mono text-stone-500 hover:text-stone-300 hover:bg-stone-900 border-l-2 border-transparent transition-colors">1.1 Historical Context</a>
+                <a href="#" class="block px-4 py-1.5 text-xs font-mono text-stone-500 hover:text-stone-300 hover:bg-stone-900 border-l-2 border-transparent transition-colors">2.0 Methodology</a>
+                <a href="#" class="block px-4 py-1.5 text-xs font-mono text-stone-500 hover:text-stone-300 hover:bg-stone-900 border-l-2 border-transparent transition-colors">3.0 Results</a>
+                <a href="#" class="block px-4 py-1.5 text-xs font-mono text-stone-500 hover:text-stone-300 hover:bg-stone-900 border-l-2 border-transparent transition-colors">4.0 Discussion</a>
+                <a href="#" class="block px-4 py-1.5 text-xs font-mono text-stone-500 hover:text-stone-300 hover:bg-stone-900 border-l-2 border-transparent transition-colors">5.0 References</a>
+            </nav>
+
+            <div class="mt-8">
+                 <p class="px-4 text-[10px] font-mono uppercase tracking-widest text-stone-600 mb-3">Cited Sources</p>
+                 <div class="px-4 space-y-2">
+                     <div class="flex items-start gap-2 group cursor-pointer">
+                         <i class="ph ph-file-pdf text-stone-500 group-hover:text-accent"></i>
+                         <span class="text-xs text-stone-400 group-hover:text-stone-200 font-serif">Doudna et al. (2020)</span>
+                     </div>
+                     <div class="flex items-start gap-2 group cursor-pointer">
+                         <i class="ph ph-file-pdf text-stone-500 group-hover:text-accent"></i>
+                         <span class="text-xs text-stone-400 group-hover:text-stone-200 font-serif">Zhang, Y. (2023)</span>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative h-full">
+
+        <header class="h-12 bg-paper border-b border-stone-200 flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex items-center gap-1 text-stone-600">
+                <select class="bg-transparent text-xs font-mono uppercase tracking-wide border border-stone-200 px-2 py-1 rounded-sm focus:outline-none focus:border-accent">
+                    <option>Normal Text</option>
+                    <option>Heading 1</option>
+                    <option>Heading 2</option>
+                </select>
+                <div class="w-px h-4 bg-stone-300 mx-2"></div>
+                <button class="p-1.5 hover:bg-stone-200 rounded-sm hover:text-ink transition-colors"><i class="ph ph-text-b"></i></button>
+                <button class="p-1.5 hover:bg-stone-200 rounded-sm hover:text-ink transition-colors"><i class="ph ph-text-italic"></i></button>
+                <button class="p-1.5 hover:bg-stone-200 rounded-sm hover:text-ink transition-colors"><i class="ph ph-quotes"></i></button>
+            </div>
+
+            <div class="font-mono text-xs text-stone-400 uppercase tracking-widest">
+                Draft_v4.docx
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button @click="mode = 'write'" :class="mode === 'write' ? 'bg-ink text-white' : 'text-stone-500 hover:bg-stone-200'" class="px-3 py-1 rounded-sm text-xs font-mono uppercase tracking-wider transition-all">
+                    Write
+                </button>
+                <button @click="mode = 'learn'" :class="mode === 'learn' ? 'bg-green-700 text-white' : 'text-stone-500 hover:bg-stone-200'" class="px-3 py-1 rounded-sm text-xs font-mono uppercase tracking-wider transition-all flex items-center gap-1">
+                    <i class="ph ph-student"></i> Socratic
+                </button>
+                <button class="ml-2 text-stone-400 hover:text-accent"><i class="ph ph-export"></i></button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto bg-stone-100 p-8 flex justify-center">
+            <div class="w-full max-w-[800px] bg-white min-h-[1000px] shadow-sm border border-stone-200 p-16 editor-focus" contenteditable="true">
+
+                <h1 class="font-serif text-4xl text-ink mb-8 leading-tight">The Ethics of Germline Editing in Modern Genomics</h1>
+
+                <p class="font-serif text-lg text-ink leading-loose mb-6">
+                    The advent of Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR) has fundamentally altered the landscape of genetic engineering. Unlike previous methods, which were often cumbersome and imprecise, CRISPR-Cas9 offers a versatile tool for editing the genome with unprecedented accuracy.
+                </p>
+
+                <p class="font-serif text-lg text-ink leading-loose mb-6">
+                    <span class="bg-orange-50 border-b border-orange-300 cursor-pointer hover:bg-orange-100 transition-colors" title="Logic Check: Unsupported Claim">However, the ethical implications of germline editing remain a contentious subject within the scientific community.</span> While the potential to eradicate hereditary diseases is immense, the risk of off-target effects necessitates a robust regulatory framework.
+                </p>
+
+                <p class="font-serif text-lg text-ink leading-loose mb-6">
+                    Recent studies by <span class="text-accent border-b border-accent/20 cursor-pointer">Doudna et al. (2020)</span> suggest that the off-target effects can be mitigated through the use of high-fidelity variants.
+                </p>
+
+                <p class="font-serif text-lg text-stone-400 italic mt-8">[ ...Continue writing ]</p>
+            </div>
+        </div>
+
+        <div class="h-8 bg-paper border-t border-stone-200 flex items-center justify-between px-4 shrink-0">
+            <span class="font-mono text-[10px] text-stone-500">WORDS: 1,240</span>
+            <span class="font-mono text-[10px] text-stone-400">SAVED: 10:42 AM</span>
+        </div>
+    </main>
+
+    <aside class="w-80 bg-paper border-l border-stone-200 flex flex-col shrink-0 z-20">
+
+        <div class="flex border-b border-stone-200">
+            <button @click="sidebar = 'research'" :class="sidebar === 'research' ? 'border-b-2 border-accent text-ink' : 'text-stone-400 border-transparent'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest hover:text-ink transition-all">
+                Context
+            </button>
+            <button @click="sidebar = 'chat'" :class="sidebar === 'chat' ? 'border-b-2 border-accent text-ink' : 'text-stone-400 border-transparent'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest hover:text-ink transition-all">
+                Copilot
+            </button>
+            <button @click="sidebar = 'check'" :class="sidebar === 'check' ? 'border-b-2 border-accent text-ink' : 'text-stone-400 border-transparent'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest hover:text-ink transition-all">
+                Audit
+            </button>
+        </div>
+
+        <div x-show="sidebar === 'research'" class="flex-1 overflow-y-auto p-5 space-y-6">
+
+            <div class="border border-stone-200 bg-white p-4 shadow-sm">
+                <div class="flex items-center gap-2 mb-2 text-accent">
+                    <i class="ph ph-sparkle-fill"></i>
+                    <span class="font-mono text-[10px] uppercase tracking-wide font-bold">Suggestion</span>
+                </div>
+                <p class="font-serif text-sm text-ink leading-relaxed mb-3">
+                    You mentioned "off-target effects." I found a 2024 study that contradicts the Doudna paper you cited.
+                </p>
+                <button class="w-full border border-stone-300 py-1.5 text-xs font-medium text-stone-600 hover:text-ink hover:border-ink transition-colors">Review Contradiction</button>
+            </div>
+
+            <div>
+                <h3 class="font-mono text-[10px] uppercase tracking-widest text-stone-400 mb-3">Relevant Literature</h3>
+                <div class="mb-3 pb-3 border-b border-stone-200 last:border-0">
+                    <h4 class="font-serif text-sm font-semibold text-ink leading-snug hover:text-accent cursor-pointer">
+                        CRISPR-Cas9 Therapeutics: Progress and Challenges
+                    </h4>
+                    <p class="text-xs text-stone-500 mt-1 font-mono">Zhang et al. &bull; 2023</p>
+                    <div class="flex gap-2 mt-2">
+                        <button class="text-[10px] text-stone-400 hover:text-ink border border-stone-200 px-2 py-0.5 rounded-sm">Cite</button>
+                        <button class="text-[10px] text-stone-400 hover:text-ink border border-stone-200 px-2 py-0.5 rounded-sm">Abstract</button>
+                    </div>
+                </div>
+                 <div class="mb-3 pb-3 border-b border-stone-200 last:border-0">
+                    <h4 class="font-serif text-sm font-semibold text-ink leading-snug hover:text-accent cursor-pointer">
+                        Germline Editing: A Policy Review
+                    </h4>
+                    <p class="text-xs text-stone-500 mt-1 font-mono">NIH Public Access &bull; 2022</p>
+                     <div class="flex gap-2 mt-2">
+                        <button class="text-[10px] text-stone-400 hover:text-ink border border-stone-200 px-2 py-0.5 rounded-sm">Cite</button>
+                        <button class="text-[10px] text-stone-400 hover:text-ink border border-stone-200 px-2 py-0.5 rounded-sm">Abstract</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div x-show="sidebar === 'chat'" class="flex-1 flex flex-col" style="display: none;">
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <div class="flex gap-3">
+                    <div class="w-6 h-6 bg-stone-200 rounded-sm flex items-center justify-center text-xs font-serif font-bold text-stone-600">AI</div>
+                    <div class="bg-white border border-stone-200 p-3 rounded-sm shadow-sm">
+                        <p class="font-serif text-sm text-ink">Is your argument about "off-target effects" considering the latest Prime Editing techniques?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-stone-200 bg-white">
+                <input type="text" placeholder="Reply..." class="w-full bg-stone-50 border border-stone-200 p-2 text-sm focus:outline-none focus:border-accent font-serif">
+            </div>
+        </div>
+
+    </aside>
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Manuscript Archive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ selected: 1 }">
+
+    <aside class="w-64 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800">
+        <div class="h-14 flex items-center justify-between px-5 border-b border-stone-800 bg-[#151515]">
+            <div class="flex items-center gap-2 text-stone-100">
+                <i class="ph ph-folder-notch"></i>
+                <span class="font-mono text-xs uppercase tracking-widest">Archive</span>
+            </div>
+            <span class="font-mono text-[10px] text-stone-500">12 FILES</span>
+        </div>
+
+        <div class="flex-1 px-0 py-6 space-y-px">
+            <a href="#" class="flex items-center gap-3 px-5 py-2 text-stone-100 bg-stone-900 border-l-2 border-accent transition-all">
+                <span class="font-mono text-xs uppercase tracking-wide">Active Manuscripts</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 hover:bg-stone-900 border-l-2 border-transparent transition-all">
+                <span class="font-mono text-xs uppercase tracking-wide">Archived / Published</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 hover:bg-stone-900 border-l-2 border-transparent transition-all">
+                <span class="font-mono text-xs uppercase tracking-wide">Templates</span>
+            </a>
+        </div>
+
+        <div class="p-4 border-t border-stone-800 bg-[#0a0a0a]">
+            <a href="05-studio.html" class="w-full py-2 bg-stone-200 text-ink hover:bg-white font-mono text-[10px] uppercase tracking-widest transition-all rounded-sm flex items-center justify-center gap-2">
+                <i class="ph ph-plus"></i> Initialize Draft
+            </a>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full bg-stone-50 relative">
+
+        <header class="h-14 bg-white border-b border-stone-200 flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex items-center gap-4">
+                <div class="relative w-64 group">
+                    <i class="ph ph-magnifying-glass absolute left-0 top-2.5 text-stone-400 group-hover:text-ink transition-colors"></i>
+                    <input type="text" placeholder="Filter by title or tag..." class="w-full bg-transparent border-b border-stone-300 py-2 pl-8 text-sm font-mono text-ink placeholder-stone-400 focus:outline-none focus:border-accent transition-colors">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button class="p-2 text-stone-500 hover:text-ink transition-colors" title="List View"><i class="ph ph-list-dashes text-lg"></i></button>
+                <button class="p-2 text-stone-400 hover:text-ink transition-colors" title="Grid View"><i class="ph ph-squares-four text-lg"></i></button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-stone-100 sticky top-0 z-10">
+                    <tr>
+                        <th class="px-6 py-3 font-mono text-[10px] text-stone-500 uppercase tracking-widest border-b border-stone-200">ID</th>
+                        <th class="px-6 py-3 font-mono text-[10px] text-stone-500 uppercase tracking-widest border-b border-stone-200">Title / Subject</th>
+                        <th class="px-6 py-3 font-mono text-[10px] text-stone-500 uppercase tracking-widest border-b border-stone-200">Stage</th>
+                        <th class="px-6 py-3 font-mono text-[10px] text-stone-500 uppercase tracking-widest border-b border-stone-200">Ver.</th>
+                        <th class="px-6 py-3 font-mono text-[10px] text-stone-500 uppercase tracking-widest border-b border-stone-200 text-right">Modified</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+
+                    <tr @click="selected = 1" :class="selected === 1 ? 'bg-stone-50' : 'hover:bg-stone-50'" class="border-b border-stone-100 cursor-pointer group transition-colors">
+                        <td class="px-6 py-4 font-mono text-xs text-stone-400 group-hover:text-accent">#8821</td>
+                        <td class="px-6 py-4">
+                            <span class="font-serif text-base text-ink block">The Ethics of Germline Editing</span>
+                            <span class="font-mono text-[10px] text-stone-400">TAGS: GENOMICS, BIOETHICS</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="border border-stone-300 px-2 py-0.5 rounded-sm text-[10px] font-mono uppercase tracking-wide text-ink">Drafting</span>
+                        </td>
+                        <td class="px-6 py-4 font-mono text-xs text-stone-500">v4.2</td>
+                        <td class="px-6 py-4 text-right font-mono text-xs text-stone-500">
+                            10:42 AM
+                        </td>
+                    </tr>
+
+                    <tr @click="selected = 2" :class="selected === 2 ? 'bg-stone-50' : 'hover:bg-stone-50'" class="border-b border-stone-100 cursor-pointer group transition-colors">
+                        <td class="px-6 py-4 font-mono text-xs text-stone-400 group-hover:text-accent">#8820</td>
+                        <td class="px-6 py-4">
+                            <span class="font-serif text-base text-ink block">Quantum Mechanics 101</span>
+                            <span class="font-mono text-[10px] text-stone-400">TAGS: PHYSICS, REVIEW</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="bg-stone-100 border border-stone-200 px-2 py-0.5 rounded-sm text-[10px] font-mono uppercase tracking-wide text-stone-500">Research</span>
+                        </td>
+                        <td class="px-6 py-4 font-mono text-xs text-stone-500">v1.0</td>
+                        <td class="px-6 py-4 text-right font-mono text-xs text-stone-500">
+                            Yesterday
+                        </td>
+                    </tr>
+
+                    <tr @click="selected = 3" :class="selected === 3 ? 'bg-stone-50' : 'hover:bg-stone-50'" class="border-b border-stone-100 cursor-pointer group transition-colors">
+                        <td class="px-6 py-4 font-mono text-xs text-stone-400 group-hover:text-accent">#8819</td>
+                        <td class="px-6 py-4">
+                            <span class="font-serif text-base text-ink block">Thesis Defense: Deck</span>
+                            <span class="font-mono text-[10px] text-stone-400">TAGS: PRESENTATION</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="bg-ink text-paper px-2 py-0.5 rounded-sm text-[10px] font-mono uppercase tracking-wide">Final</span>
+                        </td>
+                        <td class="px-6 py-4 font-mono text-xs text-stone-500">vFinal</td>
+                        <td class="px-6 py-4 text-right font-mono text-xs text-stone-500">
+                            Oct 22
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <aside class="w-80 bg-paper border-l border-stone-200 flex flex-col shrink-0 z-20" x-show="selected === 1">
+
+        <div class="h-14 border-b border-stone-200 flex items-center justify-between px-6">
+            <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">File Metadata</span>
+            <button class="text-stone-400 hover:text-ink"><i class="ph ph-x"></i></button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-8">
+
+            <div>
+                <h2 class="font-serif text-xl text-ink leading-tight mb-2">The Ethics of Germline Editing</h2>
+                <div class="flex gap-2 mb-4">
+                     <span class="font-mono text-[10px] bg-stone-200 px-1 text-stone-600">DOCX</span>
+                     <span class="font-mono text-[10px] border border-stone-300 px-1 text-stone-500">2.4 MB</span>
+                </div>
+                <p class="font-serif text-sm text-stone-600 italic leading-relaxed">
+                    "An investigation into the moral implications of CRISPR-Cas9 when applied to human embryos..."
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border-t border-b border-stone-200 py-6">
+                <div>
+                    <span class="block font-mono text-[10px] uppercase text-stone-400 mb-1">Word Count</span>
+                    <span class="font-mono text-lg text-ink">2,405</span>
+                </div>
+                <div>
+                    <span class="block font-mono text-[10px] uppercase text-stone-400 mb-1">Reading Time</span>
+                    <span class="font-mono text-lg text-ink">12m</span>
+                </div>
+                <div>
+                    <span class="block font-mono text-[10px] uppercase text-stone-400 mb-1">Citations</span>
+                    <span class="font-mono text-lg text-ink">14</span>
+                </div>
+                <div>
+                    <span class="block font-mono text-[10px] uppercase text-stone-400 mb-1">Integrity</span>
+                    <span class="font-mono text-lg text-accent">72/100</span>
+                </div>
+            </div>
+
+            <div class="space-y-3">
+                <a href="05-studio.html" class="w-full py-3 bg-ink text-paper hover:bg-stone-800 font-mono text-[10px] uppercase tracking-widest transition-all rounded-sm flex items-center justify-center gap-2">
+                    <i class="ph ph-pen-nib"></i> Open Editor
+                </a>
+                <button class="w-full py-3 border border-stone-300 text-ink hover:bg-stone-100 font-mono text-[10px] uppercase tracking-widest transition-all rounded-sm flex items-center justify-center gap-2">
+                    <i class="ph ph-share-network"></i> Share / Export
+                </button>
+                <button class="w-full py-3 border border-stone-300 text-stone-500 hover:text-red-600 hover:border-red-200 font-mono text-[10px] uppercase tracking-widest transition-all rounded-sm flex items-center justify-center gap-2">
+                    <i class="ph ph-trash"></i> Archive File
+                </button>
+            </div>
+
+        </div>
+    </aside>
+
+</body>
+</html>
