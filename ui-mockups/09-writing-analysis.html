@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Writing Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Highlight styles for the white editor area */
+        .highlight-passive {
+            background: linear-gradient(to bottom, rgba(139, 92, 246, 0.12), rgba(139, 92, 246, 0.18));
+            border-bottom: 2px solid #8b5cf6;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .highlight-passive:hover { background: rgba(139, 92, 246, 0.25); }
+
+        .highlight-complex {
+            background: linear-gradient(to bottom, rgba(239, 68, 68, 0.10), rgba(239, 68, 68, 0.16));
+            border-bottom: 2px solid #ef4444;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .highlight-complex:hover { background: rgba(239, 68, 68, 0.22); }
+
+        .highlight-weak {
+            background: linear-gradient(to bottom, rgba(245, 158, 11, 0.12), rgba(245, 158, 11, 0.18));
+            border-bottom: 2px solid #f59e0b;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .highlight-weak:hover { background: rgba(245, 158, 11, 0.25); }
+
+        /* Glass nav */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Score gauge */
+        .score-ring {
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom scrollbar for dark sidebar */
+        .dark-scroll::-webkit-scrollbar { width: 4px; }
+        .dark-scroll::-webkit-scrollbar-track { background: transparent; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .dark-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 font-sans h-screen flex overflow-hidden antialiased" x-data="{ activeTab: 'issues' }">
+
+    <!-- ===== EDITOR PANEL (LEFT) ===== -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+
+        <!-- Top Bar -->
+        <header class="h-14 border-b border-white/5 flex items-center justify-between px-5 shrink-0 glass-panel z-10">
+            <div class="flex items-center gap-3">
+                <a href="08-design-studio.html" class="p-2 hover:bg-white/5 rounded-lg text-slate-400 transition-colors">
+                    <i class="ph-bold ph-arrow-left text-base"></i>
+                </a>
+                <div class="w-px h-5 bg-white/10"></div>
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-brand-500 rounded-md flex items-center justify-center">
+                        <i class="ph-bold ph-text-aa text-white text-xs"></i>
+                    </div>
+                    <h1 class="font-semibold text-white text-sm">Draft Analysis</h1>
+                    <span class="text-slate-500 text-sm">/ CRISPR Thesis</span>
+                </div>
+            </div>
+
+            <!-- Highlight Legend -->
+            <div class="flex items-center gap-2">
+                <span class="flex items-center gap-1.5 px-2.5 py-1 bg-purple-500/10 text-purple-300 rounded-full text-[11px] font-medium border border-purple-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Passive
+                </span>
+                <span class="flex items-center gap-1.5 px-2.5 py-1 bg-red-500/10 text-red-300 rounded-full text-[11px] font-medium border border-red-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> Hard to Read
+                </span>
+                <span class="flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 text-amber-300 rounded-full text-[11px] font-medium border border-amber-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Weak Words
+                </span>
+            </div>
+        </header>
+
+        <!-- Editor Content - White Background -->
+        <div class="flex-1 overflow-y-auto bg-white">
+            <div class="max-w-3xl mx-auto py-16 px-12">
+                <div class="font-serif text-lg leading-[2] text-slate-800">
+                    <h1 class="text-[2.5rem] font-sans font-extrabold text-slate-900 mb-10 leading-tight tracking-tight">The Efficacy of Cas9 Variants</h1>
+
+                    <p class="mb-8">
+                        The rapid evolution of gene-editing technologies has revolutionized molecular biology.
+                        <span class="highlight-passive" title="Passive Voice Detected">It has been argued by many researchers</span> that the primary limitation of the CRISPR-Cas9 system is its propensity for off-target effects.
+                    </p>
+
+                    <p class="mb-8">
+                        <span class="highlight-complex" title="Very Hard to Read (Flesch Score: 12)">
+                        Furthermore, notwithstanding the significant advancements in high-fidelity variants which have purportedly ameliorated the specificity issues, a comprehensive longitudinal study regarding the potentiality of genotoxicity in germline applications has yet to be unequivocally established by the scientific community.
+                        </span>
+                    </p>
+
+                    <p class="mb-8">
+                        <span class="highlight-weak" title="Hedging/Weak Language">Basically</span>, we need better enzymes.
+                        <span class="highlight-passive" title="Passive Voice Detected">A new experiment was conducted</span> to test the SpCas9-HF1 variant. The results show a <span class="highlight-weak" title="Vague">huge</span> improvement in specificity.
+                    </p>
+
+                    <p class="mb-8">
+                       However, the data suggests that while specificity is improved, the on-target efficiency is compromised. This tradeoff creates a dilemma for therapeutic applications where both high efficiency and high specificity are required.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== ANALYSIS PANEL (RIGHT) ===== -->
+    <aside class="w-[400px] bg-slate-900 flex flex-col shrink-0 h-full overflow-hidden border-l border-white/5">
+
+        <!-- Academic Score Section -->
+        <div class="p-6 border-b border-white/5">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                    <i class="ph-bold ph-chart-donut text-brand-400"></i>
+                    Academic Score
+                </h2>
+                <button class="text-brand-400 text-xs font-semibold hover:text-brand-300 transition-colors flex items-center gap-1">
+                    <i class="ph ph-arrows-clockwise text-xs"></i> Recalculate
+                </button>
+            </div>
+
+            <div class="flex items-center gap-5">
+                <!-- SVG Circular Gauge -->
+                <div class="relative w-24 h-24 flex items-center justify-center shrink-0">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        <!-- Background circle -->
+                        <circle cx="50" cy="50" r="42" stroke="rgba(255,255,255,0.06)" stroke-width="8" fill="none"></circle>
+                        <!-- Score arc: 72% of full circle. Circumference = 2 * pi * 42 = ~263.9. dashoffset = 263.9 * (1 - 0.72) = ~73.9 -->
+                        <circle cx="50" cy="50" r="42" stroke="url(#scoreGradient)" stroke-width="8" fill="none"
+                            stroke-dasharray="263.9" stroke-dashoffset="73.9" stroke-linecap="round" class="score-ring"></circle>
+                        <defs>
+                            <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#f59e0b" />
+                                <stop offset="100%" stop-color="#f97316" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span class="text-3xl font-extrabold text-white leading-none">72</span>
+                        <span class="text-[10px] text-slate-500 font-medium">/100</span>
+                    </div>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="px-2 py-0.5 bg-amber-500/15 text-amber-400 text-[10px] font-bold rounded-full border border-amber-500/20">NEEDS WORK</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">Your vocabulary is strong, but sentence complexity is hurting readability. Focus on breaking long sentences.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex border-b border-white/5 shrink-0">
+            <button @click="activeTab = 'issues'"
+                :class="activeTab === 'issues' ? 'text-brand-400 border-brand-500 bg-brand-500/5' : 'text-slate-500 border-transparent hover:text-slate-300'"
+                class="flex-1 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all flex items-center justify-center gap-1.5">
+                <i class="ph-bold ph-warning-circle"></i> Issues <span class="bg-red-500/20 text-red-400 text-[10px] px-1.5 py-0.5 rounded-full font-bold ml-1">4</span>
+            </button>
+            <button @click="activeTab = 'metrics'"
+                :class="activeTab === 'metrics' ? 'text-brand-400 border-brand-500 bg-brand-500/5' : 'text-slate-500 border-transparent hover:text-slate-300'"
+                class="flex-1 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-all flex items-center justify-center gap-1.5">
+                <i class="ph-bold ph-chart-bar-horizontal"></i> Metrics
+            </button>
+        </div>
+
+        <!-- Issues Tab -->
+        <div x-show="activeTab === 'issues'" class="flex-1 overflow-y-auto p-4 space-y-3 dark-scroll">
+
+            <!-- Issue Card 1: Hard to Read (Critical) -->
+            <div class="group bg-slate-800/50 p-4 rounded-xl border border-white/5 hover:border-red-500/30 transition-all cursor-pointer">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-red-500/15 text-red-400 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-warning-octagon text-lg"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="text-sm font-bold text-white">Hard to Read Sentence</h4>
+                            <span class="px-1.5 py-0.5 bg-red-500/15 text-red-400 text-[9px] font-bold rounded uppercase">Critical</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-2.5">42 words. Flesch score: 12 (Very Confusing).</p>
+                        <div class="p-2.5 bg-red-500/5 text-red-300/80 text-xs rounded-lg border border-red-500/10 italic mb-3 line-clamp-2">
+                            "Furthermore, notwithstanding the significant advancements in high-fidelity variants..."
+                        </div>
+                        <button class="w-full py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 transition-colors shadow-lg shadow-brand-500/20">
+                            <i class="ph-bold ph-magic-wand text-sm"></i> AI Fix: Split Sentence
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Issue Card 2: Passive Voice -->
+            <div class="group bg-slate-800/50 p-4 rounded-xl border border-white/5 hover:border-purple-500/30 transition-all cursor-pointer">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-prohibit text-lg"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="text-sm font-bold text-white">Passive Voice</h4>
+                            <span class="px-1.5 py-0.5 bg-purple-500/15 text-purple-400 text-[9px] font-bold rounded uppercase">Medium</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-2.5">Active voice is stronger in academic writing.</p>
+                        <div class="p-2.5 bg-purple-500/5 text-purple-300/80 text-xs rounded-lg border border-purple-500/10 italic mb-3">
+                            "It has been argued by many..."
+                        </div>
+                        <button class="w-full py-2 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold rounded-lg border border-white/10 flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="ph ph-pencil-simple text-sm"></i> Fix: "Many researchers argue..."
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Issue Card 3: Passive Voice #2 -->
+            <div class="group bg-slate-800/50 p-4 rounded-xl border border-white/5 hover:border-purple-500/30 transition-all cursor-pointer">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-prohibit text-lg"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="text-sm font-bold text-white">Passive Voice</h4>
+                            <span class="px-1.5 py-0.5 bg-purple-500/15 text-purple-400 text-[9px] font-bold rounded uppercase">Medium</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-2.5">Convert to active voice for clarity.</p>
+                        <div class="p-2.5 bg-purple-500/5 text-purple-300/80 text-xs rounded-lg border border-purple-500/10 italic mb-3">
+                            "A new experiment was conducted..."
+                        </div>
+                        <button class="w-full py-2 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold rounded-lg border border-white/10 flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="ph ph-pencil-simple text-sm"></i> Fix: "We conducted a new experiment..."
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Issue Card 4: Weak Word -->
+            <div class="group bg-slate-800/50 p-4 rounded-xl border border-white/5 hover:border-amber-500/30 transition-all cursor-pointer">
+                <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
+                        <i class="ph-bold ph-chat-teardrop-dots text-lg"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h4 class="text-sm font-bold text-white">Weak Word Choice</h4>
+                            <span class="px-1.5 py-0.5 bg-amber-500/15 text-amber-400 text-[9px] font-bold rounded uppercase">Low</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-2.5">"Huge" and "Basically" are too informal for a thesis.</p>
+                        <div class="flex gap-2">
+                            <button class="flex-1 py-2 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold rounded-lg border border-white/10 transition-colors">
+                                "Significant"
+                            </button>
+                            <button class="flex-1 py-2 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold rounded-lg border border-white/10 transition-colors">
+                                "Substantial"
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Metrics Tab -->
+        <div x-show="activeTab === 'metrics'" class="flex-1 overflow-y-auto p-5 space-y-6 dark-scroll" style="display: none;">
+
+            <!-- Readability -->
+            <div>
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="ph-bold ph-book-open text-xs"></i> Readability
+                </h3>
+
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-300">Flesch Reading Ease</span>
+                            <span class="font-bold text-amber-400">45.2</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-500 to-orange-500 h-2 rounded-full transition-all duration-1000" style="width: 45%"></div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1.5">College Level (Difficult)</p>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-slate-300">Gunning Fog Index</span>
+                            <span class="font-bold text-brand-400">14.0</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-brand-500 to-brand-400 h-2 rounded-full transition-all duration-1000" style="width: 70%"></div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-1.5">College Graduate Level</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vocabulary -->
+            <div>
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="ph-bold ph-text-aa text-xs"></i> Vocabulary
+                </h3>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-800/50 p-4 border border-white/5 rounded-xl text-center">
+                        <div class="text-2xl font-extrabold text-brand-400 mb-1">24%</div>
+                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Unique Words</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 border border-white/5 rounded-xl text-center">
+                        <div class="text-2xl font-extrabold text-emerald-400 mb-1">8%</div>
+                        <div class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Academic Jargon</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tone Analysis -->
+            <div>
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="ph-bold ph-microphone text-xs"></i> Tone Analysis
+                </h3>
+                <div class="bg-slate-800/50 p-4 border border-white/5 rounded-xl space-y-3.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400">Objectivity</span>
+                        <span class="px-2 py-0.5 bg-emerald-500/15 text-emerald-400 text-[10px] font-bold rounded-full border border-emerald-500/20">High</span>
+                    </div>
+                    <div class="w-full h-px bg-white/5"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400">Confidence</span>
+                        <span class="px-2 py-0.5 bg-amber-500/15 text-amber-400 text-[10px] font-bold rounded-full border border-amber-500/20">Medium</span>
+                    </div>
+                    <div class="w-full h-px bg-white/5"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-slate-400">Formality</span>
+                        <span class="px-2 py-0.5 bg-emerald-500/15 text-emerald-400 text-[10px] font-bold rounded-full border border-emerald-500/20">Very High</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Word Count Stats -->
+            <div>
+                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <i class="ph-bold ph-hash text-xs"></i> Statistics
+                </h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="bg-slate-800/50 p-3 border border-white/5 rounded-lg text-center">
+                        <div class="text-lg font-bold text-white">142</div>
+                        <div class="text-[9px] text-slate-500 uppercase font-bold">Words</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-3 border border-white/5 rounded-lg text-center">
+                        <div class="text-lg font-bold text-white">6</div>
+                        <div class="text-[9px] text-slate-500 uppercase font-bold">Sentences</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-3 border border-white/5 rounded-lg text-center">
+                        <div class="text-lg font-bold text-white">4</div>
+                        <div class="text-[9px] text-slate-500 uppercase font-bold">Paragraphs</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+</body>
+</html>

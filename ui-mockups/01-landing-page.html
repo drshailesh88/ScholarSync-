@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Your research thesis, from blank page to submission</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Typography --- */
+        .text-gradient {
+            background: linear-gradient(135deg, #c7d2fe 0%, #818cf8 30%, #6366f1 60%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-gradient-warm {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* --- Glass effects --- */
+        .glass-nav {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* --- Dot pattern --- */
+        .dot-pattern {
+            background-image: radial-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* --- Animated gradient border --- */
+        .gradient-border {
+            position: relative;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #6366f1, #a78bfa, #6366f1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* --- Hover lift --- */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+        }
+
+        /* --- Scroll fade-in --- */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Glow pulse for CTA --- */
+        .glow-pulse {
+            animation: glow 3s ease-in-out infinite;
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.5), 0 0 60px rgba(99, 102, 241, 0.2); }
+        }
+
+        /* --- Feature card accent --- */
+        .accent-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 999px 999px 0 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .group:hover .accent-bar { opacity: 1; }
+
+        /* --- Subtle line pattern for hero --- */
+        .hero-lines {
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* --- Pricing popular ring --- */
+        .ring-glow {
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.5), 0 20px 60px -10px rgba(99, 102, 241, 0.3);
+        }
+
+        /* --- Smooth scroll --- */
+        html { scroll-behavior: smooth; }
+
+        /* --- Mode card left border --- */
+        .mode-learn { border-left: 4px solid #f59e0b; }
+        .mode-draft { border-left: 4px solid #38bdf8; }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 font-sans antialiased overflow-x-hidden">
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="fixed top-0 w-full z-50 glass-nav border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2.5">
+                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/25">
+                    <i class="ph-bold ph-graduation-cap text-white text-base"></i>
+                </div>
+                <span class="font-bold text-lg text-white tracking-tight">ScholarSync</span>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#modes" class="text-sm text-slate-400 hover:text-white transition-colors">How it Works</a>
+                <a href="#features" class="text-sm text-slate-400 hover:text-white transition-colors">Features</a>
+                <a href="#pricing" class="text-sm text-slate-400 hover:text-white transition-colors">Pricing</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="02-auth-page.html" class="hidden md:inline-flex text-sm font-medium text-slate-400 hover:text-white transition-colors px-3 py-1.5">Sign In</a>
+                <a href="02-auth-page.html" class="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-lg transition-colors shadow-lg shadow-brand-500/20">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="relative pt-28 pb-24 lg:pt-40 lg:pb-32 overflow-hidden">
+        <!-- Background effects -->
+        <div class="absolute inset-0 dot-pattern"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-brand-600/15 rounded-full blur-[128px] pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-[400px] h-[300px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8">
+                <span class="flex h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-xs font-medium text-slate-300">Built for Medical Students</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.1] mb-6">
+                Your research thesis,<br>
+                from <span class="text-gradient">blank page</span> to <span class="text-gradient">submission</span>
+            </h1>
+
+            <!-- Subhead -->
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Learn the craft of academic writing with AI coaching, or let AI draft alongside you.
+                Paper search, citations, plagiarism checks &mdash; all under one roof.
+            </p>
+
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
+                <a href="02-auth-page.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-all shadow-xl shadow-brand-500/25 glow-pulse">
+                    <i class="ph-bold ph-pen-nib text-lg"></i>
+                    Start Writing for Free
+                </a>
+                <a href="02-auth-page.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 hover:border-white/20 transition-all backdrop-blur">
+                    Sign In
+                </a>
+            </div>
+            <p class="text-xs text-slate-500">No credit card required &middot; Free plan available</p>
+
+            <!-- Hero Mockup -->
+            <div class="mt-16 mx-auto max-w-3xl">
+                <div class="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl shadow-brand-500/10">
+                    <!-- Browser chrome -->
+                    <div class="bg-slate-900/80 backdrop-blur px-4 py-2.5 flex items-center gap-2 border-b border-white/5">
+                        <div class="flex gap-1.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-white/10"></div>
+                        </div>
+                        <div class="flex-1 mx-8">
+                            <div class="bg-white/5 rounded-md px-3 py-1 text-xs text-slate-500 text-center">scholarsync.app/studio</div>
+                        </div>
+                    </div>
+                    <!-- App preview -->
+                    <div class="bg-slate-900 flex h-[280px] sm:h-[340px]">
+                        <!-- Sidebar -->
+                        <div class="w-48 bg-slate-900 border-r border-white/5 p-4 hidden sm:block">
+                            <div class="flex items-center gap-2 mb-6">
+                                <div class="w-5 h-5 bg-brand-500 rounded flex items-center justify-center">
+                                    <i class="ph-bold ph-graduation-cap text-white text-[10px]"></i>
+                                </div>
+                                <span class="text-xs font-semibold text-white">ScholarSync</span>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="text-[10px] text-slate-500 font-medium uppercase tracking-wider mb-2">Sections</div>
+                                <div class="flex items-center gap-2 px-2 py-1.5 rounded-md bg-brand-500/10 text-brand-400 text-xs font-medium">
+                                    <i class="ph ph-file-text text-xs"></i> Introduction
+                                </div>
+                                <div class="flex items-center gap-2 px-2 py-1.5 text-slate-500 text-xs">
+                                    <i class="ph ph-flask text-xs"></i> Methodology
+                                </div>
+                                <div class="flex items-center gap-2 px-2 py-1.5 text-slate-500 text-xs">
+                                    <i class="ph ph-chart-bar text-xs"></i> Results
+                                </div>
+                            </div>
+                            <div class="mt-6">
+                                <div class="text-[10px] text-slate-500 font-medium uppercase tracking-wider mb-2">Cited Sources</div>
+                                <div class="space-y-2">
+                                    <div class="bg-white/5 rounded p-2">
+                                        <div class="text-[10px] text-slate-400">Doudna et al. (2014)</div>
+                                        <div class="text-[9px] text-slate-600">Science, CRISPR-Cas9</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Editor -->
+                        <div class="flex-1 bg-white p-6 sm:p-8 text-left overflow-hidden">
+                            <div class="font-serif text-slate-800">
+                                <h3 class="text-base font-bold text-slate-900 mb-3">Introduction</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed mb-3">The CRISPR-Cas9 system has revolutionized genome editing across biological sciences. Since its initial characterization as a bacterial adaptive immune system, CRISPR has been...</p>
+                                <div class="bg-brand-50 border-l-3 border-brand-500 rounded-r-lg px-3 py-2 mb-3" style="border-left: 3px solid #6366f1;">
+                                    <div class="flex items-center gap-1.5 mb-1">
+                                        <i class="ph-fill ph-sparkle text-brand-500 text-xs"></i>
+                                        <span class="text-[10px] font-bold text-brand-600">AI Suggestion</span>
+                                    </div>
+                                    <p class="text-[10px] text-slate-600">This paragraph needs a citation. Found 3 relevant papers on PubMed...</p>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">Recent studies have demonstrated the potential of base editing approaches to address limitations in...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Reflection shadow -->
+                <div class="h-16 bg-gradient-to-b from-brand-500/5 to-transparent rounded-b-3xl mx-4"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FREE PLAGIARISM CHECK CTA ==================== -->
+    <section class="py-12">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="relative rounded-2xl overflow-hidden border border-amber-500/20 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-orange-500/10 p-8 text-center">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10">
+                    <span class="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">
+                        <i class="ph-bold ph-shield-check"></i> Try It Free
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-bold text-white mb-3">Check your paper for plagiarism &mdash; no signup needed</h2>
+                    <p class="text-sm text-slate-400 max-w-lg mx-auto mb-6">
+                        Paste up to 1,000 words and get instant results. Powered by the same engine that checks against 60 trillion web pages and 16,000+ journals.
+                    </p>
+                    <a href="#" class="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold rounded-xl transition-colors shadow-lg shadow-amber-500/20">
+                        <i class="ph-bold ph-magnifying-glass text-lg"></i>
+                        Free Plagiarism Check
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TWO MODES ==================== -->
+    <section id="modes" class="py-24">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 fade-up">
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-400 uppercase tracking-wider mb-3">
+                    <i class="ph-bold ph-path"></i> Two Ways to Write
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Choose your path</h2>
+                <p class="text-slate-400 max-w-xl mx-auto">
+                    Whether you want to learn the process or speed through it, ScholarSync adapts to your needs.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Learn Mode -->
+                <div class="group relative rounded-2xl bg-slate-900/60 border border-white/5 hover:border-amber-500/30 p-8 transition-all hover-lift mode-learn">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center">
+                            <i class="ph-bold ph-brain text-amber-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Learn Mode</h3>
+                            <span class="text-xs text-amber-400/70 font-medium">Like having a mentor by your side</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">
+                        Guided, step-by-step coaching that teaches you how to write a research paper &mdash; from understanding methodology to crafting your discussion.
+                    </p>
+                    <ul class="space-y-2.5">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-amber-400 mt-0.5"></i>
+                            Interactive coaching by AI mentor
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-amber-400 mt-0.5"></i>
+                            Stage-by-stage guidance (5 stages)
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-amber-400 mt-0.5"></i>
+                            Detailed feedback on every section
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-amber-400 mt-0.5"></i>
+                            Learn at your own pace
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Draft Mode -->
+                <div class="group relative rounded-2xl bg-slate-900/60 border border-white/5 hover:border-sky-500/30 p-8 transition-all hover-lift mode-draft">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-sky-500/10 rounded-xl flex items-center justify-center">
+                            <i class="ph-bold ph-lightning text-sky-400 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Draft Mode</h3>
+                            <span class="text-xs text-sky-400/70 font-medium">Guided or hands-off &mdash; you choose</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">
+                        AI-assisted drafting that handles the heavy lifting while you stay in control. Search papers, generate outlines, and draft sections effortlessly.
+                    </p>
+                    <ul class="space-y-2.5">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-sky-400 mt-0.5"></i>
+                            AI-powered section drafting
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-sky-400 mt-0.5"></i>
+                            Automatic paper search & retrieval
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-sky-400 mt-0.5"></i>
+                            Smart citation management
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check-circle text-sky-400 mt-0.5"></i>
+                            One-click bibliography generation
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FEATURES GRID ==================== -->
+    <section id="features" class="py-24 border-t border-white/5">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 fade-up">
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-400 uppercase tracking-wider mb-3">
+                    <i class="ph-bold ph-squares-four"></i> Everything You Need
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">One platform, every research tool</h2>
+                <p class="text-slate-400 max-w-xl mx-auto">
+                    From the first search query to the final citation check.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Paper Search -->
+                <div class="group relative bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:border-brand-500/30 transition-all hover-lift">
+                    <div class="accent-bar bg-gradient-to-r from-brand-500 to-purple-500"></div>
+                    <div class="w-10 h-10 bg-brand-500/10 rounded-xl flex items-center justify-center mb-4">
+                        <i class="ph-bold ph-globe-hemisphere-west text-brand-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Paper Search</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Search PubMed, Semantic Scholar, and OpenAlex. Find relevant papers in seconds, not hours.</p>
+                </div>
+
+                <!-- Smart Citations -->
+                <div class="group relative bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:border-brand-500/30 transition-all hover-lift">
+                    <div class="accent-bar bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-4">
+                        <i class="ph-bold ph-quotes text-emerald-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Smart Citations</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Auto-generate and insert citations in Vancouver, APA, AMA, or Chicago format.</p>
+                </div>
+
+                <!-- Plagiarism Check -->
+                <div class="group relative bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:border-brand-500/30 transition-all hover-lift">
+                    <div class="accent-bar bg-gradient-to-r from-red-500 to-rose-500"></div>
+                    <div class="w-10 h-10 bg-red-500/10 rounded-xl flex items-center justify-center mb-4">
+                        <i class="ph-bold ph-shield-check text-red-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Plagiarism Check</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Check your manuscript against published literature before you submit.</p>
+                </div>
+
+                <!-- AI Detection -->
+                <div class="group relative bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:border-brand-500/30 transition-all hover-lift">
+                    <div class="accent-bar bg-gradient-to-r from-orange-500 to-amber-500"></div>
+                    <div class="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4">
+                        <i class="ph-bold ph-robot text-orange-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">AI Detection</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Scan your drafts for AI-generated content. Ensure authentic academic voice.</p>
+                </div>
+
+                <!-- Deep Research -->
+                <div class="group relative bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:border-brand-500/30 transition-all hover-lift">
+                    <div class="accent-bar bg-gradient-to-r from-violet-500 to-fuchsia-500"></div>
+                    <div class="w-10 h-10 bg-violet-500/10 rounded-xl flex items-center justify-center mb-4">
+                        <i class="ph-bold ph-magnifying-glass-plus text-violet-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Deep Research</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Get comprehensive research reports on any topic with properly cited sources.</p>
+                </div>
+
+                <!-- Bibliography -->
+                <div class="group relative bg-slate-900/50 border border-white/5 rounded-2xl p-6 hover:border-brand-500/30 transition-all hover-lift">
+                    <div class="accent-bar bg-gradient-to-r from-cyan-500 to-blue-500"></div>
+                    <div class="w-10 h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4">
+                        <i class="ph-bold ph-book-open-text text-cyan-400 text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-white mb-2">Bibliography</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Auto-generate formatted reference lists. Export-ready for any journal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section class="py-24 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute inset-0 hero-lines pointer-events-none"></div>
+        <div class="relative z-10 max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 fade-up">
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-400 uppercase tracking-wider mb-3">
+                    <i class="ph-bold ph-steps"></i> Simple Process
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Three steps to your manuscript</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="text-center fade-up">
+                    <div class="w-14 h-14 mx-auto bg-brand-500/10 border border-brand-500/20 rounded-2xl flex items-center justify-center mb-5">
+                        <span class="text-2xl font-extrabold text-brand-400">1</span>
+                    </div>
+                    <h3 class="font-bold text-white text-lg mb-2">Choose your mode</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Pick Learn Mode to master research writing, or Draft Mode for AI-assisted drafting.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="text-center fade-up">
+                    <div class="w-14 h-14 mx-auto bg-brand-500/10 border border-brand-500/20 rounded-2xl flex items-center justify-center mb-5">
+                        <span class="text-2xl font-extrabold text-brand-400">2</span>
+                    </div>
+                    <h3 class="font-bold text-white text-lg mb-2">Research & write</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Search papers, build outlines, draft sections &mdash; everything in one workspace.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="text-center fade-up">
+                    <div class="w-14 h-14 mx-auto bg-brand-500/10 border border-brand-500/20 rounded-2xl flex items-center justify-center mb-5">
+                        <span class="text-2xl font-extrabold text-brand-400">3</span>
+                    </div>
+                    <h3 class="font-bold text-white text-lg mb-2">Check & submit</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Run plagiarism and AI detection checks. Export your polished manuscript.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PRICING ==================== -->
+    <section id="pricing" class="py-24 border-t border-white/5">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="text-center mb-16 fade-up">
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-brand-400 uppercase tracking-wider mb-3">
+                    <i class="ph-bold ph-credit-card"></i> Pricing
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Start free, upgrade when ready</h2>
+                <p class="text-slate-400 max-w-xl mx-auto">
+                    No hidden fees. Cancel anytime. All plans include paper search and library management.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto items-start">
+                <!-- Free -->
+                <div class="rounded-2xl bg-slate-900/50 border border-white/5 p-7 hover:border-white/10 transition-colors">
+                    <h3 class="font-bold text-white text-lg">Free</h3>
+                    <div class="mt-4 mb-1">
+                        <span class="text-4xl font-extrabold text-white">&#8377;0</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6">forever</p>
+                    <p class="text-xs text-slate-400 mb-6 font-medium">Perfect for learning research writing</p>
+
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            Learn Mode &mdash; 3 sessions/month
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            2 plagiarism checks
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            2 AI detection checks
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            Paper search & library (50 papers)
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-500">
+                            <i class="ph ph-x mt-0.5 flex-shrink-0"></i>
+                            No Draft Mode or export
+                        </li>
+                    </ul>
+
+                    <a href="02-auth-page.html" class="block w-full py-3 text-center bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 transition-colors text-sm">
+                        Start Free
+                    </a>
+                </div>
+
+                <!-- Basic (Popular) -->
+                <div class="rounded-2xl border border-brand-500/40 bg-slate-900/80 p-7 relative ring-glow md:-translate-y-3">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span class="px-3 py-1 bg-brand-500 text-white text-[10px] font-bold uppercase tracking-wider rounded-full shadow-lg shadow-brand-500/30">Most Popular</span>
+                    </div>
+                    <h3 class="font-bold text-white text-lg">Basic</h3>
+                    <div class="mt-4 mb-1">
+                        <span class="text-4xl font-extrabold text-white">&#8377;1,000</span>
+                        <span class="text-sm text-slate-400 font-normal">/month</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6">billed monthly</p>
+                    <p class="text-xs text-brand-300 mb-6 font-medium">For students actively writing their thesis</p>
+
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+                            Everything in Free, unlimited
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+                            Draft Mode
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+                            5 plagiarism checks
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+                            10 AI detection checks
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+                            5 deep research reports
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-brand-400 mt-0.5 flex-shrink-0"></i>
+                            DOCX & PDF export
+                        </li>
+                    </ul>
+
+                    <a href="02-auth-page.html" class="block w-full py-3 text-center bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-brand-500/25 text-sm">
+                        Get Started
+                    </a>
+                    <div class="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-slate-500">
+                        <i class="ph ph-lock-key"></i> Secured by Razorpay
+                    </div>
+                </div>
+
+                <!-- Pro -->
+                <div class="rounded-2xl bg-slate-900/50 border border-white/5 p-7 hover:border-white/10 transition-colors">
+                    <h3 class="font-bold text-white text-lg">Pro</h3>
+                    <div class="mt-4 mb-1">
+                        <span class="text-4xl font-extrabold text-white">&#8377;2,000</span>
+                        <span class="text-sm text-slate-400 font-normal">/month</span>
+                    </div>
+                    <p class="text-sm text-slate-500 mb-6">billed monthly</p>
+                    <p class="text-xs text-slate-400 mb-6 font-medium">For serious researchers who want it all</p>
+
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            Everything in Basic
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            20 plagiarism checks
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            Unlimited AI detection
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            15 deep research reports
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            Priority AI processing
+                        </li>
+                        <li class="flex items-start gap-2.5 text-sm text-slate-300">
+                            <i class="ph-bold ph-check text-emerald-400 mt-0.5 flex-shrink-0"></i>
+                            Early access to new features
+                        </li>
+                    </ul>
+
+                    <a href="02-auth-page.html" class="block w-full py-3 text-center bg-white/5 hover:bg-white/10 text-white font-semibold rounded-xl border border-white/10 transition-colors text-sm">
+                        Get Pro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CTA BANNER ==================== -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-brand-600/20 via-brand-500/10 to-purple-600/20"></div>
+        <div class="absolute inset-0 dot-pattern opacity-50"></div>
+        <div class="relative z-10 max-w-3xl mx-auto px-6 text-center fade-up">
+            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to start your research thesis?</h2>
+            <p class="text-slate-400 max-w-lg mx-auto mb-8">
+                Join medical students across India who are writing better research papers with ScholarSync.
+            </p>
+            <a href="02-auth-page.html" class="inline-flex items-center gap-2 px-8 py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-xl shadow-white/10 text-base">
+                <i class="ph-bold ph-rocket-launch text-lg"></i>
+                Get Started &mdash; It's Free
+            </a>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="border-t border-white/5 py-10">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-7 h-7 bg-brand-500 rounded-lg flex items-center justify-center">
+                        <i class="ph-bold ph-graduation-cap text-white text-sm"></i>
+                    </div>
+                    <span class="font-bold text-white">ScholarSync</span>
+                </div>
+
+                <p class="text-sm text-slate-500 text-center">All research needs met under one single roof.</p>
+
+                <div class="flex items-center gap-6 text-sm text-slate-500">
+                    <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms</a>
+                    <a href="mailto:support@scholarsync.app" class="hover:text-white transition-colors">Contact</a>
+                    <a href="02-auth-page.html" class="hover:text-white transition-colors">Sign In</a>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-xs text-slate-600">
+                &copy; 2026 ScholarSync. Built with care for researchers.
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== SCROLL ANIMATION ==================== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        });
+    </script>
+
+</body>
+</html>

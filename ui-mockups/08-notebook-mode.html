@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Notebook Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Glass effects --- */
+        .glass-nav {
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* --- Gradient text --- */
+        .text-gradient {
+            background: linear-gradient(135deg, #c7d2fe 0%, #818cf8 30%, #6366f1 60%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* --- Dot pattern --- */
+        .dot-pattern {
+            background-image: radial-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* --- AI bubble gradient --- */
+        .ai-bubble {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.04) 100%);
+        }
+
+        /* --- Upload zone gradient --- */
+        .upload-zone-bg {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.04) 0%, rgba(139, 92, 246, 0.02) 100%);
+        }
+
+        /* --- Scrollbar --- */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.15);
+            border-radius: 99px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.3);
+        }
+
+        /* --- Input glow --- */
+        .input-glow:focus-within {
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3), 0 0 20px rgba(99, 102, 241, 0.08);
+        }
+
+        /* --- Hover lift --- */
+        .hover-lift {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-1px);
+        }
+
+        /* --- Copilot pulse --- */
+        @keyframes copilot-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .copilot-status {
+            animation: copilot-pulse 2s ease-in-out infinite;
+        }
+
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans h-screen flex overflow-hidden antialiased" x-data="{
+    sources: [
+        { id: 1, title: 'CRISPR-Cas9 Mechanism.pdf', type: 'pdf', size: '1.2 MB', selected: true },
+        { id: 2, title: 'Ethical Guidelines 2024.pdf', type: 'pdf', size: '890 KB', selected: true },
+        { id: 3, title: 'Lab Notes_Experiment_4.docx', type: 'docx', size: '340 KB', selected: false }
+    ],
+    dragOver: false
+}">
+
+    <!-- ==================== LEFT SIDEBAR: SOURCES ==================== -->
+    <aside class="w-[320px] bg-slate-950 border-r border-white/5 flex flex-col shrink-0 h-full">
+
+        <!-- Sidebar Header -->
+        <div class="h-16 flex items-center justify-between px-5 border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="text-slate-500 hover:text-white transition-colors">
+                    <i class="ph ph-arrow-left text-lg"></i>
+                </a>
+                <div>
+                    <span class="font-bold text-white text-sm">Notebook Sources</span>
+                </div>
+            </div>
+            <span class="text-[10px] font-bold bg-brand-500/15 text-brand-400 px-2.5 py-1 rounded-lg border border-brand-500/20" x-text="sources.length + ' Files'"></span>
+        </div>
+
+        <!-- Sources List -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+
+            <!-- Drag & Drop Zone -->
+            <div
+                @dragover.prevent="dragOver = true"
+                @dragleave.prevent="dragOver = false"
+                @drop.prevent="dragOver = false"
+                :class="dragOver ? 'border-brand-500 bg-brand-500/10 shadow-lg shadow-brand-500/10' : 'border-white/10 hover:border-brand-500/30 hover:bg-white/[0.02]'"
+                class="border-2 border-dashed rounded-2xl p-6 flex flex-col items-center justify-center text-center transition-all cursor-pointer h-36 mb-5 upload-zone-bg relative overflow-hidden group">
+
+                <!-- Decorative glow on hover -->
+                <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-32 h-32 bg-brand-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-brand-500/10 transition-all"></div>
+
+                <div class="relative z-10">
+                    <div class="w-12 h-12 bg-brand-500/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-brand-500/15">
+                        <i class="ph ph-upload-simple text-2xl text-brand-400"></i>
+                    </div>
+                    <p class="text-sm font-semibold text-slate-300">Drop PDF or DOCX here</p>
+                    <p class="text-xs text-slate-500 mt-1.5">or <span class="text-brand-400 hover:text-brand-300 cursor-pointer font-medium">browse files</span></p>
+                </div>
+            </div>
+
+            <!-- Source Cards -->
+            <template x-for="source in sources" :key="source.id">
+                <div
+                    @click="source.selected = !source.selected"
+                    :class="source.selected ? 'border-brand-500/30 bg-brand-500/5 ring-1 ring-brand-500/15' : 'border-white/5 bg-slate-900/30 opacity-60 hover:opacity-100'"
+                    class="p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 group hover-lift">
+
+                    <!-- Checkbox -->
+                    <div :class="source.selected ? 'bg-brand-500 border-brand-500 shadow-lg shadow-brand-500/25' : 'bg-transparent border-slate-600'"
+                        class="w-5 h-5 rounded-md border-2 flex items-center justify-center text-white mt-0.5 transition-all flex-shrink-0">
+                        <i class="ph-bold ph-check text-[10px]" x-show="source.selected"></i>
+                    </div>
+
+                    <!-- Source info -->
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-slate-200 truncate group-hover:text-white transition-colors" x-text="source.title"></p>
+                        <div class="flex items-center gap-2 mt-1.5">
+                            <span :class="source.type === 'pdf' ? 'text-red-400 bg-red-500/15' : 'text-blue-400 bg-blue-500/15'"
+                                class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded" x-text="source.type"></span>
+                            <span class="text-[10px] text-slate-500" x-text="source.size"></span>
+                            <span class="text-[10px] text-slate-600">Added today</span>
+                        </div>
+                    </div>
+
+                    <!-- Delete -->
+                    <button class="text-slate-600 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all mt-0.5 p-1 hover:bg-red-500/10 rounded-lg">
+                        <i class="ph ph-trash text-sm"></i>
+                    </button>
+                </div>
+            </template>
+
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="p-4 border-t border-white/5 space-y-2">
+            <button class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-xl flex items-center justify-center gap-2 text-sm transition-all">
+                <i class="ph ph-link text-brand-400"></i> Add Link / URL
+            </button>
+            <button class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white font-semibold rounded-xl flex items-center justify-center gap-2 text-sm transition-all">
+                <i class="ph ph-magnifying-glass text-brand-400"></i> Search PubMed
+            </button>
+        </div>
+    </aside>
+
+    <!-- ==================== MAIN CHAT AREA ==================== -->
+    <main class="flex-1 flex flex-col relative bg-slate-950">
+
+        <!-- Header -->
+        <header class="h-16 border-b border-white/5 flex items-center justify-between px-6 shrink-0 glass-nav">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/25">
+                    <i class="ph-bold ph-notebook text-white text-sm"></i>
+                </div>
+                <h1 class="text-base font-bold text-white">Notebook Chat</h1>
+                <span class="text-slate-700 text-sm mx-1">|</span>
+                <button class="text-sm font-medium text-slate-400 hover:text-brand-400 flex items-center gap-1.5 transition-colors">
+                    <i class="ph ph-notebook text-sm"></i> View Source Notes
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Selected sources indicator -->
+                <div class="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-xl border border-white/5 text-xs text-slate-400">
+                    <span class="flex h-1.5 w-1.5 rounded-full bg-emerald-400 copilot-status"></span>
+                    <span x-text="sources.filter(s => s.selected).length + ' sources active'"></span>
+                </div>
+                <button class="p-2.5 text-slate-400 hover:text-white rounded-xl hover:bg-white/5 transition-all" title="Audio Overview">
+                    <i class="ph ph-headphones text-lg"></i>
+                </button>
+                <button class="p-2.5 text-slate-400 hover:text-white rounded-xl hover:bg-white/5 transition-all" title="Share">
+                    <i class="ph ph-share-network text-lg"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Chat Messages -->
+        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar relative">
+            <!-- Subtle background pattern -->
+            <div class="absolute inset-0 dot-pattern pointer-events-none opacity-40"></div>
+
+            <div class="max-w-3xl mx-auto space-y-8 relative z-10">
+
+                <!-- Welcome message -->
+                <div class="text-center py-8">
+                    <div class="w-14 h-14 bg-brand-500/10 border border-brand-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="ph-bold ph-notebook text-brand-400 text-2xl"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2">Chat with your research papers</h2>
+                    <p class="text-sm text-slate-400 max-w-md mx-auto">Ask questions about your uploaded documents. I will synthesize information across all selected sources and cite specific pages.</p>
+                </div>
+
+                <!-- User Message -->
+                <div class="flex justify-end">
+                    <div class="bg-white/5 border border-white/10 text-slate-200 px-5 py-4 rounded-2xl rounded-tr-md max-w-xl">
+                        <p class="text-sm leading-relaxed">What are the specific ethical concerns mentioned regarding 'Germline Editing' across these papers?</p>
+                    </div>
+                </div>
+
+                <!-- AI Response -->
+                <div class="flex gap-4">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shrink-0 mt-1 shadow-lg shadow-brand-500/25">
+                        <i class="ph-fill ph-sparkle text-sm"></i>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <!-- Response content -->
+                        <div class="ai-bubble border border-brand-500/10 p-5 rounded-2xl rounded-tl-md">
+                            <div class="text-sm text-slate-300 leading-relaxed space-y-4">
+                                <p>Based on the selected documents, there are three primary ethical concerns regarding germline editing:</p>
+                                <ol class="list-decimal pl-5 space-y-3">
+                                    <li>
+                                        <strong class="text-white">Off-target Mutations:</strong>
+                                        <span class="text-slate-400"> There is a significant risk of unintended genetic changes being passed down to future generations, which could introduce new hereditary diseases.</span>
+                                        <span class="inline-flex items-center gap-1 ml-1 px-2 py-0.5 bg-brand-500/15 border border-brand-500/20 text-brand-300 rounded-md text-[10px] font-bold cursor-pointer hover:bg-brand-500/25 transition-all">
+                                            <i class="ph-bold ph-file-pdf text-[9px]"></i> CRISPR-Cas9 Mechanism, p.4
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <strong class="text-white">Consent Issues:</strong>
+                                        <span class="text-slate-400"> Future generations cannot consent to the genetic alterations made to their genome.</span>
+                                        <span class="inline-flex items-center gap-1 ml-1 px-2 py-0.5 bg-brand-500/15 border border-brand-500/20 text-brand-300 rounded-md text-[10px] font-bold cursor-pointer hover:bg-brand-500/25 transition-all">
+                                            <i class="ph-bold ph-file-pdf text-[9px]"></i> Ethical Guidelines, p.12
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <strong class="text-white">Eugenics & Inequality:</strong>
+                                        <span class="text-slate-400"> The potential for "designer babies" could exacerbate socioeconomic inequalities, creating a genetic divide between those who can afford editing and those who cannot.</span>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <!-- Action row -->
+                        <div class="flex items-center gap-2">
+                            <button class="p-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all" title="Copy">
+                                <i class="ph ph-copy text-sm"></i>
+                            </button>
+                            <button class="p-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all" title="Thumbs up">
+                                <i class="ph ph-thumbs-up text-sm"></i>
+                            </button>
+                            <button class="p-2 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all" title="Thumbs down">
+                                <i class="ph ph-thumbs-down text-sm"></i>
+                            </button>
+                        </div>
+
+                        <!-- Follow-up suggestion chips -->
+                        <div class="flex flex-wrap gap-2">
+                            <button class="text-xs bg-white/5 border border-white/10 text-slate-300 px-4 py-2 rounded-full hover:bg-white/10 hover:border-brand-500/30 hover:text-white transition-all font-medium flex items-center gap-1.5">
+                                <i class="ph ph-arrow-bend-down-right text-brand-400 text-[10px]"></i>
+                                Tell me more about "Off-target mutations"
+                            </button>
+                            <button class="text-xs bg-white/5 border border-white/10 text-slate-300 px-4 py-2 rounded-full hover:bg-white/10 hover:border-brand-500/30 hover:text-white transition-all font-medium flex items-center gap-1.5">
+                                <i class="ph ph-arrow-bend-down-right text-brand-400 text-[10px]"></i>
+                                Summarize the conclusion of Source 2
+                            </button>
+                            <button class="text-xs bg-white/5 border border-white/10 text-slate-300 px-4 py-2 rounded-full hover:bg-white/10 hover:border-brand-500/30 hover:text-white transition-all font-medium flex items-center gap-1.5">
+                                <i class="ph ph-arrow-bend-down-right text-brand-400 text-[10px]"></i>
+                                Compare views across both papers
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==================== CHAT INPUT ==================== -->
+        <div class="p-6 relative z-10">
+            <div class="max-w-3xl mx-auto">
+                <div class="relative bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden input-glow transition-all">
+                    <textarea rows="1" class="w-full pl-5 pr-24 py-4 bg-transparent border-none text-white placeholder-slate-500 focus:ring-0 resize-none text-sm"
+                        x-bind:placeholder="'Ask a question about the selected ' + sources.filter(s => s.selected).length + ' files...'"></textarea>
+                    <div class="absolute right-3 bottom-3 flex items-center gap-1.5">
+                        <button class="p-2 text-slate-500 hover:text-brand-400 transition-colors rounded-lg hover:bg-white/5">
+                            <i class="ph ph-paperclip text-lg"></i>
+                        </button>
+                        <button class="p-2.5 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition-all shadow-lg shadow-brand-500/25">
+                            <i class="ph-bold ph-arrow-up text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-center text-[10px] text-slate-600 mt-2.5">AI can make mistakes. Always verify important information against original sources.</p>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

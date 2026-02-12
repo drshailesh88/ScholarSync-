@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Glass effects --- */
+        .glass-nav {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .glass-copilot {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        /* --- Gradient text --- */
+        .text-gradient {
+            background: linear-gradient(135deg, #c7d2fe 0%, #818cf8 30%, #6366f1 60%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* --- Dot pattern --- */
+        .dot-pattern {
+            background-image: radial-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        /* --- Synthesis gradient --- */
+        .synthesis-gradient {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(99, 102, 241, 0.04) 100%);
+        }
+
+        /* --- Hover lift --- */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+
+        /* --- Search glow --- */
+        .search-glow:focus-within {
+            box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.4), 0 0 24px rgba(99, 102, 241, 0.15);
+        }
+
+        /* --- Scrollbar --- */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 99px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.35);
+        }
+
+        /* --- Animated gradient border --- */
+        .gradient-border-animated {
+            position: relative;
+        }
+        .gradient-border-animated::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #6366f1, #a78bfa, #6366f1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* --- Pulse animation for copilot status --- */
+        @keyframes copilot-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .copilot-status {
+            animation: copilot-pulse 2s ease-in-out infinite;
+        }
+
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans h-screen flex overflow-hidden antialiased" x-data="{
+    hasSearched: true,
+    selectedPaper: null,
+    copilotOpen: true
+}">
+
+    <!-- ===== LEFT ICON SIDEBAR ===== -->
+    <aside class="w-[68px] bg-slate-950 border-r border-white/5 flex flex-col items-center py-5 gap-5 shrink-0 z-20">
+        <!-- Logo -->
+        <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center shadow-lg shadow-brand-500/25">
+            <i class="ph-bold ph-graduation-cap text-white text-lg"></i>
+        </div>
+
+        <!-- Nav Icons -->
+        <nav class="flex flex-col gap-1.5 mt-3 w-full px-2.5">
+            <a href="dashboard.html" class="w-11 h-11 mx-auto flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all" title="Dashboard">
+                <i class="ph ph-squares-four text-xl"></i>
+            </a>
+            <a href="#" class="w-11 h-11 mx-auto flex items-center justify-center rounded-xl bg-brand-500/15 text-brand-400 ring-1 ring-brand-500/25 transition-all" title="Research">
+                <i class="ph-bold ph-globe-hemisphere-west text-xl"></i>
+            </a>
+            <a href="07-the-studio.html" class="w-11 h-11 mx-auto flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all" title="Write">
+                <i class="ph ph-pen-nib text-xl"></i>
+            </a>
+            <a href="08-notebook-mode.html" class="w-11 h-11 mx-auto flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-all" title="Notebook">
+                <i class="ph ph-notebook text-xl"></i>
+            </a>
+        </nav>
+
+        <!-- User Avatar -->
+        <div class="mt-auto">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 border-2 border-slate-900 cursor-pointer shadow-lg shadow-orange-500/20"></div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 flex flex-col h-full relative">
+
+        <!-- ===== TOP HEADER / SEARCH BAR ===== -->
+        <header class="h-[76px] bg-slate-950/80 backdrop-blur-xl border-b border-white/5 flex items-center px-8 justify-between shrink-0 z-10">
+            <div class="flex-1 max-w-3xl relative">
+                <div class="relative group search-glow rounded-2xl transition-all">
+                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                        <i class="ph-bold ph-magnifying-glass text-lg text-brand-400 group-focus-within:text-brand-300 transition-colors"></i>
+                    </div>
+                    <input type="text" value="CRISPR gene editing off-target effects"
+                        class="block w-full pl-13 pr-28 py-3.5 bg-slate-900/60 border border-white/10 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-brand-500/50 transition-all font-medium text-sm"
+                        style="padding-left: 3.25rem;"
+                        placeholder="Ask a research question or search PubMed...">
+                    <button class="absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold rounded-xl transition-all shadow-lg shadow-brand-500/25 flex items-center gap-1.5">
+                        <i class="ph-bold ph-magnifying-glass text-xs"></i>
+                        Search
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 ml-6">
+                <button @click="copilotOpen = !copilotOpen"
+                    :class="copilotOpen ? 'bg-brand-500/15 text-brand-400 ring-1 ring-brand-500/25' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'"
+                    class="px-3.5 py-2 rounded-xl transition-all flex items-center gap-2">
+                    <i class="ph-bold ph-sparkle text-sm"></i>
+                    <span class="text-sm font-semibold hidden md:inline">Copilot</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ===== CONTENT AREA ===== -->
+        <div class="flex-1 flex overflow-hidden">
+
+            <!-- ===== RESULTS PANEL ===== -->
+            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar relative">
+                <!-- Subtle background pattern -->
+                <div class="absolute inset-0 dot-pattern pointer-events-none opacity-50"></div>
+
+                <div class="relative z-10">
+
+                    <!-- Filter Pills -->
+                    <div class="flex items-center gap-2.5 mb-7 overflow-x-auto pb-2">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mr-1 whitespace-nowrap">Filters</span>
+
+                        <button class="px-4 py-2 bg-slate-900/60 border border-white/10 rounded-full text-xs font-medium text-slate-300 hover:border-brand-500/30 hover:text-white flex items-center gap-1.5 transition-all whitespace-nowrap">
+                            <i class="ph ph-calendar-blank text-slate-400"></i> Last 5 Years
+                        </button>
+                        <button class="px-4 py-2 bg-brand-500/15 border border-brand-500/30 rounded-full text-xs font-semibold text-brand-300 flex items-center gap-1.5 transition-all whitespace-nowrap shadow-sm shadow-brand-500/10">
+                            <i class="ph-bold ph-file-pdf text-brand-400"></i> PDF Available
+                        </button>
+                        <button class="px-4 py-2 bg-slate-900/60 border border-white/10 rounded-full text-xs font-medium text-slate-300 hover:border-brand-500/30 hover:text-white flex items-center gap-1.5 transition-all whitespace-nowrap">
+                            <i class="ph ph-star text-slate-400"></i> High Impact
+                        </button>
+                        <button class="px-4 py-2 bg-slate-900/60 border border-white/10 rounded-full text-xs font-medium text-slate-300 hover:border-brand-500/30 hover:text-white flex items-center gap-1.5 transition-all whitespace-nowrap">
+                            <i class="ph ph-flask text-slate-400"></i> Clinical Trials
+                        </button>
+                    </div>
+
+                    <!-- TL;DR Synthesis Box -->
+                    <div class="mb-8 p-6 synthesis-gradient border border-brand-500/15 rounded-2xl relative overflow-hidden">
+                        <!-- Decorative glow -->
+                        <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/8 rounded-full blur-2xl pointer-events-none"></div>
+                        <!-- Decorative icon -->
+                        <div class="absolute top-4 right-4 opacity-[0.06]">
+                            <i class="ph ph-quotes text-7xl text-brand-300"></i>
+                        </div>
+
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2.5 mb-3">
+                                <div class="w-7 h-7 bg-brand-500/20 rounded-lg flex items-center justify-center">
+                                    <i class="ph-fill ph-sparkle text-brand-400 text-sm"></i>
+                                </div>
+                                <h3 class="text-sm font-bold text-brand-300 tracking-wide">TL;DR Synthesis</h3>
+                                <span class="text-[10px] text-slate-500 ml-auto font-medium">Based on 47 papers</span>
+                            </div>
+                            <p class="text-sm text-slate-300 leading-relaxed font-serif">
+                                Recent literature (2020-2024) indicates that off-target effects in CRISPR-Cas9 remain a primary concern for clinical application. However, high-fidelity variants and prime editing techniques have shown to reduce these errors by up to <strong class="text-white font-bold">85-90%</strong> in human cell lines <span class="text-brand-400">(Zhang et al., Doudna et al.)</span>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Results Count -->
+                    <div class="flex items-center justify-between mb-5">
+                        <p class="text-sm text-slate-400">Showing <span class="text-white font-semibold">47 results</span> from PubMed & Semantic Scholar</p>
+                        <div class="flex items-center gap-2 text-xs text-slate-500">
+                            <span>Sort by:</span>
+                            <button class="text-brand-400 font-semibold hover:text-brand-300 transition-colors">Relevance</button>
+                            <span class="text-slate-700">|</span>
+                            <button class="hover:text-white transition-colors">Date</button>
+                            <span class="text-slate-700">|</span>
+                            <button class="hover:text-white transition-colors">Citations</button>
+                        </div>
+                    </div>
+
+                    <!-- Paper Results -->
+                    <div class="space-y-4">
+
+                        <!-- Paper Card 1 -->
+                        <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-brand-500/30 transition-all cursor-pointer group hover-lift hover:shadow-xl hover:shadow-brand-500/5">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1">
+                                    <h3 class="text-base font-bold text-white leading-snug group-hover:text-brand-300 transition-colors">High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects</h3>
+                                    <p class="text-sm text-slate-400 mt-2">
+                                        Slaymaker, I.M., et al. &mdash;
+                                        <span class="font-semibold text-slate-300">Nature</span> &mdash; 2023
+                                    </p>
+                                </div>
+                                <span class="bg-emerald-500/15 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 border border-emerald-500/20 whitespace-nowrap">
+                                    <i class="ph-bold ph-check-circle text-xs"></i> PDF
+                                </span>
+                            </div>
+
+                            <!-- Key findings tags -->
+                            <div class="flex gap-2 mt-4">
+                                <div class="bg-slate-800/80 border border-white/5 px-3 py-1.5 rounded-lg text-xs text-slate-400">
+                                    <span class="font-bold text-slate-300">Method:</span> Enhanced Cas9 variants
+                                </div>
+                                <div class="bg-slate-800/80 border border-white/5 px-3 py-1.5 rounded-lg text-xs text-slate-400">
+                                    <span class="font-bold text-slate-300">Result:</span> &lt;0.1% error rate
+                                </div>
+                            </div>
+
+                            <!-- Action row -->
+                            <div class="mt-4 flex items-center gap-3 border-t border-white/5 pt-4">
+                                <button class="text-xs font-semibold text-brand-400 hover:bg-brand-500/10 px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph-bold ph-chat-centered-text text-sm"></i> Ask Copilot
+                                </button>
+                                <button class="text-xs font-semibold text-slate-400 hover:bg-white/5 hover:text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph ph-bookmark-simple text-sm"></i> Save
+                                </button>
+                                <button class="text-xs font-semibold text-slate-400 hover:bg-white/5 hover:text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph ph-quotes text-sm"></i> Cite
+                                </button>
+                                <span class="text-xs text-slate-500 ml-auto flex items-center gap-1">
+                                    <i class="ph ph-arrow-up-right text-xs"></i> Cited by 420
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Paper Card 2 -->
+                        <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-brand-500/30 transition-all cursor-pointer group hover-lift hover:shadow-xl hover:shadow-brand-500/5">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1">
+                                    <h3 class="text-base font-bold text-white leading-snug group-hover:text-brand-300 transition-colors">Evaluation of Off-Target Effects in CRISPR-Cas9 Therapeutics</h3>
+                                    <p class="text-sm text-slate-400 mt-2">
+                                        Zhang, Y., et al. &mdash;
+                                        <span class="font-semibold text-slate-300">Cell Review</span> &mdash; 2024
+                                    </p>
+                                </div>
+                                <span class="bg-amber-500/15 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 border border-amber-500/20 whitespace-nowrap">
+                                    <i class="ph ph-star text-xs"></i> Review
+                                </span>
+                            </div>
+
+                            <p class="text-sm text-slate-400 mt-3 leading-relaxed line-clamp-2">This systematic review analyzes 50 clinical trials involving CRISPR therapies, specifically focusing on the long-term safety profiles...</p>
+
+                            <!-- Action row -->
+                            <div class="mt-4 flex items-center gap-3 border-t border-white/5 pt-4">
+                                <button class="text-xs font-semibold text-brand-400 hover:bg-brand-500/10 px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph-bold ph-chat-centered-text text-sm"></i> Ask Copilot
+                                </button>
+                                <button class="text-xs font-semibold text-slate-400 hover:bg-white/5 hover:text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph ph-bookmark-simple text-sm"></i> Save
+                                </button>
+                                <button class="text-xs font-semibold text-slate-400 hover:bg-white/5 hover:text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph ph-quotes text-sm"></i> Cite
+                                </button>
+                                <span class="text-xs text-slate-500 ml-auto flex items-center gap-1">
+                                    <i class="ph ph-arrow-up-right text-xs"></i> Cited by 85
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Paper Card 3 -->
+                        <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-brand-500/30 transition-all cursor-pointer group hover-lift hover:shadow-xl hover:shadow-brand-500/5">
+                            <div class="flex justify-between items-start gap-4">
+                                <div class="flex-1">
+                                    <h3 class="text-base font-bold text-white leading-snug group-hover:text-brand-300 transition-colors">Prime Editing: A Safe and Versatile Alternative to CRISPR-Cas9</h3>
+                                    <p class="text-sm text-slate-400 mt-2">
+                                        Liu, D.R., et al. &mdash;
+                                        <span class="font-semibold text-slate-300">Science</span> &mdash; 2023
+                                    </p>
+                                </div>
+                                <span class="bg-emerald-500/15 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-lg flex items-center gap-1 border border-emerald-500/20 whitespace-nowrap">
+                                    <i class="ph-bold ph-check-circle text-xs"></i> PDF
+                                </span>
+                            </div>
+
+                            <p class="text-sm text-slate-400 mt-3 leading-relaxed line-clamp-2">This landmark study demonstrates how prime editing can achieve precise genetic modifications without double-strand breaks, significantly reducing off-target...</p>
+
+                            <div class="mt-4 flex items-center gap-3 border-t border-white/5 pt-4">
+                                <button class="text-xs font-semibold text-brand-400 hover:bg-brand-500/10 px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph-bold ph-chat-centered-text text-sm"></i> Ask Copilot
+                                </button>
+                                <button class="text-xs font-semibold text-slate-400 hover:bg-white/5 hover:text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph ph-bookmark-simple text-sm"></i> Save
+                                </button>
+                                <button class="text-xs font-semibold text-slate-400 hover:bg-white/5 hover:text-white px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+                                    <i class="ph ph-quotes text-sm"></i> Cite
+                                </button>
+                                <span class="text-xs text-slate-500 ml-auto flex items-center gap-1">
+                                    <i class="ph ph-arrow-up-right text-xs"></i> Cited by 312
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== AI COPILOT SIDE PANEL ===== -->
+            <aside class="w-[400px] glass-copilot border-l border-white/5 flex flex-col shrink-0 transition-all duration-300"
+                x-show="copilotOpen"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="translate-x-full opacity-0"
+                x-transition:enter-end="translate-x-0 opacity-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="translate-x-0 opacity-100"
+                x-transition:leave-end="translate-x-full opacity-0">
+
+                <!-- Copilot Header -->
+                <div class="h-[60px] border-b border-white/5 flex items-center justify-between px-5">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-2 h-2 rounded-full bg-emerald-400 copilot-status"></div>
+                        <span class="font-bold text-sm text-white">Research Copilot</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button class="p-1.5 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all">
+                            <i class="ph ph-arrows-out-simple text-sm"></i>
+                        </button>
+                        <button @click="copilotOpen = false" class="p-1.5 text-slate-500 hover:text-white hover:bg-white/5 rounded-lg transition-all">
+                            <i class="ph ph-x text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Copilot Content -->
+                <div class="flex-1 overflow-y-auto p-5 space-y-6 custom-scrollbar">
+
+                    <!-- AI Insight -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                            <i class="ph-fill ph-sparkle text-brand-400 text-xs"></i> AI Insight
+                        </div>
+
+                        <div class="relative">
+                            <!-- Message bubble with gradient accent -->
+                            <div class="bg-brand-500/8 border border-brand-500/15 p-4 rounded-2xl rounded-tl-md">
+                                <p class="text-sm text-slate-300 leading-relaxed">
+                                    Based on these results, there is a clear shift in 2023 towards <strong class="text-white">"Prime Editing"</strong> as a safer alternative to standard Cas9. Would you like to filter for "Prime Editing" specifically?
+                                </p>
+                            </div>
+
+                            <!-- Action buttons -->
+                            <div class="flex gap-2 mt-3">
+                                <button class="text-xs bg-brand-500/15 border border-brand-500/25 text-brand-300 px-4 py-2 rounded-full hover:bg-brand-500/25 transition-all font-medium">
+                                    Yes, filter results
+                                </button>
+                                <button class="text-xs bg-white/5 border border-white/10 text-slate-400 px-4 py-2 rounded-full hover:bg-white/10 hover:text-white transition-all font-medium">
+                                    No, keep exploring
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Extraction Table -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                            <i class="ph ph-table text-brand-400 text-xs"></i> Data Extraction
+                        </div>
+
+                        <div class="bg-slate-900/60 border border-white/5 rounded-2xl overflow-hidden">
+                            <table class="w-full text-left text-xs">
+                                <thead class="border-b border-white/5">
+                                    <tr>
+                                        <th class="px-4 py-3 font-semibold text-slate-400 text-[11px] uppercase tracking-wider">Paper Author</th>
+                                        <th class="px-4 py-3 font-semibold text-slate-400 text-[11px] uppercase tracking-wider">Error Rate</th>
+                                        <th class="px-4 py-3 font-semibold text-slate-400 text-[11px] uppercase tracking-wider">Method</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/5">
+                                    <tr class="hover:bg-white/[0.02] transition-colors">
+                                        <td class="px-4 py-3 text-slate-300 font-medium">Slaymaker</td>
+                                        <td class="px-4 py-3">
+                                            <span class="text-emerald-400 font-semibold">&lt;0.1%</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-slate-400">eSpCas9</td>
+                                    </tr>
+                                    <tr class="hover:bg-white/[0.02] transition-colors">
+                                        <td class="px-4 py-3 text-slate-300 font-medium">Zhang</td>
+                                        <td class="px-4 py-3">
+                                            <span class="text-emerald-400 font-semibold">~1.2%</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-slate-400">HiFi Cas9</td>
+                                    </tr>
+                                    <tr class="hover:bg-white/[0.02] transition-colors">
+                                        <td class="px-4 py-3 text-slate-300 font-medium">Liu</td>
+                                        <td class="px-4 py-3">
+                                            <span class="text-emerald-400 font-semibold">&lt;0.05%</span>
+                                        </td>
+                                        <td class="px-4 py-3 text-slate-400">Prime Edit</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="p-3 border-t border-white/5 text-center">
+                                <button class="text-xs text-brand-400 font-semibold hover:text-brand-300 transition-colors flex items-center gap-1 mx-auto">
+                                    <i class="ph ph-plus text-xs"></i> Extract more columns
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Related Topics -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                            <i class="ph ph-lightbulb text-amber-400 text-xs"></i> Explore Further
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button class="text-xs bg-white/5 border border-white/10 text-slate-300 px-3 py-1.5 rounded-full hover:bg-white/10 hover:border-brand-500/30 hover:text-white transition-all">
+                                Prime Editing mechanisms
+                            </button>
+                            <button class="text-xs bg-white/5 border border-white/10 text-slate-300 px-3 py-1.5 rounded-full hover:bg-white/10 hover:border-brand-500/30 hover:text-white transition-all">
+                                Clinical trial safety data
+                            </button>
+                            <button class="text-xs bg-white/5 border border-white/10 text-slate-300 px-3 py-1.5 rounded-full hover:bg-white/10 hover:border-brand-500/30 hover:text-white transition-all">
+                                Base editing comparison
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Copilot Input -->
+                <div class="p-4 border-t border-white/5">
+                    <div class="relative">
+                        <textarea rows="1" class="w-full pl-4 pr-12 py-3.5 bg-slate-900/60 border border-white/10 rounded-2xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500/40 focus:ring-1 focus:ring-brand-500/20 resize-none transition-all" placeholder="Ask about these papers..."></textarea>
+                        <button class="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 bg-brand-500 text-white rounded-xl hover:bg-brand-600 transition-all shadow-lg shadow-brand-500/25">
+                            <i class="ph-bold ph-paper-plane-right text-sm"></i>
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-600 text-center mt-2">AI may make mistakes. Verify critical data.</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+</body>
+</html>

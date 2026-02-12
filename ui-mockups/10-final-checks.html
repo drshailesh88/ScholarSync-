@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Final Checks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Highlight styles for the white editor area */
+        .highlight-ai {
+            background: linear-gradient(to bottom, rgba(249, 115, 22, 0.10), rgba(249, 115, 22, 0.16));
+            border-bottom: 2px solid #f97316;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .highlight-ai:hover { background: rgba(249, 115, 22, 0.25); }
+
+        .highlight-plag {
+            background: linear-gradient(to bottom, rgba(239, 68, 68, 0.10), rgba(239, 68, 68, 0.16));
+            border-bottom: 2px solid #ef4444;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .highlight-plag:hover { background: rgba(239, 68, 68, 0.22); }
+
+        /* Glass */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Scrollbar */
+        .dark-scroll::-webkit-scrollbar { width: 4px; }
+        .dark-scroll::-webkit-scrollbar-track { background: transparent; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .dark-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+        /* Semi-circle gauge */
+        .gauge-ring {
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 font-sans h-screen flex overflow-hidden antialiased" x-data="{ activeSection: 'ai' }">
+
+    <!-- ===== EDITOR PANEL (LEFT) ===== -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+
+        <!-- Top Bar -->
+        <header class="h-14 border-b border-white/5 flex items-center justify-between px-5 shrink-0 glass-panel z-10">
+            <div class="flex items-center gap-3">
+                <a href="08-design-studio.html" class="p-2 hover:bg-white/5 rounded-lg text-slate-400 transition-colors">
+                    <i class="ph-bold ph-arrow-left text-base"></i>
+                </a>
+                <div class="w-px h-5 bg-white/10"></div>
+                <div class="flex items-center gap-2">
+                    <div class="w-6 h-6 bg-emerald-500 rounded-md flex items-center justify-center">
+                        <i class="ph-bold ph-shield-check text-white text-xs"></i>
+                    </div>
+                    <h1 class="font-semibold text-white text-sm">Final Checks</h1>
+                    <span class="text-slate-500 text-sm">/ Thesis_v4.docx</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Highlight Legend -->
+                <span class="flex items-center gap-1.5 px-2.5 py-1 bg-orange-500/10 text-orange-300 rounded-full text-[11px] font-medium border border-orange-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> AI Detected
+                </span>
+                <span class="flex items-center gap-1.5 px-2.5 py-1 bg-red-500/10 text-red-300 rounded-full text-[11px] font-medium border border-red-500/20">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> Plagiarism
+                </span>
+                <div class="w-px h-5 bg-white/10"></div>
+                <button class="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold rounded-lg flex items-center gap-2 transition-colors shadow-lg shadow-brand-500/20">
+                    <i class="ph-bold ph-download-simple text-sm"></i> Download Report
+                </button>
+            </div>
+        </header>
+
+        <!-- Editor Content - White Background -->
+        <div class="flex-1 overflow-y-auto bg-white">
+            <div class="max-w-3xl mx-auto py-16 px-12">
+                <div class="font-serif text-lg leading-[2] text-slate-800">
+                    <h1 class="text-[2.5rem] font-sans font-extrabold text-slate-900 mb-10 leading-tight tracking-tight">The Ethics of Germline Editing</h1>
+
+                    <p class="mb-8">
+                        The ability to modify the human germline represents a watershed moment in the history of science.
+                        <span class="highlight-ai" title="AI Probability: 88%">It allows for the correction of disease-causing mutations in embryos, preventing the transmission of genetic disorders to future generations.</span>
+                    </p>
+
+                    <p class="mb-8">
+                        However, this power comes with significant ethical responsibilities.
+                        <span class="highlight-plag" title="Match found: Wikipedia (100%)">Critics argue that germline editing could lead to a new form of eugenics, where parents select for traits such as intelligence or physical appearance.</span>
+                        This concern is not merely theoretical; it is rooted in the history of genetic discrimination.
+                    </p>
+
+                    <p class="mb-8">
+                        Furthermore, the long-term effects of off-target mutations remain unknown. A recent study by Zhang et al. (2024) demonstrated that...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== CHECKS PANEL (RIGHT) ===== -->
+    <aside class="w-[420px] bg-slate-900 flex flex-col shrink-0 h-full overflow-hidden border-l border-white/5">
+
+        <!-- AI Detection Section -->
+        <div class="p-6 border-b border-white/5">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                    <i class="ph-bold ph-robot text-orange-400"></i>
+                    AI Content Detection
+                </h2>
+                <button class="text-slate-500 text-xs font-semibold hover:text-slate-300 transition-colors flex items-center gap-1">
+                    <i class="ph ph-info text-xs"></i> How it works
+                </button>
+            </div>
+
+            <!-- Semi-circle Gauge for AI Detection -->
+            <div class="flex items-center gap-5 mb-5">
+                <div class="relative w-28 h-16 shrink-0">
+                    <svg viewBox="0 0 120 70" class="w-full h-full">
+                        <!-- Background arc (semi-circle) -->
+                        <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10" stroke-linecap="round"/>
+                        <!-- AI Score arc: 35% of semi-circle. Half-circle path length ~ 157. 35% = ~55 -->
+                        <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="url(#aiGradient)" stroke-width="10" stroke-linecap="round"
+                            stroke-dasharray="157" stroke-dashoffset="102" class="gauge-ring"/>
+                        <defs>
+                            <linearGradient id="aiGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#f97316"/>
+                                <stop offset="100%" stop-color="#f59e0b"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Score text -->
+                        <text x="60" y="58" text-anchor="middle" class="fill-white text-2xl font-extrabold" style="font-family: 'Plus Jakarta Sans'; font-size: 22px; font-weight: 800;">35%</text>
+                        <text x="60" y="70" text-anchor="middle" class="fill-slate-500" style="font-family: 'Plus Jakarta Sans'; font-size: 8px;">AI DETECTED</text>
+                    </svg>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1.5">
+                        <span class="px-2 py-0.5 bg-orange-500/15 text-orange-400 text-[10px] font-bold rounded-full border border-orange-500/20">MODERATE RISK</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">2 paragraphs appear robotic. Consider rewriting in your own voice.</p>
+                </div>
+            </div>
+
+            <!-- AI Flagged Items -->
+            <div class="space-y-2.5">
+                <div class="bg-slate-800/50 p-3.5 rounded-xl border border-white/5 hover:border-orange-500/30 transition-all cursor-pointer group">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i class="ph ph-paragraph text-orange-400"></i> Paragraph 1
+                        </span>
+                        <span class="text-[10px] font-bold bg-orange-500/15 px-2 py-0.5 rounded-full text-orange-400 border border-orange-500/20">88% AI</span>
+                    </div>
+                    <p class="text-xs text-slate-500 line-clamp-1 italic mb-3">"It allows for the correction of disease-causing mutations..."</p>
+                    <button class="w-full py-2 bg-orange-500/10 hover:bg-orange-500/20 text-orange-300 text-xs font-bold rounded-lg border border-orange-500/20 flex items-center justify-center gap-1.5 transition-colors">
+                        <i class="ph-bold ph-magic-wand text-sm"></i> Humanize Text
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plagiarism Section -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <div class="p-6 pb-4">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="font-bold text-white text-sm flex items-center gap-2">
+                        <i class="ph-bold ph-copy text-red-400"></i>
+                        Plagiarism Check
+                    </h2>
+                </div>
+
+                <!-- Plagiarism Score Bar -->
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-white/5 flex items-center gap-5 mb-1">
+                    <div class="text-center">
+                        <div class="text-3xl font-extrabold text-red-400 leading-none">14%</div>
+                        <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider mt-1">Similarity</div>
+                    </div>
+                    <div class="w-px h-10 bg-white/10"></div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs mb-2">
+                            <span class="text-slate-400">Similarity Score</span>
+                            <span class="text-red-400 font-bold">14%</span>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-red-500 to-red-400 h-2 rounded-full" style="width: 14%"></div>
+                        </div>
+                    </div>
+                    <div class="w-px h-10 bg-white/10"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-extrabold text-white leading-none">2</div>
+                        <div class="text-[9px] text-slate-500 uppercase font-bold tracking-wider mt-1">Matches</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plagiarism Matches List -->
+            <div class="flex-1 overflow-y-auto px-6 pb-6 space-y-3 dark-scroll">
+
+                <!-- Match 1: Critical -->
+                <div class="bg-slate-800/50 p-4 rounded-xl border-l-[3px] border-l-red-500 border border-white/5 hover:border-red-500/30 transition-all cursor-pointer group">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i class="ph ph-globe text-slate-500"></i> Wikipedia.org
+                        </span>
+                        <span class="text-[10px] font-bold bg-red-500/15 px-2 py-0.5 rounded-full text-red-400 border border-red-500/20">100% Match</span>
+                    </div>
+                    <div class="p-2.5 bg-red-500/5 text-red-300/80 text-xs rounded-lg border border-red-500/10 italic mb-3 leading-relaxed">
+                        "...lead to a new form of eugenics, where parents select for traits such as intelligence or physical appearance."
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 bg-brand-500/10 hover:bg-brand-500/20 text-brand-300 text-xs font-bold rounded-lg border border-brand-500/20 flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="ph-bold ph-quotes text-sm"></i> Add Citation
+                        </button>
+                        <button class="flex-1 py-2 bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold rounded-lg border border-white/10 flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="ph ph-arrows-left-right text-sm"></i> Paraphrase
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Match 2: Partial -->
+                <div class="bg-slate-800/50 p-4 rounded-xl border-l-[3px] border-l-amber-400 border border-white/5 hover:border-amber-500/30 transition-all cursor-pointer group">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <span class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i class="ph ph-article text-slate-500"></i> Nature.com
+                        </span>
+                        <span class="text-[10px] font-bold bg-amber-500/15 px-2 py-0.5 rounded-full text-amber-400 border border-amber-500/20">24% Match</span>
+                    </div>
+                    <div class="p-2.5 bg-amber-500/5 text-amber-300/80 text-xs rounded-lg border border-amber-500/10 italic mb-3 leading-relaxed">
+                        "...demonstrated that off-target effects remain a primary concern in therapeutic applications..."
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="flex-1 py-2 bg-brand-500/10 hover:bg-brand-500/20 text-brand-300 text-xs font-bold rounded-lg border border-brand-500/20 flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="ph-bold ph-quotes text-sm"></i> Add Citation
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </aside>
+
+</body>
+</html>

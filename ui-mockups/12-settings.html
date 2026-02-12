@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Settings & Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc',
+                            400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .dark-scroll::-webkit-scrollbar { width: 6px; }
+        .dark-scroll::-webkit-scrollbar-track { background: transparent; }
+        .dark-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 4px; }
+        .dark-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.12); }
+
+        html { scroll-behavior: smooth; }
+
+        /* Toggle switch */
+        .toggle-track {
+            width: 40px; height: 22px;
+            border-radius: 11px;
+            transition: background 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: white;
+            top: 3px; left: 3px;
+            transition: transform 0.2s ease;
+        }
+        .toggle-track.active { background: #6366f1; }
+        .toggle-track.active::after { transform: translateX(18px); }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 font-sans h-screen flex overflow-hidden antialiased" x-data="{ currentTab: 'billing' }">
+
+    <!-- ===== ICON SIDEBAR ===== -->
+    <aside class="w-16 bg-slate-900/50 border-r border-white/5 flex flex-col shrink-0 items-center py-5 gap-5 z-20">
+        <div class="w-9 h-9 bg-brand-500 rounded-lg flex items-center justify-center shadow-lg shadow-brand-500/25">
+            <i class="ph-bold ph-graduation-cap text-white text-base"></i>
+        </div>
+
+        <nav class="flex flex-col gap-2 mt-3 w-full px-2.5">
+            <a href="03-dashboard.html" class="w-10 h-10 mx-auto flex items-center justify-center rounded-xl text-slate-500 hover:text-white hover:bg-white/5 transition-all" title="Dashboard">
+                <i class="ph ph-squares-four text-lg"></i>
+            </a>
+            <a href="08-design-studio.html" class="w-10 h-10 mx-auto flex items-center justify-center rounded-xl text-slate-500 hover:text-white hover:bg-white/5 transition-all" title="Editor">
+                <i class="ph ph-pen-nib text-lg"></i>
+            </a>
+            <a href="#" class="w-10 h-10 mx-auto flex items-center justify-center rounded-xl bg-brand-500/15 text-brand-400 border border-brand-500/20 transition-all" title="Settings">
+                <i class="ph-bold ph-gear text-lg"></i>
+            </a>
+        </nav>
+
+        <div class="mt-auto">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 border-2 border-slate-800 cursor-pointer hover:scale-110 transition-transform shadow-lg"></div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN AREA ===== -->
+    <main class="flex-1 flex h-full overflow-hidden">
+
+        <!-- Settings Navigation -->
+        <aside class="w-56 bg-slate-900/30 border-r border-white/5 flex flex-col pt-7 pb-4 shrink-0">
+            <h1 class="text-lg font-bold text-white px-5 mb-6 flex items-center gap-2">
+                <i class="ph-bold ph-gear text-brand-400"></i> Settings
+            </h1>
+
+            <nav class="space-y-0.5 px-3 flex-1">
+                <button @click="currentTab = 'general'"
+                    :class="currentTab === 'general' ? 'bg-brand-500/10 text-brand-400 border-brand-500/20' : 'text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all text-left border font-medium">
+                    <i class="ph-bold ph-user text-base"></i> My Account
+                </button>
+                <button @click="currentTab = 'billing'"
+                    :class="currentTab === 'billing' ? 'bg-brand-500/10 text-brand-400 border-brand-500/20' : 'text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all text-left border font-medium">
+                    <i class="ph-bold ph-credit-card text-base"></i> Plans & Billing
+                </button>
+                <button @click="currentTab = 'usage'"
+                    :class="currentTab === 'usage' ? 'bg-brand-500/10 text-brand-400 border-brand-500/20' : 'text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all text-left border font-medium">
+                    <i class="ph-bold ph-chart-bar text-base"></i> Usage Tracking
+                </button>
+                <button @click="currentTab = 'pref'"
+                    :class="currentTab === 'pref' ? 'bg-brand-500/10 text-brand-400 border-brand-500/20' : 'text-slate-500 border-transparent hover:bg-white/5 hover:text-slate-300'"
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all text-left border font-medium">
+                    <i class="ph-bold ph-sliders text-base"></i> Preferences
+                </button>
+            </nav>
+
+            <div class="px-5 pt-4 border-t border-white/5 mt-2">
+                <button class="flex items-center gap-2 text-sm text-red-400 font-medium hover:text-red-300 transition-colors">
+                    <i class="ph-bold ph-sign-out"></i> Log Out
+                </button>
+            </div>
+        </aside>
+
+        <!-- Content Area -->
+        <div class="flex-1 overflow-y-auto p-8 dark-scroll">
+            <div class="max-w-3xl mx-auto space-y-6">
+
+                <!-- ============ ACCOUNT TAB ============ -->
+                <div x-show="currentTab === 'general'" class="space-y-6" style="display: none;"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0">
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">My Account</h2>
+                        <p class="text-sm text-slate-500">Manage your profile and account settings.</p>
+                    </div>
+
+                    <!-- Profile Card -->
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5">
+                        <div class="flex items-center gap-6">
+                            <div class="relative">
+                                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-amber-400 to-orange-500 shadow-lg shadow-orange-500/20 flex items-center justify-center text-3xl font-bold text-white">R</div>
+                                <button class="absolute -bottom-1 -right-1 p-1.5 bg-slate-800 border border-white/10 rounded-lg shadow-lg hover:bg-brand-500 hover:border-brand-500 transition-all group">
+                                    <i class="ph-bold ph-camera text-xs text-slate-400 group-hover:text-white"></i>
+                                </button>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-white">Rahul Verma</h3>
+                                <p class="text-sm text-slate-400 mb-2">rahul.verma@university.edu</p>
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-semibold rounded-full border border-emerald-500/20">
+                                    <i class="ph-bold ph-seal-check text-xs"></i> Verified Student
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Edit Form -->
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 space-y-5">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="ph-bold ph-user-circle text-brand-400"></i> Profile Details
+                        </h3>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs font-semibold text-slate-500 mb-1.5 block">First Name</label>
+                                <input type="text" value="Rahul" class="w-full px-3.5 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-all">
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-slate-500 mb-1.5 block">Last Name</label>
+                                <input type="text" value="Verma" class="w-full px-3.5 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-semibold text-slate-500 mb-1.5 block">Email Address</label>
+                            <input type="email" value="rahul.verma@university.edu" class="w-full px-3.5 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-all">
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-semibold text-slate-500 mb-1.5 block">Institution</label>
+                            <input type="text" value="AIIMS New Delhi" class="w-full px-3.5 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-all">
+                        </div>
+
+                        <div class="flex justify-end pt-2">
+                            <button class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-brand-500/20">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="bg-red-500/5 p-6 rounded-2xl border border-red-500/10">
+                        <h3 class="text-sm font-bold text-red-400 mb-2 flex items-center gap-2">
+                            <i class="ph-bold ph-warning text-sm"></i> Danger Zone
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Once you delete your account, there is no going back. Please be certain.</p>
+                        <button class="px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-bold rounded-lg border border-red-500/20 transition-colors">
+                            Delete Account
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============ BILLING TAB ============ -->
+                <div x-show="currentTab === 'billing'" class="space-y-6"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0">
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Subscription & Billing</h2>
+                        <p class="text-sm text-slate-500">Manage your plan, payment methods, and view invoices.</p>
+                    </div>
+
+                    <!-- Current Plan Card -->
+                    <div class="bg-slate-900/50 rounded-2xl border border-white/5 p-6">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                            <div>
+                                <div class="flex items-center gap-2.5 mb-2">
+                                    <h3 class="text-lg font-bold text-white">Researcher Pro Plan</h3>
+                                    <span class="px-2.5 py-0.5 bg-brand-500/15 text-brand-400 text-[10px] font-bold rounded-full border border-brand-500/20 uppercase tracking-wider">Active</span>
+                                </div>
+                                <p class="text-sm text-slate-500">Billed monthly. Next payment on <span class="font-semibold text-slate-300">Oct 24, 2024</span>.</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="text-right">
+                                    <span class="text-3xl font-extrabold text-white">&#8377;499</span>
+                                    <span class="text-sm text-slate-500 font-medium">/mo</span>
+                                </div>
+                                <button class="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-white text-sm font-bold rounded-xl border border-white/10 transition-colors">
+                                    Manage Plan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="bg-slate-900/50 rounded-2xl border border-white/5 p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="ph-bold ph-credit-card text-brand-400"></i> Payment Method
+                            </h3>
+                            <button class="text-brand-400 text-xs font-semibold hover:text-brand-300 transition-colors">Update</button>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-slate-800/50 border border-white/5 rounded-xl">
+                            <!-- Visa card icon -->
+                            <div class="w-12 h-8 bg-gradient-to-br from-blue-800 to-blue-900 rounded-lg flex items-center justify-center border border-blue-700/30 shadow-md">
+                                <span class="text-white text-[11px] font-extrabold tracking-widest italic">VISA</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-bold text-white tracking-wider">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242</p>
+                                <p class="text-xs text-slate-500">Expires 12/28</p>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-[10px] text-slate-500 bg-slate-800/80 px-2.5 py-1.5 rounded-lg border border-white/5">
+                                <i class="ph-bold ph-lock-key text-xs"></i> Razorpay Secure
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice History -->
+                    <div class="bg-slate-900/50 rounded-2xl border border-white/5 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-white/5">
+                            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="ph-bold ph-receipt text-brand-400"></i> Invoice History
+                            </h3>
+                        </div>
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b border-white/5">
+                                    <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Description</th>
+                                    <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+                                    <th class="px-6 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5">
+                                <tr class="hover:bg-white/[0.02] transition-colors">
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-300">Sept 24, 2024</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">Pro Plan - Monthly</td>
+                                    <td class="px-6 py-4 text-sm font-bold text-white">&#8377;499.00</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-brand-400 hover:text-brand-300 text-xs font-bold flex items-center justify-end gap-1.5 transition-colors">
+                                            <i class="ph-bold ph-download-simple text-sm"></i> Download
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-white/[0.02] transition-colors">
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-300">Aug 24, 2024</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">Pro Plan - Monthly</td>
+                                    <td class="px-6 py-4 text-sm font-bold text-white">&#8377;499.00</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-brand-400 hover:text-brand-300 text-xs font-bold flex items-center justify-end gap-1.5 transition-colors">
+                                            <i class="ph-bold ph-download-simple text-sm"></i> Download
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-white/[0.02] transition-colors">
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-300">Jul 24, 2024</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">Pro Plan - Monthly</td>
+                                    <td class="px-6 py-4 text-sm font-bold text-white">&#8377;499.00</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-brand-400 hover:text-brand-300 text-xs font-bold flex items-center justify-end gap-1.5 transition-colors">
+                                            <i class="ph-bold ph-download-simple text-sm"></i> Download
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ============ USAGE TAB ============ -->
+                <div x-show="currentTab === 'usage'" class="space-y-6" style="display: none;"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0">
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Usage Tracking</h2>
+                        <p class="text-sm text-slate-500">Monitor your resource usage for the current billing period.</p>
+                    </div>
+
+                    <!-- Usage Cards Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <!-- AI Words Generated -->
+                        <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-brand-500/20 transition-all">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI Words Generated</p>
+                                    <h3 class="text-2xl font-extrabold text-white mt-1">12,450 <span class="text-sm font-medium text-slate-500">/ 50,000</span></h3>
+                                </div>
+                                <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center border border-brand-500/20">
+                                    <i class="ph-bold ph-magic-wand text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="w-full bg-white/5 rounded-full h-2.5 mb-2 overflow-hidden">
+                                <div class="bg-gradient-to-r from-brand-600 to-brand-400 h-2.5 rounded-full relative" style="width: 25%">
+                                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-white shadow-sm"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-[10px] text-slate-500">Resets on Oct 24</p>
+                                <p class="text-xs font-bold text-brand-400">25%</p>
+                            </div>
+                        </div>
+
+                        <!-- Deep Searches -->
+                        <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-sky-500/20 transition-all">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Deep Searches</p>
+                                    <h3 class="text-2xl font-extrabold text-white mt-1">85 <span class="text-sm font-medium text-slate-500">/ Unlimited</span></h3>
+                                </div>
+                                <div class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center border border-sky-500/20">
+                                    <i class="ph-bold ph-globe-hemisphere-west text-lg"></i>
+                                </div>
+                            </div>
+                            <div class="w-full bg-white/5 rounded-full h-2.5 mb-2 overflow-hidden">
+                                <div class="bg-gradient-to-r from-sky-600 to-sky-400 h-2.5 rounded-full relative" style="width: 15%">
+                                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-white shadow-sm"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-[10px] text-slate-500">Fair usage policy applies</p>
+                                <p class="text-xs font-bold text-sky-400">15%</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Plagiarism Checks -->
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-amber-500/20 transition-all">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
+                                    <i class="ph-bold ph-shield-check text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white">Plagiarism Checks</h3>
+                                    <p class="text-xs text-slate-500">Detailed scans against web and academic databases.</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-extrabold text-white">3</span>
+                                <span class="text-sm text-slate-500 font-medium"> / 10 left</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-3 overflow-hidden">
+                            <div class="bg-gradient-to-r from-amber-600 to-amber-400 h-3 rounded-full relative" style="width: 70%">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white shadow-sm"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <p class="text-[10px] text-slate-500">7 of 10 used this billing period</p>
+                            <p class="text-xs font-bold text-amber-400">70%</p>
+                        </div>
+                    </div>
+
+                    <!-- AI Detection Checks -->
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 hover:border-emerald-500/20 transition-all">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
+                                    <i class="ph-bold ph-robot text-lg"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-white">AI Detection Checks</h3>
+                                    <p class="text-xs text-slate-500">Scan your drafts for AI-generated content.</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-extrabold text-white">18</span>
+                                <span class="text-sm text-slate-500 font-medium"> / Unlimited</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-white/5 rounded-full h-3 overflow-hidden">
+                            <div class="bg-gradient-to-r from-emerald-600 to-emerald-400 h-3 rounded-full relative" style="width: 8%">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white shadow-sm"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <p class="text-[10px] text-slate-500">No limit on your plan</p>
+                            <p class="text-xs font-bold text-emerald-400">Unlimited</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ PREFERENCES TAB ============ -->
+                <div x-show="currentTab === 'pref'" class="space-y-6" style="display: none;"
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0">
+
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-1">Preferences</h2>
+                        <p class="text-sm text-slate-500">Customize your ScholarSync experience.</p>
+                    </div>
+
+                    <!-- Editor Preferences -->
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 space-y-5">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="ph-bold ph-pen-nib text-brand-400"></i> Editor Settings
+                        </h3>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-slate-300 font-medium">Auto-save drafts</p>
+                                    <p class="text-xs text-slate-500">Save your work every 30 seconds.</p>
+                                </div>
+                                <div class="toggle-track active bg-brand-500" onclick="this.classList.toggle('active')"></div>
+                            </div>
+                            <div class="h-px bg-white/5"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-slate-300 font-medium">Show AI suggestions</p>
+                                    <p class="text-xs text-slate-500">Get inline writing suggestions as you type.</p>
+                                </div>
+                                <div class="toggle-track active bg-brand-500" onclick="this.classList.toggle('active')"></div>
+                            </div>
+                            <div class="h-px bg-white/5"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-slate-300 font-medium">Spellcheck</p>
+                                    <p class="text-xs text-slate-500">Highlight spelling errors in the editor.</p>
+                                </div>
+                                <div class="toggle-track active bg-brand-500" onclick="this.classList.toggle('active')"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Citation Preferences -->
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 space-y-5">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="ph-bold ph-quotes text-brand-400"></i> Citation Defaults
+                        </h3>
+
+                        <div>
+                            <label class="text-xs font-semibold text-slate-500 mb-2 block">Default Citation Style</label>
+                            <select class="w-full px-3.5 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-all appearance-none cursor-pointer">
+                                <option>Vancouver</option>
+                                <option>APA 7th Edition</option>
+                                <option>AMA</option>
+                                <option>Chicago</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="text-xs font-semibold text-slate-500 mb-2 block">Reference Manager</label>
+                            <select class="w-full px-3.5 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-all appearance-none cursor-pointer">
+                                <option>Built-in Library</option>
+                                <option>Zotero</option>
+                                <option>Mendeley</option>
+                                <option>EndNote</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Notification Preferences -->
+                    <div class="bg-slate-900/50 p-6 rounded-2xl border border-white/5 space-y-5">
+                        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="ph-bold ph-bell text-brand-400"></i> Notifications
+                        </h3>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-slate-300 font-medium">Email notifications</p>
+                                    <p class="text-xs text-slate-500">Receive updates about your account.</p>
+                                </div>
+                                <div class="toggle-track active bg-brand-500" onclick="this.classList.toggle('active')"></div>
+                            </div>
+                            <div class="h-px bg-white/5"></div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-slate-300 font-medium">Usage alerts</p>
+                                    <p class="text-xs text-slate-500">Alert when nearing usage limits.</p>
+                                </div>
+                                <div class="toggle-track bg-slate-700" onclick="this.classList.toggle('active')"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
