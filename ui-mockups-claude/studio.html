@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - The Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825', 'ink-light':'#6b6560' }
+            }}
+        }
+    </script>
+    <style>
+        .editor-canvas:focus { outline: none; }
+        .editor-canvas ::selection { background: rgba(200,150,93,0.2); }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #252b38; border-radius: 4px; }
+        .paper-shadow { box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 80px rgba(200,150,93,0.03); }
+    </style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden" x-data="{ sidebar: 'context', mode: 'write' }">
+
+    <!-- Left: Document Structure -->
+    <aside class="w-56 bg-surface flex flex-col shrink-0 border-r border-border">
+        <div class="h-12 flex items-center px-4 border-b border-border">
+            <a href="dashboard.html" class="flex items-center gap-2 text-[#8891a0] hover:text-paper transition-colors text-sm">
+                <i class="ph ph-arrow-left text-xs"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-4">
+            <p class="px-4 text-[10px] font-mono text-[#555d6e] uppercase tracking-widest mb-3">Structure</p>
+            <nav class="space-y-0.5 px-2">
+                <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm text-paper bg-elevated rounded-md border-l-2 border-gold">
+                    <span class="font-mono text-[10px] text-gold">1.0</span> Introduction
+                </a>
+                <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-sm text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-md border-l-2 border-transparent transition-colors">
+                    <span class="font-mono text-[10px] text-[#555d6e]">1.1</span> Historical Context
+                </a>
+                <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-sm text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-md border-l-2 border-transparent transition-colors">
+                    <span class="font-mono text-[10px] text-[#555d6e]">2.0</span> Methodology
+                </a>
+                <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-sm text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-md border-l-2 border-transparent transition-colors">
+                    <span class="font-mono text-[10px] text-[#555d6e]">3.0</span> Results
+                </a>
+                <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-sm text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-md border-l-2 border-transparent transition-colors">
+                    <span class="font-mono text-[10px] text-[#555d6e]">4.0</span> Discussion
+                </a>
+                <a href="#" class="flex items-center gap-2 px-3 py-1.5 text-sm text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-md border-l-2 border-transparent transition-colors">
+                    <span class="font-mono text-[10px] text-[#555d6e]">5.0</span> References
+                </a>
+            </nav>
+
+            <div class="mt-8">
+                <p class="px-4 text-[10px] font-mono text-[#555d6e] uppercase tracking-widest mb-3">Cited Sources</p>
+                <div class="px-4 space-y-2.5">
+                    <div class="flex items-center gap-2 group cursor-pointer">
+                        <i class="ph ph-file-pdf text-[#555d6e] group-hover:text-gold transition-colors text-sm"></i>
+                        <span class="text-xs text-[#8891a0] group-hover:text-paper font-serif italic transition-colors">Doudna et al. (2020)</span>
+                    </div>
+                    <div class="flex items-center gap-2 group cursor-pointer">
+                        <i class="ph ph-file-pdf text-[#555d6e] group-hover:text-gold transition-colors text-sm"></i>
+                        <span class="text-xs text-[#8891a0] group-hover:text-paper font-serif italic transition-colors">Zhang, Y. (2023)</span>
+                    </div>
+                    <div class="flex items-center gap-2 group cursor-pointer">
+                        <i class="ph ph-file-pdf text-[#555d6e] group-hover:text-gold transition-colors text-sm"></i>
+                        <span class="text-xs text-[#8891a0] group-hover:text-paper font-serif italic transition-colors">NIH Report (2022)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Center: Editor -->
+    <main class="flex-1 flex flex-col relative h-full">
+        <!-- Toolbar -->
+        <header class="h-12 bg-surface border-b border-border flex items-center justify-between px-5 shrink-0 z-20">
+            <div class="flex items-center gap-1 text-[#8891a0]">
+                <select class="bg-elevated border border-border text-xs px-2 py-1 rounded text-paper focus:outline-none focus:border-gold cursor-pointer">
+                    <option>Body Text</option>
+                    <option>Heading 1</option>
+                    <option>Heading 2</option>
+                    <option>Block Quote</option>
+                </select>
+                <div class="w-px h-4 bg-border mx-2"></div>
+                <button class="p-1.5 hover:bg-elevated rounded transition-colors"><i class="ph ph-text-b"></i></button>
+                <button class="p-1.5 hover:bg-elevated rounded transition-colors"><i class="ph ph-text-italic"></i></button>
+                <button class="p-1.5 hover:bg-elevated rounded transition-colors"><i class="ph ph-quotes"></i></button>
+                <button class="p-1.5 hover:bg-elevated rounded transition-colors"><i class="ph ph-link-simple"></i></button>
+                <div class="w-px h-4 bg-border mx-2"></div>
+                <button class="p-1.5 hover:bg-elevated rounded transition-colors"><i class="ph ph-list-bullets"></i></button>
+                <button class="p-1.5 hover:bg-elevated rounded transition-colors"><i class="ph ph-image"></i></button>
+            </div>
+
+            <div class="font-mono text-[10px] text-[#555d6e]">
+                Draft_v4.docx
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button @click="mode = 'write'" :class="mode === 'write' ? 'bg-gold text-void' : 'text-[#8891a0] hover:bg-elevated'" class="px-3 py-1 rounded text-xs font-medium transition-all">
+                    Write
+                </button>
+                <button @click="mode = 'learn'" :class="mode === 'learn' ? 'bg-[#5b9a72] text-white' : 'text-[#8891a0] hover:bg-elevated'" class="px-3 py-1 rounded text-xs font-medium transition-all flex items-center gap-1">
+                    <i class="ph ph-brain"></i> Socratic
+                </button>
+                <div class="w-px h-4 bg-border mx-1"></div>
+                <button class="text-[#555d6e] hover:text-[#8891a0] transition-colors p-1"><i class="ph ph-share-network"></i></button>
+                <button class="text-[#555d6e] hover:text-[#8891a0] transition-colors p-1"><i class="ph ph-export"></i></button>
+            </div>
+        </header>
+
+        <!-- Editor Area -->
+        <div class="flex-1 overflow-y-auto bg-elevated/50 p-8 flex justify-center">
+            <div class="w-full max-w-[780px] bg-paper rounded-lg paper-shadow min-h-[900px] p-14 editor-canvas" contenteditable="true">
+
+                <h1 class="font-serif text-[2.25rem] text-ink leading-[1.3] mb-8 font-medium">
+                    The Ethics of Germline Editing in Modern Genomics
+                </h1>
+
+                <p class="font-serif text-[1.05rem] text-ink leading-[2] mb-6">
+                    The advent of Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR) has fundamentally altered the landscape of genetic engineering. Unlike previous methods, which were often cumbersome and imprecise, CRISPR-Cas9 offers a versatile tool for editing the genome with unprecedented accuracy.
+                </p>
+
+                <p class="font-serif text-[1.05rem] text-ink leading-[2] mb-6">
+                    <span class="bg-gold/10 border-b-2 border-gold/40 cursor-pointer" title="Suggestion: Strengthen this claim with data">However, the ethical implications of germline editing remain a contentious subject within the scientific community.</span> While the potential to eradicate hereditary diseases is immense, the risk of off-target effects necessitates a robust regulatory framework that balances innovation with caution.
+                </p>
+
+                <p class="font-serif text-[1.05rem] text-ink leading-[2] mb-6">
+                    Recent studies by <span class="text-gold-dim font-medium border-b border-gold/30 cursor-pointer hover:border-gold transition-colors">Doudna et al. (2020)</span> suggest that the off-target effects can be mitigated through the use of high-fidelity Cas9 variants, specifically SpCas9-HF1. These variants demonstrated a reduction of unintended mutations by approximately 85&ndash;90% in controlled human cell lines.
+                </p>
+
+                <p class="font-serif text-[1.05rem] text-ink-light leading-[2] italic mt-10">
+                    Continue writing&hellip;
+                </p>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="h-8 bg-surface border-t border-border flex items-center justify-between px-5 shrink-0">
+            <div class="flex items-center gap-4">
+                <span class="font-mono text-[10px] text-[#8891a0]">1,240 words</span>
+                <span class="font-mono text-[10px] text-[#555d6e]">Section 1.0</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="font-mono text-[10px] text-[#555d6e]">Flesch-Kincaid: 14.2</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-[#5b9a72] rounded-full"></span>
+                    <span class="font-mono text-[10px] text-[#8891a0]">Saved 10:42 AM</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Right: Intelligence Panel -->
+    <aside class="w-80 bg-surface flex flex-col shrink-0 border-l border-border z-20">
+        <div class="flex border-b border-border">
+            <button @click="sidebar = 'context'" :class="sidebar === 'context' ? 'text-gold border-gold' : 'text-[#555d6e] border-transparent hover:text-[#8891a0]'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest border-b-2 transition-all">Context</button>
+            <button @click="sidebar = 'copilot'" :class="sidebar === 'copilot' ? 'text-gold border-gold' : 'text-[#555d6e] border-transparent hover:text-[#8891a0]'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest border-b-2 transition-all">Copilot</button>
+            <button @click="sidebar = 'audit'" :class="sidebar === 'audit' ? 'text-gold border-gold' : 'text-[#555d6e] border-transparent hover:text-[#8891a0]'" class="flex-1 py-3 text-[10px] font-mono uppercase tracking-widest border-b-2 transition-all">Audit</button>
+        </div>
+
+        <!-- Context Tab -->
+        <div x-show="sidebar === 'context'" class="flex-1 overflow-y-auto p-5 space-y-5">
+            <div class="border border-gold/20 rounded-lg p-4 bg-gold/[0.03]">
+                <div class="flex items-center gap-2 text-gold text-xs mb-2">
+                    <i class="ph ph-lightbulb-filament"></i>
+                    <span class="font-mono text-[10px] uppercase font-medium">Insight</span>
+                </div>
+                <p class="font-serif text-sm text-[#e0dbd5] leading-relaxed mb-3">
+                    You cited Doudna (2020) on off-target reduction. A 2024 study by Zhang et al. reports contradicting figures for germline applications specifically.
+                </p>
+                <button class="w-full border border-border py-2 text-xs text-[#8891a0] hover:text-paper hover:border-border-bright rounded transition-colors">Review contradiction</button>
+            </div>
+
+            <div>
+                <h3 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-3">Related literature</h3>
+                <div class="space-y-4">
+                    <div class="group cursor-pointer">
+                        <h4 class="font-serif text-sm text-paper leading-snug group-hover:text-gold transition-colors">CRISPR-Cas9 Therapeutics: Progress and Challenges</h4>
+                        <p class="text-[10px] text-[#555d6e] mt-1 font-mono">Zhang et al. &bull; 2023 &bull; Cell Review</p>
+                        <div class="flex gap-2 mt-2">
+                            <button class="text-[10px] text-[#8891a0] hover:text-paper border border-border px-2 py-0.5 rounded transition-colors">Cite</button>
+                            <button class="text-[10px] text-[#8891a0] hover:text-paper border border-border px-2 py-0.5 rounded transition-colors">Abstract</button>
+                        </div>
+                    </div>
+                    <div class="border-t border-border"></div>
+                    <div class="group cursor-pointer">
+                        <h4 class="font-serif text-sm text-paper leading-snug group-hover:text-gold transition-colors">Germline Editing: A Policy Review</h4>
+                        <p class="text-[10px] text-[#555d6e] mt-1 font-mono">NIH Public Access &bull; 2022</p>
+                        <div class="flex gap-2 mt-2">
+                            <button class="text-[10px] text-[#8891a0] hover:text-paper border border-border px-2 py-0.5 rounded transition-colors">Cite</button>
+                            <button class="text-[10px] text-[#8891a0] hover:text-paper border border-border px-2 py-0.5 rounded transition-colors">Abstract</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copilot Tab -->
+        <div x-show="sidebar === 'copilot'" class="flex-1 flex flex-col" style="display:none;">
+            <div class="flex-1 overflow-y-auto p-5 space-y-4">
+                <div class="flex gap-3">
+                    <div class="w-6 h-6 bg-gold/10 border border-gold/20 rounded flex items-center justify-center shrink-0">
+                        <span class="font-serif text-[10px] text-gold italic">S</span>
+                    </div>
+                    <div class="bg-elevated border border-border p-3 rounded-lg">
+                        <p class="font-serif text-sm text-[#e0dbd5] leading-relaxed">Your claim about off-target effects cites a 2020 source. Have you considered whether Prime Editing techniques (2023+) change this conclusion?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t border-border">
+                <div class="relative">
+                    <input type="text" placeholder="Ask about your draft..." class="w-full bg-elevated border border-border rounded-lg p-3 pr-10 text-sm text-paper placeholder-[#555d6e] focus:outline-none focus:border-gold transition-colors">
+                    <button class="absolute right-3 top-3 text-[#555d6e] hover:text-gold transition-colors"><i class="ph ph-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Tab -->
+        <div x-show="sidebar === 'audit'" class="flex-1 overflow-y-auto p-5 space-y-5" style="display:none;">
+            <div class="flex items-center justify-between">
+                <span class="font-mono text-[10px] text-[#555d6e] uppercase">Integrity Score</span>
+                <span class="font-mono text-2xl text-paper font-medium">72<span class="text-[#555d6e] text-sm">/100</span></span>
+            </div>
+            <div class="w-full bg-elevated h-1 rounded-full"><div class="bg-gold h-1 rounded-full w-[72%]"></div></div>
+
+            <div class="space-y-3 pt-2">
+                <div class="border border-border rounded-lg p-3">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-[10px] font-mono text-void bg-[#c25d5d] px-1.5 py-0.5 rounded">Critical</span>
+                        <span class="text-xs text-paper">Complex sentence</span>
+                    </div>
+                    <p class="font-serif text-xs text-[#8891a0] mb-2 pl-2 border-l border-border">
+                        "Furthermore, notwithstanding..." (42 words)
+                    </p>
+                    <button class="w-full border border-border py-1.5 text-[10px] text-[#8891a0] hover:text-paper rounded transition-colors font-mono">Simplify</button>
+                </div>
+                <div class="border border-border rounded-lg p-3">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-[10px] font-mono text-void bg-gold px-1.5 py-0.5 rounded">Warning</span>
+                        <span class="text-xs text-paper">Passive voice</span>
+                    </div>
+                    <p class="font-serif text-xs text-[#8891a0] mb-2 pl-2 border-l border-border">
+                        "It has been argued by many..."
+                    </p>
+                    <button class="w-full border border-border py-1.5 text-[10px] text-[#8891a0] hover:text-paper rounded transition-colors font-mono">Convert to active</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Sign in</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans: ['Inter','sans-serif'], serif: ['Crimson Pro','serif'], mono: ['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden selection:bg-gold/30">
+
+    <!-- Left: Form -->
+    <div class="w-full lg:w-[45%] flex flex-col justify-center px-12 sm:px-20 relative">
+        <div class="absolute top-8 left-12">
+            <a href="landing.html" class="font-serif text-xl text-paper hover:text-gold transition-colors">ScholarSync</a>
+        </div>
+
+        <div class="max-w-sm w-full mx-auto" x-data="{ state: 'login' }">
+            <h1 class="text-3xl font-serif text-paper mb-2" x-text="state === 'login' ? 'Welcome back' : 'Create account'"></h1>
+            <p class="text-sm text-[#8891a0] mb-8" x-text="state === 'login' ? 'Sign in to continue your research.' : 'Start your research journey.'"></p>
+
+            <button class="w-full flex items-center justify-center gap-3 border border-border hover:border-border-bright hover:bg-elevated/50 transition-all py-3 rounded mb-8 group">
+                <i class="ph ph-google-logo text-lg text-[#8891a0] group-hover:text-paper"></i>
+                <span class="text-sm text-[#8891a0] group-hover:text-paper">Continue with Google</span>
+            </button>
+
+            <div class="relative flex items-center mb-8">
+                <div class="flex-grow border-t border-border"></div>
+                <span class="px-4 text-[#555d6e] text-xs">or</span>
+                <div class="flex-grow border-t border-border"></div>
+            </div>
+
+            <form action="dashboard.html" class="space-y-5">
+                <div x-show="state === 'signup'" x-transition>
+                    <label class="text-xs text-[#8891a0] mb-1.5 block">Full name</label>
+                    <input type="text" class="w-full bg-elevated border border-border rounded px-4 py-2.5 text-sm text-paper focus:outline-none focus:border-gold transition-colors placeholder-[#555d6e]" placeholder="Your name">
+                </div>
+
+                <div>
+                    <label class="text-xs text-[#8891a0] mb-1.5 block">Email</label>
+                    <input type="email" class="w-full bg-elevated border border-border rounded px-4 py-2.5 text-sm text-paper focus:outline-none focus:border-gold transition-colors placeholder-[#555d6e]" placeholder="you@university.edu">
+                </div>
+
+                <div>
+                    <label class="text-xs text-[#8891a0] mb-1.5 block">Password</label>
+                    <input type="password" class="w-full bg-elevated border border-border rounded px-4 py-2.5 text-sm text-paper focus:outline-none focus:border-gold transition-colors placeholder-[#555d6e]" placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;">
+                </div>
+
+                <div class="flex items-center justify-between" x-show="state === 'login'">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="w-3.5 h-3.5 rounded border-border bg-elevated text-gold focus:ring-0 focus:ring-offset-0">
+                        <span class="text-xs text-[#8891a0]">Remember me</span>
+                    </label>
+                    <a href="#" class="text-xs text-[#8891a0] hover:text-gold transition-colors">Forgot password?</a>
+                </div>
+
+                <button class="w-full bg-gold text-void text-sm font-medium py-3 rounded hover:bg-gold-bright transition-all flex items-center justify-center gap-2">
+                    <span x-text="state === 'login' ? 'Sign in' : 'Create account'"></span>
+                    <i class="ph ph-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="text-xs text-[#8891a0]">
+                    <span x-text="state === 'login' ? 'New here?' : 'Already have an account?'"></span>
+                    <button @click="state = state === 'login' ? 'signup' : 'login'" class="text-gold hover:text-gold-bright ml-1 transition-colors" x-text="state === 'login' ? 'Create an account' : 'Sign in'"></button>
+                </p>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-12">
+            <p class="text-[10px] text-[#555d6e] font-mono">256-bit encryption &bull; SOC 2 compliant</p>
+        </div>
+    </div>
+
+    <!-- Right: Visual -->
+    <div class="hidden lg:flex w-[55%] bg-surface relative items-center justify-center p-16 overflow-hidden border-l border-border">
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#c8965d 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+        <!-- Floating editor preview -->
+        <div class="relative z-10 w-full max-w-lg">
+            <div class="bg-paper rounded-lg shadow-2xl shadow-black/40 p-10 border border-[#e8e4de]">
+                <h2 class="font-serif text-2xl text-ink mb-4 leading-tight">The Ethics of Germline Editing in Modern Genomics</h2>
+                <p class="font-serif text-sm text-ink/80 leading-[1.9] mb-3">
+                    The advent of CRISPR has fundamentally altered the landscape of genetic engineering. Unlike previous methods, which were often cumbersome and imprecise&hellip;
+                </p>
+                <p class="font-serif text-sm text-ink/50 leading-[1.9]">
+                    Recent studies by <span class="text-gold-dim border-b border-gold/40">Doudna et al. (2020)</span> suggest that off-target effects can be mitigated&hellip;
+                </p>
+            </div>
+
+            <div class="mt-6 flex items-center justify-between px-2">
+                <span class="font-mono text-[10px] text-[#555d6e]">1,240 words &bull; Draft v4</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 bg-[#5b9a72] rounded-full"></span>
+                    <span class="font-mono text-[10px] text-[#555d6e]">Auto-saved</span>
+                </div>
+            </div>
+
+            <!-- Quote below -->
+            <div class="mt-12 text-center">
+                <p class="font-serif text-lg text-[#8891a0] italic leading-relaxed">
+                    "The important thing is not to stop questioning."
+                </p>
+                <p class="font-mono text-[10px] text-gold mt-3 uppercase tracking-widest">Albert Einstein</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

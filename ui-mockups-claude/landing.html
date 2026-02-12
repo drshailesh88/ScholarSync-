@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Where research finds clarity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        void: '#0b0e13',
+                        surface: '#12161e',
+                        elevated: '#1a1f2b',
+                        border: '#252b38',
+                        'border-bright': '#333a4a',
+                        gold: '#c8965d',
+                        'gold-bright': '#daa76e',
+                        'gold-dim': '#9e7849',
+                        paper: '#f5f1eb',
+                        ink: '#2c2825',
+                        'ink-light': '#6b6560',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-glow {
+            background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(200, 150, 93, 0.06) 0%, transparent 70%);
+        }
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #daa76e 0%, #c8965d 40%, #9e7849 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .border-glow { box-shadow: 0 0 0 1px rgba(200, 150, 93, 0.15); }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans antialiased selection:bg-gold/30 selection:text-white">
+
+    <nav class="fixed top-0 w-full z-50 bg-void/80 backdrop-blur-xl border-b border-border/50">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <span class="font-serif font-semibold text-xl tracking-tight text-paper">ScholarSync</span>
+            <div class="hidden md:flex items-center gap-8 text-sm text-[#8891a0]">
+                <a href="#features" class="hover:text-paper transition-colors">Features</a>
+                <a href="#method" class="hover:text-paper transition-colors">Method</a>
+                <a href="#pricing" class="hover:text-paper transition-colors">Pricing</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="auth.html" class="text-sm text-[#8891a0] hover:text-paper transition-colors">Log in</a>
+                <a href="auth.html" class="px-5 py-2 bg-gold text-void text-sm font-medium rounded hover:bg-gold-bright transition-colors">
+                    Start writing
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="relative pt-32 pb-24 hero-glow">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 border border-border rounded-full mb-10">
+                <span class="w-1.5 h-1.5 bg-gold rounded-full"></span>
+                <span class="text-xs text-[#8891a0] font-mono">Now in public beta</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-serif font-light leading-[1.08] mb-8 tracking-tight">
+                Where research<br>
+                <span class="text-gold-gradient italic">finds clarity.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-[#8891a0] max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+                An integrated workspace for academic writing. Search literature,
+                analyze arguments, draft with precision &mdash; all in one focused environment.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="auth.html" class="w-full sm:w-auto px-8 py-3.5 bg-gold text-void font-medium rounded hover:bg-gold-bright transition-all flex items-center justify-center gap-2">
+                    Begin your research <i class="ph ph-arrow-right"></i>
+                </a>
+                <a href="#features" class="w-full sm:w-auto px-8 py-3.5 border border-border text-[#8891a0] rounded hover:border-border-bright hover:text-paper transition-all flex items-center justify-center gap-2">
+                    See how it works
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- App Preview -->
+    <section class="pb-24 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="relative border border-border rounded-lg overflow-hidden bg-surface shadow-2xl shadow-black/30">
+                <div class="h-10 bg-elevated border-b border-border flex items-center px-4 gap-2">
+                    <div class="flex gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#c25d5d]/60"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-gold/40"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-[#5b9a72]/60"></div>
+                    </div>
+                    <div class="mx-auto font-mono text-[10px] text-[#555d6e]">ScholarSync &mdash; The Studio</div>
+                </div>
+
+                <div class="flex h-[420px]">
+                    <!-- Sidebar mock -->
+                    <div class="w-56 bg-surface border-r border-border p-4 hidden md:block">
+                        <div class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-3">Structure</div>
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2 px-2 py-1.5 bg-elevated rounded text-xs text-paper border-l-2 border-gold">
+                                <span class="font-mono text-[10px] text-gold">1.0</span> Introduction
+                            </div>
+                            <div class="flex items-center gap-2 px-2 py-1.5 text-xs text-[#8891a0]">
+                                <span class="font-mono text-[10px] text-[#555d6e]">2.0</span> Methodology
+                            </div>
+                            <div class="flex items-center gap-2 px-2 py-1.5 text-xs text-[#8891a0]">
+                                <span class="font-mono text-[10px] text-[#555d6e]">3.0</span> Results
+                            </div>
+                        </div>
+
+                        <div class="mt-8 font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-3">Sources</div>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2 text-xs text-[#8891a0]">
+                                <i class="ph ph-file-pdf text-gold/60"></i>
+                                <span class="font-serif italic">Doudna (2020)</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-[#8891a0]">
+                                <i class="ph ph-file-pdf text-gold/60"></i>
+                                <span class="font-serif italic">Zhang (2023)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Editor mock -->
+                    <div class="flex-1 bg-paper p-12 overflow-hidden">
+                        <h2 class="font-serif text-3xl text-ink mb-6 leading-tight">The Ethics of Germline Editing</h2>
+                        <p class="font-serif text-base text-ink leading-[1.9] mb-4">
+                            The advent of CRISPR has fundamentally altered the landscape of genetic engineering. Unlike previous methods, CRISPR-Cas9 offers a versatile tool for editing the genome with <span class="bg-gold/10 border-b border-gold/40">unprecedented accuracy</span>.
+                        </p>
+                        <p class="font-serif text-base text-ink-light leading-[1.9]">
+                            Recent studies by <span class="text-gold-dim border-b border-gold/30 cursor-pointer">Doudna et al. (2020)</span> suggest that off-target effects can be mitigated through high-fidelity variants&hellip;
+                        </p>
+                    </div>
+
+                    <!-- Right panel mock -->
+                    <div class="w-64 bg-surface border-l border-border p-4 hidden lg:block">
+                        <div class="flex gap-2 mb-4 border-b border-border pb-3">
+                            <span class="text-[10px] font-mono text-gold border-b border-gold pb-1">Context</span>
+                            <span class="text-[10px] font-mono text-[#555d6e] pb-1">Copilot</span>
+                        </div>
+                        <div class="border border-border rounded p-3 mb-4 bg-elevated/50">
+                            <div class="flex items-center gap-1.5 text-gold text-xs mb-2">
+                                <i class="ph ph-lightbulb-filament"></i>
+                                <span class="font-mono text-[10px] uppercase">Insight</span>
+                            </div>
+                            <p class="font-serif text-xs text-[#8891a0] leading-relaxed">
+                                A 2024 study contradicts your citation on off-target rates.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center font-mono text-[10px] text-[#555d6e] mt-4 uppercase tracking-widest">The Studio &mdash; distraction-free academic writing</p>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="py-24 border-t border-border">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-serif text-paper mb-4">Three pillars of better research</h2>
+                <p class="text-[#8891a0] max-w-lg mx-auto">Every feature exists to serve one purpose: helping you think more clearly and write more precisely.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="border border-border rounded-lg p-8 hover:border-border-bright transition-all group bg-surface/50">
+                    <div class="w-12 h-12 border border-border rounded-lg flex items-center justify-center mb-6 group-hover:border-gold/40 transition-colors">
+                        <i class="ph ph-globe-hemisphere-west text-xl text-[#8891a0] group-hover:text-gold transition-colors"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-paper mb-3">Deep Search</h3>
+                    <p class="text-sm text-[#8891a0] leading-relaxed mb-4">
+                        Queries PubMed and Semantic Scholar simultaneously. Returns not just results, but a synthesized consensus across sources.
+                    </p>
+                    <span class="font-mono text-[10px] text-gold">200M+ papers indexed</span>
+                </div>
+
+                <div class="border border-border rounded-lg p-8 hover:border-border-bright transition-all group bg-surface/50">
+                    <div class="w-12 h-12 border border-border rounded-lg flex items-center justify-center mb-6 group-hover:border-gold/40 transition-colors">
+                        <i class="ph ph-brain text-xl text-[#8891a0] group-hover:text-gold transition-colors"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-paper mb-3">Socratic Analysis</h3>
+                    <p class="text-sm text-[#8891a0] leading-relaxed mb-4">
+                        Upload PDFs. The AI doesn't summarize &mdash; it challenges your understanding through targeted questions. You learn by defending.
+                    </p>
+                    <span class="font-mono text-[10px] text-gold">Questions that sharpen thinking</span>
+                </div>
+
+                <div class="border border-border rounded-lg p-8 hover:border-border-bright transition-all group bg-surface/50">
+                    <div class="w-12 h-12 border border-border rounded-lg flex items-center justify-center mb-6 group-hover:border-gold/40 transition-colors">
+                        <i class="ph ph-pen-nib text-xl text-[#8891a0] group-hover:text-gold transition-colors"></i>
+                    </div>
+                    <h3 class="font-serif text-xl text-paper mb-3">Draft &amp; Cite</h3>
+                    <p class="text-sm text-[#8891a0] leading-relaxed mb-4">
+                        Write in a distraction-free editor. Citations auto-format as you type. APA, MLA, Chicago &mdash; handled.
+                    </p>
+                    <span class="font-mono text-[10px] text-gold">Write with sources, not after</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Method -->
+    <section id="method" class="py-24 border-t border-border bg-surface/30">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-serif text-paper mb-16 text-center">From question to submission</h2>
+            <div class="space-y-12">
+                <div class="flex gap-8 items-start">
+                    <div class="w-10 h-10 border border-gold/30 rounded-lg flex items-center justify-center shrink-0 bg-gold/5">
+                        <span class="font-serif text-gold text-lg italic">1</span>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-xl text-paper mb-2">Research</h3>
+                        <p class="text-[#8891a0] leading-relaxed">Query across databases. The AI reads abstracts for you and surfaces the consensus, contradictions, and gaps. Build your literature base in minutes, not weeks.</p>
+                    </div>
+                </div>
+                <div class="flex gap-8 items-start">
+                    <div class="w-10 h-10 border border-gold/30 rounded-lg flex items-center justify-center shrink-0 bg-gold/5">
+                        <span class="font-serif text-gold text-lg italic">2</span>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-xl text-paper mb-2">Analyze</h3>
+                        <p class="text-[#8891a0] leading-relaxed">Upload your sources. The Socratic mode tests your understanding. The logic checker finds weak arguments before your reviewer does. The bias detector flags what you can't see.</p>
+                    </div>
+                </div>
+                <div class="flex gap-8 items-start">
+                    <div class="w-10 h-10 border border-gold/30 rounded-lg flex items-center justify-center shrink-0 bg-gold/5">
+                        <span class="font-serif text-gold text-lg italic">3</span>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-xl text-paper mb-2">Write</h3>
+                        <p class="text-[#8891a0] leading-relaxed">Draft in a focused editor with your research at arm's reach. Citations auto-format. Readability metrics update live. Export to PDF, LaTeX, or DOCX when you're ready.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-24 border-t border-border">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-serif text-paper mb-4">Honest pricing</h2>
+                <p class="text-[#8891a0]">Start free. Upgrade when the work demands it.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                <div class="border border-border rounded-lg p-8 bg-surface/50 hover:border-border-bright transition-all">
+                    <h3 class="font-mono text-xs text-[#8891a0] uppercase tracking-widest mb-2">Researcher</h3>
+                    <div class="text-4xl font-serif text-paper mb-6">Free</div>
+                    <ul class="space-y-3 text-sm text-[#8891a0] mb-8">
+                        <li class="flex items-center gap-3"><span class="text-[#5b9a72]">&#10003;</span> 5 deep searches per day</li>
+                        <li class="flex items-center gap-3"><span class="text-[#5b9a72]">&#10003;</span> Basic editor access</li>
+                        <li class="flex items-center gap-3"><span class="text-[#5b9a72]">&#10003;</span> 3 active manuscripts</li>
+                    </ul>
+                    <a href="auth.html" class="block w-full py-3 border border-border text-center text-sm font-medium text-paper rounded hover:bg-elevated transition-colors">Get started</a>
+                </div>
+
+                <div class="border border-gold/30 rounded-lg p-8 relative bg-surface/50 shadow-lg shadow-gold/5">
+                    <div class="absolute -top-3 right-6 bg-gold text-void text-[10px] font-bold px-3 py-1 rounded-full uppercase font-mono tracking-wider">Recommended</div>
+                    <h3 class="font-mono text-xs text-gold uppercase tracking-widest mb-2">Scholar Pro</h3>
+                    <div class="text-4xl font-serif text-paper mb-6">&#8377;499<span class="text-lg text-[#8891a0]">/mo</span></div>
+                    <ul class="space-y-3 text-sm text-[#8891a0] mb-8">
+                        <li class="flex items-center gap-3"><span class="text-gold">&#10003;</span> Unlimited deep search</li>
+                        <li class="flex items-center gap-3"><span class="text-gold">&#10003;</span> Socratic mode &amp; logic checks</li>
+                        <li class="flex items-center gap-3"><span class="text-gold">&#10003;</span> PDF / LaTeX export</li>
+                        <li class="flex items-center gap-3"><span class="text-gold">&#10003;</span> Plagiarism &amp; AI audit</li>
+                    </ul>
+                    <a href="auth.html" class="block w-full py-3 bg-gold text-void text-center text-sm font-medium rounded hover:bg-gold-bright transition-colors">Upgrade</a>
+                </div>
+            </div>
+
+            <p class="text-center mt-8 font-mono text-[10px] text-[#555d6e] flex items-center justify-center gap-2">
+                <i class="ph ph-lock-key"></i> Payments via Razorpay &bull; Cancel anytime
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-border py-12">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <span class="font-serif text-lg text-paper">ScholarSync</span>
+            <div class="text-xs text-[#555d6e] flex gap-6">
+                <a href="#" class="hover:text-[#8891a0] transition-colors">Terms</a>
+                <a href="#" class="hover:text-[#8891a0] transition-colors">Privacy</a>
+                <a href="#" class="hover:text-[#8891a0] transition-colors">Contact</a>
+            </div>
+            <span class="text-xs text-[#555d6e]">&copy; 2025 ScholarSync</span>
+        </div>
+    </footer>
+
+</body>
+</html>

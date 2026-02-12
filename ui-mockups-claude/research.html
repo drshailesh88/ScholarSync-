@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Deep Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+    <style>::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#252b38;border-radius:4px}</style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden selection:bg-gold/30">
+
+    <!-- Mini sidebar -->
+    <aside class="w-14 bg-surface flex flex-col items-center py-5 shrink-0 border-r border-border gap-5">
+        <a href="dashboard.html" class="text-[#8891a0] hover:text-paper transition-colors"><i class="ph ph-squares-four text-lg"></i></a>
+        <div class="w-6 border-t border-border"></div>
+        <a href="dashboard.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Dashboard"><i class="ph ph-monitor text-lg"></i></a>
+        <a href="#" class="p-2 text-gold bg-elevated rounded-lg" title="Deep Search"><i class="ph ph-globe-hemisphere-west text-lg"></i></a>
+        <a href="studio.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Studio"><i class="ph ph-pen-nib text-lg"></i></a>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <!-- Search header -->
+        <header class="border-b border-border px-8 py-5 shrink-0 bg-surface/50">
+            <div class="flex items-center gap-6 max-w-4xl">
+                <div class="flex-1 relative">
+                    <i class="ph ph-magnifying-glass absolute left-0 top-2 text-[#555d6e] text-lg"></i>
+                    <input type="text" value="CRISPR gene editing off-target effects consensus"
+                        class="w-full bg-transparent border-b border-border py-2 pl-8 text-lg font-serif text-paper focus:outline-none focus:border-gold transition-colors placeholder-[#555d6e]"
+                        placeholder="Enter research query...">
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <select class="bg-elevated border border-border text-xs font-mono py-1.5 px-3 rounded text-[#8891a0] focus:outline-none focus:border-gold cursor-pointer">
+                        <option>PubMed + Semantic Scholar</option>
+                        <option>ArXiv</option>
+                        <option>ClinicalTrials.gov</option>
+                    </select>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-10">
+            <div class="max-w-4xl mx-auto">
+
+                <!-- Synthesis -->
+                <section class="mb-12">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="font-mono text-[10px] text-gold uppercase tracking-widest">AI Synthesis</h2>
+                        <span class="font-mono text-[10px] text-[#555d6e]">Generated from 15 sources</span>
+                    </div>
+                    <div class="border border-border rounded-lg p-7 bg-surface/50 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-gold rounded-full"></div>
+                        <p class="font-serif text-lg text-paper leading-relaxed mb-4 pl-4">
+                            <strong>Consensus:</strong> Recent literature (2020&ndash;2024) indicates a significant shift. While early Cas9 variants posed high risks, <em>high-fidelity Cas9 (SpCas9-HF1)</em> and <em>Prime Editing</em> have reduced off-target incidence by approximately <span class="bg-gold/10 px-1 py-0.5 rounded text-sm font-mono border border-gold/20">85&ndash;90%</span> in human cell lines.
+                        </p>
+                        <p class="font-serif text-lg text-[#8891a0] leading-relaxed pl-4">
+                            Clinical application remains stalled due to insufficient longitudinal data on <span class="bg-gold/10 px-1 py-0.5 rounded text-sm font-mono border border-gold/20">p53 activation</span> and genotoxicity.
+                        </p>
+                        <div class="mt-6 flex gap-4 pt-4 border-t border-border pl-4">
+                            <button class="flex items-center gap-2 text-xs text-[#8891a0] hover:text-gold transition-colors font-mono"><i class="ph ph-copy"></i> Copy</button>
+                            <button class="flex items-center gap-2 text-xs text-[#8891a0] hover:text-gold transition-colors font-mono"><i class="ph ph-quotes"></i> Cite</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Results -->
+                <section>
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest">Results (142)</h2>
+                        <div class="flex gap-2">
+                            <button class="text-[10px] font-mono border border-border px-2.5 py-1 rounded hover:border-border-bright transition-colors text-[#8891a0]">Last 5 years</button>
+                            <button class="text-[10px] font-mono border border-border px-2.5 py-1 rounded hover:border-border-bright transition-colors text-[#8891a0]">PDF only</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="group">
+                            <div class="flex justify-between items-start gap-4">
+                                <h3 class="font-serif text-lg text-paper font-medium leading-snug group-hover:text-gold cursor-pointer transition-colors flex-1">
+                                    High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects
+                                </h3>
+                                <span class="font-mono text-[10px] text-[#555d6e] shrink-0">Cited: 420</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2 font-mono text-xs text-[#8891a0]">
+                                <span class="font-medium text-paper">Slaymaker, I.M., et al.</span>
+                                <span class="text-[#555d6e]">&bull;</span>
+                                <span class="italic">Nature</span>
+                                <span class="text-[#555d6e]">&bull;</span>
+                                <span>2023</span>
+                            </div>
+                            <p class="font-serif text-sm text-[#8891a0] mt-2 leading-relaxed">
+                                &hellip;demonstrates that structure-guided engineering of SpCas9 can eliminate off-target effects without compromising on-target activity&hellip;
+                            </p>
+                            <div class="mt-3 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Add to library</button>
+                                <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Extract data</button>
+                                <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Full text</button>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-border/50"></div>
+
+                        <div class="group">
+                            <div class="flex justify-between items-start gap-4">
+                                <h3 class="font-serif text-lg text-paper font-medium leading-snug group-hover:text-gold cursor-pointer transition-colors flex-1">
+                                    Evaluation of Off-Target Effects in CRISPR-Cas9 Therapeutics
+                                </h3>
+                                <span class="font-mono text-[10px] text-[#555d6e] shrink-0">Cited: 85</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2 font-mono text-xs text-[#8891a0]">
+                                <span class="font-medium text-paper">Zhang, Y., et al.</span>
+                                <span class="text-[#555d6e]">&bull;</span>
+                                <span class="italic">Cell Review</span>
+                                <span class="text-[#555d6e]">&bull;</span>
+                                <span>2024</span>
+                            </div>
+                            <p class="font-serif text-sm text-[#8891a0] mt-2 leading-relaxed">
+                                &hellip;systematic review analyzing 50 clinical trials involving CRISPR therapies, focusing on long-term safety profiles and p53 activation&hellip;
+                            </p>
+                            <div class="mt-3 flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Add to library</button>
+                                <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Extract data</button>
+                                <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Full text</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Right: Data extraction -->
+    <aside class="w-72 bg-surface border-l border-border flex flex-col shrink-0">
+        <div class="h-10 border-b border-border flex items-center justify-between px-4">
+            <span class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest">Extraction</span>
+            <i class="ph ph-table text-[#555d6e]"></i>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-5">
+            <div class="border border-border rounded-lg overflow-hidden">
+                <div class="bg-elevated px-3 py-2 border-b border-border">
+                    <span class="font-mono text-[10px] text-paper">Error Rates by Study</span>
+                </div>
+                <table class="w-full text-left">
+                    <tbody class="font-mono text-[10px]">
+                        <tr class="border-b border-border/50"><td class="p-2.5 text-[#8891a0]">Slaymaker</td><td class="p-2.5 text-paper">&lt;0.1%</td></tr>
+                        <tr class="border-b border-border/50"><td class="p-2.5 text-[#8891a0]">Zhang</td><td class="p-2.5 text-paper">~1.2%</td></tr>
+                        <tr><td class="p-2.5 text-[#8891a0]">Kleinstiver</td><td class="p-2.5 text-paper">Undetected</td></tr>
+                    </tbody>
+                </table>
+                <button class="w-full py-2 text-[10px] font-mono text-gold hover:bg-elevated transition-colors border-t border-border">+ Add column</button>
+            </div>
+
+            <div>
+                <div class="bg-elevated px-3 py-2 border border-border border-b-0 rounded-t-lg">
+                    <span class="font-mono text-[10px] text-paper">Notes</span>
+                </div>
+                <div class="border border-border rounded-b-lg bg-elevated/30 p-3 min-h-[120px]">
+                    <p class="font-serif text-sm text-[#8891a0] leading-relaxed">
+                        Consensus shifting towards Prime Editing. Consider refining query to separate base editing results.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+</body>
+</html>

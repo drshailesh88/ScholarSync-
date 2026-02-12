@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Manuscripts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+    <style>::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#252b38;border-radius:4px}</style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden selection:bg-gold/30">
+
+    <!-- Sidebar -->
+    <aside class="w-60 bg-surface flex flex-col shrink-0 border-r border-border">
+        <div class="h-14 flex items-center px-5 border-b border-border">
+            <span class="font-serif font-semibold text-lg text-paper">ScholarSync</span>
+        </div>
+
+        <nav class="flex-1 px-3 py-6 space-y-1">
+            <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                <i class="ph ph-squares-four"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-paper bg-elevated rounded-lg border border-border transition-all">
+                <i class="ph ph-folder-notch text-gold"></i>
+                <span class="text-sm font-medium">Manuscripts</span>
+            </a>
+            <a href="library.html" class="flex items-center gap-3 px-3 py-2.5 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                <i class="ph ph-books"></i>
+                <span class="text-sm">Library</span>
+            </a>
+
+            <div class="pt-6 mt-4 border-t border-border">
+                <p class="px-3 text-[10px] font-mono text-[#555d6e] uppercase tracking-widest mb-3">Tools</p>
+                <a href="research.html" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <i class="ph ph-globe-hemisphere-west"></i>
+                    <span class="text-sm">Deep Search</span>
+                </a>
+                <a href="notebook.html" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <i class="ph ph-brain"></i>
+                    <span class="text-sm">Socratic Notebook</span>
+                </a>
+                <a href="analysis.html" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <i class="ph ph-chart-bar"></i>
+                    <span class="text-sm">Analysis</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-border">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gold/10 border border-gold/20 rounded-lg flex items-center justify-center">
+                    <span class="font-serif text-sm text-gold italic">R</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-medium text-paper truncate">Rahul Verma</p>
+                    <p class="text-[10px] text-[#555d6e] font-mono">Pro</p>
+                </div>
+                <a href="settings.html" class="text-[#555d6e] hover:text-[#8891a0] transition-colors"><i class="ph ph-gear text-sm"></i></a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="h-14 border-b border-border flex items-center justify-between px-8 shrink-0 bg-void">
+            <div class="relative w-80 group">
+                <i class="ph ph-magnifying-glass absolute left-0 top-2.5 text-[#555d6e] group-focus-within:text-gold transition-colors"></i>
+                <input type="text" placeholder="Search manuscripts..." class="w-full bg-transparent border-b border-transparent py-2 pl-7 text-sm text-paper placeholder-[#555d6e] focus:outline-none focus:border-border transition-colors">
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="text-[10px] font-mono bg-gold text-void px-3 py-1.5 rounded hover:bg-gold-bright transition-colors flex items-center gap-2"><i class="ph ph-plus"></i> New manuscript</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-10">
+            <div class="max-w-5xl mx-auto space-y-8">
+
+                <!-- Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="border border-border rounded-lg p-4 bg-surface/30">
+                        <span class="text-xl font-mono font-medium text-paper">5</span>
+                        <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-0.5">Total</p>
+                    </div>
+                    <div class="border border-border rounded-lg p-4 bg-surface/30">
+                        <span class="text-xl font-mono font-medium text-gold">2</span>
+                        <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-0.5">In Progress</p>
+                    </div>
+                    <div class="border border-border rounded-lg p-4 bg-surface/30">
+                        <span class="text-xl font-mono font-medium text-[#5b9a72]">2</span>
+                        <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-0.5">Completed</p>
+                    </div>
+                    <div class="border border-border rounded-lg p-4 bg-surface/30">
+                        <span class="text-xl font-mono font-medium text-[#8891a0]">1</span>
+                        <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-0.5">Archived</p>
+                    </div>
+                </div>
+
+                <!-- Active section -->
+                <section>
+                    <h2 class="text-xs font-mono text-[#555d6e] uppercase tracking-widest mb-4">Active</h2>
+                    <div class="space-y-4">
+                        <!-- Manuscript card 1 -->
+                        <div class="border border-border rounded-lg p-6 bg-surface/30 hover:border-border-bright transition-all group cursor-pointer">
+                            <div class="flex items-start justify-between gap-6">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h3 class="font-serif text-lg text-paper group-hover:text-gold transition-colors">CRISPR Applications: A Comprehensive Review</h3>
+                                        <span class="text-[10px] font-mono border border-gold/30 text-gold px-2 py-0.5 rounded shrink-0">Drafting</span>
+                                    </div>
+                                    <p class="font-serif text-sm text-[#8891a0] leading-relaxed mb-4">
+                                        A systematic review examining the evolution of CRISPR-Cas9 technology, focusing on recent advances in high-fidelity variants and their implications for therapeutic applications.
+                                    </p>
+                                    <div class="flex items-center gap-4 font-mono text-[10px] text-[#555d6e]">
+                                        <span>2,401 words</span>
+                                        <span>&bull;</span>
+                                        <span>14 citations</span>
+                                        <span>&bull;</span>
+                                        <span>4 sections</span>
+                                        <span>&bull;</span>
+                                        <span>Last edited 2h ago</span>
+                                    </div>
+                                </div>
+                                <div class="shrink-0 text-right">
+                                    <div class="w-16 h-16 relative">
+                                        <svg class="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#252b38" stroke-width="2"></path>
+                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#c8965d" stroke-width="2" stroke-dasharray="60, 100"></path>
+                                        </svg>
+                                        <span class="absolute inset-0 flex items-center justify-center font-mono text-xs text-gold">60%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-border/50 flex items-center justify-between">
+                                <div class="flex gap-2">
+                                    <span class="text-[9px] font-mono bg-elevated text-[#8891a0] px-2 py-1 rounded border border-border">Review article</span>
+                                    <span class="text-[9px] font-mono bg-elevated text-[#8891a0] px-2 py-1 rounded border border-border">Nature Reviews Genetics</span>
+                                </div>
+                                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Open</button>
+                                    <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Analyze</button>
+                                    <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Export</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Manuscript card 2 -->
+                        <div class="border border-border rounded-lg p-6 bg-surface/30 hover:border-border-bright transition-all group cursor-pointer">
+                            <div class="flex items-start justify-between gap-6">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h3 class="font-serif text-lg text-paper group-hover:text-gold transition-colors">Ethical Implications of AI in Scientific Research</h3>
+                                        <span class="text-[10px] font-mono border border-border text-[#8891a0] px-2 py-0.5 rounded shrink-0">Research</span>
+                                    </div>
+                                    <p class="font-serif text-sm text-[#8891a0] leading-relaxed mb-4">
+                                        Exploring the ethical frameworks surrounding AI-assisted writing and research tools in academic contexts, with focus on attribution, transparency, and intellectual integrity.
+                                    </p>
+                                    <div class="flex items-center gap-4 font-mono text-[10px] text-[#555d6e]">
+                                        <span>12 sources collected</span>
+                                        <span>&bull;</span>
+                                        <span>Outline complete</span>
+                                        <span>&bull;</span>
+                                        <span>Last edited yesterday</span>
+                                    </div>
+                                </div>
+                                <div class="shrink-0 text-right">
+                                    <div class="w-16 h-16 relative">
+                                        <svg class="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#252b38" stroke-width="2"></path>
+                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#8891a0" stroke-width="2" stroke-dasharray="20, 100"></path>
+                                        </svg>
+                                        <span class="absolute inset-0 flex items-center justify-center font-mono text-xs text-[#8891a0]">20%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-border/50 flex items-center justify-between">
+                                <div class="flex gap-2">
+                                    <span class="text-[9px] font-mono bg-elevated text-[#8891a0] px-2 py-1 rounded border border-border">Opinion piece</span>
+                                    <span class="text-[9px] font-mono bg-elevated text-[#8891a0] px-2 py-1 rounded border border-border">Science & Ethics</span>
+                                </div>
+                                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Open</button>
+                                    <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Analyze</button>
+                                    <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors">Export</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Completed -->
+                <section>
+                    <h2 class="text-xs font-mono text-[#555d6e] uppercase tracking-widest mb-4">Completed</h2>
+                    <div class="space-y-3">
+                        <div class="border border-border rounded-lg p-5 bg-surface/20 hover:border-border-bright transition-all cursor-pointer group">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-serif text-paper group-hover:text-gold transition-colors">Introduction to Gene Therapy: A Student&rsquo;s Guide</h3>
+                                    <div class="flex items-center gap-3 font-mono text-[10px] text-[#555d6e] mt-1.5">
+                                        <span>4,820 words</span>
+                                        <span>&bull;</span>
+                                        <span>28 citations</span>
+                                        <span>&bull;</span>
+                                        <span>Submitted Oct 12</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-[#5b9a72] border border-[#5b9a72]/30 px-2 py-0.5 rounded">Submitted</span>
+                            </div>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/20 hover:border-border-bright transition-all cursor-pointer group">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-serif text-paper group-hover:text-gold transition-colors">mRNA Vaccine Mechanisms: Literature Review</h3>
+                                    <div class="flex items-center gap-3 font-mono text-[10px] text-[#555d6e] mt-1.5">
+                                        <span>3,215 words</span>
+                                        <span>&bull;</span>
+                                        <span>19 citations</span>
+                                        <span>&bull;</span>
+                                        <span>Submitted Sep 28</span>
+                                    </div>
+                                </div>
+                                <span class="text-[10px] font-mono text-[#5b9a72] border border-[#5b9a72]/30 px-2 py-0.5 rounded">Published</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

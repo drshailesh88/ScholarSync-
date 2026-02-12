@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+    <style>::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#252b38;border-radius:4px}</style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden selection:bg-gold/30">
+
+    <!-- Sidebar -->
+    <aside class="w-60 bg-surface flex flex-col shrink-0 border-r border-border">
+        <div class="h-14 flex items-center px-5 border-b border-border">
+            <span class="font-serif font-semibold text-lg text-paper">ScholarSync</span>
+        </div>
+
+        <nav class="flex-1 px-3 py-6 space-y-1">
+            <a href="dashboard.html" class="flex items-center gap-3 px-3 py-2.5 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                <i class="ph ph-squares-four"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            <a href="projects.html" class="flex items-center gap-3 px-3 py-2.5 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                <i class="ph ph-folder-notch"></i>
+                <span class="text-sm">Manuscripts</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-paper bg-elevated rounded-lg border border-border transition-all">
+                <i class="ph ph-books text-gold"></i>
+                <span class="text-sm font-medium">Library</span>
+            </a>
+
+            <div class="pt-6 mt-4 border-t border-border">
+                <p class="px-3 text-[10px] font-mono text-[#555d6e] uppercase tracking-widest mb-3">Collections</p>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <span class="w-2 h-2 bg-gold rounded-full"></span>
+                    <span class="text-sm">CRISPR Research</span>
+                    <span class="ml-auto font-mono text-[10px] text-[#555d6e]">24</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <span class="w-2 h-2 bg-[#5b9a72] rounded-full"></span>
+                    <span class="text-sm">AI Ethics</span>
+                    <span class="ml-auto font-mono text-[10px] text-[#555d6e]">12</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <span class="w-2 h-2 bg-[#6b7bc4] rounded-full"></span>
+                    <span class="text-sm">Gene Therapy</span>
+                    <span class="ml-auto font-mono text-[10px] text-[#555d6e]">8</span>
+                </a>
+                <button class="flex items-center gap-3 px-3 py-2 text-[#555d6e] hover:text-[#8891a0] transition-colors w-full">
+                    <i class="ph ph-plus text-xs"></i>
+                    <span class="text-sm">New collection</span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-border">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gold/10 border border-gold/20 rounded-lg flex items-center justify-center">
+                    <span class="font-serif text-sm text-gold italic">R</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-medium text-paper truncate">Rahul Verma</p>
+                    <p class="text-[10px] text-[#555d6e] font-mono">Pro</p>
+                </div>
+                <a href="settings.html" class="text-[#555d6e] hover:text-[#8891a0] transition-colors"><i class="ph ph-gear text-sm"></i></a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="h-14 border-b border-border flex items-center justify-between px-8 shrink-0 bg-void">
+            <div class="relative w-80 group">
+                <i class="ph ph-magnifying-glass absolute left-0 top-2.5 text-[#555d6e] group-focus-within:text-gold transition-colors"></i>
+                <input type="text" placeholder="Search library..." class="w-full bg-transparent border-b border-transparent py-2 pl-7 text-sm text-paper placeholder-[#555d6e] focus:outline-none focus:border-border transition-colors">
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="text-[10px] font-mono border border-border px-3 py-1.5 rounded hover:border-border-bright transition-colors text-[#8891a0] flex items-center gap-2"><i class="ph ph-funnel"></i> Filter</button>
+                <button class="text-[10px] font-mono border border-border px-3 py-1.5 rounded hover:border-border-bright transition-colors text-[#8891a0] flex items-center gap-2"><i class="ph ph-sort-ascending"></i> Sort</button>
+                <button class="text-[10px] font-mono bg-gold text-void px-3 py-1.5 rounded hover:bg-gold-bright transition-colors flex items-center gap-2"><i class="ph ph-plus"></i> Add paper</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto">
+            <!-- Library header stats -->
+            <div class="px-8 py-6 border-b border-border bg-surface/30">
+                <div class="flex items-center gap-8">
+                    <div>
+                        <span class="text-2xl font-mono font-medium text-paper">44</span>
+                        <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-0.5">Total papers</p>
+                    </div>
+                    <div class="w-px h-8 bg-border"></div>
+                    <div>
+                        <span class="text-2xl font-mono font-medium text-[#8891a0]">3</span>
+                        <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-0.5">Collections</p>
+                    </div>
+                    <div class="w-px h-8 bg-border"></div>
+                    <div>
+                        <span class="text-2xl font-mono font-medium text-gold">7</span>
+                        <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-0.5">Unread</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Papers list -->
+            <div class="divide-y divide-border/50">
+                <div class="px-8 py-5 hover:bg-surface/30 transition-colors cursor-pointer group">
+                    <div class="flex items-start gap-4">
+                        <input type="checkbox" class="mt-1.5 w-3.5 h-3.5 rounded border-border bg-elevated text-gold focus:ring-0 focus:ring-offset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-serif text-paper leading-snug group-hover:text-gold transition-colors">High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects</h3>
+                            <div class="flex items-center gap-2 mt-1.5 font-mono text-xs text-[#8891a0]">
+                                <span class="font-medium text-paper">Slaymaker, I.M., Gao, L., Zetsche, B., Scott, D.A., Yan, W.X., Zhang, F.</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1 font-mono text-[10px] text-[#555d6e]">
+                                <span class="italic">Nature</span>
+                                <span>&bull;</span>
+                                <span>2023</span>
+                                <span>&bull;</span>
+                                <span>Cited 420 times</span>
+                                <span>&bull;</span>
+                                <span class="text-gold">CRISPR Research</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Cite"><i class="ph ph-quotes text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Open PDF"><i class="ph ph-file-pdf text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="More"><i class="ph ph-dots-three text-sm"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-8 py-5 hover:bg-surface/30 transition-colors cursor-pointer group">
+                    <div class="flex items-start gap-4">
+                        <input type="checkbox" class="mt-1.5 w-3.5 h-3.5 rounded border-border bg-elevated text-gold focus:ring-0 focus:ring-offset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-serif text-paper leading-snug group-hover:text-gold transition-colors">Evaluation of Off-Target Effects in CRISPR-Cas9 Therapeutics</h3>
+                            <div class="flex items-center gap-2 mt-1.5 font-mono text-xs text-[#8891a0]">
+                                <span class="font-medium text-paper">Zhang, Y., Chen, H., Li, M.</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1 font-mono text-[10px] text-[#555d6e]">
+                                <span class="italic">Cell Review</span>
+                                <span>&bull;</span>
+                                <span>2024</span>
+                                <span>&bull;</span>
+                                <span>Cited 85 times</span>
+                                <span>&bull;</span>
+                                <span class="text-gold">CRISPR Research</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Cite"><i class="ph ph-quotes text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Open PDF"><i class="ph ph-file-pdf text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="More"><i class="ph ph-dots-three text-sm"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-8 py-5 hover:bg-surface/30 transition-colors cursor-pointer group">
+                    <div class="flex items-start gap-4">
+                        <input type="checkbox" class="mt-1.5 w-3.5 h-3.5 rounded border-border bg-elevated text-gold focus:ring-0 focus:ring-offset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-serif text-paper leading-snug group-hover:text-gold transition-colors">Prime editing: a new era of genome engineering</h3>
+                            <div class="flex items-center gap-2 mt-1.5 font-mono text-xs text-[#8891a0]">
+                                <span class="font-medium text-paper">Anzalone, A.V., Randolph, P.B., Davis, J.R., Liu, D.R.</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1 font-mono text-[10px] text-[#555d6e]">
+                                <span class="italic">Nature</span>
+                                <span>&bull;</span>
+                                <span>2021</span>
+                                <span>&bull;</span>
+                                <span>Cited 1,240 times</span>
+                                <span>&bull;</span>
+                                <span class="text-gold">CRISPR Research</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Cite"><i class="ph ph-quotes text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Open PDF"><i class="ph ph-file-pdf text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="More"><i class="ph ph-dots-three text-sm"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-8 py-5 hover:bg-surface/30 transition-colors cursor-pointer group">
+                    <div class="flex items-start gap-4">
+                        <input type="checkbox" class="mt-1.5 w-3.5 h-3.5 rounded border-border bg-elevated text-gold focus:ring-0 focus:ring-offset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-serif text-paper leading-snug group-hover:text-gold transition-colors">Ethical considerations in AI-assisted scientific writing</h3>
+                                <span class="text-[9px] font-mono bg-gold/10 text-gold px-1.5 py-0.5 rounded border border-gold/20">Unread</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1.5 font-mono text-xs text-[#8891a0]">
+                                <span class="font-medium text-paper">Roberts, K., Patel, S.</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1 font-mono text-[10px] text-[#555d6e]">
+                                <span class="italic">Science & Ethics</span>
+                                <span>&bull;</span>
+                                <span>2024</span>
+                                <span>&bull;</span>
+                                <span>Cited 32 times</span>
+                                <span>&bull;</span>
+                                <span class="text-[#5b9a72]">AI Ethics</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Cite"><i class="ph ph-quotes text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Open PDF"><i class="ph ph-file-pdf text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="More"><i class="ph ph-dots-three text-sm"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-8 py-5 hover:bg-surface/30 transition-colors cursor-pointer group">
+                    <div class="flex items-start gap-4">
+                        <input type="checkbox" class="mt-1.5 w-3.5 h-3.5 rounded border-border bg-elevated text-gold focus:ring-0 focus:ring-offset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-serif text-paper leading-snug group-hover:text-gold transition-colors">CRISPR gene therapy: safety and long-term outcomes from phase I trials</h3>
+                            <div class="flex items-center gap-2 mt-1.5 font-mono text-xs text-[#8891a0]">
+                                <span class="font-medium text-paper">Chen, W., Liu, J.</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1 font-mono text-[10px] text-[#555d6e]">
+                                <span class="italic">NEJM</span>
+                                <span>&bull;</span>
+                                <span>2023</span>
+                                <span>&bull;</span>
+                                <span>Cited 198 times</span>
+                                <span>&bull;</span>
+                                <span class="text-[#6b7bc4]">Gene Therapy</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Cite"><i class="ph ph-quotes text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="Open PDF"><i class="ph ph-file-pdf text-sm"></i></button>
+                            <button class="text-[#8891a0] hover:text-gold transition-colors p-1.5" title="More"><i class="ph ph-dots-three text-sm"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
