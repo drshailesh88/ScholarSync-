@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-border: var(--border-color);
+  --color-border-subtle: var(--border-subtle);
+  --color-glass: var(--glass);
+  --color-glow: var(--glow);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --font-sans: var(--font-sans-family);
+  --font-serif: var(--font-serif-family);
+}
+
+:root {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-raised: #f1f5f9;
+  --ink: #0f172a;
+  --ink-muted: #64748b;
+  --border-color: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(226, 232, 240, 0.6);
+  --glow: #6366f1;
+  --brand: #6366f1;
+  --brand-hover: #4f46e5;
+  --font-sans-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  --font-serif-family: var(--font-merriweather), Georgia, serif;
+}
+
+.dark {
+  --background: #020617;
+  --surface: #0f172a;
+  --surface-raised: #1e293b;
+  --ink: #f1f5f9;
+  --ink-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --glass: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glow: #0ea5e9;
+  --brand: #6366f1;
+  --brand-hover: #818cf8;
+  --font-sans-family: var(--font-inter), system-ui, sans-serif;
+  --font-serif-family: var(--font-merriweather), Georgia, serif;
+}
+
+body {
+  font-family: var(--font-sans-family);
+}
+
+.glass-panel {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+:root .glass-panel {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.text-glow {
+  text-shadow: 0 0 20px var(--glow), 0 0 40px color-mix(in srgb, var(--glow) 30%, transparent);
+}
+
+.lamp-glow {
+  box-shadow: 0 0 30px color-mix(in srgb, var(--glow) 20%, transparent),
+    0 0 60px color-mix(in srgb, var(--glow) 10%, transparent);
+}

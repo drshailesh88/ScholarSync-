@@ -1,0 +1,308 @@
+# ScholarSync — Phase 1 Foundation PRD
+
+## Overview
+ScholarSync is an AI-powered academic writing platform for medical students and researchers. This PRD covers Phase 1: the complete technical foundation. No features yet — just the skeleton that every feature will build on.
+
+The repo lives at `/Users/shaileshsingh/codename ScholarSync/` and currently has HTML mockups (ui-mockups-codex/) and documentation (docs/) but ZERO application code.
+
+## Tech Stack (FINAL — do not deviate)
+- Framework: Next.js 15 App Router, TypeScript, Tailwind CSS
+- Database: PostgreSQL with Drizzle ORM (71-table schema)
+- Auth: Clerk (@clerk/nextjs)
+- AI: Claude only — Haiku (cheap) + Sonnet (quality) via Vercel AI SDK
+- Icons: @phosphor-icons/react
+- Theme: next-themes with CSS variables (dark default, light toggle)
+- Fonts: Inter (dark UI), Plus Jakarta Sans (light UI), Merriweather (serif/editor)
+- Deploy target: GCP Cloud Run (later — build locally first)
+
+---
+
+## Task 1: Initialize Next.js Project
+Initialize a Next.js 15 project with TypeScript, Tailwind CSS, ESLint, App Router, and src directory in the existing repo. Use npm (not pnpm). The command should scaffold into the current directory alongside existing mockup and docs folders.
+
+**Acceptance criteria:**
+- `npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias "@/*" --no-turbopack` runs successfully
+- `npm run dev` starts the default Next.js page at localhost:3000
+- Existing ui-mockups/, docs/, and other files are NOT overwritten
+
+## Task 2: Install All Phase 1 npm Packages
+Install all Phase 1 dependencies in one go. Core: @clerk/nextjs, next-themes, @phosphor-icons/react, clsx, tailwind-merge. Database: drizzle-orm, postgres. AI: ai, @ai-sdk/anthropic. Dev: drizzle-kit, @types/node, tsx.
+
+**Acceptance criteria:**
+- All packages in package.json
+- `npm ls` shows no peer dependency errors (warnings OK)
+- No duplicate packages
+
+## Task 3: Create Project Configuration Files
+Create: next.config.ts (with output: 'standalone'), .env.local (with placeholder Clerk/DB/Anthropic keys, gitignored), drizzle.config.ts (pointing to schema directory), and add database scripts to package.json (db:push, db:studio, db:generate, db:migrate).
+
+**Acceptance criteria:**
+- next.config.ts has `output: 'standalone'`
+- .env.local exists with all required env vars (placeholder values OK)
+- .env.local is in .gitignore
+- drizzle.config.ts points to `./src/lib/db/schema/index.ts`
+- package.json has db:push, db:studio, db:generate, db:migrate scripts
+
+## Task 4: Create Dockerfile and cloudbuild.yaml
+Create a multi-stage Dockerfile (node:22-alpine, deps → builder → runner, standalone output, non-root user, port 3000). Create cloudbuild.yaml for future GCP Cloud Run auto-deploy on git push to main.
+
+**Acceptance criteria:**
+- Dockerfile follows multi-stage pattern (base, deps, builder, runner)
+- Runner stage copies standalone output and static files
+- cloudbuild.yaml references the correct GCP project ID and region (asia-south1)
+- `docker build .` should succeed (if Docker is available)
+
+## Task 5: Copy Database Schema to Repo
+Copy the 71-table PostgreSQL schema from `/Users/shaileshsingh/Downloads/scholarsync_schema_v3_final.sql` to `database/schema.sql` in the repo. This is the single source of truth for the database. Do NOT modify the SQL.
+
+**Acceptance criteria:**
+- `database/schema.sql` exists in repo
+- Content is byte-identical to the source file
+- All 71 tables present
+- All indexes present
+- Seed data for usage_quotas present
+
+## Task 6: Create Theme System (globals.css with CSS Variables)
+Create the dual-theme CSS system in src/app/globals.css. Define CSS custom properties for both themes: Light (Daylight Studio: canvas #f8fafc, white surfaces, Plus Jakarta Sans) and Dark (Luminous Workspace: slate-950 room, slate-900 surfaces, Inter font, sky-500 glow). Include glass-panel, text-glow, and lamp-glow utility classes. Register theme tokens with Tailwind.
+
+**Dark theme values:** room #020617, surface #0f172a, surface-raised #1e293b, ink #f1f5f9, ink-muted #94a3b8, border rgba(255,255,255,0.08), glass rgba(15,23,42,0.6) with blur(16px), glow #0ea5e9, brand #6366f1, font-sans Inter.
+
+**Light theme values:** background #f8fafc, surface #ffffff, surface-raised #f1f5f9, ink #0f172a, ink-muted #64748b, border #e2e8f0, glass rgba(255,255,255,0.8) with blur(12px), brand #6366f1, font-sans Plus Jakarta Sans.
+
+**Acceptance criteria:**
+- globals.css defines :root (light) and .dark (dark) variable sets
+- Glass panel utility class works in both themes
+- Tailwind can use custom colors: bg-background, text-ink, text-ink-muted, border-border, bg-surface, bg-brand, text-glow
+- Font family switches between themes via --font-sans variable
+
+## Task 7: Create Utility Functions and Font Configuration
+Create src/lib/utils.ts with the cn() utility (clsx + tailwind-merge). Create src/lib/fonts.ts with Next.js font loading for Inter, Plus Jakarta Sans, and Merriweather using next/font/google.
+
+**Acceptance criteria:**
+- cn() combines class names with Tailwind merge support
+- All three fonts loaded with correct weights and CSS variables
+- Fonts exported for use in root layout
+
+## Task 8: Create Theme Provider Component
+Create src/components/providers/theme-provider.tsx wrapping next-themes ThemeProvider. This is a client component that provides dark/light theme context to the entire app.
+
+**Acceptance criteria:**
+- Client component ("use client")
+- Wraps NextThemesProvider with passthrough props
+- Exported for use in root layout
+
+## Task 9: Create Root Layout with Clerk and Theme Providers
+Create src/app/layout.tsx — the root layout wrapping the entire app. Must include: ClerkProvider (with indigo brand appearance), ThemeProvider (dark default), html tag with font CSS variables, body with bg-background text-ink, and metadata.
+
+**Acceptance criteria:**
+- ClerkProvider wraps everything
+- ThemeProvider sets defaultTheme="dark"
+- html tag has suppressHydrationWarning and font variable classes
+- body has bg-background text-ink antialiased
+- Metadata: title "ScholarSync", description about academic writing
+
+## Task 10: Create Clerk Auth Middleware
+Create src/middleware.ts using @clerk/nextjs/server. Public routes: /, /sign-in(.+), /sign-up(.+), /api/webhooks(.+). All other routes protected. Use createRouteMatcher pattern.
+
+**Acceptance criteria:**
+- Landing page (/) accessible without auth
+- Sign-in/up pages accessible without auth
+- /dashboard, /studio, etc. redirect to sign-in when not authenticated
+- Matcher excludes static files and Next.js internals
+
+## Task 11: Drizzle Schema — Enum Definitions
+Create src/lib/db/schema/enums.ts with ALL pgEnum definitions extracted from the SQL schema's CHECK constraints. Enums include: degree_level, plan, project_status, project_type, paper_source, section_type, conversation_mode, message_role, screening_stage, screening_decision, risk_judgment, effect_model, column_type, matrix_source, milestone_status, submission_status, review_recommendation, comment_severity, annotation_color, audio_status, integration_direction, sync_status, and all others from the schema.
+
+**Acceptance criteria:**
+- Every CHECK constraint in schema.sql that acts as an enum has a corresponding pgEnum
+- Enum values match SQL exactly (spelling, order)
+- All enums exported for use in other schema files
+
+## Task 12: Drizzle Schema — Core Tables (1-16)
+Create src/lib/db/schema/core.ts with tables 1-16 from the SQL schema: users, projects, papers, project_papers, paper_chunks (with vector(1536) column), search_queries, paper_extractions, synthesis_documents, synthesis_sections, synthesis_citations, synthesis_versions, conversations, messages, project_context_cache, citation_graph, snowball_sessions. Include all columns, types, defaults, constraints, and indexes matching the SQL exactly.
+
+**Acceptance criteria:**
+- All 16 tables defined with correct column types
+- users.id is TEXT (Clerk ID), not SERIAL
+- paper_chunks.embedding is vector(1536)
+- All foreign key references correct (onDelete cascade/set null as per SQL)
+- All indexes from SQL schema included
+- JSONB columns use jsonb() type
+- Default values match SQL
+
+## Task 13: Drizzle Schema — Editor and Writing Tables (17-36)
+Create src/lib/db/schema/editor.ts with tables 17-36: slide_decks, slides, deep_research_sessions, deep_research_steps, datasets, statistical_analyses, integrity_checks, writing_action_log, writing_analysis_snapshots, document_changes, templates, template_sections, user_references, document_comments, document_shares, activity_log, discipline_profiles, export_templates, learning_modules, user_learning_progress. All columns, constraints, indexes matching SQL exactly.
+
+**Acceptance criteria:**
+- All 20 tables defined matching SQL
+- Foreign key references to core tables use correct imports
+- All CHECK constraints represented
+- All indexes included
+- Soft delete columns (deleted_at) present where specified
+
+## Task 14: Drizzle Schema — Billing and Tracking Tables (37-41, 52)
+Create src/lib/db/schema/billing.ts with: usage_events, subscriptions, feedback, prompt_versions, pdf_annotations, usage_quotas. All columns, constraints, indexes matching SQL exactly.
+
+**Acceptance criteria:**
+- All 6 tables defined matching SQL
+- usage_quotas has UNIQUE constraint on plan
+- subscriptions has razorpay fields
+- pdf_annotations has color enum
+- All indexes included
+
+## Task 15: Drizzle Schema — Systematic Review Tables (42-51)
+Create src/lib/db/schema/systematic.ts with: screening_criteria, screening_decisions, prisma_flow, risk_of_bias, meta_analysis_results, comparison_matrices, matrix_columns, matrix_cells, project_milestones, milestone_progress. All columns, constraints, composite unique indexes matching SQL exactly.
+
+**Acceptance criteria:**
+- All 10 tables defined matching SQL
+- Composite UNIQUE constraints (e.g., screening_decisions, risk_of_bias, matrix_cells)
+- All CHECK constraints represented
+- All indexes included
+
+## Task 16: Drizzle Schema — Institutional Tables (53-55)
+Create src/lib/db/schema/institutional.ts with: institutions, institution_memberships, supervisor_assignments. All columns, constraints, unique indexes matching SQL exactly.
+
+**Acceptance criteria:**
+- All 3 tables defined matching SQL
+- institution_memberships has UNIQUE(user_id, institution_id)
+- supervisor_assignments has UNIQUE(student_id, project_id)
+- All foreign key references correct
+
+## Task 17: Drizzle Schema — Platform Tables (56-71)
+Create src/lib/db/schema/platform.ts with: marketplace_items, marketplace_reviews, journal_profiles, submissions, submission_checks, review_simulations, simulated_comments, user_profiles_public, publications, orcid_links, audio_summaries, audio_scripts, knowledge_notes, knowledge_links, integrations, sync_log. All columns, constraints, indexes matching SQL exactly.
+
+**Acceptance criteria:**
+- All 16 tables defined matching SQL
+- marketplace_reviews has UNIQUE(item_id, user_id)
+- user_profiles_public has UNIQUE on user_id and profile_url_slug
+- orcid_links has UNIQUE on user_id
+- integrations has UNIQUE(user_id, provider)
+- knowledge_links has composite UNIQUE
+- All indexes included
+
+## Task 18: Drizzle Schema — Relations and Barrel Export
+Create src/lib/db/schema/relations.ts with Drizzle relations() definitions for all foreign key relationships across all 71 tables. Create src/lib/db/schema/index.ts as barrel export re-exporting everything from enums, core, editor, billing, systematic, institutional, platform, and relations.
+
+**Acceptance criteria:**
+- relations.ts defines relations for every table with foreign keys
+- One-to-many and many-to-one relationships correctly modeled
+- index.ts re-exports all tables, enums, and relations
+- `import * as schema from '@/lib/db/schema'` works
+
+## Task 19: Create Database Client
+Create src/lib/db/index.ts with Drizzle client using postgres.js driver. Connection string from DATABASE_URL env var. Export db instance with full schema.
+
+**Acceptance criteria:**
+- Uses `postgres` (postgres.js) driver
+- Passes full schema to drizzle() for relational queries
+- Exported as `db`
+- Connection string from process.env.DATABASE_URL
+
+## Task 20: Create AI Model Utility
+Create src/lib/ai/models.ts with getModel(), getSmallModel(), and getBigModel() functions. Uses @ai-sdk/anthropic provider. getModel() returns claude-sonnet-4 (main workhorse). getSmallModel() returns claude-haiku-4.5 (cheap tasks). getBigModel() returns claude-sonnet-4 (complex reasoning). All use ANTHROPIC_API_KEY from env.
+
+**Acceptance criteria:**
+- Three exported functions: getModel, getSmallModel, getBigModel
+- Uses createAnthropic from @ai-sdk/anthropic
+- API key from process.env.ANTHROPIC_API_KEY
+- Model IDs are valid Anthropic model identifiers
+- Each function has JSDoc explaining when to use it
+
+## Task 21: Create UI Components
+Create reusable UI components in src/components/ui/: logo.tsx (gradient icon + "ScholarSync" text), glass-panel.tsx (reusable glass morphism container with rounded-2xl), glow-card.tsx (dashboard action card with hover glow effect and translateY animation), theme-toggle.tsx (Daylight/Night pill toggle using next-themes useTheme hook). All components use Phosphor Icons and the cn() utility.
+
+**Acceptance criteria:**
+- Logo renders gradient icon + brand text
+- GlassPanel applies glass-panel CSS class + rounded-2xl
+- GlowCard has hover:-translate-y-1 transition and glow shadow
+- ThemeToggle switches between "dark" and "light" themes
+- ThemeToggle is hydration-safe (mounted check)
+- All components accept className prop for customization
+
+## Task 22: Create App Sidebar Component
+Create src/components/layout/app-sidebar.tsx — the glass panel sidebar used across all authenticated pages. Navigation items: Dashboard (House), Studio (PenNib), Deep Research (GlobeHemisphereWest), Notebook (Notebook), Library (Books), Archive (FolderOpen), Compliance (ShieldCheck), Presentation (ProjectorScreenChart), Settings (Gear). Active state with filled icon + highlight background. User section at bottom with Clerk UserButton.
+
+**Acceptance criteria:**
+- w-64 sidebar with glass-panel styling
+- Logo at top (h-20 header)
+- 9 navigation items with Phosphor icons
+- Active route detection using usePathname()
+- Active state: bg-surface-raised, filled icon weight, border
+- Hover state: bg-surface-raised/50
+- Hidden on mobile (hidden md:flex)
+- Clerk UserButton in footer section
+
+## Task 23: Create App Header Component
+Create src/components/layout/app-header.tsx — the top header bar for authenticated pages. Contains: greeting text ("Good morning" / "Good afternoon" / "Good evening" based on time), theme toggle component, notification bell icon, and page title area.
+
+**Acceptance criteria:**
+- Time-based greeting
+- Theme toggle positioned on the right
+- Notification bell (Phosphor Bell icon)
+- Responsive layout
+
+## Task 24: Create Marketing Nav Component
+Create src/components/layout/marketing-nav.tsx — the floating glass nav for the landing page. Contains: ScholarSync logo, nav links (Features, Pricing, About), and Sign In / Get Started buttons. Always dark theme. Glass pill shape with rounded-full.
+
+**Acceptance criteria:**
+- Fixed/sticky positioning at top
+- Glass morphism background (bg-glass with backdrop-blur)
+- Rounded pill shape
+- Logo on left, links center, auth buttons right
+- Get Started button with brand gradient
+- Links scroll to sections on landing page
+
+## Task 25: Create Route Layouts (Marketing, Auth, App)
+Create three route group layouts: (marketing)/layout.tsx — forces dark theme via className="dark", no sidebar. (auth)/layout.tsx — split-screen: form area left (w-1/2), decorative panel right with quote and gradient background. (app)/layout.tsx — checks auth (redirect to /sign-in if unauthenticated), renders AppSidebar + main content area.
+
+**Acceptance criteria:**
+- Marketing layout wraps children in dark div
+- Auth layout shows split screen (responsive: full width on mobile)
+- App layout redirects to sign-in if no userId from auth()
+- App layout renders sidebar + scrollable main area
+- All layouts are properly typed
+
+## Task 26: Create Auth Pages (Sign-In, Sign-Up)
+Create src/app/(auth)/sign-in/[[...sign-in]]/page.tsx with Clerk SignIn component. Create src/app/(auth)/sign-up/[[...sign-up]]/page.tsx with Clerk SignUp component. Both use the catch-all route pattern required by Clerk.
+
+**Acceptance criteria:**
+- Sign-in page renders Clerk SignIn component
+- Sign-up page renders Clerk SignUp component
+- Routes match Clerk's catch-all pattern
+- Pages are accessible without authentication
+
+## Task 27: Create All Stub App Pages
+Create placeholder pages for all 10 app routes: dashboard, studio, research, notebook, library, projects, compliance, presentation, analysis, settings. Each stub page shows the page title as an h1 and a "Coming in Phase 2" message. Use the glass-panel component for the card container.
+
+**Acceptance criteria:**
+- All 10 pages exist at correct routes
+- Each page exports a default function component
+- Each page shows its title (e.g., "Dashboard", "Studio")
+- Pages render without errors
+- All pages are accessible when authenticated
+
+## Task 28: Build Landing Page from Mockup
+Convert ui-mockups-codex/landing.html to a full React component at src/app/(marketing)/page.tsx. Include: Hero section with gradient text and tagline, feature grid (4 feature cards with icons), pricing section (3 tiers: Free, Basic ₹1,000/mo, Pro ₹2,000/mo), social proof/testimonial area, and footer. Always dark theme. Use marketing-nav component. Match the mockup's Tailwind classes, glass panels, and glow effects.
+
+**Acceptance criteria:**
+- Landing page matches the dark theme mockup visually
+- Hero section with gradient text effect
+- Feature grid with 4 cards
+- Pricing with 3 tiers showing INR prices
+- Marketing nav at top
+- CTA buttons link to /sign-up
+- Responsive (looks good on mobile)
+- Always dark regardless of theme setting
+
+## Task 29: Verify and Test Phase 1 Build
+Run full verification of the Phase 1 foundation: npm run dev starts without errors, TypeScript compiles (npx tsc --noEmit), all routes resolve correctly, theme toggle works, Clerk auth flow works (if keys provided), landing page renders in dark, sidebar navigation works, all stub pages load. Fix any issues found.
+
+**Acceptance criteria:**
+- `npm run dev` starts without errors
+- `npx tsc --noEmit` passes with zero errors
+- Landing page (/) renders correctly in dark theme
+- /sign-in and /sign-up show Clerk components (or placeholder if no keys)
+- /dashboard and all app routes show stub pages (when authenticated)
+- Theme toggle switches between dark and light
+- Sidebar highlights active route
+- No console errors in browser
