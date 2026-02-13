@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Diagnostics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                        alert: '#b91c1c',  // Deep Red for critical
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .highlight-critical { text-decoration: underline; text-decoration-color: #b91c1c; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+        .highlight-warning { text-decoration: underline; text-decoration-color: #ea580c; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+        .highlight-note { background-color: #e7e5e4; }
+    </style>
+</head>
+<body class="bg-stone-100 text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ tab: 'issues' }">
+
+    <main class="flex-1 flex flex-col h-full border-r border-stone-200 bg-white relative">
+
+        <header class="h-14 bg-paper border-b border-stone-200 flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex items-center gap-3">
+                <a href="05-studio.html" class="text-stone-400 hover:text-ink transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <h1 class="font-mono text-xs text-stone-500 uppercase tracking-widest">Diagnostic Report: Thesis_v4.docx</h1>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-alert"></span>
+                    <span class="font-mono text-[10px] uppercase text-stone-500">Critical: 2</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-accent"></span>
+                    <span class="font-mono text-[10px] uppercase text-stone-500">Warning: 4</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-12 lg:p-16 relative">
+            <div class="absolute top-16 left-4 text-stone-300 font-mono text-xs text-right space-y-8 select-none hidden md:block">
+                <p>01</p><p>05</p><p>10</p><p>15</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <h1 class="font-serif text-3xl text-ink mb-10">The Efficacy of Cas9 Variants</h1>
+
+                <div class="prose prose-lg prose-stone max-w-none font-serif leading-loose">
+                    <p>
+                        The rapid evolution of gene-editing technologies has revolutionized molecular biology.
+                        <span class="highlight-warning cursor-pointer group relative">
+                            It has been argued by many researchers
+                            <span class="absolute -top-6 left-0 bg-accent text-white text-[10px] font-mono px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">PASSIVE_VOICE</span>
+                        </span>
+                         that the primary limitation of the CRISPR-Cas9 system is its propensity for off-target effects.
+                    </p>
+
+                    <p class="mt-8">
+                        <span class="highlight-critical cursor-pointer group relative">
+                            Furthermore, notwithstanding the significant advancements in high-fidelity variants which have purportedly ameliorated the specificity issues, a comprehensive longitudinal study regarding the potentiality of genotoxicity in germline applications has yet to be unequivocally established by the scientific community.
+                            <span class="absolute -top-6 left-0 bg-alert text-white text-[10px] font-mono px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">COMPLEXITY_INDEX: 18.4 (HIGH)</span>
+                        </span>
+                    </p>
+
+                    <p class="mt-8">
+                        <span class="highlight-note cursor-pointer">Basically</span>, we need better enzymes.
+                        A new experiment was conducted to test the SpCas9-HF1 variant. The results show a
+                        <span class="highlight-note cursor-pointer border-b border-dotted border-stone-500">huge</span>
+                        improvement in specificity.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <aside class="w-96 bg-paper flex flex-col shrink-0 h-full z-20">
+
+        <div class="p-6 border-b border-stone-200 bg-stone-100">
+            <h2 class="font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-2">Manuscript Integrity Index</h2>
+            <div class="flex items-baseline gap-2">
+                <span class="font-mono text-4xl font-bold text-ink">72</span>
+                <span class="font-mono text-sm text-stone-400">/100</span>
+            </div>
+            <div class="mt-4 w-full bg-stone-200 h-1">
+                <div class="bg-accent h-1 w-[72%]"></div>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto">
+
+            <div class="p-6 border-b border-stone-200">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-serif text-lg text-ink italic">Readability Metrics</h3>
+                    <i class="ph ph-eye text-stone-400"></i>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between font-mono text-xs text-stone-500 mb-1">
+                            <span>Flesch-Kincaid Grade</span>
+                            <span class="text-ink font-bold">14.2</span>
+                        </div>
+                        <div class="w-full bg-stone-200 h-px"><div class="bg-ink h-px w-[80%]"></div></div>
+                        <p class="text-[10px] text-stone-400 mt-1">Post-Graduate Level (Dense)</p>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between font-mono text-xs text-stone-500 mb-1">
+                            <span>Sentence Variance</span>
+                            <span class="text-accent font-bold">Low</span>
+                        </div>
+                        <div class="w-full bg-stone-200 h-px"><div class="bg-accent h-px w-[30%]"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6">
+                <h3 class="font-serif text-lg text-ink italic mb-4">Detected Anomalies</h3>
+
+                <div class="mb-4 group">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="font-mono text-[10px] text-white bg-alert px-1 py-0.5">CRITICAL</span>
+                        <span class="font-mono text-xs text-ink">Syntactic Overload</span>
+                    </div>
+                    <p class="font-serif text-sm text-stone-600 mb-2 border-l-2 border-stone-200 pl-2">
+                        "Furthermore, notwithstanding..." (42 words)
+                    </p>
+                    <button class="w-full border border-stone-300 text-stone-600 text-[10px] font-mono py-1.5 hover:bg-stone-50 hover:border-ink hover:text-ink transition-colors flex items-center justify-center gap-2">
+                        <i class="ph ph-wrench"></i> AUTO_REFACTOR
+                    </button>
+                </div>
+
+                <div class="mb-4 group">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="font-mono text-[10px] text-white bg-accent px-1 py-0.5">WARNING</span>
+                        <span class="font-mono text-xs text-ink">Passive Construction</span>
+                    </div>
+                    <p class="font-serif text-sm text-stone-600 mb-2 border-l-2 border-stone-200 pl-2">
+                        "It has been argued by many..."
+                    </p>
+                    <button class="w-full border border-stone-300 text-stone-600 text-[10px] font-mono py-1.5 hover:bg-stone-50 hover:border-ink hover:text-ink transition-colors flex items-center justify-center gap-2">
+                        <i class="ph ph-arrow-right"></i> CONVERT_TO_ACTIVE
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </aside>
+
+</body>
+</html>

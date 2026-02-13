@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Reference Index</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .citation-box { background-image: radial-gradient(#e7e5e4 1px, transparent 1px); background-size: 10px 10px; }
+    </style>
+</head>
+<body class="bg-stone-100 text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ modal: false, format: 'apa' }">
+
+    <aside class="w-64 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800">
+
+        <div class="h-14 flex items-center justify-between px-5 border-b border-stone-800 bg-[#151515]">
+            <div class="flex items-center gap-2 text-stone-100">
+                <i class="ph ph-books"></i>
+                <span class="font-mono text-xs uppercase tracking-widest">Library</span>
+            </div>
+            <span class="font-mono text-[10px] text-stone-500">142 ITEMS</span>
+        </div>
+
+        <div class="flex-1 overflow-y-auto py-6 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-5 py-2 text-stone-100 bg-stone-900 border-l-2 border-accent transition-all">
+                <i class="ph ph-files text-lg"></i>
+                <span class="font-mono text-xs uppercase tracking-wide">All References</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 hover:bg-stone-900 border-l-2 border-transparent transition-all">
+                <i class="ph ph-star text-lg"></i>
+                <span class="font-mono text-xs uppercase tracking-wide">Favorites</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 hover:bg-stone-900 border-l-2 border-transparent transition-all">
+                <i class="ph ph-clock-counter-clockwise text-lg"></i>
+                <span class="font-mono text-xs uppercase tracking-wide">Recently Read</span>
+            </a>
+
+            <div class="pt-6 mt-2">
+                <p class="px-5 text-[10px] font-mono text-stone-600 uppercase mb-3 tracking-widest">Collections</p>
+                <a href="#" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 hover:bg-stone-900 border-l-2 border-transparent transition-all group">
+                    <span class="text-accent group-hover:text-white">&#9679;</span>
+                    <span class="font-serif text-sm italic">Thesis: CRISPR</span>
+                </a>
+                <a href="#" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 hover:bg-stone-900 border-l-2 border-transparent transition-all group">
+                    <span class="text-blue-500 group-hover:text-white">&#9679;</span>
+                    <span class="font-serif text-sm italic">Quantum Physics</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-stone-800 bg-[#0a0a0a]">
+            <button class="w-full py-2 border border-stone-700 text-stone-400 font-mono text-[10px] uppercase tracking-widest hover:border-stone-500 hover:text-stone-200 transition-all rounded-sm flex items-center justify-center gap-2">
+                <i class="ph ph-upload-simple"></i> Import .BIB
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full bg-paper relative">
+
+        <header class="h-14 bg-white border-b border-stone-200 flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="relative w-96 group">
+                <i class="ph ph-magnifying-glass absolute left-0 top-2.5 text-stone-400 group-hover:text-ink transition-colors"></i>
+                <input type="text" placeholder="Filter by author, year, or tag..." class="w-full bg-transparent border-b border-stone-300 py-2 pl-8 text-sm font-mono text-ink placeholder-stone-400 focus:outline-none focus:border-accent transition-colors">
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button class="font-mono text-[10px] text-stone-500 hover:text-ink uppercase tracking-wider">SORT: YEAR (DESC)</button>
+                <div class="w-px h-3 bg-stone-300"></div>
+                <button class="font-mono text-[10px] text-stone-500 hover:text-ink uppercase tracking-wider">VIEW: LIST</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-12">
+            <div class="max-w-5xl mx-auto space-y-1">
+
+                <div class="grid grid-cols-12 gap-4 px-4 py-2 text-[10px] font-mono text-stone-400 uppercase tracking-widest border-b border-stone-200">
+                    <div class="col-span-6">Title / Author</div>
+                    <div class="col-span-2">Year</div>
+                    <div class="col-span-2">Journal</div>
+                    <div class="col-span-2 text-right">Actions</div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-200 hover:bg-white hover:shadow-sm transition-all group items-start">
+                    <div class="col-span-6 pr-4">
+                        <h3 class="font-serif text-lg text-ink font-medium leading-tight group-hover:text-accent cursor-pointer">
+                            High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects
+                        </h3>
+                        <p class="font-mono text-xs text-stone-500 mt-1">Slaymaker, I.M., et al.</p>
+                        <div class="mt-2 flex gap-2">
+                             <span class="font-mono text-[10px] border border-stone-200 px-1 text-stone-400">PDF</span>
+                             <span class="font-mono text-[10px] border border-stone-200 px-1 text-green-700 border-green-200 bg-green-50">PEER_REVIEWED</span>
+                        </div>
+                    </div>
+                    <div class="col-span-2 font-mono text-sm text-stone-600">2023</div>
+                    <div class="col-span-2 font-serif text-sm text-stone-600 italic">Nature</div>
+                    <div class="col-span-2 flex justify-end gap-3 opacity-40 group-hover:opacity-100 transition-opacity">
+                        <button @click="modal = true" class="text-stone-500 hover:text-ink" title="Cite"><i class="ph ph-quotes text-lg"></i></button>
+                        <button class="text-stone-500 hover:text-ink" title="PDF"><i class="ph ph-file-pdf text-lg"></i></button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-200 hover:bg-white hover:shadow-sm transition-all group items-start">
+                    <div class="col-span-6 pr-4">
+                        <h3 class="font-serif text-lg text-ink font-medium leading-tight group-hover:text-accent cursor-pointer">
+                            Ethical implications of germline editing in human embryos
+                        </h3>
+                        <p class="font-mono text-xs text-stone-500 mt-1">National Institutes of Health</p>
+                        <div class="mt-2 flex gap-2">
+                             <span class="font-mono text-[10px] border border-stone-200 px-1 text-stone-400">WEB</span>
+                        </div>
+                    </div>
+                    <div class="col-span-2 font-mono text-sm text-stone-600">2022</div>
+                    <div class="col-span-2 font-serif text-sm text-stone-600 italic">NIH Report</div>
+                    <div class="col-span-2 flex justify-end gap-3 opacity-40 group-hover:opacity-100 transition-opacity">
+                        <button @click="modal = true" class="text-stone-500 hover:text-ink" title="Cite"><i class="ph ph-quotes text-lg"></i></button>
+                        <button class="text-stone-500 hover:text-ink" title="Link"><i class="ph ph-link text-lg"></i></button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-200 hover:bg-white hover:shadow-sm transition-all group items-start">
+                    <div class="col-span-6 pr-4">
+                        <h3 class="font-serif text-lg text-ink font-medium leading-tight group-hover:text-accent cursor-pointer">
+                            A systematic review of Cas9 variants and efficiency
+                        </h3>
+                        <p class="font-mono text-xs text-stone-500 mt-1">Zhang, Y.</p>
+                        <div class="mt-2 flex gap-2">
+                             <span class="font-mono text-[10px] border border-stone-200 px-1 text-stone-400">PDF</span>
+                             <span class="font-mono text-[10px] border border-stone-200 px-1 text-stone-400">TAG: METHODOLOGY</span>
+                        </div>
+                    </div>
+                    <div class="col-span-2 font-mono text-sm text-stone-600">2024</div>
+                    <div class="col-span-2 font-serif text-sm text-stone-600 italic">Cell Review</div>
+                    <div class="col-span-2 flex justify-end gap-3 opacity-40 group-hover:opacity-100 transition-opacity">
+                        <button @click="modal = true" class="text-stone-500 hover:text-ink" title="Cite"><i class="ph ph-quotes text-lg"></i></button>
+                        <button class="text-stone-500 hover:text-ink" title="PDF"><i class="ph ph-file-pdf text-lg"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <div x-show="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/20 backdrop-blur-sm" style="display: none;">
+        <div @click.away="modal = false" class="bg-paper w-full max-w-lg border border-stone-300 shadow-2xl relative">
+
+            <div class="flex items-center justify-between p-4 border-b border-stone-200 bg-white">
+                <span class="font-mono text-xs uppercase tracking-widest text-ink">Generate Citation</span>
+                <button @click="modal = false" class="text-stone-400 hover:text-ink"><i class="ph ph-x text-lg"></i></button>
+            </div>
+
+            <div class="p-6">
+                <div class="flex gap-4 mb-6 border-b border-stone-200">
+                    <button @click="format = 'apa'" :class="format === 'apa' ? 'text-accent border-accent' : 'text-stone-400 border-transparent hover:text-ink'" class="font-mono text-xs font-bold pb-2 border-b-2 transition-all">APA 7</button>
+                    <button @click="format = 'mla'" :class="format === 'mla' ? 'text-accent border-accent' : 'text-stone-400 border-transparent hover:text-ink'" class="font-mono text-xs font-bold pb-2 border-b-2 transition-all">MLA 9</button>
+                    <button @click="format = 'bib'" :class="format === 'bib' ? 'text-accent border-accent' : 'text-stone-400 border-transparent hover:text-ink'" class="font-mono text-xs font-bold pb-2 border-b-2 transition-all">BibTeX</button>
+                </div>
+
+                <div class="citation-box border border-stone-300 p-4 relative bg-stone-50">
+                    <p x-show="format === 'apa'" class="font-serif text-sm text-ink leading-relaxed">
+                        Slaymaker, I. M., et al. (2023). High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects. <em>Nature</em>, 351(6269), 809-815.
+                    </p>
+                    <p x-show="format === 'mla'" class="font-serif text-sm text-ink leading-relaxed" style="display: none;">
+                        Slaymaker, Ian M., et al. "High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects." <em>Nature</em> 351.6269 (2023): 809-815.
+                    </p>
+                    <code x-show="format === 'bib'" class="font-mono text-xs text-stone-600 block whitespace-pre-wrap" style="display: none;">@article{slaymaker2023high,
+  title={High-fidelity CRISPR-Cas9...},
+  author={Slaymaker, Ian M and others},
+  journal={Nature},
+  year={2023}
+}</code>
+
+                    <button class="absolute top-2 right-2 p-1.5 bg-white border border-stone-200 shadow-sm hover:border-accent text-stone-500 hover:text-accent transition-all">
+                        <i class="ph ph-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 bg-stone-50 border-t border-stone-200 flex justify-between items-center">
+                <span class="font-mono text-[10px] text-stone-400 uppercase">Auto-generated via Citation.js</span>
+                <button @click="modal = false" class="px-4 py-1.5 bg-ink text-paper text-xs font-mono uppercase hover:bg-stone-800 transition-colors">Close</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 100: '#f5f5f4', 200: '#e7e5e4', 500: '#78716c', 800: '#292524' },
+                        accent: '#ea580c',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white">
+
+    <aside class="w-64 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800">
+        <div class="h-14 flex items-center px-5 border-b border-stone-800">
+            <span class="font-serif font-semibold text-xl tracking-wide text-stone-100">ScholarSync.</span>
+        </div>
+
+        <nav class="flex-1 px-0 py-6 space-y-px">
+            <a href="#" class="flex items-center gap-3 px-5 py-3 text-stone-100 bg-stone-900 border-l-2 border-accent transition-all group">
+                <i class="ph ph-squares-four text-lg"></i>
+                <span class="text-xs font-mono uppercase tracking-widest">Console</span>
+            </a>
+
+            <a href="10-project-manager.html" class="flex items-center gap-3 px-5 py-3 hover:text-stone-100 hover:bg-stone-900/50 border-l-2 border-transparent transition-all group">
+                <i class="ph ph-folder-notch text-lg"></i>
+                <span class="text-xs font-mono uppercase tracking-widest">Manuscripts</span>
+            </a>
+
+            <a href="09-reference-manager.html" class="flex items-center gap-3 px-5 py-3 hover:text-stone-100 hover:bg-stone-900/50 border-l-2 border-transparent transition-all group">
+                <i class="ph ph-books text-lg"></i>
+                <span class="text-xs font-mono uppercase tracking-widest">Reference Lib</span>
+            </a>
+
+            <div class="py-4 px-5">
+                <div class="h-px bg-stone-800 w-full"></div>
+            </div>
+
+            <p class="px-5 text-[10px] font-mono text-stone-600 uppercase mb-2">Analysis Engines</p>
+
+            <a href="06-deep-research.html" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 transition-all">
+                <span class="font-mono text-xs text-stone-600">01</span>
+                <span class="text-sm font-medium">Deep Search</span>
+            </a>
+            <a href="07-notebook-mode.html" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 transition-all">
+                <span class="font-mono text-xs text-stone-600">02</span>
+                <span class="text-sm font-medium">Socratic Notebook</span>
+            </a>
+            <a href="08-writing-analysis.html" class="flex items-center gap-3 px-5 py-2 hover:text-stone-100 transition-all">
+                <span class="font-mono text-xs text-stone-600">03</span>
+                <span class="text-sm font-medium">Logic & Bias</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-stone-800 bg-[#0a0a0a]">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-stone-800 border border-stone-700 flex items-center justify-center font-serif text-stone-300 italic">RV</div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-bold text-stone-300">R. Verma</p>
+                    <p class="text-[10px] font-mono text-stone-600">PRO_ACCESS_GRANTED</p>
+                </div>
+                <a href="11-settings.html" class="text-stone-500 hover:text-stone-300"><i class="ph ph-gear"></i></a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-paper">
+
+        <header class="h-10 bg-white border-b border-stone-200 flex items-center justify-between px-6 shrink-0">
+            <div class="flex items-center gap-4 text-[10px] font-mono text-stone-400 uppercase tracking-wider">
+                <span><span class="text-green-600">&#9679;</span> System Online</span>
+                <span>Latency: 24ms</span>
+                <span>Region: IND_NOIDA</span>
+            </div>
+            <div class="text-[10px] font-mono text-stone-400">
+                v2.4.1 (Stable)
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-12">
+            <div class="max-w-6xl mx-auto space-y-12">
+
+                <section class="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-stone-200 pb-8">
+                    <div>
+                        <p class="font-mono text-xs text-accent uppercase tracking-widest mb-2">Wednesday, Oct 24</p>
+                        <h1 class="text-3xl font-serif text-ink">Good Morning, Researcher.</h1>
+                        <p class="text-stone-500 mt-2 max-w-xl font-light">
+                            You have 2 manuscripts in progress. Your "CRISPR Ethics" draft requires a citation audit.
+                        </p>
+                    </div>
+
+                    <div class="w-full md:w-96 relative group">
+                        <input type="text" placeholder="Search database or command..." class="w-full bg-transparent border-b border-stone-300 py-2 pl-0 pr-8 text-sm focus:outline-none focus:border-accent transition-colors font-mono placeholder-stone-400">
+                        <i class="ph ph-magnifying-glass absolute right-0 top-2 text-stone-400 group-hover:text-ink transition-colors"></i>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="font-mono text-xs text-stone-400 uppercase tracking-widest mb-4">Initialize Task</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-4 border-t border-l border-stone-200 bg-stone-100">
+
+                        <a href="06-deep-research.html" class="bg-paper p-6 border-r border-b border-stone-200 hover:bg-white hover:border-stone-300 transition-all group relative">
+                            <div class="absolute top-4 right-4 text-stone-300 group-hover:text-accent transition-colors font-mono text-[10px]">01</div>
+                            <i class="ph ph-globe-hemisphere-west text-2xl text-stone-600 mb-4 group-hover:text-ink"></i>
+                            <h3 class="font-serif text-lg text-ink">Deep Search</h3>
+                            <p class="text-xs text-stone-500 mt-1 font-mono">Query 200M+ papers</p>
+                        </a>
+
+                        <a href="05-studio.html" class="bg-paper p-6 border-r border-b border-stone-200 hover:bg-white hover:border-stone-300 transition-all group relative">
+                            <div class="absolute top-4 right-4 text-stone-300 group-hover:text-accent transition-colors font-mono text-[10px]">02</div>
+                            <i class="ph ph-pen-nib text-2xl text-stone-600 mb-4 group-hover:text-ink"></i>
+                            <h3 class="font-serif text-lg text-ink">New Manuscript</h3>
+                            <p class="text-xs text-stone-500 mt-1 font-mono">Blank slate</p>
+                        </a>
+
+                        <a href="07-notebook-mode.html" class="bg-paper p-6 border-r border-b border-stone-200 hover:bg-white hover:border-stone-300 transition-all group relative">
+                            <div class="absolute top-4 right-4 text-stone-300 group-hover:text-accent transition-colors font-mono text-[10px]">03</div>
+                            <i class="ph ph-notebook text-2xl text-stone-600 mb-4 group-hover:text-ink"></i>
+                            <h3 class="font-serif text-lg text-ink">Upload & Analyze</h3>
+                            <p class="text-xs text-stone-500 mt-1 font-mono">PDF Socratic mode</p>
+                        </a>
+
+                        <div class="bg-paper p-6 border-r border-b border-stone-200 hover:bg-white hover:border-stone-300 transition-all group relative cursor-pointer">
+                            <div class="absolute top-4 right-4 text-stone-300 group-hover:text-accent transition-colors font-mono text-[10px]">04</div>
+                            <i class="ph ph-upload-simple text-2xl text-stone-600 mb-4 group-hover:text-ink"></i>
+                            <h3 class="font-serif text-lg text-ink">Import Data</h3>
+                            <p class="text-xs text-stone-500 mt-1 font-mono">.BIB / .DOCX / .PDF</p>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="font-mono text-xs text-stone-400 uppercase tracking-widest">Active Manuscripts</h2>
+                        <a href="10-project-manager.html" class="text-xs font-mono text-accent hover:underline">View All_</a>
+                    </div>
+
+                    <div class="bg-white border border-stone-200">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-stone-200 bg-stone-50 text-[10px] font-mono text-stone-500 uppercase tracking-wider">
+                                    <th class="px-6 py-3 font-medium">Ref_ID</th>
+                                    <th class="px-6 py-3 font-medium">Title</th>
+                                    <th class="px-6 py-3 font-medium">Stage</th>
+                                    <th class="px-6 py-3 font-medium">Metrics</th>
+                                    <th class="px-6 py-3 font-medium text-right">Last Edited</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm font-light text-ink">
+                                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors cursor-pointer group">
+                                    <td class="px-6 py-4 font-mono text-xs text-stone-400">#8821</td>
+                                    <td class="px-6 py-4 font-serif text-base group-hover:text-accent transition-colors">CRISPR Applications: A Review</td>
+                                    <td class="px-6 py-4"><span class="border border-stone-300 px-2 py-0.5 rounded-sm text-[10px] uppercase tracking-wide">Drafting</span></td>
+                                    <td class="px-6 py-4 font-mono text-xs text-stone-500">2,401 wds</td>
+                                    <td class="px-6 py-4 text-right font-mono text-xs text-stone-500">2h ago</td>
+                                </tr>
+                                <tr class="border-b border-stone-100 hover:bg-stone-50 transition-colors cursor-pointer group">
+                                    <td class="px-6 py-4 font-mono text-xs text-stone-400">#8820</td>
+                                    <td class="px-6 py-4 font-serif text-base group-hover:text-accent transition-colors">Ethical Implications of AI</td>
+                                    <td class="px-6 py-4"><span class="bg-stone-100 border border-stone-200 px-2 py-0.5 rounded-sm text-[10px] uppercase tracking-wide text-stone-500">Research</span></td>
+                                    <td class="px-6 py-4 font-mono text-xs text-stone-500">12 sources</td>
+                                    <td class="px-6 py-4 text-right font-mono text-xs text-stone-500">Yesterday</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="border border-stone-200 bg-white p-5">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="font-mono text-[10px] uppercase text-stone-400">Compute Credits</span>
+                            <span class="font-mono text-lg font-bold text-ink">85<span class="text-stone-300">/100</span></span>
+                        </div>
+                        <div class="w-full bg-stone-100 h-1">
+                            <div class="bg-ink h-1 w-[85%]"></div>
+                        </div>
+                    </div>
+                    <div class="border border-stone-200 bg-white p-5">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="font-mono text-[10px] uppercase text-stone-400">Storage</span>
+                            <span class="font-mono text-lg font-bold text-ink">1.2<span class="text-stone-300">GB</span></span>
+                        </div>
+                        <div class="w-full bg-stone-100 h-1">
+                            <div class="bg-ink h-1 w-[20%]"></div>
+                        </div>
+                    </div>
+                    <div class="border border-stone-200 bg-white p-5">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="font-mono text-[10px] uppercase text-stone-400">Plagiarism Checks</span>
+                            <span class="font-mono text-lg font-bold text-accent">2<span class="text-stone-300">/5</span></span>
+                        </div>
+                        <div class="w-full bg-stone-100 h-1">
+                            <div class="bg-accent h-1 w-[40%]"></div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #252b38; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden selection:bg-gold/30">
+
+    <!-- Sidebar -->
+    <aside class="w-60 bg-surface flex flex-col shrink-0 border-r border-border">
+        <div class="h-14 flex items-center px-5 border-b border-border">
+            <span class="font-serif font-semibold text-lg text-paper">ScholarSync</span>
+        </div>
+
+        <nav class="flex-1 px-3 py-6 space-y-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-paper bg-elevated rounded-lg border border-border transition-all">
+                <i class="ph ph-squares-four text-gold"></i>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a href="projects.html" class="flex items-center gap-3 px-3 py-2.5 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                <i class="ph ph-folder-notch"></i>
+                <span class="text-sm">Manuscripts</span>
+            </a>
+            <a href="library.html" class="flex items-center gap-3 px-3 py-2.5 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                <i class="ph ph-books"></i>
+                <span class="text-sm">Library</span>
+            </a>
+
+            <div class="pt-6 mt-4 border-t border-border">
+                <p class="px-3 text-[10px] font-mono text-[#555d6e] uppercase tracking-widest mb-3">Tools</p>
+                <a href="research.html" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <i class="ph ph-globe-hemisphere-west"></i>
+                    <span class="text-sm">Deep Search</span>
+                </a>
+                <a href="notebook.html" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <i class="ph ph-brain"></i>
+                    <span class="text-sm">Socratic Notebook</span>
+                </a>
+                <a href="analysis.html" class="flex items-center gap-3 px-3 py-2 text-[#8891a0] hover:text-paper hover:bg-elevated/50 rounded-lg transition-all">
+                    <i class="ph ph-chart-bar"></i>
+                    <span class="text-sm">Analysis</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="p-4 border-t border-border">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gold/10 border border-gold/20 rounded-lg flex items-center justify-center">
+                    <span class="font-serif text-sm text-gold italic">R</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-medium text-paper truncate">Rahul Verma</p>
+                    <p class="text-[10px] text-[#555d6e] font-mono">Pro</p>
+                </div>
+                <a href="settings.html" class="text-[#555d6e] hover:text-[#8891a0] transition-colors"><i class="ph ph-gear text-sm"></i></a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+
+        <header class="h-14 border-b border-border flex items-center justify-between px-8 shrink-0 bg-void">
+            <div class="relative w-80 group">
+                <i class="ph ph-magnifying-glass absolute left-0 top-2.5 text-[#555d6e] group-focus-within:text-gold transition-colors"></i>
+                <input type="text" placeholder="Search or run a command..." class="w-full bg-transparent border-b border-transparent py-2 pl-7 text-sm text-paper placeholder-[#555d6e] focus:outline-none focus:border-border transition-colors">
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="font-mono text-[10px] text-[#555d6e]"><span class="text-[#5b9a72]">&#9679;</span> All systems normal</span>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-10">
+            <div class="max-w-5xl mx-auto space-y-10">
+
+                <!-- Greeting -->
+                <section>
+                    <p class="font-mono text-xs text-gold mb-2">Wednesday, October 24</p>
+                    <h1 class="text-2xl font-serif text-paper">Good morning, Rahul.</h1>
+                    <p class="text-[#8891a0] mt-1 text-sm">You have 2 manuscripts in progress. Your CRISPR draft needs a citation audit.</p>
+                </section>
+
+                <!-- Quick Actions -->
+                <section>
+                    <h2 class="text-xs font-mono text-[#555d6e] uppercase tracking-widest mb-4">Start</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                        <a href="research.html" class="border border-border rounded-lg p-5 hover:border-border-bright hover:bg-surface/50 transition-all group">
+                            <i class="ph ph-globe-hemisphere-west text-xl text-[#8891a0] mb-3 group-hover:text-gold transition-colors block"></i>
+                            <h3 class="text-sm font-medium text-paper mb-1">Deep Search</h3>
+                            <p class="text-[10px] text-[#555d6e] font-mono">Query 200M+ papers</p>
+                        </a>
+                        <a href="studio.html" class="border border-border rounded-lg p-5 hover:border-border-bright hover:bg-surface/50 transition-all group">
+                            <i class="ph ph-pen-nib text-xl text-[#8891a0] mb-3 group-hover:text-gold transition-colors block"></i>
+                            <h3 class="text-sm font-medium text-paper mb-1">New Manuscript</h3>
+                            <p class="text-[10px] text-[#555d6e] font-mono">Blank draft</p>
+                        </a>
+                        <a href="notebook.html" class="border border-border rounded-lg p-5 hover:border-border-bright hover:bg-surface/50 transition-all group">
+                            <i class="ph ph-brain text-xl text-[#8891a0] mb-3 group-hover:text-gold transition-colors block"></i>
+                            <h3 class="text-sm font-medium text-paper mb-1">Upload &amp; Analyze</h3>
+                            <p class="text-[10px] text-[#555d6e] font-mono">Socratic mode</p>
+                        </a>
+                        <div class="border border-border rounded-lg p-5 hover:border-border-bright hover:bg-surface/50 transition-all group cursor-pointer">
+                            <i class="ph ph-upload-simple text-xl text-[#8891a0] mb-3 group-hover:text-gold transition-colors block"></i>
+                            <h3 class="text-sm font-medium text-paper mb-1">Import</h3>
+                            <p class="text-[10px] text-[#555d6e] font-mono">.bib / .docx / .pdf</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Active Manuscripts -->
+                <section>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xs font-mono text-[#555d6e] uppercase tracking-widest">Active Manuscripts</h2>
+                        <a href="projects.html" class="text-xs text-gold hover:text-gold-bright transition-colors">View all</a>
+                    </div>
+                    <div class="border border-border rounded-lg overflow-hidden">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b border-border bg-surface/50 text-[10px] font-mono text-[#555d6e] uppercase tracking-wider">
+                                    <th class="px-5 py-3 font-normal">Title</th>
+                                    <th class="px-5 py-3 font-normal">Stage</th>
+                                    <th class="px-5 py-3 font-normal">Progress</th>
+                                    <th class="px-5 py-3 font-normal text-right">Last edited</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-border/50 hover:bg-surface/30 transition-colors cursor-pointer group">
+                                    <td class="px-5 py-4">
+                                        <span class="font-serif text-paper group-hover:text-gold transition-colors">CRISPR Applications: A Review</span>
+                                        <span class="block text-[10px] font-mono text-[#555d6e] mt-0.5">2,401 words &bull; 14 citations</span>
+                                    </td>
+                                    <td class="px-5 py-4"><span class="text-[10px] font-mono border border-gold/30 text-gold px-2 py-0.5 rounded">Drafting</span></td>
+                                    <td class="px-5 py-4">
+                                        <div class="w-24 bg-elevated h-1 rounded-full"><div class="bg-gold h-1 rounded-full w-[60%]"></div></div>
+                                    </td>
+                                    <td class="px-5 py-4 text-right text-xs text-[#8891a0]">2h ago</td>
+                                </tr>
+                                <tr class="hover:bg-surface/30 transition-colors cursor-pointer group">
+                                    <td class="px-5 py-4">
+                                        <span class="font-serif text-paper group-hover:text-gold transition-colors">Ethical Implications of AI</span>
+                                        <span class="block text-[10px] font-mono text-[#555d6e] mt-0.5">12 sources collected</span>
+                                    </td>
+                                    <td class="px-5 py-4"><span class="text-[10px] font-mono border border-border text-[#8891a0] px-2 py-0.5 rounded">Research</span></td>
+                                    <td class="px-5 py-4">
+                                        <div class="w-24 bg-elevated h-1 rounded-full"><div class="bg-[#8891a0] h-1 rounded-full w-[20%]"></div></div>
+                                    </td>
+                                    <td class="px-5 py-4 text-right text-xs text-[#8891a0]">Yesterday</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Metrics -->
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border border-border rounded-lg p-5 bg-surface/30">
+                        <div class="flex justify-between items-end mb-3">
+                            <span class="text-[10px] font-mono text-[#555d6e] uppercase">AI Credits</span>
+                            <span class="text-lg font-mono font-medium text-paper">85<span class="text-[#555d6e]">/100</span></span>
+                        </div>
+                        <div class="w-full bg-elevated h-1 rounded-full"><div class="bg-paper h-1 rounded-full w-[85%]"></div></div>
+                    </div>
+                    <div class="border border-border rounded-lg p-5 bg-surface/30">
+                        <div class="flex justify-between items-end mb-3">
+                            <span class="text-[10px] font-mono text-[#555d6e] uppercase">Storage</span>
+                            <span class="text-lg font-mono font-medium text-paper">1.2<span class="text-[#555d6e]"> GB</span></span>
+                        </div>
+                        <div class="w-full bg-elevated h-1 rounded-full"><div class="bg-paper h-1 rounded-full w-[20%]"></div></div>
+                    </div>
+                    <div class="border border-border rounded-lg p-5 bg-surface/30">
+                        <div class="flex justify-between items-end mb-3">
+                            <span class="text-[10px] font-mono text-[#555d6e] uppercase">Audit Scans</span>
+                            <span class="text-lg font-mono font-medium text-gold">2<span class="text-[#555d6e]">/5</span></span>
+                        </div>
+                        <div class="w-full bg-elevated h-1 rounded-full"><div class="bg-gold h-1 rounded-full w-[40%]"></div></div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>

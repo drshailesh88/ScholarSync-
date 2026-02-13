@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep Research - ScholarSync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="mobile-head">
+      <strong>Deep Research</strong>
+      <a href="index.html" class="btn soft" style="padding: 0.3rem 0.55rem;">Index</a>
+    </div>
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">S</span>
+        <span class="brand-text">ScholarSync</span>
+      </div>
+      <nav class="nav">
+        <a href="01-focus-dashboard.html">Focus Dashboard <small>01</small></a>
+        <a class="active" href="02-deep-research.html">Deep Research <small>02</small></a>
+        <a href="03-studio.html">Studio <small>03</small></a>
+        <a href="04-notebook.html">Notebook <small>04</small></a>
+        <a href="index.html">Design Index <small>00</small></a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="kicker" style="color: #c2ccd8; margin: 0 0 0.25rem;">Query Engine</p>
+        <strong style="font-size: 1rem;">142 sources indexed</strong>
+        <p style="margin: 0.45rem 0 0; font-size: 0.75rem; color: #c2ccd8;">Bias scan active</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search">
+          <span class="kicker">Query</span>
+          <input type="text" value="ethical risk profile of CRISPR germline interventions" aria-label="query" />
+        </div>
+        <div class="top-actions">
+          <span class="badge">15 high-quality sources</span>
+          <a class="btn primary" href="#">Refine Search</a>
+        </div>
+      </header>
+
+      <section class="content split" style="grid-template-columns: 1.8fr 1.2fr;">
+        <article class="panel reveal">
+          <header>
+            <h2>Evidence Stream</h2>
+            <span class="badge">Sorted: Method Strength</span>
+          </header>
+          <div class="panel-body stack">
+            <article class="card pad" style="border-radius: 12px;">
+              <p class="kicker" style="margin: 0;">Nature Biotechnology, 2023</p>
+              <h3 style="margin-top: 0.25rem;">High-fidelity variants reduce off-target edits in human stem cells.</h3>
+              <p class="muted" style="margin-bottom: 0.5rem;">Sample size: 128. Multiple labs replicated findings with consistent protocol boundaries.</p>
+              <div class="btn-row" style="margin-top: 0;">
+                <a class="btn soft" href="#">Add to Library</a>
+                <a class="btn soft" href="#">Extract Data</a>
+                <span class="badge">Cited 420x</span>
+              </div>
+            </article>
+
+            <article class="card pad" style="border-radius: 12px;">
+              <p class="kicker" style="margin: 0;">Cell Reports, 2022</p>
+              <h3 style="margin-top: 0.25rem;">Longitudinal p53 activation patterns remain underpowered in current trials.</h3>
+              <p class="muted" style="margin-bottom: 0.5rem;">Useful as cautionary evidence; confidence moderate due to time horizon limitations.</p>
+              <div class="btn-row" style="margin-top: 0;">
+                <a class="btn soft" href="#">Add to Library</a>
+                <a class="btn soft" href="#">Extract Data</a>
+                <span class="badge">Cited 85x</span>
+              </div>
+            </article>
+
+            <article class="card pad" style="border-radius: 12px;">
+              <p class="kicker" style="margin: 0;">Policy Review, 2024</p>
+              <h3 style="margin-top: 0.25rem;">Regulatory consensus diverges on acceptable therapeutic threshold.</h3>
+              <p class="muted" style="margin-bottom: 0.5rem;">Normative framework conflicts with technical confidence intervals.</p>
+              <div class="btn-row" style="margin-top: 0;">
+                <a class="btn soft" href="#">Add to Library</a>
+                <a class="btn soft" href="#">Extract Data</a>
+                <span class="badge">Policy Track</span>
+              </div>
+            </article>
+          </div>
+        </article>
+
+        <aside class="stack reveal delay-1">
+          <section class="panel">
+            <header>
+              <h2>Synthesis Draft</h2>
+            </header>
+            <div class="panel-body">
+              <p class="note" style="margin-top: 0;">
+                Consensus has improved on technical accuracy, but long-term safety evidence remains insufficient for broad clinical policy.
+              </p>
+              <p class="muted">
+                Suggested stance: separate near-term somatic use from germline policy claims to avoid overextension.
+              </p>
+              <a class="btn primary" href="03-studio.html">Send to Studio</a>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header>
+              <h2>Extraction Ledger</h2>
+            </header>
+            <div class="panel-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Variable</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Off-target reduction</td><td>85-90%</td></tr>
+                  <tr><td>Longitudinal data horizon</td><td>&lt; 5 years</td></tr>
+                  <tr><td>Policy agreement index</td><td>0.43 / 1.00</td></tr>
+                </tbody>
+              </table>
+              <p class="muted" style="font-size: 0.82rem; margin-bottom: 0;">Auto-updates as you add sources and annotate findings.</p>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

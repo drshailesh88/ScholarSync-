@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Socratic Notebook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+    <style>::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#252b38;border-radius:4px}</style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden selection:bg-gold/30">
+
+    <!-- Mini sidebar -->
+    <aside class="w-14 bg-surface flex flex-col items-center py-5 shrink-0 border-r border-border gap-5">
+        <a href="dashboard.html" class="text-[#8891a0] hover:text-paper transition-colors"><i class="ph ph-squares-four text-lg"></i></a>
+        <div class="w-6 border-t border-border"></div>
+        <a href="dashboard.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Dashboard"><i class="ph ph-monitor text-lg"></i></a>
+        <a href="research.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Deep Search"><i class="ph ph-globe-hemisphere-west text-lg"></i></a>
+        <a href="studio.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Studio"><i class="ph ph-pen-nib text-lg"></i></a>
+        <a href="#" class="p-2 text-gold bg-elevated rounded-lg" title="Notebook"><i class="ph ph-brain text-lg"></i></a>
+    </aside>
+
+    <!-- Left: Source papers -->
+    <aside class="w-72 bg-surface border-r border-border flex flex-col shrink-0">
+        <div class="h-10 border-b border-border flex items-center justify-between px-4">
+            <span class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest">Sources</span>
+            <button class="text-[#555d6e] hover:text-gold transition-colors"><i class="ph ph-plus text-sm"></i></button>
+        </div>
+
+        <div class="p-3">
+            <div class="relative">
+                <i class="ph ph-magnifying-glass absolute left-2.5 top-2 text-[#555d6e] text-xs"></i>
+                <input type="text" placeholder="Search sources..." class="w-full bg-elevated border border-border rounded px-3 py-1.5 pl-7 text-xs text-paper placeholder-[#555d6e] focus:outline-none focus:border-gold transition-colors">
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-3 space-y-1">
+            <!-- Active source -->
+            <div class="bg-elevated border border-border-bright rounded-lg p-3 cursor-pointer">
+                <p class="font-serif text-sm text-paper leading-snug mb-1.5">High-fidelity CRISPR-Cas9 nucleases with no detectable off-target effects</p>
+                <p class="font-mono text-[10px] text-[#555d6e]">Slaymaker et al. &bull; Nature 2023</p>
+                <div class="flex gap-1.5 mt-2">
+                    <span class="text-[9px] font-mono bg-gold/10 text-gold px-1.5 py-0.5 rounded border border-gold/20">Highlighted</span>
+                    <span class="text-[9px] font-mono bg-elevated text-[#8891a0] px-1.5 py-0.5 rounded border border-border">3 notes</span>
+                </div>
+            </div>
+
+            <!-- Other sources -->
+            <div class="rounded-lg p-3 cursor-pointer hover:bg-elevated/50 transition-colors">
+                <p class="font-serif text-sm text-[#8891a0] leading-snug mb-1.5">Evaluation of Off-Target Effects in CRISPR-Cas9 Therapeutics</p>
+                <p class="font-mono text-[10px] text-[#555d6e]">Zhang et al. &bull; Cell Review 2024</p>
+            </div>
+
+            <div class="rounded-lg p-3 cursor-pointer hover:bg-elevated/50 transition-colors">
+                <p class="font-serif text-sm text-[#8891a0] leading-snug mb-1.5">Prime editing: a new era of genome engineering</p>
+                <p class="font-mono text-[10px] text-[#555d6e]">Anzalone et al. &bull; Nature 2021</p>
+            </div>
+
+            <div class="rounded-lg p-3 cursor-pointer hover:bg-elevated/50 transition-colors">
+                <p class="font-serif text-sm text-[#8891a0] leading-snug mb-1.5">CRISPR gene therapy: safety and long-term outcomes</p>
+                <p class="font-mono text-[10px] text-[#555d6e]">Chen & Liu &bull; NEJM 2023</p>
+            </div>
+
+            <div class="rounded-lg p-3 cursor-pointer hover:bg-elevated/50 transition-colors">
+                <p class="font-serif text-sm text-[#8891a0] leading-snug mb-1.5">Genome-wide specificity of CRISPR tools</p>
+                <p class="font-mono text-[10px] text-[#555d6e]">Tsai et al. &bull; Science 2022</p>
+            </div>
+        </div>
+
+        <div class="p-3 border-t border-border">
+            <button class="w-full text-[10px] font-mono text-gold hover:text-gold-bright transition-colors py-2 border border-border rounded hover:border-gold/30 flex items-center justify-center gap-2">
+                <i class="ph ph-upload-simple"></i> Upload PDF
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main: Socratic dialogue -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="border-b border-border px-8 py-4 shrink-0 bg-surface/50 flex items-center justify-between">
+            <div>
+                <h1 class="font-serif text-lg text-paper">Socratic Analysis</h1>
+                <p class="font-mono text-[10px] text-[#555d6e] mt-0.5">5 sources loaded &bull; Deep comprehension mode</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="text-[10px] font-mono border border-border px-3 py-1.5 rounded hover:border-border-bright transition-colors text-[#8891a0] flex items-center gap-2"><i class="ph ph-export"></i> Export notes</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-10">
+            <div class="max-w-3xl mx-auto space-y-8">
+
+                <!-- User question -->
+                <div class="flex gap-4">
+                    <div class="w-7 h-7 bg-gold/10 border border-gold/20 rounded-lg flex items-center justify-center shrink-0 mt-1">
+                        <span class="font-serif text-xs text-gold italic">R</span>
+                    </div>
+                    <div>
+                        <p class="font-serif text-paper leading-relaxed">What are the key differences between SpCas9-HF1 and Prime Editing in terms of off-target reduction?</p>
+                    </div>
+                </div>
+
+                <!-- AI response -->
+                <div class="flex gap-4">
+                    <div class="w-7 h-7 bg-elevated border border-border rounded-lg flex items-center justify-center shrink-0 mt-1">
+                        <i class="ph ph-brain text-xs text-gold"></i>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <p class="font-serif text-[#e0dbd5] leading-relaxed">
+                            These are fundamentally different approaches to the same problem. Let me break this down:
+                        </p>
+
+                        <div class="border border-border rounded-lg p-5 bg-surface/50">
+                            <p class="font-mono text-[10px] text-gold uppercase tracking-widest mb-3">SpCas9-HF1</p>
+                            <p class="font-serif text-sm text-[#8891a0] leading-relaxed mb-3">
+                                Works by <em>reducing non-specific contacts</em> between the Cas9 protein and DNA. Slaymaker et al. engineered four key residues (N497A, R661A, Q695A, Q926A) to create an &ldquo;energy barrier&rdquo; that prevents off-target cleavage while preserving on-target activity.
+                            </p>
+                            <div class="flex items-center gap-2 text-[10px] font-mono text-[#555d6e]">
+                                <i class="ph ph-book-open text-xs"></i>
+                                <span>Source: Slaymaker et al., Nature 2023, p. 421&ndash;427</span>
+                            </div>
+                        </div>
+
+                        <div class="border border-border rounded-lg p-5 bg-surface/50">
+                            <p class="font-mono text-[10px] text-gold uppercase tracking-widest mb-3">Prime Editing</p>
+                            <p class="font-serif text-sm text-[#8891a0] leading-relaxed mb-3">
+                                A completely different mechanism. Uses a Cas9 nickase fused with reverse transcriptase. Rather than creating double-strand breaks, it directly writes new genetic information. This <em>eliminates DSBs entirely</em>, which is the root cause of most off-target mutations.
+                            </p>
+                            <div class="flex items-center gap-2 text-[10px] font-mono text-[#555d6e]">
+                                <i class="ph ph-book-open text-xs"></i>
+                                <span>Source: Anzalone et al., Nature 2021, p. 89&ndash;103</span>
+                            </div>
+                        </div>
+
+                        <p class="font-serif text-[#e0dbd5] leading-relaxed">
+                            The critical distinction: <strong>SpCas9-HF1 reduces off-target cutting</strong>, while <strong>Prime Editing avoids the mechanism that causes off-target damage</strong> in the first place. However, Prime Editing has lower efficiency for large insertions.
+                        </p>
+
+                        <!-- Socratic follow-up -->
+                        <div class="border-l-2 border-gold/40 pl-4 mt-4">
+                            <p class="font-serif text-sm text-gold italic">
+                                This raises an interesting question: If Prime Editing avoids DSBs entirely, why hasn't it replaced Cas9-based approaches in clinical trials? What trade-offs might explain this?
+                            </p>
+                        </div>
+
+                        <div class="flex gap-3 mt-2">
+                            <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors flex items-center gap-1.5"><i class="ph ph-copy"></i> Copy</button>
+                            <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors flex items-center gap-1.5"><i class="ph ph-note"></i> Save as note</button>
+                            <button class="text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors flex items-center gap-1.5"><i class="ph ph-arrow-bend-up-right"></i> Send to draft</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- User follow-up -->
+                <div class="flex gap-4">
+                    <div class="w-7 h-7 bg-gold/10 border border-gold/20 rounded-lg flex items-center justify-center shrink-0 mt-1">
+                        <span class="font-serif text-xs text-gold italic">R</span>
+                    </div>
+                    <div>
+                        <p class="font-serif text-paper leading-relaxed">Good question. Is it an efficiency problem or a delivery problem?</p>
+                    </div>
+                </div>
+
+                <!-- AI response 2 -->
+                <div class="flex gap-4">
+                    <div class="w-7 h-7 bg-elevated border border-border rounded-lg flex items-center justify-center shrink-0 mt-1">
+                        <i class="ph ph-brain text-xs text-gold"></i>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <p class="font-serif text-[#e0dbd5] leading-relaxed">
+                            Both, actually, and your instinct to separate them is correct. The literature reveals two distinct bottlenecks:
+                        </p>
+                        <p class="font-serif text-sm text-[#8891a0] leading-relaxed">
+                            <strong class="text-paper">Efficiency:</strong> Prime Editing currently achieves 10&ndash;50% editing rates vs. 70&ndash;90% for optimized Cas9. For therapeutic applications requiring high correction rates (like sickle cell), this gap is clinically significant.
+                        </p>
+                        <p class="font-serif text-sm text-[#8891a0] leading-relaxed">
+                            <strong class="text-paper">Delivery:</strong> The prime editor construct is ~6.3kb &mdash; too large for AAV vectors (4.7kb capacity). This limits <em>in vivo</em> delivery to lipid nanoparticles, which have their own tissue-targeting challenges.
+                        </p>
+
+                        <div class="border-l-2 border-gold/40 pl-4 mt-4">
+                            <p class="font-serif text-sm text-gold italic">
+                                Consider this for your review: How do these practical constraints affect the timeline for Prime Editing in clinical settings? Chen &amp; Liu (2023) address this directly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="border-t border-border px-8 py-4 bg-surface/50">
+            <div class="max-w-3xl mx-auto">
+                <div class="flex items-end gap-3">
+                    <div class="flex-1 relative">
+                        <textarea rows="1" placeholder="Ask a question about your sources..." class="w-full bg-elevated border border-border rounded-lg px-4 py-3 text-sm text-paper placeholder-[#555d6e] focus:outline-none focus:border-gold transition-colors resize-none font-serif"></textarea>
+                    </div>
+                    <button class="bg-gold text-void p-3 rounded-lg hover:bg-gold-bright transition-colors shrink-0">
+                        <i class="ph ph-arrow-up text-sm font-bold"></i>
+                    </button>
+                </div>
+                <div class="flex items-center gap-4 mt-2">
+                    <button class="text-[10px] font-mono text-[#555d6e] hover:text-[#8891a0] transition-colors flex items-center gap-1.5"><i class="ph ph-lightbulb"></i> Suggest questions</button>
+                    <button class="text-[10px] font-mono text-[#555d6e] hover:text-[#8891a0] transition-colors flex items-center gap-1.5"><i class="ph ph-graph"></i> Compare sources</button>
+                    <button class="text-[10px] font-mono text-[#555d6e] hover:text-[#8891a0] transition-colors flex items-center gap-1.5"><i class="ph ph-list-bullets"></i> Summarize all</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Right: Notes & highlights -->
+    <aside class="w-72 bg-surface border-l border-border flex flex-col shrink-0">
+        <div class="h-10 border-b border-border flex items-center px-4">
+            <div class="flex gap-4">
+                <button class="font-mono text-[10px] text-gold uppercase tracking-widest">Notes</button>
+                <button class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest hover:text-[#8891a0] transition-colors">Highlights</button>
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-3">
+            <div class="border border-border rounded-lg p-3 bg-elevated/50">
+                <p class="font-mono text-[10px] text-gold mb-2">Key finding</p>
+                <p class="font-serif text-xs text-[#8891a0] leading-relaxed">SpCas9-HF1 reduces off-target by ~85-90% via energy barrier mechanism. Four residue mutations.</p>
+                <p class="font-mono text-[9px] text-[#555d6e] mt-2">From: Slaymaker et al.</p>
+            </div>
+
+            <div class="border border-border rounded-lg p-3 bg-elevated/50">
+                <p class="font-mono text-[10px] text-gold mb-2">Comparison note</p>
+                <p class="font-serif text-xs text-[#8891a0] leading-relaxed">Prime Editing avoids DSBs entirely but has efficiency and delivery constraints (6.3kb &gt; AAV 4.7kb limit).</p>
+                <p class="font-mono text-[9px] text-[#555d6e] mt-2">Synthesized from 3 sources</p>
+            </div>
+
+            <div class="border border-border rounded-lg p-3 bg-elevated/50">
+                <p class="font-mono text-[10px] text-[#8891a0] mb-2">Research gap</p>
+                <p class="font-serif text-xs text-[#8891a0] leading-relaxed">Insufficient longitudinal data on p53 activation in clinical settings. Key barrier to FDA approval.</p>
+                <p class="font-mono text-[9px] text-[#555d6e] mt-2">From: Zhang et al.</p>
+            </div>
+        </div>
+
+        <div class="p-3 border-t border-border">
+            <button class="w-full text-[10px] font-mono text-[#8891a0] hover:text-gold transition-colors py-2 border border-border rounded hover:border-gold/30 flex items-center justify-center gap-2">
+                <i class="ph ph-plus"></i> New note
+            </button>
+        </div>
+    </aside>
+
+</body>
+</html>

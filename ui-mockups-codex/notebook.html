@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScholarSync - Socratic Notebook</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Merriweather', 'serif'] },
+          colors: {
+            room: '#020617',
+            surface: '#0f172a',
+            text_main: '#f1f5f9',
+            text_muted: '#94a3b8',
+            glow: '#0ea5e9',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background: #020617; }
+    .glass {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+<body class="text-text_main font-sans h-screen flex overflow-hidden selection:bg-glow selection:text-white" x-data="{ tab: 'claims' }">
+  <aside class="w-20 lg:w-64 flex flex-col shrink-0 border-r border-white/5 bg-room/50 hidden md:flex z-20">
+    <div class="h-20 flex items-center px-6 justify-center lg:justify-start">
+      <a href="dashboard.html" class="text-text_muted hover:text-white"><i class="ph ph-arrow-left"></i></a>
+      <span class="ml-3 text-white font-semibold hidden lg:block">Notebook</span>
+    </div>
+    <nav class="px-3 space-y-1">
+      <a href="dashboard.html" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 justify-center lg:justify-start"><i class="ph ph-house text-xl"></i><span class="hidden lg:block text-sm">Dashboard</span></a>
+      <a href="research.html" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 justify-center lg:justify-start"><i class="ph ph-globe-hemisphere-west text-xl"></i><span class="hidden lg:block text-sm">Research</span></a>
+      <a href="notebook.html" class="flex items-center gap-3 px-3 py-3 rounded-lg bg-white/10 text-white border border-white/5 justify-center lg:justify-start"><i class="ph ph-notebook text-xl"></i><span class="hidden lg:block text-sm">Notebook</span></a>
+      <a href="analysis.html" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 justify-center lg:justify-start"><i class="ph ph-scan text-xl"></i><span class="hidden lg:block text-sm">Audit</span></a>
+    </nav>
+  </aside>
+
+  <main class="flex-1 overflow-y-auto bg-room p-6 md:p-10">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section class="lg:col-span-2 glass rounded-2xl p-8">
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-3xl font-serif text-white">Reasoning Notebook</h1>
+          <span class="text-xs uppercase tracking-widest text-text_muted">Socratic Mode</span>
+        </div>
+
+        <div class="space-y-4">
+          <article class="p-5 rounded-xl border border-emerald-500/20 bg-emerald-500/10">
+            <p class="text-xs uppercase tracking-widest text-emerald-300 mb-2">Grounded Claim</p>
+            <h3 class="font-serif text-xl text-white">High-fidelity variants reduce off-target edits by 85-90% in controlled human cell studies.</h3>
+            <p class="text-text_muted mt-2 text-sm">Evidence strength: high • Sources: 4</p>
+          </article>
+
+          <article class="p-5 rounded-xl border border-amber-500/20 bg-amber-500/10">
+            <p class="text-xs uppercase tracking-widest text-amber-300 mb-2">Needs Qualification</p>
+            <h3 class="font-serif text-xl text-white">Current policy frameworks are ethically insufficient for germline deployment.</h3>
+            <p class="text-text_muted mt-2 text-sm">Evidence strength: moderate • Add normative framework citations</p>
+          </article>
+
+          <article class="p-5 rounded-xl border border-red-500/20 bg-red-500/10">
+            <p class="text-xs uppercase tracking-widest text-red-300 mb-2">High Risk Assertion</p>
+            <h3 class="font-serif text-xl text-white">Intergenerational risk should block all current policy adoption.</h3>
+            <p class="text-text_muted mt-2 text-sm">Evidence strength: low • Over-generalized from one source</p>
+          </article>
+        </div>
+      </section>
+
+      <aside class="glass rounded-2xl p-6">
+        <div class="flex gap-2 mb-5">
+          <button @click="tab='claims'" :class="tab==='claims' ? 'bg-white/10 text-white' : 'text-text_muted'" class="px-3 py-2 rounded-lg text-xs uppercase tracking-widest">Prompts</button>
+          <button @click="tab='next'" :class="tab==='next' ? 'bg-white/10 text-white' : 'text-text_muted'" class="px-3 py-2 rounded-lg text-xs uppercase tracking-widest">Next Step</button>
+        </div>
+        <div x-show="tab==='claims'" class="space-y-4">
+          <p class="text-sm text-white">Which sentence in your conclusion depends on moral premise vs empirical evidence?</p>
+          <p class="text-sm text-white">What specific finding would falsify your strongest policy recommendation?</p>
+          <p class="text-sm text-white">Can your caution be reframed without implying technical pessimism?</p>
+        </div>
+        <div x-show="tab==='next'" style="display:none" class="space-y-4">
+          <p class="text-sm text-text_muted">1. Open research and add two policy sources.</p>
+          <p class="text-sm text-text_muted">2. Narrow claim C in studio to a conditional recommendation.</p>
+          <a href="studio.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-500 text-white text-sm">Open Studio <i class="ph ph-arrow-right"></i></a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+    <style id="mode-switch-fab-style">
+      #mode-toggle {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: inline-flex;
+        gap: 6px;
+        padding: 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, 0.14);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      }
+      #mode-toggle .mode-btn {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: #334155;
+        background: transparent;
+        border: 1px solid transparent;
+      }
+      #mode-toggle .mode-btn:hover {
+        color: #0f172a;
+        background: rgba(148, 163, 184, 0.12);
+      }
+      #mode-toggle .mode-btn.is-active {
+        color: #ffffff;
+        background: #4f46e5;
+        border-color: #4f46e5;
+      }
+      html.dark #mode-toggle,
+      body.dark #mode-toggle {
+        background: rgba(2, 6, 23, 0.88);
+        border-color: rgba(148, 163, 184, 0.35);
+      }
+      html.dark #mode-toggle .mode-btn,
+      body.dark #mode-toggle .mode-btn {
+        color: #cbd5e1;
+      }
+      html.dark #mode-toggle .mode-btn:hover,
+      body.dark #mode-toggle .mode-btn:hover {
+        color: #f8fafc;
+        background: rgba(148, 163, 184, 0.18);
+      }
+      html.dark #mode-toggle .mode-btn.is-active,
+      body.dark #mode-toggle .mode-btn.is-active {
+        color: #0f172a;
+        background: #f8fafc;
+        border-color: #f8fafc;
+      }
+    </style>
+    <div id="mode-toggle" role="group" aria-label="Color mode toggle">
+      <a id="mode-day" class="mode-btn" href="#">Daylight</a>
+      <a id="mode-night" class="mode-btn" href="#">Night</a>
+    </div>
+    <script id="mode-switch-fab-script">
+      (function () {
+        var day = document.getElementById('mode-day');
+        var night = document.getElementById('mode-night');
+        if (!day || !night) return;
+
+        var file = (location.pathname.split('/').pop() || '').split('?')[0].split('#')[0];
+        var m = file.match(/^(.*?)(?:_light)?\.html$/i);
+        if (!m) return;
+
+        var base = m[1];
+        var isLight = /_light\.html$/i.test(file);
+        var dayHref = base + '_light.html';
+        var nightHref = base + '.html';
+
+        day.href = dayHref;
+        night.href = nightHref;
+
+        day.classList.toggle('is-active', isLight);
+        night.classList.toggle('is-active', !isLight);
+
+        day.setAttribute('aria-current', isLight ? 'page' : 'false');
+        night.setAttribute('aria-current', !isLight ? 'page' : 'false');
+      })();
+    </script>
+
+</body>
+</html>

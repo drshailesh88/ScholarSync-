@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Gemini Design Exploration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        accent: '#ea580c',
+                        stone: { 100: '#f5f5f4', 200: '#e7e5e4', 500: '#78716c', 800: '#292524' },
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink font-sans min-h-screen selection:bg-accent selection:text-white">
+
+    <div class="max-w-4xl mx-auto px-8 py-16">
+
+        <div class="mb-12 border-b border-stone-200 pb-8">
+            <p class="font-mono text-[10px] text-accent uppercase tracking-widest mb-4">Design Exploration</p>
+            <h1 class="text-4xl font-serif text-ink mb-3">Gemini Design Language</h1>
+            <p class="text-stone-500 text-sm max-w-2xl leading-relaxed">
+                An alternative design direction for ScholarSync. This collection uses a warm "Deep Work" palette
+                with Crimson Pro serif headings, JetBrains Mono for system elements, and a burnt orange accent.
+                The aesthetic is minimal, editorial, and technically inspired.
+            </p>
+        </div>
+
+        <div class="mb-8">
+            <h2 class="font-mono text-xs text-stone-500 uppercase tracking-widest mb-1">Design System</h2>
+            <div class="flex gap-4 mt-4">
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-[#f9f8f6] border border-stone-300"></div>
+                    <span class="font-mono text-[10px] text-stone-500">Paper</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-[#1c1917] border border-stone-300"></div>
+                    <span class="font-mono text-[10px] text-stone-500">Ink</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-[#ea580c] border border-stone-300"></div>
+                    <span class="font-mono text-[10px] text-stone-500">Accent</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-[#111111] border border-stone-300"></div>
+                    <span class="font-mono text-[10px] text-stone-500">Sidebar</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-12 h-12 bg-[#e7e5e4] border border-stone-300"></div>
+                    <span class="font-mono text-[10px] text-stone-500">Stone 200</span>
+                </div>
+            </div>
+            <div class="mt-4 flex gap-6 font-mono text-[10px] text-stone-400">
+                <span>Serif: Crimson Pro</span>
+                <span>Sans: Inter</span>
+                <span>Mono: JetBrains Mono</span>
+            </div>
+        </div>
+
+        <div class="space-y-1 mt-12">
+            <div class="grid grid-cols-12 gap-4 px-4 py-2 text-[10px] font-mono text-stone-400 uppercase tracking-widest border-b border-stone-200">
+                <div class="col-span-1">#</div>
+                <div class="col-span-4">Page</div>
+                <div class="col-span-4">Description</div>
+                <div class="col-span-3 text-right">Action</div>
+            </div>
+
+            <a href="01-dashboard-deepwork.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">01</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Dashboard (Deep Work)</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Minimal research console variant</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="02-landing-page.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">02</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Landing Page</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Marketing page with grid pattern hero</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="03-auth-page.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">03</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Auth Page</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Split-screen login with Feynman quote</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="04-dashboard.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">04</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Dashboard (Full)</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Main console with status bar & metrics</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="05-studio.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">05</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">The Studio (Editor)</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Manuscript editor with AI copilot sidebar</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="06-deep-research.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">06</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Deep Research</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Literature search with data extraction panel</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="07-notebook-mode.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">07</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Notebook / Source Dossier</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Socratic synthesis with source citations</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="08-writing-analysis.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">08</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Writing Analysis</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Readability diagnostics & anomaly detection</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="08b-compliance-checks.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">08b</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Compliance Checks</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Plagiarism & AI detection audit</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="09-reference-manager.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">09</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Reference Manager</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Library with citation modal (APA/MLA/BibTeX)</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="09b-presentation-mode.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">09b</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Presentation Builder</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Deck builder with frame properties panel</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="10-project-manager.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">10</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Project Manager</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Manuscript archive with metadata sidebar</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+
+            <a href="11-settings.html" class="grid grid-cols-12 gap-4 px-4 py-4 border-b border-stone-100 hover:bg-white transition-all group items-center">
+                <div class="col-span-1 font-mono text-xs text-stone-400">11</div>
+                <div class="col-span-4 font-serif text-base text-ink group-hover:text-accent">Settings</div>
+                <div class="col-span-4 font-mono text-xs text-stone-500">Membership, usage telemetry, identity</div>
+                <div class="col-span-3 text-right font-mono text-[10px] text-stone-400 group-hover:text-accent">OPEN &rarr;</div>
+            </a>
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-stone-200">
+            <p class="font-mono text-[10px] text-stone-400 uppercase tracking-widest">
+                Branch: gemini-design-exploration &mdash; This does not affect the main branch.
+            </p>
+        </div>
+
+    </div>
+
+</body>
+</html>

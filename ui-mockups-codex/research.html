@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Deep Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        room: '#020617',
+                        surface: '#0f172a',
+                        glass: 'rgba(15, 23, 42, 0.7)',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        text_main: '#f1f5f9',
+                        text_muted: '#94a3b8',
+                        glow: '#0ea5e9',
+                    },
+                    boxShadow: {
+                        'glow': '0 0 40px -10px rgba(14, 165, 233, 0.2)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .omnibar-glow:focus-within {
+            box-shadow: 0 0 30px -5px rgba(14, 165, 233, 0.3);
+            border-color: rgba(14, 165, 233, 0.5);
+        }
+    </style>
+</head>
+<body class="text-text_main font-sans h-screen flex overflow-hidden selection:bg-glow selection:text-white">
+
+    <aside class="w-20 lg:w-64 flex flex-col shrink-0 border-r border-white/5 bg-room/50 hidden md:flex z-20">
+        <div class="h-20 flex items-center px-6 justify-center lg:justify-start">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-sky-500/20 shrink-0">
+                <i class="ph ph-squares-four text-lg"></i>
+            </div>
+            <span class="ml-3 font-semibold tracking-tight text-white hidden lg:block">ScholarSync</span>
+        </div>
+
+        <nav class="px-3 space-y-1">
+            <a href="dashboard.html" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 transition-all justify-center lg:justify-start">
+                <i class="ph ph-house text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Dashboard</span>
+            </a>
+            <a href="studio.html" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 transition-all justify-center lg:justify-start">
+                <i class="ph ph-pen-nib text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Studio</span>
+            </a>
+            <a href="research.html" class="flex items-center gap-3 px-3 py-3 rounded-lg bg-white/10 text-white shadow-inner border border-white/5 ring-1 ring-white/5 justify-center lg:justify-start">
+                <i class="ph ph-globe-hemisphere-west text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Research</span>
+            </a>
+            <a href="library.html" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 transition-all justify-center lg:justify-start">
+                <i class="ph ph-books text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Library</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative bg-room">
+
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-sky-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-5xl mx-auto px-6 py-12 relative z-10 min-h-screen flex flex-col">
+
+            <header class="sticky top-6 z-50 mb-12">
+                <div class="glass-panel rounded-2xl p-2 flex items-center gap-4 shadow-glass omnibar-glow transition-all">
+                    <div class="pl-4 text-sky-400 animate-pulse">
+                        <i class="ph ph-magnifying-glass text-2xl"></i>
+                    </div>
+                    <input type="text" value="CRISPR off-target effects consensus 2024"
+                        class="w-full bg-transparent border-none text-lg md:text-xl font-serif text-white placeholder-white/20 focus:ring-0 py-3"
+                        placeholder="What are you investigating?">
+
+                    <div class="hidden md:flex items-center gap-2 pr-2">
+                        <span class="text-[10px] font-medium text-text_muted uppercase tracking-wider bg-white/5 px-2 py-1 rounded">PubMed</span>
+                        <span class="text-[10px] font-medium text-text_muted uppercase tracking-wider bg-white/5 px-2 py-1 rounded">Semantic Scholar</span>
+                    </div>
+                    <button class="bg-sky-500 hover:bg-sky-400 text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg shadow-sky-500/20">
+                        Investigate
+                    </button>
+                </div>
+            </header>
+
+            <section class="mb-16">
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <h2 class="text-sm font-medium text-sky-400 uppercase tracking-widest flex items-center gap-2">
+                        <i class="ph ph-sparkle-fill"></i> Intelligence Briefing
+                    </h2>
+                    <span class="text-xs text-text_muted">Synthesized from 12 sources</span>
+                </div>
+
+                <div class="bg-surface border border-white/5 rounded-2xl p-8 md:p-12 shadow-glow relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-sky-500 to-transparent opacity-50"></div>
+
+                    <div class="prose prose-invert prose-lg max-w-none font-serif leading-loose text-gray-300">
+                        <p>
+                            <span class="text-white font-semibold">Consensus:</span> Recent literature (2020-2024) indicates a significant paradigm shift regarding off-target effects in CRISPR-Cas9 applications.
+                        </p>
+                        <p>
+                            While early wild-type variants posed high risks for germline editing, the introduction of <span class="text-sky-300 bg-sky-500/10 px-1 rounded">Prime Editing</span> and high-fidelity Cas9 (SpCas9-HF1) has reduced off-target incidence by approximately <strong>85-90%</strong> in human cell lines. However, a major bottleneck remains: the lack of longitudinal data regarding <span class="text-sky-300 bg-sky-500/10 px-1 rounded">p53 activation</span> and subsequent genotoxicity.
+                        </p>
+                    </div>
+
+                    <div class="mt-8 flex gap-4 border-t border-white/5 pt-6">
+                        <button class="flex items-center gap-2 text-sm text-text_muted hover:text-white transition-colors">
+                            <i class="ph ph-copy"></i> Copy to Studio
+                        </button>
+                        <button class="flex items-center gap-2 text-sm text-text_muted hover:text-white transition-colors">
+                            <i class="ph ph-share-network"></i> Share Briefing
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center justify-between mb-6 px-2">
+                    <h2 class="text-sm font-medium text-text_muted uppercase tracking-widest">Primary Sources (142)</h2>
+                    <div class="flex gap-2">
+                        <button class="text-xs text-text_muted hover:text-white bg-white/5 px-3 py-1.5 rounded-lg transition-colors">Filter: PDF Only</button>
+                        <button class="text-xs text-text_muted hover:text-white bg-white/5 px-3 py-1.5 rounded-lg transition-colors">Sort: Impact Factor</button>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+
+                    <div class="glass-panel p-6 rounded-xl hover:bg-white/5 hover:border-sky-500/30 transition-all group cursor-pointer relative">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1 pr-8">
+                                <h3 class="text-xl font-serif text-white group-hover:text-sky-400 transition-colors mb-2">
+                                    High-fidelity CRISPR-Cas9 nucleases with no detectable genome-wide off-target effects
+                                </h3>
+                                <p class="text-sm text-text_muted font-medium mb-3">
+                                    Slaymaker, I.M., et al. • <span class="italic">Nature</span> • 2023
+                                </p>
+                                <p class="text-sm text-gray-400 leading-relaxed line-clamp-2">
+                                    ...demonstrates that structure-guided engineering of SpCas9 can eliminate off-target effects without compromising on-target activity...
+                                </p>
+                            </div>
+                            <div class="flex flex-col items-end gap-2">
+                                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">PDF Available</span>
+                                <span class="text-xs text-text_muted">Cited by 420</span>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-4 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-3">
+                            <button class="text-xs font-medium text-white bg-sky-500 px-3 py-1.5 rounded-lg shadow-lg">Save to Library</button>
+                            <button class="text-xs font-medium text-text_muted hover:text-white bg-white/10 px-3 py-1.5 rounded-lg">Cite</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-xl hover:bg-white/5 hover:border-sky-500/30 transition-all group cursor-pointer relative">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1 pr-8">
+                                <h3 class="text-xl font-serif text-white group-hover:text-sky-400 transition-colors mb-2">
+                                    Evaluation of Off-Target Effects in CRISPR-Cas9 Therapeutics
+                                </h3>
+                                <p class="text-sm text-text_muted font-medium mb-3">
+                                    Zhang, Y., et al. • <span class="italic">Cell Review</span> • 2024
+                                </p>
+                                <p class="text-sm text-gray-400 leading-relaxed line-clamp-2">
+                                    ...systematic review analyzing 50 clinical trials involving CRISPR therapies, focusing on long-term safety profiles and p53 activation...
+                                </p>
+                            </div>
+                            <div class="flex flex-col items-end gap-2">
+                                <span class="bg-white/5 text-text_muted border border-white/10 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Abstract Only</span>
+                                <span class="text-xs text-text_muted">Cited by 85</span>
+                            </div>
+                        </div>
+
+                         <div class="absolute bottom-4 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-3">
+                            <button class="text-xs font-medium text-white bg-sky-500 px-3 py-1.5 rounded-lg shadow-lg">Save to Library</button>
+                            <button class="text-xs font-medium text-text_muted hover:text-white bg-white/10 px-3 py-1.5 rounded-lg">Cite</button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <div class="h-24"></div>
+
+        </div>
+    </main>
+
+    <style id="mode-switch-fab-style">
+      #mode-toggle {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: inline-flex;
+        gap: 6px;
+        padding: 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, 0.14);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      }
+      #mode-toggle .mode-btn {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: #334155;
+        background: transparent;
+        border: 1px solid transparent;
+      }
+      #mode-toggle .mode-btn:hover {
+        color: #0f172a;
+        background: rgba(148, 163, 184, 0.12);
+      }
+      #mode-toggle .mode-btn.is-active {
+        color: #ffffff;
+        background: #4f46e5;
+        border-color: #4f46e5;
+      }
+      html.dark #mode-toggle,
+      body.dark #mode-toggle {
+        background: rgba(2, 6, 23, 0.88);
+        border-color: rgba(148, 163, 184, 0.35);
+      }
+      html.dark #mode-toggle .mode-btn,
+      body.dark #mode-toggle .mode-btn {
+        color: #cbd5e1;
+      }
+      html.dark #mode-toggle .mode-btn:hover,
+      body.dark #mode-toggle .mode-btn:hover {
+        color: #f8fafc;
+        background: rgba(148, 163, 184, 0.18);
+      }
+      html.dark #mode-toggle .mode-btn.is-active,
+      body.dark #mode-toggle .mode-btn.is-active {
+        color: #0f172a;
+        background: #f8fafc;
+        border-color: #f8fafc;
+      }
+    </style>
+    <div id="mode-toggle" role="group" aria-label="Color mode toggle">
+      <a id="mode-day" class="mode-btn" href="#">Daylight</a>
+      <a id="mode-night" class="mode-btn" href="#">Night</a>
+    </div>
+    <script id="mode-switch-fab-script">
+      (function () {
+        var day = document.getElementById('mode-day');
+        var night = document.getElementById('mode-night');
+        if (!day || !night) return;
+
+        var file = (location.pathname.split('/').pop() || '').split('?')[0].split('#')[0];
+        var m = file.match(/^(.*?)(?:_light)?\.html$/i);
+        if (!m) return;
+
+        var base = m[1];
+        var isLight = /_light\.html$/i.test(file);
+        var dayHref = base + '_light.html';
+        var nightHref = base + '.html';
+
+        day.href = dayHref;
+        night.href = nightHref;
+
+        day.classList.toggle('is-active', isLight);
+        night.classList.toggle('is-active', !isLight);
+
+        day.setAttribute('aria-current', isLight ? 'page' : 'false');
+        night.setAttribute('aria-current', !isLight ? 'page' : 'false');
+      })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - System Config</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ tab: 'billing' }">
+
+    <aside class="w-16 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800 items-center py-6">
+        <div class="h-10 w-10 flex items-center justify-center text-stone-100 mb-6">
+            <i class="ph ph-squares-four text-xl"></i>
+        </div>
+
+        <nav class="flex flex-col gap-6 w-full items-center">
+            <a href="04-dashboard.html" class="p-2 text-stone-500 hover:text-stone-100 transition-colors" title="Console">
+                <i class="ph ph-monitor text-xl"></i>
+            </a>
+            <a href="10-project-manager.html" class="p-2 text-stone-500 hover:text-stone-100 transition-colors" title="Archive">
+                <i class="ph ph-folder-notch text-xl"></i>
+            </a>
+            <a href="#" class="p-2 text-stone-100 bg-stone-800 rounded-sm transition-colors" title="Config">
+                <i class="ph ph-gear text-xl"></i>
+            </a>
+        </nav>
+
+        <div class="mt-auto">
+            <button class="text-stone-600 hover:text-red-500 transition-colors"><i class="ph ph-power text-xl"></i></button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex h-full overflow-hidden">
+
+        <aside class="w-64 bg-stone-50 border-r border-stone-200 flex flex-col pt-8">
+            <h1 class="font-serif text-xl text-ink px-6 mb-8 italic">System Configuration</h1>
+
+            <nav class="space-y-px">
+                <button @click="tab = 'billing'" :class="tab === 'billing' ? 'border-accent bg-white text-ink' : 'border-transparent text-stone-500 hover:text-ink'" class="w-full flex items-center gap-3 px-6 py-3 border-l-2 transition-all text-left group">
+                    <span class="font-mono text-[10px] uppercase tracking-widest group-hover:text-ink transition-colors">01. Membership</span>
+                </button>
+                <button @click="tab = 'usage'" :class="tab === 'usage' ? 'border-accent bg-white text-ink' : 'border-transparent text-stone-500 hover:text-ink'" class="w-full flex items-center gap-3 px-6 py-3 border-l-2 transition-all text-left group">
+                    <span class="font-mono text-[10px] uppercase tracking-widest group-hover:text-ink transition-colors">02. Resource Usage</span>
+                </button>
+                <button @click="tab = 'profile'" :class="tab === 'profile' ? 'border-accent bg-white text-ink' : 'border-transparent text-stone-500 hover:text-ink'" class="w-full flex items-center gap-3 px-6 py-3 border-l-2 transition-all text-left group">
+                    <span class="font-mono text-[10px] uppercase tracking-widest group-hover:text-ink transition-colors">03. Identity</span>
+                </button>
+            </nav>
+        </aside>
+
+        <div class="flex-1 overflow-y-auto bg-paper p-12">
+            <div class="max-w-3xl mx-auto space-y-12">
+
+                <div x-show="tab === 'billing'" class="space-y-8" x-transition:enter="transition ease-out duration-300">
+                    <div class="flex justify-between items-end border-b border-stone-200 pb-4">
+                        <h2 class="font-serif text-3xl text-ink">Membership Ledger</h2>
+                        <span class="font-mono text-[10px] text-stone-400">ID: 8821-AX</span>
+                    </div>
+
+                    <div class="border border-stone-300 bg-white p-6 relative">
+                        <div class="absolute top-0 right-0 bg-ink text-white font-mono text-[10px] px-2 py-1 uppercase tracking-widest">Active</div>
+                        <h3 class="font-serif text-xl text-ink mb-1">Professional Tier</h3>
+                        <p class="font-mono text-xs text-stone-500 mb-6">Billed monthly via Razorpay Secure.</p>
+
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="font-serif text-4xl text-ink">&#8377;499</span>
+                            <span class="font-mono text-xs text-stone-400">/mo</span>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button class="border border-stone-300 px-4 py-2 text-xs font-mono uppercase hover:border-ink hover:bg-stone-50 transition-all">Change Plan</button>
+                            <button class="text-stone-400 hover:text-red-600 text-xs font-mono uppercase underline decoration-stone-300 hover:decoration-red-600 underline-offset-4 transition-all">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="font-mono text-xs text-stone-400 uppercase tracking-widest mb-4">Transaction History</h3>
+                        <div class="border border-stone-200 bg-white">
+                            <table class="w-full text-left">
+                                <thead class="bg-stone-50 border-b border-stone-200 font-mono text-[10px] uppercase text-stone-500">
+                                    <tr>
+                                        <th class="px-4 py-2 font-normal">Date</th>
+                                        <th class="px-4 py-2 font-normal">Description</th>
+                                        <th class="px-4 py-2 font-normal">Amount</th>
+                                        <th class="px-4 py-2 font-normal text-right">Invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="font-mono text-xs text-ink">
+                                    <tr class="border-b border-stone-100">
+                                        <td class="px-4 py-3 text-stone-500">2024-10-24</td>
+                                        <td class="px-4 py-3">Pro_Tier_Monthly</td>
+                                        <td class="px-4 py-3">&#8377;499.00</td>
+                                        <td class="px-4 py-3 text-right"><a href="#" class="text-stone-400 hover:text-ink">PDF</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-4 py-3 text-stone-500">2024-09-24</td>
+                                        <td class="px-4 py-3">Pro_Tier_Monthly</td>
+                                        <td class="px-4 py-3">&#8377;499.00</td>
+                                        <td class="px-4 py-3 text-right"><a href="#" class="text-stone-400 hover:text-ink">PDF</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="tab === 'usage'" class="space-y-8" style="display: none;">
+                    <div class="flex justify-between items-end border-b border-stone-200 pb-4">
+                        <h2 class="font-serif text-3xl text-ink">Resource Telemetry</h2>
+                        <span class="font-mono text-[10px] text-green-700">&#9679; SYSTEM NOMINAL</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-8">
+
+                        <div>
+                            <div class="flex justify-between mb-2 font-mono text-xs">
+                                <span class="uppercase tracking-widest text-stone-500">Compute Credits (AI)</span>
+                                <span class="text-ink">12,450 / 50,000</span>
+                            </div>
+                            <div class="w-full bg-stone-200 h-px mb-1">
+                                <div class="bg-ink h-px w-[25%]"></div>
+                            </div>
+                            <p class="font-mono text-[10px] text-stone-400">RESET: 14 DAYS</p>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-2 font-mono text-xs">
+                                <span class="uppercase tracking-widest text-stone-500">Deep Search Queries</span>
+                                <span class="text-ink">85 / Unlimited</span>
+                            </div>
+                            <div class="w-full bg-stone-200 h-px mb-1">
+                                <div class="bg-ink h-px w-[10%]"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-2 font-mono text-xs">
+                                <span class="uppercase tracking-widest text-stone-500">Plagiarism/Audit Scans</span>
+                                <span class="text-accent">2 / 5</span>
+                            </div>
+                            <div class="w-full bg-stone-200 h-px mb-1">
+                                <div class="bg-accent h-px w-[40%]"></div>
+                            </div>
+                            <p class="font-mono text-[10px] text-stone-400">Additional scans available @ &#8377;50/scan</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div x-show="tab === 'profile'" class="space-y-8" style="display: none;">
+                    <div class="flex justify-between items-end border-b border-stone-200 pb-4">
+                        <h2 class="font-serif text-3xl text-ink">Identity & Access</h2>
+                    </div>
+
+                    <div class="flex items-start gap-8">
+                        <div class="w-24 h-24 bg-stone-200 border border-stone-300 flex items-center justify-center">
+                            <span class="font-serif text-4xl text-stone-400 italic">RV</span>
+                        </div>
+                        <div class="flex-1 space-y-4 max-w-md">
+                            <div>
+                                <label class="block font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-1">Full Name</label>
+                                <input type="text" value="Rahul Verma" class="w-full bg-transparent border-b border-stone-300 py-1 font-serif text-lg text-ink focus:outline-none focus:border-accent">
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-1">Institution</label>
+                                <input type="text" value="Indian Institute of Technology, Delhi" class="w-full bg-transparent border-b border-stone-300 py-1 font-serif text-lg text-ink focus:outline-none focus:border-accent">
+                            </div>
+                            <div>
+                                <label class="block font-mono text-[10px] uppercase tracking-widest text-stone-500 mb-1">Email (Locked)</label>
+                                <input type="text" value="rahul.verma@iitd.ac.in" disabled class="w-full bg-transparent border-b border-stone-200 py-1 font-mono text-sm text-stone-400 cursor-not-allowed">
+                            </div>
+
+                            <div class="pt-4">
+                                <button class="bg-ink text-white px-6 py-2 font-mono text-xs uppercase tracking-wide hover:bg-stone-800 transition-colors">Save Changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Deck Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .aspect-slide { aspect-ratio: 16 / 9; }
+        .slide-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06); }
+    </style>
+</head>
+<body class="bg-stone-100 text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ frame: 1 }">
+
+    <aside class="w-64 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800">
+
+        <div class="h-14 flex items-center justify-between px-5 border-b border-stone-800 bg-[#151515]">
+            <div class="flex items-center gap-2 text-stone-100">
+                <i class="ph ph-projector-screen"></i>
+                <span class="font-mono text-xs uppercase tracking-widest">Deck Structure</span>
+            </div>
+            <button class="font-mono text-[10px] text-stone-500 hover:text-stone-300 transition-colors border border-stone-700 px-2 py-0.5 rounded-sm">
+                + FRAME
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+
+            <div @click="frame = 1" :class="frame === 1 ? 'border-accent bg-stone-900' : 'border-transparent hover:bg-stone-900/50'" class="border-l-2 p-3 cursor-pointer transition-all group">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-mono text-[10px] text-stone-500 uppercase tracking-widest">Frame 01</span>
+                    <i class="ph ph-dots-three text-stone-600 group-hover:text-stone-400"></i>
+                </div>
+                <div class="w-full aspect-slide bg-stone-800 border border-stone-700 p-2 flex flex-col justify-center items-center gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div class="w-2/3 h-1 bg-stone-500"></div>
+                    <div class="w-1/2 h-0.5 bg-stone-600"></div>
+                </div>
+                <p class="font-serif text-xs text-stone-300 mt-2 truncate">Title: Ethics of CRISPR</p>
+            </div>
+
+            <div @click="frame = 2" :class="frame === 2 ? 'border-accent bg-stone-900' : 'border-transparent hover:bg-stone-900/50'" class="border-l-2 p-3 cursor-pointer transition-all group">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-mono text-[10px] text-stone-500 uppercase tracking-widest">Frame 02</span>
+                    <i class="ph ph-dots-three text-stone-600 group-hover:text-stone-400"></i>
+                </div>
+                <div class="w-full aspect-slide bg-stone-800 border border-stone-700 p-2 flex flex-col gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div class="w-1/3 h-1 bg-stone-500 mb-1"></div>
+                    <div class="w-full h-0.5 bg-stone-600"></div>
+                    <div class="w-full h-0.5 bg-stone-600"></div>
+                    <div class="w-3/4 h-0.5 bg-stone-600"></div>
+                </div>
+                <p class="font-serif text-xs text-stone-300 mt-2 truncate">Introduction & Context</p>
+            </div>
+
+            <div @click="frame = 3" :class="frame === 3 ? 'border-accent bg-stone-900' : 'border-transparent hover:bg-stone-900/50'" class="border-l-2 p-3 cursor-pointer transition-all group">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-mono text-[10px] text-stone-500 uppercase tracking-widest">Frame 03</span>
+                    <i class="ph ph-dots-three text-stone-600 group-hover:text-stone-400"></i>
+                </div>
+                <div class="w-full aspect-slide bg-stone-800 border border-stone-700 p-2 flex gap-1 opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div class="flex-1 flex flex-col gap-1 pt-1">
+                        <div class="w-full h-1 bg-stone-500"></div>
+                        <div class="w-full h-0.5 bg-stone-600"></div>
+                    </div>
+                    <div class="w-1/3 h-full bg-stone-700 border border-stone-600"></div>
+                </div>
+                <p class="font-serif text-xs text-stone-300 mt-2 truncate">Data Visualization</p>
+            </div>
+
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full relative">
+
+        <header class="h-14 bg-paper border-b border-stone-200 flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex items-center gap-3">
+                <a href="05-studio.html" class="text-stone-400 hover:text-ink transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <span class="font-mono text-xs text-stone-500 uppercase tracking-widest">Presentation_v1.pptx</span>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <span class="font-mono text-[10px] text-stone-400">LAST SYNC: 2m AGO</span>
+                <button class="flex items-center gap-2 px-4 py-1.5 bg-ink text-paper text-xs font-mono uppercase tracking-wide hover:bg-stone-800 transition-all rounded-sm">
+                    <i class="ph ph-export"></i> Compile_Deck
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-hidden bg-stone-200 flex flex-col items-center justify-center p-8 relative">
+
+            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient(#ccc 1px, transparent 1px), linear-gradient(90deg, #ccc 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+            <div x-show="frame === 1" class="w-full max-w-4xl aspect-slide bg-white slide-shadow p-16 flex flex-col justify-center relative border border-stone-300" x-transition.opacity>
+                <div class="border border-transparent hover:border-dashed hover:border-accent p-2 -ml-2 transition-all cursor-text mb-6">
+                    <h1 class="font-serif text-6xl text-ink leading-tight">
+                        CRISPR-Cas9:<br>Ethics &amp; Efficacy
+                    </h1>
+                </div>
+                <div class="border border-transparent hover:border-dashed hover:border-accent p-2 -ml-2 transition-all cursor-text">
+                    <p class="font-serif text-2xl text-stone-500 italic">
+                        A Comparative Analysis of High-Fidelity Variants
+                    </p>
+                </div>
+                <div class="absolute bottom-8 right-8 font-mono text-[10px] text-stone-300 uppercase tracking-widest">
+                    ScholarSync_Generated
+                </div>
+            </div>
+
+            <div x-show="frame === 2" class="w-full max-w-4xl aspect-slide bg-white slide-shadow p-16 flex flex-col relative border border-stone-300" style="display: none;">
+                <h2 class="font-serif text-4xl text-ink mb-8 border-b border-ink pb-4 w-max">Introduction</h2>
+                <div class="font-serif text-2xl text-stone-600 space-y-6 leading-relaxed">
+                    <p>&bull; CRISPR technology has revolutionized gene editing since 2012.</p>
+                    <p>&bull; Primary challenge: <strong class="text-ink">Off-target effects</strong> (unintended mutations).</p>
+                    <p>&bull; This study compares wild-type Cas9 vs. SpCas9-HF1 variants.</p>
+                </div>
+            </div>
+
+            <div x-show="frame === 3" class="w-full max-w-4xl aspect-slide bg-white slide-shadow p-16 flex gap-12 relative border border-stone-300" style="display: none;">
+                <div class="flex-1">
+                    <h2 class="font-serif text-3xl text-ink mb-6">Methodology</h2>
+                    <p class="font-serif text-lg text-stone-600 leading-loose">
+                        We utilized a sample size of 500 embryos to determine the efficacy rate. The control group demonstrated significant deviation...
+                    </p>
+                </div>
+                <div class="w-1/3 bg-stone-100 border border-stone-200 flex items-center justify-center">
+                    <span class="font-mono text-xs text-stone-400 uppercase tracking-widest">[Chart_Placeholder]</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="h-32 bg-paper border-t border-stone-200 shrink-0 flex flex-col z-20">
+            <div class="h-8 bg-stone-100 border-b border-stone-200 flex items-center justify-between px-4">
+                <span class="font-mono text-[10px] uppercase tracking-widest text-stone-500">Lecturer Script</span>
+                <span class="font-mono text-[10px] text-stone-400">AUTO_GENERATED</span>
+            </div>
+            <textarea class="flex-1 p-4 bg-transparent border-none resize-none font-mono text-xs text-stone-600 focus:outline-none leading-relaxed" placeholder="Notes...">Good morning. Today I will present our findings on CRISPR variants. As detailed in the abstract...</textarea>
+        </div>
+
+    </main>
+
+    <aside class="w-72 bg-paper border-l border-stone-200 flex flex-col shrink-0 z-20">
+
+        <div class="p-4 border-b border-stone-200">
+            <h2 class="font-mono text-xs font-bold text-ink uppercase tracking-widest">Frame Properties</h2>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-8">
+
+            <div>
+                <label class="font-mono text-[10px] text-stone-400 uppercase tracking-widest mb-3 block">Layout Grid</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="h-10 border border-stone-300 hover:border-accent bg-white"></button>
+                    <button class="h-10 border border-stone-300 hover:border-accent bg-white flex"><div class="w-1/3 border-r border-stone-100 bg-stone-50"></div></button>
+                    <button class="h-10 border border-stone-300 hover:border-accent bg-white flex flex-col"><div class="h-1/3 border-b border-stone-100 bg-stone-50"></div></button>
+                    <button class="h-10 border border-stone-300 hover:border-accent bg-white flex"><div class="w-1/2 border-r border-stone-100 bg-stone-50"></div></button>
+                </div>
+            </div>
+
+            <div>
+                <label class="font-mono text-[10px] text-stone-400 uppercase tracking-widest mb-3 block">Typography</label>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs font-mono text-stone-600 border border-stone-200 p-2 bg-white">
+                        <span>Typeface</span>
+                        <span class="text-ink">Crimson Pro</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs font-mono text-stone-600 border border-stone-200 p-2 bg-white">
+                        <span>Size</span>
+                        <span class="text-ink">48pt</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="font-mono text-[10px] text-stone-400 uppercase tracking-widest mb-3 block">Intelligence</label>
+
+                <button class="w-full text-left p-3 border border-stone-200 hover:border-accent hover:bg-white transition-all mb-2 group">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="ph ph-magic-wand text-stone-400 group-hover:text-accent"></i>
+                        <span class="font-mono text-[10px] font-bold text-ink uppercase">Condense Text</span>
+                    </div>
+                    <p class="font-serif text-xs text-stone-500 italic">Convert paragraphs to bullets</p>
+                </button>
+
+                <button class="w-full text-left p-3 border border-stone-200 hover:border-accent hover:bg-white transition-all mb-2 group">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="ph ph-image text-stone-400 group-hover:text-accent"></i>
+                        <span class="font-mono text-[10px] font-bold text-ink uppercase">Fetch Figures</span>
+                    </div>
+                    <p class="font-serif text-xs text-stone-500 italic">Extract charts from PDF</p>
+                </button>
+            </div>
+
+        </div>
+    </aside>
+
+</body>
+</html>

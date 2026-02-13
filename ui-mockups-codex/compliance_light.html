@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Forensic Audit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        canvas: '#f8fafc',
+                        ink: '#0f172a',
+                        muted: '#64748b',
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            900: '#312e81',
+                        },
+                        warning: '#f43f5e',
+                        synthetic: '#8b5cf6',
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'sheet': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    },
+                    animation: {
+                        'scan': 'scan 3s linear infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { top: '0%', opacity: '0' },
+                            '10%': { opacity: '0.5' },
+                            '90%': { opacity: '0.5' },
+                            '100%': { top: '100%', opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; }
+        .glass-sidebar {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid #e2e8f0;
+        }
+        .highlight-source {
+            background-color: #ffe4e6;
+            border-bottom: 2px solid #f43f5e;
+            color: #881337;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .highlight-source:hover { background-color: #fecdd3; }
+        .highlight-ai {
+            background-color: #ede9fe;
+            border-bottom: 2px solid #8b5cf6;
+            color: #5b21b6;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .highlight-ai:hover { background-color: #ddd6fe; }
+    </style>
+</head>
+<body class="text-ink font-sans h-screen flex overflow-hidden antialiased selection:bg-brand-100 selection:text-brand-900" x-data="{ report: 'source' }">
+
+    <aside class="w-64 glass-sidebar flex flex-col shrink-0 hidden md:flex z-20">
+        <div class="h-20 flex items-center px-6">
+            <div class="flex items-center gap-3">
+                <a href="dashboard_light.html" class="text-slate-400 hover:text-brand-600 transition-colors"><i class="ph-bold ph-arrow-left"></i></a>
+                <span class="font-bold tracking-tight text-slate-800">Audit Log</span>
+            </div>
+        </div>
+
+        <nav class="px-3 space-y-1 flex-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white border border-slate-200 text-brand-600 shadow-sm transition-all justify-center lg:justify-start">
+                <i class="ph-bold ph-scan text-xl"></i>
+                <span class="text-sm font-semibold hidden lg:block">Current Scan</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-white hover:shadow-sm transition-all justify-center lg:justify-start">
+                <i class="ph-bold ph-clock-counter-clockwise text-xl"></i>
+                <span class="text-sm font-semibold hidden lg:block">History</span>
+            </a>
+        </nav>
+
+        <div class="p-6 border-t border-slate-200 bg-slate-50">
+            <a href="compliance.html" class="text-xs font-semibold text-brand-600 hover:text-brand-800">Night Variant</a>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative bg-canvas">
+        <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col">
+                    <h1 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Target File</h1>
+                    <span class="text-slate-900 font-bold">Thesis_v4.docx</span>
+                </div>
+                <span class="px-2 py-1 rounded bg-emerald-50 border border-emerald-100 text-emerald-600 text-[10px] font-bold uppercase tracking-wider">Scan Complete</span>
+            </div>
+
+            <button class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-lg text-xs font-bold text-slate-700 transition-all shadow-sm">
+                <i class="ph-bold ph-file-pdf"></i> Export Report
+            </button>
+        </header>
+
+        <div class="max-w-3xl mx-auto px-12 py-16 relative z-10">
+            <div class="absolute left-0 right-0 h-px bg-brand-500 shadow-sm animate-scan pointer-events-none opacity-50 z-20"></div>
+
+            <div class="bg-white p-16 shadow-sheet min-h-[800px] border border-slate-200">
+                <h1 class="font-serif text-4xl font-bold text-slate-900 mb-12 leading-tight">The Ethics of Germline Editing</h1>
+
+                <div class="prose prose-slate prose-lg max-w-none font-serif leading-loose text-slate-700">
+                    <p>
+                        The ability to modify the human germline represents a watershed moment in the history of science.
+
+                        <span @click="report = 'synthetic'" class="highlight-ai relative group rounded px-0.5">
+                            It allows for the correction of disease-causing mutations in embryos, preventing the transmission of genetic disorders to future generations.
+                            <span class="absolute -top-10 left-0 bg-white border border-synthetic text-[10px] text-synthetic font-sans uppercase font-bold px-3 py-1.5 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                                <i class="ph-bold ph-robot"></i> Synthetic Pattern [88%]
+                            </span>
+                        </span>
+                    </p>
+
+                    <p class="mt-8">
+                        However, this power comes with significant ethical responsibilities.
+
+                        <span @click="report = 'source'" class="highlight-source relative group rounded px-0.5">
+                            Critics argue that germline editing could lead to a new form of eugenics, where parents select for traits such as intelligence or physical appearance.
+                            <span class="absolute -top-10 left-0 bg-white border border-warning text-[10px] text-warning font-sans uppercase font-bold px-3 py-1.5 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                                <i class="ph-bold ph-warning"></i> Wikipedia Match
+                            </span>
+                        </span>
+                        This concern is not merely theoretical; it is rooted in the history of genetic discrimination.
+                    </p>
+
+                    <p class="mt-8">
+                        Furthermore, the long-term effects of off-target mutations remain unknown. A recent study by Zhang et al. (2024) demonstrated that...
+                    </p>
+
+                    <p class="text-slate-400 italic text-base">[ ... ]</p>
+                </div>
+            </div>
+
+            <div class="h-32"></div>
+        </div>
+    </main>
+
+    <aside class="w-96 bg-white border-l border-slate-200 flex flex-col shrink-0 z-30 shadow-lg">
+        <div class="flex border-b border-slate-100">
+            <button @click="report = 'source'" :class="report === 'source' ? 'bg-slate-50 text-slate-900 border-b-2 border-warning' : 'text-slate-500 hover:text-slate-900 border-b-2 border-transparent'" class="flex-1 py-4 text-xs font-bold uppercase tracking-widest transition-all">
+                Source Match
+            </button>
+            <button @click="report = 'synthetic'" :class="report === 'synthetic' ? 'bg-slate-50 text-slate-900 border-b-2 border-synthetic' : 'text-slate-500 hover:text-slate-900 border-b-2 border-transparent'" class="flex-1 py-4 text-xs font-bold uppercase tracking-widest transition-all">
+                Synthetic AI
+            </button>
+        </div>
+
+        <div x-show="report === 'source'" class="flex-1 overflow-y-auto">
+            <div class="p-8 border-b border-slate-100 bg-rose-50/50 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-3 opacity-10">
+                    <i class="ph-fill ph-warning-octagon text-6xl text-warning"></i>
+                </div>
+                <div class="flex justify-between items-end mb-2 relative z-10">
+                    <span class="font-bold text-xs uppercase text-warning">Similarity Index</span>
+                    <span class="font-mono text-4xl font-bold text-slate-900">14%</span>
+                </div>
+                <div class="w-full bg-white border border-rose-100 h-2 rounded-full overflow-hidden mb-2 relative z-10">
+                    <div class="bg-warning h-full w-[14%]"></div>
+                </div>
+                <p class="font-bold text-[10px] text-slate-500 uppercase tracking-wide">2 Segments Flagged</p>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div class="group bg-white border border-slate-200 rounded-xl p-4 hover:shadow-card hover:border-warning/30 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-slate-500 font-bold flex items-center gap-2">
+                            <i class="ph-bold ph-link"></i> Wikipedia.org
+                        </span>
+                        <span class="text-[10px] bg-rose-50 text-warning border border-rose-100 px-2 py-0.5 rounded font-bold">100% MATCH</span>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 rounded-lg p-3 mb-3 border-l-2 border-l-warning">
+                        <p class="font-serif text-sm text-slate-600 italic leading-relaxed">
+                            "...lead to a new form of eugenics, where parents select for traits..."
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="py-2 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 rounded-lg text-[10px] font-bold text-slate-600 transition-colors">
+                            INSERT CITATION
+                        </button>
+                        <button class="py-2 border border-slate-200 hover:bg-slate-50 hover:border-slate-300 rounded-lg text-[10px] font-bold text-slate-600 transition-colors">
+                            REPHRASE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="report === 'synthetic'" class="flex-1 overflow-y-auto" style="display: none;">
+            <div class="p-8 border-b border-slate-100 bg-violet-50/50 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-3 opacity-10">
+                    <i class="ph-fill ph-robot text-6xl text-synthetic"></i>
+                </div>
+                <div class="flex justify-between items-end mb-2 relative z-10">
+                    <span class="font-bold text-xs uppercase text-synthetic">Humanity Score</span>
+                    <span class="font-mono text-4xl font-bold text-slate-900">65%</span>
+                </div>
+                <div class="w-full bg-white border border-violet-100 h-2 rounded-full overflow-hidden mb-2 relative z-10">
+                    <div class="bg-synthetic h-full w-[65%]"></div>
+                </div>
+                <p class="font-bold text-[10px] text-slate-500 uppercase tracking-wide">Moderate Probability of AI</p>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div class="group bg-white border border-slate-200 rounded-xl p-4 hover:shadow-card hover:border-synthetic/30 transition-all">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-slate-500 font-bold">Segment 01</span>
+                        <span class="text-[10px] bg-violet-50 text-synthetic border border-violet-100 px-2 py-0.5 rounded font-bold">88% PROBABILITY</span>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 rounded-lg p-3 mb-3 border-l-2 border-l-synthetic">
+                        <p class="font-serif text-sm text-slate-600 italic leading-relaxed">
+                            "It allows for the correction of disease-causing mutations..."
+                        </p>
+                        <div class="mt-3 pt-2 border-t border-slate-200 flex gap-2">
+                            <span class="text-[10px] font-bold text-slate-400">Low Perplexity</span>
+                            <span class="text-[10px] font-bold text-slate-400">•</span>
+                            <span class="text-[10px] font-bold text-slate-400">Low Burstiness</span>
+                        </div>
+                    </div>
+                    <button class="w-full py-2 bg-synthetic hover:bg-violet-600 text-white rounded-lg text-[10px] font-bold uppercase tracking-wide transition-colors flex items-center justify-center gap-2 shadow-sm">
+                        <i class="ph-bold ph-magic-wand"></i> Humanize Syntax
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <style id="mode-switch-fab-style">
+      #mode-toggle {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: inline-flex;
+        gap: 6px;
+        padding: 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, 0.14);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      }
+      #mode-toggle .mode-btn {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: #334155;
+        background: transparent;
+        border: 1px solid transparent;
+      }
+      #mode-toggle .mode-btn:hover {
+        color: #0f172a;
+        background: rgba(148, 163, 184, 0.12);
+      }
+      #mode-toggle .mode-btn.is-active {
+        color: #ffffff;
+        background: #4f46e5;
+        border-color: #4f46e5;
+      }
+      html.dark #mode-toggle,
+      body.dark #mode-toggle {
+        background: rgba(2, 6, 23, 0.88);
+        border-color: rgba(148, 163, 184, 0.35);
+      }
+      html.dark #mode-toggle .mode-btn,
+      body.dark #mode-toggle .mode-btn {
+        color: #cbd5e1;
+      }
+      html.dark #mode-toggle .mode-btn:hover,
+      body.dark #mode-toggle .mode-btn:hover {
+        color: #f8fafc;
+        background: rgba(148, 163, 184, 0.18);
+      }
+      html.dark #mode-toggle .mode-btn.is-active,
+      body.dark #mode-toggle .mode-btn.is-active {
+        color: #0f172a;
+        background: #f8fafc;
+        border-color: #f8fafc;
+      }
+    </style>
+    <div id="mode-toggle" role="group" aria-label="Color mode toggle">
+      <a id="mode-day" class="mode-btn" href="#">Daylight</a>
+      <a id="mode-night" class="mode-btn" href="#">Night</a>
+    </div>
+    <script id="mode-switch-fab-script">
+      (function () {
+        var day = document.getElementById('mode-day');
+        var night = document.getElementById('mode-night');
+        if (!day || !night) return;
+
+        var file = (location.pathname.split('/').pop() || '').split('?')[0].split('#')[0];
+        var m = file.match(/^(.*?)(?:_light)?\.html$/i);
+        if (!m) return;
+
+        var base = m[1];
+        var isLight = /_light\.html$/i.test(file);
+        var dayHref = base + '_light.html';
+        var nightHref = base + '.html';
+
+        day.href = dayHref;
+        night.href = nightHref;
+
+        day.classList.toggle('is-active', isLight);
+        night.classList.toggle('is-active', !isLight);
+
+        day.setAttribute('aria-current', isLight ? 'page' : 'false');
+        night.setAttribute('aria-current', !isLight ? 'page' : 'false');
+      })();
+    </script>
+
+</body>
+</html>

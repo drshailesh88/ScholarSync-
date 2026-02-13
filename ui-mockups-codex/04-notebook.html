@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notebook - ScholarSync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="mobile-head">
+      <strong>Notebook</strong>
+      <a href="index.html" class="btn soft" style="padding: 0.3rem 0.55rem;">Index</a>
+    </div>
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">S</span>
+        <span class="brand-text">ScholarSync</span>
+      </div>
+      <nav class="nav">
+        <a href="01-focus-dashboard.html">Focus Dashboard <small>01</small></a>
+        <a href="02-deep-research.html">Deep Research <small>02</small></a>
+        <a href="03-studio.html">Studio <small>03</small></a>
+        <a class="active" href="04-notebook.html">Notebook <small>04</small></a>
+        <a href="index.html">Design Index <small>00</small></a>
+      </nav>
+      <div class="sidebar-footer">
+        <p class="kicker" style="color: #c2ccd8; margin: 0 0 0.25rem;">Reasoning Integrity</p>
+        <strong style="font-size: 1rem;">8 claims fully grounded</strong>
+        <p style="margin: 0.45rem 0 0; font-size: 0.75rem; color: #c2ccd8;">3 require stronger support</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search">
+          <span class="kicker">Question</span>
+          <input type="text" value="Which claims in this draft are most vulnerable to methodological critique?" aria-label="question" />
+        </div>
+        <div class="top-actions">
+          <span class="badge">Notebook Mode</span>
+          <a class="btn soft" href="03-studio.html">Return to Draft</a>
+        </div>
+      </header>
+
+      <section class="content split" style="grid-template-columns: 1.3fr 1fr;">
+        <article class="panel reveal">
+          <header>
+            <h2>Argument Graph</h2>
+            <span class="badge">Socratic Pass</span>
+          </header>
+          <div class="panel-body stack">
+            <article class="card pad" style="border-radius: 12px; border-left: 3px solid var(--success);">
+              <p class="kicker" style="margin: 0;">Claim A</p>
+              <h3 style="margin-top: 0.25rem;">Technical feasibility is improving faster than policy consensus.</h3>
+              <p class="muted" style="margin: 0.35rem 0;">Support score: strong. Evidence from 4 independent sources.</p>
+              <span class="badge">Grounded</span>
+            </article>
+
+            <article class="card pad" style="border-radius: 12px; border-left: 3px solid var(--warn);">
+              <p class="kicker" style="margin: 0;">Claim B</p>
+              <h3 style="margin-top: 0.25rem;">Current risk management frameworks are ethically insufficient.</h3>
+              <p class="muted" style="margin: 0.35rem 0;">Support score: moderate. Needs clearer normative framework citation.</p>
+              <span class="badge">Needs Source Upgrade</span>
+            </article>
+
+            <article class="card pad" style="border-radius: 12px; border-left: 3px solid var(--danger);">
+              <p class="kicker" style="margin: 0;">Claim C</p>
+              <h3 style="margin-top: 0.25rem;">Intergenerational risk should block policy adoption.</h3>
+              <p class="muted" style="margin: 0.35rem 0;">Support score: weak. Broad claim supported by single policy paper.</p>
+              <span class="badge">High Revision Priority</span>
+            </article>
+          </div>
+        </article>
+
+        <aside class="stack reveal delay-1">
+          <section class="panel">
+            <header>
+              <h2>Socratic Prompts</h2>
+            </header>
+            <div class="panel-body stack">
+              <article class="note">
+                <p class="kicker" style="margin: 0;">Probe 1</p>
+                <p style="margin: 0.25rem 0 0;">Which part of your conclusion depends on moral premises rather than empirical results?</p>
+              </article>
+              <article class="note">
+                <p class="kicker" style="margin: 0;">Probe 2</p>
+                <p style="margin: 0.25rem 0 0;">What would falsify your strongest claim if new longitudinal data emerges?</p>
+              </article>
+              <article class="note">
+                <p class="kicker" style="margin: 0;">Probe 3</p>
+                <p style="margin: 0.25rem 0 0;">Can you separate policy caution from technological pessimism in your framing?</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel">
+            <header>
+              <h2>Next Step</h2>
+            </header>
+            <div class="panel-body">
+              <p class="muted" style="margin-top: 0;">Revise Claim C in Studio with a narrower thesis and two additional policy sources.</p>
+              <div class="btn-row">
+                <a class="btn primary" href="03-studio.html">Open Studio</a>
+                <a class="btn soft" href="02-deep-research.html">Find Sources</a>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

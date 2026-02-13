@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Enter Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        room: '#020617',
+                        surface: '#0f172a',
+                        glass: 'rgba(15, 23, 42, 0.6)',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        text_main: '#f1f5f9',
+                        text_muted: '#94a3b8',
+                        glow: '#0ea5e9',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(14, 165, 233, 0.5);
+            box-shadow: 0 0 20px -5px rgba(14, 165, 233, 0.2);
+            outline: none;
+        }
+        .nebula {
+            background: radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.15), transparent 70%);
+            filter: blur(60px);
+        }
+    </style>
+</head>
+<body class="text-text_main font-sans h-screen flex overflow-hidden selection:bg-glow selection:text-white">
+
+    <div class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-24 relative z-10 bg-room">
+
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] nebula pointer-events-none opacity-50"></div>
+
+        <div class="absolute top-12 left-12 flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white">
+                <i class="ph ph-squares-four text-lg"></i>
+            </div>
+            <span class="font-semibold tracking-tight text-white">ScholarSync</span>
+        </div>
+
+        <div class="max-w-md w-full mx-auto relative z-20" x-data="{ state: 'login' }">
+
+            <h1 class="text-4xl font-serif font-light text-white mb-3" x-text="state === 'login' ? 'Welcome back.' : 'Join the lab.'"></h1>
+            <p class="text-text_muted mb-10 font-light" x-text="state === 'login' ? 'Enter your workspace to continue deep work.' : 'Start your 14-day research trial.'"></p>
+
+            <button class="w-full flex items-center justify-center gap-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white transition-all py-3 rounded-xl mb-6 group">
+                <i class="ph ph-google-logo text-lg text-text_muted group-hover:text-white transition-colors"></i>
+                <span class="text-sm font-medium">Continue with Google</span>
+            </button>
+
+            <div class="relative flex py-2 items-center mb-6">
+                <div class="flex-grow border-t border-white/10"></div>
+                <span class="flex-shrink mx-4 text-text_muted text-xs uppercase tracking-widest opacity-50">Or</span>
+                <div class="flex-grow border-t border-white/10"></div>
+            </div>
+
+            <form action="dashboard.html" class="space-y-5">
+                <div x-show="state === 'signup'" x-transition.opacity.duration.300ms>
+                    <label class="text-xs font-medium text-text_muted uppercase tracking-wide mb-2 block ml-1">Full Name</label>
+                    <input type="text" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-white placeholder-white/20" placeholder="e.g. Richard Feynman">
+                </div>
+
+                <div>
+                    <label class="text-xs font-medium text-text_muted uppercase tracking-wide mb-2 block ml-1">Email</label>
+                    <input type="email" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-white placeholder-white/20" placeholder="researcher@institute.edu">
+                </div>
+
+                <div>
+                    <label class="text-xs font-medium text-text_muted uppercase tracking-wide mb-2 block ml-1">Password</label>
+                    <input type="password" class="w-full glass-input rounded-xl px-4 py-3 text-sm text-white placeholder-white/20" placeholder="••••••••">
+                </div>
+
+                <div class="flex items-center justify-between mt-2" x-show="state === 'login'">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <div class="w-4 h-4 rounded border border-white/20 group-hover:border-glow/50 flex items-center justify-center transition-colors">
+                            <i class="ph ph-check text-glow text-xs opacity-0"></i>
+                        </div>
+                        <span class="text-xs text-text_muted group-hover:text-white transition-colors">Remember me</span>
+                    </label>
+                    <a href="#" class="text-xs text-text_muted hover:text-glow transition-colors">Forgot password?</a>
+                </div>
+
+                <button class="w-full bg-glow hover:bg-sky-400 text-white font-medium py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(14,165,233,0.3)] hover:shadow-[0_0_30px_rgba(14,165,233,0.5)] hover:-translate-y-0.5 mt-8">
+                    <span x-text="state === 'login' ? 'Enter Workspace' : 'Create Account'"></span>
+                </button>
+            </form>
+
+            <div class="mt-8 text-center">
+                <p class="text-sm text-text_muted">
+                    <span x-text="state === 'login' ? 'New here?' : 'Already have an account?'"></span>
+                    <button @click="state = state === 'login' ? 'signup' : 'login'" class="font-medium text-white hover:text-glow ml-1 transition-colors border-b border-transparent hover:border-glow" x-text="state === 'login' ? 'Create an account' : 'Sign in'"></button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="hidden lg:flex w-1/2 bg-surface relative items-center justify-center p-12 overflow-hidden border-l border-white/5">
+
+        <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-radial from-indigo-500/10 to-transparent rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 animate-pulse-slow"></div>
+        <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-radial from-sky-500/10 to-transparent rounded-full blur-[80px] translate-y-1/3 -translate-x-1/3"></div>
+
+        <div class="relative z-10 bg-white/5 backdrop-blur-xl border border-white/10 p-12 rounded-2xl max-w-lg shadow-2xl">
+            <i class="ph ph-quotes-fill text-4xl text-white/20 mb-8 block"></i>
+            <p class="text-2xl font-serif text-white leading-relaxed font-light italic mb-8">
+                "It is not that I'm so smart. But I stay with the questions much longer."
+            </p>
+            <div class="flex items-center gap-4">
+                <div class="h-px w-12 bg-sky-500/50"></div>
+                <p class="text-sm font-medium text-sky-400 uppercase tracking-widest">Albert Einstein</p>
+            </div>
+        </div>
+
+    </div>
+
+    <style id="mode-switch-fab-style">
+      #mode-toggle {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        display: inline-flex;
+        gap: 6px;
+        padding: 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, 0.14);
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      }
+      #mode-toggle .mode-btn {
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        padding: 9px 12px;
+        border-radius: 999px;
+        color: #334155;
+        background: transparent;
+        border: 1px solid transparent;
+      }
+      #mode-toggle .mode-btn:hover {
+        color: #0f172a;
+        background: rgba(148, 163, 184, 0.12);
+      }
+      #mode-toggle .mode-btn.is-active {
+        color: #ffffff;
+        background: #4f46e5;
+        border-color: #4f46e5;
+      }
+      html.dark #mode-toggle,
+      body.dark #mode-toggle {
+        background: rgba(2, 6, 23, 0.88);
+        border-color: rgba(148, 163, 184, 0.35);
+      }
+      html.dark #mode-toggle .mode-btn,
+      body.dark #mode-toggle .mode-btn {
+        color: #cbd5e1;
+      }
+      html.dark #mode-toggle .mode-btn:hover,
+      body.dark #mode-toggle .mode-btn:hover {
+        color: #f8fafc;
+        background: rgba(148, 163, 184, 0.18);
+      }
+      html.dark #mode-toggle .mode-btn.is-active,
+      body.dark #mode-toggle .mode-btn.is-active {
+        color: #0f172a;
+        background: #f8fafc;
+        border-color: #f8fafc;
+      }
+    </style>
+    <div id="mode-toggle" role="group" aria-label="Color mode toggle">
+      <a id="mode-day" class="mode-btn" href="#">Daylight</a>
+      <a id="mode-night" class="mode-btn" href="#">Night</a>
+    </div>
+    <script id="mode-switch-fab-script">
+      (function () {
+        var day = document.getElementById('mode-day');
+        var night = document.getElementById('mode-night');
+        if (!day || !night) return;
+
+        var file = (location.pathname.split('/').pop() || '').split('?')[0].split('#')[0];
+        var m = file.match(/^(.*?)(?:_light)?\.html$/i);
+        if (!m) return;
+
+        var base = m[1];
+        var isLight = /_light\.html$/i.test(file);
+        var dayHref = base + '_light.html';
+        var nightHref = base + '.html';
+
+        day.href = dayHref;
+        night.href = nightHref;
+
+        day.classList.toggle('is-active', isLight);
+        night.classList.toggle('is-active', !isLight);
+
+        day.setAttribute('aria-current', isLight ? 'page' : 'false');
+        night.setAttribute('aria-current', !isLight ? 'page' : 'false');
+      })();
+    </script>
+
+</body>
+</html>

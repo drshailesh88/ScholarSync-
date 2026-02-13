@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Dashboard - ScholarSync</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="mobile-head">
+      <strong>ScholarSync</strong>
+      <a href="index.html" class="btn soft" style="padding: 0.3rem 0.55rem;">Index</a>
+    </div>
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark">S</span>
+        <span class="brand-text">ScholarSync</span>
+      </div>
+
+      <nav class="nav">
+        <a class="active" href="01-focus-dashboard.html">Focus Dashboard <small>01</small></a>
+        <a href="02-deep-research.html">Deep Research <small>02</small></a>
+        <a href="03-studio.html">Studio <small>03</small></a>
+        <a href="04-notebook.html">Notebook <small>04</small></a>
+        <a href="index.html">Design Index <small>00</small></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p class="kicker" style="color: #c2ccd8; margin: 0 0 0.25rem;">Active Session</p>
+        <strong style="font-size: 1.2rem;">78 min</strong>
+        <div class="progress" style="margin-top: 0.45rem;"><span style="width: 64%;"></span></div>
+        <p style="margin: 0.45rem 0 0; font-size: 0.75rem; color: #c2ccd8;">Distraction events: 1</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="search">
+          <span class="kicker">Cmd+K</span>
+          <input type="text" value="Show manuscripts due this week" aria-label="search" />
+        </div>
+        <div class="top-actions">
+          <span class="badge">Focus Mode: ON</span>
+          <a class="btn soft" href="03-studio.html">Resume Draft</a>
+          <a class="btn primary" href="02-deep-research.html">Run Query</a>
+        </div>
+      </header>
+
+      <section class="content stack">
+        <section class="panel reveal">
+          <header>
+            <h2>Today, your only job is to think clearly.</h2>
+            <span class="badge">Thursday Protocol</span>
+          </header>
+          <div class="panel-body">
+            <p class="muted" style="margin-top: 0;">
+              Protected block 09:30-12:30 is active. Messaging is muted and low-signal notifications are suspended.
+            </p>
+            <div class="metric-grid">
+              <article class="metric">
+                <p class="kicker" style="margin: 0 0 0.2rem;">Deep Work Time</p>
+                <strong>2h 14m</strong>
+                <p class="muted" style="margin: 0.3rem 0 0; font-size: 0.8rem;">+26% vs last week</p>
+              </article>
+              <article class="metric">
+                <p class="kicker" style="margin: 0 0 0.2rem;">Claims Verified</p>
+                <strong>17</strong>
+                <p class="muted" style="margin: 0.3rem 0 0; font-size: 0.8rem;">2 pending evidence links</p>
+              </article>
+              <article class="metric">
+                <p class="kicker" style="margin: 0 0 0.2rem;">Draft Delta</p>
+                <strong>+1,240</strong>
+                <p class="muted" style="margin: 0.3rem 0 0; font-size: 0.8rem;">Words with citation anchors</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="split reveal delay-1">
+          <article class="panel">
+            <header>
+              <h2>Manuscripts in Progress</h2>
+              <a class="kicker" href="03-studio.html">Open Studio</a>
+            </header>
+            <div class="panel-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Status</th>
+                    <th>Next action</th>
+                    <th>Due</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Ethics of Germline Editing</td>
+                    <td><span class="badge">Drafting</span></td>
+                    <td>Resolve contradiction in section 2.3</td>
+                    <td>Feb 15</td>
+                  </tr>
+                  <tr>
+                    <td>Policy Brief: AI Governance</td>
+                    <td><span class="badge">Research</span></td>
+                    <td>Extract regulation quotes from 3 sources</td>
+                    <td>Feb 19</td>
+                  </tr>
+                  <tr>
+                    <td>Methods Appendix</td>
+                    <td><span class="badge">Review</span></td>
+                    <td>Finalize references and citations</td>
+                    <td>Feb 21</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <aside class="panel">
+            <header>
+              <h2>Thinking Queue</h2>
+            </header>
+            <div class="panel-body stack">
+              <article class="note">
+                <p class="kicker" style="margin: 0;">Open question</p>
+                <p style="margin: 0.3rem 0 0;">Is your causal claim in paragraph 4 inferentially stronger than the evidence quality?</p>
+              </article>
+              <article class="note" style="border-left-color: var(--warn);">
+                <p class="kicker" style="margin: 0;">Risk</p>
+                <p style="margin: 0.3rem 0 0;">Two high-impact assertions currently rely on single-source support.</p>
+              </article>
+              <article class="note" style="border-left-color: var(--success);">
+                <p class="kicker" style="margin: 0;">Next best move</p>
+                <p style="margin: 0.3rem 0 0;">Run one focused query on counterarguments before expanding prose.</p>
+                <a class="btn soft" href="02-deep-research.html" style="margin-top: 0.4rem;">Go to Deep Research</a>
+              </article>
+            </div>
+          </aside>
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

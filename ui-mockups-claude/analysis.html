@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Writing Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+    <style>::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#252b38;border-radius:4px}</style>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans h-screen flex overflow-hidden selection:bg-gold/30" x-data="{ tab: 'quality' }">
+
+    <!-- Mini sidebar -->
+    <aside class="w-14 bg-surface flex flex-col items-center py-5 shrink-0 border-r border-border gap-5">
+        <a href="dashboard.html" class="text-[#8891a0] hover:text-paper transition-colors"><i class="ph ph-squares-four text-lg"></i></a>
+        <div class="w-6 border-t border-border"></div>
+        <a href="dashboard.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Dashboard"><i class="ph ph-monitor text-lg"></i></a>
+        <a href="research.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Deep Search"><i class="ph ph-globe-hemisphere-west text-lg"></i></a>
+        <a href="studio.html" class="p-2 text-[#555d6e] hover:text-paper transition-colors" title="Studio"><i class="ph ph-pen-nib text-lg"></i></a>
+        <a href="#" class="p-2 text-gold bg-elevated rounded-lg" title="Analysis"><i class="ph ph-chart-bar text-lg"></i></a>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        <header class="border-b border-border px-8 py-5 shrink-0 bg-surface/50">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="font-serif text-lg text-paper">Writing Analysis</h1>
+                    <p class="font-mono text-[10px] text-[#555d6e] mt-0.5">CRISPR Applications: A Review &bull; 2,401 words</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button @click="tab = 'quality'" :class="tab === 'quality' ? 'border-gold text-gold' : 'border-border text-[#8891a0] hover:border-border-bright'" class="text-[10px] font-mono border px-3 py-1.5 rounded transition-colors">Quality</button>
+                    <button @click="tab = 'compliance'" :class="tab === 'compliance' ? 'border-gold text-gold' : 'border-border text-[#8891a0] hover:border-border-bright'" class="text-[10px] font-mono border px-3 py-1.5 rounded transition-colors">Compliance</button>
+                    <button @click="tab = 'citations'" :class="tab === 'citations' ? 'border-gold text-gold' : 'border-border text-[#8891a0] hover:border-border-bright'" class="text-[10px] font-mono border px-3 py-1.5 rounded transition-colors">Citations</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-10">
+            <div class="max-w-5xl mx-auto">
+
+                <!-- Quality Tab -->
+                <div x-show="tab === 'quality'" class="space-y-8">
+                    <!-- Score overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <span class="text-3xl font-mono font-medium text-gold">78</span>
+                            <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-1">Overall Score</p>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <span class="text-3xl font-mono font-medium text-[#5b9a72]">92</span>
+                            <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-1">Clarity</p>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <span class="text-3xl font-mono font-medium text-gold">71</span>
+                            <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-1">Structure</p>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <span class="text-3xl font-mono font-medium text-[#c75a5a]">64</span>
+                            <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-1">Depth</p>
+                        </div>
+                    </div>
+
+                    <!-- Readability metrics -->
+                    <section>
+                        <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-4">Readability Metrics</h2>
+                        <div class="border border-border rounded-lg overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="border-b border-border bg-surface/50 text-[10px] font-mono text-[#555d6e] uppercase tracking-wider">
+                                        <th class="px-5 py-3 font-normal">Metric</th>
+                                        <th class="px-5 py-3 font-normal">Value</th>
+                                        <th class="px-5 py-3 font-normal">Target</th>
+                                        <th class="px-5 py-3 font-normal text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm">
+                                    <tr class="border-b border-border/50">
+                                        <td class="px-5 py-3 text-paper">Flesch-Kincaid Grade</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-[#8891a0]">14.2</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-[#555d6e]">12&ndash;16</td>
+                                        <td class="px-5 py-3 text-right"><span class="w-2 h-2 bg-[#5b9a72] rounded-full inline-block"></span></td>
+                                    </tr>
+                                    <tr class="border-b border-border/50">
+                                        <td class="px-5 py-3 text-paper">Avg. sentence length</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-[#8891a0]">24.3 words</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-[#555d6e]">15&ndash;25</td>
+                                        <td class="px-5 py-3 text-right"><span class="w-2 h-2 bg-[#5b9a72] rounded-full inline-block"></span></td>
+                                    </tr>
+                                    <tr class="border-b border-border/50">
+                                        <td class="px-5 py-3 text-paper">Passive voice</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-gold">28%</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-[#555d6e]">&lt;20%</td>
+                                        <td class="px-5 py-3 text-right"><span class="w-2 h-2 bg-gold rounded-full inline-block"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-5 py-3 text-paper">Hedging frequency</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-[#c75a5a]">High</td>
+                                        <td class="px-5 py-3 font-mono text-xs text-[#555d6e]">Moderate</td>
+                                        <td class="px-5 py-3 text-right"><span class="w-2 h-2 bg-[#c75a5a] rounded-full inline-block"></span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Issues -->
+                    <section>
+                        <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-4">Issues Found (7)</h2>
+                        <div class="space-y-3">
+                            <div class="border border-border rounded-lg p-5 bg-surface/30 group hover:border-border-bright transition-colors">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="w-2 h-2 bg-[#c75a5a] rounded-full"></span>
+                                            <span class="font-mono text-[10px] text-[#c75a5a] uppercase">High Priority</span>
+                                        </div>
+                                        <p class="text-sm text-paper mb-1">Excessive hedging in conclusion</p>
+                                        <p class="font-serif text-xs text-[#8891a0] leading-relaxed">&ldquo;It could potentially be argued that these findings might suggest&hellip;&rdquo; &mdash; Consider using more assertive language to strengthen your argument.</p>
+                                        <p class="font-mono text-[10px] text-[#555d6e] mt-2">Section 4, paragraph 2 &bull; Line 87</p>
+                                    </div>
+                                    <button class="text-[10px] font-mono text-gold hover:text-gold-bright transition-colors shrink-0 opacity-0 group-hover:opacity-100">Fix &rarr;</button>
+                                </div>
+                            </div>
+
+                            <div class="border border-border rounded-lg p-5 bg-surface/30 group hover:border-border-bright transition-colors">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="w-2 h-2 bg-gold rounded-full"></span>
+                                            <span class="font-mono text-[10px] text-gold uppercase">Medium</span>
+                                        </div>
+                                        <p class="text-sm text-paper mb-1">Long paragraph without transition</p>
+                                        <p class="font-serif text-xs text-[#8891a0] leading-relaxed">Paragraph in Section 2 exceeds 200 words without a clear topic transition. Consider splitting into two paragraphs.</p>
+                                        <p class="font-mono text-[10px] text-[#555d6e] mt-2">Section 2, paragraph 4 &bull; Line 41</p>
+                                    </div>
+                                    <button class="text-[10px] font-mono text-gold hover:text-gold-bright transition-colors shrink-0 opacity-0 group-hover:opacity-100">Fix &rarr;</button>
+                                </div>
+                            </div>
+
+                            <div class="border border-border rounded-lg p-5 bg-surface/30 group hover:border-border-bright transition-colors">
+                                <div class="flex items-start justify-between gap-4">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="w-2 h-2 bg-gold rounded-full"></span>
+                                            <span class="font-mono text-[10px] text-gold uppercase">Medium</span>
+                                        </div>
+                                        <p class="text-sm text-paper mb-1">Repetitive phrasing detected</p>
+                                        <p class="font-serif text-xs text-[#8891a0] leading-relaxed">&ldquo;It is important to note&rdquo; appears 4 times. Vary your transitional phrases.</p>
+                                        <p class="font-mono text-[10px] text-[#555d6e] mt-2">Sections 1, 2, 3, 4</p>
+                                    </div>
+                                    <button class="text-[10px] font-mono text-gold hover:text-gold-bright transition-colors shrink-0 opacity-0 group-hover:opacity-100">Fix &rarr;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Compliance Tab -->
+                <div x-show="tab === 'compliance'" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <div class="w-10 h-10 mx-auto mb-3 border border-[#5b9a72]/30 rounded-full flex items-center justify-center">
+                                <i class="ph ph-check text-[#5b9a72]"></i>
+                            </div>
+                            <p class="text-sm text-paper mb-1">Originality</p>
+                            <span class="font-mono text-xs text-[#5b9a72]">97% original</span>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <div class="w-10 h-10 mx-auto mb-3 border border-[#5b9a72]/30 rounded-full flex items-center justify-center">
+                                <i class="ph ph-check text-[#5b9a72]"></i>
+                            </div>
+                            <p class="text-sm text-paper mb-1">AI Detection</p>
+                            <span class="font-mono text-xs text-[#5b9a72]">Human-written</span>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <div class="w-10 h-10 mx-auto mb-3 border border-gold/30 rounded-full flex items-center justify-center">
+                                <i class="ph ph-warning text-gold"></i>
+                            </div>
+                            <p class="text-sm text-paper mb-1">Citation Integrity</p>
+                            <span class="font-mono text-xs text-gold">2 issues</span>
+                        </div>
+                    </div>
+
+                    <section>
+                        <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-4">Similarity Matches</h2>
+                        <div class="border border-border rounded-lg overflow-hidden">
+                            <div class="p-5 bg-surface/30">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-sm text-paper">3% similarity detected</span>
+                                    <span class="font-mono text-[10px] text-[#5b9a72]">Below threshold</span>
+                                </div>
+                                <div class="w-full bg-elevated h-2 rounded-full">
+                                    <div class="bg-[#5b9a72] h-2 rounded-full" style="width:3%"></div>
+                                </div>
+                            </div>
+                            <div class="border-t border-border p-4 space-y-3">
+                                <div class="flex items-start justify-between gap-4 text-xs">
+                                    <div>
+                                        <p class="text-paper mb-0.5">Match with: Doudna & Charpentier, Science 2014</p>
+                                        <p class="font-serif text-[#8891a0] italic">&ldquo;CRISPR-Cas9 has emerged as a powerful tool for genome engineering&hellip;&rdquo;</p>
+                                    </div>
+                                    <span class="font-mono text-[10px] text-[#555d6e] shrink-0">1.8%</span>
+                                </div>
+                                <div class="border-t border-border/50"></div>
+                                <div class="flex items-start justify-between gap-4 text-xs">
+                                    <div>
+                                        <p class="text-paper mb-0.5">Match with: NIH CRISPR fact sheet</p>
+                                        <p class="font-serif text-[#8891a0] italic">&ldquo;a family of DNA sequences found in the genomes of prokaryotic organisms&hellip;&rdquo;</p>
+                                    </div>
+                                    <span class="font-mono text-[10px] text-[#555d6e] shrink-0">1.2%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Citations Tab -->
+                <div x-show="tab === 'citations'" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <span class="text-3xl font-mono font-medium text-paper">14</span>
+                            <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-1">Total Citations</p>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <span class="text-3xl font-mono font-medium text-[#5b9a72]">12</span>
+                            <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-1">Valid</p>
+                        </div>
+                        <div class="border border-border rounded-lg p-5 bg-surface/30 text-center">
+                            <span class="text-3xl font-mono font-medium text-gold">2</span>
+                            <p class="text-[10px] font-mono text-[#555d6e] uppercase mt-1">Needs Review</p>
+                        </div>
+                    </div>
+
+                    <section>
+                        <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-4">Citation Audit</h2>
+                        <div class="space-y-3">
+                            <div class="border border-border rounded-lg p-4 bg-surface/30 flex items-center gap-4">
+                                <span class="w-2 h-2 bg-[#5b9a72] rounded-full shrink-0"></span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-paper truncate">Slaymaker, I.M. et al. (2023)</p>
+                                    <p class="font-mono text-[10px] text-[#555d6e]">Used 3 times &bull; DOI verified</p>
+                                </div>
+                                <span class="font-mono text-[10px] text-[#5b9a72]">Valid</span>
+                            </div>
+                            <div class="border border-border rounded-lg p-4 bg-surface/30 flex items-center gap-4">
+                                <span class="w-2 h-2 bg-[#5b9a72] rounded-full shrink-0"></span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-paper truncate">Zhang, Y. et al. (2024)</p>
+                                    <p class="font-mono text-[10px] text-[#555d6e]">Used 2 times &bull; DOI verified</p>
+                                </div>
+                                <span class="font-mono text-[10px] text-[#5b9a72]">Valid</span>
+                            </div>
+                            <div class="border border-gold/30 rounded-lg p-4 bg-surface/30 flex items-center gap-4">
+                                <span class="w-2 h-2 bg-gold rounded-full shrink-0"></span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-paper truncate">Chen, L. et al. (2022)</p>
+                                    <p class="font-mono text-[10px] text-gold">Year mismatch &bull; Check source</p>
+                                </div>
+                                <span class="font-mono text-[10px] text-gold">Review</span>
+                            </div>
+                            <div class="border border-gold/30 rounded-lg p-4 bg-surface/30 flex items-center gap-4">
+                                <span class="w-2 h-2 bg-gold rounded-full shrink-0"></span>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-paper truncate">Kim, S. &amp; Park, J. (2021)</p>
+                                    <p class="font-mono text-[10px] text-gold">DOI not found &bull; Verify manually</p>
+                                </div>
+                                <span class="font-mono text-[10px] text-gold">Review</span>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Right: Recommendations -->
+    <aside class="w-72 bg-surface border-l border-border flex flex-col shrink-0">
+        <div class="h-10 border-b border-border flex items-center px-4">
+            <span class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest">Recommendations</span>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div class="border border-border rounded-lg p-4 bg-elevated/30">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="ph ph-lightbulb text-gold text-sm"></i>
+                    <span class="font-mono text-[10px] text-gold">Quick win</span>
+                </div>
+                <p class="font-serif text-xs text-[#8891a0] leading-relaxed">Reduce passive voice in your methodology section. Change &ldquo;was performed&rdquo; to &ldquo;we performed&rdquo; for 6 instances.</p>
+                <button class="text-[10px] font-mono text-gold hover:text-gold-bright transition-colors mt-3">Apply all &rarr;</button>
+            </div>
+
+            <div class="border border-border rounded-lg p-4 bg-elevated/30">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="ph ph-arrow-up text-[#8891a0] text-sm"></i>
+                    <span class="font-mono text-[10px] text-[#8891a0]">Improve depth</span>
+                </div>
+                <p class="font-serif text-xs text-[#8891a0] leading-relaxed">Section 3 lacks quantitative evidence. Consider adding data from your extracted tables to support claims.</p>
+            </div>
+
+            <div class="border border-border rounded-lg p-4 bg-elevated/30">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="ph ph-quotes text-[#8891a0] text-sm"></i>
+                    <span class="font-mono text-[10px] text-[#8891a0]">Citation gap</span>
+                </div>
+                <p class="font-serif text-xs text-[#8891a0] leading-relaxed">Your discussion of p53 activation is uncited. Zhang et al. (2024) directly addresses this topic.</p>
+                <button class="text-[10px] font-mono text-gold hover:text-gold-bright transition-colors mt-3">Add citation &rarr;</button>
+            </div>
+
+            <div class="border border-border rounded-lg p-4 bg-elevated/30">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="ph ph-target text-[#8891a0] text-sm"></i>
+                    <span class="font-mono text-[10px] text-[#8891a0]">Journal fit</span>
+                </div>
+                <p class="font-serif text-xs text-[#8891a0] leading-relaxed">Based on your topic and structure, consider targeting <em>Nature Reviews Genetics</em> or <em>Trends in Biotechnology</em>.</p>
+            </div>
+        </div>
+    </aside>
+
+</body>
+</html>

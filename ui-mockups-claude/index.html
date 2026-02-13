@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Design Gallery (Claude)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: { extend: {
+                fontFamily: { sans:['Inter','sans-serif'], serif:['Crimson Pro','serif'], mono:['JetBrains Mono','monospace'] },
+                colors: { void:'#0b0e13', surface:'#12161e', elevated:'#1a1f2b', border:'#252b38', 'border-bright':'#333a4a', gold:'#c8965d', 'gold-bright':'#daa76e', 'gold-dim':'#9e7849', paper:'#f5f1eb', ink:'#2c2825' }
+            }}
+        }
+    </script>
+</head>
+<body class="bg-void text-[#e0dbd5] font-sans min-h-screen selection:bg-gold/30">
+
+    <div class="max-w-4xl mx-auto px-8 py-16">
+        <!-- Header -->
+        <div class="mb-16">
+            <p class="font-mono text-[10px] text-gold uppercase tracking-widest mb-3">Design Direction</p>
+            <h1 class="text-4xl font-serif text-paper mb-3">The Scholar&rsquo;s Sanctum</h1>
+            <p class="text-[#8891a0] max-w-xl leading-relaxed">
+                A design language built around the metaphor of focused study: dark, warm surroundings with a glowing paper workspace at the center. Scholarly but modern. Deep work, not SaaS.
+            </p>
+        </div>
+
+        <!-- Palette -->
+        <div class="mb-16">
+            <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-5">Color System</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                    <div class="h-16 rounded-lg bg-void border border-border mb-2"></div>
+                    <p class="text-xs text-paper">Void</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#0b0e13</p>
+                </div>
+                <div>
+                    <div class="h-16 rounded-lg bg-surface border border-border mb-2"></div>
+                    <p class="text-xs text-paper">Surface</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#12161e</p>
+                </div>
+                <div>
+                    <div class="h-16 rounded-lg bg-elevated border border-border mb-2"></div>
+                    <p class="text-xs text-paper">Elevated</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#1a1f2b</p>
+                </div>
+                <div>
+                    <div class="h-16 rounded-lg border border-border mb-2" style="background:#252b38"></div>
+                    <p class="text-xs text-paper">Border</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#252b38</p>
+                </div>
+                <div>
+                    <div class="h-16 rounded-lg bg-gold mb-2"></div>
+                    <p class="text-xs text-paper">Gold</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#c8965d</p>
+                </div>
+                <div>
+                    <div class="h-16 rounded-lg bg-gold-bright mb-2"></div>
+                    <p class="text-xs text-paper">Gold Bright</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#daa76e</p>
+                </div>
+                <div>
+                    <div class="h-16 rounded-lg bg-paper mb-2"></div>
+                    <p class="text-xs text-paper">Paper</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#f5f1eb</p>
+                </div>
+                <div>
+                    <div class="h-16 rounded-lg mb-2" style="background:#2c2825"></div>
+                    <p class="text-xs text-paper">Ink</p>
+                    <p class="font-mono text-[10px] text-[#555d6e]">#2c2825</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Typography -->
+        <div class="mb-16">
+            <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-5">Typography</h2>
+            <div class="space-y-6">
+                <div class="border border-border rounded-lg p-6 bg-surface/30">
+                    <p class="font-mono text-[10px] text-gold uppercase tracking-widest mb-3">Body &amp; Content</p>
+                    <p class="font-serif text-2xl text-paper">Crimson Pro</p>
+                    <p class="font-serif text-[#8891a0] mt-1">Used for all reading content: manuscripts, synthesis, paper titles, and long-form text. Elegant scholarly serif.</p>
+                </div>
+                <div class="border border-border rounded-lg p-6 bg-surface/30">
+                    <p class="font-mono text-[10px] text-gold uppercase tracking-widest mb-3">Interface</p>
+                    <p class="text-2xl text-paper">Inter</p>
+                    <p class="text-[#8891a0] mt-1">Clean sans-serif for navigation, buttons, labels, and all interactive elements. Neutral and highly legible.</p>
+                </div>
+                <div class="border border-border rounded-lg p-6 bg-surface/30">
+                    <p class="font-mono text-[10px] text-gold uppercase tracking-widest mb-3">Data &amp; System</p>
+                    <p class="font-mono text-2xl text-paper">JetBrains Mono</p>
+                    <p class="font-mono text-[#8891a0] mt-1">For metadata, timestamps, labels, stats, and anything that reads as system information.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pages -->
+        <div>
+            <h2 class="font-mono text-[10px] text-[#555d6e] uppercase tracking-widest mb-5">Pages (10)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <a href="landing.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">01</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Landing Page</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Marketing page with hero, features, pricing, and app preview.</p>
+                </a>
+
+                <a href="auth.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">02</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Authentication</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Split-screen login/signup with editor preview and Einstein quote.</p>
+                </a>
+
+                <a href="dashboard.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">03</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Dashboard</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Home console with greeting, quick actions, manuscripts, and usage metrics.</p>
+                </a>
+
+                <a href="studio.html" class="border border-gold/30 rounded-lg p-5 hover:border-gold/60 bg-gold/5 hover:bg-gold/10 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-gold">04</span>
+                        <h3 class="text-sm font-medium text-gold transition-colors">Studio (Hero Page)</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Three-panel manuscript editor with cream paper canvas floating on dark background.</p>
+                </a>
+
+                <a href="research.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">05</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Deep Search</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Literature search with AI synthesis, results, and data extraction panel.</p>
+                </a>
+
+                <a href="notebook.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">06</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Socratic Notebook</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">AI-driven Q&A with source papers, notes, and Socratic follow-up prompts.</p>
+                </a>
+
+                <a href="analysis.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">07</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Writing Analysis</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Quality scoring, compliance checks, citation auditing with recommendations.</p>
+                </a>
+
+                <a href="library.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">08</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Library</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Reference manager with collections, paper list, and batch actions.</p>
+                </a>
+
+                <a href="projects.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">09</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Manuscripts</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Project manager with progress rings, tags, and manuscript archive.</p>
+                </a>
+
+                <a href="settings.html" class="border border-border rounded-lg p-5 hover:border-gold/40 hover:bg-surface/30 transition-all group">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="font-mono text-[10px] text-[#555d6e]">10</span>
+                        <h3 class="text-sm font-medium text-paper group-hover:text-gold transition-colors">Settings</h3>
+                    </div>
+                    <p class="text-xs text-[#8891a0]">Profile, editor preferences, AI behavior, and billing management.</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-16 pt-8 border-t border-border text-center">
+            <p class="font-mono text-[10px] text-[#555d6e]">ScholarSync &mdash; "The Scholar&rsquo;s Sanctum" design direction &mdash; Claude</p>
+        </div>
+    </div>
+
+</body>
+</html>

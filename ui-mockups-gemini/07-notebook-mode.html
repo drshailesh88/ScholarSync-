@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Source Dossier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Crimson Pro', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        paper: '#f9f8f6',
+                        ink: '#1c1917',
+                        stone: { 50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1', 800: '#292524' },
+                        accent: '#ea580c', // Burnt Orange
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-paper text-ink font-sans h-screen flex overflow-hidden selection:bg-accent selection:text-white" x-data="{ mode: 'chat' }">
+
+    <aside class="w-80 bg-[#111] text-stone-400 flex flex-col shrink-0 border-r border-stone-800">
+
+        <div class="h-14 flex items-center justify-between px-5 border-b border-stone-800 bg-[#151515]">
+            <div class="flex items-center gap-2 text-stone-100">
+                <i class="ph ph-folder-open"></i>
+                <span class="font-mono text-xs uppercase tracking-widest">Source Index</span>
+            </div>
+            <span class="font-mono text-[10px] text-stone-500">3 FILES ACTIVE</span>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 space-y-2">
+
+            <div class="border border-dashed border-stone-700 hover:border-accent hover:bg-stone-900 transition-all p-4 mb-6 cursor-pointer group text-center">
+                <i class="ph ph-plus text-xl text-stone-600 group-hover:text-accent mb-2"></i>
+                <p class="font-mono text-[10px] uppercase text-stone-500 group-hover:text-stone-300">Ingest Documents</p>
+                <p class="font-mono text-[10px] text-stone-700">PDF / TXT / MD</p>
+            </div>
+
+            <div class="flex items-start gap-3 p-3 bg-stone-900 border-l-2 border-accent group cursor-pointer">
+                <div class="mt-0.5 text-accent"><i class="ph ph-check-square"></i></div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-mono text-xs text-stone-200 truncate" title="CRISPR-Cas9 Mechanism.pdf">CRISPR-Cas9 Mechanism.pdf</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="font-mono text-[10px] text-green-700">INDEXED</span>
+                        <span class="font-mono text-[10px] text-stone-600">1.2MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-3 hover:bg-stone-900 border-l-2 border-transparent hover:border-stone-700 transition-colors cursor-pointer">
+                <div class="mt-0.5 text-stone-600 hover:text-stone-300"><i class="ph ph-check-square"></i></div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-mono text-xs text-stone-400 truncate">Ethical Guidelines 2024.pdf</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="font-mono text-[10px] text-green-700">INDEXED</span>
+                        <span class="font-mono text-[10px] text-stone-600">450KB</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3 p-3 hover:bg-stone-900 border-l-2 border-transparent hover:border-stone-700 transition-colors cursor-pointer">
+                <div class="mt-0.5 text-stone-600 hover:text-stone-300"><i class="ph ph-check-square"></i></div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-mono text-xs text-stone-400 truncate">Lab Notes_Exp_4.txt</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="font-mono text-[10px] text-green-700">INDEXED</span>
+                        <span class="font-mono text-[10px] text-stone-600">12KB</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="p-4 border-t border-stone-800 bg-[#0a0a0a]">
+            <button class="w-full flex items-center justify-between px-3 py-2 bg-stone-900 border border-stone-800 hover:border-stone-600 text-stone-300 transition-all rounded-sm group">
+                <div class="flex items-center gap-2">
+                    <i class="ph ph-headphones text-accent"></i>
+                    <span class="font-mono text-xs uppercase">Audio Briefing</span>
+                </div>
+                <i class="ph ph-play-circle text-lg group-hover:text-white"></i>
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-full relative">
+
+        <header class="h-14 bg-paper border-b border-stone-200 flex items-center justify-between px-8 shrink-0 z-20">
+            <div class="flex items-center gap-3">
+                <a href="04-dashboard.html" class="text-stone-400 hover:text-ink transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <h1 class="font-serif text-lg text-ink font-medium">Synthesis Log: Project Alpha</h1>
+            </div>
+            <div class="flex items-center gap-3">
+                <button class="text-xs font-mono text-stone-500 hover:text-ink border-b border-transparent hover:border-ink transition-all">CLEAR_LOG</button>
+                <button class="text-xs font-mono text-stone-500 hover:text-ink border-b border-transparent hover:border-ink transition-all">EXPORT_NOTES</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 lg:p-16">
+            <div class="max-w-3xl mx-auto space-y-12">
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-stone-200 pb-2">
+                        <span class="font-mono text-[10px] text-accent uppercase tracking-widest">User_Query</span>
+                        <span class="font-mono text-[10px] text-stone-400">10:42:15</span>
+                    </div>
+                    <h2 class="font-serif text-xl text-ink leading-relaxed">
+                        What are the specific ethical concerns mentioned regarding 'Germline Editing' across these papers?
+                    </h2>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 border-b border-stone-200 pb-2">
+                        <span class="font-mono text-[10px] text-stone-800 uppercase tracking-widest">System_Synthesis</span>
+                        <span class="font-mono text-[10px] text-stone-400">Ref: 2 Sources</span>
+                    </div>
+
+                    <div class="prose prose-stone max-w-none">
+                        <p class="font-serif text-lg text-ink leading-loose">
+                            Based on the active dossier, three primary ethical concerns emerge regarding germline editing:
+                        </p>
+
+                        <ul class="list-none space-y-6 mt-6">
+                            <li class="pl-4 border-l-2 border-stone-300">
+                                <span class="font-mono text-xs font-bold text-ink uppercase block mb-1">01. Off-target Mutations</span>
+                                <p class="font-serif text-base text-stone-700 leading-relaxed">
+                                    Risk of unintended genetic changes passed to future generations.
+                                    <sup class="font-mono text-[10px] text-accent ml-1 cursor-pointer hover:underline">[1] p.4</sup>
+                                </p>
+                            </li>
+                            <li class="pl-4 border-l-2 border-stone-300">
+                                <span class="font-mono text-xs font-bold text-ink uppercase block mb-1">02. Consent Deficit</span>
+                                <p class="font-serif text-base text-stone-700 leading-relaxed">
+                                    Future generations cannot consent to alterations.
+                                    <sup class="font-mono text-[10px] text-accent ml-1 cursor-pointer hover:underline">[2] p.12</sup>
+                                </p>
+                            </li>
+                            <li class="pl-4 border-l-2 border-stone-300">
+                                <span class="font-mono text-xs font-bold text-ink uppercase block mb-1">03. Socioeconomic Disparity</span>
+                                <p class="font-serif text-base text-stone-700 leading-relaxed">
+                                    Potential for "designer babies" exacerbating inequality.
+                                    <sup class="font-mono text-[10px] text-accent ml-1 cursor-pointer hover:underline">[2] p.14</sup>
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-6 bg-stone-100 p-4 border border-stone-200">
+                        <p class="font-mono text-[10px] uppercase text-stone-500 mb-2">Reference Key</p>
+                        <div class="space-y-1">
+                            <div class="flex gap-2 font-mono text-xs text-stone-600">
+                                <span class="text-accent">[1]</span> <span>CRISPR-Cas9 Mechanism.pdf</span>
+                            </div>
+                            <div class="flex gap-2 font-mono text-xs text-stone-600">
+                                <span class="text-accent">[2]</span> <span>Ethical Guidelines 2024.pdf</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="p-8 bg-paper shrink-0">
+            <div class="max-w-3xl mx-auto relative group">
+                <textarea rows="1" class="w-full bg-transparent border-b-2 border-stone-300 py-3 pr-12 text-lg font-serif text-ink placeholder-stone-400 focus:outline-none focus:border-accent transition-all resize-none" placeholder="Enter interrogation..."></textarea>
+                <button class="absolute right-0 bottom-4 text-stone-400 hover:text-ink transition-colors">
+                    <i class="ph ph-arrow-right text-xl"></i>
+                </button>
+            </div>
+            <div class="max-w-3xl mx-auto mt-2 flex justify-between items-center">
+                <span class="font-mono text-[10px] text-stone-400">SHIFT + ENTER TO EXPAND</span>
+                <span class="font-mono text-[10px] text-green-700">&#9679; SYSTEM READY</span>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
