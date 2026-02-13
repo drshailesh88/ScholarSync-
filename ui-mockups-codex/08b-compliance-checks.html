@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScholarSync - Forensic Audit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    },
+                    colors: {
+                        room: '#020617',       // Slate 950
+                        surface: '#0f172a',    // Slate 900
+                        glass: 'rgba(15, 23, 42, 0.7)',
+                        border: 'rgba(255, 255, 255, 0.08)',
+                        text_main: '#f1f5f9',  // Slate 100
+                        text_muted: '#94a3b8', // Slate 400
+                        glow: '#0ea5e9',       // Sky 500
+
+                        // Forensic Colors
+                        warning: '#f43f5e',    // Rose 500 (Plagiarism)
+                        synthetic: '#8b5cf6',  // Violet 500 (AI)
+                    },
+                    boxShadow: {
+                        'glow': '0 0 60px -15px rgba(14, 165, 233, 0.2)',
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.5)',
+                    },
+                    animation: {
+                        'scan': 'scan 4s linear infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%': { top: '0%', opacity: '0' },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { top: '100%', opacity: '0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #020617; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Highlight Styles */
+        .highlight-source {
+            background: rgba(244, 63, 94, 0.15);
+            border-bottom: 2px solid #f43f5e;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .highlight-source:hover { background: rgba(244, 63, 94, 0.25); }
+
+        .highlight-ai {
+            background: rgba(139, 92, 246, 0.15);
+            border-bottom: 2px solid #8b5cf6;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .highlight-ai:hover { background: rgba(139, 92, 246, 0.25); }
+    </style>
+</head>
+<body class="text-text_main font-sans h-screen flex overflow-hidden selection:bg-glow selection:text-white" x-data="{ report: 'source' }">
+
+    <aside class="w-20 lg:w-64 flex flex-col shrink-0 border-r border-white/5 bg-room/50 hidden md:flex z-20">
+        <div class="h-20 flex items-center px-6">
+            <div class="flex items-center gap-3">
+                <a href="dashboard.html" class="text-text_muted hover:text-white transition-colors"><i class="ph ph-arrow-left"></i></a>
+                <span class="font-semibold tracking-tight text-white hidden lg:block">Audit Log</span>
+            </div>
+        </div>
+
+        <nav class="px-3 space-y-1 flex-1">
+            <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-lg bg-white/10 text-white shadow-inner border border-white/5 ring-1 ring-white/5 justify-center lg:justify-start">
+                <i class="ph ph-scan text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">Current Scan</span>
+            </a>
+            <a href="#" class="flex items-center gap-3 px-3 py-3 rounded-lg text-text_muted hover:text-white hover:bg-white/5 transition-all justify-center lg:justify-start">
+                <i class="ph ph-clock-counter-clockwise text-xl"></i>
+                <span class="text-sm font-medium hidden lg:block">History</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative bg-room">
+
+        <header class="sticky top-0 z-30 bg-room/80 backdrop-blur-md border-b border-white/5 px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col">
+                    <h1 class="text-sm font-mono text-text_muted uppercase tracking-widest">Target File</h1>
+                    <span class="text-white font-medium">Thesis_v4.docx</span>
+                </div>
+                <span class="px-2 py-1 rounded bg-green-500/10 border border-green-500/20 text-green-400 text-[10px] font-bold uppercase tracking-wider">Scan Complete</span>
+            </div>
+
+            <button class="flex items-center gap-2 px-4 py-2 glass-panel hover:bg-white/10 rounded-lg text-xs font-medium text-white transition-all">
+                <i class="ph ph-file-pdf"></i> Export Report
+            </button>
+        </header>
+
+        <div class="max-w-3xl mx-auto px-12 py-16 relative z-10">
+            <div class="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-500 to-transparent shadow-[0_0_15px_#0ea5e9] animate-scan pointer-events-none opacity-50"></div>
+
+            <h1 class="font-serif text-4xl text-white mb-12 leading-tight">The Ethics of Germline Editing</h1>
+
+            <div class="prose prose-invert prose-lg max-w-none font-serif leading-loose text-gray-300">
+                <p>
+                    The ability to modify the human germline represents a watershed moment in the history of science.
+
+                    <span @click="report = 'synthetic'" class="highlight-ai relative group rounded">
+                        It allows for the correction of disease-causing mutations in embryos, preventing the transmission of genetic disorders to future generations.
+                        <span class="absolute -top-8 left-0 glass-panel border border-synthetic/50 text-[10px] text-synthetic font-sans uppercase font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+                            <i class="ph ph-robot"></i> Synthetic Pattern [88%]
+                        </span>
+                    </span>
+                </p>
+
+                <p class="mt-8">
+                    However, this power comes with significant ethical responsibilities.
+
+                    <span @click="report = 'source'" class="highlight-source relative group rounded">
+                        Critics argue that germline editing could lead to a new form of eugenics, where parents select for traits such as intelligence or physical appearance.
+                        <span class="absolute -top-8 left-0 glass-panel border border-warning/50 text-[10px] text-warning font-sans uppercase font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+                            <i class="ph ph-warning"></i> Wikipedia Match
+                        </span>
+                    </span>
+                    This concern is not merely theoretical; it is rooted in the history of genetic discrimination.
+                </p>
+
+                <p class="mt-8">
+                    Furthermore, the long-term effects of off-target mutations remain unknown. A recent study by Zhang et al. (2024) demonstrated that...
+                </p>
+
+                <p class="text-text_muted italic">[ ... ]</p>
+            </div>
+
+            <div class="h-32"></div>
+        </div>
+    </main>
+
+    <aside class="w-96 glass-panel border-l border-white/5 flex flex-col shrink-0 z-30 shadow-glass">
+
+        <div class="flex border-b border-white/5">
+            <button @click="report = 'source'" :class="report === 'source' ? 'bg-white/5 text-white border-b-2 border-warning' : 'text-text_muted hover:text-white border-b-2 border-transparent'" class="flex-1 py-4 text-xs font-medium uppercase tracking-widest transition-all">
+                Source Match
+            </button>
+            <button @click="report = 'synthetic'" :class="report === 'synthetic' ? 'bg-white/5 text-white border-b-2 border-synthetic' : 'text-text_muted hover:text-white border-b-2 border-transparent'" class="flex-1 py-4 text-xs font-medium uppercase tracking-widest transition-all">
+                Synthetic AI
+            </button>
+        </div>
+
+        <div x-show="report === 'source'" class="flex-1 overflow-y-auto animate-fade-in-up">
+            <div class="p-8 border-b border-white/5 bg-warning/5 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-3 opacity-20">
+                    <i class="ph ph-warning-octagon text-6xl text-warning"></i>
+                </div>
+                <div class="flex justify-between items-end mb-2 relative z-10">
+                    <span class="font-mono text-xs uppercase text-warning">Similarity Index</span>
+                    <span class="font-mono text-4xl font-bold text-white">14%</span>
+                </div>
+                <div class="w-full bg-surface h-2 rounded-full overflow-hidden mb-2 relative z-10">
+                    <div class="bg-warning h-full w-[14%] shadow-[0_0_15px_#f43f5e]"></div>
+                </div>
+                <p class="font-mono text-[10px] text-text_muted">2 SEGMENTS FLAGGED</p>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div class="group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-text_muted flex items-center gap-2">
+                            <i class="ph ph-link"></i> Wikipedia.org
+                        </span>
+                        <span class="text-[10px] bg-warning/10 text-warning border border-warning/20 px-2 py-0.5 rounded font-bold">100% MATCH</span>
+                    </div>
+                    <div class="bg-surface border border-white/5 rounded-lg p-3 mb-3 border-l-2 border-l-warning">
+                        <p class="font-serif text-sm text-gray-300 italic">
+                            "...lead to a new form of eugenics, where parents select for traits..."
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="py-2 border border-white/10 hover:bg-white/5 rounded-lg text-[10px] font-medium text-white transition-colors">
+                            INSERT CITATION
+                        </button>
+                        <button class="py-2 border border-white/10 hover:bg-white/5 rounded-lg text-[10px] font-medium text-white transition-colors">
+                            REPHRASE
+                        </button>
+                    </div>
+                </div>
+
+                <div class="group opacity-60 hover:opacity-100 transition-opacity">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-text_muted flex items-center gap-2">
+                            <i class="ph ph-article"></i> Nature.com
+                        </span>
+                        <span class="text-[10px] bg-orange-500/10 text-orange-400 border border-orange-500/20 px-2 py-0.5 rounded font-bold">24% MATCH</span>
+                    </div>
+                    <div class="bg-surface border border-white/5 rounded-lg p-3 mb-3 border-l-2 border-l-orange-500">
+                        <p class="font-serif text-sm text-gray-300 italic">
+                            "...demonstrated that off-target effects remain a primary concern..."
+                        </p>
+                    </div>
+                    <button class="w-full py-2 border border-white/10 hover:bg-white/5 rounded-lg text-[10px] font-medium text-white transition-colors">
+                        REVIEW CONTEXT
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div x-show="report === 'synthetic'" class="flex-1 overflow-y-auto animate-fade-in-up" style="display: none;">
+            <div class="p-8 border-b border-white/5 bg-synthetic/5 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-3 opacity-20">
+                    <i class="ph ph-robot text-6xl text-synthetic"></i>
+                </div>
+                <div class="flex justify-between items-end mb-2 relative z-10">
+                    <span class="font-mono text-xs uppercase text-synthetic">Humanity Score</span>
+                    <span class="font-mono text-4xl font-bold text-white">65%</span>
+                </div>
+                <div class="w-full bg-surface h-2 rounded-full overflow-hidden mb-2 relative z-10">
+                    <div class="bg-synthetic h-full w-[65%] shadow-[0_0_15px_#8b5cf6]"></div>
+                </div>
+                <p class="font-mono text-[10px] text-text_muted">MODERATE PROBABILITY OF AI USE</p>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-text_muted">Segment 01</span>
+                        <span class="text-[10px] bg-synthetic/10 text-synthetic border border-synthetic/20 px-2 py-0.5 rounded font-bold">88% PROBABILITY</span>
+                    </div>
+                    <div class="bg-surface border border-white/5 rounded-lg p-3 mb-3 border-l-2 border-l-synthetic">
+                        <p class="font-serif text-sm text-gray-300 italic">
+                            "It allows for the correction of disease-causing mutations..."
+                        </p>
+                        <div class="mt-3 pt-2 border-t border-white/5 flex gap-2">
+                             <span class="text-[10px] font-mono text-text_muted">Low Perplexity</span>
+                             <span class="text-[10px] font-mono text-text_muted">•</span>
+                             <span class="text-[10px] font-mono text-text_muted">Low Burstiness</span>
+                        </div>
+                    </div>
+                    <button class="w-full py-2 bg-synthetic hover:bg-violet-600 text-white rounded-lg text-[10px] font-bold uppercase tracking-wide transition-colors flex items-center justify-center gap-2 shadow-lg shadow-synthetic/20">
+                        <i class="ph ph-magic-wand"></i> Humanize Syntax
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </aside>
+
+</body>
+</html>
