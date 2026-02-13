@@ -5,7 +5,7 @@ const hasClerkKeys =
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
   !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder");
 
-export default async function middleware(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   if (hasClerkKeys) {
     const { clerkMiddleware, createRouteMatcher } = await import(
       "@clerk/nextjs/server"
