@@ -381,8 +381,10 @@ export const userReferences = pgTable(
     deletedAt: timestamp("deleted_at"),
   },
   (table) => [
+    unique("user_references_user_paper_unique").on(table.userId, table.paperId),
     index("idx_user_refs_user").on(table.userId),
     index("idx_user_refs_paper").on(table.paperId),
+    index("idx_user_refs_collection").on(table.collection),
   ]
 );
 

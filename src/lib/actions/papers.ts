@@ -34,6 +34,108 @@ export async function getUserPapers(collection?: string) {
   }));
 }
 
+/**
+ * Find an existing paper by checking DOI, PubMed ID, and Semantic Scholar ID.
+ * Returns the paper ID if found, null otherwise.
+ */
+async function findExistingPaper(data: {
+  doi?: string;
+  pubmed_id?: string;
+  semantic_scholar_id?: string;
+}): Promise<number | null> {
+  // Check DOI first (most reliable identifier)
+  if (data.doi) {
+    const [match] = await db
+      .select({ id: papers.id })
+      .from(papers)
+      .where(eq(papers.doi, data.doi));
+    if (match) return match.id;
+  }
+
+  // Check PubMed ID
+  if (data.pubmed_id) {
+    const [match] = await db
+      .select({ id: papers.id })
+      .from(papers)
+      .where(eq(papers.pubmed_id, data.pubmed_id));
+    if (match) return match.id;
+  }
+
+  // Check Semantic Scholar ID
+  if (data.semantic_scholar_id) {
+    const [match] = await db
+      .select({ id: papers.id })
+      .from(papers)
+      .where(eq(papers.semantic_scholar_id, data.semantic_scholar_id));
+    if (match) return match.id;
+  }
+
+  return null;
+}
+
+/**
+ * Enrich an existing paper record with new data, filling in fields
+ * that were previously null/empty without overwriting existing values.
+ */
+async function enrichExistingPaper(
+  paperId: number,
+  data: {
+    abstract?: string;
+    tldr?: string;
+    citation_count?: number;
+    pubmed_id?: string;
+    semantic_scholar_id?: string;
+    doi?: string;
+    authors?: string[];
+    journal?: string;
+    year?: number;
+  }
+) {
+  // Fetch current paper data to know what to fill
+  const [current] = await db
+    .select()
+    .from(papers)
+    .where(eq(papers.id, paperId));
+
+  if (!current) return;
+
+  const updates: Record<string, unknown> = {};
+
+  // Fill missing identifiers
+  if (!current.doi && data.doi) updates.doi = data.doi;
+  if (!current.pubmed_id && data.pubmed_id) updates.pubmed_id = data.pubmed_id;
+  if (!current.semantic_scholar_id && data.semantic_scholar_id)
+    updates.semantic_scholar_id = data.semantic_scholar_id;
+
+  // Fill missing metadata
+  if (!current.abstract && data.abstract) updates.abstract = data.abstract;
+  if (!current.tldr && data.tldr) updates.tldr = data.tldr;
+  if (!current.journal && data.journal) updates.journal = data.journal;
+  if (!current.year && data.year) updates.year = data.year;
+
+  // Always update citation count if the new value is higher
+  if (
+    data.citation_count &&
+    data.citation_count > (current.citation_count ?? 0)
+  ) {
+    updates.citation_count = data.citation_count;
+  }
+
+  // Fill authors if currently empty
+  const currentAuthors = current.authors as string[] | null;
+  if (
+    (!currentAuthors || currentAuthors.length === 0) &&
+    data.authors &&
+    data.authors.length > 0
+  ) {
+    updates.authors = data.authors;
+  }
+
+  if (Object.keys(updates).length > 0) {
+    await db.update(papers).set(updates).where(eq(papers.id, paperId));
+  }
+}
+
 export async function savePaper(data: {
   title: string;
   authors?: string[];
@@ -41,7 +143,14 @@ export async function savePaper(data: {
   year?: number;
   doi?: string;
   abstract?: string;
-  source: "pubmed" | "semantic_scholar" | "openalex" | "arxiv" | "user_upload" | "snowball" | "deep_research";
+  source:
+    | "pubmed"
+    | "semantic_scholar"
+    | "openalex"
+    | "arxiv"
+    | "user_upload"
+    | "snowball"
+    | "deep_research";
   pubmed_id?: string;
   semantic_scholar_id?: string;
   citation_count?: number;
@@ -50,35 +159,28 @@ export async function savePaper(data: {
 }) {
   const userId = await getCurrentUserId();
 
-  // Upsert paper (check DOI first)
-  let paperId: number;
-  if (data.doi) {
-    const [existing] = await db
-      .select({ id: papers.id })
-      .from(papers)
-      .where(eq(papers.doi, data.doi));
-    if (existing) {
-      paperId = existing.id;
-    } else {
-      const [newPaper] = await db
-        .insert(papers)
-        .values({
-          title: data.title,
-          authors: data.authors || [],
-          journal: data.journal,
-          year: data.year,
-          doi: data.doi,
-          abstract: data.abstract,
-          source: data.source,
-          pubmed_id: data.pubmed_id,
-          semantic_scholar_id: data.semantic_scholar_id,
-          citation_count: data.citation_count || 0,
-          tldr: data.tldr,
-        })
-        .returning();
-      paperId = newPaper.id;
-    }
+  // Multi-field deduplication: check DOI, PMID, and S2 ID
+  let paperId = await findExistingPaper({
+    doi: data.doi,
+    pubmed_id: data.pubmed_id,
+    semantic_scholar_id: data.semantic_scholar_id,
+  });
+
+  if (paperId) {
+    // Enrich existing paper with any new data
+    await enrichExistingPaper(paperId, {
+      abstract: data.abstract,
+      tldr: data.tldr,
+      citation_count: data.citation_count,
+      pubmed_id: data.pubmed_id,
+      semantic_scholar_id: data.semantic_scholar_id,
+      doi: data.doi,
+      authors: data.authors,
+      journal: data.journal,
+      year: data.year,
+    });
   } else {
+    // Create new paper
     const [newPaper] = await db
       .insert(papers)
       .values({
@@ -86,10 +188,10 @@ export async function savePaper(data: {
         authors: data.authors || [],
         journal: data.journal,
         year: data.year,
-        doi: data.doi,
+        doi: data.doi || undefined,
         abstract: data.abstract,
         source: data.source,
-        pubmed_id: data.pubmed_id,
+        pubmed_id: data.pubmed_id || undefined,
         semantic_scholar_id: data.semantic_scholar_id,
         citation_count: data.citation_count || 0,
         tldr: data.tldr,
