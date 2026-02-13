@@ -22,6 +22,9 @@ import {
 
 import {
   sourceTypeEnum,
+  slideLayoutEnum,
+  generationStatusEnum,
+  audienceTypeEnum,
   researchStatusEnum,
   stepTypeEnum,
   stepStatusEnum,
@@ -44,14 +47,22 @@ export const slideDecks = pgTable(
   {
     id: serial("id").primaryKey(),
     projectId: integer("project_id")
-      .notNull()
       .references(() => projects.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
     documentId: integer("document_id").references(
       () => synthesisDocuments.id,
       { onDelete: "set null" }
     ),
     title: text("title").notNull(),
+    description: text("description"),
     theme: text("theme").default("modern"),
+    audienceType: audienceTypeEnum("audience_type").default("general"),
+    generationStatus: generationStatusEnum("generation_status"),
+    generationPrompt: text("generation_prompt"),
+    themeConfig: jsonb("theme_config"),
+    slideOrder: jsonb("slide_order").default([]),
     totalSlides: integer("total_slides").default(0),
     sourceType: sourceTypeEnum("source_type"),
     sourcePaperIds: jsonb("source_paper_ids").default([]),
@@ -59,7 +70,10 @@ export const slideDecks = pgTable(
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },
-  (table) => [index("idx_slide_decks_project").on(table.projectId)]
+  (table) => [
+    index("idx_slide_decks_project").on(table.projectId),
+    index("idx_slide_decks_user").on(table.userId),
+  ]
 );
 
 // ---------------------------------------------------------------------------
@@ -73,23 +87,62 @@ export const slides = pgTable(
       .notNull()
       .references(() => slideDecks.id, { onDelete: "cascade" }),
     sortOrder: integer("sort_order").notNull(),
-    layout: text("layout").default("title_content"),
+    layout: slideLayoutEnum("layout").default("title_content"),
     title: text("title"),
+    subtitle: text("subtitle"),
     content: jsonb("content"),
+    contentBlocks: jsonb("content_blocks").default([]),
     speakerNotes: text("speaker_notes"),
     sourceSectionId: integer("source_section_id").references(
       () => synthesisSections.id,
       { onDelete: "set null" }
     ),
     sourceCitations: jsonb("source_citations").default([]),
+    generatedByAi: boolean("generated_by_ai").default(false),
     hasChart: boolean("has_chart").default(false),
     hasTable: boolean("has_table").default(false),
     hasImage: boolean("has_image").default(false),
     visualData: jsonb("visual_data"),
     createdAt: timestamp("created_at").defaultNow(),
+    lastEditedAt: timestamp("last_edited_at").defaultNow(),
   },
   (table) => [index("idx_slides_deck").on(table.deckId)]
 );
+
+// ---------------------------------------------------------------------------
+// 18a. presentation_coach_evaluations
+// ---------------------------------------------------------------------------
+export const presentationCoachEvaluations = pgTable(
+  "presentation_coach_evaluations",
+  {
+    id: serial("id").primaryKey(),
+    deckId: integer("deck_id")
+      .notNull()
+      .references(() => slideDecks.id, { onDelete: "cascade" }),
+    structureScore: real("structure_score"),
+    evidenceScore: real("evidence_score"),
+    narrativeScore: real("narrative_score"),
+    designScore: real("design_score"),
+    audienceFitScore: real("audience_fit_score"),
+    overallScore: real("overall_score"),
+    slideInsights: jsonb("slide_insights").default([]),
+    suggestions: jsonb("suggestions").default([]),
+    createdAt: timestamp("created_at").defaultNow(),
+  },
+  (table) => [index("idx_coach_eval_deck").on(table.deckId)]
+);
+
+// ---------------------------------------------------------------------------
+// 18b. slide_templates
+// ---------------------------------------------------------------------------
+export const slideTemplates = pgTable("slide_templates", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  category: text("category"),
+  templateData: jsonb("template_data").notNull(),
+  isSystem: boolean("is_system").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
 
 // ---------------------------------------------------------------------------
 // 19. deep_research_sessions
