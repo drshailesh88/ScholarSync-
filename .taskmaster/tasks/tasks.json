@@ -1,284 +1,426 @@
 {
   "tasks": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Initialize Next.js Project",
       "description": "Initialize a Next.js 15 project with TypeScript, Tailwind CSS, ESLint, App Router, and src directory in the existing repo. Use npm (not pnpm). Command: npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack. Must scaffold into current directory alongside existing ui-mockups/, docs/ folders without overwriting them.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
       "dependencies": [],
       "details": "Run from /Users/shaileshsingh/codename ScholarSync/. The directory is non-empty (has ui-mockups/, docs/, .git). create-next-app should handle this gracefully. Verify npm run dev works after.",
-      "testStrategy": "npm run dev starts default Next.js page at localhost:3000. Existing mockup and doc files are intact."
+      "testStrategy": "npm run dev starts default Next.js page at localhost:3000. Existing mockup and doc files are intact.",
+      "updatedAt": "2026-02-13T06:56:51.248Z",
+      "subtasks": []
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Install All Phase 1 npm Packages",
       "description": "Install all Phase 1 dependencies. Core: @clerk/nextjs, next-themes, @phosphor-icons/react, clsx, tailwind-merge. Database: drizzle-orm, postgres. AI: ai, @ai-sdk/anthropic. Dev: drizzle-kit, @types/node, tsx.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [1],
+      "dependencies": [
+        "1"
+      ],
       "details": "npm install @clerk/nextjs next-themes @phosphor-icons/react clsx tailwind-merge drizzle-orm postgres ai @ai-sdk/anthropic && npm install -D drizzle-kit @types/node tsx",
-      "testStrategy": "npm ls shows no missing peer dependencies (warnings OK). All packages in package.json."
+      "testStrategy": "npm ls shows no missing peer dependencies (warnings OK). All packages in package.json.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:56:54.420Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Create Project Configuration Files",
       "description": "Create: next.config.ts (output: 'standalone', image remotePatterns for clerk), .env.local (placeholder Clerk/DB/Anthropic keys, gitignored), drizzle.config.ts (PostgreSQL dialect, schema path ./src/lib/db/schema/index.ts), and add db scripts to package.json (db:push, db:studio, db:generate, db:migrate).",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [2],
+      "dependencies": [
+        "2"
+      ],
       "details": ".env.local keys: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY, NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in, NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up, NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard, NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard, DATABASE_URL=postgresql://scholarsync:scholarsync@localhost:5432/scholarsync, ANTHROPIC_API_KEY=sk-ant-placeholder",
-      "testStrategy": "next.config.ts has output standalone. .env.local is gitignored. drizzle.config.ts parses without error."
+      "testStrategy": "next.config.ts has output standalone. .env.local is gitignored. drizzle.config.ts parses without error.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:56:57.374Z"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "Create Dockerfile and cloudbuild.yaml",
       "description": "Create multi-stage Dockerfile: node:22-alpine base, deps stage (npm ci), builder stage (npm run build), runner stage (standalone output, non-root user nextjs:nodejs, port 3000, HOSTNAME 0.0.0.0). Create cloudbuild.yaml for GCP Cloud Run auto-deploy targeting asia-south1 region, project metal-node-486118-t7.",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
-      "dependencies": [2],
+      "dependencies": [
+        "2"
+      ],
       "details": "Dockerfile stages: base → deps (copy package*.json, npm ci) → builder (copy all, npm run build) → runner (copy public, .next/standalone, .next/static, CMD node server.js). cloudbuild.yaml uses asia-south1-docker.pkg.dev/metal-node-486118-t7/scholarsync/web:$COMMIT_SHA image tag.",
-      "testStrategy": "docker build . succeeds if Docker available. cloudbuild.yaml is valid YAML."
+      "testStrategy": "docker build . succeeds if Docker available. cloudbuild.yaml is valid YAML.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:00.404Z"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Copy Database Schema to Repo",
       "description": "Copy /Users/shaileshsingh/Downloads/scholarsync_schema_v3_final.sql to database/schema.sql in the repo. Create database/ directory. This is the single source of truth — do NOT modify the SQL content.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [1],
+      "dependencies": [
+        "1"
+      ],
       "details": "mkdir -p database && cp /Users/shaileshsingh/Downloads/scholarsync_schema_v3_final.sql database/schema.sql. Verify 71 tables, all indexes, and seed data are present.",
-      "testStrategy": "database/schema.sql exists. grep -c 'CREATE TABLE' database/schema.sql returns 71."
+      "testStrategy": "database/schema.sql exists. grep -c 'CREATE TABLE' database/schema.sql returns 71.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:03.349Z"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Create Theme System (globals.css with CSS Variables)",
       "description": "Create src/app/globals.css with dual-theme CSS variables. :root (light Daylight Studio) and .dark (dark Luminous Workspace). Include glass-panel, text-glow, lamp-glow utility classes. Import tailwindcss. Register theme tokens.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [2],
+      "dependencies": [
+        "2"
+      ],
       "details": "Dark: room #020617, surface #0f172a, surface-raised #1e293b, ink #f1f5f9, ink-muted #94a3b8, border rgba(255,255,255,0.08), glass rgba(15,23,42,0.6) blur(16px), glow #0ea5e9, brand #6366f1, font-sans Inter. Light: background #f8fafc, surface #ffffff, surface-raised #f1f5f9, ink #0f172a, ink-muted #64748b, border #e2e8f0, glass rgba(255,255,255,0.8) blur(12px), brand #6366f1, font-sans Plus Jakarta Sans. Merriweather for --font-serif in both themes.",
-      "testStrategy": "CSS variables resolve correctly. glass-panel class produces backdrop-filter blur. Theme switch changes all colors."
+      "testStrategy": "CSS variables resolve correctly. glass-panel class produces backdrop-filter blur. Theme switch changes all colors.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:06.327Z"
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "Create Utility Functions and Font Configuration",
       "description": "Create src/lib/utils.ts with cn() utility (clsx + tailwind-merge). Create src/lib/fonts.ts loading Inter, Plus Jakarta Sans, and Merriweather via next/font/google with CSS variable outputs.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [2],
+      "dependencies": [
+        "2"
+      ],
       "details": "cn() pattern: import { clsx, type ClassValue } from 'clsx'; import { twMerge } from 'tailwind-merge'; export function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)); }. Fonts: Inter (--font-inter), Plus_Jakarta_Sans (--font-plus-jakarta), Merriweather (--font-merriweather, weights 300/400/700, normal+italic).",
-      "testStrategy": "cn('px-4', 'px-2') returns 'px-2' (merge works). Fonts export CSS variable names."
+      "testStrategy": "cn('px-4', 'px-2') returns 'px-2' (merge works). Fonts export CSS variable names.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:09.283Z"
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "Create Theme Provider Component",
       "description": "Create src/components/providers/theme-provider.tsx — client component wrapping next-themes ThemeProvider with passthrough props.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [2],
+      "dependencies": [
+        "2"
+      ],
       "details": "\"use client\"; import { ThemeProvider as NextThemesProvider, type ThemeProviderProps } from 'next-themes'; export function ThemeProvider({ children, ...props }: ThemeProviderProps) { return <NextThemesProvider {...props}>{children}</NextThemesProvider>; }",
-      "testStrategy": "Component renders without hydration errors. useTheme() hook works in child components."
+      "testStrategy": "Component renders without hydration errors. useTheme() hook works in child components.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:12.267Z"
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "Create Root Layout with Clerk and Theme Providers",
       "description": "Create src/app/layout.tsx — root layout with ClerkProvider (indigo brand), ThemeProvider (dark default), html tag with font CSS variables and suppressHydrationWarning, body with bg-background text-ink antialiased, metadata (title ScholarSync).",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [6, 7, 8],
+      "dependencies": [
+        "6",
+        "7",
+        "8"
+      ],
       "details": "Import fonts from @/lib/fonts. Apply font variable classes to html tag. ClerkProvider appearance: colorPrimary #6366f1. ThemeProvider: attribute='class', defaultTheme='dark', enableSystem=false, disableTransitionOnChange.",
-      "testStrategy": "App renders with correct fonts. Dark theme active by default. No hydration mismatch."
+      "testStrategy": "App renders with correct fonts. Dark theme active by default. No hydration mismatch.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:15.266Z"
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "Create Clerk Auth Middleware",
       "description": "Create src/middleware.ts using clerkMiddleware and createRouteMatcher from @clerk/nextjs/server. Public routes: /, /sign-in(.*), /sign-up(.*), /api/webhooks(.*). All other routes call auth.protect().",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [2],
+      "dependencies": [
+        "2"
+      ],
       "details": "Export matcher config excluding _next, static files (html, css, js, images, fonts, ico). Use the standard Clerk middleware pattern.",
-      "testStrategy": "/ is accessible without auth. /dashboard redirects to /sign-in without auth."
+      "testStrategy": "/ is accessible without auth. /dashboard redirects to /sign-in without auth.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:18.214Z"
     },
     {
-      "id": 11,
+      "id": "11",
       "title": "Drizzle Schema — Enum Definitions",
       "description": "Create src/lib/db/schema/enums.ts with ALL pgEnum definitions extracted from schema.sql CHECK constraints. Every CHECK(column IN (...)) becomes a pgEnum.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [5],
+      "dependencies": [
+        "5"
+      ],
       "details": "Enums to define: degreeLevelEnum (undergraduate,postgraduate,phd,postdoc,faculty), planEnum (free,basic,pro,institutional), projectStatusEnum (planning,drafting,reviewing,completed,archived), projectTypeEnum (thesis,review_article,original_article,...all 13), paperSourceEnum (pubmed,semantic_scholar,openalex,arxiv,user_upload,snowball,deep_research), sectionTypeEnum (title,abstract,introduction,methods,results,discussion,conclusion,references,other), conversationModeEnum (chat,learn,draft,research,notebook,statistics,integrity,general), messageRoleEnum (user,assistant,system,tool), documentTypeEnum (all 13 types from synthesis_documents), documentStatusEnum, sectionStatusEnum, authorTypeEnum, changeTypeEnum, changeStatusEnum, projectPaperStatusEnum, addedByEnum, screeningDecisionEnum, queryTypeEnum, searchSourceEnum, stepTypeEnum, stepStatusEnum, checkTypeEnum, annotationColorEnum, institutionTypeEnum, membershipRoleEnum, milestoneStatusEnum, itemTypeEnum, submissionStatusEnum, recommendationEnum, severityEnum, audioStatusEnum, syncDirectionEnum, syncStatusEnum, effectModelEnum, columnTypeEnum, matrixSourceEnum, riskJudgmentEnum, assessedByEnum, decidedByEnum, screeningStageEnum, savedByEnum, researchStatusEnum, analysisStatusEnum, fileTypeEnum, codeLanguageEnum, permissionEnum, linkTypeEnum, sourceTypeEnum, discoveredViaEnum. Reference database/schema.sql for exact values.",
-      "testStrategy": "TypeScript compiles. Every enum matches the corresponding CHECK constraint in schema.sql."
+      "testStrategy": "TypeScript compiles. Every enum matches the corresponding CHECK constraint in schema.sql.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:21.156Z"
     },
     {
-      "id": 12,
+      "id": "12",
       "title": "Drizzle Schema — Core Tables (1-16)",
       "description": "Create src/lib/db/schema/core.ts with tables 1-16: users, projects, papers, project_papers, paper_chunks (vector 1536), search_queries, paper_extractions, synthesis_documents, synthesis_sections, synthesis_citations, synthesis_versions, conversations, messages, project_context_cache, citation_graph, snowball_sessions.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [11],
+      "dependencies": [
+        "11"
+      ],
       "details": "Key details: users.id is text().primaryKey() (Clerk ID). paper_chunks.embedding uses vector('embedding', { dimensions: 1536 }). All foreign keys with correct onDelete behavior. All indexes from schema.sql. JSONB columns with jsonb(). Full-text search index on papers (GIN index on to_tsvector). Trigram index on papers.title. HNSW index on paper_chunks.embedding.",
-      "testStrategy": "TypeScript compiles. Table count matches (16). Column types match SQL schema. All indexes defined."
+      "testStrategy": "TypeScript compiles. Table count matches (16). Column types match SQL schema. All indexes defined.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:24.185Z"
     },
     {
-      "id": 13,
+      "id": "13",
       "title": "Drizzle Schema — Editor and Writing Tables (17-36)",
       "description": "Create src/lib/db/schema/editor.ts with 20 tables: slide_decks, slides, deep_research_sessions, deep_research_steps, datasets, statistical_analyses, integrity_checks, writing_action_log, writing_analysis_snapshots, document_changes, templates, template_sections, user_references, document_comments, document_shares, activity_log, discipline_profiles, export_templates, learning_modules, user_learning_progress.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [11, 12],
+      "dependencies": [
+        "11",
+        "12"
+      ],
       "details": "Import users, projects, papers, synthesis_documents, synthesis_sections from core.ts for foreign key references. user_references has deleted_at for soft delete. document_comments has self-referential parent_comment_id. user_learning_progress has UNIQUE(user_id, module_id). All indexes from SQL schema.",
-      "testStrategy": "TypeScript compiles. 20 tables defined. Foreign key references resolve. All CHECK constraints represented."
+      "testStrategy": "TypeScript compiles. 20 tables defined. Foreign key references resolve. All CHECK constraints represented.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:27.178Z"
     },
     {
-      "id": 14,
+      "id": "14",
       "title": "Drizzle Schema — Billing and Tracking Tables (37-41, 52)",
       "description": "Create src/lib/db/schema/billing.ts with 6 tables: usage_events, subscriptions, feedback, prompt_versions, pdf_annotations, usage_quotas.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [11, 12],
+      "dependencies": [
+        "11",
+        "12"
+      ],
       "details": "usage_quotas has plan as UNIQUE. prompt_versions has UNIQUE(prompt_name, version_number). subscriptions has razorpay_subscription_id and razorpay_customer_id. pdf_annotations has color enum. Import users, projects, papers, messages from core.ts.",
-      "testStrategy": "TypeScript compiles. 6 tables defined. UNIQUE constraints present. Seed data shape matches usage_quotas INSERT."
+      "testStrategy": "TypeScript compiles. 6 tables defined. UNIQUE constraints present. Seed data shape matches usage_quotas INSERT.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:30.169Z"
     },
     {
-      "id": 15,
+      "id": "15",
       "title": "Drizzle Schema — Systematic Review Tables (42-51)",
       "description": "Create src/lib/db/schema/systematic.ts with 10 tables: screening_criteria, screening_decisions, prisma_flow, risk_of_bias, meta_analysis_results, comparison_matrices, matrix_columns, matrix_cells, project_milestones, milestone_progress.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [11, 12],
+      "dependencies": [
+        "11",
+        "12"
+      ],
       "details": "Multiple composite UNIQUE constraints: screening_decisions(project_id, paper_id, stage), risk_of_bias(paper_id, project_id, domain), matrix_cells(matrix_id, column_id, paper_id). All reference projects and papers from core.ts.",
-      "testStrategy": "TypeScript compiles. 10 tables defined. Composite unique constraints present."
+      "testStrategy": "TypeScript compiles. 10 tables defined. Composite unique constraints present.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:33.165Z"
     },
     {
-      "id": 16,
+      "id": "16",
       "title": "Drizzle Schema — Institutional Tables (53-55)",
       "description": "Create src/lib/db/schema/institutional.ts with 3 tables: institutions, institution_memberships, supervisor_assignments.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [11, 12],
+      "dependencies": [
+        "11",
+        "12"
+      ],
       "details": "institution_memberships: UNIQUE(user_id, institution_id). supervisor_assignments: UNIQUE(student_id, project_id). Both supervisor_id and student_id reference users(id).",
-      "testStrategy": "TypeScript compiles. 3 tables defined. UNIQUE constraints correct."
+      "testStrategy": "TypeScript compiles. 3 tables defined. UNIQUE constraints correct.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:36.323Z"
     },
     {
-      "id": 17,
+      "id": "17",
       "title": "Drizzle Schema — Platform Tables (56-71)",
       "description": "Create src/lib/db/schema/platform.ts with 16 tables: marketplace_items, marketplace_reviews, journal_profiles, submissions, submission_checks, review_simulations, simulated_comments, user_profiles_public, publications, orcid_links, audio_summaries, audio_scripts, knowledge_notes, knowledge_links, integrations, sync_log.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [11, 12],
+      "dependencies": [
+        "11",
+        "12"
+      ],
       "details": "UNIQUE constraints: marketplace_reviews(item_id, user_id), user_profiles_public(user_id), user_profiles_public(profile_url_slug), orcid_links(user_id), integrations(user_id, provider), knowledge_links(source_type, source_id, target_type, target_id). knowledge_links source_id and target_id are plain integers (not FK references).",
-      "testStrategy": "TypeScript compiles. 16 tables defined. All UNIQUE constraints present. All indexes from SQL."
+      "testStrategy": "TypeScript compiles. 16 tables defined. All UNIQUE constraints present. All indexes from SQL.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:39.314Z"
     },
     {
-      "id": 18,
+      "id": "18",
       "title": "Drizzle Schema — Relations and Barrel Export",
       "description": "Create src/lib/db/schema/relations.ts with Drizzle relations() for all FK relationships across 71 tables. Create src/lib/db/schema/index.ts barrel exporting everything from all schema files.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [12, 13, 14, 15, 16, 17],
+      "dependencies": [
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17"
+      ],
       "details": "Define one-to-many (e.g., users has many projects) and many-to-one (e.g., project belongs to user) for every foreign key. Self-referential relations: document_comments.parent_comment_id, search_queries.parent_query_id. index.ts: export * from each schema file.",
-      "testStrategy": "TypeScript compiles. import * as schema from '@/lib/db/schema' resolves all tables. Relations queryable."
+      "testStrategy": "TypeScript compiles. import * as schema from '@/lib/db/schema' resolves all tables. Relations queryable.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:42.277Z"
     },
     {
-      "id": 19,
+      "id": "19",
       "title": "Create Database Client",
       "description": "Create src/lib/db/index.ts with Drizzle ORM client using postgres.js driver. Connection from DATABASE_URL env var. Export db with full schema for relational queries.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [18],
+      "dependencies": [
+        "18"
+      ],
       "details": "import { drizzle } from 'drizzle-orm/postgres-js'; import postgres from 'postgres'; import * as schema from './schema'; const client = postgres(process.env.DATABASE_URL!); export const db = drizzle(client, { schema });",
-      "testStrategy": "TypeScript compiles. db export available. Connection string from env."
+      "testStrategy": "TypeScript compiles. db export available. Connection string from env.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:45.226Z"
     },
     {
-      "id": 20,
+      "id": "20",
       "title": "Create AI Model Utility",
       "description": "Create src/lib/ai/models.ts with getModel() (Claude Sonnet — main), getSmallModel() (Claude Haiku — cheap), getBigModel() (Claude Sonnet — complex). All use @ai-sdk/anthropic with ANTHROPIC_API_KEY from env.",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
-      "dependencies": [2],
+      "dependencies": [
+        "2"
+      ],
       "details": "import { createAnthropic } from '@ai-sdk/anthropic'; const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY! }); getModel returns anthropic('claude-sonnet-4-20250514'), getSmallModel returns anthropic('claude-haiku-4-5-20251001'), getBigModel returns anthropic('claude-sonnet-4-20250514'). JSDoc on each function explaining when to use it.",
-      "testStrategy": "TypeScript compiles. Three functions exported. Model IDs are valid."
+      "testStrategy": "TypeScript compiles. Three functions exported. Model IDs are valid.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:48.196Z"
     },
     {
-      "id": 21,
+      "id": "21",
       "title": "Create UI Components (Logo, GlassPanel, GlowCard, ThemeToggle)",
       "description": "Create 4 reusable UI components in src/components/ui/: logo.tsx (gradient icon from Phosphor SquaresFour + ScholarSync text), glass-panel.tsx (glass-panel CSS class + rounded-2xl wrapper), glow-card.tsx (hover:-translate-y-1, glow shadow, accepts title/description/icon props), theme-toggle.tsx (Daylight/Night pill toggle, uses next-themes useTheme, hydration-safe).",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
-      "dependencies": [6, 7],
+      "dependencies": [
+        "6",
+        "7"
+      ],
       "details": "All components use cn() from utils.ts. Accept className prop. Logo uses gradient from sky-500 to indigo-500. GlowCard has transition-all duration-200. ThemeToggle uses Sun/Moon from Phosphor, shows Daylight/Night labels, uses mounted state to avoid hydration mismatch.",
-      "testStrategy": "All components render without errors. ThemeToggle switches theme. GlowCard animates on hover."
+      "testStrategy": "All components render without errors. ThemeToggle switches theme. GlowCard animates on hover.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:51.200Z"
     },
     {
-      "id": 22,
+      "id": "22",
       "title": "Create App Sidebar Component",
       "description": "Create src/components/layout/app-sidebar.tsx — glass panel sidebar (w-64) with: Logo header (h-20), 9 nav items with Phosphor icons (House, PenNib, GlobeHemisphereWest, Notebook, Books, FolderOpen, ShieldCheck, ProjectorScreenChart, Gear), active route detection via usePathname(), Clerk UserButton in footer.",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
-      "dependencies": [6, 7, 21],
+      "dependencies": [
+        "6",
+        "7",
+        "21"
+      ],
       "details": "Nav items: Dashboard(/dashboard, House), Studio(/studio, PenNib), Deep Research(/research, GlobeHemisphereWest), Notebook(/notebook, Notebook), Library(/library, Books), Archive(/projects, FolderOpen), Compliance(/compliance, ShieldCheck), Presentation(/presentation, ProjectorScreenChart), Settings(/settings, Gear). Active: bg-surface-raised border border-border-subtle, filled icon. Hover: bg-surface-raised/50. Hidden on mobile: hidden md:flex.",
-      "testStrategy": "Sidebar renders. Active route highlighted. Navigation works. Icons display correctly."
+      "testStrategy": "Sidebar renders. Active route highlighted. Navigation works. Icons display correctly.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:54.188Z"
     },
     {
-      "id": 23,
+      "id": "23",
       "title": "Create App Header and Marketing Nav Components",
       "description": "Create src/components/layout/app-header.tsx (time-based greeting, theme toggle, notification bell) and src/components/layout/marketing-nav.tsx (floating glass pill nav for landing page with logo, links, auth buttons).",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
-      "dependencies": [6, 7, 21],
+      "dependencies": [
+        "6",
+        "7",
+        "21"
+      ],
       "details": "AppHeader: greeting based on hour (Good morning/afternoon/evening), ThemeToggle on right, Bell icon (Phosphor). MarketingNav: fixed top, glass-panel bg, rounded-full pill, Logo left, links center (Features/Pricing scrolls to sections), Sign In (/sign-in) and Get Started (/sign-up) buttons right. Get Started has brand gradient bg.",
-      "testStrategy": "Header shows correct greeting. Marketing nav links work. Glass effect visible."
+      "testStrategy": "Header shows correct greeting. Marketing nav links work. Glass effect visible.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:57:57.165Z"
     },
     {
-      "id": 24,
+      "id": "24",
       "title": "Create Route Layouts (Marketing, Auth, App)",
       "description": "Create 3 route group layouts: (marketing)/layout.tsx — forces dark via className='dark', no sidebar. (auth)/layout.tsx — split-screen: children left (w-full lg:w-1/2), decorative panel right with gradient bg and quote. (app)/layout.tsx — server component checking auth(), redirect to /sign-in if unauthenticated, renders AppSidebar + scrollable main.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [22, 23],
+      "dependencies": [
+        "22",
+        "23"
+      ],
       "details": "Marketing layout: <div className='dark' style={{ colorScheme: 'dark' }}>{children}</div>. Auth layout: left side has children, right side (hidden on mobile) shows indigo/sky gradient with ScholarSync quote. App layout: import { auth } from '@clerk/nextjs/server'; const { userId } = await auth(); if (!userId) redirect('/sign-in');",
-      "testStrategy": "Marketing page always dark. Auth shows split screen on desktop. App redirects without auth."
+      "testStrategy": "Marketing page always dark. Auth shows split screen on desktop. App redirects without auth.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:58:00.145Z"
     },
     {
-      "id": 25,
+      "id": "25",
       "title": "Create Auth Pages (Sign-In, Sign-Up)",
       "description": "Create Clerk auth pages: src/app/(auth)/sign-in/[[...sign-in]]/page.tsx with <SignIn /> component. src/app/(auth)/sign-up/[[...sign-up]]/page.tsx with <SignUp /> component. Both use catch-all route pattern.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [24],
+      "dependencies": [
+        "24"
+      ],
       "details": "Import SignIn/SignUp from @clerk/nextjs. Simple page components that render the Clerk component. The [[...sign-in]] catch-all pattern is required by Clerk for multi-step flows.",
-      "testStrategy": "Pages render Clerk components. Routes resolve correctly. No hydration errors."
+      "testStrategy": "Pages render Clerk components. Routes resolve correctly. No hydration errors.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:58:03.089Z"
     },
     {
-      "id": 26,
+      "id": "26",
       "title": "Create All Stub App Pages (10 pages)",
       "description": "Create placeholder pages for all 10 app routes: dashboard/page.tsx, studio/page.tsx, research/page.tsx, notebook/page.tsx, library/page.tsx, projects/page.tsx, compliance/page.tsx, presentation/page.tsx, analysis/page.tsx, settings/page.tsx. Each shows page title in h1 and 'Coming in Phase 2' in a glass-panel card.",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
-      "dependencies": [24],
+      "dependencies": [
+        "24"
+      ],
       "details": "Each page is a simple server component. Use GlassPanel wrapper. Title as text-3xl font-semibold. Subtitle as text-ink-muted. All pages under src/app/(app)/.",
-      "testStrategy": "All 10 routes render correctly. Navigation between pages works. No 404s."
+      "testStrategy": "All 10 routes render correctly. Navigation between pages works. No 404s.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:58:06.047Z"
     },
     {
-      "id": 27,
+      "id": "27",
       "title": "Build Landing Page from Mockup",
       "description": "Convert ui-mockups-codex/landing.html to React at src/app/(marketing)/page.tsx. Hero section with gradient text, feature grid (4 cards), pricing (Free/₹1,000/₹2,000), social proof, footer. Always dark. Use MarketingNav. Match mockup's glass panels and glow effects.",
-      "status": "pending",
+      "status": "done",
       "priority": "medium",
-      "dependencies": [23, 24],
+      "dependencies": [
+        "23",
+        "24"
+      ],
       "details": "Read ui-mockups-codex/landing.html for exact Tailwind classes, layout structure, and content. Convert Alpine.js x-data/x-show to React useState. Replace Phosphor i tags with @phosphor-icons/react components. Keep all glass-panel, gradient, and animation classes. Pricing: Free (₹0, 10K tokens, 50 searches, 1 plagiarism check), Basic (₹1,000/mo, 100K tokens, unlimited searches, 10 checks, 10 exports), Pro (₹2,000/mo, 500K tokens, unlimited everything). CTA buttons link to /sign-up.",
-      "testStrategy": "Landing page matches dark theme mockup. All sections render. Pricing shows INR amounts. Responsive on mobile. CTAs link to /sign-up."
+      "testStrategy": "Landing page matches dark theme mockup. All sections render. Pricing shows INR amounts. Responsive on mobile. CTAs link to /sign-up.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:58:08.986Z"
     },
     {
-      "id": 28,
+      "id": "28",
       "title": "Verify and Test Phase 1 Build",
       "description": "Full verification: npm run dev without errors, npx tsc --noEmit passes, all routes resolve, theme toggle works, landing page dark, sidebar navigation works, auth flow works. Fix any issues found.",
-      "status": "pending",
+      "status": "done",
       "priority": "high",
-      "dependencies": [19, 20, 25, 26, 27],
+      "dependencies": [
+        "19",
+        "20",
+        "25",
+        "26",
+        "27"
+      ],
       "details": "Checklist: (1) npm run dev starts clean (2) tsc --noEmit zero errors (3) / renders landing page dark (4) /sign-in shows Clerk (5) /dashboard shows stub (6) theme toggle switches (7) sidebar highlights active (8) no console errors (9) all 10 app routes work (10) responsive on mobile viewport.",
-      "testStrategy": "All items in checklist pass. Zero TypeScript errors. Zero console errors. App is functional foundation."
+      "testStrategy": "All items in checklist pass. Zero TypeScript errors. Zero console errors. App is functional foundation.",
+      "subtasks": [],
+      "updatedAt": "2026-02-13T06:58:12.067Z"
     }
-  ]
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-02-13T06:58:12.068Z",
+    "taskCount": 28,
+    "completedCount": 28,
+    "tags": [
+      "master"
+    ]
+  }
 }

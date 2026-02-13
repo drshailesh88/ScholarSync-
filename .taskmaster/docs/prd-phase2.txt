@@ -1,0 +1,382 @@
+# ScholarSync Phase 2 PRD: Full Feature Implementation
+
+## Overview
+Phase 1 (complete) established the foundation: Next.js 16, Tailwind CSS 4, Clerk auth, 71-table Drizzle ORM schema, dual theme system (dark default), AI models utility, layout components, 10 stub pages, and landing page.
+
+Phase 2 converts all 10 stub app pages into fully functional React components, matching the HTML mockups in `ui-mockups-codex/` as the primary design reference. Each page uses a mock data layer initially, with real API integrations where practical (PubMed, Semantic Scholar, AI chat).
+
+## Tech Stack (Locked — Do Not Change)
+- Next.js 16 App Router + TypeScript + Tailwind CSS 4
+- PostgreSQL + Drizzle ORM (schema in src/lib/db/schema/)
+- Clerk auth (@clerk/nextjs) with placeholder key handling
+- Claude AI via Vercel AI SDK (ai + @ai-sdk/anthropic)
+- Tiptap (ProseMirror) for rich text editing
+- Phosphor Icons (@phosphor-icons/react) for ALL icons
+- CSS custom properties for theming (dark default, light toggle via next-themes)
+- clsx + tailwind-merge via cn() utility at src/lib/utils.ts
+
+## Global Rules
+1. Every component must work in BOTH dark and light themes — never hardcode colors
+2. Use ONLY theme CSS variables: bg-background, bg-surface, bg-surface-raised, text-ink, text-ink-muted, border-border, border-border-subtle, bg-glass, text-glow, text-brand
+3. Reference dark mockup (*.html) as primary design source, light mockup (*_light.html) for light theme verification
+4. Reuse existing components: GlassPanel, GlowCard, ThemeToggle, Logo, AppSidebar, AppHeader
+5. Phosphor Icons only — NEVER use Lucide, Heroicons, or any other icon library
+6. All AI calls via getModel()/getSmallModel()/getBigModel() from src/lib/ai/models.ts — NEVER hardcode model names
+7. Use cn() from src/lib/utils.ts for conditional Tailwind classes
+8. Server components by default; add "use client" only when needed (hooks, interactivity)
+9. All new components in src/components/ organized by feature (ui/, editor/, layout/)
+10. Keep fonts: Inter (dark sans), Plus Jakarta Sans (light sans), Merriweather (serif/editor)
+11. Glass morphism pattern: use the .glass-panel CSS class from globals.css
+12. Graceful degradation: If Clerk keys are placeholder, skip auth checks. If ANTHROPIC_API_KEY is missing, show friendly message instead of crashing.
+
+---
+
+## Task 29: Install Phase 2 Dependencies
+Install packages needed for Phase 2 features:
+```
+npm install @tiptap/core @tiptap/react @tiptap/starter-kit @tiptap/extension-placeholder @tiptap/pm cmdk react-dropzone
+```
+Do NOT install citation-js, retext, pptxgenjs, docx yet — those are Phase 3.
+Acceptance: npm install succeeds, npm run dev still starts, npx tsc --noEmit passes.
+
+## Task 30: Create Mock Data Layer
+Create `src/lib/mock-data.ts` with realistic sample data for all pages:
+- mockUser: { id, name, email, plan, creditsUsed, creditsLimit }
+- mockProjects: Array of 6 projects with { id, title, type ("research_paper"|"learn_session"|"thesis"), status ("drafting"|"completed"|"issues_found"), wordCount, lastEdited (ISO date) }
+- mockPapers: Array of 8 papers with { id, title, authors: string[], journal, year, doi, type ("pdf"|"web"), abstract, isFavorite }
+- mockCollections: Array of 3 folders with { id, name, paperCount }
+- mockSearchResults: Array of 5 results with { id, title, authors, journal, year, abstract, citationCount, tags: string[], hasPdf, tldr }
+- mockChatMessages: Array of 4 messages with { id, role ("user"|"assistant"), content }
+- mockUsageStats: { aiTokens: { used: 12450, limit: 50000 }, searches: { used: 85, limit: -1 }, plagiarismChecks: { used: 3, limit: 10 } }
+- mockInvoices: Array of 3 invoices with { id, date, description, amount }
+- mockSlides: Array of 3 slides with { id, title, content }
+All data should feel realistic for a medical student researching CRISPR gene editing.
+Export TypeScript types for each mock data shape.
+Acceptance: File exports all mock objects with proper types, no TypeScript errors.
+
+## Task 31: Create Shared UI Components
+Build reusable components used across multiple pages. Each in src/components/ui/:
+1. `data-table.tsx` — Generic sortable table. Props: columns (array of { key, label, render? }), data (array), onRowClick?. Used in Dashboard, Projects, Settings.
+2. `search-input.tsx` — Search bar with MagnifyingGlass icon. Props: value, onChange, placeholder. Used in Dashboard, Library, Research.
+3. `tabs.tsx` — Tab navigation. Props: tabs (array of { key, label, count? }), activeTab, onChange. Used in Projects, Studio AI panel, Analysis, Settings.
+4. `badge.tsx` — Status badge. Props: variant ("drafting"|"completed"|"issues"|"active"|"popular"), children. Color-coded per variant.
+5. `modal.tsx` — Dialog overlay. Props: open, onClose, title, children. Glass morphism styling. Used for citation modal, new project, confirmations.
+6. `progress-bar.tsx` — Usage bar. Props: value, max, label, color?. Used in Settings usage, sidebar credits.
+7. `empty-state.tsx` — Empty state. Props: icon (PhosphorIcon), title, description, actionLabel?, onAction?. Used when lists are empty.
+8. `circular-gauge.tsx` — Circular/semi-circle score gauge. Props: value (0-100), label, size?. Used in Analysis (72/100) and Compliance (35%).
+All must use theme CSS variables, work in dark and light.
+Acceptance: All 8 components render correctly, exported with TypeScript props interfaces.
+
+## Task 32: Build Dashboard Page
+Convert `ui-mockups-codex/dashboard.html` (dark) to React. Replace stub at `src/app/(app)/dashboard/page.tsx`.
+The AppHeader already shows greeting + theme toggle. Dashboard adds:
+1. "What do you want to do today?" section — 4 GlowCard action cards in a 2x2 grid:
+   - Deep Research (GlobeHemisphereWest icon, sky-500 accent) → /research
+   - Write & Draft (PenNib icon, indigo-500 accent) → /studio
+   - Learn Mode (GraduationCap icon, emerald-500 accent) → /studio?mode=learn
+   - Final Checks (ShieldCheck icon, amber-500 accent) → /compliance
+   Each card: icon, title, short description, hover glow effect
+2. "Recent Projects" section — DataTable showing mockProjects:
+   - Columns: Name (with file type icon), Type, Status (Badge), Word Count, Last Edited (relative time)
+   - Row click navigates to /studio/{project.id}
+3. Below recent projects: "View All Projects" link → /projects
+Reference: docs/MASTER_REGISTRY.md "03 - Dashboard"
+Acceptance: 4 action cards render with correct icons and links. Recent projects table shows mock data. Row clicks navigate. Both themes work.
+
+## Task 33: Build Projects Page
+Convert `ui-mockups-codex/projects.html` to React. Replace stub at `src/app/(app)/projects/page.tsx`.
+1. Header row: "My Projects" title, project count badge (6), List/Grid toggle (two icon buttons), "+ New Project" button (indigo)
+2. Tabs component: All Projects | Research Papers | Learn Sessions — filters mockProjects by type
+3. Search input below tabs — filters by project name (client-side)
+4. List view (default): DataTable with Name, Status (Badge), Word Count, Last Edited, action icons (PencilSimple → /studio/{id}, Trash → confirm delete)
+5. Grid view: CSS grid of cards. Each card: colored top bar, title, status badge, word count, last edited, edit/delete icons
+6. "+ New Project" opens Modal with: project name input, type selector (research_paper/learn_session/thesis), "Create" button. On create: add to mockProjects state and navigate to /studio/new
+All client-side state with mockProjects.
+Reference: docs/MASTER_REGISTRY.md "04 - My Projects"
+Acceptance: List/grid toggle switches views. Tabs filter. Search filters. New project modal works. Both themes.
+
+## Task 34: Build Library Page
+Convert `ui-mockups-codex/library.html` to React. Replace stub at `src/app/(app)/library/page.tsx`.
+This page has its own internal layout (NOT the standard sidebar+main).
+Layout: Collections sidebar (w-64, glass-panel) nested INSIDE the main content area + paper list.
+1. Collections sidebar:
+   - "All Papers" (count: 8), "Favorites" (count of favorites from mockPapers)
+   - Folders: mockCollections rendered as folder items with FolderSimple icon
+   - "Upload PDF" button at bottom (opens react-dropzone area)
+   - "+ New Collection" button (opens inline input)
+2. Main paper list area:
+   - SearchInput for filtering by title/author
+   - Sort dropdown: "Recently Added", "Title A-Z", "Year"
+   - Paper cards (not table): Each card shows file type icon (FilePdf or GlobeSimple), title, authors (truncated), journal, year, actions row
+   - Per-paper actions: "Cite" button (BookOpen icon), favorite star toggle (Star icon fill/outline), delete (Trash icon)
+3. Citation Modal (opens on Cite click):
+   - Tabs: APA 7 | MLA 9 | Chicago (visual only, show same static text for now)
+   - Formatted citation text in a copyable box
+   - "Copy Citation" button with ClipboardText icon — copies to clipboard
+   - "Copy In-Text" button for parenthetical citation
+Use mockPapers and mockCollections. Collections filtering is client-side.
+Reference: docs/MASTER_REGISTRY.md "05 - My Library"
+Acceptance: Collections sidebar filters, paper cards display, Cite modal opens with copy functionality, search filters, favorite toggles. Both themes.
+
+## Task 35: Build Deep Research Page
+Convert `ui-mockups-codex/research.html` to React. Replace stub at `src/app/(app)/research/page.tsx`.
+Layout: Main search area + collapsible Research Copilot panel (right sidebar, w-96)
+1. Full-width search bar (large) with "Search" button. On enter/click, triggers search.
+2. Filter chips below search: "Last 5 Years", "PDF Available", "High Impact" — toggle active/inactive state, visual only for now
+3. Search results area:
+   - Loading state: skeleton cards
+   - TL;DR Synthesis box (GlassPanel with indigo/brand gradient border): Static AI summary text
+   - Result cards: title (bold), authors (truncated), journal + year, method/result tag chips, citation count, "Save" button (adds to mock library), "Ask Copilot" button
+4. Research Copilot panel (right sidebar):
+   - Toggle button (ChatCircleDots icon) to show/hide panel
+   - When open: Status indicator (green dot + "Ready"), AI Insight section (static text with Yes/No buttons), Data Extraction table (static), chat input
+Start with mockSearchResults displayed. Search is client-side filter only for now.
+Reference: docs/MASTER_REGISTRY.md "06 - Deep Research"
+Acceptance: Search bar renders, filter chips toggle, results display as cards, copilot panel toggles. Both themes.
+
+## Task 36: Create PubMed Search API Route
+Create `src/app/api/search/pubmed/route.ts`:
+1. GET handler with query params: q (required), maxResults (default 10)
+2. Validate q is not empty, return 400 if so
+3. Call ESearch: `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${encodeURIComponent(q)}&retmax=${maxResults}&retmode=json`
+4. Extract PMIDs from response
+5. If PMIDs found, call ESummary: `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=${pmids.join(",")}&retmode=json`
+6. Transform each result to: { id: pmid, source: "pubmed", title, authors: string[], journal, year, doi, pmid }
+7. Return NextResponse.json({ results, total })
+8. Wrap in try/catch, return 500 on failure
+Acceptance: Calling `/api/search/pubmed?q=CRISPR` returns real paper data from PubMed.
+
+## Task 37: Create Semantic Scholar Search API Route
+Create `src/app/api/search/semantic-scholar/route.ts`:
+1. GET handler with query params: q (required), limit (default 10)
+2. Call S2: `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodeURIComponent(q)}&limit=${limit}&fields=title,authors,year,abstract,citationCount,journal,tldr,externalIds,url`
+3. Transform each result to: { id: paperId, source: "semantic_scholar", title, authors, journal, year, abstract, citationCount, tldr: tldr?.text, doi: externalIds?.DOI }
+4. Return NextResponse.json({ results, total })
+5. Handle rate limiting (429) with appropriate error message
+Acceptance: Calling `/api/search/semantic-scholar?q=CRISPR` returns real papers with abstracts and TL;DR.
+
+## Task 38: Wire Deep Research to Real Search APIs
+Update Research page to use real API routes:
+1. On search submit, set loading state, call both API routes in parallel via Promise.all
+2. Merge results: combine arrays, deduplicate by DOI (prefer Semantic Scholar for abstract/tldr)
+3. Display merged results replacing mockSearchResults
+4. Show "X results from PubMed, Y from Semantic Scholar" count
+5. Loading skeletons during search
+6. Error state: if both fail show error message, if one fails show partial results
+7. "Save" button adds paper to a local saved papers state
+Keep filter chips and copilot panel as visual-only.
+Acceptance: Real search works for any biomedical query. Results merge correctly. Loading/error states work.
+
+## Task 39: Install and Configure Tiptap Editor
+Create `src/components/editor/tiptap-editor.tsx`:
+1. Import Tiptap core + StarterKit + Placeholder
+2. Configure: StarterKit (heading levels 1-3, bold, italic, bulletList, orderedList, blockquote, codeBlock), Placeholder extension with "Start typing or press '/' for AI commands..."
+3. Apply styling: editor content uses font-serif (Merriweather), proper theme colors, min-height 400px
+4. Expose editor instance via ref or callback
+Create `src/components/editor/toolbar.tsx`:
+1. Formatting buttons: Heading (1/2/3 dropdown), Bold (B), Italic (I), Bullet List, Ordered List, Blockquote
+2. Each button shows active state when format is applied
+3. Uses Phosphor Icons for each button
+4. Styled with glass-panel background, theme-responsive
+Acceptance: Editor renders, typing works, all formatting buttons work (bold, italic, headings, lists, blockquote), placeholder shows, both themes look good.
+
+## Task 40: Build Studio Page
+Convert `ui-mockups-codex/studio.html` to React. Replace stub at `src/app/(app)/studio/page.tsx`. "use client" page.
+This is the MOST important page — the core product experience.
+Layout: Custom layout (overrides or nests within the app layout). Left sidebar (w-64) + center editor + right AI panel (w-80).
+1. Studio top bar (replaces or sits below AppHeader):
+   - Logo (small), document title (editable input, default "Untitled Document"), Write/Learn mode toggle (pill switch), "Export" button (disabled for now), user avatar placeholder
+2. Left sidebar:
+   - Nav links: "Current Draft" (active, bold), "My Library" → /library, "Deep Research" → /research
+   - Divider
+   - "Cited Sources" section header + "+ Add" button
+   - List of 2-3 mock cited source cards: PDF/WEB badge, truncated title, author
+   - Bottom: AI Credits progress bar (from mockUsageStats)
+3. Center: TiptapEditor component (from Task 39)
+4. Right AI panel (glass-panel):
+   - Tabs: "Chat & Learn" | "Research" | "Checks"
+   - Chat tab: scrollable message list + chat input with send button. Messages styled: AI (left, with brand-colored avatar circle) and user (right, surface-raised bg)
+   - Research tab: mini SearchInput + "Search PubMed" button + placeholder results area
+   - Checks tab: AI Detection score (CircularGauge 92%), Plagiarism summary "2 matches found", "Review Matches" link → /compliance
+5. Write/Learn mode toggle:
+   - "Write" mode: normal AI chat behavior
+   - "Learn" mode: green banner above editor "I won't write for you — I'll help you think", green accent on toggle
+Chat messages use mockChatMessages initially.
+Reference: docs/MASTER_REGISTRY.md "07 - The Studio"
+Acceptance: Full 3-column layout renders. Editor works. Tabs switch. Write/Learn toggle shows/hides banner. All interactions work. Both themes.
+
+## Task 41: Create AI Chat Streaming API Route
+Create `src/app/api/chat/route.ts` using Vercel AI SDK:
+```typescript
+import { streamText } from "ai";
+import { getModel } from "@/lib/ai/models";
+export async function POST(req: Request) {
+  const { messages, mode } = await req.json();
+  const systemPrompt = mode === "learn"
+    ? "You are a Socratic research tutor. Never give direct answers. Ask probing questions to help the student think critically about their research. Challenge assumptions. Guide them to discover insights themselves."
+    : "You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone.";
+  const result = streamText({
+    model: getModel(),
+    system: systemPrompt,
+    messages,
+  });
+  return result.toDataStreamResponse();
+}
+```
+Handle missing ANTHROPIC_API_KEY gracefully: check if key exists, if not return a JSON error { error: "API key not configured" } with 503 status.
+Acceptance: POST with messages returns streaming text. Learn mode changes AI behavior. Missing key returns helpful error.
+
+## Task 42: Wire Studio and Notebook Chat to Streaming AI
+Update Studio Chat tab and prepare for Notebook:
+1. In Studio: replace mockChatMessages with `useChat` hook from "ai/react" pointed at "/api/chat"
+2. Pass { body: { mode: isLearnMode ? "learn" : "write" } } to useChat options
+3. Display streaming messages with proper styling
+4. Show loading indicator while AI is generating
+5. Auto-scroll to bottom on new messages
+6. If API returns error (missing key), show inline message: "Configure ANTHROPIC_API_KEY in .env.local to enable AI chat"
+Acceptance: Real-time streaming chat works in Studio. Learn mode changes AI responses. Error handling works.
+
+## Task 43: Build Notebook Page
+Convert `ui-mockups-codex/notebook.html` to React. Replace stub at `src/app/(app)/notebook/page.tsx`. "use client" page.
+Layout: Sources sidebar (w-80, glass-panel) + full-width chat
+1. Sources sidebar:
+   - Back button (ArrowLeft) → /dashboard
+   - "Notebook Sources" header + file count badge
+   - Upload zone: react-dropzone area with dashed border, "Drag files here or click to upload", accepts .pdf,.txt,.md
+   - File list: Each file shows FileText icon, name, size (formatted), checkbox (selected/unselected), X delete button on hover
+   - "Add Link / URL" button (LinkSimple icon) — opens inline input for URL
+2. Chat area:
+   - Header: "Notebook Chat" title
+   - Empty state (when no messages): GlassPanel with "Ready to analyze {fileCount} sources", 3 suggestion chips: "Summarize Key Themes", "Find Contradictions", "Compare Methodologies" — clicking fills chat input
+   - Messages: Same AI/user message styling as Studio chat
+   - Chat input: Textarea with Paperclip (attach) icon and PaperPlaneRight (send) icon
+   - Footer disclaimer: "AI can make mistakes. Check important info."
+3. Use `useChat` hook pointed at "/api/chat" with system context about being a notebook assistant
+File upload adds to client-side state only (name + size). No real PDF processing yet.
+Reference: docs/MASTER_REGISTRY.md "08 - Notebook Mode"
+Acceptance: Source sidebar shows, files can be "uploaded" (added to list), chat streams AI responses, suggestion chips work, empty state shows. Both themes.
+
+## Task 44: Build Writing Analysis Page
+Convert `ui-mockups-codex/analysis.html` to React. Replace stub at `src/app/(app)/analysis/page.tsx`.
+Layout: Editor view (left, flex-1) + Analysis panel (right, w-96)
+1. Header bar: ArrowLeft back to /studio, "Draft Analysis: CRISPR-Cas9 Review" title, color legend pills (Passive=purple, Complex=red, Weak=yellow)
+2. Editor (left): Read-only view of sample academic text (~4 paragraphs about CRISPR). Apply inline highlight spans:
+   - 2 purple highlights on passive voice phrases (e.g., "was demonstrated", "have been shown")
+   - 1 red highlight on a complex sentence
+   - 2 yellow highlights on weak words (e.g., "very", "significantly")
+   Use hardcoded sample text with spans.
+3. Analysis panel (right):
+   - CircularGauge: 72/100, label "Needs Improvement", color gradient (green at 100, yellow at 70, red at 30)
+   - Tabs: "Issues (4)" | "Detailed Metrics"
+   - Issues tab: 4 issue cards:
+     - Passive Voice (purple icon): "2 instances found", excerpt, "AI Fix" button
+     - Complex Sentence (red): "1 instance", excerpt, "AI Fix: Split Sentence" button
+     - Weak Words (yellow): "2 instances", excerpt, "AI Fix: Strengthen" button
+   - Metrics tab (scrollable):
+     - Readability: Flesch Reading Ease 45.2 (with bar), Gunning Fog 14.0
+     - Vocabulary: Unique Words 24% (bar), Academic Jargon 8% (bar)
+     - Tone: Objectivity High (green badge), Confidence Medium (yellow), Formality Very High (green)
+All data is static/hardcoded. Real retext integration is Phase 3.
+Acceptance: Split layout renders, highlights visible in text, gauge shows 72, tabs switch, issue cards display. Both themes.
+
+## Task 45: Build Compliance Page
+Convert `ui-mockups-codex/compliance.html` to React. Replace stub at `src/app/(app)/compliance/page.tsx`.
+Layout: Editor view (left, flex-1) + Report panel (right, w-96)
+1. Header: ArrowLeft back to /studio, "Final Checks: CRISPR_Review_Draft.docx", "Download Report" button
+2. Editor (left): Read-only sample text with inline highlights:
+   - 2 orange highlights on AI-detected passages
+   - 1 red highlight on plagiarism-matched passage
+3. Report panel (right), scrollable:
+   - AI Content Detection section:
+     - CircularGauge (semi-circle variant): 35%, "Moderate Risk" label, amber color
+     - 3 paragraph items: each with paragraph number, AI probability bar (85%, 12%, 67%), "Humanize Text" button on high-probability ones
+   - Divider
+   - Plagiarism Check section:
+     - "Similarity: 14%" header with progress bar
+     - "2 Matches Found" count
+     - Match cards: source title/URL, match percentage, excerpt text, two buttons: "Add Citation" (BookOpen) and "Paraphrase" (PenNib)
+All data is static. Real Copyleaks integration is future.
+Acceptance: Split layout, gauges display, paragraph breakdown shows, action buttons present. Both themes.
+
+## Task 46: Build Presentation Page
+Convert `ui-mockups-codex/presentation.html` to React. Replace stub at `src/app/(app)/presentation/page.tsx`. "use client" page.
+Layout: Outline sidebar (w-64) + Slide canvas (center, flex-1) + Design panel (w-72)
+1. Outline sidebar:
+   - ArrowLeft back to /studio
+   - "Outline" header + "+ Slide" button
+   - 3 slide thumbnails: small 16:9 cards with slide title, click to select (active = ring-2 ring-brand)
+   - Default slides: "Title Slide", "Introduction", "Methodology"
+2. Slide canvas (center):
+   - Mini toolbar: TextT (text tool), Columns (layout), "Export PPTX" button (disabled for now)
+   - Slide area: 16:9 aspect ratio container with white/dark background, editable contentEditable divs for title and body text
+   - "Last saved 2m ago" indicator
+   - Speaker Notes: textarea at bottom with placeholder "Add speaker notes..."
+3. Design panel (right):
+   - "Theme" header, 4 theme cards in 2x2 grid: Modern (indigo), Dark (slate), Thesis (stone), Vibrant (sky) — clicking changes slide background color
+   - "AI Tools" section: "Shorten Text" button (non-functional) and "Suggest Image" button (non-functional)
+Slide state managed client-side. "+ Slide" adds a new blank slide.
+Reference: docs/MASTER_REGISTRY.md "11 - Slides Generator"
+Acceptance: 3-panel layout, slide thumbnails navigate, text editable in canvas, theme cards change colors, + Slide works. Both themes.
+
+## Task 47: Build Settings Page
+Convert `ui-mockups-codex/settings.html` to React. Replace stub at `src/app/(app)/settings/page.tsx`. "use client" page.
+Layout: Settings nav sidebar (w-64, inside main content) + settings content area
+1. Settings nav: Tabs component rendered vertically as sidebar links:
+   - My Account, Plans & Billing (default), Usage Tracking, Preferences
+   - "Log Out" button at bottom (red text)
+2. My Account tab:
+   - Profile card: large avatar placeholder (UserCircle icon), name "Dr. Rahul Sharma", email, "Verified Student" badge (green)
+   - Edit profile: Name and Institution text inputs + "Save Changes" button (visual only)
+3. Plans & Billing tab (default view):
+   - Current plan GlassPanel: "Basic Plan" title, ACTIVE badge, "₹1,000/month", "Next billing: March 15, 2026", "Manage Plan" button
+   - Payment Method GlassPanel: Visa card icon, "•••• •••• •••• 4242", "Razorpay Secure" badge, "Update" button
+   - Invoice History: DataTable with Date, Description, Amount (₹), "Download" link per row. Use mockInvoices.
+4. Usage Tracking tab:
+   - 3 ProgressBar items: AI Tokens (12,450/50,000), Deep Searches (85/Unlimited with fair use note), Plagiarism Checks (3/10)
+   - Each shows label, used/limit text, colored bar
+5. Preferences tab:
+   - Theme: ThemeToggle component (reuse existing)
+   - Editor Font Size: select dropdown (14px, 16px, 18px, 20px)
+   - Default Citation Format: select dropdown (APA 7, MLA 9, Chicago, Vancouver)
+   - All selections stored in client state only
+Reference: docs/MASTER_REGISTRY.md "12 - Settings & Account"
+Acceptance: All 4 tabs render with full content. Tab switching works. Progress bars show. Both themes.
+
+## Task 48: Add Cmdk Command Palette
+Install cmdk (already in Task 29) and create `src/components/ui/command-palette.tsx`:
+1. Cmd+K (Mac) / Ctrl+K (Windows) opens the palette
+2. Glass morphism modal with search input
+3. Commands grouped:
+   - Navigation: Dashboard, Studio, Research, Library, Projects, Notebook, Settings
+   - Actions: New Project, Toggle Theme
+4. Fuzzy search filters commands as user types
+5. Enter or click executes command (navigation uses router.push, theme uses setTheme)
+6. Escape closes
+7. Add to root layout or app layout so it's available everywhere
+Acceptance: Cmd+K opens palette on any app page. Search works. Commands navigate correctly. Both themes.
+
+## Task 49: Mobile Responsive Sidebar
+Make the app sidebar responsive:
+1. On mobile (< md breakpoint), sidebar is hidden by default
+2. Add a hamburger menu button (List icon) in AppHeader for mobile
+3. Clicking hamburger opens sidebar as an overlay (fixed position, z-50, with backdrop)
+4. Clicking a nav link or the backdrop closes the sidebar
+5. Update AppSidebar to accept `open` and `onClose` props
+Acceptance: On mobile viewport, sidebar collapses behind hamburger. Navigation works. Overlay closes on nav or backdrop click.
+
+## Task 50: End-to-End Verification and Polish
+Comprehensive quality check:
+1. `npx tsc --noEmit` — zero errors
+2. `npm run build` — production build succeeds with no errors
+3. All 10 pages render without console errors
+4. Sidebar nav highlights the active page on every route
+5. Theme toggle works on every single page
+6. Cmd+K command palette works globally
+7. Deep Research returns real PubMed + Semantic Scholar results
+8. Studio editor: typing, formatting, and tab switching all work
+9. AI chat streams real responses (or shows graceful fallback if no API key)
+10. Notebook: file upload adds to list, chat works
+11. All pages look correct in both dark and light themes
+12. Mobile responsive: sidebar collapses on small viewports
+Fix ALL issues found during this check.
+Acceptance: All 12 checks pass. Zero TypeScript errors. Zero console errors. Production build succeeds.
