@@ -436,6 +436,7 @@ export const userReferences = pgTable(
   (table) => [
     index("idx_user_refs_user").on(table.userId),
     index("idx_user_refs_paper").on(table.paperId),
+    unique("user_references_user_paper_unique").on(table.userId, table.paperId),
   ]
 );
 

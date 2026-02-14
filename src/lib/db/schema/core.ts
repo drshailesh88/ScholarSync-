@@ -127,7 +127,7 @@ export const papers = pgTable(
     id: serial("id").primaryKey(),
     pubmed_id: text("pubmed_id").unique(),
     doi: text("doi").unique(),
-    semantic_scholar_id: text("semantic_scholar_id"),
+    semantic_scholar_id: text("semantic_scholar_id").unique(),
     arxiv_id: text("arxiv_id"),
     openalex_id: text("openalex_id"),
     title: text("title").notNull(),
@@ -153,10 +153,21 @@ export const papers = pgTable(
     retracted: boolean("retracted").default(false),
     open_access: boolean("open_access"),
     metadata: jsonb("metadata").default({}),
+    mesh_terms: jsonb("mesh_terms").default([]),
+    publication_types: jsonb("publication_types").default([]),
+    fields_of_study: jsonb("fields_of_study").default([]),
+    evidence_level: text("evidence_level"),
+    open_access_url: text("open_access_url"),
+    influential_citation_count: integer("influential_citation_count").default(0),
+    reference_count: integer("reference_count").default(0),
     created_at: timestamp("created_at").defaultNow(),
   },
   (table) => [
     index("idx_papers_source").on(table.source),
+    index("idx_papers_doi").on(table.doi),
+    index("idx_papers_pubmed_id").on(table.pubmed_id),
+    index("idx_papers_s2_id").on(table.semantic_scholar_id),
+    index("idx_papers_year").on(table.year),
   ]
 );
 
