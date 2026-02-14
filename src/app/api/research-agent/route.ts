@@ -2,7 +2,7 @@ import { streamText, tool, stepCountIs } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { z } from "zod";
 import { searchPubMed } from "@/lib/search/sources/pubmed";
-import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
+import { searchSemanticScholar, getSemanticScholarPaper } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { getRecommendationsForPaper } from "@/lib/search/sources/s2-recommendations";
 import { savePaper } from "@/lib/actions/papers";
@@ -208,15 +208,18 @@ export async function POST(req: Request) {
           }),
           execute: async ({ doi, pmid, s2Id }) => {
             if (s2Id) {
-              const data = await searchSemanticScholar(s2Id, { limit: 1 });
-              return data.results[0] || { error: "Paper not found" };
-            }
-            if (pmid) {
-              const data = await searchPubMed(pmid, { maxResults: 1 });
-              return data.results[0] || { error: "Paper not found" };
+              const paper = await getSemanticScholarPaper(s2Id);
+              return paper || { error: "Paper not found" };
             }
             if (doi) {
-              const data = await searchSemanticScholar(doi, { limit: 1 });
+              const paper = await getSemanticScholarPaper(`DOI:${doi}`);
+              return paper || { error: "Paper not found" };
+            }
+            if (pmid) {
+              const paper = await getSemanticScholarPaper(`PMID:${pmid}`);
+              if (paper) return paper;
+              // Fallback to PubMed search if S2 doesn't have this PMID
+              const data = await searchPubMed(pmid, { maxResults: 1 });
               return data.results[0] || { error: "Paper not found" };
             }
             return { error: "Provide at least one identifier" };

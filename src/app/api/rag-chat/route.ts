@@ -70,8 +70,8 @@ export async function POST(req: Request): Promise<Response> {
             });
           }
         }
-      } catch {
-        // Fallback to no-context mode if RAG fails
+      } catch (ragError) {
+        console.error("RAG retrieval failed, falling back to no-context mode:", ragError);
       }
     }
 

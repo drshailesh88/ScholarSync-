@@ -94,6 +94,24 @@ function mapPaper(paper: S2Paper): UnifiedSearchResult {
   };
 }
 
+/**
+ * Fetch a single paper by identifier using S2's direct lookup endpoint.
+ * Accepts a Semantic Scholar ID, or DOI/PMID with the appropriate prefix.
+ * E.g. "DOI:10.1234/...", "PMID:12345678", or a raw S2 paper ID.
+ */
+export async function getSemanticScholarPaper(
+  identifier: string
+): Promise<UnifiedSearchResult | null> {
+  const url = `https://api.semanticscholar.org/graph/v1/paper/${encodeURIComponent(identifier)}?fields=${S2_FIELDS}`;
+  try {
+    const res = await fetchWithRetry(url);
+    const paper: S2Paper = await res.json();
+    return mapPaper(paper);
+  } catch {
+    return null;
+  }
+}
+
 export async function searchSemanticScholar(
   query: string,
   options: S2SearchOptions = {}

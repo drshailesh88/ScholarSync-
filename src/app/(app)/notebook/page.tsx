@@ -24,6 +24,7 @@ import { GlassPanel } from "@/components/ui/glass-panel";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 import { getUserPapers, savePaper } from "@/lib/actions/papers";
 import { getExtractionForPaper, verifyExtraction } from "@/lib/actions/extraction";
+import { extractUploadedPdf } from "@/lib/actions/pdf-advanced";
 
 interface ChatMessage {
   id: string;
@@ -434,10 +435,10 @@ export default function NotebookPage(): React.ReactElement {
       setFiles((prev) => [...prev, newFile]);
 
       try {
-        // Extract PDF text
-        const formData = new FormData();
-        formData.append("file", file);
-        const extractRes = await fetch("/api/extract-pdf", { method: "POST", body: formData });
+        // Extract basic metadata from the PDF
+        const metaForm = new FormData();
+        metaForm.append("file", file);
+        const extractRes = await fetch("/api/extract-pdf", { method: "POST", body: metaForm });
         const extractData = await extractRes.json();
 
         if (!extractRes.ok) {
@@ -469,8 +470,22 @@ export default function NotebookPage(): React.ReactElement {
           body: pdfFormData,
         }).catch((err) => console.error("PDF storage failed:", err));
 
-        // Trigger embedding generation with proper error handling
+        // Extract and chunk PDF via Docling (creates real chunks in DB)
         try {
+          const doclingForm = new FormData();
+          doclingForm.append("file", file);
+          doclingForm.append("paperId", String(paperId));
+          const doclingResult = await extractUploadedPdf(doclingForm);
+
+          if (doclingResult.chunksCreated === 0) {
+            console.error("Docling extraction produced zero chunks");
+            setFiles((prev) =>
+              prev.map((f) => (f.id === tempId ? { ...f, status: "embed_failed" } : f))
+            );
+            continue;
+          }
+
+          // Trigger embedding generation on the newly-created chunks
           const embedRes = await fetch("/api/embed", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -486,7 +501,8 @@ export default function NotebookPage(): React.ReactElement {
               prev.map((f) => (f.id === tempId ? { ...f, status: "ready" } : f))
             );
           }
-        } catch {
+        } catch (err) {
+          console.error("PDF extraction/embedding failed:", err);
           setFiles((prev) =>
             prev.map((f) => (f.id === tempId ? { ...f, status: "embed_failed" } : f))
           );

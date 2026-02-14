@@ -7,6 +7,7 @@ import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
 import { getEvidenceLevel } from "@/lib/search/evidence-level";
 import { augmentQuery } from "@/lib/ai/query-augment";
+import { batchLookupUnpaywall } from "@/lib/search/sources/unpaywall";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -101,6 +102,29 @@ export async function GET(req: Request) {
 
     // Step 4: Rerank (if Cohere key available)
     fused = await rerankResults(q, fused);
+
+    // Step 4b: Enrich with Unpaywall OA data for papers missing PDF URLs
+    const doisToLookup = fused
+      .filter((r) => r.doi && !r.openAccessPdfUrl)
+      .map((r) => r.doi!);
+    if (doisToLookup.length > 0) {
+      try {
+        const unpaywallMap = await batchLookupUnpaywall(doisToLookup);
+        fused = fused.map((r) => {
+          if (r.doi && unpaywallMap.has(r.doi)) {
+            const oa = unpaywallMap.get(r.doi)!;
+            return {
+              ...r,
+              isOpenAccess: r.isOpenAccess || oa.isOpenAccess,
+              openAccessPdfUrl: r.openAccessPdfUrl || oa.pdfUrl,
+            };
+          }
+          return r;
+        });
+      } catch (err) {
+        console.error("Unpaywall enrichment failed:", err);
+      }
+    }
 
     // Step 5: Apply evidence levels
     fused = fused.map((result) => {
