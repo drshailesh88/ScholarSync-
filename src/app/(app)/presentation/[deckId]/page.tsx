@@ -11,6 +11,7 @@ import {
   createSlide,
   updateSlide as updateSlideAction,
   deleteSlide as deleteSlideAction,
+  reorderSlides,
 } from "@/lib/actions/presentations";
 import { PRESET_THEMES } from "@/types/presentation";
 import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
@@ -112,6 +113,18 @@ export default function DeckEditorPage() {
       }
       return filtered;
     });
+  }
+
+  async function handleReorderSlides(slideIds: number[]) {
+    // Optimistically reorder local state
+    const reordered = slideIds
+      .map((id) => slides.find((s) => s.id === id))
+      .filter(Boolean)
+      .map((s, i) => ({ ...s!, sortOrder: i }));
+    setSlides(reordered);
+
+    // Persist to DB
+    await reorderSlides(deckId, slideIds);
   }
 
   function handleThemeChange(key: string, config: ThemeConfig) {
@@ -229,6 +242,7 @@ export default function DeckEditorPage() {
           onSelectSlide={setActiveSlideId}
           onAddSlide={handleAddSlide}
           onDeleteSlide={handleDeleteSlide}
+          onReorderSlides={handleReorderSlides}
         />
       </div>
 

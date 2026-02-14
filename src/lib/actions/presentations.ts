@@ -6,7 +6,7 @@ import {
   slides,
   presentationCoachEvaluations,
 } from "@/lib/db/schema";
-import { eq, and, desc, asc } from "drizzle-orm";
+import { eq, and, desc, asc, count, sql } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import type {
   ContentBlock,
@@ -78,11 +78,36 @@ export async function getDecksForProject(projectId: number) {
 
 export async function getUserDecks() {
   const userId = await getCurrentUserId();
-  return db
-    .select()
+
+  const slideCountSq = db
+    .select({
+      deckId: slides.deckId,
+      slideCount: count(slides.id).as("slide_count"),
+    })
+    .from(slides)
+    .groupBy(slides.deckId)
+    .as("slide_counts");
+
+  const rows = await db
+    .select({
+      id: slideDecks.id,
+      title: slideDecks.title,
+      description: slideDecks.description,
+      theme: slideDecks.theme,
+      audienceType: slideDecks.audienceType,
+      generationStatus: slideDecks.generationStatus,
+      themeConfig: slideDecks.themeConfig,
+      totalSlides: sql<number>`coalesce(${slideCountSq.slideCount}, ${slideDecks.totalSlides}, 0)`.as("total_slides_live"),
+      sourceType: slideDecks.sourceType,
+      createdAt: slideDecks.createdAt,
+      updatedAt: slideDecks.updatedAt,
+    })
     .from(slideDecks)
+    .leftJoin(slideCountSq, eq(slideDecks.id, slideCountSq.deckId))
     .where(eq(slideDecks.userId, userId))
     .orderBy(desc(slideDecks.updatedAt));
+
+  return rows;
 }
 
 export async function updateDeck(

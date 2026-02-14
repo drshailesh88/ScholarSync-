@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Plus, Trash, DotsSixVertical } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { SlideRenderer } from "./slide-renderer";
@@ -23,6 +23,7 @@ interface SlideOutlineSidebarProps {
   onSelectSlide: (id: number) => void;
   onAddSlide: () => void;
   onDeleteSlide: (id: number) => void;
+  onReorderSlides?: (slideIds: number[]) => void;
 }
 
 export function SlideOutlineSidebar({
@@ -33,8 +34,42 @@ export function SlideOutlineSidebar({
   onSelectSlide,
   onAddSlide,
   onDeleteSlide,
+  onReorderSlides,
 }: SlideOutlineSidebarProps) {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
+  const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+  const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+  const dragNodeRef = useRef<HTMLDivElement | null>(null);
+
+  function handleDragStart(e: React.DragEvent, idx: number) {
+    setDraggedIdx(idx);
+    dragNodeRef.current = e.currentTarget as HTMLDivElement;
+    e.dataTransfer.effectAllowed = "move";
+    // Make drag image slightly transparent
+    if (dragNodeRef.current) {
+      e.dataTransfer.setDragImage(dragNodeRef.current, 0, 0);
+    }
+  }
+
+  function handleDragOver(e: React.DragEvent, idx: number) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    if (draggedIdx === null || draggedIdx === idx) return;
+    setDragOverIdx(idx);
+  }
+
+  function handleDragEnd() {
+    if (draggedIdx !== null && dragOverIdx !== null && draggedIdx !== dragOverIdx) {
+      const reordered = [...slides];
+      const [moved] = reordered.splice(draggedIdx, 1);
+      reordered.splice(dragOverIdx, 0, moved);
+      const newIds = reordered.map((s) => s.id);
+      onReorderSlides?.(newIds);
+    }
+    setDraggedIdx(null);
+    setDragOverIdx(null);
+    dragNodeRef.current = null;
+  }
 
   return (
     <aside className="w-64 shrink-0 glass-panel border-r border-border flex flex-col">
@@ -54,7 +89,15 @@ export function SlideOutlineSidebar({
         {slides.map((slide, idx) => (
           <div
             key={slide.id}
-            className="relative group"
+            className={cn(
+              "relative group",
+              draggedIdx === idx && "opacity-40",
+              dragOverIdx === idx && draggedIdx !== null && "ring-2 ring-brand rounded-lg"
+            )}
+            draggable
+            onDragStart={(e) => handleDragStart(e, idx)}
+            onDragOver={(e) => handleDragOver(e, idx)}
+            onDragEnd={handleDragEnd}
             onMouseEnter={() => setHoveredId(slide.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
@@ -78,7 +121,11 @@ export function SlideOutlineSidebar({
                   scale={0.35}
                 />
               </div>
-              <div className="px-2 py-1.5 bg-surface">
+              <div className="px-2 py-1.5 bg-surface flex items-center gap-1">
+                <DotsSixVertical
+                  size={10}
+                  className="text-ink-muted/50 cursor-grab shrink-0"
+                />
                 <p className="text-[10px] text-ink-muted truncate">
                   {idx + 1}. {slide.title || "Untitled"}
                 </p>
