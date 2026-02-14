@@ -18,7 +18,7 @@ const ragChatRequestSchema = z.object({
     .min(1, "At least one message is required")
     .max(100, "Too many messages"),
   paperIds: z.array(z.number().int().positive()).optional(),
-  mode: z.enum(["notebook", "general"]).optional(),
+  mode: z.enum(["notebook", "general", "learn"]).optional(),
   ragConfig: z
     .object({
       useMultiQuery: z.boolean().optional(),
@@ -100,10 +100,15 @@ export async function POST(req: Request): Promise<Response> {
     }
 
     // Build system prompt with source-grounded context
-    let systemPrompt = `You are ScholarSync, an AI research assistant for academic writing. You help students and researchers analyze their papers and answer questions.`;
+    let systemPrompt: string;
 
-    if (mode === "notebook") {
-      systemPrompt += ` You are in Notebook mode — analyzing uploaded research sources.`;
+    if (mode === "learn") {
+      systemPrompt = `You are ScholarSync in Learn mode — a Socratic research tutor. Your goal is to help the student develop critical thinking skills about their research sources. Use the retrieved passages to formulate probing questions rather than giving direct answers. Challenge their assumptions, ask them to compare findings across sources, and guide them to discover insights themselves. When referencing sources, still use [1], [2] citation format so the student can follow along.`;
+    } else {
+      systemPrompt = `You are ScholarSync, an AI research assistant for academic writing. You help students and researchers analyze their papers and answer questions.`;
+      if (mode === "notebook") {
+        systemPrompt += ` You are in Notebook mode — analyzing uploaded research sources.`;
+      }
     }
 
     if (contextChunks.length > 0) {

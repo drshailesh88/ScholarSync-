@@ -12,7 +12,7 @@ const chatRequestSchema = z.object({
     )
     .min(1, "At least one message is required")
     .max(100, "Too many messages"),
-  mode: z.enum(["learn", "assist"]).optional().default("assist"),
+  mode: z.enum(["learn", "assist", "notebook"]).optional().default("assist"),
 });
 
 export async function POST(req: Request) {
@@ -36,10 +36,12 @@ export async function POST(req: Request) {
     }
     const { messages, mode } = parsed.data;
 
-    const systemPrompt =
-      mode === "learn"
-        ? "You are a Socratic research tutor. Never give direct answers. Ask probing questions to help the student think critically about their research. Challenge assumptions. Guide them to discover insights themselves."
-        : "You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone.";
+    const systemPromptMap: Record<string, string> = {
+      learn: "You are a Socratic research tutor. Never give direct answers. Ask probing questions to help the student think critically about their research. Challenge assumptions. Guide them to discover insights themselves.",
+      notebook: "You are ScholarSync, an AI research assistant in Notebook mode. Help users analyze, compare, and synthesize information from their uploaded research papers. Be precise, maintain academic tone, and help with literature review tasks.",
+      assist: "You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone.",
+    };
+    const systemPrompt = systemPromptMap[mode] || systemPromptMap.assist;
 
     const result = streamText({
       model: getModel(),

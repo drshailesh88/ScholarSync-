@@ -43,6 +43,7 @@ export async function createConversation(data: {
   mode: "chat" | "learn" | "draft" | "research" | "notebook" | "statistics" | "integrity" | "general";
   project_id?: number;
   title?: string;
+  paper_ids?: number[];
 }) {
   const userId = await getCurrentUserId();
   const [convo] = await db
@@ -52,9 +53,26 @@ export async function createConversation(data: {
       mode: data.mode,
       project_id: data.project_id,
       title: data.title || "New Conversation",
+      paper_ids: data.paper_ids || [],
     })
     .returning();
   return convo;
+}
+
+export async function updateConversationPaperIds(
+  conversationId: number,
+  paperIds: number[]
+) {
+  const userId = await getCurrentUserId();
+  await db
+    .update(conversations)
+    .set({ paper_ids: paperIds, updated_at: new Date() })
+    .where(
+      and(
+        eq(conversations.id, conversationId),
+        eq(conversations.user_id, userId)
+      )
+    );
 }
 
 export async function addMessage(data: {
@@ -64,6 +82,7 @@ export async function addMessage(data: {
   input_tokens?: number;
   output_tokens?: number;
   model?: string;
+  retrieved_chunks?: unknown;
 }) {
   const [msg] = await db
     .insert(messages)
@@ -74,6 +93,7 @@ export async function addMessage(data: {
       input_tokens: data.input_tokens,
       output_tokens: data.output_tokens,
       model: data.model,
+      retrieved_chunks: data.retrieved_chunks || null,
     })
     .returning();
 

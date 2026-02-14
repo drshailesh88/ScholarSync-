@@ -17,11 +17,20 @@ import {
   CheckCircle,
   CircleNotch,
   ShieldCheck,
+  GraduationCap,
+  Lightning,
+  ClockCounterClockwise,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
-import { createConversation, addMessage } from "@/lib/actions/conversations";
+import {
+  createConversation,
+  addMessage,
+  getConversations,
+  getConversation,
+  updateConversationPaperIds,
+} from "@/lib/actions/conversations";
 import { getUserPapers, savePaper } from "@/lib/actions/papers";
 import { getExtractionForPaper, verifyExtraction } from "@/lib/actions/extraction";
 
@@ -69,11 +78,27 @@ interface ExtractionData {
   custom_extractions: Record<string, string | undefined> | null;
 }
 
-const suggestions = [
-  "Summarize Key Themes",
-  "Find Contradictions",
-  "Compare Methodologies",
-];
+type NotebookMode = "research" | "learn";
+
+interface ConversationSummary {
+  id: number;
+  title: string | null;
+  mode: string;
+  updatedAt: Date | null;
+}
+
+const suggestions: Record<NotebookMode, string[]> = {
+  research: [
+    "Summarize Key Themes",
+    "Find Contradictions",
+    "Compare Methodologies",
+  ],
+  learn: [
+    "Quiz me on these papers",
+    "What assumptions should I question?",
+    "Help me find gaps in this research",
+  ],
+};
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -186,7 +211,7 @@ function ExtractionCard({
 
 export default function NotebookPage(): React.ReactElement {
   const [files, setFiles] = useState<SourceFile[]>([]);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showUrlInput, setShowUrlInput] = useState(false);
@@ -197,11 +222,14 @@ export default function NotebookPage(): React.ReactElement {
   const [extractingPapers, setExtractingPapers] = useState<Set<number>>(new Set());
   const [extractions, setExtractions] = useState<Map<number, ExtractionData>>(new Map());
   const [expandedExtraction, setExpandedExtraction] = useState<number | null>(null);
+  const [notebookMode, setNotebookMode] = useState<NotebookMode>("research");
+  const [pastConversations, setPastConversations] = useState<ConversationSummary[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const conversationIdRef = useRef<number | null>(null);
 
-  // Load user's papers from library on mount
+  // Load user's papers from library and past conversations on mount
   useEffect(() => {
     getUserPapers()
       .then((papers) => {
@@ -234,11 +262,81 @@ export default function NotebookPage(): React.ReactElement {
         }
       })
       .catch(() => {});
+
+    // Load past notebook conversations
+    getConversations("notebook")
+      .then((convos) => {
+        setPastConversations(
+          convos.slice(0, 20).map((c) => ({
+            id: c.id,
+            title: c.title,
+            mode: c.mode,
+            updatedAt: c.updated_at,
+          }))
+        );
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [chatMessages]);
+
+  const loadConversation = useCallback(async (convoId: number) => {
+    try {
+      const convo = await getConversation(convoId);
+      if (!convo) return;
+      conversationIdRef.current = convo.id;
+      const loaded: ChatMessage[] = convo.messages.map((m) => ({
+        id: `msg_${m.id}`,
+        role: m.role as "user" | "assistant",
+        content: m.content,
+        sources: m.retrieved_chunks
+          ? (m.retrieved_chunks as SourceMetadata[])
+          : undefined,
+      }));
+      setChatMessages(loaded);
+
+      // Restore sources panel from last assistant message with sources
+      const lastWithSources = [...loaded]
+        .reverse()
+        .find((m) => m.role === "assistant" && m.sources && m.sources.length > 0);
+      if (lastWithSources?.sources) {
+        setCurrentSources(lastWithSources.sources);
+        setShowSourcesPanel(true);
+      }
+
+      // If conversation had paper_ids stored, select those papers
+      const storedPaperIds = convo.paper_ids as number[] | null;
+      if (storedPaperIds && storedPaperIds.length > 0) {
+        setFiles((prev) =>
+          prev.map((f) => ({
+            ...f,
+            selected: f.paperId ? storedPaperIds.includes(f.paperId) : false,
+          }))
+        );
+      }
+
+      // Determine mode from conversation record
+      if (convo.mode === "learn") {
+        setNotebookMode("learn");
+      } else {
+        setNotebookMode("research");
+      }
+
+      setShowHistory(false);
+    } catch (err) {
+      console.error("Failed to load conversation:", err);
+    }
+  }, []);
+
+  const startNewConversation = useCallback(() => {
+    conversationIdRef.current = null;
+    setChatMessages([]);
+    setCurrentSources([]);
+    setShowSourcesPanel(false);
+    setHighlightedSource(null);
+  }, []);
 
   const handleExtractFacts = useCallback(async (paperId: number) => {
     setExtractingPapers((prev) => new Set(prev).add(paperId));
@@ -333,38 +431,49 @@ export default function NotebookPage(): React.ReactElement {
     const msg = text || input.trim();
     if (!msg || isLoading) return;
     const userMsg: ChatMessage = { id: `msg_${Date.now()}`, role: "user", content: msg };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
+    const newMessages = [...chatMessages, userMsg];
+    setChatMessages(newMessages);
     setInput("");
     setIsLoading(true);
+
+    // Collect paper IDs from selected sources for RAG retrieval
+    const selectedPaperIds = files
+      .filter((f) => f.selected && f.paperId)
+      .map((f) => f.paperId as number);
+
+    // Determine the conversation mode and API mode to send
+    const conversationMode = notebookMode === "learn" ? "learn" as const : "notebook" as const;
+    const apiMode = notebookMode === "learn" ? "learn" : "notebook";
 
     try {
       // Create conversation on first message
       if (!conversationIdRef.current) {
-        const convo = await createConversation({ mode: "notebook", title: msg.slice(0, 80) });
+        const convo = await createConversation({
+          mode: conversationMode,
+          title: msg.slice(0, 80),
+          paper_ids: selectedPaperIds,
+        });
         conversationIdRef.current = convo.id;
+      } else {
+        // Update paper_ids on existing conversation if selection changed
+        updateConversationPaperIds(conversationIdRef.current, selectedPaperIds).catch(() => {});
       }
 
       // Persist user message
       addMessage({ conversation_id: conversationIdRef.current, role: "user", content: msg }).catch(() => {});
-
-      // Collect paper IDs from selected sources for RAG retrieval
-      const selectedPaperIds = files
-        .filter((f) => f.selected && f.paperId)
-        .map((f) => f.paperId as number);
 
       const res = await fetch(selectedPaperIds.length > 0 ? "/api/rag-chat" : "/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
-          mode: "notebook",
+          mode: apiMode,
           ...(selectedPaperIds.length > 0 ? { paperIds: selectedPaperIds } : {}),
         }),
       });
 
       if (!res.ok) {
-        setMessages((prev) => [
+        setChatMessages((prev) => [
           ...prev,
           { id: `err_${Date.now()}`, role: "assistant", content: "Unable to connect to AI. Please check your AI provider API key configuration." },
         ]);
@@ -394,29 +503,34 @@ export default function NotebookPage(): React.ReactElement {
         content: "",
         sources,
       };
-      setMessages((prev) => [...prev, assistantMsg]);
+      setChatMessages((prev) => [...prev, assistantMsg]);
 
       const decoder = new TextDecoder();
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         assistantMsg.content += decoder.decode(value, { stream: true });
-        setMessages((prev) => prev.map((m) => (m.id === assistantMsg.id ? { ...m, content: assistantMsg.content } : m)));
+        setChatMessages((prev) => prev.map((m) => (m.id === assistantMsg.id ? { ...m, content: assistantMsg.content } : m)));
       }
 
-      // Persist assistant response
+      // Persist assistant response with retrieved_chunks for citation replay
       if (conversationIdRef.current && assistantMsg.content) {
-        addMessage({ conversation_id: conversationIdRef.current, role: "assistant", content: assistantMsg.content }).catch(() => {});
+        addMessage({
+          conversation_id: conversationIdRef.current,
+          role: "assistant",
+          content: assistantMsg.content,
+          retrieved_chunks: sources.length > 0 ? sources : undefined,
+        }).catch(() => {});
       }
     } catch {
-      setMessages((prev) => [
+      setChatMessages((prev) => [
         ...prev,
         { id: `err_${Date.now()}`, role: "assistant", content: "Something went wrong. Please try again." },
       ]);
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, messages, files]);
+  }, [input, isLoading, chatMessages, files, notebookMode]);
 
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
@@ -510,6 +624,7 @@ export default function NotebookPage(): React.ReactElement {
   };
 
   const selectedCount = files.filter((f) => f.selected).length;
+  const activeSuggestions = suggestions[notebookMode];
 
   return (
     <div className="flex gap-6 h-[calc(100vh-7rem)]">
@@ -523,6 +638,74 @@ export default function NotebookPage(): React.ReactElement {
             <h2 className="font-semibold text-ink text-sm">Notebook Sources</h2>
             <span className="px-2 py-0.5 rounded-full bg-surface-raised text-xs text-ink-muted">{files.length}</span>
           </div>
+        </div>
+
+        {/* Mode Toggle */}
+        <div className="flex rounded-xl bg-surface-raised p-1 mb-3">
+          <button
+            onClick={() => setNotebookMode("research")}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+              notebookMode === "research"
+                ? "bg-brand text-white shadow-sm"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            <Lightning size={14} />
+            Research
+          </button>
+          <button
+            onClick={() => setNotebookMode("learn")}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+              notebookMode === "learn"
+                ? "bg-brand text-white shadow-sm"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            <GraduationCap size={14} />
+            Learn
+          </button>
+        </div>
+
+        {/* Conversation History */}
+        <div className="mb-3">
+          <button
+            onClick={() => setShowHistory((v) => !v)}
+            className="flex items-center gap-2 text-xs text-ink-muted hover:text-ink transition-colors w-full"
+          >
+            <ClockCounterClockwise size={14} />
+            <span>Past conversations</span>
+            {showHistory ? <CaretUp size={10} className="ml-auto" /> : <CaretDown size={10} className="ml-auto" />}
+          </button>
+          {showHistory && (
+            <div className="mt-1.5 space-y-1 max-h-32 overflow-y-auto">
+              <button
+                onClick={startNewConversation}
+                className="w-full text-left px-2 py-1.5 rounded-lg text-xs text-brand hover:bg-brand/10 transition-colors font-medium"
+              >
+                + New conversation
+              </button>
+              {pastConversations.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => loadConversation(c.id)}
+                  className={cn(
+                    "w-full text-left px-2 py-1.5 rounded-lg text-xs transition-colors truncate",
+                    conversationIdRef.current === c.id
+                      ? "bg-brand/10 text-brand"
+                      : "text-ink-muted hover:text-ink hover:bg-surface-raised/50"
+                  )}
+                  title={c.title || "Untitled"}
+                >
+                  {c.title || "Untitled"}
+                </button>
+              ))}
+              {pastConversations.length === 0 && (
+                <p className="text-[10px] text-ink-muted px-2 py-1">No past conversations</p>
+              )}
+            </div>
+          )}
         </div>
 
         <button
@@ -632,16 +815,32 @@ export default function NotebookPage(): React.ReactElement {
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col">
-        <h2 className="text-lg font-semibold text-ink mb-4">Notebook Chat</h2>
+        <div className="flex items-center gap-3 mb-4">
+          <h2 className="text-lg font-semibold text-ink">
+            {notebookMode === "learn" ? "Learn Mode" : "Notebook Chat"}
+          </h2>
+          {notebookMode === "learn" && (
+            <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-[10px] text-amber-600 font-medium">
+              Socratic tutoring
+            </span>
+          )}
+        </div>
 
         <div className="flex-1 overflow-y-auto space-y-3">
-          {messages.length === 0 && (
+          {chatMessages.length === 0 && (
             <GlassPanel className="p-6 text-center">
-              <p className="text-sm text-ink mb-4">
-                Ready to analyze {selectedCount} source{selectedCount !== 1 ? "s" : ""}
+              <p className="text-sm text-ink mb-2">
+                {notebookMode === "learn"
+                  ? "Learn mode: I'll ask you guiding questions instead of giving direct answers"
+                  : `Ready to analyze ${selectedCount} source${selectedCount !== 1 ? "s" : ""}`}
+              </p>
+              <p className="text-xs text-ink-muted mb-4">
+                {notebookMode === "learn"
+                  ? "Select your papers and start exploring"
+                  : "Select sources on the left, then ask a question"}
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
-                {suggestions.map((s) => (
+                {activeSuggestions.map((s) => (
                   <button key={s} onClick={() => sendMessage(s)} className="px-3 py-1.5 rounded-full text-xs font-medium bg-brand/10 text-brand hover:bg-brand/20 transition-colors">
                     {s}
                   </button>
@@ -650,7 +849,7 @@ export default function NotebookPage(): React.ReactElement {
             </GlassPanel>
           )}
 
-          {messages.map((msg) => (
+          {chatMessages.map((msg) => (
             <div key={msg.id} className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
               {msg.role === "assistant" && (
                 <div className="w-7 h-7 rounded-full bg-brand/20 flex items-center justify-center shrink-0 mt-0.5">
@@ -730,7 +929,7 @@ export default function NotebookPage(): React.ReactElement {
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about your sources..."
+              placeholder={notebookMode === "learn" ? "What do you want to explore?" : "Ask about your sources..."}
               className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none"
             />
             <button type="submit" disabled={isLoading || !input.trim()} className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50">
