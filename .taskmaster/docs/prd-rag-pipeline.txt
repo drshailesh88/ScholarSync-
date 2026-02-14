@@ -1,0 +1,1170 @@
+# ScholarSync — Advanced RAG Pipeline + Infrastructure Fixes PRD
+# Version: 1.0
+# Scope: Workstream A (12 items) + Workstream D (6 items)
+# Dependencies: None — pure TypeScript, no new infrastructure
+
+---
+
+## Context
+
+ScholarSync's RAG chat currently does: user query → 1 embedding → 5 nearest chunks (vector only) → plain text answer with no citations. This PRD upgrades it to a 9-strategy pipeline that matches NotebookLM quality, plus fixes critical infrastructure gaps.
+
+The paper-fetching overhaul (separate autonomous agent) is building `src/lib/search/` for search-result-level operations. This PRD builds `src/lib/rag/` for CHUNK-level operations. These are different systems operating at different granularities — search results are papers, RAG chunks are paragraphs within papers.
+
+---
+
+## Current State
+
+### RAG Chat (`src/app/api/rag-chat/route.ts` — 62 lines)
+```
+1. Take user question as-is
+2. Generate ONE embedding (OpenAI text-embedding-3-small)
+3. SELECT ... ORDER BY embedding <=> query_vector LIMIT 5
+4. Stuff 5 chunks into system prompt as plain text
+5. StreamText with Claude → plain answer (no citations)
+```
+
+### What's Wrong
+- No query enhancement → misses chunks using different terminology
+- Vector-only search → misses exact keyword matches (drug names, trial acronyms)
+- No reranking → irrelevant chunks waste context window
+- No source grounding → user can't verify or cite any claim
+- Only 5 chunks → may miss important context
+- Only works on uploaded PDFs → saved papers from search are invisible
+- Section type ignored → can't filter to "only Results" or "only Methods"
+
+### Files That Exist
+- `src/lib/actions/embeddings.ts` — `embedPaperChunks()`, `searchSimilarChunks()`
+- `src/lib/actions/pdf.ts` — PDF text extraction + chunking (500-word, 50-word overlap)
+- `src/app/api/rag-chat/route.ts` — Basic RAG endpoint
+- `src/app/api/embed/route.ts` — Embedding trigger endpoint
+- `src/app/api/extract-pdf/route.ts` — PDF extraction with pdf-parse
+- `src/lib/actions/documents.ts` — Has `autoSaveVersion()` function (defined but NEVER called)
+- `src/app/(app)/notebook/page.tsx` — Embedding triggered with `.catch(() => {})` (silent failure)
+- `src/app/(app)/studio/page.tsx` — TiptapEditor rendered without onUpdate callback
+
+### Schema State
+- `paper_chunks` table has: `text`, `embedding vector(1536)`, `section_type`, `page_number`, `metadata JSONB`
+- `paper_chunks` does NOT have a tsvector column for full-text search
+- `papers` table has GIN index on `to_tsvector('english', title || abstract)` but it's not used in code
+- `search_queries` table exists in schema but is NEVER written to
+- `paper_extractions` table exists but nothing populates it
+
+---
+
+## Workstream A: Advanced RAG Pipeline
+
+### A1. Multi-Query Generation
+
+**File:** `src/lib/rag/query-enhancer.ts`
+
+Generate 3 rephrased versions of the user's question using different medical terminology, then search ALL variations.
+
+```typescript
+import { generateObject } from "ai";
+import { getSmallModel } from "@/lib/ai/models";
+import { z } from "zod";
+
+export async function generateMultiQueries(query: string): Promise<string[]> {
+  const { object } = await generateObject({
+    model: getSmallModel(),
+    schema: z.object({
+      queries: z.array(z.string()).length(3).describe(
+        "3 variations of the query using different medical/scientific terminology"
+      ),
+    }),
+    system: "You are a medical research librarian. Generate query variations that use different terminology, synonyms, and phrasings to capture the same concept. Each variation should be under 15 words. Focus on medical synonyms (e.g., 'heart attack' → 'myocardial infarction', 'blood thinners' → 'anticoagulants').",
+    prompt: query,
+  });
+  return [query, ...object.queries]; // Original + 3 variations = 4 total
+}
+```
+
+**Impact:** 30-40% more relevant chunks retrieved.
+**Cost:** ~$0.0001 per query (uses getSmallModel).
+
+---
+
+### A2. HyDE (Hypothetical Document Embeddings)
+
+**File:** `src/lib/rag/hyde.ts`
+
+Before searching, ask the LLM to write a hypothetical answer. Embed THAT instead of the raw query — its language patterns are closer to actual paper text.
+
+```typescript
+import { generateText } from "ai";
+import { getSmallModel } from "@/lib/ai/models";
+
+export async function generateHypotheticalAnswer(query: string): Promise<string> {
+  const { text } = await generateText({
+    model: getSmallModel(),
+    system: "You are a medical textbook. Write a brief, factual 2-3 sentence answer to this research question. Use precise medical terminology. Do not hedge or qualify — state facts directly as a textbook would.",
+    prompt: query,
+    maxTokens: 200,
+  });
+  return text;
+}
+```
+
+**Impact:** Especially powerful for medical queries where terminology matters.
+**Cost:** ~$0.0002 per query.
+
+---
+
+### A3. Hybrid Search (Vector + PostgreSQL Full-Text Search)
+
+**File:** `src/lib/rag/search.ts`
+
+Add keyword-based full-text search alongside vector search. Vector captures meaning ("mortality" ↔ "death rate"), keywords capture exact terms ("DAPA-HF", "p<0.001").
+
+**Schema change required:** Add tsvector column to `paper_chunks` table.
+
+In `src/lib/db/schema/core.ts`, update the `paperChunks` table definition to add:
+```typescript
+tsv: text("tsv"), // Will be populated by a generated column or trigger — for now, store the tsvector-ready text
+```
+
+HOWEVER — Drizzle ORM doesn't natively support PostgreSQL `GENERATED ALWAYS AS` columns or `tsvector` type. So we handle this differently:
+
+**Approach:** Use raw SQL for full-text search queries. The tsvector will be computed on-the-fly using `to_tsvector('english', text)` with a GIN index. When the database is set up, run this migration:
+
+```sql
+-- Migration to add full-text search to paper_chunks
+CREATE INDEX IF NOT EXISTS idx_paper_chunks_fts
+  ON paper_chunks USING gin(to_tsvector('english', text));
+```
+
+For now, create a migration file: `database/migrations/001_add_chunks_fts.sql`
+
+**Search functions:**
+
+```typescript
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
+import { generateEmbedding } from "@/lib/ai/embeddings";
+
+interface ChunkResult {
+  id: number;
+  paper_id: number;
+  text: string;
+  chunk_index: number;
+  section_type: string | null;
+  page_number: number | null;
+  score: number;
+}
+
+/**
+ * Vector similarity search on paper_chunks using pgvector.
+ */
+export async function searchVector(
+  queryText: string,
+  paperIds: number[],
+  limit: number = 20,
+  filters?: { sectionType?: string }
+): Promise<ChunkResult[]> {
+  const embedding = await generateEmbedding(queryText);
+  const vectorStr = `[${embedding.join(",")}]`;
+
+  let filterClause = sql`embedding IS NOT NULL`;
+  if (paperIds.length > 0) {
+    filterClause = sql`embedding IS NOT NULL AND paper_id = ANY(${paperIds})`;
+  }
+  if (filters?.sectionType) {
+    filterClause = sql`${filterClause} AND section_type = ${filters.sectionType}`;
+  }
+
+  const results = await db.execute(
+    sql`SELECT id, paper_id, text, chunk_index, section_type, page_number,
+            1 - (embedding <=> ${vectorStr}::vector) as score
+        FROM paper_chunks
+        WHERE ${filterClause}
+        ORDER BY embedding <=> ${vectorStr}::vector
+        LIMIT ${limit}`
+  );
+
+  return results as unknown as ChunkResult[];
+}
+
+/**
+ * Full-text keyword search on paper_chunks using PostgreSQL tsvector.
+ */
+export async function searchKeyword(
+  query: string,
+  paperIds: number[],
+  limit: number = 20
+): Promise<ChunkResult[]> {
+  let filterClause = sql`to_tsvector('english', text) @@ plainto_tsquery('english', ${query})`;
+  if (paperIds.length > 0) {
+    filterClause = sql`${filterClause} AND paper_id = ANY(${paperIds})`;
+  }
+
+  const results = await db.execute(
+    sql`SELECT id, paper_id, text, chunk_index, section_type, page_number,
+            ts_rank(to_tsvector('english', text), plainto_tsquery('english', ${query})) as score
+        FROM paper_chunks
+        WHERE ${filterClause}
+        ORDER BY score DESC
+        LIMIT ${limit}`
+  );
+
+  return results as unknown as ChunkResult[];
+}
+```
+
+**Impact:** 20-30% improvement for queries containing proper nouns, drug names, trial acronyms.
+**Cost:** $0 (runs in PostgreSQL).
+
+---
+
+### A4. Reciprocal Rank Fusion for Chunks
+
+**File:** `src/lib/rag/fusion.ts`
+
+Combine vector and keyword chunk results. Documents appearing in BOTH lists get boosted.
+
+```typescript
+import type { ChunkResult } from "./search";
+
+export interface FusedChunk extends ChunkResult {
+  rrfScore: number;
+  vectorRank?: number;
+  keywordRank?: number;
+  sources: ("vector" | "keyword")[];
+}
+
+export function reciprocalRankFusion(
+  vectorResults: ChunkResult[],
+  keywordResults: ChunkResult[],
+  k: number = 60
+): FusedChunk[] {
+  const scores = new Map<number, FusedChunk>();
+
+  vectorResults.forEach((chunk, i) => {
+    const existing = scores.get(chunk.id);
+    if (existing) {
+      existing.rrfScore += 1 / (k + i + 1);
+      existing.vectorRank = i + 1;
+      existing.sources.push("vector");
+    } else {
+      scores.set(chunk.id, {
+        ...chunk,
+        rrfScore: 1 / (k + i + 1),
+        vectorRank: i + 1,
+        sources: ["vector"],
+      });
+    }
+  });
+
+  keywordResults.forEach((chunk, i) => {
+    const existing = scores.get(chunk.id);
+    if (existing) {
+      existing.rrfScore += 1 / (k + i + 1);
+      existing.keywordRank = i + 1;
+      if (!existing.sources.includes("keyword")) existing.sources.push("keyword");
+    } else {
+      scores.set(chunk.id, {
+        ...chunk,
+        rrfScore: 1 / (k + i + 1),
+        keywordRank: i + 1,
+        sources: ["keyword"],
+      });
+    }
+  });
+
+  return [...scores.values()].sort((a, b) => b.rrfScore - a.rrfScore);
+}
+```
+
+**Impact:** Significant — chunks appearing in both vector AND keyword results are boosted.
+**Cost:** $0 (pure math).
+
+---
+
+### A5. Cohere Rerank for Chunks
+
+**File:** `src/lib/rag/reranker.ts`
+
+After retrieving ~20 chunks via hybrid search + RRF, send them to a cross-encoder that reads each (query, chunk) pair and makes a precise relevance judgment.
+
+```typescript
+import type { FusedChunk } from "./fusion";
+
+export interface RerankedChunk extends FusedChunk {
+  rerankScore: number;
+}
+
+/**
+ * Rerank chunks using Cohere's cross-encoder.
+ * Gracefully degrades to returning input unchanged if no API key.
+ */
+export async function rerankChunks(
+  query: string,
+  chunks: FusedChunk[],
+  topK: number = 8
+): Promise<RerankedChunk[]> {
+  if (!process.env.COHERE_API_KEY || chunks.length === 0) {
+    // No-op: return top K by RRF score
+    return chunks.slice(0, topK).map((c) => ({ ...c, rerankScore: c.rrfScore }));
+  }
+
+  const response = await fetch("https://api.cohere.com/v2/rerank", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "rerank-v3.5",
+      query,
+      documents: chunks.map((c) => c.text),
+      top_n: topK,
+      return_documents: false,
+    }),
+  });
+
+  if (!response.ok) {
+    // Fallback on API error
+    console.error("Cohere rerank failed:", response.status);
+    return chunks.slice(0, topK).map((c) => ({ ...c, rerankScore: c.rrfScore }));
+  }
+
+  const data = await response.json();
+
+  return data.results.map((r: { index: number; relevance_score: number }) => ({
+    ...chunks[r.index],
+    rerankScore: r.relevance_score,
+  }));
+}
+```
+
+**Impact:** Dramatic — the chunks that reach the LLM are the RIGHT ones.
+**Cost:** ~$0.001 per query. Free tier: 1000 calls/month.
+
+---
+
+### A6. Contextual Compression
+
+**File:** `src/lib/rag/compressor.ts`
+
+After reranking, extract ONLY the relevant sentences from each chunk. A 500-token chunk might have just 2 relevant sentences.
+
+```typescript
+import { generateText } from "ai";
+import { getSmallModel } from "@/lib/ai/models";
+import type { RerankedChunk } from "./reranker";
+
+export interface CompressedChunk extends RerankedChunk {
+  compressedText: string;
+}
+
+/**
+ * Compress chunks to only the sentences relevant to the query.
+ * Optional — adds latency but improves context quality.
+ */
+export async function compressChunks(
+  query: string,
+  chunks: RerankedChunk[]
+): Promise<CompressedChunk[]> {
+  const compressed = await Promise.all(
+    chunks.map(async (chunk) => {
+      const { text } = await generateText({
+        model: getSmallModel(),
+        system: "Extract ONLY the sentences from the given text that are relevant to the question. Return the exact sentences, not paraphrases. If the entire text is relevant, return it all. If nothing is relevant, return an empty string.",
+        prompt: `Question: ${query}\n\nText:\n${chunk.text}`,
+        maxTokens: 300,
+      });
+      return { ...chunk, compressedText: text.trim() || chunk.text };
+    })
+  );
+  return compressed.filter((c) => c.compressedText.length > 0);
+}
+```
+
+**Impact:** Fits more relevant info into context window.
+**Cost:** ~$0.0005 per chunk. Only used when `useCompression: true` (off by default).
+
+---
+
+### A7. Self-Query Metadata Filtering
+
+**File:** `src/lib/rag/self-query.ts`
+
+Extract structured filters from the question before searching. The `paper_chunks` table already has `section_type` and `page_number`.
+
+```typescript
+import { generateObject } from "ai";
+import { getSmallModel } from "@/lib/ai/models";
+import { z } from "zod";
+
+const metadataFilterSchema = z.object({
+  sectionType: z
+    .enum(["abstract", "introduction", "methods", "results", "discussion", "conclusion", "other"])
+    .optional()
+    .describe("If the user asks about a specific section, filter to that section"),
+  yearRange: z
+    .object({
+      start: z.number().optional(),
+      end: z.number().optional(),
+    })
+    .optional()
+    .describe("If the user mentions a year or date range"),
+  requireTable: z
+    .boolean()
+    .optional()
+    .describe("True if the user is asking about table data or numerical results"),
+});
+
+export type MetadataFilters = z.infer<typeof metadataFilterSchema>;
+
+export async function extractMetadataFilters(query: string): Promise<MetadataFilters> {
+  const { object } = await generateObject({
+    model: getSmallModel(),
+    schema: metadataFilterSchema,
+    system: "Extract metadata filters from this research question. Only extract filters that are explicitly or strongly implied in the question. Do NOT guess.",
+    prompt: query,
+  });
+  return object;
+}
+```
+
+**Example:**
+- "What did the Results section say about mortality?" → `{ sectionType: "results" }`
+- "What methods were used?" → `{ sectionType: "methods" }`
+- "Show me the data from Table 2" → `{ requireTable: true }`
+
+---
+
+### A8. Query Decomposition
+
+**File:** `src/lib/rag/decomposer.ts`
+
+Break complex multi-part questions into sub-questions that are each searched independently, then synthesized.
+
+```typescript
+import { generateObject } from "ai";
+import { getSmallModel } from "@/lib/ai/models";
+import { z } from "zod";
+
+export async function decomposeQuery(query: string): Promise<string[] | null> {
+  const { object } = await generateObject({
+    model: getSmallModel(),
+    schema: z.object({
+      isComplex: z.boolean().describe("True if the query has multiple distinct parts that need separate searches"),
+      subQuestions: z.array(z.string()).max(4).describe("Sub-questions, only if isComplex is true"),
+    }),
+    system: "Analyze if this research question needs to be broken into sub-questions. Only decompose if the question clearly asks about multiple distinct topics (e.g., 'Compare X and Y' or 'What are the efficacy AND safety of Z'). Simple questions should NOT be decomposed.",
+    prompt: query,
+  });
+
+  if (!object.isComplex || object.subQuestions.length <= 1) {
+    return null; // Not complex enough to decompose
+  }
+  return object.subQuestions;
+}
+```
+
+---
+
+### A9. Pipeline Orchestrator
+
+**File:** `src/lib/rag/pipeline.ts`
+
+The unified `advancedRetrieve()` function that chains all strategies together.
+
+```typescript
+import { generateMultiQueries } from "./query-enhancer";
+import { generateHypotheticalAnswer } from "./hyde";
+import { extractMetadataFilters } from "./self-query";
+import { decomposeQuery } from "./decomposer";
+import { searchVector, searchKeyword } from "./search";
+import { reciprocalRankFusion } from "./fusion";
+import { rerankChunks } from "./reranker";
+import { compressChunks } from "./compressor";
+import type { RerankedChunk } from "./reranker";
+import type { CompressedChunk } from "./compressor";
+
+export interface RAGConfig {
+  useMultiQuery?: boolean;    // default: true
+  useHyDE?: boolean;          // default: true
+  useSelfQuery?: boolean;     // default: true
+  useRerank?: boolean;        // default: true
+  useCompression?: boolean;   // default: false (adds latency)
+  useDecomposition?: boolean; // default: false (for complex queries)
+  topK?: number;              // default: 8
+  vectorLimit?: number;       // default: 20
+  keywordLimit?: number;      // default: 20
+}
+
+export type RAGResult = CompressedChunk | RerankedChunk;
+
+export async function advancedRetrieve(
+  query: string,
+  paperIds: number[],
+  config: RAGConfig = {}
+): Promise<RAGResult[]> {
+  const {
+    useMultiQuery = true,
+    useHyDE = true,
+    useSelfQuery = true,
+    useRerank = true,
+    useCompression = false,
+    useDecomposition = false,
+    topK = 8,
+    vectorLimit = 20,
+    keywordLimit = 20,
+  } = config;
+
+  // Step 0: Query decomposition (optional)
+  if (useDecomposition) {
+    const subQuestions = await decomposeQuery(query);
+    if (subQuestions) {
+      // Retrieve for each sub-question, then merge all results
+      const allResults: RAGResult[] = [];
+      for (const subQ of subQuestions) {
+        const subResults = await advancedRetrieve(subQ, paperIds, {
+          ...config,
+          useDecomposition: false, // Don't recurse
+          topK: Math.ceil(topK / subQuestions.length),
+        });
+        allResults.push(...subResults);
+      }
+      // Deduplicate by chunk ID
+      const seen = new Set<number>();
+      return allResults.filter((r) => {
+        if (seen.has(r.id)) return false;
+        seen.add(r.id);
+        return true;
+      });
+    }
+  }
+
+  // Step 1: Extract metadata filters
+  let sectionFilter: string | undefined;
+  if (useSelfQuery) {
+    const filters = await extractMetadataFilters(query);
+    sectionFilter = filters.sectionType;
+  }
+
+  // Step 2: Generate query variations
+  let queries = [query];
+  if (useMultiQuery) {
+    queries = await generateMultiQueries(query);
+  }
+
+  // Step 3: HyDE — also embed a hypothetical answer
+  let embeddingTexts = queries;
+  if (useHyDE) {
+    const hydeAnswer = await generateHypotheticalAnswer(query);
+    embeddingTexts = [...queries, hydeAnswer];
+  }
+
+  // Step 4: Hybrid search for each query variation
+  const allVectorResults = [];
+  const allKeywordResults = [];
+
+  // Vector search with all embedding texts (original + variations + HyDE)
+  for (const text of embeddingTexts) {
+    const vectorResults = await searchVector(text, paperIds, vectorLimit, {
+      sectionType: sectionFilter,
+    });
+    allVectorResults.push(...vectorResults);
+  }
+
+  // Keyword search with original + variations (not HyDE — HyDE text is synthetic)
+  for (const q of queries) {
+    const keywordResults = await searchKeyword(q, paperIds, keywordLimit);
+    allKeywordResults.push(...keywordResults);
+  }
+
+  // Step 5: Reciprocal Rank Fusion
+  let fused = reciprocalRankFusion(allVectorResults, allKeywordResults);
+
+  // Step 6: Cohere Rerank
+  let ranked: RerankedChunk[];
+  if (useRerank && fused.length > 0) {
+    ranked = await rerankChunks(query, fused.slice(0, 20), topK);
+  } else {
+    ranked = fused.slice(0, topK).map((c) => ({ ...c, rerankScore: c.rrfScore }));
+  }
+
+  // Step 7: Contextual Compression (optional)
+  if (useCompression && ranked.length > 0) {
+    return await compressChunks(query, ranked);
+  }
+
+  return ranked;
+}
+```
+
+---
+
+### A10. Source-Grounded RAG Chat
+
+**Rewrite:** `src/app/api/rag-chat/route.ts`
+
+The upgraded RAG chat endpoint that:
+1. Uses `advancedRetrieve()` instead of basic `searchSimilarChunks()`
+2. Includes paper metadata (title, authors, page, section) with each chunk
+3. Instructs the LLM to cite sources as [1], [2], etc.
+4. Returns source metadata alongside the streamed answer
+
+```typescript
+import { streamText } from "ai";
+import { getModel } from "@/lib/ai/models";
+import { advancedRetrieve } from "@/lib/rag/pipeline";
+import { db } from "@/lib/db";
+import { papers } from "@/lib/db/schema";
+import { eq, inArray } from "drizzle-orm";
+
+export async function POST(req: Request) {
+  try {
+    const { messages, paperIds, mode, ragConfig } = await req.json();
+
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return new Response(JSON.stringify({ error: "Messages are required" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Get the latest user message for retrieval
+    const lastUserMsg = [...messages].reverse().find((m: { role: string }) => m.role === "user");
+    const query = lastUserMsg?.content || "";
+
+    // Run advanced RAG retrieval
+    let contextChunks: typeof retrievedChunks = [];
+    let sourcePapers: Map<number, { title: string; authors: unknown; year: number | null }> = new Map();
+
+    if (query && paperIds?.length > 0) {
+      try {
+        const retrievedChunks = await advancedRetrieve(query, paperIds, {
+          useMultiQuery: true,
+          useHyDE: true,
+          useSelfQuery: true,
+          useRerank: true,
+          useCompression: false,
+          topK: 8,
+          ...ragConfig,
+        });
+        contextChunks = retrievedChunks;
+
+        // Fetch paper metadata for source attribution
+        const chunkPaperIds = [...new Set(retrievedChunks.map((c) => c.paper_id))];
+        if (chunkPaperIds.length > 0) {
+          const paperRows = await db
+            .select({ id: papers.id, title: papers.title, authors: papers.authors, year: papers.year })
+            .from(papers)
+            .where(inArray(papers.id, chunkPaperIds));
+          for (const p of paperRows) {
+            sourcePapers.set(p.id, { title: p.title, authors: p.authors, year: p.year });
+          }
+        }
+      } catch {
+        // Fallback to no-context mode if RAG fails
+      }
+    }
+
+    // Build system prompt with source-grounded context
+    let systemPrompt = `You are ScholarSync, an AI research assistant for academic writing. You help students and researchers analyze their papers and answer questions.`;
+
+    if (mode === "notebook") {
+      systemPrompt += ` You are in Notebook mode — analyzing uploaded research sources.`;
+    }
+
+    if (contextChunks.length > 0) {
+      systemPrompt += `\n\nRelevant sources from the user's research papers:\n\n`;
+
+      contextChunks.forEach((chunk, i) => {
+        const paper = sourcePapers.get(chunk.paper_id);
+        const paperTitle = paper?.title || "Unknown paper";
+        const paperAuthors = Array.isArray(paper?.authors)
+          ? (paper.authors as string[]).slice(0, 3).join(", ")
+          : "Unknown authors";
+        const pageInfo = chunk.page_number ? ` | Page ${chunk.page_number}` : "";
+        const sectionInfo = chunk.section_type ? ` | Section: ${chunk.section_type}` : "";
+        const relevance = "rerankScore" in chunk
+          ? ` | Relevance: ${((chunk as { rerankScore: number }).rerankScore * 100).toFixed(0)}%`
+          : "";
+
+        systemPrompt += `[Source ${i + 1}] "${paperTitle}" — ${paperAuthors}${pageInfo}${sectionInfo}${relevance}\n`;
+        systemPrompt += `${"compressedText" in chunk ? (chunk as { compressedText: string }).compressedText : chunk.text}\n\n`;
+      });
+
+      systemPrompt += `CRITICAL RULES:
+1. For EVERY factual claim, cite the source number in brackets like [1] or [1][2].
+2. NEVER make unsourced claims. If you don't have a source, say "Based on general knowledge" or "I don't have a specific source for this."
+3. If sources conflict, cite both and note the disagreement.
+4. When quoting numbers (HR, CI, p-values), always cite the exact source.
+5. End your response with a "Sources:" section listing all cited references.`;
+    }
+
+    // Stream the response
+    const result = streamText({
+      model: getModel(),
+      system: systemPrompt,
+      messages: messages.map((m: { role: string; content: string }) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      })),
+    });
+
+    // Return streaming response with source metadata in headers
+    const response = result.toTextStreamResponse();
+
+    // Add source metadata as a custom header (JSON-encoded)
+    const sourceMetadata = contextChunks.map((chunk, i) => {
+      const paper = sourcePapers.get(chunk.paper_id);
+      return {
+        sourceIndex: i + 1,
+        paperId: chunk.paper_id,
+        paperTitle: paper?.title || "Unknown",
+        paperAuthors: paper?.authors || [],
+        pageNumber: chunk.page_number,
+        sectionType: chunk.section_type,
+        chunkId: chunk.id,
+      };
+    });
+
+    // Clone the response to add headers
+    return new Response(response.body, {
+      headers: {
+        ...Object.fromEntries(response.headers.entries()),
+        "X-RAG-Sources": JSON.stringify(sourceMetadata),
+      },
+    });
+  } catch (error) {
+    console.error("RAG chat error:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to process RAG chat" }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+}
+```
+
+---
+
+### A11. Full-Text Search Migration
+
+**File:** `database/migrations/001_add_chunks_fts.sql`
+
+```sql
+-- Add GIN index for full-text search on paper_chunks
+-- This enables hybrid search (vector + keyword) in the RAG pipeline
+CREATE INDEX IF NOT EXISTS idx_paper_chunks_fts
+  ON paper_chunks USING gin(to_tsvector('english', text));
+```
+
+This file is for documentation and manual execution when the database is set up. The code in `search.ts` computes `to_tsvector('english', text)` on-the-fly — the GIN index just makes it fast.
+
+---
+
+### A12. Citation Rendering in Notebook UI
+
+**Update:** `src/app/(app)/notebook/page.tsx`
+
+The notebook page needs to:
+1. Read `X-RAG-Sources` header from the streamed response
+2. Parse [1], [2] markers in the AI's response text
+3. Render them as clickable superscript links
+4. Show a collapsible "Sources" panel listing each cited paper with title, authors, page, section
+5. Clicking a source highlights/scrolls to it in the sources panel
+
+**Implementation approach:**
+
+Add a `SourcesPanel` component that receives the source metadata and renders:
+```
+Sources cited in this response:
+[1] McMurray et al., "Dapagliflozin in HFrEF", NEJM 2019 — Page 1997, Results
+[2] Packer et al., "EMPEROR-Reduced", NEJM 2020 — Page 1333, Results
+```
+
+In the chat message rendering, replace `[1]` patterns with clickable elements:
+```typescript
+function renderCitedText(text: string, sources: SourceMetadata[]): React.ReactNode {
+  // Split text by citation markers [1], [2], [1][2], etc.
+  // Replace each marker with a clickable superscript that highlights the source
+  const parts = text.split(/(\[\d+\])/g);
+  return parts.map((part, i) => {
+    const match = part.match(/\[(\d+)\]/);
+    if (match) {
+      const sourceIdx = parseInt(match[1], 10);
+      const source = sources[sourceIdx - 1];
+      return (
+        <button
+          key={i}
+          onClick={() => highlightSource(sourceIdx)}
+          className="text-brand text-[10px] align-super font-medium hover:underline cursor-pointer"
+          title={source?.paperTitle}
+        >
+          [{sourceIdx}]
+        </button>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+```
+
+---
+
+## Workstream D: Infrastructure Fixes
+
+### D1. Fix Embed Error Handling
+
+**Update:** `src/app/(app)/notebook/page.tsx`
+
+Replace the silent `.catch(() => {})` with proper error handling:
+
+```typescript
+// BEFORE (line ~200):
+fetch("/api/embed", { ... }).catch(() => {});
+
+// AFTER:
+try {
+  const embedRes = await fetch("/api/embed", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ paperId }),
+  });
+  if (!embedRes.ok) {
+    const err = await embedRes.json();
+    console.error("Embedding failed:", err);
+    // Update paper status to show embedding failed
+    setPaperStatuses((prev) => ({ ...prev, [paperId]: "embed_failed" }));
+  } else {
+    setPaperStatuses((prev) => ({ ...prev, [paperId]: "ready" }));
+  }
+} catch {
+  setPaperStatuses((prev) => ({ ...prev, [paperId]: "embed_failed" }));
+}
+```
+
+Add a retry button in the UI when embedding fails:
+```tsx
+{paperStatus === "embed_failed" && (
+  <button onClick={() => retryEmbed(paperId)} className="text-xs text-amber-500 hover:text-amber-400">
+    Embedding failed — click to retry
+  </button>
+)}
+```
+
+---
+
+### D2. Save Search History
+
+**Update:** `src/app/(app)/research/page.tsx` (or the unified search endpoint)
+
+After every search, write to the `search_queries` table:
+
+**New server action in** `src/lib/actions/search-history.ts`:
+
+```typescript
+"use server";
+
+import { db } from "@/lib/db";
+import { searchQueries } from "@/lib/db/schema";
+import { getCurrentUserId } from "@/lib/auth";
+
+export async function saveSearchQuery(data: {
+  originalQuery: string;
+  queryType?: string;
+  source?: string;
+  augmentedQueries?: Record<string, string>;
+  filtersApplied?: Record<string, unknown>;
+  resultCount: number;
+  parentQueryId?: number;
+}) {
+  const userId = await getCurrentUserId();
+
+  const [row] = await db
+    .insert(searchQueries)
+    .values({
+      user_id: userId,
+      original_query: data.originalQuery,
+      query_type: data.queryType || "user",
+      source: data.source || "all",
+      augmented_queries: data.augmentedQueries || null,
+      filters_applied: data.filtersApplied || null,
+      result_count: data.resultCount,
+      parent_query_id: data.parentQueryId || null,
+    })
+    .returning();
+
+  return row.id;
+}
+```
+
+Call this after every search completes in the unified search endpoint or research page.
+
+---
+
+### D3. Wire Editor Auto-Save
+
+**Update:** `src/app/(app)/studio/page.tsx`
+
+The `autoSaveVersion()` function exists in `src/lib/actions/documents.ts` but is never called. Wire the TiptapEditor's `onUpdate` callback to trigger debounced auto-save.
+
+```typescript
+// In studio/page.tsx, add to the TiptapEditor:
+import { useCallback, useRef } from "react";
+import { autoSaveVersion } from "@/lib/actions/documents";
+
+// Debounce helper
+function useDebouncedCallback(fn: (...args: unknown[]) => void, delay: number) {
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  return useCallback((...args: unknown[]) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => fn(...args), delay);
+  }, [fn, delay]);
+}
+
+// In the component:
+const handleEditorUpdate = useDebouncedCallback(async (content: string) => {
+  if (!currentDocumentId || !currentSectionId) return;
+  try {
+    await autoSaveVersion(currentDocumentId, currentSectionId, content);
+    setLastSaved(new Date());
+  } catch {
+    // Silent fail for auto-save — user can manually save
+  }
+}, 3000); // 3-second debounce
+
+// Pass to TiptapEditor:
+<TiptapEditor onUpdate={handleEditorUpdate} />
+```
+
+NOTE: If the studio page doesn't have `currentDocumentId` / `currentSectionId` state yet (it likely uses mock data), create a simplified version that just saves to localStorage as a stopgap:
+
+```typescript
+const handleEditorUpdate = useDebouncedCallback((content: string) => {
+  localStorage.setItem("scholarsync_studio_draft", JSON.stringify({
+    content,
+    timestamp: Date.now(),
+    title: documentTitle,
+  }));
+  setLastSaved(new Date());
+}, 2000);
+```
+
+Show a "Saved" indicator in the header when auto-save fires.
+
+---
+
+### D4. Bridge: Auto-Chunk Saved Papers
+
+**The critical gap:** Papers saved from search have metadata but NO chunks/embeddings. They're invisible to RAG.
+
+**New server action in** `src/lib/actions/papers.ts` (add to existing file):
+
+```typescript
+/**
+ * Create chunks from a saved paper's abstract (and any available text).
+ * This bridges the gap between "saved from search" and "usable in RAG."
+ * Called automatically when a paper is saved with an abstract.
+ */
+export async function autoChunkPaper(paperId: number): Promise<number> {
+  const [paper] = await db
+    .select()
+    .from(papers)
+    .where(eq(papers.id, paperId));
+
+  if (!paper) return 0;
+
+  // Check if already chunked
+  const existingChunks = await db
+    .select({ id: paperChunks.id })
+    .from(paperChunks)
+    .where(eq(paperChunks.paper_id, paperId))
+    .limit(1);
+
+  if (existingChunks.length > 0) return 0; // Already chunked
+
+  // Build text from available metadata
+  const sections: { text: string; sectionType: string }[] = [];
+
+  if (paper.abstract) {
+    sections.push({ text: paper.abstract, sectionType: "abstract" });
+  }
+
+  if (paper.tldr) {
+    sections.push({ text: `TL;DR Summary: ${paper.tldr}`, sectionType: "abstract" });
+  }
+
+  // If we have full text (from PDF extraction), chunk it properly
+  if (paper.full_text_plain) {
+    const words = paper.full_text_plain.split(/\s+/);
+    const CHUNK_SIZE = 500;
+    const OVERLAP = 50;
+    for (let i = 0; i < words.length; i += CHUNK_SIZE - OVERLAP) {
+      const chunk = words.slice(i, i + CHUNK_SIZE).join(" ");
+      if (chunk.trim()) {
+        sections.push({ text: chunk, sectionType: "other" });
+      }
+    }
+  }
+
+  if (sections.length === 0) return 0;
+
+  // Insert chunks
+  for (let i = 0; i < sections.length; i++) {
+    await db.insert(paperChunks).values({
+      paper_id: paperId,
+      chunk_index: i,
+      text: sections[i].text,
+      section_type: sections[i].sectionType,
+    });
+  }
+
+  // Mark paper as chunked
+  await db.update(papers).set({ is_chunked: true }).where(eq(papers.id, paperId));
+
+  return sections.length;
+}
+```
+
+**Integration:** Call `autoChunkPaper()` at the end of `savePaper()`:
+
+```typescript
+// At the end of savePaper(), after creating user_reference:
+if (data.abstract || data.tldr) {
+  // Auto-chunk in background — don't block the save
+  autoChunkPaper(paperId).catch(() => {});
+}
+```
+
+Then trigger embedding for the auto-chunked paper:
+```typescript
+// After auto-chunking, embed
+import { embedPaperChunks } from "./embeddings";
+const chunked = await autoChunkPaper(paperId);
+if (chunked > 0) {
+  embedPaperChunks(paperId).catch(() => {}); // Background
+}
+```
+
+**Impact:** Saved papers now have at least abstract + TLDR chunks with embeddings. RAG can answer questions about them.
+
+---
+
+### D5. Fix PDF Storage Path
+
+**Update:** `src/app/api/papers/[id]/pdf/route.ts`
+
+Currently stores to `/tmp/scholarsync-pdfs/` which is ephemeral. For now (pre-GCS), store in a project-relative directory that persists:
+
+```typescript
+import path from "path";
+import fs from "fs/promises";
+
+// Use a persistent directory within the project (for local dev)
+// In production, this will be replaced with GCS
+const PDF_DIR = process.env.PDF_STORAGE_PATH ||
+  path.join(process.cwd(), ".data", "pdfs");
+```
+
+Add `PDF_STORAGE_PATH` to `.env.example`:
+```
+# PDF Storage (local dev — will be GCS in production)
+PDF_STORAGE_PATH=
+```
+
+Add `.data/` to `.gitignore`:
+```
+# Local data storage
+.data/
+```
+
+---
+
+### D6. Snowball Search UI Buttons
+
+**Update:** `src/app/(app)/research/page.tsx` (or library page)
+
+Add "Find Citing Papers" and "Find Referenced Papers" buttons on saved paper cards. These call the S2 citations/references API that's being built by the paper-fetching agent.
+
+On each paper card in the library or search results:
+```tsx
+<button
+  onClick={() => findCitingPapers(paper.s2Id)}
+  className="text-xs text-ink-muted hover:text-brand transition-colors"
+>
+  <ArrowsIn size={14} /> Citing Papers
+</button>
+<button
+  onClick={() => findReferencedPapers(paper.s2Id)}
+  className="text-xs text-ink-muted hover:text-brand transition-colors"
+>
+  <ArrowsOut size={14} /> References
+</button>
+```
+
+The handler calls the S2 recommendations/citations API and displays results in a modal or inline expansion.
+
+---
+
+## File Summary
+
+### New Files (13):
+1. `src/lib/rag/query-enhancer.ts` — Multi-query generation
+2. `src/lib/rag/hyde.ts` — Hypothetical Document Embeddings
+3. `src/lib/rag/search.ts` — Vector + keyword search functions
+4. `src/lib/rag/fusion.ts` — Reciprocal Rank Fusion for chunks
+5. `src/lib/rag/reranker.ts` — Cohere rerank for chunks
+6. `src/lib/rag/compressor.ts` — Contextual compression
+7. `src/lib/rag/self-query.ts` — Metadata filter extraction
+8. `src/lib/rag/decomposer.ts` — Query decomposition
+9. `src/lib/rag/pipeline.ts` — Unified `advancedRetrieve()` orchestrator
+10. `src/lib/actions/search-history.ts` — Save search queries to DB
+11. `database/migrations/001_add_chunks_fts.sql` — FTS index migration
+12. `src/lib/rag/index.ts` — Barrel export for the rag module
+
+### Modified Files (5):
+1. `src/app/api/rag-chat/route.ts` — Complete rewrite with source grounding
+2. `src/app/(app)/notebook/page.tsx` — Citation rendering + embed error handling
+3. `src/app/(app)/studio/page.tsx` — Wire auto-save
+4. `src/lib/actions/papers.ts` — Add `autoChunkPaper()` + call from `savePaper()`
+5. `src/app/api/papers/[id]/pdf/route.ts` — Fix PDF storage path
+
+### Environment:
+- `COHERE_API_KEY` — Optional, for reranking (already in .env.example from paper-fetching)
+- `PDF_STORAGE_PATH` — Optional, for persistent PDF storage
+
+---
+
+## Execution Order
+
+1. Create `src/lib/rag/` directory
+2. Create search.ts (vector + keyword search — depends on db)
+3. Create fusion.ts (RRF — depends on search types)
+4. Create reranker.ts (Cohere — depends on fusion types)
+5. Create compressor.ts (depends on reranker types)
+6. Create query-enhancer.ts (multi-query)
+7. Create hyde.ts (HyDE)
+8. Create self-query.ts (metadata filters)
+9. Create decomposer.ts (query decomposition)
+10. Create pipeline.ts (imports all of the above)
+11. Create index.ts (barrel export)
+12. Rewrite rag-chat/route.ts (uses pipeline)
+13. Create search-history.ts (server action)
+14. Create migration SQL file
+15. Update papers.ts (autoChunkPaper + bridge)
+16. Update notebook/page.tsx (citation rendering + embed error fix)
+17. Update studio/page.tsx (auto-save)
+18. Update papers/[id]/pdf/route.ts (fix storage path)
+19. Verify: `npx tsc --noEmit` — 0 errors
+20. Verify: `npm run build` — clean build
+
+---
+
+## Coding Rules
+
+- ALL AI calls use `getModel()`, `getSmallModel()`, or `getBigModel()` from `src/lib/ai/models.ts`
+- ALL database queries use Drizzle ORM patterns from existing actions
+- ALL server actions call `getCurrentUserId()` from `src/lib/auth.ts`
+- Use existing CSS patterns (glass-panel, text-ink, bg-surface, etc.)
+- Phosphor Icons ONLY
+- TypeScript strict — no `any` types
+- No new npm packages (Cohere is called via raw fetch, not a client library)
+- The `zod` package is already installed — use it for all schemas
+- The `ai` package provides `generateText`, `generateObject`, `streamText`, `tool`
