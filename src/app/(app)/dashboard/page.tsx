@@ -10,11 +10,17 @@ import {
   ShieldCheck,
   FileText,
   ArrowRight,
+  Lightning,
+  MagnifyingGlass,
+  ShieldWarning,
+  Export,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { ProgressBar } from "@/components/ui/progress-bar";
 import { getProjects } from "@/lib/actions/projects";
 import { ensureUser } from "@/lib/actions/user";
+import { getDashboardStats, getRecentSearches, type DashboardStats } from "@/lib/actions/dashboard";
 
 const actionCards = [
   {
@@ -109,14 +115,22 @@ type Project = Awaited<ReturnType<typeof getProjects>>[number];
 export default function DashboardPage() {
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [recentSearches, setRecentSearches] = useState<Awaited<ReturnType<typeof getRecentSearches>>>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
         await ensureUser();
-        const data = await getProjects();
+        const [data, dashStats, searches] = await Promise.all([
+          getProjects(),
+          getDashboardStats(),
+          getRecentSearches(5),
+        ]);
         setProjects(data);
+        setStats(dashStats);
+        setRecentSearches(searches);
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
       } finally {
@@ -224,6 +238,99 @@ export default function DashboardPage() {
                 </div>
               );
             })
+          )}
+        </div>
+      </section>
+
+      {/* Usage Stats + Recent Searches */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+        {/* Usage Overview */}
+        <div className="glass-panel rounded-2xl p-6 border border-border">
+          <h2 className="text-sm font-medium text-ink-muted uppercase tracking-widest mb-5">
+            Usage This Month
+          </h2>
+          {stats ? (
+            <div className="space-y-5">
+              <ProgressBar
+                value={stats.tokensUsed}
+                max={stats.tokensLimit}
+                label="AI Tokens"
+                color="var(--brand)"
+              />
+              <div className="grid grid-cols-3 gap-3">
+                <div className="p-3 rounded-xl bg-surface-raised text-center">
+                  <div className="flex items-center justify-center gap-1.5 text-sky-400 mb-1">
+                    <MagnifyingGlass size={14} />
+                  </div>
+                  <p className="text-lg font-semibold text-ink">{stats.totalSearches}</p>
+                  <p className="text-[10px] text-ink-muted">Searches</p>
+                </div>
+                <div className="p-3 rounded-xl bg-surface-raised text-center">
+                  <div className="flex items-center justify-center gap-1.5 text-amber-400 mb-1">
+                    <ShieldWarning size={14} />
+                  </div>
+                  <p className="text-lg font-semibold text-ink">{stats.plagiarismChecksUsed}</p>
+                  <p className="text-[10px] text-ink-muted">Plagiarism Checks</p>
+                </div>
+                <div className="p-3 rounded-xl bg-surface-raised text-center">
+                  <div className="flex items-center justify-center gap-1.5 text-emerald-400 mb-1">
+                    <Export size={14} />
+                  </div>
+                  <p className="text-lg font-semibold text-ink">{stats.exportsUsed}</p>
+                  <p className="text-[10px] text-ink-muted">Exports</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-border-subtle">
+                <span className="text-xs text-ink-muted">
+                  Plan: <span className="text-ink font-medium capitalize">{stats.plan}</span>
+                </span>
+                <Link href="/settings" className="text-xs text-brand hover:text-brand-hover transition-colors">
+                  Manage Plan →
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="py-8 text-center text-sm text-ink-muted">Loading stats...</div>
+          )}
+        </div>
+
+        {/* Recent Searches */}
+        <div className="glass-panel rounded-2xl p-6 border border-border">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-sm font-medium text-ink-muted uppercase tracking-widest">
+              Recent Searches
+            </h2>
+            <Link
+              href="/research"
+              className="text-sm text-brand hover:text-brand-hover transition-colors"
+            >
+              Search →
+            </Link>
+          </div>
+          {recentSearches.length === 0 ? (
+            <div className="py-8 text-center text-sm text-ink-muted">
+              No searches yet. Start by exploring papers.
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {recentSearches.map((search) => (
+                <div
+                  key={search.id}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-surface-raised/50 transition-colors cursor-pointer"
+                  onClick={() => router.push(`/research?q=${encodeURIComponent(search.query)}`)}
+                >
+                  <div className="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400 shrink-0">
+                    <MagnifyingGlass size={14} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-ink truncate">{search.query}</p>
+                    <p className="text-[10px] text-ink-muted">
+                      {search.resultCount ?? 0} results · {search.source ?? "all"}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </section>
