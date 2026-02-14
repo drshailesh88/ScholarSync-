@@ -10,7 +10,9 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate"
+    "db:migrate": "drizzle-kit migrate",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.43",
@@ -23,6 +25,7 @@
     "@tiptap/react": "^3.19.0",
     "@tiptap/starter-kit": "^3.19.0",
     "@tiptap/suggestion": "^3.19.0",
+    "@vitejs/plugin-react": "^5.1.4",
     "ai": "^6.0.85",
     "citation-js": "^0.7.22",
     "clsx": "^2.1.1",
@@ -43,6 +46,7 @@
     "react-pdf": "^10.3.0",
     "tailwind-merge": "^3.4.0",
     "tippy.js": "^6.3.7",
+    "vitest": "^4.0.18",
     "write-good": "^1.0.8",
     "zhipu-ai-provider": "^0.2.2"
   },
