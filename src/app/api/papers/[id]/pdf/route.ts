@@ -3,7 +3,9 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
-const PDF_STORAGE_DIR = path.join("/tmp", "scholarsync-pdfs");
+const PDF_STORAGE_DIR =
+  process.env.PDF_STORAGE_PATH ||
+  path.join(process.cwd(), ".data", "pdfs");
 
 /**
  * GET /api/papers/[id]/pdf

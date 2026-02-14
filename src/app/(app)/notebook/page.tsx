@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, Fragment } from "react";
 import {
   ArrowLeft,
   FileText,
@@ -9,6 +9,10 @@ import {
   Paperclip,
   X,
   Sparkle,
+  ArrowClockwise,
+  BookOpen,
+  CaretDown,
+  CaretUp,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -20,6 +24,17 @@ interface ChatMessage {
   id: string;
   role: "user" | "assistant";
   content: string;
+  sources?: SourceMetadata[];
+}
+
+interface SourceMetadata {
+  sourceIndex: number;
+  paperId: number;
+  paperTitle: string;
+  paperAuthors: unknown[];
+  pageNumber: number | null;
+  sectionType: string | null;
+  chunkId: number;
 }
 
 interface SourceFile {
@@ -27,8 +42,8 @@ interface SourceFile {
   name: string;
   size: string;
   selected: boolean;
-  paperId?: number; // Real DB paper ID for RAG
-  status?: "ready" | "processing" | "error";
+  paperId?: number;
+  status?: "ready" | "processing" | "error" | "embed_failed";
 }
 
 const suggestions = [
@@ -43,6 +58,32 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / 1048576).toFixed(1)} MB`;
 }
 
+function renderCitedText(
+  text: string,
+  sources: SourceMetadata[],
+  onHighlight: (idx: number) => void
+): React.ReactNode {
+  const parts = text.split(/(\[\d+\])/g);
+  return parts.map((part, i) => {
+    const match = part.match(/\[(\d+)\]/);
+    if (match) {
+      const sourceIdx = parseInt(match[1], 10);
+      const source = sources[sourceIdx - 1];
+      return (
+        <button
+          key={i}
+          onClick={() => onHighlight(sourceIdx)}
+          className="text-brand text-[10px] align-super font-medium hover:underline cursor-pointer"
+          title={source?.paperTitle || `Source ${sourceIdx}`}
+        >
+          [{sourceIdx}]
+        </button>
+      );
+    }
+    return <Fragment key={i}>{part}</Fragment>;
+  });
+}
+
 export default function NotebookPage() {
   const [files, setFiles] = useState<SourceFile[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -50,6 +91,9 @@ export default function NotebookPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [urlValue, setUrlValue] = useState("");
+  const [highlightedSource, setHighlightedSource] = useState<number | null>(null);
+  const [showSourcesPanel, setShowSourcesPanel] = useState(false);
+  const [currentSources, setCurrentSources] = useState<SourceMetadata[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const conversationIdRef = useRef<number | null>(null);
@@ -74,6 +118,34 @@ export default function NotebookPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const retryEmbed = useCallback(async (paperId: number) => {
+    const fileId = `paper_${paperId}`;
+    setFiles((prev) =>
+      prev.map((f) => (f.id === fileId ? { ...f, status: "processing" } : f))
+    );
+    try {
+      const embedRes = await fetch("/api/embed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paperId }),
+      });
+      if (!embedRes.ok) {
+        console.error("Embedding retry failed");
+        setFiles((prev) =>
+          prev.map((f) => (f.id === fileId ? { ...f, status: "embed_failed" } : f))
+        );
+      } else {
+        setFiles((prev) =>
+          prev.map((f) => (f.id === fileId ? { ...f, status: "ready" } : f))
+        );
+      }
+    } catch {
+      setFiles((prev) =>
+        prev.map((f) => (f.id === fileId ? { ...f, status: "embed_failed" } : f))
+      );
+    }
+  }, []);
 
   const sendMessage = useCallback(async (text?: string) => {
     const msg = text || input.trim();
@@ -118,10 +190,28 @@ export default function NotebookPage() {
         return;
       }
 
+      // Parse source metadata from headers
+      let sources: SourceMetadata[] = [];
+      const sourcesHeader = res.headers.get("X-RAG-Sources");
+      if (sourcesHeader) {
+        try {
+          sources = JSON.parse(sourcesHeader) as SourceMetadata[];
+          setCurrentSources(sources);
+          if (sources.length > 0) setShowSourcesPanel(true);
+        } catch {
+          // Ignore parse errors
+        }
+      }
+
       const reader = res.body?.getReader();
       if (!reader) { setIsLoading(false); return; }
 
-      const assistantMsg: ChatMessage = { id: `msg_${Date.now() + 1}`, role: "assistant", content: "" };
+      const assistantMsg: ChatMessage = {
+        id: `msg_${Date.now() + 1}`,
+        role: "assistant",
+        content: "",
+        sources,
+      };
       setMessages((prev) => [...prev, assistantMsg]);
 
       const decoder = new TextDecoder();
@@ -144,7 +234,7 @@ export default function NotebookPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, messages]);
+  }, [input, isLoading, messages, files]);
 
   const handleFileUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
@@ -173,7 +263,7 @@ export default function NotebookPage() {
           continue;
         }
 
-        // Save as a paper in the library (returns paper ID directly)
+        // Save as a paper in the library
         const paperId = await savePaper({
           title: extractData.info?.title || file.name.replace(/\.pdf$/i, ""),
           authors: extractData.info?.author ? [extractData.info.author] : [],
@@ -184,7 +274,7 @@ export default function NotebookPage() {
         setFiles((prev) =>
           prev.map((f) =>
             f.id === tempId
-              ? { ...f, paperId, status: "ready", size: `${extractData.pages} pages` }
+              ? { ...f, paperId, status: "processing", size: `${extractData.pages} pages` }
               : f
           )
         );
@@ -195,14 +285,30 @@ export default function NotebookPage() {
         fetch(`/api/papers/${paperId}/pdf`, {
           method: "POST",
           body: pdfFormData,
-        }).catch(() => {});
+        }).catch((err) => console.error("PDF storage failed:", err));
 
-        // Trigger embedding generation in background
-        fetch("/api/embed", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ paperId }),
-        }).catch(() => {});
+        // Trigger embedding generation with proper error handling
+        try {
+          const embedRes = await fetch("/api/embed", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ paperId }),
+          });
+          if (!embedRes.ok) {
+            console.error("Embedding failed:", await embedRes.text());
+            setFiles((prev) =>
+              prev.map((f) => (f.id === tempId ? { ...f, status: "embed_failed" } : f))
+            );
+          } else {
+            setFiles((prev) =>
+              prev.map((f) => (f.id === tempId ? { ...f, status: "ready" } : f))
+            );
+          }
+        } catch {
+          setFiles((prev) =>
+            prev.map((f) => (f.id === tempId ? { ...f, status: "embed_failed" } : f))
+          );
+        }
       } catch {
         setFiles((prev) => prev.map((f) => f.id === tempId ? { ...f, status: "error" } : f));
       }
@@ -255,12 +361,21 @@ export default function NotebookPage() {
                 onChange={() => setFiles((prev) => prev.map((f) => (f.id === file.id ? { ...f, selected: !f.selected } : f)))}
                 className="rounded border-border accent-brand"
               />
-              <FileText size={16} className={cn("shrink-0", file.status === "error" ? "text-red-400" : file.status === "processing" ? "text-amber-400 animate-pulse" : "text-ink-muted")} />
+              <FileText size={16} className={cn("shrink-0", file.status === "error" || file.status === "embed_failed" ? "text-red-400" : file.status === "processing" ? "text-amber-400 animate-pulse" : "text-ink-muted")} />
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-ink truncate">{file.name}</p>
                 <p className="text-[10px] text-ink-muted">
-                  {file.status === "processing" ? "Processing..." : file.status === "error" ? "Failed" : file.size}
+                  {file.status === "processing" ? "Processing..." : file.status === "error" ? "Failed" : file.status === "embed_failed" ? "Embedding failed" : file.size}
                 </p>
+                {file.status === "embed_failed" && file.paperId && (
+                  <button
+                    onClick={() => retryEmbed(file.paperId!)}
+                    className="flex items-center gap-1 text-[10px] text-amber-500 hover:text-amber-400 mt-0.5"
+                  >
+                    <ArrowClockwise size={10} />
+                    Click to retry
+                  </button>
+                )}
               </div>
               <button
                 onClick={() => setFiles((prev) => prev.filter((f) => f.id !== file.id))}
@@ -322,7 +437,11 @@ export default function NotebookPage() {
                 </div>
               )}
               <div className={cn("max-w-[75%] px-4 py-3 rounded-2xl text-sm", msg.role === "user" ? "bg-surface-raised text-ink" : "bg-brand/5 text-ink")}>
-                <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                <p className="whitespace-pre-wrap leading-relaxed">
+                  {msg.role === "assistant" && msg.sources && msg.sources.length > 0
+                    ? renderCitedText(msg.content, msg.sources, setHighlightedSource)
+                    : msg.content}
+                </p>
               </div>
             </div>
           ))}
@@ -344,7 +463,45 @@ export default function NotebookPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="mt-4">
+        {/* Sources Panel */}
+        {currentSources.length > 0 && (
+          <div className="mt-2">
+            <button
+              onClick={() => setShowSourcesPanel((v) => !v)}
+              className="flex items-center gap-2 text-xs text-ink-muted hover:text-ink transition-colors mb-1"
+            >
+              <BookOpen size={14} />
+              <span>Sources cited ({currentSources.length})</span>
+              {showSourcesPanel ? <CaretUp size={12} /> : <CaretDown size={12} />}
+            </button>
+            {showSourcesPanel && (
+              <div className="space-y-1 mb-2 max-h-40 overflow-y-auto">
+                {currentSources.map((src) => (
+                  <div
+                    key={src.chunkId}
+                    className={cn(
+                      "px-3 py-2 rounded-lg text-xs transition-colors",
+                      highlightedSource === src.sourceIndex
+                        ? "bg-brand/10 border border-brand/30"
+                        : "bg-surface-raised/50"
+                    )}
+                  >
+                    <span className="font-medium text-brand">[{src.sourceIndex}]</span>{" "}
+                    <span className="text-ink">{src.paperTitle}</span>
+                    {src.pageNumber && (
+                      <span className="text-ink-muted"> — Page {src.pageNumber}</span>
+                    )}
+                    {src.sectionType && (
+                      <span className="text-ink-muted">, {src.sectionType}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="mt-2">
           <div className="flex items-center gap-2 p-2 rounded-2xl bg-surface border border-border">
             <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 text-ink-muted hover:text-ink transition-colors">
               <Paperclip size={18} />

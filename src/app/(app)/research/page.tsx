@@ -7,10 +7,13 @@ import {
   FloppyDisk,
   X,
   Sparkle,
+  ArrowsIn,
+  ArrowsOut,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { savePaper } from "@/lib/actions/papers";
+import { saveSearchQuery } from "@/lib/actions/search-history";
 
 interface SearchResult {
   id: string;
@@ -24,6 +27,7 @@ interface SearchResult {
   tldr?: string;
   doi?: string;
   tags?: string[];
+  s2Id?: string;
 }
 
 const filterChips = ["Last 5 Years", "PDF Available", "High Impact"];
@@ -93,6 +97,14 @@ export default function ResearchPage() {
 
       setResults(merged);
 
+      // Save search history
+      saveSearchQuery({
+        originalQuery: query,
+        queryType: "user",
+        source: "all",
+        resultCount: merged.length,
+      }).catch(() => {});
+
       if (merged.length === 0 && pubmedRes.status === "rejected" && s2Res.status === "rejected") {
         setError("Both search services failed. Please try again.");
       }
@@ -102,6 +114,55 @@ export default function ResearchPage() {
       setLoading(false);
     }
   }, [query]);
+
+  const findCitingPapers = useCallback(async (s2Id?: string) => {
+    if (!s2Id) return;
+    // TODO: Wire to S2 citations API when available
+    // For now, search S2 with paper ID as query
+    try {
+      const res = await fetch(
+        `/api/search/semantic-scholar?q=${encodeURIComponent(s2Id)}&limit=5`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.results?.length > 0) {
+          setResults((prev) => {
+            const seen = new Set(prev.map((r) => r.id));
+            const newResults = data.results.filter(
+              (r: SearchResult) => !seen.has(r.id)
+            );
+            return [...prev, ...newResults];
+          });
+        }
+      }
+    } catch {
+      // Silently fail
+    }
+  }, []);
+
+  const findReferencedPapers = useCallback(async (s2Id?: string) => {
+    if (!s2Id) return;
+    // TODO: Wire to S2 references API when available
+    try {
+      const res = await fetch(
+        `/api/search/s2-recommendations?paperId=${encodeURIComponent(s2Id)}&limit=5`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.results?.length > 0) {
+          setResults((prev) => {
+            const seen = new Set(prev.map((r) => r.id));
+            const newResults = data.results.filter(
+              (r: SearchResult) => !seen.has(r.id)
+            );
+            return [...prev, ...newResults];
+          });
+        }
+      }
+    } catch {
+      // Silently fail
+    }
+  }, []);
 
   const toggleSave = async (id: string) => {
     const result = results.find((r) => r.id === id);
@@ -255,6 +316,24 @@ export default function ResearchPage() {
                     <FloppyDisk size={14} />
                     {saved.has(r.id) ? "Saved" : "Save"}
                   </button>
+                  {r.s2Id && (
+                    <>
+                      <button
+                        onClick={() => findCitingPapers(r.s2Id)}
+                        className="flex items-center gap-1 text-xs text-ink-muted hover:text-brand transition-colors"
+                      >
+                        <ArrowsIn size={14} />
+                        Citing
+                      </button>
+                      <button
+                        onClick={() => findReferencedPapers(r.s2Id)}
+                        className="flex items-center gap-1 text-xs text-ink-muted hover:text-brand transition-colors"
+                      >
+                        <ArrowsOut size={14} />
+                        References
+                      </button>
+                    </>
+                  )}
                   <span className="text-[10px] text-ink-muted px-2 py-1 rounded bg-surface-raised">
                     {r.source === "pubmed" ? "PubMed" : "Semantic Scholar"}
                   </span>

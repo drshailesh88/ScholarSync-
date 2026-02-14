@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, Suspense } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -15,6 +15,7 @@ import {
   Sparkle,
   DownloadSimple,
   FileDoc,
+  Check,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
@@ -63,6 +64,7 @@ function StudioContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [usageStats, setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const conversationIdRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -186,6 +188,43 @@ function StudioContent() {
     e.preventDefault();
     sendMessage();
   };
+
+  // Auto-save editor content to localStorage (stopgap until real document IDs)
+  const handleEditorUpdate = useCallback(
+    (data: { editor_content: Record<string, unknown>; plain_text_content: string; word_count: number }) => {
+      try {
+        localStorage.setItem(
+          "scholarsync_studio_draft",
+          JSON.stringify({
+            content: data.editor_content,
+            plainText: data.plain_text_content,
+            wordCount: data.word_count,
+            timestamp: Date.now(),
+            title: docTitle,
+          })
+        );
+        setLastSaved(new Date());
+      } catch {
+        // localStorage may be full or unavailable
+      }
+    },
+    [docTitle]
+  );
+
+  // Load saved draft on mount
+  const savedContent = useMemo(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const saved = localStorage.getItem("scholarsync_studio_draft");
+      if (saved) {
+        const parsed = JSON.parse(saved) as { content: Record<string, unknown>; title?: string };
+        return parsed.content;
+      }
+    } catch {
+      // Ignore
+    }
+    return null;
+  }, []);
 
   const getEditorContent = (): string => {
     const el = document.querySelector(".ProseMirror");
@@ -335,7 +374,15 @@ function StudioContent() {
             </p>
           </div>
         )}
-        <div className="flex items-center justify-end px-4 py-2 border-b border-border-subtle bg-surface">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-border-subtle bg-surface">
+          {lastSaved ? (
+            <span className="flex items-center gap-1 text-[10px] text-ink-muted">
+              <Check size={12} className="text-emerald-500" />
+              Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </span>
+          ) : (
+            <span />
+          )}
           <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
@@ -365,7 +412,12 @@ function StudioContent() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto bg-surface">
-          <TiptapEditor className="max-w-3xl mx-auto" />
+          <TiptapEditor
+            className="max-w-3xl mx-auto"
+            content={savedContent}
+            onUpdate={handleEditorUpdate}
+            debounceMs={2000}
+          />
         </div>
       </main>
 
