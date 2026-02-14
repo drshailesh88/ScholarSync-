@@ -1,8 +1,14 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { papers, userReferences, paperChunks } from "@/lib/db/schema";
-import { eq, and, desc, isNull, ilike, or, sql } from "drizzle-orm";
+import {
+  papers,
+  userReferences,
+  paperChunks,
+  projectPapers,
+  projects,
+} from "@/lib/db/schema";
+import { eq, and, desc, asc, isNull, ilike, or, sql, gte, lte, inArray } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { normalizeTitle } from "@/lib/search/dedup";
@@ -32,7 +38,180 @@ export async function getUserPapers(collection?: string) {
     collection: r.ref.collection,
     notes: r.ref.notes,
     tags: r.ref.tags,
+    addedAt: r.ref.createdAt?.toISOString() ?? null,
   }));
+}
+
+/** Filters for the advanced library query */
+export interface LibraryFilters {
+  search?: string;
+  projectId?: number;
+  yearMin?: number;
+  yearMax?: number;
+  studyType?: string;
+  sortBy?: "date_added" | "title" | "citation_count" | "year";
+  sortDir?: "asc" | "desc";
+}
+
+/**
+ * Fetch the current user's library papers with full filtering and sorting.
+ * All filtering is done server-side via Drizzle ORM queries.
+ */
+export async function getFilteredUserPapers(filters: LibraryFilters = {}) {
+  const userId = await getCurrentUserId();
+
+  // When filtering by project, we need the set of paper IDs in that project
+  let projectPaperIds: number[] | null = null;
+  if (filters.projectId) {
+    const ppRows = await db
+      .select({ paperId: projectPapers.paper_id })
+      .from(projectPapers)
+      .where(eq(projectPapers.project_id, filters.projectId));
+    projectPaperIds = ppRows.map((r) => r.paperId);
+    // If the project has no papers, return empty immediately
+    if (projectPaperIds.length === 0) return [];
+  }
+
+  // Build WHERE conditions
+  const conditions = [
+    eq(userReferences.userId, userId),
+    isNull(userReferences.deletedAt),
+  ];
+
+  // Project filter: restrict to paper IDs that belong to that project
+  if (projectPaperIds && projectPaperIds.length > 0) {
+    conditions.push(inArray(papers.id, projectPaperIds));
+  }
+
+  // Year range
+  if (filters.yearMin != null) {
+    conditions.push(gte(papers.year, filters.yearMin));
+  }
+  if (filters.yearMax != null) {
+    conditions.push(lte(papers.year, filters.yearMax));
+  }
+
+  // Study type
+  if (filters.studyType) {
+    conditions.push(eq(papers.study_type, filters.studyType));
+  }
+
+  // Text search (title, journal, authors jsonb cast to text)
+  if (filters.search) {
+    const q = `%${filters.search}%`;
+    conditions.push(
+      or(
+        ilike(papers.title, q),
+        ilike(papers.journal, q),
+        sql`${papers.authors}::text ILIKE ${q}`
+      )!
+    );
+  }
+
+  // Determine ORDER BY
+  let orderClause;
+  const direction = filters.sortDir ?? "desc";
+  switch (filters.sortBy) {
+    case "title":
+      orderClause =
+        direction === "asc" ? asc(papers.title) : desc(papers.title);
+      break;
+    case "citation_count":
+      orderClause =
+        direction === "desc"
+          ? desc(papers.citation_count)
+          : asc(papers.citation_count);
+      break;
+    case "year":
+      orderClause =
+        direction === "desc" ? desc(papers.year) : asc(papers.year);
+      break;
+    case "date_added":
+    default:
+      orderClause =
+        direction === "desc"
+          ? desc(userReferences.createdAt)
+          : asc(userReferences.createdAt);
+      break;
+  }
+
+  const refs = await db
+    .select({
+      ref: userReferences,
+      paper: papers,
+    })
+    .from(userReferences)
+    .innerJoin(papers, eq(userReferences.paperId, papers.id))
+    .where(and(...conditions))
+    .orderBy(orderClause);
+
+  return refs.map((r) => ({
+    ...r.paper,
+    refId: r.ref.id,
+    isFavorite: r.ref.isFavorite,
+    collection: r.ref.collection,
+    notes: r.ref.notes,
+    tags: r.ref.tags,
+    addedAt: r.ref.createdAt?.toISOString() ?? null,
+  }));
+}
+
+/**
+ * Get distinct study types present in the user's library for filter dropdown.
+ */
+export async function getLibraryStudyTypes(): Promise<string[]> {
+  const userId = await getCurrentUserId();
+  const rows = await db
+    .selectDistinct({ studyType: papers.study_type })
+    .from(userReferences)
+    .innerJoin(papers, eq(userReferences.paperId, papers.id))
+    .where(
+      and(
+        eq(userReferences.userId, userId),
+        isNull(userReferences.deletedAt),
+        sql`${papers.study_type} IS NOT NULL AND ${papers.study_type} != ''`
+      )
+    );
+  return rows.map((r) => r.studyType).filter(Boolean) as string[];
+}
+
+/**
+ * Get the year range (min/max) present in the user's library.
+ */
+export async function getLibraryYearRange(): Promise<{
+  min: number | null;
+  max: number | null;
+}> {
+  const userId = await getCurrentUserId();
+  const [row] = await db
+    .select({
+      minYear: sql<number>`MIN(${papers.year})`,
+      maxYear: sql<number>`MAX(${papers.year})`,
+    })
+    .from(userReferences)
+    .innerJoin(papers, eq(userReferences.paperId, papers.id))
+    .where(
+      and(
+        eq(userReferences.userId, userId),
+        isNull(userReferences.deletedAt),
+        sql`${papers.year} IS NOT NULL`
+      )
+    );
+  return { min: row?.minYear ?? null, max: row?.maxYear ?? null };
+}
+
+/**
+ * Get user's projects (lightweight list for filter dropdown).
+ */
+export async function getLibraryProjects(): Promise<
+  { id: number; title: string }[]
+> {
+  const userId = await getCurrentUserId();
+  return db
+    .select({ id: projects.id, title: projects.title })
+    .from(projects)
+    .where(and(eq(projects.user_id, userId), isNull(projects.deleted_at)))
+    .orderBy(desc(projects.updated_at));
 }
 
 interface SavePaperData {
