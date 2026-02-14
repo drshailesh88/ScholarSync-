@@ -74,6 +74,8 @@ interface FilterState {
   rctsOnly: boolean;
   reviews: boolean;
   metaAnalyses: boolean;
+  yearStart: string;
+  yearEnd: string;
 }
 
 export default function ResearchPage() {
@@ -93,6 +95,8 @@ export default function ResearchPage() {
     rctsOnly: false,
     reviews: false,
     metaAnalyses: false,
+    yearStart: "",
+    yearEnd: "",
   });
   const [sort, setSort] = useState<SortOption>("relevance");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
@@ -135,7 +139,17 @@ export default function ResearchPage() {
   };
 
   const toggleFilter = (key: keyof FilterState) => {
-    setFilters((prev) => ({ ...prev, [key]: !prev[key] }));
+    setFilters((prev) => {
+      const val = prev[key];
+      if (typeof val === "boolean") {
+        // When toggling last5Years on, clear custom year range
+        if (key === "last5Years" && !val) {
+          return { ...prev, [key]: true, yearStart: "", yearEnd: "" };
+        }
+        return { ...prev, [key]: !val };
+      }
+      return prev;
+    });
   };
 
   const buildSearchUrl = useCallback(
@@ -148,6 +162,13 @@ export default function ResearchPage() {
 
       if (filters.last5Years) {
         params.set("yearStart", (new Date().getFullYear() - 5).toString());
+      } else {
+        if (filters.yearStart) {
+          params.set("yearStart", filters.yearStart);
+        }
+        if (filters.yearEnd) {
+          params.set("yearEnd", filters.yearEnd);
+        }
       }
       if (filters.pdfAvailable) {
         params.set("openAccessOnly", "true");
@@ -180,7 +201,12 @@ export default function ResearchPage() {
       try {
         const url = buildSearchUrl(pageNum);
         const res = await fetch(url);
-        if (!res.ok) throw new Error("Search failed");
+        if (!res.ok) {
+          const errorBody = await res.json().catch(() => null);
+          throw new Error(
+            errorBody?.error || `Search failed (status ${res.status})`
+          );
+        }
 
         const data: SearchResponse = await res.json();
         setResults(data.results);
@@ -189,15 +215,30 @@ export default function ResearchPage() {
         setSourceCounts(data.sourceCounts);
         setAugmentedQueries(data.augmentedQueries || null);
 
-        // Save search history
+        // Save search history with full context
         saveSearchQuery({
           originalQuery: query,
           queryType: "user",
           source: "all",
           resultCount: data.total,
+          augmentedQueries: data.augmentedQueries
+            ? {
+                pubmed: data.augmentedQueries.pubmed,
+                semanticScholar: data.augmentedQueries.semanticScholar,
+                openAlex: data.augmentedQueries.openAlex,
+              }
+            : undefined,
+          filtersApplied: {
+            sort,
+            ...filters,
+          },
         }).catch(() => {});
-      } catch {
-        setError("Search failed. Please try again.");
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Search failed. Please try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -213,10 +254,13 @@ export default function ResearchPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, sort]);
 
+  const [savingKeys, setSavingKeys] = useState<Set<string>>(new Set());
+
   const handleSave = async (result: UnifiedSearchResult) => {
     const key = result.doi || result.pmid || result.s2Id || result.title;
-    if (saved.has(key)) return;
+    if (saved.has(key) || savingKeys.has(key)) return;
 
+    setSavingKeys((prev) => new Set(prev).add(key));
     try {
       await savePaper({
         title: result.title,
@@ -246,6 +290,12 @@ export default function ResearchPage() {
       setSaved((prev) => new Set(prev).add(key));
     } catch (err) {
       console.error("Failed to save paper:", err);
+    } finally {
+      setSavingKeys((prev) => {
+        const next = new Set(prev);
+        next.delete(key);
+        return next;
+      });
     }
   };
 
@@ -331,6 +381,37 @@ export default function ResearchPage() {
                   {label}
                 </button>
               ))}
+            </div>
+
+            {/* Year Range */}
+            <div className="flex items-center gap-1.5">
+              <input
+                type="number"
+                placeholder="From"
+                value={filters.yearStart}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    yearStart: e.target.value,
+                    last5Years: false,
+                  }))
+                }
+                className="w-[70px] px-2 py-1.5 rounded-lg text-xs bg-surface-raised text-ink border border-border placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/40"
+              />
+              <span className="text-[10px] text-ink-muted">-</span>
+              <input
+                type="number"
+                placeholder="To"
+                value={filters.yearEnd}
+                onChange={(e) =>
+                  setFilters((prev) => ({
+                    ...prev,
+                    yearEnd: e.target.value,
+                    last5Years: false,
+                  }))
+                }
+                className="w-[70px] px-2 py-1.5 rounded-lg text-xs bg-surface-raised text-ink border border-border placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/40"
+              />
             </div>
 
             {/* Sort Dropdown */}
@@ -442,7 +523,27 @@ export default function ResearchPage() {
                   <div className="glass-panel rounded-xl p-5 hover:bg-surface-raised/30 transition-all">
                     {/* Title */}
                     <h3 className="font-medium text-ink text-sm leading-snug mb-1.5">
-                      {r.title}
+                      {r.doi ? (
+                        <a
+                          href={`https://doi.org/${r.doi}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-brand transition-colors"
+                        >
+                          {r.title}
+                        </a>
+                      ) : r.pmid ? (
+                        <a
+                          href={`https://pubmed.ncbi.nlm.nih.gov/${r.pmid}/`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-brand transition-colors"
+                        >
+                          {r.title}
+                        </a>
+                      ) : (
+                        r.title
+                      )}
                     </h3>
 
                     {/* Authors */}
@@ -457,6 +558,20 @@ export default function ResearchPage() {
                       {r.citationCount
                         ? ` · ${r.citationCount} citations`
                         : ""}
+                      {r.doi && (
+                        <>
+                          {" · "}
+                          <a
+                            href={`https://doi.org/${r.doi}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-brand/70 hover:text-brand hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            DOI
+                          </a>
+                        </>
+                      )}
                     </p>
 
                     {/* Abstract */}
@@ -478,15 +593,22 @@ export default function ResearchPage() {
                       {/* Save button */}
                       <button
                         onClick={() => handleSave(r)}
+                        disabled={saved.has(key) || savingKeys.has(key)}
                         className={cn(
                           "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
                           saved.has(key)
                             ? "bg-emerald-500/10 text-emerald-500"
-                            : "bg-brand/10 text-brand hover:bg-brand/20"
+                            : savingKeys.has(key)
+                              ? "bg-brand/10 text-brand/50 cursor-wait"
+                              : "bg-brand/10 text-brand hover:bg-brand/20"
                         )}
                       >
                         <FloppyDisk size={14} />
-                        {saved.has(key) ? "Saved" : "Save"}
+                        {saved.has(key)
+                          ? "Saved"
+                          : savingKeys.has(key)
+                            ? "Saving..."
+                            : "Save"}
                       </button>
 
                       {/* Find Similar button */}
