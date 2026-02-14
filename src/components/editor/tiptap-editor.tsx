@@ -17,6 +17,13 @@ interface TiptapEditorProps {
   }) => void;
   /** Debounce delay in ms for auto-save (default 2000) */
   debounceMs?: number;
+  /**
+   * Change this key to force the editor to replace its content.
+   * Useful when switching documents/projects: pass `document.id` or similar.
+   */
+  contentKey?: string | number | null;
+  /** Called immediately on every keystroke (before debounce) for live status updates */
+  onDirty?: () => void;
 }
 
 export function TiptapEditor({
@@ -24,10 +31,14 @@ export function TiptapEditor({
   content,
   onUpdate,
   debounceMs = 2000,
+  contentKey,
+  onDirty,
 }: TiptapEditorProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onUpdateRef = useRef(onUpdate);
   onUpdateRef.current = onUpdate;
+  const onDirtyRef = useRef(onDirty);
+  onDirtyRef.current = onDirty;
 
   const editor = useEditor({
     extensions: [
@@ -47,6 +58,9 @@ export function TiptapEditor({
       },
     },
     onUpdate: ({ editor: ed }) => {
+      // Notify parent that content has changed (before debounce)
+      onDirtyRef.current?.();
+
       if (!onUpdateRef.current) return;
 
       // Clear previous timer
@@ -86,10 +100,27 @@ export function TiptapEditor({
     [editor]
   );
 
-  // Set initial content when editor is ready and content prop changes
+  // When contentKey changes, force-replace editor content (project switch / initial load)
+  const prevContentKeyRef = useRef(contentKey);
+  useEffect(() => {
+    if (editor && !editor.isDestroyed) {
+      // On initial load or when contentKey changes, set the content
+      if (contentKey !== prevContentKeyRef.current || !prevContentKeyRef.current) {
+        prevContentKeyRef.current = contentKey;
+        if (content) {
+          setContent(content);
+        } else {
+          // Clear editor for a fresh document
+          editor.commands.clearContent();
+        }
+      }
+    }
+  }, [editor, content, contentKey, setContent]);
+
+  // Set initial content when editor is ready and content prop is provided
+  // (handles the case where editor mounts after content is already available)
   useEffect(() => {
     if (editor && content && !editor.isDestroyed) {
-      // Only set if editor is empty (initial load)
       const currentText = editor.getText();
       if (!currentText.trim()) {
         setContent(content);

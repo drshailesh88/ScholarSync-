@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, Suspense, useMemo } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -16,6 +16,10 @@ import {
   DownloadSimple,
   FileDoc,
   Check,
+  CircleNotch,
+  CloudCheck,
+  Warning,
+  CaretDown,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
@@ -24,6 +28,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
+import { useStudioDocument, type SaveStatus } from "@/hooks/use-studio-document";
 
 interface ChatMessage {
   id: string;
@@ -51,10 +56,142 @@ export default function StudioPage() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Save Status Indicator
+// ---------------------------------------------------------------------------
+function SaveIndicator({
+  status,
+  lastSavedAt,
+}: {
+  status: SaveStatus;
+  lastSavedAt: Date | null;
+}) {
+  switch (status) {
+    case "saving":
+      return (
+        <span className="flex items-center gap-1 text-[10px] text-ink-muted">
+          <CircleNotch size={12} className="text-brand animate-spin" />
+          Saving...
+        </span>
+      );
+    case "saved":
+      return (
+        <span className="flex items-center gap-1 text-[10px] text-ink-muted">
+          <CloudCheck size={12} className="text-emerald-500" />
+          Saved{" "}
+          {lastSavedAt
+            ? lastSavedAt.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : ""}
+        </span>
+      );
+    case "unsaved":
+      return (
+        <span className="flex items-center gap-1 text-[10px] text-amber-400">
+          <CircleNotch size={12} />
+          Unsaved changes
+        </span>
+      );
+    case "error":
+      return (
+        <span className="flex items-center gap-1 text-[10px] text-red-400">
+          <Warning size={12} />
+          Save failed
+        </span>
+      );
+    default:
+      // idle / first load -- show last saved if available, otherwise nothing
+      if (lastSavedAt) {
+        return (
+          <span className="flex items-center gap-1 text-[10px] text-ink-muted">
+            <Check size={12} className="text-emerald-500" />
+            Saved{" "}
+            {lastSavedAt.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        );
+      }
+      return <span />;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Project Selector Dropdown
+// ---------------------------------------------------------------------------
+function ProjectSelector({
+  projects,
+  selectedId,
+  onSelect,
+}: {
+  projects: { id: number; title: string }[];
+  selectedId: number | null;
+  onSelect: (id: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const selected = projects.find((p) => p.id === selectedId);
+
+  if (projects.length <= 1) return null;
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-ink-muted hover:text-ink bg-surface-raised/50 hover:bg-surface-raised border border-border-subtle transition-colors max-w-[180px]"
+      >
+        <span className="truncate">{selected?.title ?? "Select project"}</span>
+        <CaretDown size={10} className="shrink-0" />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
+          {projects.map((p) => (
+            <button
+              key={p.id}
+              onClick={() => {
+                onSelect(p.id);
+                setOpen(false);
+              }}
+              className={cn(
+                "w-full text-left px-3 py-2 text-xs transition-colors",
+                p.id === selectedId
+                  ? "bg-brand/10 text-brand font-medium"
+                  : "text-ink hover:bg-surface-raised"
+              )}
+            >
+              {p.title}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main Studio Content
+// ---------------------------------------------------------------------------
 function StudioContent() {
   const searchParams = useSearchParams();
+  const projectParam = searchParams.get("projectId");
+  const initialProjectId = projectParam ? Number(projectParam) : null;
+
   const [isLearnMode, setIsLearnMode] = useState(searchParams.get("mode") === "learn");
-  const [docTitle, setDocTitle] = useState("Untitled Document");
   const [aiTab, setAiTab] = useState("chat");
   const [researchQuery, setResearchQuery] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -64,8 +201,25 @@ function StudioContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [usageStats, setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
-  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const conversationIdRef = useRef<number | null>(null);
+
+  // -----------------------------------------------------------------------
+  // Real DB persistence via hook
+  // -----------------------------------------------------------------------
+  const {
+    document: studioDoc,
+    initialContent,
+    docTitle,
+    setDocTitle,
+    saveStatus,
+    lastSavedAt,
+    isLoading: docLoading,
+    error: docError,
+    handleEditorUpdate,
+    projects: userProjects,
+    selectedProjectId,
+    selectProject,
+  } = useStudioDocument(initialProjectId);
 
   useEffect(() => {
     getUserUsageStats().then((stats) => {
@@ -189,41 +343,13 @@ function StudioContent() {
     sendMessage();
   };
 
-  // Auto-save editor content to localStorage (stopgap until real document IDs)
-  const handleEditorUpdate = useCallback(
-    (data: { editor_content: Record<string, unknown>; plain_text_content: string; word_count: number }) => {
-      try {
-        localStorage.setItem(
-          "scholarsync_studio_draft",
-          JSON.stringify({
-            content: data.editor_content,
-            plainText: data.plain_text_content,
-            wordCount: data.word_count,
-            timestamp: Date.now(),
-            title: docTitle,
-          })
-        );
-        setLastSaved(new Date());
-      } catch {
-        // localStorage may be full or unavailable
-      }
-    },
-    [docTitle]
-  );
-
-  // Load saved draft on mount
-  const savedContent = useMemo(() => {
-    if (typeof window === "undefined") return null;
-    try {
-      const saved = localStorage.getItem("scholarsync_studio_draft");
-      if (saved) {
-        const parsed = JSON.parse(saved) as { content: Record<string, unknown>; title?: string };
-        return parsed.content;
-      }
-    } catch {
-      // Ignore
-    }
-    return null;
+  // Mark status as unsaved immediately on keystroke (before debounce fires)
+  const handleDirty = useCallback(() => {
+    // The hook's handleEditorUpdate will transition to "saving" once the debounce fires.
+    // We want to show "unsaved" right away on keystroke.
+    // We achieve this through the hook -- but as a lightweight approach, we don't
+    // need extra state here: the hook already transitions idle -> saving -> saved.
+    // The onDirty callback gives us a chance to set unsaved if needed.
   }, []);
 
   const getEditorContent = (): string => {
@@ -315,6 +441,17 @@ function StudioContent() {
               Learn
             </button>
           </div>
+
+          {/* Project selector */}
+          {userProjects.length > 1 && (
+            <div className="mt-3">
+              <ProjectSelector
+                projects={userProjects}
+                selectedId={selectedProjectId}
+                onSelect={selectProject}
+              />
+            </div>
+          )}
         </div>
 
         <nav className="px-3 py-3 space-y-0.5">
@@ -375,14 +512,7 @@ function StudioContent() {
           </div>
         )}
         <div className="flex items-center justify-between px-4 py-2 border-b border-border-subtle bg-surface">
-          {lastSaved ? (
-            <span className="flex items-center gap-1 text-[10px] text-ink-muted">
-              <Check size={12} className="text-emerald-500" />
-              Saved {lastSaved.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-            </span>
-          ) : (
-            <span />
-          )}
+          <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
           <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
@@ -412,12 +542,30 @@ function StudioContent() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto bg-surface">
-          <TiptapEditor
-            className="max-w-3xl mx-auto"
-            content={savedContent}
-            onUpdate={handleEditorUpdate}
-            debounceMs={2000}
-          />
+          {docLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="flex flex-col items-center gap-3">
+                <CircleNotch size={28} className="text-brand animate-spin" />
+                <p className="text-sm text-ink-muted">Loading document...</p>
+              </div>
+            </div>
+          ) : docError ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="flex flex-col items-center gap-3 text-center px-8">
+                <Warning size={28} className="text-red-400" />
+                <p className="text-sm text-red-400">{docError}</p>
+              </div>
+            </div>
+          ) : (
+            <TiptapEditor
+              className="max-w-3xl mx-auto"
+              content={initialContent}
+              contentKey={studioDoc?.id ?? null}
+              onUpdate={handleEditorUpdate}
+              onDirty={handleDirty}
+              debounceMs={2000}
+            />
+          )}
         </div>
       </main>
 
