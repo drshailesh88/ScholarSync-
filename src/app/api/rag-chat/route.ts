@@ -5,22 +5,46 @@ import type { RAGResult } from "@/lib/rag/pipeline";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
+import { z } from "zod";
+
+const ragChatRequestSchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant", "system"]),
+        content: z.string().min(1, "Message content must not be empty"),
+      })
+    )
+    .min(1, "At least one message is required")
+    .max(100, "Too many messages"),
+  paperIds: z.array(z.number().int().positive()).optional(),
+  mode: z.enum(["notebook", "general"]).optional(),
+  ragConfig: z
+    .object({
+      useMultiQuery: z.boolean().optional(),
+      useHyDE: z.boolean().optional(),
+      useSelfQuery: z.boolean().optional(),
+      useRerank: z.boolean().optional(),
+      useCompression: z.boolean().optional(),
+      topK: z.number().int().min(1).max(50).optional(),
+    })
+    .optional(),
+});
 
 export async function POST(req: Request): Promise<Response> {
   try {
-    const { messages, paperIds, mode, ragConfig } = (await req.json()) as {
-      messages: { role: string; content: string }[];
-      paperIds?: number[];
-      mode?: string;
-      ragConfig?: Record<string, unknown>;
-    };
-
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return new Response(JSON.stringify({ error: "Messages are required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+    const body = await req.json();
+    const parsed = ragChatRequestSchema.safeParse(body);
+    if (!parsed.success) {
+      return new Response(
+        JSON.stringify({
+          error: "Invalid request body",
+          details: parsed.error.flatten().fieldErrors,
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
+    const { messages, paperIds, mode, ragConfig } = parsed.data;
 
     // Get the latest user message for retrieval
     const lastUserMsg = [...messages]

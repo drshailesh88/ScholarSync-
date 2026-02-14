@@ -1,6 +1,39 @@
 import { NextResponse } from "next/server";
 import PptxGenJS from "pptxgenjs";
 import type { ContentBlock, ThemeConfig } from "@/types/presentation";
+import { z } from "zod";
+
+const pptxContentBlockSchema = z.object({
+  type: z.string().min(1),
+  data: z.record(z.string(), z.unknown()),
+});
+
+const pptxSlideInputSchema = z.object({
+  title: z.string().max(500).optional(),
+  subtitle: z.string().max(500).optional(),
+  content: z.string().optional(),
+  layout: z.string().optional(),
+  contentBlocks: z.array(pptxContentBlockSchema).optional(),
+  speakerNotes: z.string().max(5000).optional(),
+});
+
+const themeConfigSchema = z.object({
+  primaryColor: z.string().optional(),
+  backgroundColor: z.string().optional(),
+  textColor: z.string().optional(),
+  accentColor: z.string().optional(),
+  fontFamily: z.string().optional(),
+  headingFontFamily: z.string().optional(),
+}).optional();
+
+const exportPptxRequestSchema = z.object({
+  title: z.string().max(500, "Title must not exceed 500 characters").optional().default("Presentation"),
+  slides: z
+    .array(pptxSlideInputSchema)
+    .min(1, "At least one slide is required")
+    .max(200, "Too many slides"),
+  themeConfig: themeConfigSchema,
+});
 
 interface SlideInput {
   title?: string;
@@ -23,14 +56,15 @@ function hexNoHash(hex: string): string {
 
 export async function POST(req: Request) {
   try {
-    const body: ExportRequest = await req.json();
-
-    if (!body.slides || !Array.isArray(body.slides) || body.slides.length === 0) {
+    const rawBody = await req.json();
+    const parsed = exportPptxRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "At least one slide is required" },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const body = parsed.data as ExportRequest;
 
     const theme = body.themeConfig;
     const primaryColor = hexNoHash(theme?.primaryColor ?? "#1E3A5F");

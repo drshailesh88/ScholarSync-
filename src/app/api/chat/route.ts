@@ -1,5 +1,19 @@
 import { streamText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+
+const chatRequestSchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant", "system"]),
+        content: z.string().min(1, "Message content must not be empty"),
+      })
+    )
+    .min(1, "At least one message is required")
+    .max(100, "Too many messages"),
+  mode: z.enum(["learn", "assist"]).optional().default("assist"),
+});
 
 export async function POST(req: Request) {
   const { isAIConfigured, requiredKeyName, getModel } = await import("@/lib/ai/models");
@@ -12,7 +26,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { messages, mode } = await req.json();
+    const body = await req.json();
+    const parsed = chatRequestSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const { messages, mode } = parsed.data;
 
     const systemPrompt =
       mode === "learn"

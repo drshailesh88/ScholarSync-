@@ -4,6 +4,29 @@ import { getModel } from "@/lib/ai/models";
 import { getCoachSystemPrompt } from "@/lib/ai/prompts/presentation";
 import { saveCoachEvaluation } from "@/lib/actions/presentations";
 import type { AudienceType, ContentBlock, CoachEvaluation } from "@/types/presentation";
+import { z } from "zod";
+
+const coachContentBlockSchema = z.object({
+  type: z.string().min(1),
+  data: z.record(z.string(), z.unknown()),
+});
+
+const coachSlideSchema = z.object({
+  title: z.string().nullable().optional(),
+  subtitle: z.string().nullable().optional(),
+  layout: z.string().nullable().optional(),
+  contentBlocks: z.array(coachContentBlockSchema).optional(),
+  speakerNotes: z.string().nullable().optional(),
+});
+
+const coachRequestSchema = z.object({
+  deckId: z.number({ error: "deckId is required" }).int().positive(),
+  audienceType: z.enum(["general", "academic", "clinical", "student", "executive"]).optional().default("general"),
+  slides: z
+    .array(coachSlideSchema)
+    .min(1, "At least one slide is required")
+    .max(200, "Too many slides"),
+});
 
 interface CoachRequest {
   deckId: number;
@@ -19,14 +42,15 @@ interface CoachRequest {
 
 export async function POST(req: Request) {
   try {
-    const body: CoachRequest = await req.json();
-
-    if (!body.deckId || !body.slides?.length) {
+    const rawBody = await req.json();
+    const parsed = coachRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "deckId and slides are required" },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const body = parsed.data as CoachRequest;
 
     const systemPrompt = getCoachSystemPrompt(body.audienceType ?? "general");
 

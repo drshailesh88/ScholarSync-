@@ -2,6 +2,14 @@ import { generateObject } from "ai";
 import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
 import { z } from "zod";
 
+const integrityCheckRequestSchema = z.object({
+  text: z
+    .string({ error: "text is required" })
+    .min(50, "Text must be at least 50 characters")
+    .max(100000, "Text must not exceed 100000 characters"),
+  mode: z.enum(["full", "ai_detection", "plagiarism"]).optional().default("full"),
+});
+
 const integritySchema = z.object({
   humanScore: z
     .number()
@@ -48,14 +56,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { text, mode = "full" } = await req.json();
-
-    if (!text || typeof text !== "string" || text.trim().length < 50) {
+    const body = await req.json();
+    const parsed = integrityCheckRequestSchema.safeParse(body);
+    if (!parsed.success) {
       return new Response(
-        JSON.stringify({ error: "Text must be at least 50 characters" }),
+        JSON.stringify({ error: "Invalid request body", details: parsed.error.flatten().fieldErrors }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
+    const { text, mode } = parsed.data;
 
     let systemPrompt =
       "You are an academic integrity analyzer. Analyze the following text for:";

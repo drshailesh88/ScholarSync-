@@ -10,6 +10,13 @@ import {
   Footer,
   Header,
 } from "docx";
+import { z } from "zod";
+
+const exportDocxRequestSchema = z.object({
+  title: z.string().max(500, "Title must not exceed 500 characters").optional(),
+  content: z.string({ error: "Content is required" }).min(1, "Content must not be empty"),
+  citations: z.array(z.string()).optional(),
+});
 
 // ---------------------------------------------------------------------------
 // Minimal HTML-to-docx-elements parser for Tiptap output
@@ -229,14 +236,15 @@ function htmlToDocxParagraphs(html: string): Paragraph[] {
 
 export async function POST(req: Request) {
   try {
-    const { title, content, citations } = await req.json();
-
-    if (!content) {
+    const body = await req.json();
+    const parsed = exportDocxRequestSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Content is required" },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { title, content, citations } = parsed.data;
 
     const docTitle = title || "Untitled Document";
 

@@ -40,23 +40,25 @@ function confidenceToNumber(confidence: "high" | "medium" | "low"): number {
   }
 }
 
+const extractPicoRequestSchema = z.object({
+  paperId: z.number().int().positive().optional(),
+  abstract: z.string().min(10, "Abstract must be at least 10 characters").max(10000, "Abstract must not exceed 10000 characters"),
+  title: z.string().min(1, "Title is required").max(500, "Title must not exceed 500 characters"),
+});
+
 export async function POST(req: Request) {
   try {
     await getCurrentUserId();
 
     const body = await req.json();
-    const { paperId, abstract, title } = body as {
-      paperId?: number;
-      abstract: string;
-      title: string;
-    };
-
-    if (!abstract || !title) {
+    const parsed = extractPicoRequestSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Title and abstract are required" },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const { paperId, abstract, title } = parsed.data;
 
     const { object: picoResult } = await generateObject({
       model: getModel(),

@@ -1,4 +1,11 @@
 import { PDFDocument, StandardFonts, rgb, PageSizes } from "pdf-lib";
+import { z } from "zod";
+
+const exportPdfRequestSchema = z.object({
+  title: z.string().max(500, "Title must not exceed 500 characters").optional(),
+  content: z.string({ error: "Content is required" }).min(1, "Content must not be empty"),
+  citations: z.array(z.string()).optional(),
+});
 
 // Layout constants (in points; 72pt = 1 inch)
 const MARGIN = 72; // 1-inch margins
@@ -26,18 +33,15 @@ interface TextBlock {
 
 export async function POST(req: Request) {
   try {
-    const { title, content, citations } = (await req.json()) as {
-      title?: string;
-      content?: string;
-      citations?: string[];
-    };
-
-    if (!content) {
-      return new Response(JSON.stringify({ error: "Content is required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+    const body = await req.json();
+    const parsed = exportPdfRequestSchema.safeParse(body);
+    if (!parsed.success) {
+      return new Response(
+        JSON.stringify({ error: "Invalid request body", details: parsed.error.flatten().fieldErrors }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
+    const { title, content, citations } = parsed.data;
 
     const pdfBytes = await generatePDF(
       title || "Untitled Document",

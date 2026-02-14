@@ -3,6 +3,25 @@ import { generateText } from "ai";
 import { getSmallModel } from "@/lib/ai/models";
 import { getSlideEditorSystemPrompt } from "@/lib/ai/prompts/presentation";
 import type { SlideEditAction, ContentBlock } from "@/types/presentation";
+import { z } from "zod";
+
+const editSlideContentBlockSchema = z.object({
+  type: z.string().min(1),
+  data: z.record(z.string(), z.unknown()),
+});
+
+const editSlideRequestSchema = z.object({
+  action: z.enum(["simplify", "elaborate", "add_examples", "improve_flow", "make_academic", "add_citations"], {
+    error: "Invalid slide edit action",
+  }),
+  title: z.string().max(500).optional(),
+  subtitle: z.string().max(500).optional(),
+  contentBlocks: z
+    .array(editSlideContentBlockSchema)
+    .min(1, "At least one content block is required"),
+  speakerNotes: z.string().max(5000).optional(),
+  additionalContext: z.string().max(2000).optional(),
+});
 
 interface EditSlideRequest {
   action: SlideEditAction;
@@ -15,14 +34,15 @@ interface EditSlideRequest {
 
 export async function POST(req: Request) {
   try {
-    const body: EditSlideRequest = await req.json();
-
-    if (!body.action || !body.contentBlocks) {
+    const rawBody = await req.json();
+    const parsed = editSlideRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "action and contentBlocks are required" },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const body = parsed.data as EditSlideRequest;
 
     const systemPrompt = getSlideEditorSystemPrompt(body.action);
 

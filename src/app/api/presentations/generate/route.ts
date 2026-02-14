@@ -14,6 +14,24 @@ import type {
   SlideLayout,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
+import { z } from "zod";
+
+const generateRequestSchema = z.object({
+  preprocessedData: z
+    .string({ error: "preprocessedData is required" })
+    .min(1, "preprocessedData must not be empty")
+    .max(100000, "preprocessedData must not exceed 100000 characters"),
+  title: z
+    .string({ error: "title is required" })
+    .min(1, "title must not be empty")
+    .max(500, "title must not exceed 500 characters"),
+  audienceType: z.enum(["general", "academic", "clinical", "student", "executive"]),
+  slideCount: z.number().int().min(1).max(100).optional(),
+  themeKey: z.string().max(50).optional(),
+  projectId: z.number().int().positive().optional(),
+  documentId: z.number().int().positive().optional(),
+  additionalInstructions: z.string().max(2000).optional(),
+});
 
 interface GenerateRequest {
   preprocessedData: string;
@@ -28,7 +46,15 @@ interface GenerateRequest {
 
 export async function POST(req: Request) {
   try {
-    const body: GenerateRequest = await req.json();
+    const rawBody = await req.json();
+    const parsed = generateRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data as GenerateRequest;
 
     const themeKey = body.themeKey ?? "modern";
 
