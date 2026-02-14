@@ -82,6 +82,17 @@ export const snowballStatusEnum = pgEnum("snowball_status", ["running", "complet
 // Slide Decks
 // ---------------------------------------------------------------------------
 export const sourceTypeEnum = pgEnum("source_type", ["synthesis", "papers", "custom"]);
+export const slideLayoutEnum = pgEnum("slide_layout", [
+  "title_slide", "title_content", "two_column", "section_header",
+  "image_text", "chart_slide", "table_slide", "quote_slide",
+  "comparison", "blank",
+]);
+export const generationStatusEnum = pgEnum("generation_status", [
+  "pending", "processing", "completed", "failed",
+]);
+export const audienceTypeEnum = pgEnum("audience_type", [
+  "thesis_defense", "conference", "journal_club", "classroom", "general",
+]);
 
 // ---------------------------------------------------------------------------
 // Deep Research Sessions

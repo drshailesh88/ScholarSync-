@@ -24,6 +24,8 @@ import {
 import {
   slideDecks,
   slides,
+  presentationCoachEvaluations,
+  slideTemplates,
   deepResearchSessions,
   deepResearchSteps,
   datasets,
@@ -117,6 +119,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   writingActionLog: many(writingActionLog),
   documentComments: many(documentComments),
   userLearningProgress: many(userLearningProgress),
+  slideDecks: many(slideDecks),
   marketplaceItems: many(marketplaceItems),
   marketplaceReviews: many(marketplaceReviews),
   institutionMemberships: many(institutionMemberships),
@@ -419,11 +422,16 @@ export const slideDecksRelations = relations(
       fields: [slideDecks.projectId],
       references: [projects.id],
     }),
+    user: one(users, {
+      fields: [slideDecks.userId],
+      references: [users.id],
+    }),
     document: one(synthesisDocuments, {
       fields: [slideDecks.documentId],
       references: [synthesisDocuments.id],
     }),
     slides: many(slides),
+    coachEvaluations: many(presentationCoachEvaluations),
   })
 );
 
@@ -440,6 +448,24 @@ export const slidesRelations = relations(slides, ({ one }) => ({
     references: [synthesisSections.id],
   }),
 }));
+
+// ============================================================
+// 18a. presentation_coach_evaluations
+// ============================================================
+export const presentationCoachEvaluationsRelations = relations(
+  presentationCoachEvaluations,
+  ({ one }) => ({
+    deck: one(slideDecks, {
+      fields: [presentationCoachEvaluations.deckId],
+      references: [slideDecks.id],
+    }),
+  })
+);
+
+// ============================================================
+// 18b. slide_templates (no FK references)
+// ============================================================
+// Standalone lookup table - no relations needed
 
 // ============================================================
 // 19. deep_research_sessions

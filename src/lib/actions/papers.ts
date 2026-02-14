@@ -2,9 +2,10 @@
 
 import { db } from "@/lib/db";
 import { papers, userReferences, paperChunks } from "@/lib/db/schema";
-import { eq, and, desc, isNull, ilike, or } from "drizzle-orm";
+import { eq, and, desc, isNull, ilike, or, sql } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { normalizeTitle } from "@/lib/search/dedup";
 
 export async function getUserPapers(collection?: string) {
   const userId = await getCurrentUserId();
@@ -34,51 +35,178 @@ export async function getUserPapers(collection?: string) {
   }));
 }
 
-export async function savePaper(data: {
+interface SavePaperData {
   title: string;
   authors?: string[];
   journal?: string;
   year?: number;
   doi?: string;
   abstract?: string;
-  source: "pubmed" | "semantic_scholar" | "openalex" | "arxiv" | "user_upload" | "snowball" | "deep_research";
+  source:
+    | "pubmed"
+    | "semantic_scholar"
+    | "openalex"
+    | "arxiv"
+    | "user_upload"
+    | "snowball"
+    | "deep_research";
   pubmed_id?: string;
   semantic_scholar_id?: string;
   citation_count?: number;
   tldr?: string;
   collection?: string;
-}) {
-  const userId = await getCurrentUserId();
+  mesh_terms?: string[];
+  publication_types?: string[];
+  fields_of_study?: string[];
+  study_type?: string;
+  evidence_level?: string;
+  open_access_url?: string;
+  influential_citation_count?: number;
+  reference_count?: number;
+}
 
-  // Upsert paper (check DOI first)
-  let paperId: number;
+async function findExistingPaper(data: SavePaperData): Promise<number | null> {
+  // 1. Check DOI
   if (data.doi) {
     const [existing] = await db
       .select({ id: papers.id })
       .from(papers)
       .where(eq(papers.doi, data.doi));
-    if (existing) {
-      paperId = existing.id;
-    } else {
-      const [newPaper] = await db
-        .insert(papers)
-        .values({
-          title: data.title,
-          authors: data.authors || [],
-          journal: data.journal,
-          year: data.year,
-          doi: data.doi,
-          abstract: data.abstract,
-          source: data.source,
-          pubmed_id: data.pubmed_id,
-          semantic_scholar_id: data.semantic_scholar_id,
-          citation_count: data.citation_count || 0,
-          tldr: data.tldr,
-        })
-        .returning();
-      paperId = newPaper.id;
+    if (existing) return existing.id;
+  }
+
+  // 2. Check PMID
+  if (data.pubmed_id) {
+    const [existing] = await db
+      .select({ id: papers.id })
+      .from(papers)
+      .where(eq(papers.pubmed_id, data.pubmed_id));
+    if (existing) return existing.id;
+  }
+
+  // 3. Check Semantic Scholar ID
+  if (data.semantic_scholar_id) {
+    const [existing] = await db
+      .select({ id: papers.id })
+      .from(papers)
+      .where(eq(papers.semantic_scholar_id, data.semantic_scholar_id));
+    if (existing) return existing.id;
+  }
+
+  // 4. Check normalized title + year
+  if (data.title && data.year) {
+    const normalized = normalizeTitle(data.title);
+    const candidates = await db
+      .select({ id: papers.id, title: papers.title })
+      .from(papers)
+      .where(eq(papers.year, data.year))
+      .limit(100);
+
+    for (const candidate of candidates) {
+      if (normalizeTitle(candidate.title) === normalized) {
+        return candidate.id;
+      }
     }
+  }
+
+  return null;
+}
+
+async function enrichExistingPaper(
+  paperId: number,
+  data: SavePaperData
+): Promise<void> {
+  const [existing] = await db
+    .select()
+    .from(papers)
+    .where(eq(papers.id, paperId));
+  if (!existing) return;
+
+  const updates: Record<string, unknown> = {};
+
+  // Fill missing text fields
+  if (!existing.abstract && data.abstract) updates.abstract = data.abstract;
+  if (!existing.tldr && data.tldr) updates.tldr = data.tldr;
+  if (!existing.journal && data.journal) updates.journal = data.journal;
+  if (!existing.study_type && data.study_type)
+    updates.study_type = data.study_type;
+  if (!existing.evidence_level && data.evidence_level)
+    updates.evidence_level = data.evidence_level;
+  if (!existing.open_access_url && data.open_access_url)
+    updates.open_access_url = data.open_access_url;
+  if (!existing.pdf_url && data.open_access_url)
+    updates.pdf_url = data.open_access_url;
+
+  // Fill missing identifiers
+  if (!existing.doi && data.doi) updates.doi = data.doi;
+  if (!existing.pubmed_id && data.pubmed_id)
+    updates.pubmed_id = data.pubmed_id;
+  if (!existing.semantic_scholar_id && data.semantic_scholar_id)
+    updates.semantic_scholar_id = data.semantic_scholar_id;
+
+  // Fill missing array fields
+  const existingMesh = existing.mesh_terms as string[] | null;
+  if ((!existingMesh || existingMesh.length === 0) && data.mesh_terms?.length)
+    updates.mesh_terms = data.mesh_terms;
+
+  const existingPubTypes = existing.publication_types as string[] | null;
+  if (
+    (!existingPubTypes || existingPubTypes.length === 0) &&
+    data.publication_types?.length
+  )
+    updates.publication_types = data.publication_types;
+
+  const existingFields = existing.fields_of_study as string[] | null;
+  if (
+    (!existingFields || existingFields.length === 0) &&
+    data.fields_of_study?.length
+  )
+    updates.fields_of_study = data.fields_of_study;
+
+  // Update citation count if new value is higher
+  if (
+    data.citation_count &&
+    data.citation_count > (existing.citation_count || 0)
+  )
+    updates.citation_count = data.citation_count;
+
+  if (
+    data.influential_citation_count &&
+    data.influential_citation_count >
+      (existing.influential_citation_count || 0)
+  )
+    updates.influential_citation_count = data.influential_citation_count;
+
+  if (
+    data.reference_count &&
+    data.reference_count > (existing.reference_count || 0)
+  )
+    updates.reference_count = data.reference_count;
+
+  // Fill missing authors
+  const existingAuthors = existing.authors as string[] | null;
+  if (
+    (!existingAuthors || existingAuthors.length === 0) &&
+    data.authors?.length
+  )
+    updates.authors = data.authors;
+
+  if (Object.keys(updates).length > 0) {
+    await db.update(papers).set(updates).where(eq(papers.id, paperId));
+  }
+}
+
+export async function savePaper(data: SavePaperData) {
+  const userId = await getCurrentUserId();
+
+  // Multi-field dedup cascade
+  let paperId = await findExistingPaper(data);
+
+  if (paperId) {
+    // Enrich existing paper with any new metadata
+    await enrichExistingPaper(paperId, data);
   } else {
+    // Insert new paper
     const [newPaper] = await db
       .insert(papers)
       .values({
@@ -93,6 +221,14 @@ export async function savePaper(data: {
         semantic_scholar_id: data.semantic_scholar_id,
         citation_count: data.citation_count || 0,
         tldr: data.tldr,
+        mesh_terms: data.mesh_terms || [],
+        publication_types: data.publication_types || [],
+        fields_of_study: data.fields_of_study || [],
+        study_type: data.study_type,
+        evidence_level: data.evidence_level,
+        open_access_url: data.open_access_url,
+        influential_citation_count: data.influential_citation_count || 0,
+        reference_count: data.reference_count || 0,
       })
       .returning();
     paperId = newPaper.id;
@@ -206,7 +342,9 @@ export async function toggleFavorite(refId: number) {
   const [ref] = await db
     .select()
     .from(userReferences)
-    .where(and(eq(userReferences.id, refId), eq(userReferences.userId, userId)));
+    .where(
+      and(eq(userReferences.id, refId), eq(userReferences.userId, userId))
+    );
 
   if (!ref) return;
 
@@ -223,7 +361,9 @@ export async function removePaper(refId: number) {
   await db
     .update(userReferences)
     .set({ deletedAt: new Date() })
-    .where(and(eq(userReferences.id, refId), eq(userReferences.userId, userId)));
+    .where(
+      and(eq(userReferences.id, refId), eq(userReferences.userId, userId))
+    );
   revalidatePath("/library");
 }
 
