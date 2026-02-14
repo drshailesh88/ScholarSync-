@@ -21,8 +21,24 @@ export interface WritingMetrics {
   avgSentenceLength: number;
   fleschReadingEase: number;
   fleschKincaidGrade: number;
+  gunningFogIndex: number;
+  automatedReadabilityIndex: number;
+  colemanLiauIndex: number;
+  complexWordCount: number;
+  complexWordPercentage: number;
+  vocabularyDiversity: number;
+  avgSyllablesPerWord: number;
   passiveVoiceCount: number;
   readabilityLabel: string;
+}
+
+export interface SentenceAnalysis {
+  text: string;
+  wordCount: number;
+  startIndex: number;
+  isComplex: boolean;
+  passiveVoice: boolean;
+  readabilityNote?: string;
 }
 
 // ---------------------------------------------------------------------------
