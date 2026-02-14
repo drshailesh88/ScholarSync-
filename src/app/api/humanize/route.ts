@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { streamText } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
 
 type HumanizeLevel = "light" | "medium" | "heavy";
 
@@ -53,11 +53,10 @@ function getSystemPrompt(level: HumanizeLevel): string {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!isAIConfigured()) {
     return NextResponse.json(
       {
-        error:
-          "API key not configured. Add ANTHROPIC_API_KEY to .env.local to enable humanization.",
+        error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable humanization.`,
       },
       { status: 503 }
     );

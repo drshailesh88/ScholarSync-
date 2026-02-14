@@ -1,5 +1,5 @@
 import { generateObject } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
 import { z } from "zod";
 
 const integritySchema = z.object({
@@ -38,11 +38,10 @@ const integritySchema = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!isAIConfigured()) {
     return new Response(
       JSON.stringify({
-        error:
-          "API key not configured. Add ANTHROPIC_API_KEY to .env.local to enable integrity checks.",
+        error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable integrity checks.`,
       }),
       { status: 503, headers: { "Content-Type": "application/json" } }
     );

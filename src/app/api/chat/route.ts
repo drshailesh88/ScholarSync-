@@ -2,15 +2,16 @@ import { streamText } from "ai";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  const { isAIConfigured, requiredKeyName, getModel } = await import("@/lib/ai/models");
+
+  if (!isAIConfigured()) {
     return NextResponse.json(
-      { error: "API key not configured. Add ANTHROPIC_API_KEY to .env.local to enable AI chat." },
+      { error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable AI chat.` },
       { status: 503 }
     );
   }
 
   try {
-    const { getModel } = await import("@/lib/ai/models");
     const { messages, mode } = await req.json();
 
     const systemPrompt =

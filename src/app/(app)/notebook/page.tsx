@@ -112,7 +112,7 @@ export default function NotebookPage() {
       if (!res.ok) {
         setMessages((prev) => [
           ...prev,
-          { id: `err_${Date.now()}`, role: "assistant", content: "Unable to connect to AI. Please configure ANTHROPIC_API_KEY." },
+          { id: `err_${Date.now()}`, role: "assistant", content: "Unable to connect to AI. Please check your AI provider API key configuration." },
         ]);
         setIsLoading(false);
         return;

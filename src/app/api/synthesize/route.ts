@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { streamText } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
@@ -105,11 +105,10 @@ function getSystemPrompt(mode: SynthesisMode): string {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!isAIConfigured()) {
     return NextResponse.json(
       {
-        error:
-          "API key not configured. Add ANTHROPIC_API_KEY to .env.local to enable synthesis.",
+        error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable synthesis.`,
       },
       { status: 503 }
     );
