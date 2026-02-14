@@ -1,0 +1,864 @@
+# ScholarSync — Paper Fetching Pipeline Overhaul PRD
+# Version: 1.0
+# Priority: Critical (core differentiator)
+# Scope: 14 fixes across search, ranking, dedup, enrichment, agent, and UI
+
+---
+
+## Context
+
+ScholarSync's research page currently has a basic dual-source search (PubMed + Semantic Scholar) with naive concatenation, DOI-only dedup, no abstracts from PubMed, no ranking, static filter chips, and a hardcoded Research Copilot sidebar. The paper save action only checks DOI for duplicates and never enriches existing records.
+
+This PRD covers 14 improvements that transform the search pipeline from "basic prototype" to "medical librarian quality." Every fix has been analyzed against the current codebase.
+
+---
+
+## Current State (What Exists)
+
+### API Routes
+- `/api/search/pubmed/route.ts` — ESearch → ESummary (no abstracts, no MeSH, no retry, no pagination)
+- `/api/search/semantic-scholar/route.ts` — Graph API search (missing fields, basic 429 handling, no pagination)
+
+### Server Actions
+- `src/lib/actions/papers.ts` — `savePaper()` with DOI-only dedup, no enrichment, no PMID/S2 ID cascade
+
+### Frontend
+- `src/app/(app)/research/page.tsx` — DOI-based dedup, S2-first concatenation, decorative filter chips, static copilot
+
+### Schema
+- `src/lib/db/schema/core.ts` — papers table with `semantic_scholar_id` (no unique), no indexes on identifiers, `study_type` unpopulated
+
+---
+
+## Fix 1: Query Specialization by Source
+
+### Problem
+Raw natural language queries sent to both PubMed and S2. PubMed's Automatic Term Mapping butchers complex queries. S2's semantic search is wasted on Boolean-style queries.
+
+### Implementation
+
+**New file:** `src/lib/ai/query-augment.ts`
+
+```typescript
+// Uses getSmallModel() (Haiku) to generate source-specific queries
+// Input: user's natural language query
+// Output: { pubmedQuery, semanticScholarQuery, openAlexQuery, filters }
+```
+
+**Schema:**
+```typescript
+z.object({
+  pubmedQuery: z.string().describe("Optimized PubMed query with MeSH terms, Boolean operators, field tags like [MeSH], [tiab], [pt]. Example: (\"SGLT2 Inhibitors\"[MeSH] OR empagliflozin OR dapagliflozin) AND \"Heart Failure\"[MeSH]"),
+  semanticScholarQuery: z.string().describe("Natural language query optimized for embedding-based semantic search. Descriptive and conceptual, not Boolean."),
+  openAlexQuery: z.string().describe("Query for OpenAlex search API. Use concept-based approach."),
+  filters: z.object({
+    yearStart: z.number().optional(),
+    yearEnd: z.number().optional(),
+    publicationTypes: z.array(z.string()).optional(),
+    fieldsOfStudy: z.array(z.string()).optional(),
+    onlyOpenAccess: z.boolean().optional(),
+  }),
+})
+```
+
+**Integration point:** Called from the research page before dispatching to individual API routes. Add new unified search endpoint `/api/search/unified/route.ts` that orchestrates everything.
+
+**Model:** Use `getSmallModel()` (Haiku) — this is a cheap classification/generation task.
+
+---
+
+## Fix 2: Reciprocal Rank Fusion (RRF)
+
+### Problem
+Results from PubMed and S2 are concatenated with S2 first. No ranking signal preserved. Papers appearing in both sources (strongest relevance signal) are not boosted.
+
+### Implementation
+
+**New file:** `src/lib/search/rank-fusion.ts`
+
+```typescript
+// RRF formula: score(d) = Σ (1 / (k + rank_i)) for each source list
+// k = 60 (standard constant)
+// Papers appearing in multiple sources get boosted scores
+// Returns merged, deduplicated, ranked array
+```
+
+**Function signature:**
+```typescript
+export function reciprocalRankFusion(
+  resultLists: { source: string; results: SearchResult[] }[],
+  k?: number // default 60
+): RankedSearchResult[]
+```
+
+**Dedup during fusion:** Match by DOI first, then PMID, then S2 ID, then normalized title+year (Fix 9 fuzzy dedup).
+
+**Output:** Each result gets `rrf_score`, `appeared_in_sources: string[]`, and merged metadata from all sources.
+
+---
+
+## Fix 3: PubMed EFetch with Abstract + MeSH + Publication Type Extraction
+
+### Problem
+Current route uses `esummary.fcgi` which returns no abstracts, no MeSH terms, no publication types. The analysis correctly identified this as a critical gap.
+
+### Implementation
+
+**Rewrite:** `src/app/api/search/pubmed/route.ts`
+
+**Changes:**
+1. Keep ESearch step (for PMIDs + total count)
+2. Replace ESummary with EFetch: `efetch.fcgi?db=pubmed&id={pmids}&rettype=xml&retmode=xml`
+3. Parse XML with a lightweight approach (regex or fast-xml-parser if already installed, otherwise regex patterns — do NOT add new XML dependencies)
+4. Extract from each `<PubmedArticle>`:
+   - `<ArticleTitle>` → title
+   - `<Abstract><AbstractText>` → abstract (handle structured abstracts with Label attributes: Background, Methods, Results, Conclusions — concatenate with labels)
+   - `<AuthorList><Author>` → authors (LastName + ForeName)
+   - `<Journal><Title>` → journal
+   - `<PubDate><Year>` → year
+   - `<ArticleIdList><ArticleId IdType="doi">` → DOI
+   - `<ArticleIdList><ArticleId IdType="pubmed">` → PMID
+   - `<PublicationTypeList><PublicationType>` → publication types array (e.g., "Randomized Controlled Trial", "Meta-Analysis", "Review")
+   - `<MeshHeadingList><MeshHeading>` → MeSH terms array (extract DescriptorName text and MajorTopicYN flag)
+5. Add retry with exponential backoff (3 retries, 400ms base delay, 2x multiplier)
+6. Add pagination: accept `page` query param, compute `retstart = page * maxResults`
+7. Add `tool=scholarsync&email=contact@scholarsync.com` to all NCBI URLs (required by NCBI policy for >3 req/sec)
+
+**Return shape update:**
+```typescript
+{
+  id: string,          // PMID
+  source: "pubmed",
+  title: string,
+  authors: string[],
+  journal: string,
+  year: number,
+  doi: string,
+  pmid: string,
+  abstract: string,           // NEW
+  publicationTypes: string[], // NEW
+  meshTerms: string[],        // NEW
+  studyType: string,          // NEW — derived from publicationTypes
+}
+```
+
+**Study type derivation:** Map PubMed publication types to evidence hierarchy:
+- "Meta-Analysis" → "meta_analysis"
+- "Systematic Review" → "systematic_review"
+- "Randomized Controlled Trial" → "rct"
+- "Observational Study" → "observational"
+- "Case Reports" → "case_report"
+- "Review" → "review"
+- Default → "other"
+
+---
+
+## Fix 4: Semantic Scholar Enhanced Fields
+
+### Problem
+Current S2 request only fetches: title, authors, year, abstract, citationCount, journal, tldr, externalIds, url. Missing: publicationTypes, openAccessPdf, fieldsOfStudy, isOpenAccess, referenceCount, influentialCitationCount.
+
+### Implementation
+
+**Update:** `src/app/api/search/semantic-scholar/route.ts`
+
+**Changes:**
+1. Add fields to request: `publicationTypes,openAccessPdf,fieldsOfStudy,isOpenAccess,referenceCount,influentialCitationCount`
+2. Full fields string: `title,authors,year,abstract,citationCount,journal,tldr,externalIds,url,publicationTypes,openAccessPdf,fieldsOfStudy,isOpenAccess,referenceCount,influentialCitationCount`
+3. Add retry with exponential backoff — respect `Retry-After` header from S2
+4. Add pagination: accept `offset` query param
+5. Add year filter: accept `yearStart` and `yearEnd` params → S2 `year` filter
+6. Add publication type filter: accept `pubTypes` param → S2 `publicationTypes` filter
+7. Map S2 publication types to study type hierarchy (same mapping as PubMed)
+
+**Return shape update:**
+```typescript
+{
+  id: string,                  // S2 paperId
+  source: "semantic_scholar",
+  title: string,
+  authors: string[],
+  journal: string,
+  year: number,
+  doi: string,
+  s2Id: string,
+  abstract: string,
+  citationCount: number,
+  influentialCitationCount: number,  // NEW
+  referenceCount: number,            // NEW
+  tldr: string,
+  publicationTypes: string[],        // NEW
+  fieldsOfStudy: string[],           // NEW
+  openAccessPdfUrl: string | null,   // NEW
+  isOpenAccess: boolean,             // NEW
+  studyType: string,                 // NEW
+}
+```
+
+---
+
+## Fix 5: Semantic Scholar Recommendations API
+
+### Problem
+S2 has a Recommendations API that finds similar papers using SPECTER embeddings + citation graph. Not used anywhere. This is what makes ResearchRabbit work.
+
+### Implementation
+
+**New file:** `src/app/api/search/s2-recommendations/route.ts`
+
+**Endpoints:**
+1. `GET /api/search/s2-recommendations?paperId={s2Id}&limit=10` — Single-paper recommendations
+   - Calls: `GET https://api.semanticscholar.org/recommendations/v1/papers/forpaper/{paper_id}?limit={limit}&fields=title,authors,year,abstract,citationCount,journal,tldr,externalIds,url,publicationTypes,openAccessPdf,fieldsOfStudy`
+
+2. `POST /api/search/s2-recommendations` — List-based recommendations
+   - Body: `{ positivePaperIds: string[], negativePaperIds?: string[], limit?: number }`
+   - Calls: `POST https://api.semanticscholar.org/recommendations/v1/papers/` with body `{ positivePaperIds, negativePaperIds }`
+   - This enables the relevance feedback loop (Fix 11)
+
+**Retry:** Same backoff pattern as Fix 4.
+
+---
+
+## Fix 6: OpenAlex as Third Search Source
+
+### Problem
+Only 2 sources (PubMed, S2). Missing preprints, non-indexed journals, institutional data. OpenAlex is CC0, no API key needed, 250M+ works.
+
+### Implementation
+
+**New file:** `src/app/api/search/openalex/route.ts`
+
+**API:** `GET https://api.openalex.org/works?search={query}&per_page={limit}&page={page}&filter={filters}&select={fields}&mailto=contact@scholarsync.com`
+
+**Filters to support:**
+- `publication_year:{yearStart}-{yearEnd}`
+- `type:{type}` (article, review, preprint, etc.)
+- `is_oa:true` (open access only)
+- `concepts.id:{conceptId}` (topic filtering)
+
+**Fields to select:** `id,doi,title,display_name,publication_year,publication_date,type,cited_by_count,is_oa,open_access,authorships,primary_location,abstract_inverted_index,concepts,referenced_works,related_works`
+
+**Abstract handling:** OpenAlex uses inverted index format for abstracts. Reconstruct:
+```typescript
+function reconstructAbstract(invertedIndex: Record<string, number[]>): string {
+  const words: [string, number][] = [];
+  for (const [word, positions] of Object.entries(invertedIndex)) {
+    for (const pos of positions) {
+      words.push([word, pos]);
+    }
+  }
+  words.sort((a, b) => a[1] - b[1]);
+  return words.map(w => w[0]).join(" ");
+}
+```
+
+**Return shape:**
+```typescript
+{
+  id: string,              // OpenAlex ID (W1234567890)
+  source: "openalex",
+  title: string,
+  authors: string[],
+  journal: string,
+  year: number,
+  doi: string,
+  openalexId: string,
+  abstract: string,
+  citationCount: number,
+  isOpenAccess: boolean,
+  openAccessPdfUrl: string | null,
+  concepts: string[],      // hierarchical topics
+  studyType: string,       // mapped from `type` field
+  institutions: string[],  // author affiliations
+}
+```
+
+**Rate limit:** OpenAlex is generous (100K/day with polite pool via `mailto` param). No special handling needed beyond basic retry.
+
+---
+
+## Fix 7: Cohere Rerank on Fused Results
+
+### Problem
+Even after RRF fusion, results aren't ranked by true semantic relevance to the user's specific query. RRF is a statistical fusion — a cross-encoder reranker understands semantics.
+
+### Implementation
+
+**New file:** `src/lib/search/rerank.ts`
+
+**Approach:** Use Cohere Rerank API (or Voyage AI as fallback). This is optional — skip if no COHERE_API_KEY in env. Graceful degradation: if no reranker available, use RRF scores only.
+
+```typescript
+export async function rerankResults(
+  query: string,
+  results: RankedSearchResult[],
+  topN?: number
+): Promise<RankedSearchResult[]>
+```
+
+**API call:**
+```
+POST https://api.cohere.com/v2/rerank
+{
+  model: "rerank-v3.5",
+  query: userQuery,
+  documents: results.map(r => r.title + ". " + (r.abstract || r.tldr || "")),
+  top_n: topN || 20,
+  return_documents: false
+}
+```
+
+**Integration:** Called after RRF fusion, before returning to frontend. Each result gets `rerank_score` added alongside `rrf_score`.
+
+**Env var:** `COHERE_API_KEY` — optional. Add to `.env.example`.
+
+**Cost:** ~$1 per 1000 searches (very cheap). Free tier: 1000 calls/month.
+
+---
+
+## Fix 8: Research Agent with Strategic Search Prompt
+
+### Problem
+No `/api/research-agent` route exists. The Research Copilot sidebar is static. No agent tools for systematic searching.
+
+### Implementation
+
+**New file:** `src/app/api/research-agent/route.ts`
+
+**Agent tools (5 total):**
+
+1. `searchPubMed` — Search PubMed with MeSH-optimized query
+   ```typescript
+   z.object({
+     query: z.string(),
+     maxResults: z.number().default(10),
+     page: z.number().default(0),
+     yearStart: z.number().optional(),
+     yearEnd: z.number().optional(),
+   })
+   ```
+
+2. `searchSemanticScholar` — Search S2 with natural language
+   ```typescript
+   z.object({
+     query: z.string(),
+     limit: z.number().default(10),
+     offset: z.number().default(0),
+     yearStart: z.number().optional(),
+     yearEnd: z.number().optional(),
+     publicationTypes: z.array(z.string()).optional(),
+   })
+   ```
+
+3. `searchOpenAlex` — Search OpenAlex for broader coverage
+   ```typescript
+   z.object({
+     query: z.string(),
+     limit: z.number().default(10),
+     page: z.number().default(1),
+     yearStart: z.number().optional(),
+     yearEnd: z.number().optional(),
+     onlyOpenAccess: z.boolean().optional(),
+   })
+   ```
+
+4. `getPaperDetails` — Fetch full metadata by identifier
+   ```typescript
+   z.object({
+     doi: z.string().optional(),
+     pmid: z.string().optional(),
+     s2Id: z.string().optional(),
+   })
+   ```
+
+5. `findSimilarPapers` — S2 Recommendations API
+   ```typescript
+   z.object({
+     paperId: z.string().describe("Semantic Scholar paper ID"),
+     limit: z.number().default(5),
+   })
+   ```
+
+6. `savePaperToLibrary` — Save a paper to user's library
+   ```typescript
+   z.object({
+     title: z.string(),
+     authors: z.array(z.string()).optional(),
+     doi: z.string().optional(),
+     pmid: z.string().optional(),
+     s2Id: z.string().optional(),
+     abstract: z.string().optional(),
+     year: z.number().optional(),
+     journal: z.string().optional(),
+     source: z.string(),
+   })
+   ```
+
+**System prompt with phased strategy:**
+```
+You are a medical research librarian AI. You conduct systematic literature searches.
+
+PHASE 1 - BROAD SWEEP (3-4 tool calls):
+- Search PubMed with MeSH-optimized queries
+- Search Semantic Scholar with natural language variants
+- Search OpenAlex for broader coverage
+- Try at least 2 different query formulations per source
+
+PHASE 2 - ASSESS COVERAGE (analyze results):
+- Review what you've found. What aspects of the question are NOT covered?
+- Which landmark studies are missing?
+- Are there gaps in evidence levels (e.g., all reviews but no RCTs)?
+
+PHASE 3 - TARGETED SEARCH (2-3 tool calls):
+- Search for gaps identified in Phase 2
+- Use findSimilarPapers on the most relevant papers from Phase 1
+
+PHASE 4 - SYNTHESIZE:
+- Rank papers by relevance to the original question
+- Note where evidence is strong vs. weak
+- Identify conflicting findings
+- Suggest which papers to save
+
+Stop when: new searches return mostly papers already found, OR all key aspects covered.
+```
+
+**Streaming:** Use `streamText` with `maxSteps: 12` for multi-step reasoning.
+
+**Route handler:**
+```typescript
+POST /api/research-agent
+Body: { messages: Message[], context?: { savedPaperIds?: string[] } }
+Returns: streaming text response with tool call results inline
+```
+
+---
+
+## Fix 9: Fuzzy Title Deduplication
+
+### Problem
+DOI-only dedup misses ~20-30% of cross-source duplicates. Papers without DOIs always create duplicates.
+
+### Implementation
+
+**New file:** `src/lib/search/dedup.ts`
+
+**Functions:**
+
+```typescript
+// Normalize title for fuzzy matching
+export function normalizeTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')  // strip punctuation
+    .replace(/\s+/g, ' ')         // collapse whitespace
+    .trim()
+    .slice(0, 150);               // truncate
+}
+
+// Deduplicate search results across sources
+export function deduplicateResults(results: SearchResult[]): SearchResult[] {
+  // Priority: DOI → PMID → S2 ID → normalized title+year
+}
+
+// Check if two results are the same paper
+export function isSamePaper(a: SearchResult, b: SearchResult): boolean {
+  // 1. DOI match
+  if (a.doi && b.doi && a.doi.toLowerCase() === b.doi.toLowerCase()) return true;
+  // 2. PMID match
+  if (a.pmid && b.pmid && a.pmid === b.pmid) return true;
+  // 3. S2 ID match
+  if (a.s2Id && b.s2Id && a.s2Id === b.s2Id) return true;
+  // 4. Normalized title + year
+  if (normalizeTitle(a.title) === normalizeTitle(b.title) && a.year === b.year) return true;
+  return false;
+}
+```
+
+**Update `savePaper()`** in `src/lib/actions/papers.ts`:
+- Replace DOI-only check with multi-field cascade: DOI → PMID → S2 ID → normalized title+year
+- When existing paper found, call `enrichExistingPaper()` to backfill missing fields
+
+**New function in `papers.ts`:**
+```typescript
+async function findExistingPaper(data): Promise<number | null> {
+  // Check DOI → PMID → S2 ID → title+year cascade
+}
+
+async function enrichExistingPaper(paperId: number, newData): Promise<void> {
+  // Fill missing fields: abstract, tldr, citation_count, mesh_terms, study_type, open_access_url
+  // Only update if current field is null/empty and new data has it
+  // Always update citation_count if new value is higher
+}
+```
+
+---
+
+## Fix 10: Unpaywall Integration for Open Access PDFs
+
+### Problem
+papers table has `pdf_url` and `full_text_available` but nothing populates them. Users can't access full text.
+
+### Implementation
+
+**New file:** `src/app/api/search/unpaywall/route.ts`
+
+**API:** `GET https://api.unpaywall.org/v2/{doi}?email=contact@scholarsync.com`
+
+No API key needed. Just an email for polite pool.
+
+**Returns:** Best available OA link (`best_oa_location.url_for_pdf` or `best_oa_location.url`).
+
+**Integration points:**
+1. During search-time enrichment (Fix 12): for any result with a DOI, check Unpaywall in parallel
+2. During paper save: store `pdf_url` and set `open_access = true` if found
+3. On library page: show "PDF Available" badge if `pdf_url` is set
+
+**Rate limit:** 100K/day. Very generous. Simple retry on 429.
+
+**Batch approach:** When displaying search results, fire Unpaywall lookups for all DOIs in parallel (Promise.allSettled). Don't block search results — populate PDF links asynchronously.
+
+---
+
+## Fix 11: Relevance Feedback Loop
+
+### Problem
+No learning from user behavior. ResearchRabbit's key advantage is that it learns from saves/excludes.
+
+### Implementation
+
+**Use S2 Recommendations API (Fix 5)** with user's library data:
+
+**New function in research page or server action:**
+```typescript
+// Get personalized recommendations based on user's saved papers
+export async function getPersonalizedRecommendations(userId: string) {
+  // 1. Get user's saved papers with S2 IDs
+  // 2. Split into positive (isFavorite=true or recently saved) and negative (removed papers)
+  // 3. Call POST /api/search/s2-recommendations with positivePaperIds and negativePaperIds
+  // 4. Return ranked recommendations
+}
+```
+
+**UI integration:**
+- Add "Recommended for You" section on research page when user has 3+ saved papers
+- Add "Find Similar" button on each search result card → calls single-paper recommendations
+- Add "Not Relevant" button alongside Save → stores paper in a `dismissed_papers` list (can use userReferences with a `dismissed` collection)
+
+**Schema change:** None needed — use existing `userReferences` table with collection = "Dismissed" for negative signals.
+
+---
+
+## Fix 12: Cross-Source Metadata Enrichment at Search Time
+
+### Problem
+PubMed gives structured abstracts + MeSH but no TLDR/citation count. S2 gives TLDR + citations but no MeSH. When the same paper appears in both, the merged result should have ALL fields from BOTH sources.
+
+### Implementation
+
+**In `rank-fusion.ts`** — when merging duplicate papers during RRF:
+
+```typescript
+function mergeMetadata(primary: SearchResult, secondary: SearchResult): SearchResult {
+  return {
+    ...primary,
+    // Fill missing fields from secondary source
+    abstract: primary.abstract || secondary.abstract,
+    tldr: primary.tldr || secondary.tldr,
+    citationCount: Math.max(primary.citationCount || 0, secondary.citationCount || 0),
+    meshTerms: primary.meshTerms || secondary.meshTerms,
+    publicationTypes: mergeArrays(primary.publicationTypes, secondary.publicationTypes),
+    openAccessPdfUrl: primary.openAccessPdfUrl || secondary.openAccessPdfUrl,
+    pmid: primary.pmid || secondary.pmid,
+    doi: primary.doi || secondary.doi,
+    s2Id: primary.s2Id || secondary.s2Id,
+    openalexId: primary.openalexId || secondary.openalexId,
+    appearedInSources: [...new Set([...primary.appearedInSources, ...secondary.appearedInSources])],
+  };
+}
+```
+
+---
+
+## Fix 13: Evidence Level / Study Quality Scoring
+
+### Problem
+All papers treated equally. Medical students need to distinguish meta-analyses from case reports.
+
+### Implementation
+
+**New file:** `src/lib/search/evidence-level.ts`
+
+```typescript
+export type EvidenceLevel = 'I' | 'II' | 'III' | 'IV' | 'V';
+
+export function getEvidenceLevel(studyType: string): { level: EvidenceLevel; label: string; color: string } {
+  switch (studyType) {
+    case 'meta_analysis':
+    case 'systematic_review':
+      return { level: 'I', label: 'Systematic Review / Meta-Analysis', color: 'emerald' };
+    case 'rct':
+      return { level: 'II', label: 'Randomized Controlled Trial', color: 'sky' };
+    case 'cohort':
+    case 'observational':
+      return { level: 'III', label: 'Cohort / Observational Study', color: 'amber' };
+    case 'case_control':
+    case 'case_report':
+      return { level: 'IV', label: 'Case Report / Case Series', color: 'orange' };
+    default:
+      return { level: 'V', label: 'Expert Opinion / Other', color: 'slate' };
+  }
+}
+```
+
+**UI integration:**
+- Show evidence level badge on each search result card (colored pill: "Level I", "Level II", etc.)
+- Add filter chip "RCTs Only", "Reviews Only", "Meta-Analyses Only" that actually work
+- Sort option: "By Evidence Level" in addition to relevance
+
+**Data source:** Populated from PubMed `PublicationTypeList` (Fix 3) and S2 `publicationTypes` (Fix 4).
+
+---
+
+## Fix 14: PICO Extraction Pipeline
+
+### Problem
+Systematic reviews require structured PICO data. Manual extraction is slow. Schema has `paper_extractions` table but nothing uses it.
+
+### Implementation
+
+**New file:** `src/app/api/extract-pico/route.ts`
+
+**Endpoint:** `POST /api/extract-pico`
+**Body:** `{ paperId: number, abstract: string, title: string }`
+
+**Uses `generateObject` with Zod schema:**
+```typescript
+const picoSchema = z.object({
+  population: z.string().describe("Study population/participants"),
+  intervention: z.string().describe("Intervention or exposure studied"),
+  comparison: z.string().describe("Comparator or control group"),
+  outcome: z.string().describe("Primary outcome measured"),
+  studyDesign: z.string().describe("Type of study (RCT, cohort, case-control, etc.)"),
+  sampleSize: z.number().optional().describe("Number of participants if mentioned"),
+  duration: z.string().optional().describe("Study duration if mentioned"),
+  keyFindings: z.string().describe("Main findings in one sentence"),
+  limitations: z.string().optional().describe("Key limitations mentioned"),
+  confidence: z.enum(["high", "medium", "low"]).describe("Confidence in extraction accuracy"),
+});
+```
+
+**Model:** Use `getModel()` (Sonnet) — this needs quality reasoning.
+
+**Storage:** Insert into `paper_extractions` table (already exists in schema):
+```typescript
+await db.insert(paperExtractions).values({
+  paper_id: paperId,
+  extraction_type: 'pico',
+  extracted_data: picoResult,
+  model_version: 'claude-sonnet-4',
+  confidence_score: confidenceToNumber(picoResult.confidence),
+});
+```
+
+**UI:** Add "Extract PICO" button on saved papers. Show PICO card below abstract when available.
+
+---
+
+## Schema Changes Required
+
+### papers table — add indexes:
+```typescript
+index("idx_papers_doi").on(table.doi),
+index("idx_papers_pubmed_id").on(table.pubmed_id),
+index("idx_papers_s2_id").on(table.semantic_scholar_id),
+index("idx_papers_year").on(table.year),
+```
+
+### papers table — add unique constraints:
+```typescript
+semantic_scholar_id: text("semantic_scholar_id").unique(),  // currently not unique
+```
+
+### papers table — add new columns:
+```typescript
+mesh_terms: jsonb("mesh_terms").default([]),
+publication_types: jsonb("publication_types").default([]),
+fields_of_study: jsonb("fields_of_study").default([]),
+evidence_level: text("evidence_level"),
+open_access_url: text("open_access_url"),
+influential_citation_count: integer("influential_citation_count").default(0),
+reference_count: integer("reference_count").default(0),
+```
+
+### user_references table — add unique constraint:
+```typescript
+unique("user_references_user_paper_unique").on(table.userId, table.paperId)
+```
+
+---
+
+## Unified Search Type
+
+All search results across all sources should conform to this unified type:
+
+**New file:** `src/types/search.ts`
+
+```typescript
+export interface UnifiedSearchResult {
+  // Identifiers
+  doi?: string;
+  pmid?: string;
+  s2Id?: string;
+  openalexId?: string;
+
+  // Core metadata
+  title: string;
+  authors: string[];
+  journal: string;
+  year: number;
+  abstract?: string;
+  tldr?: string;
+
+  // Metrics
+  citationCount: number;
+  influentialCitationCount?: number;
+  referenceCount?: number;
+
+  // Classification
+  studyType?: string;
+  evidenceLevel?: EvidenceLevel;
+  publicationTypes: string[];
+  meshTerms?: string[];
+  fieldsOfStudy?: string[];
+  concepts?: string[];
+
+  // Access
+  isOpenAccess: boolean;
+  openAccessPdfUrl?: string | null;
+
+  // Provenance
+  sources: string[];           // which APIs returned this paper
+  rrfScore?: number;           // from rank fusion
+  rerankScore?: number;        // from Cohere rerank
+
+  // PICO (if extracted)
+  pico?: {
+    population: string;
+    intervention: string;
+    comparison: string;
+    outcome: string;
+  };
+}
+```
+
+---
+
+## New Unified Search Endpoint
+
+**New file:** `src/app/api/search/unified/route.ts`
+
+This is the main orchestrator that replaces direct calls to individual source APIs from the frontend.
+
+**Flow:**
+1. Receive user query + filters
+2. Call query augmentation (Fix 1) → get source-specific queries
+3. Fan out to PubMed + S2 + OpenAlex in parallel (Promise.allSettled)
+4. Normalize all results to UnifiedSearchResult
+5. Run dedup + RRF fusion (Fix 2 + Fix 9)
+6. Cross-source enrichment (Fix 12)
+7. Optionally rerank with Cohere (Fix 7) — skip if no API key
+8. Apply evidence level scoring (Fix 13)
+9. Check Unpaywall for OA PDFs in parallel (Fix 10) — non-blocking
+10. Return ranked, enriched results
+
+**Query params:**
+```
+GET /api/search/unified?q={query}&page={0}&perPage={20}&yearStart={2020}&yearEnd={2025}&studyTypes={rct,meta_analysis}&openAccessOnly={false}&augment={true}
+```
+
+When `augment=false`, skip the LLM query augmentation (for simple/fast searches).
+
+---
+
+## Frontend Updates
+
+### Research Page (`src/app/(app)/research/page.tsx`)
+
+1. **Replace dual API calls** with single call to `/api/search/unified`
+2. **Wire filter chips** — make "Last 5 Years", "PDF Available", "High Impact" actually filter:
+   - "Last 5 Years" → `yearStart=currentYear-5`
+   - "PDF Available" → `openAccessOnly=true`
+   - "High Impact" → `minCitations=50` (or sort by citations)
+3. **Add new filter chips:** "RCTs Only", "Reviews Only", "Meta-Analyses"
+4. **Add evidence level badges** on each result card
+5. **Add source badges** showing which sources returned each paper (e.g., "PubMed + S2" in green, "OpenAlex" in blue)
+6. **Add pagination controls** — Previous / Page N / Next
+7. **Add sort dropdown** — Relevance (default), Citations, Year, Evidence Level
+8. **Add "Find Similar" button** on each result → calls S2 Recommendations
+9. **Wire Research Copilot sidebar** to `/api/research-agent` with streaming chat
+10. **Add "Recommended for You" section** when user has 3+ saved papers
+
+---
+
+## File Summary
+
+### New Files (12):
+1. `src/lib/ai/query-augment.ts` — LLM query specialization
+2. `src/lib/search/rank-fusion.ts` — RRF implementation
+3. `src/lib/search/dedup.ts` — Multi-field deduplication
+4. `src/lib/search/rerank.ts` — Cohere rerank wrapper
+5. `src/lib/search/evidence-level.ts` — Evidence hierarchy scoring
+6. `src/types/search.ts` — Unified search result type
+7. `src/app/api/search/unified/route.ts` — Main search orchestrator
+8. `src/app/api/search/openalex/route.ts` — OpenAlex search
+9. `src/app/api/search/s2-recommendations/route.ts` — S2 recommendations
+10. `src/app/api/search/unpaywall/route.ts` — OA PDF lookup
+11. `src/app/api/research-agent/route.ts` — AI research agent with tools
+12. `src/app/api/extract-pico/route.ts` — PICO extraction
+
+### Modified Files (4):
+1. `src/app/api/search/pubmed/route.ts` — Rewrite with EFetch + XML parsing
+2. `src/app/api/search/semantic-scholar/route.ts` — Add fields + retry + pagination
+3. `src/lib/actions/papers.ts` — Multi-field dedup + enrichment on save
+4. `src/app/(app)/research/page.tsx` — Full UI overhaul
+5. `src/lib/db/schema/core.ts` — Schema additions (indexes, columns, constraints)
+6. `.env.example` — Add COHERE_API_KEY (optional)
+
+---
+
+## Execution Order
+
+1. Create `src/types/search.ts` (unified type — everything depends on this)
+2. Create `src/lib/search/dedup.ts` (dedup utilities)
+3. Create `src/lib/search/evidence-level.ts` (evidence scoring)
+4. Create `src/lib/search/rank-fusion.ts` (RRF — uses dedup)
+5. Create `src/lib/search/rerank.ts` (Cohere rerank — optional)
+6. Update `src/lib/db/schema/core.ts` (add indexes, columns, constraints)
+7. Rewrite `src/app/api/search/pubmed/route.ts` (EFetch + XML + MeSH)
+8. Update `src/app/api/search/semantic-scholar/route.ts` (enhanced fields)
+9. Create `src/app/api/search/openalex/route.ts` (third source)
+10. Create `src/app/api/search/unpaywall/route.ts` (OA PDF links)
+11. Create `src/app/api/search/s2-recommendations/route.ts` (recommendations)
+12. Create `src/lib/ai/query-augment.ts` (LLM query specialization)
+13. Create `src/app/api/search/unified/route.ts` (orchestrator)
+14. Create `src/app/api/research-agent/route.ts` (AI agent with tools)
+15. Create `src/app/api/extract-pico/route.ts` (PICO extraction)
+16. Update `src/lib/actions/papers.ts` (multi-field dedup + enrichment)
+17. Rewrite `src/app/(app)/research/page.tsx` (full UI overhaul)
+18. Update `.env.example` with new optional vars
+19. Verify: `npx tsc --noEmit` — 0 errors
+20. Verify: `npm run build` — clean production build
+
+---
+
+## Coding Rules
+
+- ALL AI calls use `getModel()`, `getSmallModel()`, or `getBigModel()` from `src/lib/ai/models.ts` — NEVER hardcode model names
+- ALL new API routes return proper error responses with status codes
+- ALL external API calls have retry logic with exponential backoff
+- NO new npm packages unless absolutely necessary (prefer built-in fetch, regex for XML parsing)
+- Use existing Drizzle patterns from `src/lib/actions/papers.ts`
+- Use existing CSS patterns (glass-panel, text-ink, bg-surface, etc.) from globals.css
+- Phosphor Icons ONLY for UI icons
+- TypeScript strict mode — no `any` types
+- Every function that accesses DB must call `getCurrentUserId()` first
