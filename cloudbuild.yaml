@@ -24,6 +24,8 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+      - '--set-env-vars'
+      - 'GCS_BUCKET_NAME=scholarsync-pdfs,GCS_PROJECT_ID=metal-node-486118-t7'
 
 images:
   - 'asia-south1-docker.pkg.dev/metal-node-486118-t7/scholarsync/web:$COMMIT_SHA'

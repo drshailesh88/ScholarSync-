@@ -208,13 +208,14 @@ export default function LibraryPage() {
     if (!file) return;
     setUploading(true);
     try {
+      // Step 1: Extract basic metadata from PDF
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch("/api/extract-pdf", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
 
-      // Save as a new paper
+      // Step 2: Save paper record
       const { savePaper } = await import("@/lib/actions/papers");
       const paperId = await savePaper({
         title: data.info?.title || file.name.replace(/\.pdf$/i, ""),
@@ -222,13 +223,18 @@ export default function LibraryPage() {
         source: "user_upload",
       });
 
-      // Store raw PDF for later viewing
+      // Step 3: Upload PDF to GCS + trigger full processing pipeline
+      // The POST endpoint now stores in GCS and triggers extract -> chunk -> embed
       const pdfFormData = new FormData();
       pdfFormData.append("file", file);
-      fetch(`/api/papers/${paperId}/pdf`, {
+      const uploadRes = await fetch(`/api/papers/${paperId}/pdf`, {
         method: "POST",
         body: pdfFormData,
-      }).catch(() => {});
+      });
+
+      if (!uploadRes.ok) {
+        console.error("PDF upload to storage failed");
+      }
 
       fetchPapers();
     } catch (err) {

@@ -227,6 +227,7 @@ export async function savePaper(data: SavePaperData) {
         study_type: data.study_type,
         evidence_level: data.evidence_level,
         open_access_url: data.open_access_url,
+        pdf_url: data.open_access_url || undefined,
         influential_citation_count: data.influential_citation_count || 0,
         reference_count: data.reference_count || 0,
       })
@@ -247,12 +248,12 @@ export async function savePaper(data: SavePaperData) {
 
   revalidatePath("/library");
 
-  // Auto-chunk in background if we have text content
+  // Auto-process: chunk abstract immediately, then try PDF fetch in background
   if (data.abstract || data.tldr) {
     autoChunkPaper(paperId)
       .then((chunked) => {
         if (chunked > 0) {
-          // Trigger embedding in background
+          // Embed abstract chunks immediately
           import("./embeddings").then(({ embedPaperChunks }) => {
             embedPaperChunks(paperId).catch((err: unknown) => {
               console.error("Background embedding failed:", err);
@@ -262,6 +263,21 @@ export async function savePaper(data: SavePaperData) {
       })
       .catch((err: unknown) => {
         console.error("Auto-chunk failed:", err);
+      });
+  }
+
+  // Try to fetch full-text PDF in background (for ALL papers, not just uploads)
+  // This is fire-and-forget. If it finds a PDF, it will:
+  //   1. Store it in GCS
+  //   2. Extract full text (replacing abstract-only chunks)
+  //   3. Generate embeddings for full-text chunks
+  if (data.doi || data.open_access_url) {
+    import("./pdf-pipeline")
+      .then(({ queuePdfProcessing }) => {
+        queuePdfProcessing(paperId);
+      })
+      .catch((err: unknown) => {
+        console.error("PDF pipeline queue failed:", err);
       });
   }
 

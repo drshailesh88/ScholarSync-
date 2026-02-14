@@ -34,7 +34,9 @@ PHASE 4 - SYNTHESIZE:
 
 Stop when: new searches return mostly papers already found, OR all key aspects covered.
 
-Always cite paper titles and key findings when discussing results. Format recommendations clearly.`;
+Always cite paper titles and key findings when discussing results. Format recommendations clearly.
+
+When saving papers to the library, ALWAYS include the openAccessUrl if one is available from the search results. This enables automatic full-text download for better analysis.`;
 
 export async function POST(req: Request) {
   try {
@@ -262,6 +264,15 @@ export async function POST(req: Request) {
             source: z
               .string()
               .describe("Source: pubmed, semantic_scholar, or openalex"),
+            openAccessUrl: z
+              .string()
+              .optional()
+              .describe("Open access PDF URL if available"),
+            tldr: z
+              .string()
+              .optional()
+              .describe("TLDR summary if available"),
+            citationCount: z.number().optional(),
           }),
           execute: async (params) => {
             const paperId = await savePaper({
@@ -277,6 +288,9 @@ export async function POST(req: Request) {
                 | "openalex",
               pubmed_id: params.pmid,
               semantic_scholar_id: params.s2Id,
+              open_access_url: params.openAccessUrl,
+              tldr: params.tldr,
+              citation_count: params.citationCount,
             });
             return { success: true, paperId };
           },
