@@ -21,7 +21,11 @@ export interface WritingMetrics {
   avgSentenceLength: number;
   fleschReadingEase: number;
   fleschKincaidGrade: number;
+  gunningFogIndex: number;
   passiveVoiceCount: number;
+  weaselWordCount: number;
+  adverbCount: number;
+  complexSentenceCount: number;
   readabilityLabel: string;
 }
 
@@ -93,6 +97,21 @@ function classifyReason(reason: string): {
 }
 
 // ---------------------------------------------------------------------------
+// Complex word detection for Gunning Fog
+// ---------------------------------------------------------------------------
+
+function isComplexWord(word: string): boolean {
+  const syllables = countSyllables(word);
+  if (syllables < 3) return false;
+  // Exclude common suffixes that inflate syllable count
+  const lower = word.toLowerCase();
+  if (lower.endsWith("ed") || lower.endsWith("es") || lower.endsWith("ing")) {
+    return false;
+  }
+  return true;
+}
+
+// ---------------------------------------------------------------------------
 // Readability label from Flesch Reading Ease score
 // ---------------------------------------------------------------------------
 
@@ -151,9 +170,21 @@ export function analyzeWriting(text: string): {
     Math.round(rawGrade * 10) / 10
   );
 
+  // ---- Gunning Fog Index: 0.4 * ((words/sentences) + 100 * (complexWords/words)) ----
+  const complexWords = words.filter((w) => isComplexWord(w));
+  const complexWordRatio = wordCount > 0 ? complexWords.length / wordCount : 0;
+  const gunningFogIndex = Math.max(
+    0,
+    Math.round(
+      (0.4 * (avgWordsPerSentence + 100 * complexWordRatio)) * 10
+    ) / 10
+  );
+
   // ---- Issues from write-good ----
   const issues: WritingIssue[] = [];
   let passiveVoiceCount = 0;
+  let weaselWordCount = 0;
+  let adverbCount = 0;
 
   if (text.trim().length > 0) {
     const writeGoodResults = writeGood(text);
@@ -163,6 +194,12 @@ export function analyzeWriting(text: string): {
 
       if (type === "passive") {
         passiveVoiceCount += 1;
+      }
+      if (type === "weasel") {
+        weaselWordCount += 1;
+      }
+      if (type === "adverb") {
+        adverbCount += 1;
       }
 
       issues.push({
@@ -177,19 +214,23 @@ export function analyzeWriting(text: string): {
   }
 
   // ---- Flag complex sentences (> 35 words) ----
+  let complexSentenceCount = 0;
   let offset = 0;
   for (const sentence of sentences) {
     const sentenceWordCount = splitWords(sentence).length;
     const sentenceStart = text.indexOf(sentence, offset);
-    if (sentenceWordCount > 35 && sentenceStart !== -1) {
-      issues.push({
-        index: sentenceStart,
-        offset: sentence.length,
-        reason: `This sentence has ${sentenceWordCount} words. Consider breaking it up for clarity.`,
-        type: "complex",
-        severity: "warning",
-        suggestion: "Break this into shorter sentences for better readability.",
-      });
+    if (sentenceWordCount > 35) {
+      complexSentenceCount += 1;
+      if (sentenceStart !== -1) {
+        issues.push({
+          index: sentenceStart,
+          offset: sentence.length,
+          reason: `This sentence has ${sentenceWordCount} words. Consider breaking it up for clarity.`,
+          type: "complex",
+          severity: "warning",
+          suggestion: "Break this into shorter sentences for better readability.",
+        });
+      }
     }
     if (sentenceStart !== -1) {
       offset = sentenceStart + sentence.length;
@@ -205,7 +246,11 @@ export function analyzeWriting(text: string): {
     avgSentenceLength: Math.round(avgWordsPerSentence * 10) / 10,
     fleschReadingEase,
     fleschKincaidGrade,
+    gunningFogIndex,
     passiveVoiceCount,
+    weaselWordCount,
+    adverbCount,
+    complexSentenceCount,
     readabilityLabel: getReadabilityLabel(fleschReadingEase),
   };
 
