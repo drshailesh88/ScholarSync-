@@ -32,6 +32,10 @@ export interface UnifiedSearchResult {
   isOpenAccess: boolean;
   openAccessPdfUrl?: string | null;
 
+  // Journal quality (enriched from Scimago data)
+  journalQuartile?: "Q1" | "Q2" | "Q3" | "Q4" | null;
+  journalImpactProxy?: number | null; // Cites per doc (2 years)
+
   // Provenance
   sources: string[];
   rrfScore?: number;
