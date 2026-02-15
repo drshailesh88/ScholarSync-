@@ -16,6 +16,7 @@ import {
   DownloadSimple,
   FileDoc,
   Check,
+  CaretDown,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
@@ -24,6 +25,13 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
+import {
+  GUIDE_STAGES,
+  GUIDE_STAGE_LABELS,
+  GUIDE_DOC_TYPE_LABELS,
+  type GuideDocumentType,
+  type GuideStage,
+} from "@/types/guide";
 
 interface ChatMessage {
   id: string;
@@ -66,6 +74,11 @@ function StudioContent() {
   const [showExport, setShowExport] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const conversationIdRef = useRef<number | null>(null);
+
+  // Guide mode context
+  const [guideDocType, setGuideDocType] = useState<GuideDocumentType | null>(null);
+  const [guideStage, setGuideStage] = useState<GuideStage>("understand");
+  const [showDocTypePicker, setShowDocTypePicker] = useState(false);
 
   useEffect(() => {
     getUserUsageStats().then((stats) => {
@@ -144,6 +157,15 @@ function StudioContent() {
         body: JSON.stringify({
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
           mode: isLearnMode ? "learn" : "write",
+          ...(isLearnMode && guideDocType
+            ? {
+                guideContext: {
+                  documentType: guideDocType,
+                  stage: guideStage,
+                  projectTitle: docTitle !== "Untitled Document" ? docTitle : undefined,
+                },
+              }
+            : {}),
         }),
       });
 
@@ -182,7 +204,7 @@ function StudioContent() {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, messages, isLearnMode]);
+  }, [input, isLoading, messages, isLearnMode, guideDocType, guideStage, docTitle]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -368,10 +390,66 @@ function StudioContent() {
       {/* Center Editor */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {isLearnMode && (
-          <div className="px-6 py-2 bg-emerald-500/10 border-b border-emerald-500/20 text-center">
-            <p className="text-xs font-medium text-emerald-500">
-              Learn Mode — I won&apos;t write for you — I&apos;ll help you think
-            </p>
+          <div className="px-4 py-2 bg-emerald-500/10 border-b border-emerald-500/20">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-emerald-500">
+                Guide Mode — I won&apos;t write for you — I&apos;ll teach you how
+              </p>
+              {/* Document type selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowDocTypePicker((v) => !v)}
+                  className="flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium bg-emerald-500/20 text-emerald-600 hover:bg-emerald-500/30 transition-colors"
+                >
+                  {guideDocType ? GUIDE_DOC_TYPE_LABELS[guideDocType] : "Select document type"}
+                  <CaretDown size={10} />
+                </button>
+                {showDocTypePicker && (
+                  <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50 py-1">
+                    {(Object.entries(GUIDE_DOC_TYPE_LABELS) as [GuideDocumentType, string][]).map(([key, label]) => (
+                      <button
+                        key={key}
+                        onClick={() => { setGuideDocType(key); setShowDocTypePicker(false); }}
+                        className={cn(
+                          "w-full text-left px-3 py-1.5 text-xs transition-colors",
+                          guideDocType === key
+                            ? "bg-emerald-500/10 text-emerald-600 font-medium"
+                            : "text-ink hover:bg-surface-raised"
+                        )}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* Stage progression tracker */}
+            {guideDocType && (
+              <div className="flex items-center gap-1 mt-2">
+                {GUIDE_STAGES.map((stage, i) => {
+                  const isActive = stage === guideStage;
+                  const stageIdx = GUIDE_STAGES.indexOf(guideStage);
+                  const isCompleted = i < stageIdx;
+                  return (
+                    <button
+                      key={stage}
+                      onClick={() => setGuideStage(stage)}
+                      className={cn(
+                        "flex-1 py-1 rounded text-[10px] font-medium transition-all",
+                        isActive
+                          ? "bg-emerald-500 text-white"
+                          : isCompleted
+                            ? "bg-emerald-500/30 text-emerald-600"
+                            : "bg-surface-raised/50 text-ink-muted hover:text-ink"
+                      )}
+                    >
+                      {GUIDE_STAGE_LABELS[stage]}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
         <div className="flex items-center justify-between px-4 py-2 border-b border-border-subtle bg-surface">
@@ -481,7 +559,13 @@ function StudioContent() {
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder={isLearnMode ? "Ask me to challenge your thinking..." : "Ask your AI research assistant..."}
+                  placeholder={
+                    isLearnMode
+                      ? guideDocType
+                        ? `Ask about your ${GUIDE_DOC_TYPE_LABELS[guideDocType].toLowerCase()} — ${GUIDE_STAGE_LABELS[guideStage]} stage...`
+                        : "Tell me what you're working on..."
+                      : "Ask your AI research assistant..."
+                  }
                   className="flex-1 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
                 />
                 <button
