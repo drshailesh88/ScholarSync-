@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { PDFDocument, PDFFont, StandardFonts, rgb } from "pdf-lib";
 import type { ContentBlock } from "@/types/presentation";
 
 interface SlideInput {
@@ -222,7 +222,7 @@ export async function POST(req: Request) {
 
 function wrapText(
   text: string,
-  font: any,
+  font: PDFFont,
   fontSize: number,
   maxWidth: number
 ): string[] {

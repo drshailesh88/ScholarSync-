@@ -13,7 +13,30 @@ import {
   deleteSlide as deleteSlideAction,
 } from "@/lib/actions/presentations";
 import { PRESET_THEMES } from "@/types/presentation";
-import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
+import type { ContentBlock, SlideLayout, ThemeConfig, AudienceType } from "@/types/presentation";
+
+interface DeckState {
+  title: string;
+  audienceType: AudienceType | null;
+}
+
+interface SlideState {
+  id: number;
+  sortOrder: number;
+  layout: SlideLayout | null;
+  title: string | null;
+  subtitle: string | null;
+  contentBlocks: unknown;
+  speakerNotes: string | null;
+}
+
+interface SlideUpdateData {
+  layout?: SlideLayout;
+  title?: string;
+  subtitle?: string;
+  contentBlocks?: ContentBlock[];
+  speakerNotes?: string;
+}
 
 import { SlideOutlineSidebar, type SidebarSlide } from "@/components/presentation/slide-outline-sidebar";
 import { SlideCanvas } from "@/components/presentation/slide-canvas";
@@ -28,8 +51,8 @@ export default function DeckEditorPage() {
   const router = useRouter();
   const deckId = Number(params.deckId);
 
-  const [deck, setDeck] = useState<any>(null);
-  const [slides, setSlides] = useState<any[]>([]);
+  const [deck, setDeck] = useState<DeckState | null>(null);
+  const [slides, setSlides] = useState<SlideState[]>([]);
   const [activeSlideId, setActiveSlideId] = useState<number | null>(null);
   const [themeKey, setThemeKey] = useState("modern");
   const [themeConfig, setThemeConfig] = useState<ThemeConfig | undefined>();
@@ -69,7 +92,7 @@ export default function DeckEditorPage() {
   const activeSlide = slides.find((s) => s.id === activeSlideId);
 
   const debouncedSaveSlide = useCallback(
-    (slideId: number, data: any) => {
+    (slideId: number, data: SlideUpdateData) => {
       if (saveTimer) clearTimeout(saveTimer);
       const timer = setTimeout(async () => {
         await updateSlideAction(slideId, data);
@@ -79,7 +102,7 @@ export default function DeckEditorPage() {
     [saveTimer]
   );
 
-  function updateLocalSlide(slideId: number, data: Partial<any>) {
+  function updateLocalSlide(slideId: number, data: SlideUpdateData) {
     setSlides((prev) =>
       prev.map((s) => (s.id === slideId ? { ...s, ...data } : s))
     );

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Extension } from "@tiptap/core";
+import type { Editor, Range } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
 import { ReactRenderer } from "@tiptap/react";
@@ -25,7 +26,7 @@ interface CommandItem {
   title: string;
   description: string;
   icon: typeof TextHOne;
-  command: (props: { editor: any; range: any }) => void;
+  command: (props: { editor: Editor; range: Range }) => void;
   category: "formatting" | "ai" | "insert";
 }
 
@@ -163,10 +164,12 @@ interface CommandListProps {
 function CommandList({ items, command }: CommandListProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [prevItems, setPrevItems] = useState(items);
 
-  useEffect(() => {
+  if (prevItems !== items) {
+    setPrevItems(items);
     setSelectedIndex(0);
-  }, [items]);
+  }
 
   const selectItem = useCallback(
     (index: number) => {
@@ -201,16 +204,13 @@ function CommandList({ items, command }: CommandListProps) {
     );
   }
 
-  let lastCategory = "";
-
   return (
     <div
       ref={containerRef}
       className="glass-panel rounded-xl border border-border shadow-xl p-1.5 min-w-[280px] max-h-[320px] overflow-y-auto"
     >
       {items.map((item, idx) => {
-        const showCategory = item.category !== lastCategory;
-        lastCategory = item.category;
+        const showCategory = idx === 0 || items[idx - 1].category !== item.category;
         const Icon = item.icon;
 
         return (

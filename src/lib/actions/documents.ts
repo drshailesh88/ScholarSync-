@@ -68,7 +68,7 @@ export async function updateSection(
   const [section] = await db
     .update(synthesisSections)
     .set({
-      editor_content: data.editor_content as any,
+      editor_content: data.editor_content,
       plain_text_content: data.plain_text_content,
       word_count: data.word_count,
       updated_at: new Date(),
@@ -87,7 +87,7 @@ export async function autoSaveVersion(
     document_id: documentId,
     section_id: sectionId,
     version_number: Date.now(),
-    content_snapshot: content as any,
+    content_snapshot: content,
     auto_saved: true,
     saved_by: "auto",
   });

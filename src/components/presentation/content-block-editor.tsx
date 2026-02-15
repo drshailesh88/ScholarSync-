@@ -120,7 +120,7 @@ function BlockEditor({
           {isActive && (
             <select
               value={block.data.style ?? "body"}
-              onChange={(e) => onChange({ ...block, data: { ...block.data, style: e.target.value as any } })}
+              onChange={(e) => onChange({ ...block, data: { ...block.data, style: e.target.value as "title" | "subtitle" | "body" | "caption" } })}
               className="text-[10px] mb-1 bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
             >
               <option value="title">Title</option>

@@ -105,8 +105,8 @@ export function AiToolsDropdown({
       if (result.contentBlocks) {
         onApply(result.contentBlocks, result.speakerNotes);
       }
-    } catch (err: any) {
-      setError(err.message || "Failed");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed");
     } finally {
       setLoading(null);
     }
