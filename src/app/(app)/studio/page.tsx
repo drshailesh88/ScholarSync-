@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback, Suspense, useMemo } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import type { Editor } from "@tiptap/react";
 import {
   FilePdf,
   GlobeSimple,
@@ -22,6 +23,9 @@ import { Tabs } from "@/components/ui/tabs";
 import { CircularGauge } from "@/components/ui/circular-gauge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
+import { CitationDialog } from "@/components/citations/citation-dialog";
+import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
+import { useReferenceStore } from "@/stores/reference-store";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 
@@ -30,12 +34,6 @@ interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
-
-const citedSources = [
-  { type: "pdf" as const, title: "CRISPR-Cas9 Gene Editing for Sickle Cell...", author: "Frangoul, H." },
-  { type: "web" as const, title: "Base editing: precision chemistry on the...", author: "Rees, H.A." },
-  { type: "pdf" as const, title: "Prime editing: A new era of precise genome...", author: "Anzalone, A.V." },
-];
 
 const aiPanelTabs = [
   { key: "chat", label: "Chat & Learn" },
@@ -66,6 +64,17 @@ function StudioContent() {
   const [showExport, setShowExport] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const conversationIdRef = useRef<number | null>(null);
+  const editorRef = useRef<Editor | null>(null);
+
+  // Citation system state
+  const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
+  const openCitationDialog = useReferenceStore((s) => s.openCitationDialog);
+  const closeCitationDialog = useReferenceStore((s) => s.closeCitationDialog);
+  const sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
+  const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
+  const setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
+  const references = useReferenceStore((s) => s.references);
+  const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
 
   useEffect(() => {
     getUserUsageStats().then((stats) => {
@@ -76,6 +85,25 @@ function StudioContent() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Listen for citation dialog open event (from keyboard shortcut + slash command)
+  useEffect(() => {
+    const handler = () => openCitationDialog();
+    window.addEventListener("scholarsync:open-citation-dialog", handler);
+    return () => window.removeEventListener("scholarsync:open-citation-dialog", handler);
+  }, [openCitationDialog]);
+
+  // Listen for Cmd+Shift+R to toggle reference sidebar
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "R") {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [toggleSidebar]);
 
   // Handle slash command AI events from the editor
   useEffect(() => {
@@ -94,9 +122,6 @@ function StudioContent() {
         case "find-sources":
           prompt = `Find and suggest relevant academic sources for the following text:\n\n${detail.context || ""}`;
           break;
-        case "cite":
-          prompt = "Help me add a citation from my library. What paper should I cite here?";
-          break;
         case "integrity-check":
           prompt = `Analyze the following text for potential integrity issues (AI-generated content, plagiarism risks, citation gaps):\n\n${detail.context || ""}`;
           break;
@@ -106,7 +131,6 @@ function StudioContent() {
 
       setInput(prompt);
       setAiTab("chat");
-      // Auto-send after a tick
       setTimeout(() => {
         setInput(prompt);
         const form = document.querySelector<HTMLFormElement>("form");
@@ -116,6 +140,41 @@ function StudioContent() {
 
     window.addEventListener("scholarsync:ai-action", handler);
     return () => window.removeEventListener("scholarsync:ai-action", handler);
+  }, []);
+
+  // Handle citation insertion from the dialog
+  const handleInsertCitation = useCallback((referenceIds: string[]) => {
+    const editor = editorRef.current;
+    if (!editor || editor.isDestroyed) return;
+
+    // Insert citation node at current cursor position
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: "citation",
+        attrs: { referenceIds },
+      })
+      .run();
+
+    // Ensure bibliography exists at end of document
+    let hasBibliography = false;
+    editor.state.doc.descendants((node) => {
+      if (node.type.name === "bibliography") {
+        hasBibliography = true;
+        return false;
+      }
+    });
+
+    if (!hasBibliography) {
+      editor.commands.insertContentAt(editor.state.doc.content.size, {
+        type: "bibliography",
+      });
+    }
+  }, []);
+
+  const handleEditorReady = useCallback((editor: Editor) => {
+    editorRef.current = editor;
   }, []);
 
   const sendMessage = useCallback(async () => {
@@ -128,14 +187,12 @@ function StudioContent() {
     setChatError(null);
 
     try {
-      // Create conversation on first message
       if (!conversationIdRef.current) {
         const mode = isLearnMode ? "learn" : ("chat" as const);
         const convo = await createConversation({ mode, title: input.trim().slice(0, 80) });
         conversationIdRef.current = convo.id;
       }
 
-      // Persist user message
       addMessage({ conversation_id: conversationIdRef.current, role: "user", content: input.trim() }).catch(() => {});
 
       const res = await fetch("/api/chat", {
@@ -173,7 +230,6 @@ function StudioContent() {
         setMessages((prev) => prev.map((m) => (m.id === assistantMsg.id ? { ...m, content: assistantMsg.content } : m)));
       }
 
-      // Persist assistant response
       if (conversationIdRef.current && assistantMsg.content) {
         addMessage({ conversation_id: conversationIdRef.current, role: "assistant", content: assistantMsg.content }).catch(() => {});
       }
@@ -189,7 +245,6 @@ function StudioContent() {
     sendMessage();
   };
 
-  // Auto-save editor content to localStorage (stopgap until real document IDs)
   const handleEditorUpdate = useCallback(
     (data: { editor_content: Record<string, unknown>; plain_text_content: string; word_count: number }) => {
       try {
@@ -211,7 +266,6 @@ function StudioContent() {
     [docTitle]
   );
 
-  // Load saved draft on mount
   const savedContent = useMemo(() => {
     if (typeof window === "undefined") return null;
     try {
@@ -284,6 +338,18 @@ function StudioContent() {
     }
   };
 
+  // Cited sources from reference store (replaces hardcoded list)
+  const citedSourcesList = useMemo(() => {
+    return Array.from(referenceNumberMap.entries())
+      .sort(([, a], [, b]) => a - b)
+      .slice(0, 5)
+      .map(([refId, num]) => {
+        const ref = references.get(refId);
+        return ref ? { num, title: ref.title, author: ref.authors[0]?.family || "Unknown" } : null;
+      })
+      .filter(Boolean) as { num: number; title: string; author: string }[];
+  }, [referenceNumberMap, references]);
+
   return (
     <div className="flex h-[calc(100vh-7rem)] -m-6 -mt-0">
       {/* Left Sidebar */}
@@ -331,27 +397,41 @@ function StudioContent() {
           </Link>
         </nav>
 
-        <div className="px-4 py-3 border-t border-border-subtle">
+        <div className="px-4 py-3 border-t border-border-subtle flex-1 overflow-y-auto">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-ink-muted uppercase tracking-wider">Cited Sources</span>
-            <button className="text-brand hover:text-brand-hover">
+            <span className="text-xs font-medium text-ink-muted uppercase tracking-wider">
+              References ({references.size})
+            </span>
+            <button onClick={openCitationDialog} className="text-brand hover:text-brand-hover">
               <Plus size={14} />
             </button>
           </div>
           <div className="space-y-2">
-            {citedSources.map((src, i) => (
-              <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-surface-raised/50">
-                {src.type === "pdf" ? (
-                  <FilePdf size={14} className="text-red-400 shrink-0 mt-0.5" />
-                ) : (
-                  <GlobeSimple size={14} className="text-sky-400 shrink-0 mt-0.5" />
-                )}
-                <div className="min-w-0">
-                  <p className="text-xs text-ink truncate">{src.title}</p>
-                  <p className="text-[10px] text-ink-muted">{src.author}</p>
+            {citedSourcesList.length > 0 ? (
+              citedSourcesList.map((src) => (
+                <div key={src.num} className="flex items-start gap-2 p-2 rounded-lg bg-surface-raised/50">
+                  <span className="text-[10px] font-mono font-bold text-blue-500 shrink-0 mt-0.5">
+                    [{src.num}]
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-xs text-ink truncate">{src.title}</p>
+                    <p className="text-[10px] text-ink-muted">{src.author}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-[10px] text-ink-muted text-center py-2">
+                Use Cmd+Shift+C to add citations
+              </p>
+            )}
+            {references.size > 5 && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="w-full text-[10px] text-brand hover:text-brand-hover py-1"
+              >
+                View all {references.size} references
+              </button>
+            )}
           </div>
         </div>
 
@@ -417,140 +497,159 @@ function StudioContent() {
             content={savedContent}
             onUpdate={handleEditorUpdate}
             debounceMs={2000}
+            onEditorReady={handleEditorReady}
+            onOpenCitationDialog={openCitationDialog}
+            onToggleReferenceSidebar={toggleSidebar}
+            referenceCount={references.size}
           />
         </div>
       </main>
 
-      {/* Right AI Panel */}
-      <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
-        <div className="px-4 py-3 border-b border-border-subtle">
-          <Tabs tabs={aiPanelTabs} activeTab={aiTab} onChange={setAiTab} />
-        </div>
+      {/* Right: AI Panel or Reference Sidebar */}
+      {sidebarOpen ? (
+        <ReferenceSidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          onOpenCitationDialog={openCitationDialog}
+        />
+      ) : (
+        <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
+          <div className="px-4 py-3 border-b border-border-subtle">
+            <Tabs tabs={aiPanelTabs} activeTab={aiTab} onChange={setAiTab} />
+          </div>
 
-        {aiTab === "chat" && (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
-              {chatError && (
-                <div className="p-3 rounded-lg bg-amber-500/10 text-amber-500 text-xs">
-                  {chatError}
-                </div>
-              )}
-              {messages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={cn(
-                    "flex gap-2",
-                    msg.role === "user" ? "justify-end" : "justify-start"
-                  )}
-                >
-                  {msg.role === "assistant" && (
-                    <div className="w-6 h-6 rounded-full bg-brand/20 flex items-center justify-center shrink-0 mt-0.5">
-                      <Sparkle size={12} className="text-brand" />
-                    </div>
-                  )}
+          {aiTab === "chat" && (
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+                {chatError && (
+                  <div className="p-3 rounded-lg bg-amber-500/10 text-amber-500 text-xs">
+                    {chatError}
+                  </div>
+                )}
+                {messages.map((msg) => (
                   <div
+                    key={msg.id}
                     className={cn(
-                      "max-w-[85%] px-3 py-2 rounded-xl text-sm",
-                      msg.role === "user"
-                        ? "bg-surface-raised text-ink"
-                        : "bg-brand/5 text-ink"
+                      "flex gap-2",
+                      msg.role === "user" ? "justify-end" : "justify-start"
                     )}
                   >
-                    <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
-                  </div>
-                </div>
-              ))}
-              {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-                <div className="flex gap-2">
-                  <div className="w-6 h-6 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
-                    <Sparkle size={12} className="text-brand animate-spin" />
-                  </div>
-                  <div className="px-3 py-2 rounded-xl bg-brand/5">
-                    <div className="flex gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce" />
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce [animation-delay:150ms]" />
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce [animation-delay:300ms]" />
+                    {msg.role === "assistant" && (
+                      <div className="w-6 h-6 rounded-full bg-brand/20 flex items-center justify-center shrink-0 mt-0.5">
+                        <Sparkle size={12} className="text-brand" />
+                      </div>
+                    )}
+                    <div
+                      className={cn(
+                        "max-w-[85%] px-3 py-2 rounded-xl text-sm",
+                        msg.role === "user"
+                          ? "bg-surface-raised text-ink"
+                          : "bg-brand/5 text-ink"
+                      )}
+                    >
+                      <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
                     </div>
                   </div>
+                ))}
+                {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+                  <div className="flex gap-2">
+                    <div className="w-6 h-6 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
+                      <Sparkle size={12} className="text-brand animate-spin" />
+                    </div>
+                    <div className="px-3 py-2 rounded-xl bg-brand/5">
+                      <div className="flex gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce [animation-delay:150ms]" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce [animation-delay:300ms]" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+              <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-border-subtle">
+                <div className="flex gap-2">
+                  <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder={isLearnMode ? "Ask me to challenge your thinking..." : "Ask your AI research assistant..."}
+                    className="flex-1 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isLoading || !input.trim()}
+                    className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50"
+                  >
+                    <PaperPlaneRight size={16} />
+                  </button>
                 </div>
-              )}
-              <div ref={messagesEndRef} />
+              </form>
             </div>
-            <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-border-subtle">
+          )}
+
+          {aiTab === "research" && (
+            <div className="flex-1 px-4 py-3 space-y-3 overflow-y-auto">
               <div className="flex gap-2">
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={isLearnMode ? "Ask me to challenge your thinking..." : "Ask your AI research assistant..."}
-                  className="flex-1 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
-                />
-                <button
-                  type="submit"
-                  disabled={isLoading || !input.trim()}
-                  className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50"
-                >
-                  <PaperPlaneRight size={16} />
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {aiTab === "research" && (
-          <div className="flex-1 px-4 py-3 space-y-3 overflow-y-auto">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-                <input
-                  value={researchQuery}
-                  onChange={(e) => setResearchQuery(e.target.value)}
-                  placeholder="Search PubMed..."
-                  className="w-full pl-8 pr-3 py-2 rounded-lg bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none"
-                />
-              </div>
-              <Link
-                href={`/research${researchQuery ? `?q=${encodeURIComponent(researchQuery)}` : ""}`}
-                className="px-3 py-2 rounded-lg bg-brand text-white text-xs font-medium hover:bg-brand-hover transition-colors"
-              >
-                Search
-              </Link>
-            </div>
-            <div className="text-center py-8 text-xs text-ink-muted">
-              Search for papers to add to your draft
-            </div>
-          </div>
-        )}
-
-        {aiTab === "checks" && (
-          <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto">
-            <div className="flex flex-col items-center py-4">
-              <CircularGauge value={92} label="Human Score" size={100} />
-            </div>
-            <div className="space-y-3">
-              <div className="p-3 rounded-lg bg-surface-raised">
-                <div className="flex items-center gap-2 mb-1">
-                  <ShieldCheck size={14} className="text-emerald-500" />
-                  <span className="text-xs font-medium text-ink">AI Detection</span>
+                <div className="relative flex-1">
+                  <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+                  <input
+                    value={researchQuery}
+                    onChange={(e) => setResearchQuery(e.target.value)}
+                    placeholder="Search PubMed..."
+                    className="w-full pl-8 pr-3 py-2 rounded-lg bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none"
+                  />
                 </div>
-                <p className="text-xs text-ink-muted">92% human-written confidence</p>
-              </div>
-              <div className="p-3 rounded-lg bg-surface-raised">
-                <div className="flex items-center gap-2 mb-1">
-                  <ShieldCheck size={14} className="text-amber-500" />
-                  <span className="text-xs font-medium text-ink">Plagiarism</span>
-                </div>
-                <p className="text-xs text-ink-muted">2 matches found</p>
                 <Link
-                  href="/compliance"
-                  className="text-xs text-brand hover:text-brand-hover mt-1 inline-block"
+                  href={`/research${researchQuery ? `?q=${encodeURIComponent(researchQuery)}` : ""}`}
+                  className="px-3 py-2 rounded-lg bg-brand text-white text-xs font-medium hover:bg-brand-hover transition-colors"
                 >
-                  Review Matches →
+                  Search
                 </Link>
               </div>
+              <div className="text-center py-8 text-xs text-ink-muted">
+                Search for papers to add to your draft
+              </div>
             </div>
-          </div>
-        )}
-      </aside>
+          )}
+
+          {aiTab === "checks" && (
+            <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto">
+              <div className="flex flex-col items-center py-4">
+                <CircularGauge value={92} label="Human Score" size={100} />
+              </div>
+              <div className="space-y-3">
+                <div className="p-3 rounded-lg bg-surface-raised">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldCheck size={14} className="text-emerald-500" />
+                    <span className="text-xs font-medium text-ink">AI Detection</span>
+                  </div>
+                  <p className="text-xs text-ink-muted">92% human-written confidence</p>
+                </div>
+                <div className="p-3 rounded-lg bg-surface-raised">
+                  <div className="flex items-center gap-2 mb-1">
+                    <ShieldCheck size={14} className="text-amber-500" />
+                    <span className="text-xs font-medium text-ink">Plagiarism</span>
+                  </div>
+                  <p className="text-xs text-ink-muted">2 matches found</p>
+                  <Link
+                    href="/compliance"
+                    className="text-xs text-brand hover:text-brand-hover mt-1 inline-block"
+                  >
+                    Review Matches →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </aside>
+      )}
+
+      {/* Citation Dialog (modal overlay) */}
+      <CitationDialog
+        open={citationDialogOpen}
+        onClose={closeCitationDialog}
+        onInsert={handleInsertCitation}
+      />
     </div>
   );
 }
