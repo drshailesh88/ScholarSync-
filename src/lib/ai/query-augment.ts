@@ -28,17 +28,25 @@ const augmentedQuerySchema = z.object({
 export type AugmentedQuery = z.infer<typeof augmentedQuerySchema>;
 
 export async function augmentQuery(userQuery: string): Promise<AugmentedQuery> {
-  const { object } = await generateObject({
-    model: getSmallModel(),
-    schema: augmentedQuerySchema,
-    system: `You are a medical librarian. Convert the user's research question into optimized search queries for different academic databases.
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+  try {
+    const { object } = await generateObject({
+      model: getSmallModel(),
+      schema: augmentedQuerySchema,
+      system: `You are a medical librarian. Convert the user's research question into optimized search queries for different academic databases.
 
 For PubMed: Use MeSH terms with [MeSH] tags, Boolean operators (AND, OR), field tags ([tiab] for title/abstract, [pt] for publication type). Be specific and structured.
 For Semantic Scholar: Use natural language that captures the conceptual meaning. Be descriptive, not Boolean.
 For OpenAlex: Use natural language keywords. Include synonyms.
 
 Also suggest appropriate filters (year range, publication types) based on the query context.`,
-    prompt: userQuery,
-  });
-  return object;
+      prompt: userQuery,
+      abortSignal: controller.signal,
+    });
+    return object;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }

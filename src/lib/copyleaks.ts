@@ -1,6 +1,8 @@
 // Copyleaks plagiarism detection API client
 // API flow: Login -> Submit scan -> Poll for results
 
+import { resilientFetch } from "@/lib/http/resilient-fetch";
+
 export interface CopyleaksConfig {
   email: string; // from COPYLEAKS_EMAIL env var
   apiKey: string; // from COPYLEAKS_API_KEY env var
@@ -47,13 +49,14 @@ export async function getCopyleaksToken(): Promise<string> {
 
   const { email, apiKey } = getConfig();
 
-  const res = await fetch(
+  const res = await resilientFetch(
     "https://id.copyleaks.com/v3/account/login/api",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, key: apiKey }),
-    }
+    },
+    { service: "Copyleaks", timeout: 30000, maxRetries: 2 }
   );
 
   if (!res.ok) {
@@ -88,7 +91,7 @@ export async function submitScan(
   // Base64-encode the text as required by the Copyleaks file submission endpoint
   const base64Text = Buffer.from(text, "utf-8").toString("base64");
 
-  const res = await fetch(
+  const res = await resilientFetch(
     `https://api.copyleaks.com/v3/scans/submit/file/${id}`,
     {
       method: "PUT",
@@ -104,13 +107,13 @@ export async function submitScan(
           webhooks: {
             status: `${process.env.NEXT_PUBLIC_APP_URL ?? "https://localhost:3000"}/api/copyleaks/webhook/{STATUS}`,
           },
-          // Scan against internet sources and internal database
           scanning: {
             internet: true,
           },
         },
       }),
-    }
+    },
+    { service: "Copyleaks", timeout: 30000, maxRetries: 2 }
   );
 
   if (!res.ok) {
@@ -131,11 +134,12 @@ export async function getScanResults(
   const token = await getCopyleaksToken();
 
   // First, check the scan status
-  const statusRes = await fetch(
+  const statusRes = await resilientFetch(
     `https://api.copyleaks.com/v3/scans/${scanId}/status`,
     {
       headers: { Authorization: `Bearer ${token}` },
-    }
+    },
+    { service: "Copyleaks", timeout: 30000, maxRetries: 2 }
   );
 
   if (!statusRes.ok) {
@@ -166,11 +170,12 @@ export async function getScanResults(
   }
 
   // Scan is complete -- fetch the full results
-  const resultsRes = await fetch(
+  const resultsRes = await resilientFetch(
     `https://api.copyleaks.com/v3/scans/${scanId}/results`,
     {
       headers: { Authorization: `Bearer ${token}` },
-    }
+    },
+    { service: "Copyleaks", timeout: 30000, maxRetries: 2 }
   );
 
   if (!resultsRes.ok) {

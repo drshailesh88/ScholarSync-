@@ -1,5 +1,9 @@
 import type { UnifiedSearchResult } from "@/types/search";
 import { mapS2PublicationType, getEvidenceLevel } from "@/lib/search/evidence-level";
+import { resilientFetch } from "@/lib/http/resilient-fetch";
+import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
+
+const breaker = createCircuitBreaker({ service: "SemanticScholar", failureThreshold: 5 });
 
 interface S2SearchOptions {
   limit?: number;
@@ -33,31 +37,6 @@ interface S2SearchResponse {
 }
 
 const S2_FIELDS = "title,authors,year,abstract,citationCount,journal,tldr,externalIds,url,publicationTypes,openAccessPdf,fieldsOfStudy,isOpenAccess,referenceCount,influentialCitationCount";
-
-async function fetchWithRetry(
-  url: string,
-  maxRetries: number = 3,
-  baseDelay: number = 1000
-): Promise<Response> {
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    const headers: Record<string, string> = {};
-    if (process.env.SEMANTIC_SCHOLAR_API_KEY) {
-      headers["x-api-key"] = process.env.SEMANTIC_SCHOLAR_API_KEY;
-    }
-    const response = await fetch(url, { headers });
-    if (response.ok) return response;
-    if (response.status === 429 || response.status >= 500) {
-      const retryAfter = response.headers.get("Retry-After");
-      const delay = retryAfter
-        ? parseInt(retryAfter, 10) * 1000
-        : baseDelay * Math.pow(2, attempt);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      continue;
-    }
-    throw new Error(`S2 API error: ${response.status}`);
-  }
-  throw new Error("S2 API: max retries exceeded");
-}
 
 function mapPaper(paper: S2Paper): UnifiedSearchResult {
   const publicationTypes = paper.publicationTypes || [];
@@ -98,6 +77,11 @@ export async function searchSemanticScholar(
   query: string,
   options: S2SearchOptions = {}
 ): Promise<{ results: UnifiedSearchResult[]; total: number }> {
+  if (!breaker.canRequest()) {
+    console.warn("[SemanticScholar] Circuit open — skipping");
+    return { results: [], total: 0 };
+  }
+
   const limit = options.limit || 20;
   const offset = options.offset || 0;
 
@@ -111,9 +95,21 @@ export async function searchSemanticScholar(
     url += `&year=-${options.yearEnd}`;
   }
 
-  const res = await fetchWithRetry(url);
-  const data: S2SearchResponse = await res.json();
+  const headers: Record<string, string> = {};
+  if (process.env.SEMANTIC_SCHOLAR_API_KEY) {
+    headers["x-api-key"] = process.env.SEMANTIC_SCHOLAR_API_KEY;
+  }
 
-  const results = (data.data || []).map(mapPaper);
-  return { results, total: data.total || 0 };
+  try {
+    const res = await resilientFetch(url, { headers }, { service: "SemanticScholar", timeout: 15000, baseDelay: 1000 });
+    const data: S2SearchResponse = await res.json();
+
+    const results = (data.data || []).map(mapPaper);
+    breaker.onSuccess();
+    return { results, total: data.total || 0 };
+  } catch (error) {
+    breaker.onFailure();
+    console.error("[SemanticScholar] Search failed:", error);
+    return { results: [], total: 0 };
+  }
 }
