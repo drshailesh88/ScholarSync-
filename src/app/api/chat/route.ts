@@ -1,7 +1,9 @@
 import { streamText } from "ai";
 import { NextResponse } from "next/server";
 import { getGuideSystemPrompt, getDefaultGuidePrompt } from "@/lib/ai/prompts/guide";
+import { getDraftSystemPrompt, getDefaultDraftPrompt } from "@/lib/ai/prompts/draft";
 import type { GuideContext } from "@/types/guide";
+import type { DraftContext } from "@/types/draft";
 
 export async function POST(req: Request) {
   const { isAIConfigured, requiredKeyName, getModel } = await import("@/lib/ai/models");
@@ -14,14 +16,13 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { messages, mode, guideContext } = await req.json();
+    const { messages, mode, guideContext, draftContext } = await req.json();
 
     let systemPrompt: string;
 
     if (mode === "learn") {
       // Guided Mode — Socratic academic writing tutor
       if (guideContext?.documentType && guideContext?.stage) {
-        // Full guide context available: document type + stage
         const ctx: GuideContext = {
           documentType: guideContext.documentType,
           stage: guideContext.stage,
@@ -32,8 +33,23 @@ export async function POST(req: Request) {
         };
         systemPrompt = getGuideSystemPrompt(ctx);
       } else {
-        // No context yet — use onboarding prompt
         systemPrompt = getDefaultGuidePrompt();
+      }
+    } else if (mode === "draft") {
+      // Draft Mode — intensity-based writing co-pilot
+      if (draftContext?.intensity) {
+        const ctx: DraftContext = {
+          intensity: draftContext.intensity,
+          documentType: draftContext.documentType,
+          currentSection: draftContext.currentSection,
+          targetJournal: draftContext.targetJournal,
+          projectTitle: draftContext.projectTitle,
+          scholarRules: draftContext.scholarRules,
+          surroundingText: draftContext.surroundingText,
+        };
+        systemPrompt = getDraftSystemPrompt(ctx);
+      } else {
+        systemPrompt = getDefaultDraftPrompt();
       }
     } else {
       // Standard assistant mode

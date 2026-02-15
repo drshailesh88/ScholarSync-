@@ -32,6 +32,11 @@ import {
   type GuideDocumentType,
   type GuideStage,
 } from "@/types/guide";
+import {
+  DRAFT_MODE_LABELS,
+  DRAFT_MODE_DESCRIPTIONS,
+  type DraftModeIntensity,
+} from "@/types/draft";
 
 interface ChatMessage {
   id: string;
@@ -79,6 +84,9 @@ function StudioContent() {
   const [guideDocType, setGuideDocType] = useState<GuideDocumentType | null>(null);
   const [guideStage, setGuideStage] = useState<GuideStage>("understand");
   const [showDocTypePicker, setShowDocTypePicker] = useState(false);
+
+  // Draft mode context
+  const [draftIntensity, setDraftIntensity] = useState<DraftModeIntensity>("collaborate");
 
   useEffect(() => {
     getUserUsageStats().then((stats) => {
@@ -143,7 +151,7 @@ function StudioContent() {
     try {
       // Create conversation on first message
       if (!conversationIdRef.current) {
-        const mode = isLearnMode ? "learn" : ("chat" as const);
+        const mode = isLearnMode ? "learn" : ("draft" as const);
         const convo = await createConversation({ mode, title: input.trim().slice(0, 80) });
         conversationIdRef.current = convo.id;
       }
@@ -156,12 +164,20 @@ function StudioContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: newMessages.map((m) => ({ role: m.role, content: m.content })),
-          mode: isLearnMode ? "learn" : "write",
+          mode: isLearnMode ? "learn" : "draft",
           ...(isLearnMode && guideDocType
             ? {
                 guideContext: {
                   documentType: guideDocType,
                   stage: guideStage,
+                  projectTitle: docTitle !== "Untitled Document" ? docTitle : undefined,
+                },
+              }
+            : {}),
+          ...(!isLearnMode
+            ? {
+                draftContext: {
+                  intensity: draftIntensity,
                   projectTitle: docTitle !== "Untitled Document" ? docTitle : undefined,
                 },
               }
@@ -204,7 +220,7 @@ function StudioContent() {
     } finally {
       setIsLoading(false);
     }
-  }, [input, isLoading, messages, isLearnMode, guideDocType, guideStage, docTitle]);
+  }, [input, isLoading, messages, isLearnMode, guideDocType, guideStage, docTitle, draftIntensity]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -389,6 +405,35 @@ function StudioContent() {
 
       {/* Center Editor */}
       <main className="flex-1 flex flex-col overflow-hidden">
+        {!isLearnMode && (
+          <div className="px-4 py-2 bg-brand/5 border-b border-brand/10">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-ink-muted">AI Intensity</p>
+              <div className="flex p-0.5 bg-surface-raised rounded-lg">
+                {(["focus", "collaborate", "accelerate"] as DraftModeIntensity[]).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setDraftIntensity(mode)}
+                    title={DRAFT_MODE_DESCRIPTIONS[mode]}
+                    className={cn(
+                      "px-3 py-1 rounded-md text-[10px] font-medium transition-all",
+                      draftIntensity === mode
+                        ? mode === "focus"
+                          ? "bg-sky-500 text-white"
+                          : mode === "collaborate"
+                            ? "bg-brand text-white"
+                            : "bg-violet-500 text-white"
+                        : "text-ink-muted hover:text-ink"
+                    )}
+                  >
+                    {DRAFT_MODE_LABELS[mode]}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-[10px] text-ink-muted mt-1">{DRAFT_MODE_DESCRIPTIONS[draftIntensity]}</p>
+          </div>
+        )}
         {isLearnMode && (
           <div className="px-4 py-2 bg-emerald-500/10 border-b border-emerald-500/20">
             <div className="flex items-center justify-between">
@@ -564,7 +609,11 @@ function StudioContent() {
                       ? guideDocType
                         ? `Ask about your ${GUIDE_DOC_TYPE_LABELS[guideDocType].toLowerCase()} — ${GUIDE_STAGE_LABELS[guideStage]} stage...`
                         : "Tell me what you're working on..."
-                      : "Ask your AI research assistant..."
+                      : draftIntensity === "focus"
+                        ? "Ask for help when you need it..."
+                        : draftIntensity === "accelerate"
+                          ? "Ask anything — I'll give detailed suggestions..."
+                          : "Ask your AI writing co-pilot..."
                   }
                   className="flex-1 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
                 />
