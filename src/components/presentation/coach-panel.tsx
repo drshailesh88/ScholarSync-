@@ -6,13 +6,11 @@ import {
   CircleNotch,
   Warning,
   ArrowRight,
-  Star,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type {
   CoachEvaluation,
   CoachSuggestion,
-  SlideInsight,
   ContentBlock,
   AudienceType,
 } from "@/types/presentation";
@@ -81,8 +79,8 @@ export function CoachPanel({
 
       const result = await res.json();
       setEvaluation(result);
-    } catch (err: any) {
-      setError(err.message || "Evaluation failed");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Evaluation failed");
     } finally {
       setLoading(false);
     }

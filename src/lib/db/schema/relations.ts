@@ -25,7 +25,6 @@ import {
   slideDecks,
   slides,
   presentationCoachEvaluations,
-  slideTemplates,
   deepResearchSessions,
   deepResearchSteps,
   datasets,
@@ -40,8 +39,6 @@ import {
   documentComments,
   documentShares,
   activityLog,
-  disciplineProfiles,
-  exportTemplates,
   learningModules,
   userLearningProgress,
 } from "./editor";
@@ -51,9 +48,7 @@ import {
   usageEvents,
   subscriptions,
   feedback,
-  promptVersions,
   pdfAnnotations,
-  usageQuotas,
 } from "./billing";
 
 // Systematic review tables (42-51)
@@ -92,7 +87,6 @@ import {
   audioSummaries,
   audioScripts,
   knowledgeNotes,
-  knowledgeLinks,
   integrations,
   syncLog,
 } from "./platform";

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { ContentBlock, ThemeConfig, SlideLayout } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
@@ -30,7 +31,6 @@ export function SlideRenderer({
   slideNumber,
 }: SlideRendererProps) {
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
-  const isDark = isColorDark(theme.backgroundColor);
 
   return (
     <div
@@ -49,7 +49,7 @@ export function SlideRenderer({
       />
 
       <div className="absolute inset-0 p-[6%] pt-[8%] flex flex-col">
-        {renderLayout(layout, title, subtitle, contentBlocks, theme, scale)}
+        {renderLayout(layout, title, subtitle, contentBlocks, theme)}
       </div>
 
       {showSlideNumber && slideNumber != null && (
@@ -69,8 +69,7 @@ function renderLayout(
   title: string | null | undefined,
   subtitle: string | null | undefined,
   blocks: ContentBlock[],
-  theme: ThemeConfig,
-  scale: number
+  theme: ThemeConfig
 ) {
   switch (layout) {
     case "title_slide":
@@ -171,7 +170,7 @@ function renderLayout(
           <div className="flex-1 grid grid-cols-2 gap-[1em] mt-[0.5em]">
             <div className="flex items-center justify-center rounded-[0.3em] overflow-hidden" style={{ backgroundColor: theme.primaryColor + "10" }}>
               {imgBlock?.type === "image" && imgBlock.data.url ? (
-                <img src={imgBlock.data.url} alt={imgBlock.data.alt} className="max-w-full max-h-full object-contain" />
+                <Image src={imgBlock.data.url} alt={imgBlock.data.alt} width={480} height={360} className="max-w-full max-h-full object-contain" unoptimized />
               ) : (
                 <div className="text-[0.7em] opacity-40">Image placeholder</div>
               )}
@@ -288,7 +287,7 @@ function ContentBlockItem({ block, theme }: { block: ContentBlock; theme: ThemeC
       return (
         <div className="flex flex-col items-center">
           {block.data.url ? (
-            <img src={block.data.url} alt={block.data.alt} className="max-h-[8em] object-contain rounded-[0.2em]" />
+            <Image src={block.data.url} alt={block.data.alt} width={400} height={128} className="max-h-[8em] object-contain rounded-[0.2em]" unoptimized />
           ) : (
             <div
               className="w-full h-[5em] rounded-[0.2em] flex items-center justify-center text-[0.6em]"
@@ -424,10 +423,3 @@ function SimpleTablePreview({
   );
 }
 
-function isColorDark(hex: string): boolean {
-  const c = hex.replace("#", "");
-  const r = parseInt(c.substring(0, 2), 16);
-  const g = parseInt(c.substring(2, 4), 16);
-  const b = parseInt(c.substring(4, 6), 16);
-  return (r * 299 + g * 587 + b * 114) / 1000 < 128;
-}

@@ -9,11 +9,8 @@ import {
   Sparkle,
   ArrowLeft,
   ArrowRight,
-  Funnel,
   SortAscending,
-  Star,
   Lightning,
-  BookOpen,
   Brain,
   CaretDown,
   PaperPlaneTilt,
@@ -27,7 +24,6 @@ import { saveSearchQuery } from "@/lib/actions/search-history";
 import type {
   UnifiedSearchResult,
   SearchResponse,
-  EvidenceLevel,
 } from "@/types/search";
 
 const EVIDENCE_COLORS: Record<string, string> = {

@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { ThemePicker } from "./theme-picker";
 import { LayoutPicker } from "./layout-picker";
 import type { SlideLayout, ThemeConfig } from "@/types/presentation";

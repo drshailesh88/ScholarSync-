@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Extension } from "@tiptap/core";
+import { Extension, type Editor, type Range } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
 import { ReactRenderer } from "@tiptap/react";
@@ -25,7 +25,7 @@ interface CommandItem {
   title: string;
   description: string;
   icon: typeof TextHOne;
-  command: (props: { editor: any; range: any }) => void;
+  command: (props: { editor: Editor; range: Range }) => void;
   category: "formatting" | "ai" | "insert";
 }
 
@@ -161,12 +161,19 @@ interface CommandListProps {
 }
 
 function CommandList({ items, command }: CommandListProps) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const itemsKey = items.map((i) => i.title).join(",");
+  const [selectedState, setSelectedState] = useState({ key: itemsKey, index: 0 });
 
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [items]);
+  const selectedIndex = selectedState.key === itemsKey ? selectedState.index : 0;
+  const setSelectedIndex = useCallback((indexOrFn: number | ((prev: number) => number)) => {
+    setSelectedState((prev) => {
+      const currentIndex = prev.key === itemsKey ? prev.index : 0;
+      const newIndex = typeof indexOrFn === "function" ? indexOrFn(currentIndex) : indexOrFn;
+      return { key: itemsKey, index: newIndex };
+    });
+  }, [itemsKey]);
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const selectItem = useCallback(
     (index: number) => {
@@ -191,7 +198,7 @@ function CommandList({ items, command }: CommandListProps) {
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [selectedIndex, items.length, selectItem]);
+  }, [selectedIndex, items.length, selectItem, setSelectedIndex]);
 
   if (items.length === 0) {
     return (
@@ -201,16 +208,13 @@ function CommandList({ items, command }: CommandListProps) {
     );
   }
 
-  let lastCategory = "";
-
   return (
     <div
       ref={containerRef}
       className="glass-panel rounded-xl border border-border shadow-xl p-1.5 min-w-[280px] max-h-[320px] overflow-y-auto"
     >
       {items.map((item, idx) => {
-        const showCategory = item.category !== lastCategory;
-        lastCategory = item.category;
+        const showCategory = idx === 0 || items[idx - 1]?.category !== item.category;
         const Icon = item.icon;
 
         return (

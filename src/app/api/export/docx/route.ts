@@ -106,10 +106,6 @@ function htmlToDocxParagraphs(html: string): Paragraph[] {
   // Normalise whitespace between tags so our regex works more reliably
   const normalized = html.replace(/>\s+</g, "><").trim();
 
-  // Match block-level elements. We process them in document order.
-  const blockRegex =
-    /<(h[1-3]|p|ul|ol|li|blockquote)(?:\s[^>]*)?>([^]*?)<\/\1>/gi;
-
   // Track whether we are inside a <ul> or <ol> so nested <li> can be handled.
   // Because our regex is greedy on inner content we also need to handle <ul>
   // containing <li> elements. We use a two-pass approach: first pull out

@@ -8,12 +8,11 @@ import {
   timestamp,
   date,
   jsonb,
-  uniqueIndex,
   index,
   bigint,
   unique,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 import { customType } from "drizzle-orm/pg-core";
 
 // Custom vector type for pgvector embeddings
@@ -252,7 +251,7 @@ export const searchQueries = pgTable(
     filters_applied: jsonb("filters_applied"),
     result_count: integer("result_count"),
     parent_query_id: integer("parent_query_id").references(
-      (): any => searchQueries.id
+      (): AnyPgColumn => searchQueries.id
     ),
     created_at: timestamp("created_at").defaultNow(),
   },

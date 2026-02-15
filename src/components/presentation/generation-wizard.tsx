@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCompletion } from "@ai-sdk/react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -102,8 +101,8 @@ export function GenerationWizard() {
       }
 
       setPreprocessedData(fullText);
-    } catch (err: any) {
-      setError(err.message || "Preprocessing failed");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Preprocessing failed");
     } finally {
       setPreprocessing(false);
     }
@@ -130,8 +129,8 @@ export function GenerationWizard() {
 
       const result = await res.json();
       setGenerationResult(result);
-    } catch (err: any) {
-      setError(err.message || "Generation failed");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Generation failed");
     } finally {
       setGenerating(false);
     }

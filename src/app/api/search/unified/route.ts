@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { UnifiedSearchResult, SearchResponse } from "@/types/search";
+import type { SearchResponse } from "@/types/search";
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";

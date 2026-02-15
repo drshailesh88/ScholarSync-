@@ -2,8 +2,7 @@
 
 import { db } from "@/lib/db";
 import { synthesisDocuments, synthesisSections, synthesisVersions } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
-import { getCurrentUserId } from "@/lib/auth";
+import { eq } from "drizzle-orm";
 
 export async function getDocument(id: number) {
   const [doc] = await db
@@ -68,7 +67,7 @@ export async function updateSection(
   const [section] = await db
     .update(synthesisSections)
     .set({
-      editor_content: data.editor_content as any,
+      editor_content: data.editor_content as Record<string, unknown>,
       plain_text_content: data.plain_text_content,
       word_count: data.word_count,
       updated_at: new Date(),
@@ -87,7 +86,7 @@ export async function autoSaveVersion(
     document_id: documentId,
     section_id: sectionId,
     version_number: Date.now(),
-    content_snapshot: content as any,
+    content_snapshot: content as Record<string, unknown>,
     auto_saved: true,
     saved_by: "auto",
   });

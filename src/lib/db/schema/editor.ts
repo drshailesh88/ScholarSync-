@@ -10,6 +10,7 @@ import {
   bigint,
   index,
   unique,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
 import {
@@ -458,7 +459,7 @@ export const documentComments = pgTable(
     textRangeEnd: integer("text_range_end"),
     content: text("content").notNull(),
     parentCommentId: integer("parent_comment_id").references(
-      (): any => documentComments.id,
+      (): AnyPgColumn => documentComments.id,
       { onDelete: "cascade" }
     ),
     isResolved: boolean("is_resolved").default(false),

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import PptxGenJS from "pptxgenjs";
 import type { ContentBlock, ThemeConfig } from "@/types/presentation";
 
+type PptxSlide = ReturnType<PptxGenJS['addSlide']>;
+
 interface SlideInput {
   title?: string;
   subtitle?: string;
@@ -119,7 +121,7 @@ export async function POST(req: Request) {
 // ---------------------------------------------------------------------------
 
 function renderTitleSlide(
-  slide: any, data: SlideInput, pptx: PptxGenJS,
+  slide: PptxSlide, data: SlideInput, pptx: PptxGenJS,
   primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   // Full accent bar
@@ -141,8 +143,8 @@ function renderTitleSlide(
 }
 
 function renderSectionHeader(
-  slide: any, data: SlideInput,
-  primary: string, text: string, headingFont: string, accent: string
+  slide: PptxSlide, data: SlideInput,
+  primary: string, text: string, headingFont: string, _accent: string
 ) {
   slide.addText(data.title || "", {
     x: 1.0, y: 2.8, w: 11.0, h: 1.2,
@@ -158,8 +160,8 @@ function renderSectionHeader(
 }
 
 function renderTitleContent(
-  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
-  primary: string, text: string, font: string, headingFont: string, accent: string
+  slide: PptxSlide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  primary: string, text: string, font: string, headingFont: string, _accent: string
 ) {
   // Title bar
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
@@ -182,7 +184,7 @@ function renderTitleContent(
 }
 
 function renderTwoColumn(
-  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  slide: PptxSlide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
   primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
@@ -212,8 +214,8 @@ function renderTwoColumn(
 }
 
 function renderChartSlide(
-  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
-  primary: string, text: string, font: string, headingFont: string, accent: string
+  slide: PptxSlide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  primary: string, text: string, font: string, headingFont: string, _accent: string
 ) {
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
 
@@ -225,7 +227,7 @@ function renderChartSlide(
   const chartBlock = blocks.find((b) => b.type === "chart");
   if (chartBlock?.type === "chart") {
     const cd = chartBlock.data;
-    const chartTypeMap: Record<string, any> = {
+    const chartTypeMap: Record<string, PptxGenJS.CHART_NAME> = {
       bar: pptx.ChartType.bar,
       line: pptx.ChartType.line,
       pie: pptx.ChartType.pie,
@@ -258,8 +260,8 @@ function renderChartSlide(
 }
 
 function renderTableSlide(
-  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
-  primary: string, text: string, font: string, headingFont: string, accent: string
+  slide: PptxSlide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  primary: string, text: string, font: string, headingFont: string, _accent: string
 ) {
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
 
@@ -271,7 +273,7 @@ function renderTableSlide(
   const tableBlock = blocks.find((b) => b.type === "table");
   if (tableBlock?.type === "table") {
     const td = tableBlock.data;
-    const tableRows: any[][] = [
+    const tableRows: PptxGenJS.TableRow[] = [
       td.headers.map((h) => ({ text: h, options: { bold: true, color: "FFFFFF", fill: { color: primary } } })),
       ...td.rows.map((row) => row.map((cell) => ({ text: cell }))),
     ];
@@ -288,7 +290,7 @@ function renderTableSlide(
 }
 
 function renderQuoteSlide(
-  slide: any, data: SlideInput, blocks: ContentBlock[],
+  slide: PptxSlide, data: SlideInput, blocks: ContentBlock[],
   primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   const quoteBlock = blocks.find((b) => b.type === "quote");

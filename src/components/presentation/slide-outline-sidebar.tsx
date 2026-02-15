@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash, DotsSixVertical } from "@phosphor-icons/react";
+import { Plus, Trash } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { SlideRenderer } from "./slide-renderer";
 import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";

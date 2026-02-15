@@ -222,7 +222,7 @@ export async function POST(req: Request) {
 
 function wrapText(
   text: string,
-  font: any,
+  font: { widthOfTextAtSize: (text: string, size: number) => number },
   fontSize: number,
   maxWidth: number
 ): string[] {

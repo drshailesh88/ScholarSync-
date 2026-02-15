@@ -39,7 +39,7 @@ export async function createDeck(data: {
       projectId: data.projectId,
       documentId: data.documentId,
       audienceType: data.audienceType ?? "general",
-      themeConfig: data.themeConfig as any,
+      themeConfig: data.themeConfig as unknown as Record<string, unknown>,
       sourceType: data.sourceType ?? "custom",
       theme: "modern",
     })
@@ -104,8 +104,8 @@ export async function updateDeck(
     .update(slideDecks)
     .set({
       ...data,
-      themeConfig: data.themeConfig as any,
-      slideOrder: data.slideOrder as any,
+      themeConfig: data.themeConfig as unknown as Record<string, unknown>,
+      slideOrder: data.slideOrder as number[],
       updatedAt: new Date(),
     })
     .where(and(eq(slideDecks.id, deckId), eq(slideDecks.userId, userId)))
@@ -142,7 +142,7 @@ export async function createSlide(data: {
       layout: data.layout ?? "title_content",
       title: data.title ?? "New Slide",
       subtitle: data.subtitle,
-      contentBlocks: (data.contentBlocks ?? []) as any,
+      contentBlocks: (data.contentBlocks ?? []) as Record<string, unknown>[],
       speakerNotes: data.speakerNotes,
       generatedByAi: data.generatedByAi ?? false,
     })
@@ -179,11 +179,11 @@ export async function updateSlide(
       ...(data.layout && { layout: data.layout }),
       ...(data.title !== undefined && { title: data.title }),
       ...(data.subtitle !== undefined && { subtitle: data.subtitle }),
-      ...(data.contentBlocks && { contentBlocks: data.contentBlocks as any }),
+      ...(data.contentBlocks && { contentBlocks: data.contentBlocks as Record<string, unknown>[] }),
       ...(data.speakerNotes !== undefined && {
         speakerNotes: data.speakerNotes,
       }),
-      ...(data.content !== undefined && { content: data.content as any }),
+      ...(data.content !== undefined && { content: data.content as Record<string, unknown> }),
       lastEditedAt: new Date(),
     })
     .where(eq(slides.id, slideId))
@@ -237,7 +237,7 @@ export async function reorderSlides(
 
   await db
     .update(slideDecks)
-    .set({ slideOrder: slideIds as any, updatedAt: new Date() })
+    .set({ slideOrder: slideIds as number[], updatedAt: new Date() })
     .where(eq(slideDecks.id, deckId));
 }
 
@@ -259,8 +259,8 @@ export async function saveCoachEvaluation(
       designScore: evaluation.designScore,
       audienceFitScore: evaluation.audienceFitScore,
       overallScore: evaluation.overallScore,
-      slideInsights: evaluation.slideInsights as any,
-      suggestions: evaluation.suggestions as any,
+      slideInsights: evaluation.slideInsights as unknown as Record<string, unknown>[],
+      suggestions: evaluation.suggestions as unknown as Record<string, unknown>[],
     })
     .returning();
   return saved;

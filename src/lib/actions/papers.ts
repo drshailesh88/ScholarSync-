@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { papers, userReferences, paperChunks } from "@/lib/db/schema";
-import { eq, and, desc, isNull, ilike, or, sql } from "drizzle-orm";
+import { eq, and, desc, isNull, ilike, or } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { normalizeTitle } from "@/lib/search/dedup";

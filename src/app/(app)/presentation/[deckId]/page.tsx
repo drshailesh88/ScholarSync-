@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
 import {
   getDeck,
   updateDeck,
@@ -23,13 +22,16 @@ import { SpeakerNotesPanel } from "@/components/presentation/speaker-notes-panel
 import { AiToolsDropdown } from "@/components/presentation/ai-tools-dropdown";
 import { CoachPanel } from "@/components/presentation/coach-panel";
 
+type DeckWithSlides = NonNullable<Awaited<ReturnType<typeof getDeck>>>;
+type SlideRow = DeckWithSlides["slides"][number];
+
 export default function DeckEditorPage() {
   const params = useParams();
   const router = useRouter();
   const deckId = Number(params.deckId);
 
-  const [deck, setDeck] = useState<any>(null);
-  const [slides, setSlides] = useState<any[]>([]);
+  const [deck, setDeck] = useState<DeckWithSlides | null>(null);
+  const [slides, setSlides] = useState<SlideRow[]>([]);
   const [activeSlideId, setActiveSlideId] = useState<number | null>(null);
   const [themeKey, setThemeKey] = useState("modern");
   const [themeConfig, setThemeConfig] = useState<ThemeConfig | undefined>();
@@ -40,11 +42,7 @@ export default function DeckEditorPage() {
   // Save timer for debouncing
   const [saveTimer, setSaveTimer] = useState<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    loadDeck();
-  }, [deckId]);
-
-  async function loadDeck() {
+  const loadDeck = useCallback(async () => {
     try {
       const data = await getDeck(deckId);
       if (!data) {
@@ -64,12 +62,16 @@ export default function DeckEditorPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [deckId, router]);
+
+  useEffect(() => {
+    loadDeck();
+  }, [loadDeck]);
 
   const activeSlide = slides.find((s) => s.id === activeSlideId);
 
   const debouncedSaveSlide = useCallback(
-    (slideId: number, data: any) => {
+    (slideId: number, data: Partial<Record<string, unknown>>) => {
       if (saveTimer) clearTimeout(saveTimer);
       const timer = setTimeout(async () => {
         await updateSlideAction(slideId, data);
@@ -79,7 +81,7 @@ export default function DeckEditorPage() {
     [saveTimer]
   );
 
-  function updateLocalSlide(slideId: number, data: Partial<any>) {
+  function updateLocalSlide(slideId: number, data: Partial<Record<string, unknown>>) {
     setSlides((prev) =>
       prev.map((s) => (s.id === slideId ? { ...s, ...data } : s))
     );
