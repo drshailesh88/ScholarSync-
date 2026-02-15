@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { streamText } from "ai";
-import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
+import { getModel, isAIConfigured } from "@/lib/ai/models";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 type HumanizeLevel = "light" | "medium" | "heavy";
+
+const MAX_TEXT_LENGTH = 50_000;
+const VALID_LEVELS: HumanizeLevel[] = ["light", "medium", "heavy"];
 
 interface HumanizeRequest {
   text: string;
@@ -53,11 +59,29 @@ function getSystemPrompt(level: HumanizeLevel): string {
 }
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
+  // --- Authentication ---
+  let userId: string;
+  try {
+    userId = await getCurrentUserId();
+  } catch {
+    return NextResponse.json(
+      { error: "Authentication required." },
+      { status: 401 }
+    );
+  }
+
+  // --- Rate limiting ---
+  const rateLimitResponse = await checkRateLimit(userId, "humanize", RATE_LIMITS.ai);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
+  }
+
+  // --- AI configuration check ---
   if (!isAIConfigured()) {
     return NextResponse.json(
-      {
-        error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable humanization.`,
-      },
+      { error: "AI service is not configured." },
       { status: 503 }
     );
   }
@@ -66,6 +90,7 @@ export async function POST(req: Request) {
     const body = (await req.json()) as HumanizeRequest;
     const { text, level } = body;
 
+    // --- Input validation ---
     if (!text || typeof text !== "string" || text.trim().length === 0) {
       return NextResponse.json(
         { error: "text must be a non-empty string." },
@@ -73,11 +98,17 @@ export async function POST(req: Request) {
       );
     }
 
-    const validLevels: HumanizeLevel[] = ["light", "medium", "heavy"];
-    if (!level || !validLevels.includes(level)) {
+    if (text.length > MAX_TEXT_LENGTH) {
+      return NextResponse.json(
+        { error: `text must not exceed ${MAX_TEXT_LENGTH} characters.` },
+        { status: 400 }
+      );
+    }
+
+    if (!level || !VALID_LEVELS.includes(level)) {
       return NextResponse.json(
         {
-          error: `level must be one of: ${validLevels.join(", ")}`,
+          error: `level must be one of: ${VALID_LEVELS.join(", ")}`,
         },
         { status: 400 }
       );
@@ -93,7 +124,7 @@ export async function POST(req: Request) {
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error("Humanize API error:", error);
+    log.error("Humanize API error", error);
     return NextResponse.json(
       { error: "Humanization failed. Please try again." },
       { status: 500 }

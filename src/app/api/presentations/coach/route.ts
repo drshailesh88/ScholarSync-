@@ -1,32 +1,56 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { generateText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { getCoachSystemPrompt } from "@/lib/ai/prompts/presentation";
 import { saveCoachEvaluation } from "@/lib/actions/presentations";
-import type { AudienceType, ContentBlock, CoachEvaluation } from "@/types/presentation";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+import type { CoachEvaluation } from "@/types/presentation";
 
-interface CoachRequest {
-  deckId: number;
-  audienceType: AudienceType;
-  slides: {
-    title?: string | null;
-    subtitle?: string | null;
-    layout?: string | null;
-    contentBlocks?: ContentBlock[];
-    speakerNotes?: string | null;
-  }[];
-}
+const coachSchema = z.object({
+  deckId: z.number().int().positive(),
+  audienceType: z.enum(["thesis_defense", "conference", "journal_club", "classroom", "general"]).optional(),
+  slides: z
+    .array(
+      z.object({
+        title: z.string().nullish(),
+        subtitle: z.string().nullish(),
+        layout: z.string().nullish(),
+        contentBlocks: z.array(z.any()).optional(),
+        speakerNotes: z.string().nullish(),
+      })
+    )
+    .min(1)
+    .max(100),
+});
 
 export async function POST(req: Request) {
-  try {
-    const body: CoachRequest = await req.json();
+  const log = logger.withRequestId();
 
-    if (!body.deckId || !body.slides?.length) {
+  try {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "presentations", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validation
+    const parseResult = coachSchema.safeParse(await req.json());
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "deckId and slides are required" },
+        { error: "Invalid request body", details: parseResult.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const body = parseResult.data;
 
     const systemPrompt = getCoachSystemPrompt(body.audienceType ?? "general");
 
@@ -56,7 +80,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(evaluation);
   } catch (error) {
-    console.error("Coach error:", error);
+    log.error("Coach error", error);
     return NextResponse.json(
       { error: "Coach evaluation failed" },
       { status: 500 }

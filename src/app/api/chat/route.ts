@@ -1,18 +1,71 @@
 import { streamText } from "ai";
 import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+
+const chatRequestSchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant", "system"]),
+        content: z.string().max(50000),
+      })
+    )
+    .max(50),
+  mode: z.string().optional(),
+});
 
 export async function POST(req: Request) {
-  const { isAIConfigured, requiredKeyName, getModel } = await import("@/lib/ai/models");
-
-  if (!isAIConfigured()) {
-    return NextResponse.json(
-      { error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable AI chat.` },
-      { status: 503 }
-    );
-  }
+  const log = logger.withRequestId();
 
   try {
-    const { messages, mode } = await req.json();
+    // 1. Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch (authError) {
+      logger.error("Chat auth failed", authError);
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 }
+      );
+    }
+
+    // 2. Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "chat", RATE_LIMITS.ai);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Input validation
+    const body = await req.json();
+    const parsed = chatRequestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      log.warn("Chat input validation failed", {
+        userId,
+        errors: parsed.error.flatten(),
+      });
+      return NextResponse.json(
+        { error: "Invalid request. Please check your input and try again." },
+        { status: 400 }
+      );
+    }
+
+    const { messages, mode } = parsed.data;
+
+    // 4. AI configuration check
+    const { isAIConfigured, getModel } = await import("@/lib/ai/models");
+
+    if (!isAIConfigured()) {
+      log.warn("AI service not configured");
+      return NextResponse.json(
+        { error: "AI service is not configured. Please contact an administrator." },
+        { status: 503 }
+      );
+    }
 
     const systemPrompt =
       mode === "learn"
@@ -27,9 +80,9 @@ export async function POST(req: Request) {
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error("Chat API error:", error);
+    log.error("Chat API error", error);
     return NextResponse.json(
-      { error: "Chat failed. Please try again." },
+      { error: "An unexpected error occurred. Please try again." },
       { status: 500 }
     );
   }

@@ -1,6 +1,20 @@
 import { generateObject } from "ai";
-import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
+import { getModel, isAIConfigured } from "@/lib/ai/models";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import { z } from "zod";
+
+const requestSchema = z.object({
+  text: z
+    .string()
+    .min(50, "Text must be at least 50 characters")
+    .max(50000, "Text must not exceed 50000 characters"),
+  mode: z
+    .enum(["full", "ai_detection", "plagiarism"])
+    .optional()
+    .default("full"),
+});
 
 const integritySchema = z.object({
   humanScore: z
@@ -38,24 +52,51 @@ const integritySchema = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!isAIConfigured()) {
-    return new Response(
-      JSON.stringify({
-        error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable integrity checks.`,
-      }),
-      { status: 503, headers: { "Content-Type": "application/json" } }
-    );
-  }
+  const log = logger.withRequestId();
 
   try {
-    const { text, mode = "full" } = await req.json();
-
-    if (!text || typeof text !== "string" || text.trim().length < 50) {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
       return new Response(
-        JSON.stringify({ error: "Text must be at least 50 characters" }),
+        JSON.stringify({ error: "Not authenticated" }),
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(
+      userId,
+      "integrity-check",
+      RATE_LIMITS.analysis
+    );
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // AI configuration check
+    if (!isAIConfigured()) {
+      return new Response(
+        JSON.stringify({ error: "AI service is not configured." }),
+        { status: 503, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Parse and validate request body
+    const body = await req.json();
+    const parsed = requestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return new Response(
+        JSON.stringify({
+          error: "Invalid request",
+          details: parsed.error.flatten().fieldErrors,
+        }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
+
+    const { text, mode } = parsed.data;
 
     let systemPrompt =
       "You are an academic integrity analyzer. Analyze the following text for:";
@@ -87,11 +128,13 @@ Be rigorous but fair. Academic writing naturally has some formal patterns that s
       prompt: text,
     });
 
+    log.info("Integrity check completed", { userId, mode });
+
     return new Response(JSON.stringify(object), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Integrity check error:", error);
+    log.error("Integrity check failed", error);
     return new Response(
       JSON.stringify({ error: "Failed to analyze text" }),
       { status: 500, headers: { "Content-Type": "application/json" } }

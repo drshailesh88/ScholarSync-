@@ -2,15 +2,15 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { createZhipu } from "zhipu-ai-provider";
 
 // ── Provider selection ─────────────────────────────────────────────
-// Set AI_PROVIDER="anthropic" to use Claude, otherwise defaults to "zhipu" (GLM-5).
+// Set AI_PROVIDER="zhipu" to use GLM-5, otherwise defaults to "anthropic" (Claude).
 // Each provider reads its own env key:
-//   zhipu     → ZHIPU_API_KEY
 //   anthropic → ANTHROPIC_API_KEY
+//   zhipu     → ZHIPU_API_KEY
 
 type Provider = "zhipu" | "anthropic";
 
 export const AI_PROVIDER: Provider =
-  (process.env.AI_PROVIDER as Provider) === "anthropic" ? "anthropic" : "zhipu";
+  (process.env.AI_PROVIDER as Provider) === "zhipu" ? "zhipu" : "anthropic";
 
 // ── Lazy-initialised clients (created once, reused) ────────────────
 let _zhipu: ReturnType<typeof createZhipu> | null = null;

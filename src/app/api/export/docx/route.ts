@@ -10,6 +10,20 @@ import {
   Footer,
   Header,
 } from "docx";
+import { z } from "zod";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
+
+const exportDocxSchema = z.object({
+  title: z.string().max(500).optional(),
+  content: z.string().max(500000),
+  citations: z.array(z.string()).max(1000).optional(),
+});
 
 // ---------------------------------------------------------------------------
 // Minimal HTML-to-docx-elements parser for Tiptap output
@@ -228,8 +242,35 @@ function htmlToDocxParagraphs(html: string): Paragraph[] {
 // ---------------------------------------------------------------------------
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const { title, content, citations } = await req.json();
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "export", RATE_LIMITS.export);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validate request body
+    const rawBody = await req.json();
+    const parseResult = exportDocxSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request data" },
+        { status: 400 }
+      );
+    }
+
+    const { title, content, citations } = parseResult.data;
 
     if (!content) {
       return NextResponse.json(
@@ -381,7 +422,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("DOCX export error:", error);
+    log.error("DOCX export error", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 }

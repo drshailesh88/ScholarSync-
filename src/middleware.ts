@@ -5,7 +5,9 @@ const hasClerkKeys =
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
   !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder");
 
-export default async function proxy(request: NextRequest) {
+const isDev = process.env.NODE_ENV === "development";
+
+export default async function middleware(request: NextRequest) {
   if (hasClerkKeys) {
     const { clerkMiddleware, createRouteMatcher } = await import(
       "@clerk/nextjs/server"
@@ -15,6 +17,7 @@ export default async function proxy(request: NextRequest) {
       "/sign-in(.*)",
       "/sign-up(.*)",
       "/api/webhooks(.*)",
+      "/api/health",
     ]);
     return clerkMiddleware(async (auth, req) => {
       if (!isPublicRoute(req)) {
@@ -22,6 +25,26 @@ export default async function proxy(request: NextRequest) {
       }
     })(request, {} as never);
   }
+
+  // In development without Clerk keys, allow all routes
+  if (isDev) {
+    return NextResponse.next();
+  }
+
+  // In production without Clerk keys, block protected routes
+  const { pathname } = request.nextUrl;
+  const publicPaths = ["/", "/sign-in", "/sign-up", "/api/webhooks", "/api/health"];
+  const isPublic = publicPaths.some(
+    (p) => pathname === p || pathname.startsWith(p + "/")
+  );
+
+  if (!isPublic) {
+    return NextResponse.json(
+      { error: "Authentication is not configured" },
+      { status: 503 }
+    );
+  }
+
   return NextResponse.next();
 }
 

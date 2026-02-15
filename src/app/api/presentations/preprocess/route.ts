@@ -1,21 +1,48 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { streamText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { getPreProcessorSystemPrompt } from "@/lib/ai/prompts/presentation";
 import { db } from "@/lib/db";
 import { papers, synthesisDocuments, synthesisSections } from "@/lib/db/schema";
 import { eq, inArray } from "drizzle-orm";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
-interface PreprocessRequest {
-  sourceType: "papers" | "document" | "text";
-  paperIds?: number[];
-  documentId?: number;
-  rawText?: string;
-}
+const preprocessSchema = z.object({
+  sourceType: z.enum(["papers", "document", "text"]),
+  paperIds: z.array(z.number().int().positive()).max(50).optional(),
+  documentId: z.number().int().positive().optional(),
+  rawText: z.string().max(100000).optional(),
+});
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const body: PreprocessRequest = await req.json();
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "presentations", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validation
+    const parseResult = preprocessSchema.safeParse(await req.json());
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request body", details: parseResult.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const body = parseResult.data;
+
     let sourceContent = "";
     let sourceLabel = "content";
 
@@ -71,7 +98,7 @@ export async function POST(req: Request) {
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error("Preprocess error:", error);
+    log.error("Preprocess error", error);
     return NextResponse.json(
       { error: "Preprocessing failed" },
       { status: 500 }

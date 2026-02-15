@@ -1,4 +1,9 @@
 import { streamText } from "ai";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import { getModel } from "@/lib/ai/models";
 import { advancedRetrieve } from "@/lib/rag/pipeline";
 import type { RAGResult } from "@/lib/rag/pipeline";
@@ -6,21 +11,59 @@ import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
 
-export async function POST(req: Request): Promise<Response> {
-  try {
-    const { messages, paperIds, mode, ragConfig } = (await req.json()) as {
-      messages: { role: string; content: string }[];
-      paperIds?: number[];
-      mode?: string;
-      ragConfig?: Record<string, unknown>;
-    };
+const ragChatRequestSchema = z.object({
+  messages: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant", "system"]),
+        content: z.string().max(50000),
+      })
+    )
+    .min(1)
+    .max(50),
+  paperIds: z.array(z.number()).max(50).optional(),
+  mode: z.string().optional(),
+  ragConfig: z.record(z.string(), z.unknown()).optional(),
+});
 
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return new Response(JSON.stringify({ error: "Messages are required" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" },
-      });
+export async function POST(req: Request): Promise<Response> {
+  const log = logger.withRequestId();
+
+  try {
+    // 1. Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch (authError) {
+      logger.error("RAG chat auth failed", authError);
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 }
+      );
     }
+
+    // 2. Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "rag-chat", RATE_LIMITS.ai);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Input validation
+    const body = await req.json();
+    const parsed = ragChatRequestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      log.warn("RAG chat input validation failed", {
+        userId,
+        errors: parsed.error.flatten(),
+      });
+      return NextResponse.json(
+        { error: "Invalid request. Please check your input and try again." },
+        { status: 400 }
+      );
+    }
+
+    const { messages, paperIds, mode, ragConfig } = parsed.data;
 
     // Get the latest user message for retrieval
     const lastUserMsg = [...messages]
@@ -70,8 +113,12 @@ export async function POST(req: Request): Promise<Response> {
             });
           }
         }
-      } catch {
+      } catch (ragError) {
         // Fallback to no-context mode if RAG fails
+        log.warn("RAG retrieval failed, falling back to no-context mode", {
+          userId,
+          error: ragError instanceof Error ? ragError.message : String(ragError),
+        });
       }
     }
 
@@ -153,10 +200,10 @@ export async function POST(req: Request): Promise<Response> {
       },
     });
   } catch (error) {
-    console.error("RAG chat error:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to process RAG chat" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+    log.error("RAG chat error", error);
+    return NextResponse.json(
+      { error: "An error occurred while processing your request. Please try again." },
+      { status: 500 }
     );
   }
 }

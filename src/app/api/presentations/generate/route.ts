@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { generateText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { getSlideGeneratorSystemPrompt } from "@/lib/ai/prompts/presentation";
@@ -7,28 +8,52 @@ import {
   createSlide,
   updateDeck,
 } from "@/lib/actions/presentations";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import type {
-  AudienceType,
   GeneratedSlide,
   ContentBlock,
   SlideLayout,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 
-interface GenerateRequest {
-  preprocessedData: string;
-  title: string;
-  audienceType: AudienceType;
-  slideCount?: number;
-  themeKey?: string;
-  projectId?: number;
-  documentId?: number;
-  additionalInstructions?: string;
-}
+const generateSchema = z.object({
+  title: z.string().min(1).max(500),
+  preprocessedData: z.string().min(1).max(100000),
+  audienceType: z.enum(["thesis_defense", "conference", "journal_club", "classroom", "general"]),
+  slideCount: z.number().int().positive().optional(),
+  themeKey: z.string().optional(),
+  projectId: z.number().int().positive().optional(),
+  documentId: z.number().int().positive().optional(),
+  additionalInstructions: z.string().optional(),
+});
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const body: GenerateRequest = await req.json();
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "presentations", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validation
+    const parseResult = generateSchema.safeParse(await req.json());
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request body", details: parseResult.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const body = parseResult.data;
 
     const themeKey = body.themeKey ?? "modern";
 
@@ -106,7 +131,7 @@ export async function POST(req: Request) {
       throw genError;
     }
   } catch (error) {
-    console.error("Generation error:", error);
+    log.error("Generation error", error);
     return NextResponse.json(
       { error: "Generation failed" },
       { status: 500 }

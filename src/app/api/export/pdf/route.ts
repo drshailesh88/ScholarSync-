@@ -1,4 +1,18 @@
 import { PDFDocument, StandardFonts, rgb, PageSizes } from "pdf-lib";
+import { z } from "zod";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
+
+const exportPdfSchema = z.object({
+  title: z.string().max(500).optional(),
+  content: z.string().max(500000),
+  citations: z.array(z.string()).max(1000).optional(),
+});
 
 // Layout constants (in points; 72pt = 1 inch)
 const MARGIN = 72; // 1-inch margins
@@ -25,12 +39,35 @@ interface TextBlock {
 // ── Route handler ──────────────────────────────────────────────────
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const { title, content, citations } = (await req.json()) as {
-      title?: string;
-      content?: string;
-      citations?: string[];
-    };
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return new Response(JSON.stringify({ error: "Authentication required" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "export", RATE_LIMITS.export);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validate request body
+    const rawBody = await req.json();
+    const parseResult = exportPdfSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return new Response(JSON.stringify({ error: "Invalid request data" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    const { title, content, citations } = parseResult.data;
 
     if (!content) {
       return new Response(JSON.stringify({ error: "Content is required" }), {
@@ -57,7 +94,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("PDF export error:", error);
+    log.error("PDF export error", error);
     return new Response(JSON.stringify({ error: "Export failed" }), {
       status: 500,
       headers: { "Content-Type": "application/json" },

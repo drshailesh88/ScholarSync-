@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import { z } from "zod";
 import type { ContentBlock } from "@/types/presentation";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
+
+const exportPresentationPdfSchema = z.object({
+  title: z.string().max(500),
+  slides: z.array(z.any()).max(100),
+});
 
 interface SlideInput {
   title?: string;
@@ -16,8 +29,35 @@ interface ExportRequest {
 }
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const body: ExportRequest = await req.json();
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "export", RATE_LIMITS.export);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validate request body
+    const rawBody = await req.json();
+    const parseResult = exportPresentationPdfSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request data" },
+        { status: 400 }
+      );
+    }
+
+    const body = parseResult.data as ExportRequest;
 
     if (!body.slides?.length) {
       return NextResponse.json(
@@ -215,7 +255,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("PDF handout export error:", error);
+    log.error("PDF handout export error", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 }

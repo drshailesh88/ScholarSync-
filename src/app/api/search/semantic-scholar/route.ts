@@ -1,10 +1,30 @@
 import { NextResponse } from "next/server";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: Request) {
+  const log = logger.withRequestId();
+
+  // Authentication
+  let userId: string;
+  try {
+    userId = await getCurrentUserId();
+  } catch {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+
+  // Rate limiting
+  const rateLimitResponse = await checkRateLimit(userId, "search", RATE_LIMITS.search);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q");
-  const limit = parseInt(searchParams.get("limit") || "20", 10);
+  const limit = Math.min(parseInt(searchParams.get("limit") || "20", 10), 100);
   const offset = parseInt(searchParams.get("offset") || "0", 10);
   const yearStart = searchParams.get("yearStart")
     ? parseInt(searchParams.get("yearStart")!, 10)
@@ -20,11 +40,18 @@ export async function GET(req: Request) {
     );
   }
 
+  if (q.length > 500) {
+    return NextResponse.json(
+      { error: "Query parameter 'q' must not exceed 500 characters" },
+      { status: 400 }
+    );
+  }
+
   try {
     const data = await searchSemanticScholar(q, { limit, offset, yearStart, yearEnd });
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Semantic Scholar search error:", error);
+    log.error("Semantic Scholar search error", error);
     return NextResponse.json(
       { error: "Semantic Scholar search failed" },
       { status: 500 }

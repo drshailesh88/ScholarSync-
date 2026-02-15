@@ -1,17 +1,28 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { streamText } from "ai";
-import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
+import { getModel, isAIConfigured } from "@/lib/ai/models";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
-type SynthesisMode = "summary" | "compare" | "gaps" | "methodology";
+const synthesisModesEnum = z.enum(["summary", "compare", "gaps", "methodology"]);
+type SynthesisMode = z.infer<typeof synthesisModesEnum>;
 
-interface SynthesizeRequest {
-  paperIds: number[];
-  prompt?: string;
-  mode: SynthesisMode;
-}
+const synthesizeSchema = z.object({
+  paperIds: z
+    .array(z.number().int().positive())
+    .min(1, "paperIds must contain at least one paper ID.")
+    .max(50, "paperIds must contain at most 50 items."),
+  mode: synthesisModesEnum,
+  prompt: z
+    .string()
+    .max(5000, "prompt must be at most 5000 characters.")
+    .optional(),
+});
 
 interface PaperAuthor {
   name?: string;
@@ -105,41 +116,45 @@ function getSystemPrompt(mode: SynthesisMode): string {
 }
 
 export async function POST(req: Request) {
-  if (!isAIConfigured()) {
-    return NextResponse.json(
-      {
-        error: `API key not configured. Add ${requiredKeyName()} to .env.local to enable synthesis.`,
-      },
-      { status: 503 }
-    );
-  }
+  const log = logger.withRequestId();
 
   try {
-    const body = (await req.json()) as SynthesizeRequest;
-    const { paperIds, prompt, mode } = body;
+    // --- Authentication ---
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    if (!paperIds || !Array.isArray(paperIds) || paperIds.length === 0) {
+    // --- Rate limiting ---
+    const rateLimitResponse = await checkRateLimit(userId, "synthesize", RATE_LIMITS.ai);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // --- AI configuration check ---
+    if (!isAIConfigured()) {
       return NextResponse.json(
-        { error: "paperIds must be a non-empty array of paper IDs." },
+        { error: "AI service is not configured." },
+        { status: 503 }
+      );
+    }
+
+    // --- Input validation ---
+    const body: unknown = await req.json();
+    const parsed = synthesizeSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues.map((e: { message: string }) => e.message).join("; ") },
         { status: 400 }
       );
     }
 
-    const validModes: SynthesisMode[] = [
-      "summary",
-      "compare",
-      "gaps",
-      "methodology",
-    ];
-    if (!mode || !validModes.includes(mode)) {
-      return NextResponse.json(
-        {
-          error: `mode must be one of: ${validModes.join(", ")}`,
-        },
-        { status: 400 }
-      );
-    }
+    const { paperIds, prompt, mode } = parsed.data;
 
+    // --- Fetch papers ---
     const fetchedPapers = await db
       .select({
         id: papers.id,
@@ -160,6 +175,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // --- Build prompt & stream ---
     const paperContext = buildPaperContext(fetchedPapers);
     const systemPrompt = getSystemPrompt(mode);
 
@@ -169,6 +185,8 @@ export async function POST(req: Request) {
       userPrompt += `\n\nAdditional instructions from the researcher:\n${prompt}`;
     }
 
+    log.info("Synthesize request", { userId, mode, paperCount: fetchedPapers.length });
+
     const result = streamText({
       model: getModel(),
       system: systemPrompt,
@@ -177,7 +195,7 @@ export async function POST(req: Request) {
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error("Synthesize API error:", error);
+    log.error("Synthesize API error", error);
     return NextResponse.json(
       { error: "Synthesis failed. Please try again." },
       { status: 500 }

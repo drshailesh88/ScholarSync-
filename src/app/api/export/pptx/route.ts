@@ -1,6 +1,20 @@
 import { NextResponse } from "next/server";
 import PptxGenJS from "pptxgenjs";
+import { z } from "zod";
 import type { ContentBlock, ThemeConfig } from "@/types/presentation";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
+
+const exportPptxSchema = z.object({
+  title: z.string().max(500),
+  slides: z.array(z.any()).max(100),
+  themeConfig: z.object({}).passthrough().optional(),
+});
 
 interface SlideInput {
   title?: string;
@@ -22,8 +36,35 @@ function hexNoHash(hex: string): string {
 }
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const body: ExportRequest = await req.json();
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "export", RATE_LIMITS.export);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validate request body
+    const rawBody = await req.json();
+    const parseResult = exportPptxSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request data" },
+        { status: 400 }
+      );
+    }
+
+    const body = parseResult.data as ExportRequest;
 
     if (!body.slides || !Array.isArray(body.slides) || body.slides.length === 0) {
       return NextResponse.json(
@@ -109,7 +150,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("PPTX export error:", error);
+    log.error("PPTX export error", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { UnifiedSearchResult, SearchResponse } from "@/types/search";
+import type { SearchResponse } from "@/types/search";
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
@@ -7,12 +7,32 @@ import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
 import { getEvidenceLevel } from "@/lib/search/evidence-level";
 import { augmentQuery } from "@/lib/ai/query-augment";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 export async function GET(req: Request) {
+  const log = logger.withRequestId();
+
+  // Authentication
+  let userId: string;
+  try {
+    userId = await getCurrentUserId();
+  } catch {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
+
+  // Rate limiting
+  const rateLimitResponse = await checkRateLimit(userId, "search", RATE_LIMITS.search);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q");
   const page = parseInt(searchParams.get("page") || "0", 10);
-  const perPage = parseInt(searchParams.get("perPage") || "20", 10);
+  const perPage = Math.min(parseInt(searchParams.get("perPage") || "20", 10), 100);
   const yearStart = searchParams.get("yearStart")
     ? parseInt(searchParams.get("yearStart")!, 10)
     : undefined;
@@ -29,6 +49,13 @@ export async function GET(req: Request) {
   if (!q) {
     return NextResponse.json(
       { error: "Query parameter 'q' is required" },
+      { status: 400 }
+    );
+  }
+
+  if (q.length > 500) {
+    return NextResponse.json(
+      { error: "Query parameter 'q' must not exceed 500 characters" },
       { status: 400 }
     );
   }
@@ -163,7 +190,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Unified search error:", error);
+    log.error("Unified search error", error);
     return NextResponse.json(
       { error: "Search failed" },
       { status: 500 }

@@ -1,30 +1,49 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { generateText } from "ai";
 import { getSmallModel } from "@/lib/ai/models";
 import { getSlideEditorSystemPrompt } from "@/lib/ai/prompts/presentation";
-import type { SlideEditAction, ContentBlock } from "@/types/presentation";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+import type { SlideEditAction } from "@/types/presentation";
 
-interface EditSlideRequest {
-  action: SlideEditAction;
-  title?: string;
-  subtitle?: string;
-  contentBlocks: ContentBlock[];
-  speakerNotes?: string;
-  additionalContext?: string;
-}
+const editSlideSchema = z.object({
+  action: z.string().min(1),
+  contentBlocks: z.array(z.any()).min(1),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  speakerNotes: z.string().optional(),
+  additionalContext: z.string().optional(),
+});
 
 export async function POST(req: Request) {
-  try {
-    const body: EditSlideRequest = await req.json();
+  const log = logger.withRequestId();
 
-    if (!body.action || !body.contentBlocks) {
+  try {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "presentations", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validation
+    const parseResult = editSlideSchema.safeParse(await req.json());
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "action and contentBlocks are required" },
+        { error: "Invalid request body", details: parseResult.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const body = parseResult.data;
 
-    const systemPrompt = getSlideEditorSystemPrompt(body.action);
+    const systemPrompt = getSlideEditorSystemPrompt(body.action as SlideEditAction);
 
     const slideContent = JSON.stringify({
       title: body.title,
@@ -52,7 +71,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Edit slide error:", error);
+    log.error("Edit slide error", error);
     return NextResponse.json(
       { error: "Slide editing failed" },
       { status: 500 }
