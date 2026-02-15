@@ -1,5 +1,19 @@
 import type { UnifiedSearchResult } from "@/types/search";
 import { mapPubMedPublicationType, getEvidenceLevel } from "@/lib/search/evidence-level";
+import { createKeyRotator } from "@/lib/search/api-key-rotator";
+
+// Initialize key rotator: prefer PUBMED_API_KEYS (comma-separated), fall back to PUBMED_API_KEY (singular)
+const pubmedKeys: string[] =
+  process.env.PUBMED_API_KEYS?.split(",") ??
+  (process.env.PUBMED_API_KEY ? [process.env.PUBMED_API_KEY] : []);
+const keyRotator = createKeyRotator(pubmedKeys);
+
+/** Append the next rotated API key to a PubMed URL, or return the URL unchanged if no keys. */
+function appendApiKey(url: string): string {
+  const key = keyRotator.next();
+  if (!key) return url;
+  return `${url}&api_key=${encodeURIComponent(key)}`;
+}
 
 interface PubMedSearchOptions {
   maxResults?: number;
@@ -20,10 +34,20 @@ async function fetchWithRetry(
   maxRetries: number = 3,
   baseDelay: number = 400
 ): Promise<Response> {
+  let currentUrl = url;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
-    const response = await fetch(url);
+    const response = await fetch(currentUrl);
     if (response.ok) return response;
-    if (response.status === 429 || response.status >= 500) {
+    if (response.status === 429) {
+      // Rate-limited: rotate to the next key before retrying
+      const baseUrl = currentUrl.replace(/&api_key=[^&]*/, "");
+      currentUrl = appendApiKey(baseUrl);
+      const delay = baseDelay * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      continue;
+    }
+    if (response.status >= 500) {
+      // Server error: retry with the same URL (not a rate-limit issue)
       const delay = baseDelay * Math.pow(2, attempt);
       await new Promise((resolve) => setTimeout(resolve, delay));
       continue;
@@ -155,7 +179,7 @@ export async function searchPubMed(
   }
 
   // Step 1: ESearch for PMIDs
-  const searchRes = await fetchWithRetry(searchUrl);
+  const searchRes = await fetchWithRetry(appendApiKey(searchUrl));
   const searchData: PubMedESearchResult = await searchRes.json();
   const pmids = searchData.esearchresult.idlist;
   const total = parseInt(searchData.esearchresult.count, 10);
@@ -165,8 +189,8 @@ export async function searchPubMed(
   }
 
   // Step 2: EFetch for full XML
-  const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmids.join(",")}&rettype=xml&retmode=xml&tool=scholarsync&email=contact@scholarsync.com`;
-  const fetchRes = await fetchWithRetry(fetchUrl);
+  const baseFetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmids.join(",")}&rettype=xml&retmode=xml&tool=scholarsync&email=contact@scholarsync.com`;
+  const fetchRes = await fetchWithRetry(appendApiKey(baseFetchUrl));
   const xml = await fetchRes.text();
 
   // Parse individual articles
