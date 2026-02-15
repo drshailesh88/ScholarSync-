@@ -3,6 +3,7 @@ import type { UnifiedSearchResult, SearchResponse } from "@/types/search";
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
+import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import { rerankResults } from "@/lib/search/rerank";
 import { getEvidenceLevel } from "@/lib/search/evidence-level";
@@ -57,7 +58,7 @@ export async function GET(req: Request) {
     }
 
     // Step 2: Fan out to all sources in parallel
-    const [pubmedResult, s2Result, oaResult] = await Promise.allSettled([
+    const [pubmedResult, s2Result, oaResult, ctResult] = await Promise.allSettled([
       searchPubMed(pubmedQuery, {
         maxResults: perPage,
         page: 0,
@@ -77,6 +78,11 @@ export async function GET(req: Request) {
         yearEnd,
         onlyOpenAccess: openAccessOnly,
       }),
+      searchClinicalTrials(q, {
+        limit: perPage,
+        yearStart,
+        yearEnd,
+      }),
     ]);
 
     const pubmedResults =
@@ -85,11 +91,14 @@ export async function GET(req: Request) {
       s2Result.status === "fulfilled" ? s2Result.value.results : [];
     const oaResults =
       oaResult.status === "fulfilled" ? oaResult.value.results : [];
+    const ctResults =
+      ctResult.status === "fulfilled" ? ctResult.value.results : [];
 
     const sourceCounts = {
       pubmed: pubmedResults.length,
       semanticScholar: s2Results.length,
       openAlex: oaResults.length,
+      clinicalTrials: ctResults.length,
     };
 
     // Step 3: RRF fusion
@@ -97,6 +106,7 @@ export async function GET(req: Request) {
       { source: "pubmed", results: pubmedResults },
       { source: "semantic_scholar", results: s2Results },
       { source: "openalex", results: oaResults },
+      { source: "clinical_trials", results: ctResults },
     ]);
 
     // Step 4: Rerank (if Cohere key available)

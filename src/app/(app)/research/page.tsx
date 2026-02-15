@@ -85,6 +85,7 @@ export default function ResearchPage() {
     pubmed: 0,
     semanticScholar: 0,
     openAlex: 0,
+    clinicalTrials: 0,
   });
   const [filters, setFilters] = useState<FilterState>({
     last5Years: false,
@@ -373,7 +374,8 @@ export default function ResearchPage() {
           <div className="mb-4">
             <p className="text-xs text-ink-muted">
               {sourceCounts.pubmed} from PubMed, {sourceCounts.semanticScholar}{" "}
-              from Semantic Scholar, {sourceCounts.openAlex} from OpenAlex —{" "}
+              from Semantic Scholar, {sourceCounts.openAlex} from OpenAlex,{" "}
+              {sourceCounts.clinicalTrials} from ClinicalTrials.gov —{" "}
               {totalResults} total results
             </p>
             {augmentedQueries && (
