@@ -10,6 +10,7 @@ import { augmentQuery } from "@/lib/ai/query-augment";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import { lookupJournalQuality } from "@/lib/search/journal-quality";
 
 export async function GET(req: Request) {
   const log = logger.withRequestId();
@@ -142,6 +143,21 @@ export async function GET(req: Request) {
       return result;
     });
 
+    // Step 5b: Enrich with journal quality indicators
+    fused = fused.map((result) => {
+      if (result.journal) {
+        const quality = lookupJournalQuality(result.journal);
+        if (quality) {
+          return {
+            ...result,
+            journalQuartile: quality.quartile,
+            journalImpactProxy: quality.citesPerDoc2y,
+          };
+        }
+      }
+      return result;
+    });
+
     // Step 6: Apply study type filter
     let filtered = fused;
     if (studyTypes && studyTypes.length > 0) {
@@ -172,6 +188,11 @@ export async function GET(req: Request) {
         (a, b) =>
           (levelOrder[a.evidenceLevel || "V"] || 5) -
           (levelOrder[b.evidenceLevel || "V"] || 5)
+      );
+    } else if (sort === "impact") {
+      filtered.sort(
+        (a, b) =>
+          (b.journalImpactProxy ?? -1) - (a.journalImpactProxy ?? -1),
       );
     }
     // "relevance" keeps RRF/rerank order (default)
