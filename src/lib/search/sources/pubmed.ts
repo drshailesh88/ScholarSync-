@@ -1,5 +1,9 @@
 import type { UnifiedSearchResult } from "@/types/search";
 import { mapPubMedPublicationType, getEvidenceLevel } from "@/lib/search/evidence-level";
+import { resilientFetch } from "@/lib/http/resilient-fetch";
+import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
+
+const breaker = createCircuitBreaker({ service: "PubMed", failureThreshold: 5 });
 
 interface PubMedSearchOptions {
   maxResults?: number;
@@ -13,24 +17,6 @@ interface PubMedESearchResult {
     idlist: string[];
     count: string;
   };
-}
-
-async function fetchWithRetry(
-  url: string,
-  maxRetries: number = 3,
-  baseDelay: number = 400
-): Promise<Response> {
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    const response = await fetch(url);
-    if (response.ok) return response;
-    if (response.status === 429 || response.status >= 500) {
-      const delay = baseDelay * Math.pow(2, attempt);
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      continue;
-    }
-    throw new Error(`PubMed API error: ${response.status}`);
-  }
-  throw new Error("PubMed API: max retries exceeded");
 }
 
 function stripXmlTags(text: string): string {
@@ -141,6 +127,11 @@ export async function searchPubMed(
   query: string,
   options: PubMedSearchOptions = {}
 ): Promise<{ results: UnifiedSearchResult[]; total: number }> {
+  if (!breaker.canRequest()) {
+    console.warn("[PubMed] Circuit open — skipping");
+    return { results: [], total: 0 };
+  }
+
   const maxResults = options.maxResults || 20;
   const page = options.page || 0;
   const retstart = page * maxResults;
@@ -154,30 +145,38 @@ export async function searchPubMed(
     searchUrl += `&mindate=${minDate}&maxdate=${maxDate}&datetype=pdat`;
   }
 
-  // Step 1: ESearch for PMIDs
-  const searchRes = await fetchWithRetry(searchUrl);
-  const searchData: PubMedESearchResult = await searchRes.json();
-  const pmids = searchData.esearchresult.idlist;
-  const total = parseInt(searchData.esearchresult.count, 10);
+  try {
+    // Step 1: ESearch for PMIDs
+    const searchRes = await resilientFetch(searchUrl, {}, { service: "PubMed", timeout: 15000, baseDelay: 400 });
+    const searchData: PubMedESearchResult = await searchRes.json();
+    const pmids = searchData.esearchresult.idlist;
+    const total = parseInt(searchData.esearchresult.count, 10);
 
-  if (pmids.length === 0) {
+    if (pmids.length === 0) {
+      breaker.onSuccess();
+      return { results: [], total: 0 };
+    }
+
+    // Step 2: EFetch for full XML
+    const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmids.join(",")}&rettype=xml&retmode=xml&tool=scholarsync&email=contact@scholarsync.com`;
+    const fetchRes = await resilientFetch(fetchUrl, {}, { service: "PubMed", timeout: 15000, baseDelay: 400 });
+    const xml = await fetchRes.text();
+
+    // Parse individual articles
+    const articleChunks =
+      xml.match(/<PubmedArticle>[\s\S]*?<\/PubmedArticle>/g) || [];
+
+    const results: UnifiedSearchResult[] = [];
+    for (const chunk of articleChunks) {
+      const parsed = parseArticle(chunk);
+      if (parsed) results.push(parsed);
+    }
+
+    breaker.onSuccess();
+    return { results, total };
+  } catch (error) {
+    breaker.onFailure();
+    console.error("[PubMed] Search failed:", error);
     return { results: [], total: 0 };
   }
-
-  // Step 2: EFetch for full XML
-  const fetchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=${pmids.join(",")}&rettype=xml&retmode=xml&tool=scholarsync&email=contact@scholarsync.com`;
-  const fetchRes = await fetchWithRetry(fetchUrl);
-  const xml = await fetchRes.text();
-
-  // Parse individual articles
-  const articleChunks =
-    xml.match(/<PubmedArticle>[\s\S]*?<\/PubmedArticle>/g) || [];
-
-  const results: UnifiedSearchResult[] = [];
-  for (const chunk of articleChunks) {
-    const parsed = parseArticle(chunk);
-    if (parsed) results.push(parsed);
-  }
-
-  return { results, total };
 }

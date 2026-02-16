@@ -1,4 +1,5 @@
 import type { UnifiedSearchResult } from "@/types/search";
+import { resilientFetch } from "@/lib/http/resilient-fetch";
 
 interface CohereRerankResponse {
   results: {
@@ -22,25 +23,24 @@ export async function rerankResults(
       (r) => `${r.title}. ${r.abstract || r.tldr || ""}`
     );
 
-    const response = await fetch("https://api.cohere.com/v2/rerank", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+    const response = await resilientFetch(
+      "https://api.cohere.com/v2/rerank",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "rerank-v3.5",
+          query,
+          documents,
+          top_n: topN || Math.min(results.length, 50),
+          return_documents: false,
+        }),
       },
-      body: JSON.stringify({
-        model: "rerank-v3.5",
-        query,
-        documents,
-        top_n: topN || Math.min(results.length, 50),
-        return_documents: false,
-      }),
-    });
-
-    if (!response.ok) {
-      console.error(`Cohere rerank failed with status ${response.status}`);
-      return results;
-    }
+      { service: "Cohere", timeout: 10000, maxRetries: 2 }
+    );
 
     const data: CohereRerankResponse = await response.json();
 
