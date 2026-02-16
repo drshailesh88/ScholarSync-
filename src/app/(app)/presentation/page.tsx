@@ -15,9 +15,18 @@ import { cn } from "@/lib/utils";
 import { getUserDecks, deleteDeck } from "@/lib/actions/presentations";
 import { PRESET_THEMES } from "@/types/presentation";
 
+interface DeckListItem {
+  id: number;
+  title: string;
+  theme: string | null;
+  totalSlides: number | null;
+  updatedAt: Date | null;
+  generationStatus: string | null;
+}
+
 export default function PresentationListPage() {
   const router = useRouter();
-  const [decks, setDecks] = useState<any[]>([]);
+  const [decks, setDecks] = useState<DeckListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

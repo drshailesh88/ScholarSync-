@@ -36,9 +36,15 @@ export function TiptapEditor({
 }: TiptapEditorProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onUpdateRef = useRef(onUpdate);
-  onUpdateRef.current = onUpdate;
   const onDirtyRef = useRef(onDirty);
-  onDirtyRef.current = onDirty;
+
+  useEffect(() => {
+    onUpdateRef.current = onUpdate;
+  }, [onUpdate]);
+
+  useEffect(() => {
+    onDirtyRef.current = onDirty;
+  }, [onDirty]);
 
   const editor = useEditor({
     extensions: [
