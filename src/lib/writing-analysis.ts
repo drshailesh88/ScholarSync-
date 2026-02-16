@@ -22,11 +22,26 @@ export interface WritingMetrics {
   fleschReadingEase: number;
   fleschKincaidGrade: number;
   gunningFogIndex: number;
+  automatedReadabilityIndex: number;
+  colemanLiauIndex: number;
+  complexWordCount: number;
+  complexWordPercentage: number;
+  vocabularyDiversity: number;
+  avgSyllablesPerWord: number;
   passiveVoiceCount: number;
   weaselWordCount: number;
   adverbCount: number;
   complexSentenceCount: number;
   readabilityLabel: string;
+}
+
+export interface SentenceAnalysis {
+  text: string;
+  wordCount: number;
+  startIndex: number;
+  isComplex: boolean;
+  passiveVoice: boolean;
+  readabilityNote?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -237,6 +252,28 @@ export function analyzeWriting(text: string): {
     }
   }
 
+  // ---- Additional readability indices ----
+  // Automated Readability Index: 4.71 * (chars/words) + 0.5 * (words/sentences) - 21.43
+  const totalChars = words.reduce((sum, w) => sum + w.replace(/[^a-zA-Z]/g, "").length, 0);
+  const charsPerWord = wordCount > 0 ? totalChars / wordCount : 0;
+  const automatedReadabilityIndex = Math.max(
+    0,
+    Math.round((4.71 * charsPerWord + 0.5 * avgWordsPerSentence - 21.43) * 10) / 10
+  );
+
+  // Coleman-Liau Index: 0.0588 * L - 0.296 * S - 15.8
+  // L = avg letters per 100 words, S = avg sentences per 100 words
+  const L = wordCount > 0 ? (totalChars / wordCount) * 100 : 0;
+  const S = wordCount > 0 ? (sentenceCount / wordCount) * 100 : 0;
+  const colemanLiauIndex = Math.max(
+    0,
+    Math.round((0.0588 * L - 0.296 * S - 15.8) * 10) / 10
+  );
+
+  // Vocabulary diversity (type-token ratio)
+  const uniqueWords = new Set(words.map((w) => w.toLowerCase().replace(/[^a-z]/g, "")));
+  const vocabularyDiversity = wordCount > 0 ? Math.round((uniqueWords.size / wordCount) * 100) / 100 : 0;
+
   // ---- Assemble metrics ----
   const metrics: WritingMetrics = {
     wordCount,
@@ -247,6 +284,12 @@ export function analyzeWriting(text: string): {
     fleschReadingEase,
     fleschKincaidGrade,
     gunningFogIndex,
+    automatedReadabilityIndex,
+    colemanLiauIndex,
+    complexWordCount: complexWords.length,
+    complexWordPercentage: wordCount > 0 ? Math.round((complexWords.length / wordCount) * 1000) / 10 : 0,
+    vocabularyDiversity,
+    avgSyllablesPerWord: Math.round(syllablesPerWord * 100) / 100,
     passiveVoiceCount,
     weaselWordCount,
     adverbCount,

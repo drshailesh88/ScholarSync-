@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import {
+  users,
   projects,
   searchQueries,
   activityLog,
@@ -11,6 +12,10 @@ import {
 import { eq, and, desc, isNull, sql, count } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { ensureUser } from "@/lib/actions/user";
+
+// ---------------------------------------------------------------------------
+// Types from Phase 1 (comprehensive dashboard data)
+// ---------------------------------------------------------------------------
 
 export type DashboardProject = {
   id: number;
@@ -42,6 +47,14 @@ export type DashboardStats = {
   paperCount: number;
   searchCount: number;
   conversationCount: number;
+  // Usage stats from Phase 2
+  tokensUsed: number;
+  tokensLimit: number;
+  plagiarismChecksUsed: number;
+  exportsUsed: number;
+  plan: string;
+  totalProjects: number;
+  totalSearches: number;
 };
 
 export type DashboardData = {
@@ -66,6 +79,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     conversationCountResult,
     recentSearchesResult,
     recentActivityResult,
+    userResult,
   ] = await Promise.all([
     // Recent projects (top 4, non-deleted, ordered by last updated)
     db
@@ -138,17 +152,56 @@ export async function getDashboardData(): Promise<DashboardData> {
       .where(eq(activityLog.userId, userId))
       .orderBy(desc(activityLog.createdAt))
       .limit(8),
+
+    // User data for usage stats
+    db.select().from(users).where(eq(users.id, userId)),
   ]);
+
+  const user = userResult[0];
+  const projectCount = projectCountResult[0]?.value ?? 0;
+  const searchCount = searchCountResult[0]?.value ?? 0;
 
   return {
     recentProjects: recentProjectsResult,
     stats: {
-      projectCount: projectCountResult[0]?.value ?? 0,
+      projectCount,
       paperCount: paperCountResult[0]?.value ?? 0,
-      searchCount: searchCountResult[0]?.value ?? 0,
+      searchCount,
       conversationCount: conversationCountResult[0]?.value ?? 0,
+      tokensUsed: user?.tokens_used_this_month ?? 0,
+      tokensLimit: user?.tokens_limit ?? 10000,
+      plagiarismChecksUsed: user?.plagiarism_checks_used ?? 0,
+      exportsUsed: user?.exports_used_this_month ?? 0,
+      plan: user?.plan ?? "free",
+      totalProjects: projectCount,
+      totalSearches: searchCount,
     },
     recentSearches: recentSearchesResult,
     recentActivity: recentActivityResult,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Phase 2 convenience functions (used by some dashboard UIs)
+// ---------------------------------------------------------------------------
+
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const data = await getDashboardData();
+  return data.stats;
+}
+
+export async function getRecentSearches(limit = 5) {
+  const userId = await getCurrentUserId();
+  return db
+    .select({
+      id: searchQueries.id,
+      query: searchQueries.original_query,
+      source: searchQueries.source,
+      resultCount: searchQueries.result_count,
+      createdAt: searchQueries.created_at,
+    })
+    .from(searchQueries)
+    .where(eq(searchQueries.user_id, userId))
+    .orderBy(desc(searchQueries.created_at))
+    .limit(limit);
 }
