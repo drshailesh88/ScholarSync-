@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 const DOCLING_URL = process.env.DOCLING_SERVICE_URL || "http://localhost:8001";
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB for Docling (vs 20MB for pdf-parse)
@@ -35,7 +38,27 @@ interface DoclingChunkResult {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  const log = logger.withRequestId();
+
   try {
+    // 1. Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch (authError) {
+      logger.error("Advanced PDF extraction auth failed", authError);
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 }
+      );
+    }
+
+    // 2. Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "extract-pdf-advanced", RATE_LIMITS.ai);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
     const url = new URL(req.url);
     const mode = url.searchParams.get("mode") || "parse"; // "parse" or "chunk"
 
@@ -78,7 +101,7 @@ export async function POST(req: Request): Promise<Response> {
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ detail: "Docling service error" }));
-      console.error("Docling service error:", error);
+      log.error("Docling service error", error as Error, { userId, mode });
 
       // Return error — caller can fall back to basic extraction
       return NextResponse.json(
@@ -94,7 +117,7 @@ export async function POST(req: Request): Promise<Response> {
     const result: DoclingParseResult | DoclingChunkResult = await response.json();
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Advanced PDF extraction error:", error);
+    log.error("Advanced PDF extraction error", error);
 
     const isTimeout = error instanceof DOMException && error.name === "TimeoutError";
     const isConnectionRefused =
@@ -111,7 +134,7 @@ export async function POST(req: Request): Promise<Response> {
       return NextResponse.json(
         {
           error: "Docling service not running",
-          detail: `Could not connect to ${DOCLING_URL}. Start with: cd services/docling && pip install -r requirements.txt && uvicorn app:app --port 8001`,
+          detail: "Advanced PDF extraction service is unavailable",
           fallback: true,
         },
         { status: 503 }

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { seedDevData } from "@/lib/actions/seed";
+import { logger } from "@/lib/logger";
 
 // Dev-only endpoint to seed the database
 export async function POST() {
@@ -11,9 +12,9 @@ export async function POST() {
     const result = await seedDevData();
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Seed error:", error);
+    logger.error("Seed error", error);
     return NextResponse.json(
-      { error: String(error) },
+      { error: "Failed to seed database" },
       { status: 500 }
     );
   }

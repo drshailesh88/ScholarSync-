@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
+import { logger } from "@/lib/logger";
 
 // Clerk webhook handler - creates/updates user in DB on Clerk events
 // In production, verify webhook signature with svix
 export async function POST(req: NextRequest) {
+  const log = logger.withRequestId();
+
   try {
     const payload = await req.json();
     const { type, data } = payload;
@@ -45,7 +48,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Clerk webhook error:", error);
+    log.error("Clerk webhook error", error);
     return NextResponse.json(
       { error: "Webhook processing failed" },
       { status: 500 }

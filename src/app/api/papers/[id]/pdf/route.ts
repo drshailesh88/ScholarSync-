@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 const PDF_STORAGE_DIR =
   process.env.PDF_STORAGE_PATH ||
@@ -15,11 +18,24 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const log = logger.withRequestId();
   const { id } = await params;
 
   if (!id || !/^\d+$/.test(id)) {
     return NextResponse.json({ error: "Invalid paper ID" }, { status: 400 });
   }
+
+  // Authentication
+  let userId: string;
+  try {
+    userId = await getCurrentUserId();
+  } catch {
+    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+  }
+
+  // Rate limiting
+  const rateLimitResponse = await checkRateLimit(userId, "papers-pdf", RATE_LIMITS.export);
+  if (rateLimitResponse) return rateLimitResponse;
 
   const filePath = path.join(PDF_STORAGE_DIR, `${id}.pdf`);
 
@@ -41,7 +57,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("Error reading PDF file:", error);
+    log.error("Error reading PDF file", error);
     return NextResponse.json(
       { error: "Failed to read PDF file" },
       { status: 500 }
@@ -58,11 +74,24 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const log = logger.withRequestId();
   const { id } = await params;
 
   if (!id || !/^\d+$/.test(id)) {
     return NextResponse.json({ error: "Invalid paper ID" }, { status: 400 });
   }
+
+  // Authentication
+  let userId: string;
+  try {
+    userId = await getCurrentUserId();
+  } catch {
+    return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+  }
+
+  // Rate limiting
+  const rateLimitResponse = await checkRateLimit(userId, "papers-pdf", RATE_LIMITS.export);
+  if (rateLimitResponse) return rateLimitResponse;
 
   try {
     const contentType = req.headers.get("content-type") || "";
@@ -94,7 +123,7 @@ export async function POST(
 
     return NextResponse.json({ success: true, paperId: id });
   } catch (error) {
-    console.error("Error storing PDF file:", error);
+    log.error("Error storing PDF file", error);
     return NextResponse.json(
       { error: "Failed to store PDF file" },
       { status: 500 }

@@ -3,6 +3,8 @@ import { generateObject } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import { db } from "@/lib/db";
 import { paperExtractions } from "@/lib/db/schema";
 
@@ -40,24 +42,30 @@ function confidenceToNumber(confidence: "high" | "medium" | "low"): number {
   }
 }
 
-const extractPicoRequestSchema = z.object({
-  paperId: z.number().int().positive().optional(),
-  abstract: z.string().min(10, "Abstract must be at least 10 characters").max(10000, "Abstract must not exceed 10000 characters"),
-  title: z.string().min(1, "Title is required").max(500, "Title must not exceed 500 characters"),
+const picoRequestSchema = z.object({
+  paperId: z.number().optional(),
+  abstract: z.string().min(1).max(50000),
+  title: z.string().min(1).max(500),
 });
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    await getCurrentUserId();
+    const userId = await getCurrentUserId();
+
+    const rateLimitResponse = await checkRateLimit(userId, "extract-pico", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
 
     const body = await req.json();
-    const parsed = extractPicoRequestSchema.safeParse(body);
+    const parsed = picoRequestSchema.safeParse(body);
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { error: "Title and abstract are required" },
         { status: 400 }
       );
     }
+
     const { paperId, abstract, title } = parsed.data;
 
     const { object: picoResult } = await generateObject({
@@ -90,7 +98,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(picoResult);
   } catch (error) {
-    console.error("PICO extraction error:", error);
+    log.error("PICO extraction error", error);
     return NextResponse.json(
       { error: "PICO extraction failed" },
       { status: 500 }

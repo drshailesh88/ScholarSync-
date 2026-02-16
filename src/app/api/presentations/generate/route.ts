@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { generateText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { getSlideGeneratorSystemPrompt } from "@/lib/ai/prompts/presentation";
@@ -7,54 +8,52 @@ import {
   createSlide,
   updateDeck,
 } from "@/lib/actions/presentations";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import type {
-  AudienceType,
   GeneratedSlide,
   ContentBlock,
   SlideLayout,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
-import { z } from "zod";
 
-const generateRequestSchema = z.object({
-  preprocessedData: z
-    .string({ error: "preprocessedData is required" })
-    .min(1, "preprocessedData must not be empty")
-    .max(100000, "preprocessedData must not exceed 100000 characters"),
-  title: z
-    .string({ error: "title is required" })
-    .min(1, "title must not be empty")
-    .max(500, "title must not exceed 500 characters"),
-  audienceType: z.enum(["general", "academic", "clinical", "student", "executive"]),
-  slideCount: z.number().int().min(1).max(100).optional(),
-  themeKey: z.string().max(50).optional(),
+const generateSchema = z.object({
+  title: z.string().min(1).max(500),
+  preprocessedData: z.string().min(1).max(100000),
+  audienceType: z.enum(["thesis_defense", "conference", "journal_club", "classroom", "general"]),
+  slideCount: z.number().int().positive().optional(),
+  themeKey: z.string().optional(),
   projectId: z.number().int().positive().optional(),
   documentId: z.number().int().positive().optional(),
-  additionalInstructions: z.string().max(2000).optional(),
+  additionalInstructions: z.string().optional(),
 });
 
-interface GenerateRequest {
-  preprocessedData: string;
-  title: string;
-  audienceType: AudienceType;
-  slideCount?: number;
-  themeKey?: string;
-  projectId?: number;
-  documentId?: number;
-  additionalInstructions?: string;
-}
-
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const rawBody = await req.json();
-    const parsed = generateRequestSchema.safeParse(rawBody);
-    if (!parsed.success) {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "presentations", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validation
+    const parseResult = generateSchema.safeParse(await req.json());
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { error: "Invalid request body", details: parseResult.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
-    const body = parsed.data as GenerateRequest;
+    const body = parseResult.data;
 
     const themeKey = body.themeKey ?? "modern";
 
@@ -132,7 +131,7 @@ export async function POST(req: Request) {
       throw genError;
     }
   } catch (error) {
-    console.error("Generation error:", error);
+    log.error("Generation error", error);
     return NextResponse.json(
       { error: "Generation failed" },
       { status: 500 }

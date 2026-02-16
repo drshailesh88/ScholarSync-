@@ -1,38 +1,19 @@
 import { NextResponse } from "next/server";
 import PptxGenJS from "pptxgenjs";
-import type { ContentBlock, ThemeConfig } from "@/types/presentation";
 import { z } from "zod";
+import type { ContentBlock, ThemeConfig } from "@/types/presentation";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
-const pptxContentBlockSchema = z.object({
-  type: z.string().min(1),
-  data: z.record(z.string(), z.unknown()),
-});
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
 
-const pptxSlideInputSchema = z.object({
-  title: z.string().max(500).optional(),
-  subtitle: z.string().max(500).optional(),
-  content: z.string().optional(),
-  layout: z.string().optional(),
-  contentBlocks: z.array(pptxContentBlockSchema).optional(),
-  speakerNotes: z.string().max(5000).optional(),
-});
-
-const themeConfigSchema = z.object({
-  primaryColor: z.string().optional(),
-  backgroundColor: z.string().optional(),
-  textColor: z.string().optional(),
-  accentColor: z.string().optional(),
-  fontFamily: z.string().optional(),
-  headingFontFamily: z.string().optional(),
-}).optional();
-
-const exportPptxRequestSchema = z.object({
-  title: z.string().max(500, "Title must not exceed 500 characters").optional().default("Presentation"),
-  slides: z
-    .array(pptxSlideInputSchema)
-    .min(1, "At least one slide is required")
-    .max(200, "Too many slides"),
-  themeConfig: themeConfigSchema,
+const exportPptxSchema = z.object({
+  title: z.string().max(500),
+  slides: z.array(z.any()).max(100),
+  themeConfig: z.object({}).passthrough().optional(),
 });
 
 interface SlideInput {
@@ -55,16 +36,42 @@ function hexNoHash(hex: string): string {
 }
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const rawBody = await req.json();
-    const parsed = exportPptxRequestSchema.safeParse(rawBody);
-    if (!parsed.success) {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
       return NextResponse.json(
-        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "export", RATE_LIMITS.export);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validate request body
+    const rawBody = await req.json();
+    const parseResult = exportPptxSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request data" },
         { status: 400 }
       );
     }
-    const body = parsed.data as ExportRequest;
+
+    const body = parseResult.data as ExportRequest;
+
+    if (!body.slides || !Array.isArray(body.slides) || body.slides.length === 0) {
+      return NextResponse.json(
+        { error: "At least one slide is required" },
+        { status: 400 }
+      );
+    }
 
     const theme = body.themeConfig;
     const primaryColor = hexNoHash(theme?.primaryColor ?? "#1E3A5F");
@@ -143,7 +150,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("PPTX export error:", error);
+    log.error("PPTX export error", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 }
@@ -153,7 +160,7 @@ export async function POST(req: Request) {
 // ---------------------------------------------------------------------------
 
 function renderTitleSlide(
-  slide: PptxGenJS.Slide, data: SlideInput, pptx: PptxGenJS,
+  slide: any, data: SlideInput, pptx: PptxGenJS,
   primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   // Full accent bar
@@ -175,8 +182,8 @@ function renderTitleSlide(
 }
 
 function renderSectionHeader(
-  slide: PptxGenJS.Slide, data: SlideInput,
-  primary: string, text: string, headingFont: string, _accent: string
+  slide: any, data: SlideInput,
+  primary: string, text: string, headingFont: string, accent: string
 ) {
   slide.addText(data.title || "", {
     x: 1.0, y: 2.8, w: 11.0, h: 1.2,
@@ -192,8 +199,8 @@ function renderSectionHeader(
 }
 
 function renderTitleContent(
-  slide: PptxGenJS.Slide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
-  primary: string, text: string, font: string, headingFont: string, _accent: string
+  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   // Title bar
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
@@ -216,7 +223,7 @@ function renderTitleContent(
 }
 
 function renderTwoColumn(
-  slide: PptxGenJS.Slide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
   primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
@@ -246,8 +253,8 @@ function renderTwoColumn(
 }
 
 function renderChartSlide(
-  slide: PptxGenJS.Slide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
-  primary: string, text: string, font: string, headingFont: string, _accent: string
+  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
 
@@ -259,7 +266,7 @@ function renderChartSlide(
   const chartBlock = blocks.find((b) => b.type === "chart");
   if (chartBlock?.type === "chart") {
     const cd = chartBlock.data;
-    const chartTypeMap: Record<string, PptxGenJS.CHART_NAME> = {
+    const chartTypeMap: Record<string, any> = {
       bar: pptx.ChartType.bar,
       line: pptx.ChartType.line,
       pie: pptx.ChartType.pie,
@@ -292,8 +299,8 @@ function renderChartSlide(
 }
 
 function renderTableSlide(
-  slide: PptxGenJS.Slide, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
-  primary: string, text: string, font: string, headingFont: string, _accent: string
+  slide: any, data: SlideInput, blocks: ContentBlock[], pptx: PptxGenJS,
+  primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   slide.addShape(pptx.ShapeType.rect, { x: 0, y: 0, w: "100%", h: 1.4, fill: { color: primary } });
 
@@ -305,7 +312,7 @@ function renderTableSlide(
   const tableBlock = blocks.find((b) => b.type === "table");
   if (tableBlock?.type === "table") {
     const td = tableBlock.data;
-    const tableRows: PptxGenJS.TableRow[] = [
+    const tableRows: any[][] = [
       td.headers.map((h) => ({ text: h, options: { bold: true, color: "FFFFFF", fill: { color: primary } } })),
       ...td.rows.map((row) => row.map((cell) => ({ text: cell }))),
     ];
@@ -322,8 +329,8 @@ function renderTableSlide(
 }
 
 function renderQuoteSlide(
-  slide: PptxGenJS.Slide, data: SlideInput, blocks: ContentBlock[],
-  _primary: string, text: string, font: string, _headingFont: string, accent: string
+  slide: any, data: SlideInput, blocks: ContentBlock[],
+  primary: string, text: string, font: string, headingFont: string, accent: string
 ) {
   const quoteBlock = blocks.find((b) => b.type === "quote");
   const quoteText = quoteBlock?.type === "quote" ? quoteBlock.data.text : data.title || "";

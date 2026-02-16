@@ -1,50 +1,49 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { generateText } from "ai";
 import { getSmallModel } from "@/lib/ai/models";
 import { getSlideEditorSystemPrompt } from "@/lib/ai/prompts/presentation";
-import type { SlideEditAction, ContentBlock } from "@/types/presentation";
-import { z } from "zod";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
+import type { SlideEditAction } from "@/types/presentation";
 
-const editSlideContentBlockSchema = z.object({
-  type: z.string().min(1),
-  data: z.record(z.string(), z.unknown()),
+const editSlideSchema = z.object({
+  action: z.string().min(1),
+  contentBlocks: z.array(z.any()).min(1),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  speakerNotes: z.string().optional(),
+  additionalContext: z.string().optional(),
 });
-
-const editSlideRequestSchema = z.object({
-  action: z.enum(["simplify", "elaborate", "add_examples", "improve_flow", "make_academic", "add_citations"], {
-    error: "Invalid slide edit action",
-  }),
-  title: z.string().max(500).optional(),
-  subtitle: z.string().max(500).optional(),
-  contentBlocks: z
-    .array(editSlideContentBlockSchema)
-    .min(1, "At least one content block is required"),
-  speakerNotes: z.string().max(5000).optional(),
-  additionalContext: z.string().max(2000).optional(),
-});
-
-interface EditSlideRequest {
-  action: SlideEditAction;
-  title?: string;
-  subtitle?: string;
-  contentBlocks: ContentBlock[];
-  speakerNotes?: string;
-  additionalContext?: string;
-}
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const rawBody = await req.json();
-    const parsed = editSlideRequestSchema.safeParse(rawBody);
-    if (!parsed.success) {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "presentations", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validation
+    const parseResult = editSlideSchema.safeParse(await req.json());
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { error: "Invalid request body", details: parseResult.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
-    const body = parsed.data as EditSlideRequest;
+    const body = parseResult.data;
 
-    const systemPrompt = getSlideEditorSystemPrompt(body.action);
+    const systemPrompt = getSlideEditorSystemPrompt(body.action as SlideEditAction);
 
     const slideContent = JSON.stringify({
       title: body.title,
@@ -72,7 +71,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Edit slide error:", error);
+    log.error("Edit slide error", error);
     return NextResponse.json(
       { error: "Slide editing failed" },
       { status: 500 }

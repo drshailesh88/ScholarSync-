@@ -1,49 +1,68 @@
 import { streamText } from "ai";
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import { getModel } from "@/lib/ai/models";
 import { advancedRetrieve } from "@/lib/rag/pipeline";
 import type { RAGResult } from "@/lib/rag/pipeline";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
-import { z } from "zod";
 
 const ragChatRequestSchema = z.object({
   messages: z
     .array(
       z.object({
         role: z.enum(["user", "assistant", "system"]),
-        content: z.string().min(1, "Message content must not be empty"),
+        content: z.string().max(50000),
       })
     )
-    .min(1, "At least one message is required")
-    .max(100, "Too many messages"),
-  paperIds: z.array(z.number().int().positive()).optional(),
-  mode: z.enum(["notebook", "general", "learn"]).optional(),
-  ragConfig: z
-    .object({
-      useMultiQuery: z.boolean().optional(),
-      useHyDE: z.boolean().optional(),
-      useSelfQuery: z.boolean().optional(),
-      useRerank: z.boolean().optional(),
-      useCompression: z.boolean().optional(),
-      topK: z.number().int().min(1).max(50).optional(),
-    })
-    .optional(),
+    .min(1)
+    .max(50),
+  paperIds: z.array(z.number()).max(50).optional(),
+  mode: z.string().optional(),
+  ragConfig: z.record(z.string(), z.unknown()).optional(),
 });
 
 export async function POST(req: Request): Promise<Response> {
+  const log = logger.withRequestId();
+
   try {
-    const body = await req.json();
-    const parsed = ragChatRequestSchema.safeParse(body);
-    if (!parsed.success) {
-      return new Response(
-        JSON.stringify({
-          error: "Invalid request body",
-          details: parsed.error.flatten().fieldErrors,
-        }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+    // 1. Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch (authError) {
+      logger.error("RAG chat auth failed", authError);
+      return NextResponse.json(
+        { error: "Authentication required." },
+        { status: 401 }
       );
     }
+
+    // 2. Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "rag-chat", RATE_LIMITS.ai);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Input validation
+    const body = await req.json();
+    const parsed = ragChatRequestSchema.safeParse(body);
+
+    if (!parsed.success) {
+      log.warn("RAG chat input validation failed", {
+        userId,
+        errors: parsed.error.flatten(),
+      });
+      return NextResponse.json(
+        { error: "Invalid request. Please check your input and try again." },
+        { status: 400 }
+      );
+    }
+
     const { messages, paperIds, mode, ragConfig } = parsed.data;
 
     // Get the latest user message for retrieval
@@ -94,21 +113,20 @@ export async function POST(req: Request): Promise<Response> {
             });
           }
         }
-      } catch {
+      } catch (ragError) {
         // Fallback to no-context mode if RAG fails
+        log.warn("RAG retrieval failed, falling back to no-context mode", {
+          userId,
+          error: ragError instanceof Error ? ragError.message : String(ragError),
+        });
       }
     }
 
     // Build system prompt with source-grounded context
-    let systemPrompt: string;
+    let systemPrompt = `You are ScholarSync, an AI research assistant for academic writing. You help students and researchers analyze their papers and answer questions.`;
 
-    if (mode === "learn") {
-      systemPrompt = `You are ScholarSync in Learn mode — a Socratic research tutor. Your goal is to help the student develop critical thinking skills about their research sources. Use the retrieved passages to formulate probing questions rather than giving direct answers. Challenge their assumptions, ask them to compare findings across sources, and guide them to discover insights themselves. When referencing sources, still use [1], [2] citation format so the student can follow along.`;
-    } else {
-      systemPrompt = `You are ScholarSync, an AI research assistant for academic writing. You help students and researchers analyze their papers and answer questions.`;
-      if (mode === "notebook") {
-        systemPrompt += ` You are in Notebook mode — analyzing uploaded research sources.`;
-      }
+    if (mode === "notebook") {
+      systemPrompt += ` You are in Notebook mode — analyzing uploaded research sources.`;
     }
 
     if (contextChunks.length > 0) {
@@ -182,10 +200,10 @@ export async function POST(req: Request): Promise<Response> {
       },
     });
   } catch (error) {
-    console.error("RAG chat error:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to process RAG chat" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+    log.error("RAG chat error", error);
+    return NextResponse.json(
+      { error: "An error occurred while processing your request. Please try again." },
+      { status: 500 }
     );
   }
 }

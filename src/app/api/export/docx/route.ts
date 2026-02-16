@@ -11,11 +11,18 @@ import {
   Header,
 } from "docx";
 import { z } from "zod";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
-const exportDocxRequestSchema = z.object({
-  title: z.string().max(500, "Title must not exceed 500 characters").optional(),
-  content: z.string({ error: "Content is required" }).min(1, "Content must not be empty"),
-  citations: z.array(z.string()).optional(),
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
+
+const exportDocxSchema = z.object({
+  title: z.string().max(500).optional(),
+  content: z.string().max(500000),
+  citations: z.array(z.string()).max(1000).optional(),
 });
 
 // ---------------------------------------------------------------------------
@@ -235,16 +242,42 @@ function htmlToDocxParagraphs(html: string): Paragraph[] {
 // ---------------------------------------------------------------------------
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const body = await req.json();
-    const parsed = exportDocxRequestSchema.safeParse(body);
-    if (!parsed.success) {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
       return NextResponse.json(
-        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "export", RATE_LIMITS.export);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validate request body
+    const rawBody = await req.json();
+    const parseResult = exportDocxSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request data" },
         { status: 400 }
       );
     }
-    const { title, content, citations } = parsed.data;
+
+    const { title, content, citations } = parseResult.data;
+
+    if (!content) {
+      return NextResponse.json(
+        { error: "Content is required" },
+        { status: 400 }
+      );
+    }
 
     const docTitle = title || "Untitled Document";
 
@@ -389,7 +422,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("DOCX export error:", error);
+    log.error("DOCX export error", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 }

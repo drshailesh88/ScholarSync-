@@ -1,27 +1,18 @@
 import { NextResponse } from "next/server";
-import { PDFDocument, PDFFont, StandardFonts, rgb } from "pdf-lib";
-import type { ContentBlock } from "@/types/presentation";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { z } from "zod";
+import type { ContentBlock } from "@/types/presentation";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
-const contentBlockSchema = z.object({
-  type: z.string().min(1),
-  data: z.record(z.string(), z.unknown()),
-});
+// ---------------------------------------------------------------------------
+// Zod validation schema
+// ---------------------------------------------------------------------------
 
-const slideInputSchema = z.object({
-  title: z.string().max(500).optional(),
-  subtitle: z.string().max(500).optional(),
-  layout: z.string().optional(),
-  contentBlocks: z.array(contentBlockSchema).optional(),
-  speakerNotes: z.string().max(5000).optional(),
-});
-
-const exportPresentationPdfRequestSchema = z.object({
-  title: z.string().max(500, "Title must not exceed 500 characters").optional().default("Presentation"),
-  slides: z
-    .array(slideInputSchema)
-    .min(1, "At least one slide is required")
-    .max(200, "Too many slides"),
+const exportPresentationPdfSchema = z.object({
+  title: z.string().max(500),
+  slides: z.array(z.any()).max(100),
 });
 
 interface SlideInput {
@@ -38,16 +29,42 @@ interface ExportRequest {
 }
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    const rawBody = await req.json();
-    const parsed = exportPresentationPdfRequestSchema.safeParse(rawBody);
-    if (!parsed.success) {
+    // Authentication
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
       return NextResponse.json(
-        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(userId, "export", RATE_LIMITS.export);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // Validate request body
+    const rawBody = await req.json();
+    const parseResult = exportPresentationPdfSchema.safeParse(rawBody);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request data" },
         { status: 400 }
       );
     }
-    const body = parsed.data as ExportRequest;
+
+    const body = parseResult.data as ExportRequest;
+
+    if (!body.slides?.length) {
+      return NextResponse.json(
+        { error: "At least one slide is required" },
+        { status: 400 }
+      );
+    }
 
     const pdf = await PDFDocument.create();
     const font = await pdf.embedFont(StandardFonts.Helvetica);
@@ -238,14 +255,14 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("PDF handout export error:", error);
+    log.error("PDF handout export error", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
 }
 
 function wrapText(
   text: string,
-  font: PDFFont,
+  font: any,
   fontSize: number,
   maxWidth: number
 ): string[] {

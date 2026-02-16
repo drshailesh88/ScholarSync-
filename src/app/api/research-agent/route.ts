@@ -7,6 +7,8 @@ import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { getRecommendationsForPaper } from "@/lib/search/sources/s2-recommendations";
 import { savePaper } from "@/lib/actions/papers";
 import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 import { NextResponse } from "next/server";
 
 const SYSTEM_PROMPT = `You are a medical research librarian AI. You conduct systematic literature searches.
@@ -36,22 +38,35 @@ Stop when: new searches return mostly papers already found, OR all key aspects c
 
 Always cite paper titles and key findings when discussing results. Format recommendations clearly.`;
 
+const researchAgentSchema = z.object({
+  messages: z.array(z.object({
+    role: z.enum(["user", "assistant"]),
+    content: z.string().max(50000),
+  })).min(1).max(50),
+  context: z.object({
+    savedPaperIds: z.array(z.string()).optional(),
+  }).optional(),
+});
+
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
-    await getCurrentUserId();
+    const userId = await getCurrentUserId();
+
+    const rateLimitResponse = await checkRateLimit(userId, "research-agent", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
 
     const body = await req.json();
-    const { messages, context } = body as {
-      messages: { role: "user" | "assistant"; content: string }[];
-      context?: { savedPaperIds?: string[] };
-    };
-
-    if (!messages || messages.length === 0) {
+    const parsed = researchAgentSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Messages are required" },
+        { error: "Invalid request. Messages are required." },
         { status: 400 }
       );
     }
+
+    const { messages, context } = parsed.data;
 
     const result = streamText({
       model: getModel(),
@@ -286,7 +301,7 @@ export async function POST(req: Request) {
 
     return result.toTextStreamResponse();
   } catch (error) {
-    console.error("Research agent error:", error);
+    log.error("Research agent error", error);
     return NextResponse.json(
       { error: "Research agent failed" },
       { status: 500 }

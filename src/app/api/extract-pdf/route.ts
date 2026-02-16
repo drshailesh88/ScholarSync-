@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { PDFParse } from "pdf-parse";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
@@ -13,7 +16,27 @@ interface PdfExtractionResult {
 }
 
 export async function POST(req: Request) {
+  const log = logger.withRequestId();
+
   try {
+    // --- Authentication ---
+    let userId: string;
+    try {
+      userId = await getCurrentUserId();
+    } catch {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+
+    // --- Rate limiting ---
+    const rateLimitResponse = await checkRateLimit(userId, "extract-pdf", RATE_LIMITS.ai);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // --- File validation ---
     const contentType = req.headers.get("content-type") || "";
     if (!contentType.includes("multipart/form-data")) {
       return NextResponse.json(
@@ -48,6 +71,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // --- PDF extraction ---
     const arrayBuffer = await file.arrayBuffer();
     const data = new Uint8Array(arrayBuffer);
 
@@ -71,13 +95,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("PDF extraction error:", error);
-
-    const message =
-      error instanceof Error ? error.message : "Unknown error during PDF extraction";
+    log.error("PDF extraction error", error, { endpoint: "extract-pdf" });
 
     return NextResponse.json(
-      { error: "Failed to extract text from PDF", details: message },
+      { error: "Failed to extract text from PDF" },
       { status: 500 }
     );
   }
