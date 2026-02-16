@@ -11,6 +11,9 @@ const ENV_VARS: EnvVar[] = [
   { name: "DATABASE_URL", required: true },
   { name: "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", required: "production" },
   { name: "CLERK_SECRET_KEY", required: "production" },
+  { name: "RAZORPAY_KEY_ID", required: "production" },
+  { name: "RAZORPAY_KEY_SECRET", required: "production" },
+  { name: "RAZORPAY_WEBHOOK_SECRET", required: "production" },
 ];
 
 export function validateEnv(): void {

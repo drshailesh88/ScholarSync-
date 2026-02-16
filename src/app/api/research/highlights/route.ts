@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 /**
  * CRUD API for PDF highlights and annotations.
@@ -10,6 +12,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 // GET — fetch highlights for a paper within a project
 export async function GET(request: NextRequest) {
+  const userId = await getCurrentUserId();
+  const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(request.url);
   const paperId = searchParams.get("paperId");
   const projectId = searchParams.get("projectId");
@@ -31,6 +37,10 @@ export async function GET(request: NextRequest) {
 // POST — create a new highlight
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await request.json();
     const {
       id,
@@ -69,6 +79,10 @@ export async function POST(request: NextRequest) {
 // PATCH — update an existing highlight
 export async function PATCH(request: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await request.json();
     const { id, note: _note, color: _color, targetSection: _targetSection } = body;
 
@@ -95,6 +109,10 @@ export async function PATCH(request: NextRequest) {
 
 // DELETE — remove a highlight
 export async function DELETE(request: NextRequest) {
+  const userId = await getCurrentUserId();
+  const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 

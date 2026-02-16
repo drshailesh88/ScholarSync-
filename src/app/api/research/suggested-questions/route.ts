@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
 import { getSmallModel, isAIConfigured } from "@/lib/ai/models";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 /**
  * Generate suggested questions for a paper based on its metadata.
  * Uses the small/cheap model since this is a simple generation task.
  */
 export async function POST(request: NextRequest) {
+  const userId = await getCurrentUserId();
+  const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+  if (rateLimitResponse) return rateLimitResponse;
+
   if (!isAIConfigured()) {
     return NextResponse.json(
       { error: "AI provider not configured" },

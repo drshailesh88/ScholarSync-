@@ -10,6 +10,8 @@ import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { reciprocalRankFusion } from "@/lib/search/rank-fusion";
 import type { UnifiedSearchResult } from "@/types/search";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 interface SearchRequestBody {
   query: string;
@@ -60,6 +62,10 @@ function determineSource(result: UnifiedSearchResult): "pubmed" | "semantic_scho
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body: SearchRequestBody = await req.json();
     const {
       query,

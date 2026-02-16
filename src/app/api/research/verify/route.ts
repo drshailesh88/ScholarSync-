@@ -6,9 +6,15 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { verifyPaper } from "@/lib/research/verify";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await req.json();
     const { paper } = body;
 

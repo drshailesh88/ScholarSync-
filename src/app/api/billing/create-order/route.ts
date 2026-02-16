@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { createRazorpayOrder, isConfigured } from "@/lib/billing/razorpay";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,6 +12,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const userId = await getCurrentUserId();
+
+    const rateLimitResponse = await checkRateLimit(userId, "billing", RATE_LIMITS.analysis);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const { plan } = await req.json();
 
     if (!plan || !["basic", "pro"].includes(plan)) {
@@ -20,7 +26,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const userId = await getCurrentUserId();
     const order = await createRazorpayOrder(plan as "basic" | "pro", userId);
 
     return NextResponse.json({

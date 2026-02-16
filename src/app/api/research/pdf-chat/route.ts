@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
 import { getModel, isAIConfigured } from "@/lib/ai/models";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 const PDF_CHAT_SYSTEM_PROMPT = `You are a medical paper reading assistant. The user is reading a specific paper and asking questions about it.
 
@@ -19,6 +21,10 @@ Rules:
 When the user has highlighted passages, use them as additional context for better answers.`;
 
 export async function POST(request: NextRequest) {
+  const userId = await getCurrentUserId();
+  const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+  if (rateLimitResponse) return rateLimitResponse;
+
   if (!isAIConfigured()) {
     return NextResponse.json(
       { error: "AI provider not configured" },

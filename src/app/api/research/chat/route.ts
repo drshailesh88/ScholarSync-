@@ -8,6 +8,8 @@
 import { NextRequest } from "next/server";
 import { streamText } from "ai";
 import { getModel, isAIConfigured } from "@/lib/ai/models";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 const PAPER_CHAT_SYSTEM = `You are a medical literature analysis assistant. Answer the user's question using ONLY information from the provided papers.
 
@@ -50,6 +52,10 @@ Abstract: ${p.abstract || "No abstract available"}`;
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await req.json();
     const { question, papers, scopeLabel } = body;
 

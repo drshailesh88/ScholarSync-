@@ -10,9 +10,15 @@ import { streamText, generateText } from "ai";
 import { getModel, getSmallModel, isAIConfigured } from "@/lib/ai/models";
 import { buildSynthesisPrompt, buildSynthesisPlanPrompt } from "@/lib/research/synthesis";
 import type { SynthesisReportType } from "@/lib/research/types";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await req.json();
     const { papers, reportType, customInstructions, targetWordCount, mode } = body;
 

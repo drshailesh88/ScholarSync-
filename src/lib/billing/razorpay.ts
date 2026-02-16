@@ -63,7 +63,15 @@ export async function verifyPaymentSignature(
     .update(`${orderId}|${paymentId}`)
     .digest("hex");
 
-  return expectedSignature === signature;
+  // Use timing-safe comparison to prevent timing attacks
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(expectedSignature, "hex"),
+      Buffer.from(signature, "hex")
+    );
+  } catch {
+    return false;
+  }
 }
 
 export async function fetchPayment(paymentId: string) {

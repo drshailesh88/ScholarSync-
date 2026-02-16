@@ -5,6 +5,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 interface ExportRequest {
   format: "csv" | "bibtex";
@@ -84,6 +86,10 @@ function generateBibTeX(data: ExportRequest): string {
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body: ExportRequest = await req.json();
     const { format } = body;
 

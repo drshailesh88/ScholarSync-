@@ -88,7 +88,10 @@ export function safeErrorResponse(
 /**
  * Add CORS headers to a response.
  */
-export function addCorsHeaders(response: Response): Response {
+export function addCorsHeaders(
+  response: Response,
+  request?: Request
+): Response {
   const allowedOrigins = process.env.CORS_ALLOWED_ORIGINS?.split(",").map((o) =>
     o.trim()
   );
@@ -96,8 +99,11 @@ export function addCorsHeaders(response: Response): Response {
   const headers = new Headers(response.headers);
 
   if (allowedOrigins && allowedOrigins.length > 0) {
-    // In production, only allow specific origins
-    headers.set("Access-Control-Allow-Origin", allowedOrigins[0]);
+    // In production, validate the request Origin against the allow-list
+    const requestOrigin = request?.headers.get("origin") ?? "";
+    if (allowedOrigins.includes(requestOrigin)) {
+      headers.set("Access-Control-Allow-Origin", requestOrigin);
+    }
     headers.set("Vary", "Origin");
   } else if (!isProd) {
     // In dev, allow all origins

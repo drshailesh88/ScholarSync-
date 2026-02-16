@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 /**
  * CRUD API for evidence notes created from PDF reading.
@@ -10,6 +12,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 // GET — fetch evidence notes for a project, optionally filtered by paper
 export async function GET(request: NextRequest) {
+  const userId = await getCurrentUserId();
+  const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get("projectId");
   const _paperId = searchParams.get("paperId");
@@ -34,6 +40,10 @@ export async function GET(request: NextRequest) {
 // POST — create a new evidence note
 export async function POST(request: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await request.json();
     const {
       id,
@@ -73,6 +83,10 @@ export async function POST(request: NextRequest) {
 
 // DELETE — remove an evidence note
 export async function DELETE(request: NextRequest) {
+  const userId = await getCurrentUserId();
+  const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+  if (rateLimitResponse) return rateLimitResponse;
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 

@@ -1,15 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUserId as _getCurrentUserId } from "@/lib/auth";
-import { verifyPaymentSignature } from "@/lib/billing/razorpay";
+import { getCurrentUserId } from "@/lib/auth";
+import { verifyPaymentSignature, PLAN_PRICES } from "@/lib/billing/razorpay";
 import { createSubscription } from "@/lib/actions/billing";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+
+const VALID_PLANS = Object.keys(PLAN_PRICES).filter((p) => p !== "free") as string[];
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+
+    const rateLimitResponse = await checkRateLimit(userId, "billing", RATE_LIMITS.analysis);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const { orderId, paymentId, signature, plan } = await req.json();
 
     if (!orderId || !paymentId || !signature || !plan) {
       return NextResponse.json(
         { error: "Missing required fields: orderId, paymentId, signature, plan" },
+        { status: 400 }
+      );
+    }
+
+    if (!VALID_PLANS.includes(plan)) {
+      return NextResponse.json(
+        { error: "Invalid plan" },
         { status: 400 }
       );
     }

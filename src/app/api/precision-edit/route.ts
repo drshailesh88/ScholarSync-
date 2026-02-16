@@ -2,6 +2,8 @@ import { generateText } from "ai";
 import { NextResponse } from "next/server";
 import { getPrecisionEditPrompt } from "@/lib/ai/prompts/draft";
 import type { PrecisionEditRequest, PrecisionEditResponse } from "@/types/draft";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
   const { isAIConfigured, requiredKeyName, getModel } = await import("@/lib/ai/models");
@@ -14,6 +16,9 @@ export async function POST(req: Request) {
   }
 
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "precision-edit", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
     const body = (await req.json()) as PrecisionEditRequest;
 
     if (!body.action || !body.selectedText) {

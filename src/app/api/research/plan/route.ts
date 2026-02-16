@@ -8,9 +8,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
 import { getSmallModel, isAIConfigured } from "@/lib/ai/models";
 import { buildPlanPrompt, parsePlanResponse } from "@/lib/research/plan-generator";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await req.json();
     const { question, currentFilters, documentContext } = body;
 

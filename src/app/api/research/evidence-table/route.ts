@@ -9,6 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
 import { getSmallModel, isAIConfigured } from "@/lib/ai/models";
 import { buildColumnExtractionPrompt, parseExtractionResponse } from "@/lib/research/extraction";
+import { getCurrentUserId } from "@/lib/auth";
+import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 interface ExtractionPaper {
   id: string;
@@ -24,6 +26,10 @@ interface ExtractionColumn {
 
 export async function POST(req: NextRequest) {
   try {
+    const userId = await getCurrentUserId();
+    const rateLimitResponse = await checkRateLimit(userId, "research", RATE_LIMITS.ai);
+    if (rateLimitResponse) return rateLimitResponse;
+
     const body = await req.json();
     const { papers, columns } = body as {
       papers: ExtractionPaper[];
