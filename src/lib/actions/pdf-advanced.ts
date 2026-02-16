@@ -153,6 +153,25 @@ export async function extractWithDocling(
 }
 
 /**
+ * Server-action wrapper that accepts FormData from a client component.
+ * Converts the uploaded file to a Buffer and delegates to extractWithDocling.
+ */
+export async function extractUploadedPdf(formData: FormData): Promise<{
+  chunksCreated: number;
+  sectionsDetected: string[];
+  usedDocling: boolean;
+}> {
+  const paperId = Number(formData.get("paperId"));
+  const file = formData.get("file") as File;
+  if (!file || !paperId) {
+    throw new Error("paperId and file are required");
+  }
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return extractWithDocling(paperId, buffer);
+}
+
+/**
  * Map Docling section types to our schema enum values.
  */
 function mapSectionType(
