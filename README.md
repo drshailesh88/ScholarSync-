@@ -15,74 +15,145 @@ ScholarSync helps researchers write, research, and publish academic papers with 
 - **Slides Generator** — Convert your paper into presentation slides
 - **Notebook Mode** — Upload sources and synthesize research across papers
 
-## Target Users
+## Tech Stack
 
-3rd-year MD students in India (primary), expandable to all sciences.
+| Layer | Choice |
+|-------|--------|
+| Frontend | Next.js 16 (App Router) |
+| AI | Vercel AI SDK + Anthropic Claude |
+| Editor | Tiptap (ProseMirror) |
+| Citations | citation-js |
+| Paper Search | PubMed + Semantic Scholar + OpenAlex |
+| PDF Extraction | unpdf + Docling |
+| Auth | Clerk |
+| Database | PostgreSQL + pgvector + Drizzle ORM |
+| Payments | Razorpay |
 
-## Current Status
+## Local Development
 
-**Phase: Research & Design Complete → Ready for Architecture Decisions → Development**
+### Prerequisites
 
-### What's Done
-- 12 UI mockup pages designed with premium dark theme
-- Library research: every feature mapped to battle-tested open-source libraries
-- AI SDK research: Vercel AI SDK v6 + Mastra recommended
-- 8-stage paper retrieval pipeline designed (SciSpace/Elicit-level)
-- Competitor analysis: Elicit, Paperpal, Consensus, Jenni AI, etc.
-- Database comparison: 11 options evaluated
-- GCP hybrid approach analyzed
+- Node.js 22+
+- Docker (for PostgreSQL)
+- An Anthropic API key (for AI features)
 
-### What's Next
-- Lock architecture decisions (database, AI SDK, cloud)
-- Begin development
+### 1. Clone and install
 
-## Project Structure
-
-```
-ScholarSync-/
-├── ui-mockups/           # 12 HTML mockup pages (viewable in browser)
-│   ├── 01-landing-page.html
-│   ├── 02-auth-page.html
-│   ├── 03-dashboard.html
-│   ├── 04-my-projects.html
-│   ├── 05-my-library.html
-│   ├── 06-deep-research.html
-│   ├── 07-the-studio.html      # Hero page — the editor
-│   ├── 08-notebook-mode.html
-│   ├── 09-writing-analysis.html
-│   ├── 10-final-checks.html
-│   ├── 11-slides-generator.html
-│   ├── 12-settings.html
-│   └── index.html               # Gallery view of all pages
-├── docs/
-│   ├── MASTER_REGISTRY.md        # Every page, component, button documented
-│   ├── LIBRARY_MAP.md            # Open-source library for every feature
-│   ├── decisions-log.md          # All decisions (append-only)
-│   ├── handover-context.md       # Quick context for new sessions
-│   ├── RESEARCH-ai-sdk-and-retrieval-pipeline.md
-│   ├── RESEARCH-competitor-tech-stacks.md
-│   ├── RESEARCH-database-comparison.md
-│   ├── RESEARCH-library-updates.md
-│   └── RESEARCH-gcp-analysis.md
-└── Comprehensive Interview Questionnaire.sty  # Founder's vision document
+```bash
+git clone <repo-url>
+cd scholarsync
+npm install
 ```
 
-## Tech Stack (Pending Final Decisions)
+### 2. Start PostgreSQL with pgvector
 
-| Layer | Choice | Status |
-|-------|--------|--------|
-| Frontend | Next.js on Vercel | Decided |
-| AI SDK | Vercel AI SDK v6 + Mastra | Pending approval |
-| Editor | Tiptap (ProseMirror) | Approved |
-| Citations | citation-js | Approved |
-| Paper Search | PubMed + Semantic Scholar + OpenAlex | Decided |
-| Retrieval Pipeline | SPECTER2 + Cohere Rerank + pgvector | Pending approval |
-| Plagiarism + AI | Copyleaks API | Approved |
-| PDF Extraction | unpdf + Docling | Pending approval |
-| Auth | Clerk | Decided |
-| Database | Convex OR Supabase | **Pending decision** |
-| Cloud (ML) | GCP Cloud Run + Vertex AI | Pending approval |
-| Payments | Razorpay | Decided |
+```bash
+docker run -d \
+  --name scholarsync-db \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=scholarsync \
+  -p 5432:5432 \
+  pgvector/pgvector:pg16
+```
+
+### 3. Configure environment
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your values:
+
+```env
+# Required
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/scholarsync
+
+# Required for AI features
+ANTHROPIC_API_KEY=your-key-here
+
+# Required in production
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=...
+RAZORPAY_WEBHOOK_SECRET=...
+
+# Optional
+AI_PROVIDER=anthropic          # or "zhipu"
+CORS_ALLOWED_ORIGINS=http://localhost:3000
+```
+
+### 4. Push schema and seed
+
+```bash
+npx drizzle-kit push
+npx tsx src/lib/db/seed.ts
+```
+
+### 5. Start dev server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Running Tests
+
+```bash
+# Unit tests (335 tests)
+npm test
+
+# With coverage report
+npm run test:coverage
+
+# E2E tests (requires dev server running)
+npm run test:e2e
+
+# E2E with UI
+npm run test:e2e:ui
+```
+
+## Docker
+
+```bash
+# Build
+docker build -t scholarsync .
+
+# Run (needs DATABASE_URL and other env vars)
+docker run -p 3000:3000 \
+  -e DATABASE_URL=... \
+  -e CLERK_SECRET_KEY=... \
+  scholarsync
+```
+
+Image size: ~83 MB (Alpine-based, standalone output).
+
+## Deployment
+
+### Environment Variables (Production Required)
+
+| Variable | Purpose |
+|----------|---------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk auth (public) |
+| `CLERK_SECRET_KEY` | Clerk auth (server) |
+| `RAZORPAY_KEY_ID` | Payment gateway |
+| `RAZORPAY_KEY_SECRET` | Payment gateway |
+| `RAZORPAY_WEBHOOK_SECRET` | Payment webhook verification |
+| `ANTHROPIC_API_KEY` | AI features |
+
+### CI/CD
+
+The GitHub Actions pipeline runs:
+
+1. **quality** — TypeScript + ESLint (zero tolerance)
+2. **test** — 335 unit tests + coverage threshold (50%)
+3. **e2e** — Playwright tests with PostgreSQL service
+4. **security** — `npm audit` + hardcoded secrets scan
+5. **build** — Next.js + Docker image build
+6. **docker** — Push on main branch
 
 ## Pricing
 
@@ -90,10 +161,10 @@ ScholarSync-/
 - **Basic** — INR 1,000/month
 - **Pro** — INR 2,000/month
 
-## Launch Target
+## License
 
-July 2026
+Proprietary. All rights reserved.
 
 ---
 
-Built by Dr. Shailesh Singh with AI agent assistance.
+Built by Dr. Shailesh Singh.
