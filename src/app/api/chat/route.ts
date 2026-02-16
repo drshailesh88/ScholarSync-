@@ -4,6 +4,10 @@ import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import { getGuideSystemPrompt, getDefaultGuidePrompt } from "@/lib/ai/prompts/guide";
+import { getDraftSystemPrompt, getDefaultDraftPrompt } from "@/lib/ai/prompts/draft";
+import type { GuideContext } from "@/types/guide";
+import type { DraftContext } from "@/types/draft";
 
 const chatRequestSchema = z.object({
   messages: z
@@ -15,6 +19,8 @@ const chatRequestSchema = z.object({
     )
     .max(50),
   mode: z.string().optional(),
+  guideContext: z.record(z.string(), z.unknown()).optional(),
+  draftContext: z.record(z.string(), z.unknown()).optional(),
 });
 
 export async function POST(req: Request) {
@@ -54,7 +60,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { messages, mode } = parsed.data;
+    const { messages, mode, guideContext, draftContext } = parsed.data;
 
     // 4. AI configuration check
     const { isAIConfigured, getModel } = await import("@/lib/ai/models");
@@ -67,10 +73,44 @@ export async function POST(req: Request) {
       );
     }
 
-    const systemPrompt =
-      mode === "learn"
-        ? "You are a Socratic research tutor. Never give direct answers. Ask probing questions to help the student think critically about their research. Challenge assumptions. Guide them to discover insights themselves."
-        : "You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone.";
+    let systemPrompt: string;
+
+    if (mode === "learn") {
+      // Guided Mode — Socratic academic writing tutor
+      if (guideContext?.documentType && guideContext?.stage) {
+        const ctx: GuideContext = {
+          documentType: guideContext.documentType as GuideContext["documentType"],
+          stage: guideContext.stage as GuideContext["stage"],
+          targetJournal: guideContext.targetJournal as string | undefined,
+          studyType: guideContext.studyType as string | undefined,
+          projectTitle: guideContext.projectTitle as string | undefined,
+          completedChecklist: guideContext.completedChecklist as string[] | undefined,
+        };
+        systemPrompt = getGuideSystemPrompt(ctx);
+      } else {
+        systemPrompt = getDefaultGuidePrompt();
+      }
+    } else if (mode === "draft") {
+      // Draft Mode — intensity-based writing co-pilot
+      if (draftContext?.intensity) {
+        const ctx: DraftContext = {
+          intensity: draftContext.intensity as DraftContext["intensity"],
+          documentType: draftContext.documentType as string | undefined,
+          currentSection: draftContext.currentSection as string | undefined,
+          targetJournal: draftContext.targetJournal as string | undefined,
+          projectTitle: draftContext.projectTitle as string | undefined,
+          scholarRules: draftContext.scholarRules as DraftContext["scholarRules"],
+          surroundingText: draftContext.surroundingText as string | undefined,
+        };
+        systemPrompt = getDraftSystemPrompt(ctx);
+      } else {
+        systemPrompt = getDefaultDraftPrompt();
+      }
+    } else {
+      // Standard assistant mode
+      systemPrompt =
+        "You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone.";
+    }
 
     const result = streamText({
       model: getModel(),
