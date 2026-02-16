@@ -38,7 +38,7 @@ function forceLayout(
   height: number
 ): CitationNode[] {
   // Simple radial layout: seed in center, references left, citations right
-  const positioned = nodes.map((n, i) => ({ ...n, x: width / 2, y: height / 2 }));
+  const positioned = nodes.map((n, _i) => ({ ...n, x: width / 2, y: height / 2 }));
 
   const seedIdx = positioned.findIndex((n) => n.type === "seed");
   if (seedIdx >= 0) {

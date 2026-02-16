@@ -1,11 +1,26 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useRef, useCallback, useEffect } from "react";
 import { Toolbar } from "./toolbar";
 import { SlashCommands } from "./slash-commands";
+import { CitationNode } from "./extensions/citation-node";
+import { BibliographyNode } from "./extensions/bibliography-node";
+import { createCitationPlugin } from "./extensions/citation-plugin";
+import { Extension } from "@tiptap/core";
+
+/**
+ * Tiptap extension that wraps the citation numbering ProseMirror plugin.
+ */
+const CitationNumbering = Extension.create({
+  name: "citationNumbering",
+  addProseMirrorPlugins() {
+    return [createCitationPlugin()];
+  },
+});
 
 interface TiptapEditorProps {
   className?: string;
@@ -24,6 +39,12 @@ interface TiptapEditorProps {
   contentKey?: string | number | null;
   /** Called immediately on every keystroke (before debounce) for live status updates */
   onDirty?: () => void;
+  /** Callback to expose the editor instance to parent */
+  onEditorReady?: (editor: Editor) => void;
+  /** Citation toolbar callbacks */
+  onOpenCitationDialog?: () => void;
+  onToggleReferenceSidebar?: () => void;
+  referenceCount?: number;
 }
 
 export function TiptapEditor({
@@ -33,10 +54,15 @@ export function TiptapEditor({
   debounceMs = 2000,
   contentKey,
   onDirty,
+  onEditorReady,
+  onOpenCitationDialog,
+  onToggleReferenceSidebar,
+  referenceCount,
 }: TiptapEditorProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onUpdateRef = useRef(onUpdate);
   const onDirtyRef = useRef(onDirty);
+  const onEditorReadyRef = useRef(onEditorReady);
 
   useEffect(() => {
     onUpdateRef.current = onUpdate;
@@ -45,6 +71,10 @@ export function TiptapEditor({
   useEffect(() => {
     onDirtyRef.current = onDirty;
   }, [onDirty]);
+
+  useEffect(() => {
+    onEditorReadyRef.current = onEditorReady;
+  }, [onEditorReady]);
 
   const editor = useEditor({
     extensions: [
@@ -55,6 +85,9 @@ export function TiptapEditor({
         placeholder: "Start typing or press '/' for AI commands...",
       }),
       SlashCommands,
+      CitationNode,
+      BibliographyNode,
+      CitationNumbering,
     ],
     content: content || undefined,
     editorProps: {
@@ -88,6 +121,13 @@ export function TiptapEditor({
       }, debounceMs);
     },
   });
+
+  // Notify parent when editor is ready
+  useEffect(() => {
+    if (editor && !editor.isDestroyed) {
+      onEditorReadyRef.current?.(editor);
+    }
+  }, [editor]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -124,7 +164,6 @@ export function TiptapEditor({
   }, [editor, content, contentKey, setContent]);
 
   // Set initial content when editor is ready and content prop is provided
-  // (handles the case where editor mounts after content is already available)
   useEffect(() => {
     if (editor && content && !editor.isDestroyed) {
       const currentText = editor.getText();
@@ -136,7 +175,12 @@ export function TiptapEditor({
 
   return (
     <div className={className}>
-      <Toolbar editor={editor} />
+      <Toolbar
+        editor={editor}
+        onOpenCitationDialog={onOpenCitationDialog}
+        onToggleReferenceSidebar={onToggleReferenceSidebar}
+        referenceCount={referenceCount}
+      />
       <EditorContent editor={editor} />
     </div>
   );

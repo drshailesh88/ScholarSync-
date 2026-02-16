@@ -10,6 +10,8 @@ import {
   TextHOne,
   TextHTwo,
   TextHThree,
+  BookOpen,
+  Books,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
@@ -75,7 +77,18 @@ const buttons: ToolbarButton[] = [
   },
 ];
 
-export function Toolbar({ editor }: ToolbarProps) {
+interface ToolbarExtendedProps extends ToolbarProps {
+  onOpenCitationDialog?: () => void;
+  onToggleReferenceSidebar?: () => void;
+  referenceCount?: number;
+}
+
+export function Toolbar({
+  editor,
+  onOpenCitationDialog,
+  onToggleReferenceSidebar,
+  referenceCount,
+}: ToolbarExtendedProps) {
   if (!editor) return null;
 
   return (
@@ -99,6 +112,37 @@ export function Toolbar({ editor }: ToolbarProps) {
           </button>
         );
       })}
+
+      {/* Separator */}
+      <div className="w-px h-5 bg-border mx-1" />
+
+      {/* Cite button */}
+      {onOpenCitationDialog && (
+        <button
+          onClick={onOpenCitationDialog}
+          title="Insert Citation (Cmd+Shift+C)"
+          className="flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-ink-muted hover:text-ink hover:bg-surface-raised text-xs"
+        >
+          <BookOpen size={16} />
+          <span className="hidden sm:inline">Cite</span>
+        </button>
+      )}
+
+      {/* References sidebar toggle */}
+      {onToggleReferenceSidebar && (
+        <button
+          onClick={onToggleReferenceSidebar}
+          title="Toggle Reference Sidebar (Cmd+Shift+R)"
+          className="flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-ink-muted hover:text-ink hover:bg-surface-raised text-xs"
+        >
+          <Books size={16} />
+          {referenceCount !== undefined && referenceCount > 0 && (
+            <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-medium rounded-full px-1.5 py-0.5 leading-none">
+              {referenceCount}
+            </span>
+          )}
+        </button>
+      )}
     </div>
   );
 }
