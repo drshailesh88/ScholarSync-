@@ -162,6 +162,7 @@ export const papers = pgTable(
     influential_citation_count: integer("influential_citation_count").default(0),
     reference_count: integer("reference_count").default(0),
     created_at: timestamp("created_at").defaultNow(),
+    updated_at: timestamp("updated_at").defaultNow(),
   },
   (table) => [
     index("idx_papers_source").on(table.source),
