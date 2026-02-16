@@ -1,7 +1,5 @@
 "use client";
 
-import { ArrowsDownUp } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
 import { ResultRow } from "./ResultRow";
 import type { PaperResult } from "@/lib/research/types";
 

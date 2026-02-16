@@ -55,7 +55,7 @@ export function ResearchSidebar() {
   }
 
   const libraryCount = store.libraryPapers.length;
-  const chatPaperCount = chat.getScopedPapers().length;
+  const _chatPaperCount = chat.getScopedPapers().length;
 
   return (
     <aside

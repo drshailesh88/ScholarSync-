@@ -7,7 +7,6 @@ import {
   CaretDown,
   X,
 } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
 
 interface PDFSearchBarProps {
   isOpen: boolean;

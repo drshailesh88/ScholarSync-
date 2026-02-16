@@ -8,7 +8,6 @@ import {
   ArrowsOutSimple,
   MagnifyingGlass,
   Highlighter,
-  BookmarkSimple,
   DownloadSimple,
   ChatCircle,
   NotePencil,
@@ -16,7 +15,6 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { HighlightColor } from "@/lib/pdf/types";
-import { HIGHLIGHT_COLOR_MAP } from "@/lib/pdf/types";
 
 interface PDFToolbarProps {
   currentPage: number;

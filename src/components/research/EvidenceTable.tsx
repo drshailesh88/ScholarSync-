@@ -5,15 +5,12 @@ import {
   ArrowLeft,
   DownloadSimple,
   Table,
-  Plus,
   Sparkle,
-  ClipboardText,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type {
   EvidenceTable as EvidenceTableType,
   EvidenceColumn,
-  EvidenceRow,
 } from "@/lib/research/types";
 import { EVIDENCE_TABLE_PRESETS } from "@/lib/research/types";
 
@@ -107,10 +104,10 @@ interface EvidenceTableSetupProps {
 export function EvidenceTableSetup({
   selectedPaperCount,
   onCreateFromPreset,
-  onCreateCustom,
+  onCreateCustom: _onCreateCustom,
   onBack,
 }: EvidenceTableSetupProps) {
-  const [customName, setCustomName] = useState("");
+  const [_customName, _setCustomName] = useState("");
 
   return (
     <div className="flex flex-col h-full">

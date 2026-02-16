@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MagnifyingGlass, Trash, Plus, BookOpen, Table } from "@phosphor-icons/react";
+import { MagnifyingGlass, BookOpen, Table } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { ResultRow } from "./ResultRow";
 import type { PaperResult } from "@/lib/research/types";

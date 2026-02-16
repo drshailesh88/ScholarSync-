@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Highlighter, FunnelSimple, SortAscending } from "@phosphor-icons/react";
+import { Highlighter } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { usePDFStore } from "@/stores/pdf-store";
 import type { PDFHighlight, HighlightColor, TargetSection } from "@/lib/pdf/types";
@@ -25,7 +25,7 @@ interface PDFHighlightSidebarProps {
 
 export function PDFHighlightSidebar({
   isOpen,
-  onClose,
+  onClose: _onClose,
   onNavigateToHighlight,
 }: PDFHighlightSidebarProps) {
   const { highlights } = usePDFStore();

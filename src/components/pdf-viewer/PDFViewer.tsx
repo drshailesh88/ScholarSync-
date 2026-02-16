@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { cn } from "@/lib/utils";
 import { usePDFStore } from "@/stores/pdf-store";
@@ -60,7 +60,7 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
 
   const [highlightMode, setHighlightMode] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [_searchQuery, setSearchQuery] = useState("");
   const [selectionMenuPos, setSelectionMenuPos] = useState({ x: 0, y: 0 });
   const [activeAnnotation, setActiveAnnotation] = useState<PDFHighlight | null>(null);
   const [annotationPos, setAnnotationPos] = useState({ x: 0, y: 0 });
@@ -80,7 +80,7 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
 
   // Selection menu actions (defined before handleMouseUp/useEffect that reference them)
   const handleAskAI = useCallback(
-    (sel: PDFTextSelection) => {
+    (_sel: PDFTextSelection) => {
       // Switch layout to show chat
       if (layout === "pdf-editor") {
         setLayout("pdf-chat");
@@ -91,7 +91,7 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
   );
 
   const handleNote = useCallback(
-    (sel: PDFTextSelection) => {
+    (_sel: PDFTextSelection) => {
       setNotePopoverPos(selectionMenuPos);
       setShowNotePopover(true);
       setSelectionMenuOpen(false);
@@ -308,7 +308,7 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
   }, [layout, setLayout]);
 
   // Navigate to a specific page with optional highlight flash
-  const handleNavigateToPage = useCallback(
+  const _handleNavigateToPage = useCallback(
     (page: number, startOffset?: number, endOffset?: number) => {
       navigateTo({
         pageNumber: page,

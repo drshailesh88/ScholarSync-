@@ -140,6 +140,7 @@ export function usePaperChat() {
         store.setIsChatLoading(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [getScopedPapers, getScopeLabel]
   );
 

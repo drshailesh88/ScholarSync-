@@ -9,7 +9,7 @@ import {
   userReferences,
   conversations,
 } from "@/lib/db/schema";
-import { eq, and, desc, isNull, sql, count } from "drizzle-orm";
+import { eq, and, desc, isNull, count } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { ensureUser } from "@/lib/actions/user";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { PaperPlaneRight, Sparkle, Copy, ClipboardText } from "@phosphor-icons/react";
+import { PaperPlaneRight, Sparkle, Copy } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { ScopeSelector } from "./ScopeSelector";
 import type { PaperChatMessage, ChatScope } from "@/lib/research/types";
@@ -26,7 +26,7 @@ export function ChatTab({
   messages,
   isChatLoading,
   onSendMessage,
-  onClearChat,
+  onClearChat: _onClearChat,
   scopeLabel,
   hasSelectedPaper,
   selectedPaperLabel,

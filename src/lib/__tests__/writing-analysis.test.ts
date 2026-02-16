@@ -4,7 +4,7 @@ import { analyzeWriting } from "../writing-analysis";
 describe("analyzeWriting", () => {
   it("should return basic metrics for simple text", () => {
     const text = "The quick brown fox jumps over the lazy dog. This is a simple sentence.";
-    const { metrics, issues } = analyzeWriting(text);
+    const { metrics, issues: _issues } = analyzeWriting(text);
 
     expect(metrics.wordCount).toBeGreaterThan(0);
     expect(metrics.sentenceCount).toBe(2);

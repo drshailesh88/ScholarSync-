@@ -43,6 +43,7 @@ export function SearchTab() {
 
   const handleAddToLibrary = useCallback((paper: PaperResult) => {
     store.addToLibrary(paper);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleBuildEvidenceTable = useCallback(() => {

@@ -34,16 +34,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       id,
-      projectId,
+      projectId: _projectId,
       paperId,
       pageNumber,
-      rects,
+      rects: _rects,
       selectedText,
-      startOffset,
-      endOffset,
-      color,
-      note,
-      targetSection,
+      startOffset: _startOffset,
+      endOffset: _endOffset,
+      color: _color,
+      note: _note,
+      targetSection: _targetSection,
     } = body;
 
     if (!paperId || !pageNumber || !selectedText) {
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, note, color, targetSection } = body;
+    const { id, note: _note, color: _color, targetSection: _targetSection } = body;
 
     if (!id) {
       return NextResponse.json(

@@ -40,6 +40,7 @@ export function usePaperSearch() {
     } else {
       await executeSearch(parsed.query || query);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.query]);
 
   /**
@@ -83,6 +84,7 @@ export function usePaperSearch() {
     } finally {
       store.setIsGeneratingPlan(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.filters]);
 
   /**
@@ -145,6 +147,7 @@ export function usePaperSearch() {
     } finally {
       store.setIsSearching(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [store.query]);
 
   /**

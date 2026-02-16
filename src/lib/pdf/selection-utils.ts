@@ -5,7 +5,7 @@ import type { PDFTextSelection } from "./types";
  * Extracts text, page number, bounding rects (as percentages), and character offsets.
  */
 export function capturePDFSelection(
-  containerEl: HTMLElement
+  _containerEl: HTMLElement
 ): PDFTextSelection | null {
   const selection = window.getSelection();
   if (!selection || selection.isCollapsed || !selection.rangeCount) {

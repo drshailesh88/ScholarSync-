@@ -21,11 +21,11 @@ interface CitationUsageListProps {
  * Reverse navigation: PDF -> Editor.
  */
 export function CitationUsageList({
-  paperId,
+  paperId: _paperId,
   paperTitle,
   usages,
   onJumpToEditor,
-  onClose,
+  onClose: _onClose,
 }: CitationUsageListProps) {
   if (usages.length === 0) {
     return (

@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   Plus,
   BookOpen,
-  Copy,
   ArrowSquareOut,
   Sparkle,
 } from "@phosphor-icons/react";

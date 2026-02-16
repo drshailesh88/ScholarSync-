@@ -43,9 +43,9 @@ export async function POST(request: NextRequest) {
       startOffset: _startOffset,
       endOffset: _endOffset,
       quotedText,
-      userNote,
+      userNote: _userNote,
       targetSection,
-      color,
+      color: _color,
     } = body;
 
     if (!paperId || !pageNumber || !quotedText || !targetSection) {

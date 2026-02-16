@@ -19,6 +19,7 @@ export function useEvidenceTable() {
     (name: string, columns: EvidenceColumn[]) => {
       return store.createEvidenceTable(name, columns);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -37,6 +38,7 @@ export function useEvidenceTable() {
 
       return store.createEvidenceTable(preset.name, columns);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -115,6 +117,7 @@ export function useEvidenceTable() {
         store.setExtractionProgress(null);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
