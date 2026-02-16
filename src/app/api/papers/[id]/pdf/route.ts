@@ -1,18 +1,16 @@
 import { NextResponse } from "next/server";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import path from "node:path";
+import { uploadPdf, getSignedPdfUrl, downloadPdf } from "@/lib/storage/gcs";
+import { db } from "@/lib/db";
+import { papers } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { queuePdfProcessing } from "@/lib/actions/pdf-pipeline";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
-const PDF_STORAGE_DIR =
-  process.env.PDF_STORAGE_PATH ||
-  path.join(process.cwd(), ".data", "pdfs");
-
 /**
  * GET /api/papers/[id]/pdf
- * Serves a stored PDF file for a given paper ID.
+ * Returns a signed URL to the PDF in GCS (redirect), or streams it.
  */
 export async function GET(
   _req: Request,
@@ -37,29 +35,53 @@ export async function GET(
   const rateLimitResponse = await checkRateLimit(userId, "papers-pdf", RATE_LIMITS.export);
   if (rateLimitResponse) return rateLimitResponse;
 
-  const filePath = path.join(PDF_STORAGE_DIR, `${id}.pdf`);
+  const paperId = parseInt(id, 10);
 
-  if (!existsSync(filePath)) {
+  try {
+    // Try signed URL first (browser-direct, fastest)
+    const signedUrl = await getSignedPdfUrl(paperId);
+
+    if (signedUrl) {
+      return NextResponse.redirect(signedUrl);
+    }
+
+    // In local storage mode, serve the file directly
+    const pdfBuffer = await downloadPdf(paperId);
+    if (pdfBuffer) {
+      return new Response(new Uint8Array(pdfBuffer), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `inline; filename="paper-${id}.pdf"`,
+          "Cache-Control": "private, max-age=3600",
+        },
+      });
+    }
+
+    // PDF not in GCS — check if paper has a web URL we can redirect to
+    const [paper] = await db
+      .select({
+        pdf_url: papers.pdf_url,
+        open_access_url: papers.open_access_url,
+      })
+      .from(papers)
+      .where(eq(papers.id, paperId));
+
+    if (paper?.pdf_url) {
+      return NextResponse.redirect(paper.pdf_url);
+    }
+    if (paper?.open_access_url) {
+      return NextResponse.redirect(paper.open_access_url);
+    }
+
     return NextResponse.json(
       { error: "PDF not found for this paper" },
       { status: 404 }
     );
-  }
-
-  try {
-    const fileBuffer = await readFile(filePath);
-    return new Response(fileBuffer, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `inline; filename="paper-${id}.pdf"`,
-        "Cache-Control": "private, max-age=3600",
-      },
-    });
   } catch (error) {
-    log.error("Error reading PDF file", error);
+    log.error("Error serving PDF", error);
     return NextResponse.json(
-      { error: "Failed to read PDF file" },
+      { error: "Failed to serve PDF" },
       { status: 500 }
     );
   }
@@ -67,7 +89,7 @@ export async function GET(
 
 /**
  * POST /api/papers/[id]/pdf
- * Stores a PDF file for a given paper ID.
+ * Stores a PDF file in GCS and triggers the processing pipeline.
  * Expects multipart/form-data with a "file" field.
  */
 export async function POST(
@@ -93,6 +115,8 @@ export async function POST(
   const rateLimitResponse = await checkRateLimit(userId, "papers-pdf", RATE_LIMITS.export);
   if (rateLimitResponse) return rateLimitResponse;
 
+  const paperId = parseInt(id, 10);
+
   try {
     const contentType = req.headers.get("content-type") || "";
     if (!contentType.includes("multipart/form-data")) {
@@ -112,18 +136,31 @@ export async function POST(
       );
     }
 
-    // Ensure storage directory exists
-    if (!existsSync(PDF_STORAGE_DIR)) {
-      await mkdir(PDF_STORAGE_DIR, { recursive: true });
-    }
-
     const arrayBuffer = await file.arrayBuffer();
-    const filePath = path.join(PDF_STORAGE_DIR, `${id}.pdf`);
-    await writeFile(filePath, Buffer.from(arrayBuffer));
+    const buffer = Buffer.from(arrayBuffer);
 
-    return NextResponse.json({ success: true, paperId: id });
+    // Store in GCS
+    const gcsPath = await uploadPdf(paperId, buffer);
+
+    // Update paper record
+    await db
+      .update(papers)
+      .set({
+        pdf_storage_path: gcsPath,
+        full_text_available: true,
+      })
+      .where(eq(papers.id, paperId));
+
+    // Trigger full processing pipeline in background
+    queuePdfProcessing(paperId, buffer);
+
+    return NextResponse.json({
+      success: true,
+      paperId: id,
+      storagePath: gcsPath,
+    });
   } catch (error) {
-    log.error("Error storing PDF file", error);
+    log.error("Error storing PDF", error);
     return NextResponse.json(
       { error: "Failed to store PDF file" },
       { status: 500 }
