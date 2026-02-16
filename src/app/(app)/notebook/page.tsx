@@ -354,7 +354,7 @@ export default function NotebookPage(): React.ReactElement {
         return;
       }
 
-      const data = await res.json();
+      await res.json();
 
       // Fetch the full extraction record
       const extraction = await getExtractionForPaper(paperId);

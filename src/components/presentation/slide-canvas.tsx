@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { SlideRenderer } from "./slide-renderer";
 import { ContentBlockEditor } from "./content-block-editor";
 import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";

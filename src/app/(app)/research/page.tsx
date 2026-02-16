@@ -9,11 +9,8 @@ import {
   Sparkle,
   ArrowLeft,
   ArrowRight,
-  Funnel,
   SortAscending,
-  Star,
   Lightning,
-  BookOpen,
   Brain,
   CaretDown,
   PaperPlaneTilt,
@@ -27,7 +24,6 @@ import { saveSearchQuery } from "@/lib/actions/search-history";
 import type {
   UnifiedSearchResult,
   SearchResponse,
-  EvidenceLevel,
 } from "@/types/search";
 
 const EVIDENCE_COLORS: Record<string, string> = {
@@ -243,6 +239,7 @@ export default function ResearchPage() {
         setLoading(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [query, buildSearchUrl]
   );
 

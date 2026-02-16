@@ -1,5 +1,3 @@
-import type { UnifiedSearchResult } from "@/types/search";
-
 interface UnpaywallResponse {
   doi: string;
   is_oa: boolean;

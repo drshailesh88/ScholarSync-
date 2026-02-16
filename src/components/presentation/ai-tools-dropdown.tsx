@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  Sparkle,
   TextAlignLeft,
   ArrowsOutSimple,
   Shuffle,
@@ -43,7 +42,7 @@ const AI_ACTIONS: {
     action: "suggest_image",
     label: "Suggest Image",
     description: "Get image recommendations",
-    icon: <Image size={14} />,
+    icon: <Image size={14} alt="" />,
   },
   {
     action: "add_citations",

@@ -5,26 +5,26 @@ import type { UnifiedSearchResult } from "@/types/search";
 function makePaper(overrides: Partial<UnifiedSearchResult> = {}): UnifiedSearchResult {
   return {
     title: "Test Paper",
-    authors: [{ name: "Author One" }],
+    authors: ["Author One"],
     year: 2024,
     journal: "Test Journal",
-    doi: null,
-    pmid: null,
-    s2Id: null,
-    openalexId: null,
-    abstract: null,
-    tldr: null,
+    doi: undefined,
+    pmid: undefined,
+    s2Id: undefined,
+    openalexId: undefined,
+    abstract: undefined,
+    tldr: undefined,
     citationCount: 0,
-    influentialCitationCount: null,
-    referenceCount: null,
-    studyType: null,
-    evidenceLevel: null,
+    influentialCitationCount: undefined,
+    referenceCount: undefined,
+    studyType: undefined,
+    evidenceLevel: undefined,
     publicationTypes: [],
     fieldsOfStudy: [],
     meshTerms: [],
     concepts: [],
     isOpenAccess: false,
-    openAccessPdfUrl: null,
+    openAccessPdfUrl: undefined,
     sources: ["pubmed"],
     ...overrides,
   };
@@ -94,7 +94,7 @@ describe("mergeMetadata", () => {
   });
 
   it("should fall back to secondary when primary is empty", () => {
-    const a = makePaper({ abstract: null, tldr: null });
+    const a = makePaper({ abstract: undefined, tldr: undefined });
     const b = makePaper({ abstract: "Has abstract", tldr: "Has tldr" });
     const merged = mergeMetadata(a, b);
     expect(merged.abstract).toBe("Has abstract");

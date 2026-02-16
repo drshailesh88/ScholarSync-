@@ -2,16 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Plus,
   Presentation,
   Trash,
-  DotsThree,
   Sparkle,
   Clock,
 } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
 import { getUserDecks, deleteDeck } from "@/lib/actions/presentations";
 import { PRESET_THEMES } from "@/types/presentation";
 
@@ -25,7 +22,6 @@ interface DeckListItem {
 }
 
 export default function PresentationListPage() {
-  const router = useRouter();
   const [decks, setDecks] = useState<DeckListItem[]>([]);
   const [loading, setLoading] = useState(true);
 

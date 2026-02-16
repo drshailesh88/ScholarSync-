@@ -6,13 +6,11 @@ import {
   CircleNotch,
   Warning,
   ArrowRight,
-  Star,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type {
   CoachEvaluation,
   CoachSuggestion,
-  SlideInsight,
   ContentBlock,
   AudienceType,
 } from "@/types/presentation";

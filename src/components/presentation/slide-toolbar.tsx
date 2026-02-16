@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Export, PencilSimple, Eye, FilePdf } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import type { SlideLayout } from "@/types/presentation";
 
 interface SlideToolbarProps {
   isEditing: boolean;

@@ -216,10 +216,10 @@ export async function saveDocumentContent(data: {
   }
 
   // Update section content
-  const [section] = await db
+  await db
     .update(synthesisSections)
     .set({
-      editor_content: data.editor_content,
+      editor_content: data.editor_content as Record<string, unknown>,
       plain_text_content: data.plain_text_content,
       word_count: data.word_count,
       updated_at: new Date(),
@@ -250,7 +250,7 @@ export async function updateSection(
 
   const [section] = await db
     .update(synthesisSections)
-    .set(setData as any)
+    .set(setData as Record<string, unknown>)
     .where(eq(synthesisSections.id, sectionId))
     .returning();
   return section;
@@ -280,7 +280,7 @@ export async function autoSaveVersion(
     document_id: documentId,
     section_id: sectionId,
     version_number: Date.now(),
-    content_snapshot: content,
+    content_snapshot: content as Record<string, unknown>,
     auto_saved: true,
     saved_by: "auto",
   });

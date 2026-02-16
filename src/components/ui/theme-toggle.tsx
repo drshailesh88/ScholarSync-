@@ -6,14 +6,12 @@ import { cn } from "@/lib/utils";
 import { useSyncExternalStore } from "react";
 
 const emptySubscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme();
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
+  const mounted = useSyncExternalStore(emptySubscribe, getSnapshot, getServerSnapshot);
 
   if (!mounted) {
     return <div className={cn("h-9 w-[156px] rounded-full bg-surface-raised", className)} />;

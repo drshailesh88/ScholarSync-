@@ -2,29 +2,29 @@ import { describe, it, expect } from "vitest";
 import { reciprocalRankFusion } from "../rank-fusion";
 import type { UnifiedSearchResult } from "@/types/search";
 
-function makePaper(title: string, doi: string | null = null): UnifiedSearchResult {
+function makePaper(title: string, doi?: string): UnifiedSearchResult {
   return {
     title,
     authors: [],
     year: 2024,
     journal: "J",
     doi,
-    pmid: null,
-    s2Id: null,
-    openalexId: null,
-    abstract: null,
-    tldr: null,
+    pmid: undefined,
+    s2Id: undefined,
+    openalexId: undefined,
+    abstract: undefined,
+    tldr: undefined,
     citationCount: 0,
-    influentialCitationCount: null,
-    referenceCount: null,
-    studyType: null,
-    evidenceLevel: null,
+    influentialCitationCount: undefined,
+    referenceCount: undefined,
+    studyType: undefined,
+    evidenceLevel: undefined,
     publicationTypes: [],
     fieldsOfStudy: [],
     meshTerms: [],
     concepts: [],
     isOpenAccess: false,
-    openAccessPdfUrl: null,
+    openAccessPdfUrl: undefined,
     sources: [],
   };
 }

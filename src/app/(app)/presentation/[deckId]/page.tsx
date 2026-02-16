@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
 import {
   getDeck,
   updateDeck,
@@ -47,6 +46,9 @@ import { SpeakerNotesPanel } from "@/components/presentation/speaker-notes-panel
 import { AiToolsDropdown } from "@/components/presentation/ai-tools-dropdown";
 import { CoachPanel } from "@/components/presentation/coach-panel";
 
+type DeckWithSlides = NonNullable<Awaited<ReturnType<typeof getDeck>>>;
+type _SlideRow = DeckWithSlides["slides"][number];
+
 export default function DeckEditorPage() {
   const params = useParams();
   const router = useRouter();
@@ -64,11 +66,7 @@ export default function DeckEditorPage() {
   // Save timer for debouncing
   const [saveTimer, setSaveTimer] = useState<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    loadDeck();
-  }, [deckId]);
-
-  async function loadDeck() {
+  const loadDeck = useCallback(async () => {
     try {
       const data = await getDeck(deckId);
       if (!data) {
@@ -88,7 +86,11 @@ export default function DeckEditorPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [deckId, router]);
+
+  useEffect(() => {
+    loadDeck();
+  }, [loadDeck]);
 
   const activeSlide = slides.find((s) => s.id === activeSlideId);
 

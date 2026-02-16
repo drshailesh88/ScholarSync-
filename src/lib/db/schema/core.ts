@@ -8,13 +8,12 @@ import {
   timestamp,
   date,
   jsonb,
-  uniqueIndex,
   index,
   bigint,
   unique,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
-import type { AnyPgColumn } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
+
 import { customType } from "drizzle-orm/pg-core";
 
 // Custom vector type for pgvector embeddings

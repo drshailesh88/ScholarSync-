@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { File, FileText, TextT, BookOpen } from "@phosphor-icons/react";
+import { FileText, TextT, BookOpen } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 export type SourceType = "papers" | "document" | "text";

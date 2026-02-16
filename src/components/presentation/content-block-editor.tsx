@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import { Plus, Trash, ArrowUp, ArrowDown } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { ContentBlock, ThemeConfig } from "@/types/presentation";
@@ -234,7 +235,7 @@ function BlockEditor({
       return (
         <div className="flex flex-col items-center gap-1 p-3 rounded-lg" style={{ backgroundColor: theme.primaryColor + "08" }}>
           {block.data.url ? (
-            <img src={block.data.url} alt={block.data.alt} className="max-h-32 object-contain rounded" />
+            <Image src={block.data.url} alt={block.data.alt} width={400} height={128} className="max-h-32 object-contain rounded" unoptimized />
           ) : (
             <div className="w-full h-20 rounded border-2 border-dashed border-border flex items-center justify-center text-xs text-ink-muted">
               {block.data.suggestion ?? "Image placeholder"}

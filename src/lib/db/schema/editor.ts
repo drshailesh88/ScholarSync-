@@ -10,8 +10,8 @@ import {
   bigint,
   index,
   unique,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
-import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
 import {
   users,

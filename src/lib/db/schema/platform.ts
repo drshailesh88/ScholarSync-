@@ -28,7 +28,6 @@ import {
   projects,
   papers,
   synthesisDocuments,
-  synthesisSections,
 } from "./core";
 
 // ---------------------------------------------------------------------------
