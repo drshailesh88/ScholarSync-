@@ -5,6 +5,16 @@ import { getPreProcessorSystemPrompt } from "@/lib/ai/prompts/presentation";
 import { db } from "@/lib/db";
 import { papers, synthesisDocuments, synthesisSections } from "@/lib/db/schema";
 import { eq, inArray } from "drizzle-orm";
+import { z } from "zod";
+
+const preprocessRequestSchema = z.object({
+  sourceType: z.enum(["papers", "document", "text"], {
+    error: "sourceType must be one of: papers, document, text",
+  }),
+  paperIds: z.array(z.number().int().positive()).optional(),
+  documentId: z.number().int().positive().optional(),
+  rawText: z.string().max(100000, "rawText must not exceed 100000 characters").optional(),
+});
 
 interface PreprocessRequest {
   sourceType: "papers" | "document" | "text";
@@ -15,7 +25,15 @@ interface PreprocessRequest {
 
 export async function POST(req: Request) {
   try {
-    const body: PreprocessRequest = await req.json();
+    const rawBody = await req.json();
+    const parsed = preprocessRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data as PreprocessRequest;
     let sourceContent = "";
     let sourceLabel = "content";
 

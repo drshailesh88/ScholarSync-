@@ -4,8 +4,20 @@ import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
+import { z } from "zod";
 
 type SynthesisMode = "summary" | "compare" | "gaps" | "methodology";
+
+const synthesizeRequestSchema = z.object({
+  paperIds: z
+    .array(z.number().int().positive())
+    .min(1, "At least one paper ID is required")
+    .max(50, "Too many paper IDs"),
+  mode: z.enum(["summary", "compare", "gaps", "methodology"], {
+    error: "mode must be one of: summary, compare, gaps, methodology",
+  }),
+  prompt: z.string().max(2000, "Prompt must not exceed 2000 characters").optional(),
+});
 
 interface SynthesizeRequest {
   paperIds: number[];
@@ -115,30 +127,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = (await req.json()) as SynthesizeRequest;
-    const { paperIds, prompt, mode } = body;
-
-    if (!paperIds || !Array.isArray(paperIds) || paperIds.length === 0) {
+    const body = await req.json();
+    const parsed = synthesizeRequestSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "paperIds must be a non-empty array of paper IDs." },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
-
-    const validModes: SynthesisMode[] = [
-      "summary",
-      "compare",
-      "gaps",
-      "methodology",
-    ];
-    if (!mode || !validModes.includes(mode)) {
-      return NextResponse.json(
-        {
-          error: `mode must be one of: ${validModes.join(", ")}`,
-        },
-        { status: 400 }
-      );
-    }
+    const { paperIds, prompt, mode } = parsed.data;
 
     const fetchedPapers = await db
       .select({

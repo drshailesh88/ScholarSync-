@@ -1,6 +1,28 @@
 import { NextResponse } from "next/server";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import type { ContentBlock } from "@/types/presentation";
+import { z } from "zod";
+
+const contentBlockSchema = z.object({
+  type: z.string().min(1),
+  data: z.record(z.string(), z.unknown()),
+});
+
+const slideInputSchema = z.object({
+  title: z.string().max(500).optional(),
+  subtitle: z.string().max(500).optional(),
+  layout: z.string().optional(),
+  contentBlocks: z.array(contentBlockSchema).optional(),
+  speakerNotes: z.string().max(5000).optional(),
+});
+
+const exportPresentationPdfRequestSchema = z.object({
+  title: z.string().max(500, "Title must not exceed 500 characters").optional().default("Presentation"),
+  slides: z
+    .array(slideInputSchema)
+    .min(1, "At least one slide is required")
+    .max(200, "Too many slides"),
+});
 
 interface SlideInput {
   title?: string;
@@ -17,14 +39,15 @@ interface ExportRequest {
 
 export async function POST(req: Request) {
   try {
-    const body: ExportRequest = await req.json();
-
-    if (!body.slides?.length) {
+    const rawBody = await req.json();
+    const parsed = exportPresentationPdfRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "At least one slide is required" },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
+    const body = parsed.data as ExportRequest;
 
     const pdf = await PDFDocument.create();
     const font = await pdf.embedFont(StandardFonts.Helvetica);

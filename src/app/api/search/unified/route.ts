@@ -57,21 +57,25 @@ export async function GET(req: Request) {
     }
 
     // Step 2: Fan out to all sources in parallel
+    // Fetch enough results from each source to fill the requested page.
+    // We need (page+1)*perPage results after fusion to serve the slice,
+    // so ask each source for that many (capped at 100 for API limits).
+    const neededPerSource = Math.min((page + 1) * perPage, 100);
     const [pubmedResult, s2Result, oaResult] = await Promise.allSettled([
       searchPubMed(pubmedQuery, {
-        maxResults: perPage,
+        maxResults: neededPerSource,
         page: 0,
         yearStart,
         yearEnd,
       }),
       searchSemanticScholar(s2Query, {
-        limit: perPage,
+        limit: neededPerSource,
         offset: 0,
         yearStart,
         yearEnd,
       }),
       searchOpenAlex(oaQuery, {
-        limit: perPage,
+        limit: neededPerSource,
         page: 1,
         yearStart,
         yearEnd,

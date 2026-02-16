@@ -45,11 +45,27 @@ export async function updateUserProfile(data: {
   specialty?: string;
   country?: string;
   bio?: string;
+  research_interests?: string[];
+  preferred_language?: string;
+  default_citation_style?: string;
+  orcid_id?: string;
 }) {
   const userId = await getCurrentUserId();
+
+  // Build a clean update payload so we only SET columns that were provided
+  const payload: Record<string, unknown> = { updated_at: new Date() };
+  if (data.full_name !== undefined) payload.full_name = data.full_name;
+  if (data.specialty !== undefined) payload.specialty = data.specialty;
+  if (data.country !== undefined) payload.country = data.country;
+  if (data.bio !== undefined) payload.bio = data.bio;
+  if (data.research_interests !== undefined) payload.research_interests = data.research_interests;
+  if (data.preferred_language !== undefined) payload.preferred_language = data.preferred_language;
+  if (data.default_citation_style !== undefined) payload.default_citation_style = data.default_citation_style;
+  if (data.orcid_id !== undefined) payload.orcid_id = data.orcid_id;
+
   const [user] = await db
     .update(users)
-    .set({ ...data, updated_at: new Date() })
+    .set(payload)
     .where(eq(users.id, userId))
     .returning();
   return user;

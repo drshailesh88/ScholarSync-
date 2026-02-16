@@ -1,8 +1,19 @@
 import { NextResponse } from "next/server";
 import { streamText } from "ai";
 import { getModel, isAIConfigured, requiredKeyName } from "@/lib/ai/models";
+import { z } from "zod";
 
 type HumanizeLevel = "light" | "medium" | "heavy";
+
+const humanizeRequestSchema = z.object({
+  text: z
+    .string({ error: "text is required" })
+    .min(1, "text must be a non-empty string")
+    .max(50000, "text must not exceed 50000 characters"),
+  level: z.enum(["light", "medium", "heavy"], {
+    error: "level must be one of: light, medium, heavy",
+  }),
+});
 
 interface HumanizeRequest {
   text: string;
@@ -63,25 +74,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = (await req.json()) as HumanizeRequest;
-    const { text, level } = body;
-
-    if (!text || typeof text !== "string" || text.trim().length === 0) {
+    const body = await req.json();
+    const parsed = humanizeRequestSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "text must be a non-empty string." },
+        { error: "Invalid request body", details: parsed.error.flatten().fieldErrors },
         { status: 400 }
       );
     }
-
-    const validLevels: HumanizeLevel[] = ["light", "medium", "heavy"];
-    if (!level || !validLevels.includes(level)) {
-      return NextResponse.json(
-        {
-          error: `level must be one of: ${validLevels.join(", ")}`,
-        },
-        { status: 400 }
-      );
-    }
+    const { text, level } = parsed.data;
 
     const systemPrompt = getSystemPrompt(level);
 

@@ -72,6 +72,7 @@ export const users = pgTable("users", {
   deep_research_used: integer("deep_research_used").default(0),
   usage_reset_date: timestamp("usage_reset_date"),
   preferred_language: text("preferred_language").default("en"),
+  default_citation_style: text("default_citation_style").default("apa7"),
   orcid_id: text("orcid_id"),
   institution_id: integer("institution_id"),
   onboarding_completed: boolean("onboarding_completed").default(false),

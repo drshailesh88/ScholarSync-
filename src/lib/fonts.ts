@@ -1,21 +1,13 @@
-import { Inter, Plus_Jakarta_Sans, Merriweather } from "next/font/google";
+// System font stacks used as CSS variables.
+// In production with internet access, swap back to next/font/google:
+//   import { Inter, Plus_Jakarta_Sans, Merriweather } from "next/font/google";
 
-export const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
+const makeFontVar = (variable: string) => ({
+  variable,
+  className: "",
+  style: { fontFamily: "inherit" } as const,
 });
 
-export const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta",
-  display: "swap",
-});
-
-export const merriweather = Merriweather({
-  subsets: ["latin"],
-  weight: ["300", "400", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-merriweather",
-  display: "swap",
-});
+export const inter = makeFontVar("font-inter");
+export const plusJakarta = makeFontVar("font-plus-jakarta");
+export const merriweather = makeFontVar("font-merriweather");

@@ -2,10 +2,15 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, PenNib, DownloadSimple, Sparkle, MagnifyingGlass } from "@phosphor-icons/react";
+import { ArrowLeft, BookOpen, PenNib, DownloadSimple, Sparkle, MagnifyingGlass, CircleNotch, CaretDown, FileText } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { CircularGauge } from "@/components/ui/circular-gauge";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import {
+  getActiveDocumentForAnalysis,
+  listProjectsForAnalysis,
+  type DocumentForAnalysis,
+} from "@/lib/actions/analysis";
 
 interface ParagraphAnalysis {
   paragraphIndex: number;
@@ -48,7 +53,21 @@ interface IntegrityResult {
   };
 }
 
+type SourceMode = "document" | "paste";
+
 export default function CompliancePage() {
+  // Source mode
+  const [sourceMode, setSourceMode] = useState<SourceMode>("document");
+
+  // Document loading state
+  const [docLoading, setDocLoading] = useState(true);
+  const [activeDoc, setActiveDoc] = useState<DocumentForAnalysis | null>(null);
+  const [projects, setProjects] = useState<{ id: number; title: string }[]>([]);
+  const [selectedProjectId, setSelectedProjectId] = useState<number | null>(null);
+  const [projectDropdownOpen, setProjectDropdownOpen] = useState(false);
+  const projectDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Text state
   const [inputText, setInputText] = useState("");
   const [result, setResult] = useState<IntegrityResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -62,12 +81,58 @@ export default function CompliancePage() {
   const [copyleaksAvailable, setCopyleaksAvailable] = useState<boolean | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Close project dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (projectDropdownRef.current && !projectDropdownRef.current.contains(e.target as Node)) {
+        setProjectDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   // Clean up polling on unmount
   useEffect(() => {
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
   }, []);
+
+  // Load projects list
+  useEffect(() => {
+    listProjectsForAnalysis()
+      .then((p) => {
+        setProjects(p);
+        if (p.length > 0 && !selectedProjectId) {
+          setSelectedProjectId(p[0].id);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // Load active document when project changes
+  useEffect(() => {
+    if (sourceMode !== "document") return;
+
+    setDocLoading(true);
+    setError(null);
+
+    getActiveDocumentForAnalysis(selectedProjectId)
+      .then((doc) => {
+        setActiveDoc(doc);
+        if (doc) {
+          setInputText(doc.plainText);
+        } else {
+          setInputText("");
+        }
+      })
+      .catch(() => {
+        setActiveDoc(null);
+        setInputText("");
+      })
+      .finally(() => setDocLoading(false));
+  }, [sourceMode, selectedProjectId]);
 
   // Poll for Copyleaks results when a scan is in progress
   useEffect(() => {
@@ -179,6 +244,8 @@ export default function CompliancePage() {
     }
   }, [inputText]);
 
+  const selectedProject = projects.find((p) => p.id === selectedProjectId);
+
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)]">
       {/* Header */}
@@ -189,39 +256,137 @@ export default function CompliancePage() {
           </Link>
           <h1 className="font-semibold text-ink">Integrity Check</h1>
         </div>
-        {result && (
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border text-ink text-sm font-medium hover:bg-surface-raised transition-colors">
-            <DownloadSimple size={16} />
-            Download Report
-          </button>
-        )}
+        <div className="flex items-center gap-3">
+          {!result && (
+            <div className="flex p-0.5 bg-surface-raised rounded-lg">
+              <button
+                onClick={() => setSourceMode("document")}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all",
+                  sourceMode === "document"
+                    ? "bg-brand text-white"
+                    : "text-ink-muted hover:text-ink"
+                )}
+              >
+                <FileText size={14} />
+                From Document
+              </button>
+              <button
+                onClick={() => setSourceMode("paste")}
+                className={cn(
+                  "px-3 py-1.5 rounded-md text-xs font-medium transition-all",
+                  sourceMode === "paste"
+                    ? "bg-brand text-white"
+                    : "text-ink-muted hover:text-ink"
+                )}
+              >
+                Paste Text
+              </button>
+            </div>
+          )}
+          {result && (
+            <button className="flex items-center gap-2 px-4 py-2 rounded-xl border border-border text-ink text-sm font-medium hover:bg-surface-raised transition-colors">
+              <DownloadSimple size={16} />
+              Download Report
+            </button>
+          )}
+        </div>
       </div>
 
       {!result ? (
         /* Input Mode */
         <div className="flex-1 flex flex-col gap-4">
-          <textarea
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Paste your text here to check for AI-generated content, plagiarism indicators, and writing quality..."
-            className="flex-1 p-6 rounded-2xl glass-panel font-serif text-ink text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-brand/40"
-          />
-          {error && (
-            <p className="text-xs text-red-500 px-2">{error}</p>
+          {/* Project selector (document mode) */}
+          {sourceMode === "document" && projects.length > 0 && (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-ink-muted">Project:</span>
+              <div ref={projectDropdownRef} className="relative">
+                <button
+                  onClick={() => setProjectDropdownOpen((v) => !v)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink bg-surface-raised border border-border hover:bg-surface-raised/80 transition-colors"
+                >
+                  <span className="truncate max-w-[200px]">{selectedProject?.title ?? "Select project"}</span>
+                  <CaretDown size={12} />
+                </button>
+                {projectDropdownOpen && (
+                  <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
+                    {projects.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => {
+                          setSelectedProjectId(p.id);
+                          setProjectDropdownOpen(false);
+                        }}
+                        className={cn(
+                          "w-full text-left px-3 py-2 text-xs transition-colors",
+                          p.id === selectedProjectId
+                            ? "bg-brand/10 text-brand font-medium"
+                            : "text-ink hover:bg-surface-raised"
+                        )}
+                      >
+                        {p.title}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {activeDoc && (
+                <span className="text-xs text-ink-muted">
+                  Document: <span className="text-ink font-medium">{activeDoc.documentTitle}</span>
+                </span>
+              )}
+            </div>
           )}
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-ink-muted">
-              {inputText.split(/\s+/).filter(Boolean).length} words
-            </p>
-            <button
-              onClick={runCheck}
-              disabled={loading || inputText.trim().length < 50}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50"
-            >
-              <Sparkle size={16} />
-              {loading ? "Analyzing..." : "Run Integrity Check"}
-            </button>
-          </div>
+
+          {sourceMode === "document" && docLoading ? (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3">
+                <CircleNotch size={28} className="text-brand animate-spin" />
+                <p className="text-sm text-ink-muted">Loading document...</p>
+              </div>
+            </div>
+          ) : sourceMode === "document" && !activeDoc ? (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="flex flex-col items-center gap-3 text-center px-8">
+                <FileText size={32} className="text-ink-muted" />
+                <p className="text-sm text-ink-muted">No document found. Write something in the Studio first, or switch to paste mode.</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                placeholder={sourceMode === "document"
+                  ? "Document content loaded from your project..."
+                  : "Paste your text here to check for AI-generated content, plagiarism indicators, and writing quality..."
+                }
+                className="flex-1 p-6 rounded-2xl glass-panel font-serif text-ink text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-brand/40"
+                readOnly={sourceMode === "document"}
+              />
+              {error && (
+                <p className="text-xs text-red-500 px-2">{error}</p>
+              )}
+              <div className="flex items-center justify-between">
+                <p className="text-xs text-ink-muted">
+                  {inputText.split(/\s+/).filter(Boolean).length} words
+                  {activeDoc && sourceMode === "document" && (
+                    <span className="ml-2 text-ink-muted/60">
+                      from {activeDoc.documentTitle}
+                    </span>
+                  )}
+                </p>
+                <button
+                  onClick={runCheck}
+                  disabled={loading || inputText.trim().length < 50}
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50"
+                >
+                  <Sparkle size={16} />
+                  {loading ? "Analyzing..." : "Run Integrity Check"}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       ) : (
         /* Results Mode */
@@ -234,8 +399,13 @@ export default function CompliancePage() {
                   onClick={() => { setResult(null); setParagraphs([]); setCopyleaksResult(null); setCopyleaksScanId(null); setCopyleaksAvailable(null); }}
                   className="text-xs text-brand hover:text-brand-hover font-medium"
                 >
-                  ← Check New Text
+                  &larr; Check New Text
                 </button>
+                {activeDoc && (
+                  <span className="text-xs text-ink-muted">
+                    {activeDoc.documentTitle}
+                  </span>
+                )}
               </div>
               <div className="font-serif text-ink leading-relaxed space-y-4">
                 {paragraphs.map((p, i) => {

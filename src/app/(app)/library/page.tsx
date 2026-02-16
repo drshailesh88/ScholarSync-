@@ -24,10 +24,14 @@ const PDFViewer = dynamic(
   { ssr: false }
 );
 import {
-  getUserPapers,
+  getFilteredUserPapers,
+  getLibraryStudyTypes,
+  getLibraryYearRange,
+  getLibraryProjects,
   toggleFavorite as toggleFavoriteAction,
   removePaper as removePaperAction,
 } from "@/lib/actions/papers";
+import type { LibraryFilters } from "@/lib/actions/papers";
 import { getAllCitationFormats } from "@/lib/actions/citations";
 import type { PaperData, CitationStyle } from "@/lib/citations";
 
@@ -41,11 +45,16 @@ type Paper = {
   abstract: string | null;
   source: string;
   citation_count: number | null;
+  study_type: string | null;
+  pdf_storage_path: string | null;
+  pdf_url: string | null;
+  open_access_url: string | null;
   refId: number;
   isFavorite: boolean | null;
   collection: string | null;
   notes: string | null;
   tags: unknown;
+  addedAt: string | null;
 };
 
 /** Safely coerce authors jsonb to string[] */
@@ -85,12 +94,14 @@ type CitationFormats = {
   bibtex: string;
 };
 
+type SortOption = "date_added" | "title" | "citation_count" | "year";
+
 export default function LibraryPage() {
   const [papers, setPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeCollection, setActiveCollection] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<"recent" | "title" | "year">("recent");
+  const [sortBy, setSortBy] = useState<SortOption>("date_added");
   const [citeModal, setCiteModal] = useState<Paper | null>(null);
   const [citationTab, setCitationTab] = useState("apa");
   const [copied, setCopied] = useState<string | null>(null);
@@ -100,20 +111,76 @@ export default function LibraryPage() {
   const [uploading, setUploading] = useState(false);
   const [viewingPaperId, setViewingPaperId] = useState<number | null>(null);
 
+  // Filter state
+  const [filterProjectId, setFilterProjectId] = useState<number | undefined>(undefined);
+  const [filterYearMin, setFilterYearMin] = useState<number | undefined>(undefined);
+  const [filterYearMax, setFilterYearMax] = useState<number | undefined>(undefined);
+  const [filterStudyType, setFilterStudyType] = useState<string | undefined>(undefined);
+
+  // Metadata for filter dropdowns (loaded once)
+  const [projectsList, setProjectsList] = useState<{ id: number; title: string }[]>([]);
+  const [studyTypes, setStudyTypes] = useState<string[]>([]);
+  const [yearRange, setYearRange] = useState<{ min: number | null; max: number | null }>({
+    min: null,
+    max: null,
+  });
+
+  // Debounce search to avoid firing on every keystroke
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Load filter metadata once on mount
+  useEffect(() => {
+    Promise.all([
+      getLibraryProjects(),
+      getLibraryStudyTypes(),
+      getLibraryYearRange(),
+    ]).then(([projs, types, yr]) => {
+      setProjectsList(projs);
+      setStudyTypes(types);
+      setYearRange(yr);
+    });
+  }, []);
+
   const fetchPapers = useCallback(async () => {
+    setLoading(true);
     try {
-      const data = await getUserPapers();
+      const filters: LibraryFilters = {
+        search: debouncedSearch || undefined,
+        projectId: filterProjectId,
+        yearMin: filterYearMin,
+        yearMax: filterYearMax,
+        studyType: filterStudyType,
+        sortBy: sortBy,
+        sortDir: sortBy === "title" ? "asc" : "desc",
+      };
+      const data = await getFilteredUserPapers(filters);
       setPapers(data as Paper[]);
     } catch (err) {
       console.error("Failed to fetch papers:", err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [debouncedSearch, filterProjectId, filterYearMin, filterYearMax, filterStudyType, sortBy]);
 
   useEffect(() => {
     fetchPapers();
   }, [fetchPapers]);
+
+  // Refresh filter metadata after mutations (add/remove)
+  const refreshMetadata = useCallback(async () => {
+    const [projs, types, yr] = await Promise.all([
+      getLibraryProjects(),
+      getLibraryStudyTypes(),
+      getLibraryYearRange(),
+    ]);
+    setProjectsList(projs);
+    setStudyTypes(types);
+    setYearRange(yr);
+  }, []);
 
   const favorites = useMemo(() => papers.filter((p) => p.isFavorite), [papers]);
 
@@ -133,6 +200,7 @@ export default function LibraryPage() {
     }));
   }, [papers]);
 
+  /** Apply client-side collection/favorites filtering (the rest is server-side) */
   const filtered = useMemo(() => {
     let result = papers;
     if (activeCollection === "favorites") {
@@ -140,20 +208,8 @@ export default function LibraryPage() {
     } else if (activeCollection && activeCollection !== "all") {
       result = papers.filter((p) => p.collection === activeCollection);
     }
-    if (search) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (p) =>
-          p.title.toLowerCase().includes(q) ||
-          getAuthors(p).some((a) => a.toLowerCase().includes(q))
-      );
-    }
-    return [...result].sort((a, b) => {
-      if (sortBy === "title") return a.title.localeCompare(b.title);
-      if (sortBy === "year") return (b.year ?? 0) - (a.year ?? 0);
-      return 0;
-    });
-  }, [papers, activeCollection, search, sortBy, favorites]);
+    return result;
+  }, [papers, activeCollection, favorites]);
 
   const handleToggleFavorite = async (refId: number) => {
     // Optimistic update
@@ -181,6 +237,8 @@ export default function LibraryPage() {
     setPapers((prev) => prev.filter((p) => p.refId !== refId));
     try {
       await removePaperAction(refId);
+      // Refresh metadata after deletion (year range, study types may change)
+      refreshMetadata();
     } catch (err) {
       console.error("Failed to remove paper:", err);
       // Revert on error
@@ -231,18 +289,33 @@ export default function LibraryPage() {
       }).catch(() => {});
 
       fetchPapers();
+      refreshMetadata();
     } catch (err) {
       console.error("PDF upload failed:", err);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
-  }, [fetchPapers]);
+  }, [fetchPapers, refreshMetadata]);
 
   const copyToClipboard = async (text: string, type: string) => {
     await navigator.clipboard.writeText(text);
     setCopied(type);
     setTimeout(() => setCopied(null), 2000);
+  };
+
+  /** Check whether any filters beyond search are active */
+  const hasActiveFilters =
+    filterProjectId !== undefined ||
+    filterYearMin !== undefined ||
+    filterYearMax !== undefined ||
+    filterStudyType !== undefined;
+
+  const clearAllFilters = () => {
+    setFilterProjectId(undefined);
+    setFilterYearMin(undefined);
+    setFilterYearMax(undefined);
+    setFilterStudyType(undefined);
   };
 
   return (
@@ -322,7 +395,8 @@ export default function LibraryPage() {
 
       {/* Papers List */}
       <div className="flex-1 overflow-y-auto">
-        <div className="flex items-center gap-4 mb-4">
+        {/* Search + Sort Row */}
+        <div className="flex items-center gap-4 mb-3">
           <SearchInput
             value={search}
             onChange={setSearch}
@@ -331,13 +405,98 @@ export default function LibraryPage() {
           />
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as "recent" | "title" | "year")}
+            onChange={(e) => setSortBy(e.target.value as SortOption)}
             className="px-3 py-2.5 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none"
           >
-            <option value="recent">Recently Added</option>
+            <option value="date_added">Recently Added</option>
             <option value="title">Title A-Z</option>
+            <option value="citation_count">Citation Count</option>
             <option value="year">Year</option>
           </select>
+        </div>
+
+        {/* Filter Row */}
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
+          {/* Project filter */}
+          {projectsList.length > 0 && (
+            <select
+              value={filterProjectId ?? ""}
+              onChange={(e) =>
+                setFilterProjectId(
+                  e.target.value ? Number(e.target.value) : undefined
+                )
+              }
+              className="px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none"
+            >
+              <option value="">All Projects</option>
+              {projectsList.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.title}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {/* Study type filter */}
+          {studyTypes.length > 0 && (
+            <select
+              value={filterStudyType ?? ""}
+              onChange={(e) =>
+                setFilterStudyType(e.target.value || undefined)
+              }
+              className="px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none"
+            >
+              <option value="">All Study Types</option>
+              {studyTypes.map((st) => (
+                <option key={st} value={st}>
+                  {st}
+                </option>
+              ))}
+            </select>
+          )}
+
+          {/* Year range filter */}
+          {yearRange.min != null && yearRange.max != null && (
+            <>
+              <input
+                type="number"
+                placeholder={`From ${yearRange.min}`}
+                value={filterYearMin ?? ""}
+                min={yearRange.min}
+                max={yearRange.max}
+                onChange={(e) =>
+                  setFilterYearMin(
+                    e.target.value ? Number(e.target.value) : undefined
+                  )
+                }
+                className="w-24 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none"
+              />
+              <span className="text-xs text-ink-muted">to</span>
+              <input
+                type="number"
+                placeholder={`To ${yearRange.max}`}
+                value={filterYearMax ?? ""}
+                min={yearRange.min}
+                max={yearRange.max}
+                onChange={(e) =>
+                  setFilterYearMax(
+                    e.target.value ? Number(e.target.value) : undefined
+                  )
+                }
+                className="w-24 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink text-sm focus:outline-none"
+              />
+            </>
+          )}
+
+          {/* Clear filters */}
+          {hasActiveFilters && (
+            <button
+              onClick={clearAllFilters}
+              className="px-3 py-2 rounded-xl text-xs font-medium text-red-500 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+            >
+              Clear Filters
+            </button>
+          )}
         </div>
 
         {loading ? (
@@ -348,8 +507,8 @@ export default function LibraryPage() {
           <div className="flex flex-col items-center justify-center py-20">
             <BookOpen size={40} className="text-ink-muted mb-3" />
             <p className="text-sm text-ink-muted">
-              {search
-                ? "No papers match your search."
+              {search || hasActiveFilters
+                ? "No papers match your search or filters."
                 : "Your library is empty. Add papers from Discover."}
             </p>
           </div>
@@ -377,6 +536,12 @@ export default function LibraryPage() {
                     </p>
                     <p className="text-xs text-ink-muted mt-0.5">
                       {paper.journal ?? "Unknown journal"} · {paper.year ?? "n.d."}
+                      {paper.citation_count != null && paper.citation_count > 0 && (
+                        <span> · {paper.citation_count} citations</span>
+                      )}
+                      {paper.study_type && (
+                        <span> · {paper.study_type}</span>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -388,7 +553,7 @@ export default function LibraryPage() {
                     <BookOpen size={14} />
                     Cite
                   </button>
-                  {paper.source === "user_upload" && (
+                  {(paper.source === "user_upload" || paper.pdf_storage_path || paper.pdf_url) && (
                     <button
                       onClick={() => setViewingPaperId(paper.id)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted bg-surface-raised hover:bg-surface-raised/80 transition-colors"
@@ -396,6 +561,17 @@ export default function LibraryPage() {
                       <Eye size={14} />
                       View PDF
                     </button>
+                  )}
+                  {paper.doi && (
+                    <a
+                      href={`https://doi.org/${paper.doi}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted bg-surface-raised hover:bg-surface-raised/80 transition-colors"
+                    >
+                      <GlobeSimple size={14} />
+                      DOI
+                    </a>
                   )}
                   <button
                     onClick={() => handleToggleFavorite(paper.refId)}
