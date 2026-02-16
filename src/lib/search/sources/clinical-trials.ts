@@ -1,14 +1,17 @@
 import type { UnifiedSearchResult } from "@/types/search";
-import { getEvidenceLevel } from "@/lib/search/evidence-level";
+import { mapClinicalTrialPhase, getEvidenceLevel } from "@/lib/search/evidence-level";
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { createCircuitBreaker } from "@/lib/http/circuit-breaker";
 
 const breaker = createCircuitBreaker({ service: "ClinicalTrials", failureThreshold: 5 });
 
 interface ClinicalTrialsSearchOptions {
-  maxResults?: number;
-  page?: number;
-  status?: string[];
+  limit?: number;
+  offset?: number;
+  yearStart?: number;
+  yearEnd?: number;
+  status?: "recruiting" | "completed" | "any";
+  phase?: string;
 }
 
 interface CTStudy {
@@ -39,7 +42,11 @@ interface CTStudy {
       };
     };
     contactsLocationsModule?: {
-      overallOfficials?: { name: string; affiliation?: string }[];
+      overallOfficials?: {
+        name: string;
+        role?: string;
+        affiliation?: string;
+      }[];
     };
     conditionsModule?: {
       conditions?: string[];
@@ -57,29 +64,13 @@ interface CTResponse {
   nextPageToken?: string;
 }
 
-function mapStudyType(study: CTStudy): string {
-  const designModule = study.protocolSection.designModule;
-  if (!designModule) return "other";
-
-  const studyType = designModule.studyType?.toLowerCase() || "";
-  const allocation = designModule.designInfo?.allocation?.toLowerCase() || "";
-
-  if (studyType === "interventional") {
-    if (allocation === "randomized") return "rct";
-    return "rct";
-  }
-  if (studyType === "observational") return "observational";
-
-  return "other";
-}
-
 function parseYear(dateStr?: string): number {
   if (!dateStr) return 0;
   const match = dateStr.match(/(\d{4})/);
   return match ? parseInt(match[1], 10) : 0;
 }
 
-function mapStudy(study: CTStudy): UnifiedSearchResult {
+function mapStudy(study: CTStudy): UnifiedSearchResult | null {
   const proto = study.protocolSection;
   const id = proto.identificationModule;
   const status = proto.statusModule;
@@ -88,32 +79,37 @@ function mapStudy(study: CTStudy): UnifiedSearchResult {
   const contacts = proto.contactsLocationsModule;
   const conditions = proto.conditionsModule;
 
-  const studyType = mapStudyType(study);
+  const title = id.officialTitle || id.briefTitle || "";
+  if (!title) return null;
+
+  const phases = design?.phases || [];
+  const trialPhase = phases.join(" / ") || undefined;
+  const studyType = mapClinicalTrialPhase(phases, design?.studyType);
   const evidence = getEvidenceLevel(studyType);
 
   const authors = (contacts?.overallOfficials || []).map((o) => o.name);
 
-  const phases = design?.phases?.join(", ") || "";
-  const statusStr = status.overallStatus || "";
-
   const abstractParts: string[] = [];
   if (desc?.briefSummary) abstractParts.push(desc.briefSummary);
-  if (phases) abstractParts.push(`Phase: ${phases}`);
-  if (statusStr) abstractParts.push(`Status: ${statusStr}`);
+  if (trialPhase) abstractParts.push(`Phase: ${trialPhase}`);
+  if (status.overallStatus) abstractParts.push(`Status: ${status.overallStatus}`);
 
   return {
-    title: id.officialTitle || id.briefTitle,
+    title,
     authors,
     journal: id.organization?.fullName || "ClinicalTrials.gov",
     year: parseYear(status.startDateStruct?.date),
     abstract: abstractParts.join(" | ") || undefined,
     citationCount: 0,
-    publicationTypes: design?.phases || [],
+    publicationTypes: ["clinical_trial_registration"],
     meshTerms: conditions?.conditions || [],
     studyType,
     evidenceLevel: evidence.level,
     isOpenAccess: true,
     sources: ["clinical_trials"],
+    nctId: id.nctId,
+    trialStatus: status.overallStatus,
+    trialPhase,
   };
 }
 
@@ -126,22 +122,46 @@ export async function searchClinicalTrials(
     return { results: [], total: 0 };
   }
 
-  const maxResults = options.maxResults || 20;
-  const pageToken = options.page ? `&pageToken=${options.page}` : "";
+  const limit = options.limit || 20;
 
-  let url = `https://clinicaltrials.gov/api/v2/studies?query.term=${encodeURIComponent(query)}&pageSize=${maxResults}${pageToken}&format=json`;
+  const params = new URLSearchParams();
+  params.set("query.term", query);
+  params.set("pageSize", String(limit));
+  params.set("sort", "@relevance");
+  params.set("format", "json");
+  params.set("countTotal", "true");
 
-  if (options.status && options.status.length > 0) {
-    url += `&filter.overallStatus=${options.status.join(",")}`;
+  if (options.status && options.status !== "any") {
+    const statusMap: Record<string, string> = {
+      recruiting: "RECRUITING",
+      completed: "COMPLETED",
+    };
+    const mapped = statusMap[options.status];
+    if (mapped) {
+      params.set("filter.overallStatus", mapped);
+    }
   }
+
+  if (options.phase) {
+    params.set("filter.phase", options.phase);
+  }
+
+  const url = `https://clinicaltrials.gov/api/v2/studies?${params.toString()}`;
 
   try {
     const res = await resilientFetch(url, {}, { service: "ClinicalTrials", timeout: 15000 });
     const data: CTResponse = await res.json();
 
-    const results = (data.studies || []).map(mapStudy);
+    const results: UnifiedSearchResult[] = [];
+    for (const study of data.studies || []) {
+      const mapped = mapStudy(study);
+      if (mapped) {
+        results.push(mapped);
+      }
+    }
+
     breaker.onSuccess();
-    return { results, total: data.totalCount || 0 };
+    return { results, total: data.totalCount || results.length };
   } catch (error) {
     breaker.onFailure();
     console.error("[ClinicalTrials] Search failed:", error);

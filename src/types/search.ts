@@ -36,6 +36,11 @@ export interface UnifiedSearchResult {
   journalQuartile?: "Q1" | "Q2" | "Q3" | "Q4" | null;
   journalImpactProxy?: number | null; // Cites per doc (2 years)
 
+  // Clinical trial fields (only populated for ClinicalTrials.gov results)
+  nctId?: string;
+  trialStatus?: string;
+  trialPhase?: string;
+
   // Provenance
   sources: string[];
   rrfScore?: number;
@@ -68,6 +73,7 @@ export interface SearchResponse {
     pubmed: number;
     semanticScholar: number;
     openAlex: number;
+    clinicalTrials: number;
   };
   augmentedQueries?: {
     pubmed: string;

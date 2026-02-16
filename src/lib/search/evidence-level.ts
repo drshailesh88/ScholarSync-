@@ -50,6 +50,30 @@ export function mapS2PublicationType(pubType: string): string {
   return "other";
 }
 
+export function mapClinicalTrialPhase(
+  phases: string[],
+  studyType?: string
+): string {
+  const normalized = (studyType || "").toLowerCase().trim();
+  if (normalized === "observational") return "observational";
+
+  const joined = phases.join(" ").toLowerCase();
+  if (
+    joined.includes("phase 1") ||
+    joined.includes("phase 2") ||
+    joined.includes("phase 3") ||
+    joined.includes("phase 4")
+  ) {
+    return "rct";
+  }
+
+  if (joined === "" || joined.includes("not applicable") || joined.includes("n/a")) {
+    return "other";
+  }
+
+  return "other";
+}
+
 export function mapOpenAlexType(type: string): string {
   const normalized = type.toLowerCase().trim();
   if (normalized === "review") return "review";
