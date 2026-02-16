@@ -22,6 +22,8 @@ import { Tabs } from "@/components/ui/tabs";
 import { CircularGauge } from "@/components/ui/circular-gauge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
+import { ResearchSidebar } from "@/components/research/ResearchSidebar";
+import { useResearchStore } from "@/stores/research-store";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 
@@ -91,9 +93,17 @@ function StudioContent() {
         case "summarize":
           prompt = `Summarize the following text concisely:\n\n${detail.context || ""}`;
           break;
-        case "find-sources":
-          prompt = `Find and suggest relevant academic sources for the following text:\n\n${detail.context || ""}`;
-          break;
+        case "find-sources": {
+          // Open the research sidebar with context from the editor
+          const researchStore = useResearchStore.getState();
+          const contextSnippet = (detail.context || "").slice(0, 200).trim();
+          if (contextSnippet) {
+            researchStore.setQuery(contextSnippet);
+          }
+          researchStore.openSidebar();
+          researchStore.setActiveTab("search");
+          return;
+        }
         case "cite":
           prompt = "Help me add a citation from my library. What paper should I cite here?";
           break;
@@ -421,6 +431,9 @@ function StudioContent() {
         </div>
       </main>
 
+      {/* Research Sidebar (between editor and AI panel) */}
+      <ResearchSidebar />
+
       {/* Right AI Panel */}
       <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
         <div className="px-4 py-3 border-b border-border-subtle">
@@ -498,25 +511,39 @@ function StudioContent() {
 
         {aiTab === "research" && (
           <div className="flex-1 px-4 py-3 space-y-3 overflow-y-auto">
+            <button
+              onClick={() => useResearchStore.getState().openSidebar()}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-brand/10 border border-brand/20 text-brand text-xs font-medium hover:bg-brand/15 transition-colors"
+            >
+              <Books size={16} />
+              Open Literature Research Panel
+            </button>
+            <p className="text-center text-[10px] text-ink-muted">
+              Or press <kbd className="px-1 py-0.5 rounded bg-surface-raised border border-border text-[9px]">Cmd+Shift+L</kbd> to toggle
+            </p>
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
                 <input
                   value={researchQuery}
                   onChange={(e) => setResearchQuery(e.target.value)}
-                  placeholder="Search PubMed..."
+                  placeholder="Quick search PubMed..."
                   className="w-full pl-8 pr-3 py-2 rounded-lg bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none"
                 />
               </div>
-              <Link
-                href={`/research${researchQuery ? `?q=${encodeURIComponent(researchQuery)}` : ""}`}
+              <button
+                onClick={() => {
+                  if (researchQuery.trim()) {
+                    const store = useResearchStore.getState();
+                    store.setQuery(researchQuery);
+                    store.openSidebar();
+                    store.setActiveTab("search");
+                  }
+                }}
                 className="px-3 py-2 rounded-lg bg-brand text-white text-xs font-medium hover:bg-brand-hover transition-colors"
               >
                 Search
-              </Link>
-            </div>
-            <div className="text-center py-8 text-xs text-ink-muted">
-              Search for papers to add to your draft
+              </button>
             </div>
           </div>
         )}
