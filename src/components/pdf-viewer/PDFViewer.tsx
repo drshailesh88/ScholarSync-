@@ -78,6 +78,48 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
     [setTotalPages]
   );
 
+  // Selection menu actions (defined before handleMouseUp/useEffect that reference them)
+  const handleAskAI = useCallback(
+    (sel: PDFTextSelection) => {
+      // Switch layout to show chat
+      if (layout === "pdf-editor") {
+        setLayout("pdf-chat");
+      }
+      setSelectionMenuOpen(false);
+    },
+    [layout, setLayout, setSelectionMenuOpen]
+  );
+
+  const handleNote = useCallback(
+    (sel: PDFTextSelection) => {
+      setNotePopoverPos(selectionMenuPos);
+      setShowNotePopover(true);
+      setSelectionMenuOpen(false);
+    },
+    [selectionMenuPos, setSelectionMenuOpen]
+  );
+
+  const handleHighlight = useCallback(
+    (sel: PDFTextSelection) => {
+      const newHighlight: PDFHighlight = {
+        id: `hl-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        projectId: "",
+        paperId: paperMetadata?.id || "",
+        pageNumber: sel.pageNumber,
+        rects: sel.rects,
+        selectedText: sel.text,
+        startOffset: sel.startOffset,
+        endOffset: sel.endOffset,
+        color: activeHighlightColor,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      addHighlight(newHighlight);
+      setSelection(null);
+    },
+    [paperMetadata, activeHighlightColor, addHighlight, setSelection]
+  );
+
   // Handle text selection on mouseup
   const handleMouseUp = useCallback(() => {
     // Small delay to ensure selection is finalized
@@ -183,18 +225,6 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
     }
   }, [navigationTarget, setPage, setFlashHighlight, clearNavigationTarget]);
 
-  // Selection menu actions
-  const handleAskAI = useCallback(
-    (sel: PDFTextSelection) => {
-      // Switch layout to show chat
-      if (layout === "pdf-editor") {
-        setLayout("pdf-chat");
-      }
-      setSelectionMenuOpen(false);
-    },
-    [layout, setLayout, setSelectionMenuOpen]
-  );
-
   const handleCite = useCallback(
     (sel: PDFTextSelection) => {
       // This will integrate with the Citation System
@@ -207,36 +237,6 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
       setSelection(null);
     },
     [paperMetadata, setSelection]
-  );
-
-  const handleNote = useCallback(
-    (sel: PDFTextSelection) => {
-      setNotePopoverPos(selectionMenuPos);
-      setShowNotePopover(true);
-      setSelectionMenuOpen(false);
-    },
-    [selectionMenuPos, setSelectionMenuOpen]
-  );
-
-  const handleHighlight = useCallback(
-    (sel: PDFTextSelection) => {
-      const newHighlight: PDFHighlight = {
-        id: `hl-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        projectId: "",
-        paperId: paperMetadata?.id || "",
-        pageNumber: sel.pageNumber,
-        rects: sel.rects,
-        selectedText: sel.text,
-        startOffset: sel.startOffset,
-        endOffset: sel.endOffset,
-        color: activeHighlightColor,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      addHighlight(newHighlight);
-      setSelection(null);
-    },
-    [paperMetadata, activeHighlightColor, addHighlight, setSelection]
   );
 
   const handleSaveNote = useCallback(
