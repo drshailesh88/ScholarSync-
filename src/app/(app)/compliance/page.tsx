@@ -109,7 +109,7 @@ export default function CompliancePage() {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [selectedProjectId]);
 
   // Load active document when project changes
   useEffect(() => {

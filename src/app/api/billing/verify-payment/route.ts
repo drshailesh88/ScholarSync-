@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUserId } from "@/lib/auth";
+import { getCurrentUserId as _getCurrentUserId } from "@/lib/auth";
 import { verifyPaymentSignature } from "@/lib/billing/razorpay";
 import { createSubscription } from "@/lib/actions/billing";
 

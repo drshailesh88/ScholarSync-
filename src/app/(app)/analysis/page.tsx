@@ -90,7 +90,7 @@ export default function AnalysisPage() {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [selectedProjectId]);
 
   // Load active document when project changes
   useEffect(() => {

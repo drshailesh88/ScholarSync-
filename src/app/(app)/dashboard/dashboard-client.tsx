@@ -11,7 +11,6 @@ import {
   ArrowRight,
   MagnifyingGlass,
   Books,
-  ChartBar,
   ChatCircleDots,
   ClockCounterClockwise,
 } from "@phosphor-icons/react";

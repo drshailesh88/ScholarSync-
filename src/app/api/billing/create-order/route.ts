@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
-import { createRazorpayOrder, isConfigured, PLAN_PRICES } from "@/lib/billing/razorpay";
+import { createRazorpayOrder, isConfigured } from "@/lib/billing/razorpay";
 
 export async function POST(req: NextRequest) {
   try {

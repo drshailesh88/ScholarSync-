@@ -12,8 +12,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get("projectId");
-  const paperId = searchParams.get("paperId");
-  const targetSection = searchParams.get("targetSection");
+  const _paperId = searchParams.get("paperId");
+  const _targetSection = searchParams.get("targetSection");
 
   if (!projectId) {
     return NextResponse.json(
@@ -37,11 +37,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       id,
-      projectId,
+      projectId: _projectId,
       paperId,
       pageNumber,
-      startOffset,
-      endOffset,
+      startOffset: _startOffset,
+      endOffset: _endOffset,
       quotedText,
       userNote,
       targetSection,

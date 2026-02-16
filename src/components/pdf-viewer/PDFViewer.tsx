@@ -147,7 +147,7 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
         }
       }
     }, 10);
-  }, [highlightMode, setSelection]);
+  }, [handleHighlight, highlightMode, setSelection]);
 
   // Handle keyboard shortcuts
   useEffect(() => {
@@ -191,7 +191,7 @@ export function PDFViewerComponent({ className }: PDFViewerComponentProps) {
 
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [currentPage, totalPages, currentSelection, closePDF, setPage]);
+  }, [currentPage, totalPages, currentSelection, closePDF, setPage, handleHighlight, handleNote, handleAskAI]);
 
   // Handle navigation target (scroll to page and flash)
   useEffect(() => {
