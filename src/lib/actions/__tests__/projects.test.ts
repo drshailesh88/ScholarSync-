@@ -67,7 +67,15 @@ vi.mock("@/lib/db", () => ({
 // ---------------------------------------------------------------------------
 // Import under test
 // ---------------------------------------------------------------------------
-import { getProjects, createProject } from "../projects";
+import {
+  getProjects,
+  getProject,
+  createProject,
+  updateProject,
+  deleteProject,
+  archiveProject,
+  updateProjectStatus,
+} from "../projects";
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -244,6 +252,99 @@ describe("projects actions", () => {
 
       expect(result).toHaveProperty("id");
       expect(typeof result.id).toBe("number");
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // getProject
+  // -------------------------------------------------------------------------
+  describe("getProject", () => {
+    it("returns the project when it exists and belongs to the user", async () => {
+      const project = {
+        id: 5,
+        user_id: "test_user_123",
+        title: "My Project",
+        status: "drafting",
+      };
+
+      mockDb.select.mockImplementation(() => createQueryBuilder([project]));
+
+      const result = await getProject(5);
+
+      expect(result).toMatchObject({ id: 5, title: "My Project" });
+    });
+
+    it("returns null when the project does not exist", async () => {
+      mockDb.select.mockImplementation(() => createQueryBuilder([]));
+
+      const result = await getProject(999);
+
+      expect(result).toBeNull();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // updateProject
+  // -------------------------------------------------------------------------
+  describe("updateProject", () => {
+    it("updates and returns the project", async () => {
+      const updated = {
+        id: 5,
+        title: "Updated Title",
+        status: "reviewing",
+        updated_at: new Date(),
+      };
+
+      mockDb.update.mockImplementation(() => createQueryBuilder([updated]));
+
+      const result = await updateProject(5, { title: "Updated Title", status: "reviewing" });
+
+      expect(result).toMatchObject({ id: 5, title: "Updated Title", status: "reviewing" });
+      expect(mockDb.update).toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // updateProjectStatus
+  // -------------------------------------------------------------------------
+  describe("updateProjectStatus", () => {
+    it("delegates to updateProject with only the status field", async () => {
+      const updated = { id: 7, status: "completed", updated_at: new Date() };
+
+      mockDb.update.mockImplementation(() => createQueryBuilder([updated]));
+
+      const result = await updateProjectStatus(7, "completed");
+
+      expect(result).toMatchObject({ id: 7, status: "completed" });
+      expect(mockDb.update).toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // deleteProject
+  // -------------------------------------------------------------------------
+  describe("deleteProject", () => {
+    it("soft-deletes the project by setting deleted_at", async () => {
+      mockDb.update.mockImplementation(() => createQueryBuilder([]));
+
+      await deleteProject(5);
+
+      expect(mockDb.update).toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // archiveProject
+  // -------------------------------------------------------------------------
+  describe("archiveProject", () => {
+    it("sets the project status to archived", async () => {
+      const archived = { id: 5, status: "archived", updated_at: new Date() };
+
+      mockDb.update.mockImplementation(() => createQueryBuilder([archived]));
+
+      const result = await archiveProject(5);
+
+      expect(result).toMatchObject({ id: 5, status: "archived" });
     });
   });
 });

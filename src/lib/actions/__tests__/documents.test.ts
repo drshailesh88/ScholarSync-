@@ -70,7 +70,10 @@ vi.mock("@/lib/db", () => ({
 import {
   getDocument,
   loadStudioDocument,
+  createDocument,
   saveDocumentContent,
+  updateDocumentTitle,
+  updateSection,
 } from "../documents";
 
 // ---------------------------------------------------------------------------
@@ -334,6 +337,113 @@ describe("documents actions", () => {
       expect(result).toHaveProperty("documentId", 1);
       expect(result).toHaveProperty("sectionId");
       expect(mockDb.insert).toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // createDocument
+  // -------------------------------------------------------------------------
+  describe("createDocument", () => {
+    it("creates a document with default sections and returns it", async () => {
+      const newDoc = {
+        id: 100,
+        project_id: 10,
+        title: "New Document",
+        document_type: "review_article",
+        overall_status: "drafting",
+      };
+
+      const newSection = {
+        id: 500,
+        document_id: 100,
+        section_type: "abstract",
+        title: "Abstract",
+        sort_order: 0,
+      };
+
+      mockDb.insert.mockImplementation(() => {
+        // Both doc insert and section inserts use this
+        return createQueryBuilder([newDoc]);
+      });
+
+      // Override: first call returns doc, subsequent calls return sections
+      let insertCallIndex = 0;
+      mockDb.insert.mockImplementation(() => {
+        if (insertCallIndex === 0) {
+          insertCallIndex++;
+          return createQueryBuilder([newDoc]);
+        }
+        insertCallIndex++;
+        return createQueryBuilder([
+          { ...newSection, id: 500 + insertCallIndex },
+        ]);
+      });
+
+      const result = await createDocument(10, "New Document");
+
+      expect(result).toHaveProperty("id");
+      expect(result).toHaveProperty("sections");
+      expect(mockDb.insert).toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // updateDocumentTitle
+  // -------------------------------------------------------------------------
+  describe("updateDocumentTitle", () => {
+    it("updates the title and returns the document", async () => {
+      const updated = {
+        id: 1,
+        title: "Renamed Document",
+        updated_at: new Date(),
+      };
+
+      mockDb.update.mockImplementation(() => createQueryBuilder([updated]));
+
+      const result = await updateDocumentTitle(1, "Renamed Document");
+
+      expect(result).toMatchObject({ id: 1, title: "Renamed Document" });
+      expect(mockDb.update).toHaveBeenCalled();
+    });
+  });
+
+  // -------------------------------------------------------------------------
+  // updateSection
+  // -------------------------------------------------------------------------
+  describe("updateSection", () => {
+    it("updates section content and returns the section", async () => {
+      const updated = {
+        id: 100,
+        document_id: 1,
+        title: "Introduction",
+        word_count: 350,
+        updated_at: new Date(),
+      };
+
+      mockDb.update.mockImplementation(() => createQueryBuilder([updated]));
+
+      const result = await updateSection(100, {
+        plain_text_content: "Updated intro text...",
+        word_count: 350,
+      });
+
+      expect(result).toMatchObject({ id: 100, word_count: 350 });
+      expect(mockDb.update).toHaveBeenCalled();
+    });
+
+    it("updates only the title when only title is provided", async () => {
+      const updated = {
+        id: 101,
+        document_id: 1,
+        title: "New Section Title",
+        updated_at: new Date(),
+      };
+
+      mockDb.update.mockImplementation(() => createQueryBuilder([updated]));
+
+      const result = await updateSection(101, { title: "New Section Title" });
+
+      expect(result).toMatchObject({ id: 101, title: "New Section Title" });
     });
   });
 });
