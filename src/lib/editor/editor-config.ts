@@ -63,7 +63,7 @@ export const EDITOR_FONTS = {
   },
   mono: {
     label: "Monospace",
-    family: "'JetBrains Mono', 'Fira Code', monospace",
+    family: "var(--font-jetbrains-mono), 'Fira Code', monospace",
     description: "For code-heavy manuscripts",
   },
 } as const;

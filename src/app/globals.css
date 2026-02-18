@@ -39,7 +39,7 @@
   --shell-border: #27272a;
   --shell-text: #71717a;
   --shell-active: #e4e4e7;
-  --accent-muted: rgba(234, 88, 12, 0.08);
+  --accent-muted: color-mix(in srgb, var(--brand) 8%, transparent);
   --font-sans-family: var(--font-inter), system-ui, sans-serif;
   --font-serif-family: var(--font-crimson-pro), Georgia, serif;
   --font-mono-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
@@ -62,7 +62,7 @@
   --shell-border: #1f1f23;
   --shell-text: #52525b;
   --shell-active: #e4e4e7;
-  --accent-muted: rgba(234, 88, 12, 0.12);
+  --accent-muted: color-mix(in srgb, var(--brand) 12%, transparent);
   --font-sans-family: var(--font-inter), system-ui, sans-serif;
   --font-serif-family: var(--font-crimson-pro), Georgia, serif;
   --font-mono-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
@@ -91,12 +91,14 @@ body {
 }
 
 /* Subtle scrollbar for dark panels */
+.scroll-subtle { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
 .scroll-subtle::-webkit-scrollbar { width: 4px; }
 .scroll-subtle::-webkit-scrollbar-track { background: transparent; }
 .scroll-subtle::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
 .scroll-subtle::-webkit-scrollbar-thumb:hover { background: #52525b; }
 
 /* Light scrollbar for editor */
+.scroll-light { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.1) transparent; }
 .scroll-light::-webkit-scrollbar { width: 4px; }
 .scroll-light::-webkit-scrollbar-track { background: transparent; }
 .scroll-light::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 2px; }
@@ -105,7 +107,7 @@ body {
 .cite-link {
   color: var(--brand);
   text-decoration: none;
-  border-bottom: 1px solid rgba(234, 88, 12, 0.3);
+  border-bottom: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
   transition: border-color 0.15s ease;
   cursor: pointer;
 }
@@ -113,12 +115,12 @@ body {
 
 /* AI highlight on text */
 .ai-flag {
-  background: rgba(234, 88, 12, 0.06);
-  border-bottom: 2px solid rgba(234, 88, 12, 0.4);
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--brand) 40%, transparent);
   cursor: pointer;
   transition: background 0.15s ease;
 }
-.ai-flag:hover { background: rgba(234, 88, 12, 0.12); }
+.ai-flag:hover { background: color-mix(in srgb, var(--brand) 12%, transparent); }
 
 /* ===== Academic Editor Styles ===== */
 
@@ -131,7 +133,7 @@ body {
 }
 
 .academic-editor-content ::selection {
-  background: rgba(234, 88, 12, 0.2);
+  background: color-mix(in srgb, var(--brand) 20%, transparent);
 }
 
 /* Headings */
@@ -295,7 +297,7 @@ body {
 .academic-editor-content a {
   color: var(--brand);
   text-decoration: none;
-  border-bottom: 1px solid rgba(234, 88, 12, 0.3);
+  border-bottom: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
   cursor: pointer;
   transition: border-color 0.15s;
 }

@@ -41,7 +41,7 @@ export function Tabs({ tabs, activeTab, onChange, className, vertical, variant =
                 : "bg-surface-raised text-ink border border-border-subtle"
               : isDark
                 ? "text-shell-text hover:text-shell-active hover:bg-white/5"
-                : "text-ink-muted hover:text-ink hover:bg-surface-raised/50"
+                : "text-ink-muted hover:text-ink hover:bg-surface-raised/50 border border-transparent"
           )}
         >
           {tab.label}

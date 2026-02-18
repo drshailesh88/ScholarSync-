@@ -112,7 +112,7 @@ export function CitationNetwork({ paperId, className }: CitationNetworkProps) {
 
   if (loading) {
     return (
-      <div className={cn("glass-panel rounded-2xl p-8 flex items-center justify-center", className)}>
+      <div className={cn("bg-surface border border-border rounded p-8 flex items-center justify-center", className)}>
         <div className="text-center">
           <div className="h-5 w-5 rounded-full border-2 border-brand border-t-transparent animate-spin mx-auto mb-3" />
           <p className="text-sm text-ink-muted">Loading citation network...</p>
@@ -123,14 +123,14 @@ export function CitationNetwork({ paperId, className }: CitationNetworkProps) {
 
   if (error) {
     return (
-      <div className={cn("glass-panel rounded-2xl p-8 text-center", className)}>
+      <div className={cn("bg-surface border border-border rounded p-8 text-center", className)}>
         <p className="text-sm text-red-500">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className={cn("glass-panel rounded-2xl overflow-hidden", className)}>
+    <div className={cn("bg-surface border border-border rounded overflow-hidden", className)}>
       {/* Legend */}
       <div className="flex items-center gap-4 px-4 py-3 border-b border-border-subtle">
         <span className="text-xs font-medium text-ink-muted">Citation Network</span>
