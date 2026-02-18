@@ -1,31 +1,54 @@
 steps:
+  # Build Docker image with build-time args
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${_NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}'
+      - '--build-arg'
+      - 'DATABASE_URL=${_DATABASE_URL}'
+      - '--build-arg'
+      - 'CLERK_SECRET_KEY=${_CLERK_SECRET_KEY}'
       - '-t'
-      - 'asia-south1-docker.pkg.dev/metal-node-486118-t7/scholarsync/web:$COMMIT_SHA'
+      - '${_REPO}:$COMMIT_SHA'
+      - '-t'
+      - '${_REPO}:latest'
       - '.'
 
+  # Push image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
-      - 'asia-south1-docker.pkg.dev/metal-node-486118-t7/scholarsync/web:$COMMIT_SHA'
+      - '--all-tags'
+      - '${_REPO}'
 
+  # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'scholarsync-web'
+      - '${_SERVICE_NAME}'
       - '--image'
-      - 'asia-south1-docker.pkg.dev/metal-node-486118-t7/scholarsync/web:$COMMIT_SHA'
+      - '${_REPO}:$COMMIT_SHA'
       - '--region'
-      - 'asia-south1'
+      - '${_REGION}'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'GCS_BUCKET_NAME=scholarsync-pdfs,GCS_PROJECT_ID=metal-node-486118-t7'
+      - 'NODE_ENV=production,GCS_BUCKET_NAME=scholarsync-pdfs,GCS_PROJECT_ID=metal-node-486118-t7,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${_NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}'
+      - '--set-secrets'
+      - 'DATABASE_URL=DATABASE_URL:latest,CLERK_SECRET_KEY=CLERK_SECRET_KEY:latest,ANTHROPIC_API_KEY=ANTHROPIC_API_KEY:latest,RAZORPAY_KEY_ID=RAZORPAY_KEY_ID:latest,RAZORPAY_KEY_SECRET=RAZORPAY_KEY_SECRET:latest,RAZORPAY_WEBHOOK_SECRET=RAZORPAY_WEBHOOK_SECRET:latest,UPSTASH_REDIS_REST_URL=UPSTASH_REDIS_REST_URL:latest,UPSTASH_REDIS_REST_TOKEN=UPSTASH_REDIS_REST_TOKEN:latest,COPYLEAKS_API_KEY=COPYLEAKS_API_KEY:latest'
 
 images:
-  - 'asia-south1-docker.pkg.dev/metal-node-486118-t7/scholarsync/web:$COMMIT_SHA'
+  - '${_REPO}:$COMMIT_SHA'
+  - '${_REPO}:latest'
+
+substitutions:
+  _REGION: asia-south1
+  _SERVICE_NAME: scholarsync-web
+  _REPO: asia-south1-docker.pkg.dev/metal-node-486118-t7/scholarsync/web
+  _NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ''
+  _DATABASE_URL: ''
+  _CLERK_SECRET_KEY: ''
