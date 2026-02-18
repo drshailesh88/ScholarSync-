@@ -26,7 +26,7 @@ interface CitationNetworkProps {
 }
 
 const NODE_COLORS = {
-  seed: { fill: "#6366f1", stroke: "#818cf8", label: "Selected Paper" },
+  seed: { fill: "#ea580c", stroke: "#f97316", label: "Selected Paper" },
   reference: { fill: "#0ea5e9", stroke: "#38bdf8", label: "References" },
   citation: { fill: "#10b981", stroke: "#34d399", label: "Cited By" },
 };
@@ -167,7 +167,7 @@ export function CitationNetwork({ paperId, className }: CitationNetworkProps) {
               y1={source.y!}
               x2={target.x}
               y2={target.y!}
-              stroke={isHighlighted ? "#6366f1" : "#334155"}
+              stroke={isHighlighted ? "#ea580c" : "#334155"}
               strokeWidth={isHighlighted ? 2 : 1}
               strokeOpacity={isHighlighted ? 0.8 : 0.3}
             />

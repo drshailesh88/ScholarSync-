@@ -3,9 +3,5 @@ export default function MarketingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="dark" style={{ colorScheme: "dark" }}>
-      {children}
-    </div>
-  );
+  return <>{children}</>;
 }

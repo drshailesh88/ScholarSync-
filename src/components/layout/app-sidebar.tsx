@@ -20,19 +20,34 @@ import { cn } from "@/lib/utils";
 
 const ClerkUserButton = dynamic(
   () => import("@clerk/nextjs").then((mod) => mod.UserButton),
-  { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-surface-raised" /> }
+  { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-shell-border" /> }
 );
 
-const navItems = [
-  { label: "Dashboard", href: "/dashboard", icon: House },
-  { label: "Studio", href: "/studio", icon: PenNib },
-  { label: "Deep Research", href: "/research", icon: GlobeHemisphereWest },
-  { label: "Notebook", href: "/notebook", icon: Notebook },
-  { label: "Library", href: "/library", icon: Books },
-  { label: "Archive", href: "/projects", icon: FolderOpen },
-  { label: "Compliance", href: "/compliance", icon: ShieldCheck },
-  { label: "Presentation", href: "/presentation", icon: ProjectorScreenChart },
-  { label: "Settings", href: "/settings", icon: Gear },
+const navSections = [
+  {
+    label: "WORKSPACE",
+    items: [
+      { label: "Dashboard", href: "/dashboard", icon: House },
+      { label: "Studio", href: "/studio", icon: PenNib },
+      { label: "Deep Research", href: "/research", icon: GlobeHemisphereWest },
+      { label: "Notebook", href: "/notebook", icon: Notebook },
+    ],
+  },
+  {
+    label: "LIBRARY",
+    items: [
+      { label: "Papers", href: "/library", icon: Books },
+      { label: "Archive", href: "/projects", icon: FolderOpen },
+    ],
+  },
+  {
+    label: "TOOLS",
+    items: [
+      { label: "Compliance", href: "/compliance", icon: ShieldCheck },
+      { label: "Presentation", href: "/presentation", icon: ProjectorScreenChart },
+      { label: "Settings", href: "/settings", icon: Gear },
+    ],
+  },
 ];
 
 const hasClerkKeys =
@@ -50,45 +65,54 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
 
   const sidebarContent = (
     <>
-      <div className="h-20 flex items-center justify-between px-6 border-b border-border-subtle">
+      <div className="h-16 flex items-center justify-between px-5 border-b border-shell-border">
         <Logo />
         {onClose && (
           <button
             onClick={onClose}
-            className="md:hidden p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+            className="md:hidden p-1.5 rounded text-shell-text hover:text-shell-active transition-colors"
           >
             <X size={20} />
           </button>
         )}
       </div>
 
-      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-          const IconComponent = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
-                isActive
-                  ? "bg-surface-raised border border-border-subtle text-ink"
-                  : "text-ink-muted hover:bg-surface-raised/50 hover:text-ink"
-              )}
-            >
-              <IconComponent
-                size={20}
-                weight={isActive ? "fill" : "regular"}
-              />
-              {item.label}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 px-3 py-4 overflow-y-auto scroll-subtle">
+        {navSections.map((section) => (
+          <div key={section.label} className="mb-4">
+            <p className="px-3 mb-1.5 text-[10px] font-mono font-medium text-shell-text uppercase tracking-widest">
+              {section.label}
+            </p>
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                const IconComponent = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2 rounded text-sm font-medium transition-all",
+                      isActive
+                        ? "text-shell-active border-l-2 border-brand bg-white/5"
+                        : "text-shell-text hover:text-shell-active hover:bg-white/5"
+                    )}
+                  >
+                    <IconComponent
+                      size={18}
+                      weight={isActive ? "fill" : "regular"}
+                    />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
-      <div className="px-6 py-4 border-t border-border-subtle">
+      <div className="px-5 py-4 border-t border-shell-border">
         {hasClerkKeys ? (
           <ClerkUserButton afterSignOutUrl="/" />
         ) : (
@@ -101,7 +125,7 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 flex-col shrink-0 glass-panel border-r border-border h-screen">
+      <aside className="hidden md:flex w-60 flex-col shrink-0 bg-shell border-r border-shell-border h-screen">
         {sidebarContent}
       </aside>
 
@@ -112,7 +136,7 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={onClose}
           />
-          <aside className="absolute left-0 top-0 bottom-0 w-64 flex flex-col glass-panel border-r border-border">
+          <aside className="absolute left-0 top-0 bottom-0 w-60 flex flex-col bg-shell border-r border-shell-border">
             {sidebarContent}
           </aside>
         </div>

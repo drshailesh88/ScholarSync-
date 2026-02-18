@@ -53,7 +53,7 @@ export const EDITOR_SHORTCUTS = {
 export const EDITOR_FONTS = {
   serif: {
     label: "Serif",
-    family: "var(--font-merriweather), Georgia, serif",
+    family: "var(--font-crimson-pro), Georgia, serif",
     description: "Best for manuscript drafting",
   },
   sans: {
