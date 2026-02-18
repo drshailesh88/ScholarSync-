@@ -35,18 +35,19 @@ export function withApiProtection(
         );
         if (rateLimitResponse) {
           log.warn("Rate limit exceeded", { userId, endpoint: options.rateLimit });
-          return addCorsHeaders(rateLimitResponse);
+          return addCorsHeaders(rateLimitResponse, req);
         }
       }
 
       // 3. Execute handler
       const response = await handler(req, userId);
-      return addCorsHeaders(response);
+      return addCorsHeaders(response, req);
     } catch (error) {
       // Auth errors
       if (error instanceof Error && error.message === "Not authenticated") {
         return addCorsHeaders(
-          NextResponse.json({ error: "Authentication required" }, { status: 401 })
+          NextResponse.json({ error: "Authentication required" }, { status: 401 }),
+          req
         );
       }
       if (
@@ -57,7 +58,8 @@ export function withApiProtection(
           NextResponse.json(
             { error: "Authentication service unavailable" },
             { status: 503 }
-          )
+          ),
+          req
         );
       }
 
@@ -67,7 +69,8 @@ export function withApiProtection(
         NextResponse.json(
           { error: "An internal error occurred. Please try again later." },
           { status: 500 }
-        )
+        ),
+        req
       );
     }
   };
