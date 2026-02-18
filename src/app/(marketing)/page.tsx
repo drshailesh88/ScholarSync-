@@ -73,7 +73,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div className="flex h-[360px]">
-                  <div className="w-48 bg-[#0e0e10] border-r border-[#27272a] p-4 hidden md:block">
+                  <div className="w-48 bg-shell border-r border-border p-4 hidden md:block">
                     <div className="space-y-3">
                       <div className="h-3 w-20 bg-white/10 rounded" />
                       <div className="h-3 w-28 bg-white/5 rounded" />
@@ -92,7 +92,7 @@ export default function LandingPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="w-48 bg-[#0e0e10] border-l border-[#27272a] p-4 hidden md:block">
+                  <div className="w-48 bg-shell border-l border-border p-4 hidden md:block">
                     <div className="space-y-3">
                       <div className="h-3 w-16 bg-white/10 rounded" />
                       <div className="h-3 w-24 bg-white/5 rounded" />

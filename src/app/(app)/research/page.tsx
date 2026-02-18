@@ -757,7 +757,7 @@ export default function ResearchPage() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Brain size={18} className="text-brand" />
-              <h3 className="font-semibold text-ink text-sm">
+              <h3 className="font-semibold text-shell-active text-sm">
                 Research Copilot
               </h3>
               <span className="flex items-center gap-1 text-[10px] text-emerald-500">
@@ -767,28 +767,28 @@ export default function ResearchPage() {
             </div>
             <button
               onClick={() => setShowCopilot(false)}
-              className="p-1 rounded text-ink-muted hover:text-ink"
+              className="p-1 rounded text-shell-text hover:text-shell-active"
             >
               <X size={16} />
             </button>
           </div>
 
           {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto space-y-3 mb-4">
+          <div className="flex-1 overflow-y-auto scroll-subtle space-y-3 mb-4">
             {chatMessages.length === 0 && (
-              <GlassPanel className="p-4">
+              <div className="bg-white/5 border border-shell-border rounded p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkle size={14} className="text-brand" />
                   <span className="text-xs font-medium text-brand uppercase tracking-wider">
                     Research Assistant
                   </span>
                 </div>
-                <p className="text-sm text-ink leading-relaxed">
+                <p className="text-sm text-shell-active leading-relaxed">
                   Ask me to find papers on any topic. I&apos;ll search across
                   PubMed, Semantic Scholar, and OpenAlex using systematic search
                   strategies.
                 </p>
-              </GlassPanel>
+              </div>
             )}
             {chatMessages.map((msg) => {
               const textContent = msg.parts
@@ -802,8 +802,8 @@ export default function ResearchPage() {
                   className={cn(
                     "text-sm rounded px-3 py-2",
                     msg.role === "user"
-                      ? "bg-brand/10 text-ink ml-8"
-                      : "bg-surface-raised text-ink mr-4"
+                      ? "bg-brand/10 text-shell-active ml-8"
+                      : "bg-white/5 text-shell-active mr-4"
                   )}
                 >
                   <p className="whitespace-pre-wrap leading-relaxed text-xs">
@@ -813,7 +813,7 @@ export default function ResearchPage() {
               );
             })}
             {chatLoading && (
-              <div className="flex items-center gap-2 text-xs text-ink-muted px-3">
+              <div className="flex items-center gap-2 text-xs text-shell-text px-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-brand animate-pulse" />
                 Searching...
               </div>
@@ -827,12 +827,12 @@ export default function ResearchPage() {
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               placeholder="Ask about papers, topics, methods..."
-              className="w-full px-4 py-2.5 pr-10 rounded bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"
+              className="w-full px-4 py-2.5 pr-10 rounded bg-white/5 border border-shell-border text-shell-active placeholder:text-shell-text text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"
             />
             <button
               type="submit"
               disabled={chatLoading || !chatInput.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-brand hover:bg-brand/10 disabled:opacity-40 transition-colors"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded text-brand hover:bg-brand/10 disabled:opacity-40 transition-colors"
             >
               <PaperPlaneTilt size={16} />
             </button>

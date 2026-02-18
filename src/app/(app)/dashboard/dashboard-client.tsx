@@ -163,7 +163,7 @@ export default function DashboardClient({
                 key={card.title}
                 href={card.href}
                 className={cn(
-                  "group bg-surface border border-border rounded p-6 transition-all duration-200 hover:-translate-y-1 border border-border",
+                  "group bg-surface border border-border rounded p-6 transition-all duration-200 hover:-translate-y-1",
                   colors.glow
                 )}
               >
