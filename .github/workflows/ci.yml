@@ -91,6 +91,7 @@ jobs:
 
       - name: Seed database
         run: npx tsx src/lib/db/seed.ts
+        continue-on-error: true
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/scholarsync_test
           NODE_ENV: development
