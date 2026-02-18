@@ -170,7 +170,7 @@ function ProjectSelector({
         <CaretDown size={10} className="shrink-0" />
       </button>
       {open && (
-        <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
+        <div className="absolute left-0 top-full mt-1 w-56 rounded bg-surface border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
           {projects.map((p) => (
             <button
               key={p.id}
@@ -549,20 +549,20 @@ function StudioContent() {
   return (
     <div className="flex h-[calc(100vh-7rem)] -m-6 -mt-0">
       {/* Left Sidebar */}
-      <aside className="w-64 shrink-0 glass-panel border-r border-border flex flex-col">
-        <div className="px-4 py-4 border-b border-border-subtle">
+      <aside className="w-60 shrink-0 bg-shell border-r border-shell-border flex flex-col text-shell-active">
+        <div className="px-4 py-4 border-b border-shell-border">
           <input
             type="text"
             value={docTitle}
             onChange={(e) => setDocTitle(e.target.value)}
-            className="w-full text-sm font-semibold text-ink bg-transparent focus:outline-none"
+            className="w-full text-sm font-semibold text-shell-active bg-transparent focus:outline-none"
           />
-          <div className="flex mt-3 p-0.5 bg-surface-raised rounded-lg">
+          <div className="flex mt-3 p-0.5 bg-white/5 rounded">
             <button
               onClick={() => setIsLearnMode(false)}
               className={cn(
-                "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
-                !isLearnMode ? "bg-brand text-white" : "text-ink-muted hover:text-ink"
+                "flex-1 py-1.5 rounded text-xs font-medium transition-all",
+                !isLearnMode ? "bg-brand text-white" : "text-shell-text hover:text-shell-active"
               )}
             >
               Write
@@ -570,8 +570,8 @@ function StudioContent() {
             <button
               onClick={() => setIsLearnMode(true)}
               className={cn(
-                "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
-                isLearnMode ? "bg-emerald-500 text-white" : "text-ink-muted hover:text-ink"
+                "flex-1 py-1.5 rounded text-xs font-medium transition-all",
+                isLearnMode ? "bg-emerald-500 text-white" : "text-shell-text hover:text-shell-active"
               )}
             >
               Learn
@@ -591,22 +591,22 @@ function StudioContent() {
         </div>
 
         <nav className="px-3 py-3 space-y-0.5">
-          <div className="px-3 py-2 rounded-lg bg-surface-raised text-ink text-sm font-medium">
+          <div className="px-3 py-2 rounded bg-white/5 text-shell-active text-sm font-medium border-l-2 border-brand">
             Current Draft
           </div>
-          <Link href="/library" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-muted hover:text-ink hover:bg-surface-raised/50 transition-colors">
+          <Link href="/library" className="flex items-center gap-2 px-3 py-2 rounded text-sm text-shell-text hover:text-shell-active hover:bg-white/5 transition-colors">
             <Books size={16} />
             My Library
           </Link>
-          <Link href="/research" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-muted hover:text-ink hover:bg-surface-raised/50 transition-colors">
+          <Link href="/research" className="flex items-center gap-2 px-3 py-2 rounded text-sm text-shell-text hover:text-shell-active hover:bg-white/5 transition-colors">
             <GlobeHemisphereWest size={16} />
             Deep Research
           </Link>
         </nav>
 
-        <div className="px-4 py-3 border-t border-border-subtle flex-1 overflow-y-auto">
+        <div className="px-4 py-3 border-t border-shell-border flex-1 overflow-y-auto scroll-subtle">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-medium text-ink-muted uppercase tracking-wider">
+            <span className="text-[10px] font-mono font-medium text-shell-text uppercase tracking-widest">
               References ({references.size})
             </span>
             <button onClick={openCitationDialog} className="text-brand hover:text-brand-hover">
@@ -616,18 +616,18 @@ function StudioContent() {
           <div className="space-y-2">
             {citedSourcesList.length > 0 ? (
               citedSourcesList.map((src) => (
-                <div key={src.num} className="flex items-start gap-2 p-2 rounded-lg bg-surface-raised/50">
-                  <span className="text-[10px] font-mono font-bold text-blue-500 shrink-0 mt-0.5">
+                <div key={src.num} className="flex items-start gap-2 p-2 rounded bg-white/5">
+                  <span className="text-[10px] font-mono font-bold text-brand shrink-0 mt-0.5">
                     [{src.num}]
                   </span>
                   <div className="min-w-0">
-                    <p className="text-xs text-ink truncate">{src.title}</p>
-                    <p className="text-[10px] text-ink-muted">{src.author}</p>
+                    <p className="text-xs text-shell-active truncate">{src.title}</p>
+                    <p className="text-[10px] text-shell-text">{src.author}</p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-[10px] text-ink-muted text-center py-2">
+              <p className="text-[10px] text-shell-text text-center py-2">
                 Use Cmd+Shift+C to add citations
               </p>
             )}
@@ -642,7 +642,7 @@ function StudioContent() {
           </div>
         </div>
 
-        <div className="mt-auto px-4 py-4 border-t border-border-subtle">
+        <div className="mt-auto px-4 py-4 border-t border-shell-border">
           <ProgressBar
             value={usageStats?.tokens_used ?? 0}
             max={usageStats?.tokens_limit ?? 50000}
@@ -658,7 +658,7 @@ function StudioContent() {
           <div className="px-4 py-2 bg-brand/5 border-b border-brand/10">
             <div className="flex items-center justify-between">
               <p className="text-xs font-medium text-ink-muted">AI Intensity</p>
-              <div className="flex p-0.5 bg-surface-raised rounded-lg">
+              <div className="flex p-0.5 bg-surface-raised rounded">
                 {(["focus", "collaborate", "accelerate"] as DraftModeIntensity[]).map((mode) => (
                   <button
                     key={mode}
@@ -699,7 +699,7 @@ function StudioContent() {
                   <CaretDown size={10} />
                 </button>
                 {showDocTypePicker && (
-                  <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50 py-1">
+                  <div className="absolute right-0 top-full mt-1 w-48 rounded bg-surface border border-border shadow-lg z-50 py-1">
                     {(Object.entries(GUIDE_DOC_TYPE_LABELS) as [GuideDocumentType, string][]).map(([key, label]) => (
                       <button
                         key={key}
@@ -751,13 +751,13 @@ function StudioContent() {
           <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
             >
               <DownloadSimple size={14} />
               Export
             </button>
             {showExport && (
-              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50">
+              <div className="absolute right-0 top-full mt-1 w-48 rounded bg-surface border border-border shadow-lg z-50">
                 <button
                   onClick={handleExportPDF}
                   className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised rounded-t-lg transition-colors"
@@ -819,16 +819,16 @@ function StudioContent() {
           onOpenCitationDialog={openCitationDialog}
         />
       ) : (
-        <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
-          <div className="px-4 py-3 border-b border-border-subtle">
-            <Tabs tabs={aiPanelTabs} activeTab={aiTab} onChange={setAiTab} />
+        <aside className="w-80 shrink-0 bg-shell border-l border-shell-border flex flex-col text-shell-active">
+          <div className="px-4 py-3 border-b border-shell-border">
+            <Tabs tabs={aiPanelTabs} activeTab={aiTab} onChange={setAiTab} variant="dark" />
           </div>
 
           {aiTab === "chat" && (
             <div className="flex-1 flex flex-col overflow-hidden">
-              <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+              <div className="flex-1 overflow-y-auto scroll-subtle px-4 py-3 space-y-3">
                 {chatError && (
-                  <div className="p-3 rounded-lg bg-amber-500/10 text-amber-500 text-xs">
+                  <div className="p-3 rounded bg-amber-500/10 text-amber-400 text-xs">
                     {chatError}
                   </div>
                 )}
@@ -847,10 +847,10 @@ function StudioContent() {
                     )}
                     <div
                       className={cn(
-                        "max-w-[85%] px-3 py-2 rounded-xl text-sm",
+                        "max-w-[85%] px-3 py-2 rounded text-sm",
                         msg.role === "user"
-                          ? "bg-surface-raised text-ink"
-                          : "bg-brand/5 text-ink"
+                          ? "bg-white/10 text-shell-active"
+                          : "bg-brand/10 text-shell-active"
                       )}
                     >
                       <p className="whitespace-pre-wrap text-xs leading-relaxed">{msg.content}</p>
@@ -862,7 +862,7 @@ function StudioContent() {
                     <div className="w-6 h-6 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
                       <Sparkle size={12} className="text-brand animate-spin" />
                     </div>
-                    <div className="px-3 py-2 rounded-xl bg-brand/5">
+                    <div className="px-3 py-2 rounded bg-brand/10">
                       <div className="flex gap-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce" />
                         <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce [animation-delay:150ms]" />
@@ -873,18 +873,18 @@ function StudioContent() {
                 )}
                 <div ref={messagesEndRef} />
               </div>
-              <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-border-subtle">
+              <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-shell-border">
                 <div className="flex gap-2">
                   <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder={isLearnMode ? "Ask me to challenge your thinking..." : "Ask your AI research assistant..."}
-                    className="flex-1 px-3 py-2 rounded-xl bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
+                    className="flex-1 px-3 py-2 rounded bg-white/5 border border-shell-border text-shell-active placeholder:text-shell-text text-xs focus:outline-none focus:ring-2 focus:ring-brand/40"
                   />
                   <button
                     type="submit"
                     disabled={isLoading || !input.trim()}
-                    className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50"
+                    className="p-2 rounded bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50"
                   >
                     <PaperPlaneRight size={16} />
                   </button>
@@ -894,25 +894,25 @@ function StudioContent() {
           )}
 
           {aiTab === "research" && (
-            <div className="flex-1 px-4 py-3 space-y-3 overflow-y-auto">
+            <div className="flex-1 px-4 py-3 space-y-3 overflow-y-auto scroll-subtle">
               <button
                 onClick={() => useResearchStore.getState().openSidebar()}
-                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-brand/10 border border-brand/20 text-brand text-xs font-medium hover:bg-brand/15 transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded bg-brand/10 border border-brand/20 text-brand text-xs font-medium hover:bg-brand/15 transition-colors"
               >
                 <Books size={16} />
                 Open Literature Research Panel
               </button>
-              <p className="text-center text-[10px] text-ink-muted">
-                Or press <kbd className="px-1 py-0.5 rounded bg-surface-raised border border-border text-[9px]">Cmd+Shift+L</kbd> to toggle
+              <p className="text-center text-[10px] text-shell-text">
+                Or press <kbd className="px-1 py-0.5 rounded bg-white/5 border border-shell-border text-[9px]">Cmd+Shift+L</kbd> to toggle
               </p>
               <div className="flex gap-2">
                 <div className="relative flex-1">
-                  <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+                  <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-shell-text" />
                   <input
                     value={researchQuery}
                     onChange={(e) => setResearchQuery(e.target.value)}
                     placeholder="Quick search PubMed..."
-                    className="w-full pl-8 pr-3 py-2 rounded-lg bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-xs focus:outline-none"
+                    className="w-full pl-8 pr-3 py-2 rounded bg-white/5 border border-shell-border text-shell-active placeholder:text-shell-text text-xs focus:outline-none"
                   />
                 </div>
                 <button
@@ -924,7 +924,7 @@ function StudioContent() {
                       store.setActiveTab("search");
                     }
                   }}
-                  className="px-3 py-2 rounded-lg bg-brand text-white text-xs font-medium hover:bg-brand-hover transition-colors"
+                  className="px-3 py-2 rounded bg-brand text-white text-xs font-medium hover:bg-brand-hover transition-colors"
                 >
                   Search
                 </button>
@@ -933,24 +933,24 @@ function StudioContent() {
           )}
 
           {aiTab === "checks" && (
-            <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto">
+            <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto scroll-subtle">
               <div className="flex flex-col items-center py-4">
                 <CircularGauge value={92} label="Human Score" size={100} />
               </div>
               <div className="space-y-3">
-                <div className="p-3 rounded-lg bg-surface-raised">
+                <div className="p-3 rounded bg-white/5">
                   <div className="flex items-center gap-2 mb-1">
                     <ShieldCheck size={14} className="text-emerald-500" />
-                    <span className="text-xs font-medium text-ink">AI Detection</span>
+                    <span className="text-xs font-medium text-shell-active">AI Detection</span>
                   </div>
-                  <p className="text-xs text-ink-muted">92% human-written confidence</p>
+                  <p className="text-xs text-shell-text">92% human-written confidence</p>
                 </div>
-                <div className="p-3 rounded-lg bg-surface-raised">
+                <div className="p-3 rounded bg-white/5">
                   <div className="flex items-center gap-2 mb-1">
                     <ShieldCheck size={14} className="text-amber-500" />
-                    <span className="text-xs font-medium text-ink">Plagiarism</span>
+                    <span className="text-xs font-medium text-shell-active">Plagiarism</span>
                   </div>
-                  <p className="text-xs text-ink-muted">2 matches found</p>
+                  <p className="text-xs text-shell-text">2 matches found</p>
                   <Link
                     href="/compliance"
                     className="text-xs text-brand hover:text-brand-hover mt-1 inline-block"

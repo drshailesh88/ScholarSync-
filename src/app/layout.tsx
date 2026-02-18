@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { inter, plusJakarta, merriweather } from "@/lib/fonts";
+import { inter, crimsonPro, jetbrainsMono } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ function Providers({ children }: { children: React.ReactNode }) {
     return (
       <ClerkProvider
         appearance={{
-          variables: { colorPrimary: "#6366f1" },
+          variables: { colorPrimary: "#ea580c" },
         }}
       >
         {children}
@@ -39,12 +39,12 @@ export default function RootLayout({
       <html
         lang="en"
         suppressHydrationWarning
-        className={`${inter.variable} ${plusJakarta.variable} ${merriweather.variable}`}
+        className={`${inter.variable} ${crimsonPro.variable} ${jetbrainsMono.variable}`}
       >
         <body className="bg-background text-ink antialiased">
           <ThemeProvider
             attribute="class"
-            defaultTheme="dark"
+            defaultTheme="light"
             enableSystem={false}
             disableTransitionOnChange
           >

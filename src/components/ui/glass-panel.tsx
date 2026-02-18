@@ -6,7 +6,7 @@ export function GlassPanel({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("glass-panel rounded-2xl", className)} {...props}>
+    <div className={cn("bg-surface border border-border rounded", className)} {...props}>
       {children}
     </div>
   );

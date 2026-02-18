@@ -62,23 +62,23 @@ const accentColors: Record<
 > = {
   sky: {
     bg: "bg-sky-500/10",
-    text: "text-sky-400",
-    glow: "hover:shadow-[0_0_40px_rgba(56,189,248,0.15)] hover:border-sky-500/30",
+    text: "text-sky-500",
+    glow: "hover:border-sky-500/30",
   },
   indigo: {
-    bg: "bg-indigo-500/10",
-    text: "text-indigo-400",
-    glow: "hover:shadow-[0_0_40px_rgba(99,102,241,0.15)] hover:border-indigo-500/30",
+    bg: "bg-brand/10",
+    text: "text-brand",
+    glow: "hover:border-brand/30",
   },
   emerald: {
     bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-    glow: "hover:shadow-[0_0_40px_rgba(16,185,129,0.15)] hover:border-emerald-500/30",
+    text: "text-emerald-500",
+    glow: "hover:border-emerald-500/30",
   },
   amber: {
     bg: "bg-amber-500/10",
-    text: "text-amber-400",
-    glow: "hover:shadow-[0_0_40px_rgba(245,158,11,0.15)] hover:border-amber-500/30",
+    text: "text-amber-500",
+    glow: "hover:border-amber-500/30",
   },
 };
 
@@ -163,13 +163,13 @@ export default function DashboardClient({
                 key={card.title}
                 href={card.href}
                 className={cn(
-                  "group glass-panel rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1 border border-border",
+                  "group bg-surface border border-border rounded p-6 transition-all duration-200 hover:-translate-y-1 border border-border",
                   colors.glow
                 )}
               >
                 <div
                   className={cn(
-                    "w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
+                    "w-12 h-12 rounded flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
                     colors.bg,
                     colors.text
                   )}
@@ -192,36 +192,36 @@ export default function DashboardClient({
           Your Research at a Glance
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="glass-panel rounded-2xl p-5 border border-border">
+          <div className="bg-surface border border-border rounded p-5 border border-border">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+              <div className="w-9 h-9 rounded-lg bg-brand/10 flex items-center justify-center text-brand">
                 <FileText size={18} />
               </div>
               <span className="text-2xl font-bold text-ink">{stats.projectCount}</span>
             </div>
             <p className="text-xs text-ink-muted">Projects</p>
           </div>
-          <div className="glass-panel rounded-2xl p-5 border border-border">
+          <div className="bg-surface border border-border rounded p-5 border border-border">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-400">
+              <div className="w-9 h-9 rounded-lg bg-sky-500/10 flex items-center justify-center text-sky-500">
                 <Books size={18} />
               </div>
               <span className="text-2xl font-bold text-ink">{stats.paperCount}</span>
             </div>
             <p className="text-xs text-ink-muted">Papers Saved</p>
           </div>
-          <div className="glass-panel rounded-2xl p-5 border border-border">
+          <div className="bg-surface border border-border rounded p-5 border border-border">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+              <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
                 <MagnifyingGlass size={18} />
               </div>
               <span className="text-2xl font-bold text-ink">{stats.searchCount}</span>
             </div>
             <p className="text-xs text-ink-muted">Searches</p>
           </div>
-          <div className="glass-panel rounded-2xl p-5 border border-border">
+          <div className="bg-surface border border-border rounded p-5 border border-border">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
+              <div className="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
                 <ChatCircleDots size={18} />
               </div>
               <span className="text-2xl font-bold text-ink">{stats.conversationCount}</span>
@@ -245,7 +245,7 @@ export default function DashboardClient({
           </Link>
         </div>
 
-        <div className="glass-panel rounded-2xl overflow-hidden border border-border">
+        <div className="bg-surface border border-border rounded overflow-hidden border border-border">
           {recentProjects.length === 0 ? (
             <div className="p-8 text-center text-ink-muted text-sm">
               No projects yet. Create your first manuscript to get started.
@@ -306,7 +306,7 @@ export default function DashboardClient({
               Search →
             </Link>
           </div>
-          <div className="glass-panel rounded-2xl overflow-hidden border border-border">
+          <div className="bg-surface border border-border rounded overflow-hidden border border-border">
             {recentSearches.length === 0 ? (
               <div className="p-6 text-center text-ink-muted text-sm">
                 No searches yet. Start exploring academic papers.
@@ -351,7 +351,7 @@ export default function DashboardClient({
               Recent Activity
             </h2>
           </div>
-          <div className="glass-panel rounded-2xl overflow-hidden border border-border">
+          <div className="bg-surface border border-border rounded overflow-hidden border border-border">
             {recentActivity.length === 0 ? (
               <div className="p-6 text-center text-ink-muted text-sm">
                 No activity yet. Your research actions will appear here.

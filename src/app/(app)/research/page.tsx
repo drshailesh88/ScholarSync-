@@ -341,13 +341,13 @@ export default function ResearchPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch(0)}
                 placeholder="Search 200M+ papers — try 'CRISPR sickle cell gene therapy'"
-                className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-surface border border-border text-ink placeholder:text-ink-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 transition-all"
+                className="w-full pl-12 pr-4 py-3.5 rounded bg-surface border border-border text-ink placeholder:text-ink-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 transition-all"
               />
             </div>
             <button
               onClick={() => handleSearch(0)}
               disabled={loading}
-              className="px-6 py-3.5 rounded-2xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50"
+              className="px-6 py-3.5 rounded bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50"
             >
               {loading ? "Searching..." : "Search"}
             </button>
@@ -423,7 +423,7 @@ export default function ResearchPage() {
                 <CaretDown size={12} />
               </button>
               {showSortDropdown && (
-                <div className="absolute right-0 top-full mt-1 z-20 bg-surface border border-border rounded-xl shadow-lg py-1 min-w-[140px]">
+                <div className="absolute right-0 top-full mt-1 z-20 bg-surface border border-border rounded shadow-lg py-1 min-w-[140px]">
                   {SORT_OPTIONS.map((option) => (
                     <button
                       key={option.value}
@@ -494,7 +494,7 @@ export default function ResearchPage() {
         {loading && (
           <div className="space-y-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="glass-panel rounded-xl p-5 animate-pulse">
+              <div key={i} className="bg-surface border border-border rounded p-5 animate-pulse">
                 <div className="h-4 bg-surface-raised rounded w-3/4 mb-3" />
                 <div className="h-3 bg-surface-raised rounded w-1/2 mb-2" />
                 <div className="h-3 bg-surface-raised rounded w-full" />
@@ -519,7 +519,7 @@ export default function ResearchPage() {
 
               return (
                 <div key={`${key}-${idx}`}>
-                  <div className="glass-panel rounded-xl p-5 hover:bg-surface-raised/30 transition-all">
+                  <div className="bg-surface border border-border rounded p-5 hover:bg-surface-raised/30 transition-all">
                     {/* Title */}
                     <h3 className="font-medium text-ink text-sm leading-snug mb-1.5">
                       {r.doi ? (
@@ -675,7 +675,7 @@ export default function ResearchPage() {
                       {similarResults[similarKey].map((sim, simIdx) => (
                         <div
                           key={simIdx}
-                          className="glass-panel rounded-lg p-3 text-xs"
+                          className="bg-surface border border-border rounded p-3 text-xs"
                         >
                           <p className="font-medium text-ink leading-snug">
                             {sim.title}
@@ -709,7 +709,7 @@ export default function ResearchPage() {
             <button
               onClick={() => handleSearch(page - 1)}
               disabled={page === 0}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium bg-surface-raised text-ink-muted border border-border hover:text-ink disabled:opacity-40 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 rounded text-xs font-medium bg-surface-raised text-ink-muted border border-border hover:text-ink disabled:opacity-40 transition-colors"
             >
               <ArrowLeft size={14} />
               Previous
@@ -720,7 +720,7 @@ export default function ResearchPage() {
             <button
               onClick={() => handleSearch(page + 1)}
               disabled={!hasMore}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium bg-surface-raised text-ink-muted border border-border hover:text-ink disabled:opacity-40 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-2 rounded text-xs font-medium bg-surface-raised text-ink-muted border border-border hover:text-ink disabled:opacity-40 transition-colors"
             >
               Next
               <ArrowRight size={14} />
@@ -745,7 +745,7 @@ export default function ResearchPage() {
           "fixed right-6 bottom-6 z-40 p-3 rounded-full shadow-lg transition-all",
           showCopilot
             ? "bg-brand text-white"
-            : "glass-panel text-ink-muted hover:text-ink"
+            : "bg-surface border border-border text-ink-muted hover:text-ink"
         )}
       >
         <ChatCircleDots size={24} />
@@ -753,7 +753,7 @@ export default function ResearchPage() {
 
       {/* Research Copilot Sidebar */}
       {showCopilot && (
-        <aside className="w-96 shrink-0 glass-panel rounded-2xl p-5 flex flex-col h-full">
+        <aside className="w-96 shrink-0 bg-shell border border-shell-border rounded p-5 flex flex-col h-full text-shell-active">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <Brain size={18} className="text-brand" />
@@ -800,7 +800,7 @@ export default function ResearchPage() {
                 <div
                   key={msg.id}
                   className={cn(
-                    "text-sm rounded-xl px-3 py-2",
+                    "text-sm rounded px-3 py-2",
                     msg.role === "user"
                       ? "bg-brand/10 text-ink ml-8"
                       : "bg-surface-raised text-ink mr-4"
@@ -827,7 +827,7 @@ export default function ResearchPage() {
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}
               placeholder="Ask about papers, topics, methods..."
-              className="w-full px-4 py-2.5 pr-10 rounded-xl bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"
+              className="w-full px-4 py-2.5 pr-10 rounded bg-surface-raised border border-border text-ink placeholder:text-ink-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/40"
             />
             <button
               type="submit"
