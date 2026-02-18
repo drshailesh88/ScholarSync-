@@ -14,6 +14,8 @@ const ENV_VARS: EnvVar[] = [
   { name: "RAZORPAY_KEY_ID", required: "production" },
   { name: "RAZORPAY_KEY_SECRET", required: "production" },
   { name: "RAZORPAY_WEBHOOK_SECRET", required: "production" },
+  { name: "UPSTASH_REDIS_REST_URL", required: "production" },
+  { name: "UPSTASH_REDIS_REST_TOKEN", required: "production" },
 ];
 
 export function validateEnv(): void {
