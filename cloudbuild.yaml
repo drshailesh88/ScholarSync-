@@ -10,7 +10,7 @@ steps:
       - '--build-arg'
       - 'CLERK_SECRET_KEY=${_CLERK_SECRET_KEY}'
       - '-t'
-      - '${_REPO}:$COMMIT_SHA'
+      - '${_REPO}:${SHORT_SHA}'
       - '-t'
       - '${_REPO}:latest'
       - '.'
@@ -22,27 +22,8 @@ steps:
       - '--all-tags'
       - '${_REPO}'
 
-  # Deploy to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
-    args:
-      - 'run'
-      - 'deploy'
-      - '${_SERVICE_NAME}'
-      - '--image'
-      - '${_REPO}:$COMMIT_SHA'
-      - '--region'
-      - '${_REGION}'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
-      - '--set-env-vars'
-      - 'NODE_ENV=production,GCS_BUCKET_NAME=scholarsync-pdfs,GCS_PROJECT_ID=metal-node-486118-t7,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${_NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}'
-      - '--set-secrets'
-      - 'DATABASE_URL=DATABASE_URL:latest,CLERK_SECRET_KEY=CLERK_SECRET_KEY:latest,ANTHROPIC_API_KEY=ANTHROPIC_API_KEY:latest,RAZORPAY_KEY_ID=RAZORPAY_KEY_ID:latest,RAZORPAY_KEY_SECRET=RAZORPAY_KEY_SECRET:latest,RAZORPAY_WEBHOOK_SECRET=RAZORPAY_WEBHOOK_SECRET:latest,UPSTASH_REDIS_REST_URL=UPSTASH_REDIS_REST_URL:latest,UPSTASH_REDIS_REST_TOKEN=UPSTASH_REDIS_REST_TOKEN:latest,COPYLEAKS_API_KEY=COPYLEAKS_API_KEY:latest'
-
 images:
-  - '${_REPO}:$COMMIT_SHA'
+  - '${_REPO}:${SHORT_SHA}'
   - '${_REPO}:latest'
 
 substitutions:
