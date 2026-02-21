@@ -14,6 +14,7 @@ import {
   ProjectorScreenChart,
   Gear,
   X,
+  FlowArrow,
 } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
@@ -43,6 +44,7 @@ const navSections = [
   {
     label: "TOOLS",
     items: [
+      { label: "Systematic Review", href: "/systematic-review", icon: FlowArrow },
       { label: "Compliance", href: "/compliance", icon: ShieldCheck },
       { label: "Presentation", href: "/presentation", icon: ProjectorScreenChart },
       { label: "Settings", href: "/settings", icon: Gear },
