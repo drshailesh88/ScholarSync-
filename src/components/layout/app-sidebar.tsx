@@ -14,6 +14,7 @@ import {
   ProjectorScreenChart,
   Gear,
   X,
+  FlowArrow,
 } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
@@ -23,16 +24,32 @@ const ClerkUserButton = dynamic(
   { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-surface-raised" /> }
 );
 
-const navItems = [
-  { label: "Dashboard", href: "/dashboard", icon: House },
-  { label: "Studio", href: "/studio", icon: PenNib },
-  { label: "Deep Research", href: "/research", icon: GlobeHemisphereWest },
-  { label: "Notebook", href: "/notebook", icon: Notebook },
-  { label: "Library", href: "/library", icon: Books },
-  { label: "Archive", href: "/projects", icon: FolderOpen },
-  { label: "Compliance", href: "/compliance", icon: ShieldCheck },
-  { label: "Presentation", href: "/presentation", icon: ProjectorScreenChart },
-  { label: "Settings", href: "/settings", icon: Gear },
+const navSections = [
+  {
+    label: "WORKSPACE",
+    items: [
+      { label: "Dashboard", href: "/dashboard", icon: House },
+      { label: "Studio", href: "/studio", icon: PenNib },
+      { label: "Deep Research", href: "/research", icon: GlobeHemisphereWest },
+      { label: "Notebook", href: "/notebook", icon: Notebook },
+    ],
+  },
+  {
+    label: "LIBRARY",
+    items: [
+      { label: "Papers", href: "/library", icon: Books },
+      { label: "Archive", href: "/projects", icon: FolderOpen },
+    ],
+  },
+  {
+    label: "TOOLS",
+    items: [
+      { label: "Systematic Review", href: "/systematic-review", icon: FlowArrow },
+      { label: "Compliance", href: "/compliance", icon: ShieldCheck },
+      { label: "Presentation", href: "/presentation", icon: ProjectorScreenChart },
+      { label: "Settings", href: "/settings", icon: Gear },
+    ],
+  },
 ];
 
 const hasClerkKeys =
