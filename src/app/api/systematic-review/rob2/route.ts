@@ -78,7 +78,7 @@ export async function GET(req: Request) {
 
     const summary = await getProjectRoB2Summary(projectId);
     return NextResponse.json(summary);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to get RoB2 summary" },
       { status: 500 }

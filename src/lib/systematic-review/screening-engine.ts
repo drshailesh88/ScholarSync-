@@ -9,11 +9,11 @@
  */
 
 import { generateObject } from "ai";
-import { getModel, getSmallModel } from "@/lib/ai/models";
+import { getSmallModel } from "@/lib/ai/models";
 import { getScreeningAgentPrompt } from "@/lib/ai/prompts/systematic-review";
 import { db } from "@/lib/db";
-import { screeningDecisions, prismaFlow } from "@/lib/db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { screeningDecisions } from "@/lib/db/schema";
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 // ---------------------------------------------------------------------------

@@ -70,7 +70,7 @@ const updateSchema = z.object({
   source: z.string().optional(),
   recordCount: z.number().int().min(0).optional(),
   excludedCount: z.number().int().min(0).optional(),
-  exclusionReasons: z.record(z.number()).optional(),
+  exclusionReasons: z.record(z.string(), z.number()).optional(),
 });
 
 export async function POST(req: Request) {

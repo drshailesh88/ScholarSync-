@@ -151,7 +151,7 @@ export async function GET(req: Request) {
 
     const summary = await getScreeningSummary(projectId);
     return NextResponse.json(summary);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to get screening summary" },
       { status: 500 }

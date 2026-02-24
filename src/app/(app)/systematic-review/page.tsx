@@ -4,7 +4,6 @@ import { useState, useCallback } from "react";
 import {
   MagnifyingGlass,
   Funnel,
-  ChartBar,
   FlowArrow,
   ShieldCheck,
   Table,
@@ -12,10 +11,8 @@ import {
   CheckCircle,
   XCircle,
   Warning,
-  ArrowRight,
   Plus,
   Trash,
-  Play,
   Eye,
   Download,
 } from "@phosphor-icons/react";
@@ -285,13 +282,11 @@ function SearchStrategyPanel() {
 // ---------------------------------------------------------------------------
 
 function ScreeningPanel() {
-  const [projectId, setProjectId] = useState("");
   const [criteria, setCriteria] = useState<Criterion[]>([
     { type: "inclusion", description: "" },
   ]);
-  const [screeningResults, setScreeningResults] = useState<ScreeningResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [summary, setSummary] = useState<{
+  const [screeningResults, _setScreeningResults] = useState<ScreeningResult[]>([]);
+  const [summary, _setSummary] = useState<{
     total: number;
     included: number;
     excluded: number;
@@ -480,7 +475,7 @@ function ScreeningPanel() {
 function PRISMAFlowPanel() {
   const [projectId, setProjectId] = useState("");
   const [flowSvg, setFlowSvg] = useState<string | null>(null);
-  const [flowData, setFlowData] = useState<Record<string, unknown> | null>(null);
+  const [_flowData, setFlowData] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
 
   const loadFlow = useCallback(async () => {
@@ -578,8 +573,7 @@ function PRISMAFlowPanel() {
 // ---------------------------------------------------------------------------
 
 function RoB2Panel() {
-  const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<
+  const [results, _setResults] = useState<
     Array<{
       paperId: number;
       domains: Array<{

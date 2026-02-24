@@ -295,7 +295,7 @@ export function generatePRISMAFlowSVG(data: PRISMAFlowData): string {
 
 export function generatePRISMAChecklist(
   flowData: PRISMAFlowData,
-  projectMeta: {
+  _projectMeta: {
     title: string;
     registrationId?: string;
     protocol?: string;
