@@ -252,7 +252,7 @@ export default function LandingPage() {
                   <Check size={16} className="text-sky-400" /> 10 exports
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check size={16} className="text-sky-400" /> 5 deep research
+                  <Check size={16} className="text-sky-400" /> 5 literature search
                   sessions
                 </li>
               </ul>
@@ -286,7 +286,7 @@ export default function LandingPage() {
                   checks
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check size={16} className="text-sky-400" /> 25 deep research
+                  <Check size={16} className="text-sky-400" /> 25 literature search
                   sessions
                 </li>
                 <li className="flex items-center gap-2">
