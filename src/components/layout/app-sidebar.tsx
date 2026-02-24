@@ -26,7 +26,7 @@ const ClerkUserButton = dynamic(
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: House },
   { label: "Studio", href: "/studio", icon: PenNib },
-  { label: "Deep Research", href: "/research", icon: GlobeHemisphereWest },
+  { label: "Literature Search", href: "/research", icon: GlobeHemisphereWest },
   { label: "Notebook", href: "/notebook", icon: Notebook },
   { label: "Library", href: "/library", icon: Books },
   { label: "Archive", href: "/projects", icon: FolderOpen },

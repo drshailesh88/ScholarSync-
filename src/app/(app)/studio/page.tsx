@@ -600,7 +600,7 @@ function StudioContent() {
           </Link>
           <Link href="/research" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-muted hover:text-ink hover:bg-surface-raised/50 transition-colors">
             <GlobeHemisphereWest size={16} />
-            Deep Research
+            Literature Search
           </Link>
         </nav>
 

@@ -27,7 +27,7 @@ import type {
 
 const actionCards = [
   {
-    title: "Deep Research",
+    title: "Literature Search",
     description: "Query 200M+ academic papers. Extract consensus.",
     icon: GlobeHemisphereWest,
     href: "/research",

@@ -127,7 +127,7 @@ export default function LandingPage() {
                 <GlobeHemisphereWest size={24} />
               </div>
               <h3 className="font-serif text-xl text-white mb-3">
-                Deep Research
+                Literature Search
               </h3>
               <p className="text-[#94a3b8] text-sm leading-relaxed">
                 Search 200M+ papers from PubMed and Semantic Scholar. Find

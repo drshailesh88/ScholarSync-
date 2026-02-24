@@ -74,7 +74,7 @@ const GOALS = [
 ];
 
 const FEATURES = [
-  { title: "Deep Research", desc: "Search 282M+ papers across PubMed, Semantic Scholar, and OpenAlex" },
+  { title: "Literature Search", desc: "Search 282M+ papers across PubMed, Semantic Scholar, and OpenAlex" },
   { title: "The Studio", desc: "AI-powered editor with Learn Mode and Draft Mode" },
   { title: "Citation Manager", desc: "Auto-format citations in 10,000+ styles" },
   { title: "Final Checks", desc: "Plagiarism detection and AI content analysis" },
