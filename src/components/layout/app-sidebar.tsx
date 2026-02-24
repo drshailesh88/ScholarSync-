@@ -14,6 +14,7 @@ import {
   ProjectorScreenChart,
   Gear,
   X,
+  FlowArrow,
 } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
@@ -23,16 +24,32 @@ const ClerkUserButton = dynamic(
   { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-surface-raised" /> }
 );
 
-const navItems = [
-  { label: "Dashboard", href: "/dashboard", icon: House },
-  { label: "Studio", href: "/studio", icon: PenNib },
-  { label: "Literature Search", href: "/research", icon: GlobeHemisphereWest },
-  { label: "Notebook", href: "/notebook", icon: Notebook },
-  { label: "Library", href: "/library", icon: Books },
-  { label: "Archive", href: "/projects", icon: FolderOpen },
-  { label: "Compliance", href: "/compliance", icon: ShieldCheck },
-  { label: "Presentation", href: "/presentation", icon: ProjectorScreenChart },
-  { label: "Settings", href: "/settings", icon: Gear },
+const navSections = [
+  {
+    label: "WORKSPACE",
+    items: [
+      { label: "Dashboard", href: "/dashboard", icon: House },
+      { label: "Studio", href: "/studio", icon: PenNib },
+      { label: "Literature Search", href: "/research", icon: GlobeHemisphereWest },
+      { label: "Notebook", href: "/notebook", icon: Notebook },
+    ],
+  },
+  {
+    label: "LIBRARY",
+    items: [
+      { label: "Papers", href: "/library", icon: Books },
+      { label: "Archive", href: "/projects", icon: FolderOpen },
+    ],
+  },
+  {
+    label: "TOOLS",
+    items: [
+      { label: "Systematic Review", href: "/systematic-review", icon: FlowArrow },
+      { label: "Compliance", href: "/compliance", icon: ShieldCheck },
+      { label: "Presentation", href: "/presentation", icon: ProjectorScreenChart },
+      { label: "Settings", href: "/settings", icon: Gear },
+    ],
+  },
 ];
 
 const hasClerkKeys =
@@ -62,30 +79,39 @@ export function AppSidebar({ open, onClose }: AppSidebarProps) {
         )}
       </div>
 
-      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-          const IconComponent = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
-                isActive
-                  ? "bg-surface-raised border border-border-subtle text-ink"
-                  : "text-ink-muted hover:bg-surface-raised/50 hover:text-ink"
-              )}
-            >
-              <IconComponent
-                size={20}
-                weight={isActive ? "fill" : "regular"}
-              />
-              {item.label}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 px-3 py-6 space-y-4 overflow-y-auto">
+        {navSections.map((section) => (
+          <div key={section.label}>
+            <div className="px-3 mb-1 text-[10px] font-semibold tracking-widest text-ink-muted/60">
+              {section.label}
+            </div>
+            <div className="space-y-1">
+              {section.items.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                const IconComponent = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={onClose}
+                    className={cn(
+                      "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all",
+                      isActive
+                        ? "bg-surface-raised border border-border-subtle text-ink"
+                        : "text-ink-muted hover:bg-surface-raised/50 hover:text-ink"
+                    )}
+                  >
+                    <IconComponent
+                      size={20}
+                      weight={isActive ? "fill" : "regular"}
+                    />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       <div className="px-6 py-4 border-t border-border-subtle">
