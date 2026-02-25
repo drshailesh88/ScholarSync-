@@ -3,6 +3,16 @@
  */
 
 // ── Source type for deep research papers ────────────────────────────
+export interface ExtractedDataSummary {
+  studyDesign?: string;
+  sampleSize?: number;
+  effectSizes?: string[];
+  pValues?: string[];
+  populationCharacteristics?: string;
+  followUpDuration?: string;
+  keyFindings?: string[];
+}
+
 export interface DeepResearchSource {
   id: string;
   title: string;
@@ -17,6 +27,58 @@ export interface DeepResearchSource {
   isOpenAccess: boolean;
   pdfUrl?: string;
   semanticScholarId?: string;
+  studyType?: string;
+  evidenceLevel?: string;
+  extractedData?: ExtractedDataSummary;
+}
+
+/**
+ * Derive an evidence level from study design string.
+ * Returns: "high" | "moderate" | "low" | "unknown"
+ */
+export function getEvidenceLevel(source: DeepResearchSource): "high" | "moderate" | "low" | "unknown" {
+  const design = (
+    source.extractedData?.studyDesign ||
+    source.studyType ||
+    source.evidenceLevel ||
+    ""
+  ).toLowerCase();
+
+  if (
+    design.includes("meta-analysis") ||
+    design.includes("systematic review") ||
+    design.includes("rct") ||
+    design.includes("randomized") ||
+    design.includes("randomised")
+  ) {
+    return "high";
+  }
+
+  if (
+    design.includes("cohort") ||
+    design.includes("case-control") ||
+    design.includes("case control") ||
+    design.includes("observational") ||
+    design.includes("cross-sectional") ||
+    design.includes("prospective") ||
+    design.includes("retrospective")
+  ) {
+    return "moderate";
+  }
+
+  if (
+    design.includes("case series") ||
+    design.includes("case report") ||
+    design.includes("expert") ||
+    design.includes("opinion") ||
+    design.includes("editorial") ||
+    design.includes("narrative review") ||
+    design.includes("letter")
+  ) {
+    return "low";
+  }
+
+  return "unknown";
 }
 
 // ── Perspective in synthesis report ─────────────────────────────────
@@ -97,6 +159,7 @@ export const STAGE_LABELS: Record<string, string> = {
   "search-round-1": "Searching papers...",
   "citation-traversal": "Traversing citation graph...",
   "search-round-2": "Expanding search...",
+  "full-text-extraction": "Reading full-text PDFs...",
   "data-extraction": "Extracting data from papers...",
   "synthesis-perspectives": "Analyzing perspectives...",
   "synthesis-summary": "Writing executive summary...",

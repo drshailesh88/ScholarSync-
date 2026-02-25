@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { List, X } from "lucide-react";
+import { List, X, BookOpen } from "lucide-react";
 import { ParsedCitationText } from "./CitationReference";
+import { CitationsPanel } from "./CitationsPanel";
 import type { DeepResearchSource } from "./types";
 import type { Components } from "react-markdown";
 
@@ -126,6 +127,8 @@ export function ResearchDocument({
 }: ResearchDocumentProps) {
   const [activeHeading, setActiveHeading] = useState("");
   const [tocOpen, setTocOpen] = useState(false);
+  const [citationsPanelOpen, setCitationsPanelOpen] = useState(true);
+  const [highlightedCitation, setHighlightedCitation] = useState<number | null>(null);
   const documentRef = useRef<HTMLDivElement>(null);
 
   const tocItems = useMemo(() => extractTOC(markdownReport), [markdownReport]);
@@ -164,10 +167,23 @@ export function ResearchDocument({
     }
   }, []);
 
-  const scrollToReference = useCallback((_index: number) => {
-    const refsSection = document.getElementById("references");
-    if (refsSection) {
-      refsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  // When a [N] citation marker is clicked in the report text → highlight in panel
+  const scrollToReference = useCallback((citationNumber: number) => {
+    setHighlightedCitation(citationNumber);
+    if (!citationsPanelOpen) setCitationsPanelOpen(true);
+    // Also scroll to the reference in the references list
+    const refEl = document.getElementById(`ref-${citationNumber}`);
+    if (refEl) {
+      refEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [citationsPanelOpen]);
+
+  // When a panel entry is clicked → scroll report to that reference
+  const handlePanelCitationClick = useCallback((citationNumber: number) => {
+    setHighlightedCitation(citationNumber);
+    const refEl = document.getElementById(`ref-${citationNumber}`);
+    if (refEl) {
+      refEl.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, []);
 
@@ -334,14 +350,25 @@ export function ResearchDocument({
 
   return (
     <div className={`flex gap-6 ${className}`}>
-      {/* Mobile TOC toggle */}
-      <button
-        onClick={() => setTocOpen(true)}
-        className="fixed bottom-6 right-6 z-30 lg:hidden print:hidden w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition-colors"
-        title="Table of Contents"
-      >
-        <List size={20} className="text-gray-300" />
-      </button>
+      {/* Mobile floating buttons */}
+      <div className="fixed bottom-6 right-6 z-30 lg:hidden print:hidden flex flex-col gap-3">
+        {sources.length > 0 && (
+          <button
+            onClick={() => setCitationsPanelOpen(true)}
+            className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition-colors"
+            title="Citations"
+          >
+            <BookOpen size={20} className="text-gray-300" />
+          </button>
+        )}
+        <button
+          onClick={() => setTocOpen(true)}
+          className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition-colors"
+          title="Table of Contents"
+        >
+          <List size={20} className="text-gray-300" />
+        </button>
+      </div>
 
       {/* Table of contents */}
       <TableOfContents
@@ -378,7 +405,11 @@ export function ResearchDocument({
                   <li
                     key={source.id || idx}
                     id={`ref-${idx + 1}`}
-                    className="flex gap-3 text-sm group"
+                    className={`flex gap-3 text-sm group rounded-lg px-2 py-1 -mx-2 transition-colors duration-700 ${
+                      highlightedCitation === idx + 1
+                        ? "bg-blue-500/10"
+                        : ""
+                    }`}
                   >
                     <span className="flex-shrink-0 text-gray-500 font-mono text-xs mt-0.5 w-8 text-right">
                       [{idx + 1}]
@@ -442,6 +473,33 @@ export function ResearchDocument({
           </section>
         )}
       </div>
+
+      {/* Citations panel (right sidebar) */}
+      {sources.length > 0 && (
+        <>
+          {/* Desktop toggle when panel is closed */}
+          {!citationsPanelOpen && (
+            <div className="hidden lg:block shrink-0 print:hidden">
+              <div className="sticky top-24">
+                <button
+                  onClick={() => setCitationsPanelOpen(true)}
+                  className="p-2 text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 rounded-lg transition-colors"
+                  title="Open Citations Panel"
+                >
+                  <BookOpen size={18} />
+                </button>
+              </div>
+            </div>
+          )}
+          <CitationsPanel
+            sources={sources}
+            isOpen={citationsPanelOpen}
+            onClose={() => setCitationsPanelOpen(false)}
+            highlightedCitation={highlightedCitation}
+            onClickCitation={handlePanelCitationClick}
+          />
+        </>
+      )}
 
       {/* Print styles */}
       <style jsx global>{`

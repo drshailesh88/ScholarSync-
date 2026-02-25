@@ -2,6 +2,44 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { DeepResearchSource } from "./types";
+import { getEvidenceLevel } from "./types";
+
+// ── Evidence Level Badge ────────────────────────────────────────────
+const EVIDENCE_BADGE_STYLES: Record<string, { bg: string; text: string; label: string }> = {
+  high: { bg: "bg-emerald-500/20", text: "text-emerald-400", label: "High" },
+  moderate: { bg: "bg-yellow-500/20", text: "text-yellow-400", label: "Moderate" },
+  low: { bg: "bg-orange-500/20", text: "text-orange-400", label: "Low" },
+  unknown: { bg: "bg-gray-500/20", text: "text-gray-400", label: "Unknown" },
+};
+
+function EvidenceBadge({ source }: { source: DeepResearchSource }) {
+  const level = getEvidenceLevel(source);
+  const style = EVIDENCE_BADGE_STYLES[level];
+  const designLabel = source.extractedData?.studyDesign || source.studyType || "";
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium ${style.bg} ${style.text}`}
+      title={designLabel ? `${style.label} evidence — ${designLabel}` : `${style.label} evidence`}
+    >
+      <span
+        className={`w-1.5 h-1.5 rounded-full ${
+          level === "high"
+            ? "bg-emerald-400"
+            : level === "moderate"
+              ? "bg-yellow-400"
+              : level === "low"
+                ? "bg-orange-400"
+                : "bg-gray-400"
+        }`}
+      />
+      {style.label}
+      {designLabel && (
+        <span className="opacity-70 ml-0.5">— {designLabel}</span>
+      )}
+    </span>
+  );
+}
 
 // ── Citation Tooltip ────────────────────────────────────────────────
 interface CitationTooltipProps {
@@ -41,7 +79,7 @@ function CitationTooltip({ source, position, onClose }: CitationTooltipProps) {
         {source.title}
       </h4>
       <p className="text-gray-400 text-xs mb-1">{authorsText}</p>
-      <p className="text-gray-400 text-xs mb-2">
+      <p className="text-gray-400 text-xs mb-1.5">
         {source.journal} {source.year && `(${source.year})`}
         {source.citationCount > 0 && (
           <span className="ml-2 text-gray-500">
@@ -49,6 +87,9 @@ function CitationTooltip({ source, position, onClose }: CitationTooltipProps) {
           </span>
         )}
       </p>
+      <div className="mb-2">
+        <EvidenceBadge source={source} />
+      </div>
       {source.abstract && (
         <p className="text-gray-400 text-xs leading-relaxed line-clamp-3 mb-2">
           {source.abstract}

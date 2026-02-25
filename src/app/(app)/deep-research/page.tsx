@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import {
   Search,
   Zap,
@@ -18,6 +18,7 @@ import {
   ProgressStepper,
   buildStagesFromEvents,
   SaveToLibraryButton,
+  PastResearchSessions,
   RESEARCH_MODES,
 } from "@/components/deep-research";
 import type {
@@ -62,8 +63,10 @@ export default function DeepResearchPage() {
   const [progressStages, setProgressStages] = useState<ProgressStage[]>([]);
   const [progressMessage, setProgressMessage] = useState("");
   const [progressPercent, setProgressPercent] = useState(0);
-  const [seenStageIds, setSeenStageIds] = useState<string[]>([]);
-  const [currentStageId, setCurrentStageId] = useState<string | null>(null);
+
+  // Refs to track stage progression inside the SSE loop (avoids stale closure)
+  const seenStageIdsRef = useRef<string[]>([]);
+  const currentStageIdRef = useRef<string | null>(null);
 
   // Streaming sections
   const [streamingSections, setStreamingSections] = useState<StreamingSection[]>([]);
@@ -74,157 +77,103 @@ export default function DeepResearchPage() {
   // Abort controller
   const abortRef = useRef<AbortController | null>(null);
 
-  // Update progress stages whenever seen/current changes
-  useEffect(() => {
-    if (pageState === "running") {
-      setProgressStages(buildStagesFromEvents(seenStageIds, currentStageId));
-    }
-  }, [seenStageIds, currentStageId, pageState]);
+  // ── Shared SSE reader utility ────────────────────────────────────
+  const readSSEStream = useCallback(
+    async (
+      response: Response,
+      handlers: {
+        onProgress?: (stage: string, message: string, progress?: number) => void;
+        onPerspectives?: (perspectives: PlanPerspective[]) => void;
+        onSection?: (markdown: string) => void;
+        onReport?: (report: EnhancedSynthesisReport | SynthesisReport) => void;
+        onError?: (error: string) => void;
+      }
+    ) => {
+      if (!response.body) throw new Error("No response stream");
 
-  // ── Start research (direct or after plan confirm) ─────────────────
-  const startResearch = useCallback(
-    async (confirmedPerspectives?: PlanPerspective[]) => {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const dataStr = line.slice(6).trim();
+          if (!dataStr || dataStr === "[DONE]") continue;
+
+          try {
+            const event = JSON.parse(dataStr);
+
+            switch (event.type) {
+              case "progress":
+                handlers.onProgress?.(event.stage, event.message, event.progress);
+                break;
+              case "perspectives":
+                handlers.onPerspectives?.(event.perspectives);
+                break;
+              case "section":
+                if (event.markdown) handlers.onSection?.(event.markdown);
+                break;
+              case "report":
+                handlers.onReport?.(event.report);
+                break;
+              case "error":
+                throw new Error(event.error || "Research failed");
+            }
+          } catch (parseErr) {
+            if (parseErr instanceof SyntaxError) continue;
+            throw parseErr;
+          }
+        }
+      }
+    },
+    []
+  );
+
+  // ── Phase 1: Generate research plan (perspectives) ─────────────────
+  const fetchPlan = useCallback(
+    async () => {
       if (!topic.trim()) return;
 
-      setPageState("running");
+      setPageState("plan-preview");
       setError(null);
-      setReport(null);
-      setStreamingSections([]);
-      setSeenStageIds([]);
-      setCurrentStageId(null);
-      setProgressPercent(0);
-      setProgressMessage("Initializing research...");
+      setPlanPerspectives([]);
+      setProgressMessage("Generating research plan...");
 
       const controller = new AbortController();
       abortRef.current = controller;
 
       try {
-        const body: Record<string, unknown> = { topic: topic.trim(), mode };
-        if (confirmedPerspectives) {
-          body.perspectives = confirmedPerspectives;
-        }
-
-        const response = await fetch("/api/deep-research", {
+        const response = await fetch("/api/deep-research/plan", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
+          body: JSON.stringify({ topic: topic.trim(), mode }),
           signal: controller.signal,
         });
 
         if (!response.ok) {
           const data = await response.json().catch(() => ({}));
-          throw new Error(data.error || `Research failed (${response.status})`);
+          throw new Error(data.error || `Plan generation failed (${response.status})`);
         }
 
-        if (!response.body) {
-          throw new Error("No response stream");
-        }
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split("\n");
-          buffer = lines.pop() || "";
-
-          for (const line of lines) {
-            if (!line.startsWith("data: ")) continue;
-            const dataStr = line.slice(6).trim();
-            if (!dataStr || dataStr === "[DONE]") continue;
-
-            try {
-              const event = JSON.parse(dataStr);
-
-              switch (event.type) {
-                case "progress": {
-                  const stage = event.stage as string;
-                  const message = event.message as string;
-                  const progress = event.progress as number;
-
-                  setProgressMessage(message);
-                  if (progress) setProgressPercent(progress);
-
-                  if (stage && stage !== currentStageId) {
-                    setSeenStageIds((prev) => {
-                      if (currentStageId && !prev.includes(currentStageId)) {
-                        return [...prev, currentStageId];
-                      }
-                      return prev;
-                    });
-                    setCurrentStageId(stage);
-                  }
-                  break;
-                }
-
-                case "perspectives": {
-                  // Got perspectives from backend — show plan preview
-                  const perspectives = event.perspectives as PlanPerspective[];
-                  if (perspectives && perspectives.length > 0 && !confirmedPerspectives) {
-                    setPlanPerspectives(perspectives);
-                    // Note: we stay in running state since we already started
-                    // The plan preview is only shown on the first phase (before confirmedPerspectives)
-                  }
-                  break;
-                }
-
-                case "section": {
-                  // Streaming section of markdown
-                  const markdown = event.markdown as string;
-                  if (markdown) {
-                    setStreamingSections((prev) => [
-                      ...prev,
-                      { markdown, animating: true },
-                    ]);
-                    // Mark as not animating after delay
-                    setTimeout(() => {
-                      setStreamingSections((prev) =>
-                        prev.map((s, i) =>
-                          i === prev.length - 1 ? { ...s, animating: false } : s
-                        )
-                      );
-                    }, 800);
-                  }
-                  break;
-                }
-
-                case "report": {
-                  setReport(event.report);
-                  setPageState("done");
-                  setProgressPercent(100);
-                  // Mark all remaining stages as completed
-                  setSeenStageIds((prev) => {
-                    const all = [
-                      "search-round-1", "citation-traversal", "search-round-2",
-                      "data-extraction", "synthesis-perspectives", "synthesis-summary",
-                      "synthesis-tables", "synthesis-critique",
-                    ];
-                    return all.filter((id) => prev.includes(id) || id === currentStageId || true);
-                  });
-                  setCurrentStageId(null);
-                  break;
-                }
-
-                case "error": {
-                  throw new Error(event.error || "Research failed");
-                }
-              }
-            } catch (parseErr) {
-              // Skip malformed JSON lines
-              if (parseErr instanceof SyntaxError) continue;
-              throw parseErr;
-            }
-          }
-        }
-
-        // If no report event was received but stream ended, check if we got sections
-        if (pageState !== "done" && streamingSections.length > 0) {
-          setPageState("done");
-        }
+        await readSSEStream(response, {
+          onProgress: (_stage, message) => {
+            setProgressMessage(message);
+          },
+          onPerspectives: (perspectives) => {
+            setPlanPerspectives(perspectives);
+          },
+          onError: (err) => {
+            throw new Error(err);
+          },
+        });
       } catch (err) {
         if ((err as Error).name === "AbortError") {
           setPageState("idle");
@@ -236,34 +185,129 @@ export default function DeepResearchPage() {
         abortRef.current = null;
       }
     },
-    [topic, mode, currentStageId, pageState, streamingSections.length]
+    [topic, mode, readSSEStream]
+  );
+
+  // ── Phase 2: Execute research with confirmed perspectives ──────────
+  const executeResearch = useCallback(
+    async (confirmedPerspectives: PlanPerspective[]) => {
+      if (!topic.trim()) return;
+
+      setPageState("running");
+      setError(null);
+      setReport(null);
+      setStreamingSections([]);
+      seenStageIdsRef.current = [];
+      currentStageIdRef.current = null;
+      setProgressStages(buildStagesFromEvents([], null));
+      setProgressPercent(0);
+      setProgressMessage("Starting research...");
+
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      try {
+        const response = await fetch("/api/deep-research/execute", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            topic: topic.trim(),
+            mode,
+            perspectives: confirmedPerspectives,
+          }),
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.error || `Research failed (${response.status})`);
+        }
+
+        await readSSEStream(response, {
+          onProgress: (stage, message, progress) => {
+            setProgressMessage(message);
+            if (progress) setProgressPercent(progress);
+
+            if (stage && stage !== currentStageIdRef.current) {
+              const prevStage = currentStageIdRef.current;
+              if (prevStage && !seenStageIdsRef.current.includes(prevStage)) {
+                seenStageIdsRef.current = [...seenStageIdsRef.current, prevStage];
+              }
+              currentStageIdRef.current = stage;
+              setProgressStages(
+                buildStagesFromEvents(seenStageIdsRef.current, stage)
+              );
+            }
+          },
+          onSection: (markdown) => {
+            setStreamingSections((prev) => [
+              ...prev,
+              { markdown, animating: true },
+            ]);
+            setTimeout(() => {
+              setStreamingSections((prev) =>
+                prev.map((s, i) =>
+                  i === prev.length - 1 ? { ...s, animating: false } : s
+                )
+              );
+            }, 800);
+          },
+          onReport: (reportData) => {
+            setReport(reportData);
+            setPageState("done");
+            setProgressPercent(100);
+            const allCompleted = [
+              "search-round-1", "citation-traversal", "search-round-2",
+              "full-text-extraction", "data-extraction",
+              "synthesis-perspectives", "synthesis-summary",
+              "synthesis-tables", "synthesis-critique",
+            ];
+            seenStageIdsRef.current = allCompleted;
+            currentStageIdRef.current = null;
+            setProgressStages(buildStagesFromEvents(allCompleted, null));
+          },
+        });
+
+        setPageState((prev) => (prev === "running" ? "done" : prev));
+      } catch (err) {
+        if ((err as Error).name === "AbortError") {
+          setPageState("idle");
+          return;
+        }
+        setError(err instanceof Error ? err.message : "An error occurred");
+        setPageState("error");
+      } finally {
+        abortRef.current = null;
+      }
+    },
+    [topic, mode, readSSEStream]
   );
 
   // ── Handle initial start button ───────────────────────────────────
   const handleStart = useCallback(() => {
-    startResearch();
-  }, [startResearch]);
+    fetchPlan();
+  }, [fetchPlan]);
 
   // ── Handle plan confirmation ──────────────────────────────────────
   const handlePlanConfirm = useCallback(
     (perspectives: PlanPerspective[]) => {
       setPlanPerspectives([]);
-      startResearch(perspectives);
+      executeResearch(perspectives);
     },
-    [startResearch]
+    [executeResearch]
   );
 
   // ── Handle plan regeneration ──────────────────────────────────────
   const handlePlanRegenerate = useCallback(() => {
-    // Re-trigger the research to get new perspectives
-    startResearch();
-  }, [startResearch]);
+    fetchPlan();
+  }, [fetchPlan]);
 
   // ── Abort research ────────────────────────────────────────────────
   const handleAbort = useCallback(() => {
     if (abortRef.current) {
       abortRef.current.abort();
     }
+    setPlanPerspectives([]);
     setPageState("idle");
   }, []);
 
@@ -277,6 +321,39 @@ export default function DeepResearchPage() {
     },
     [topic, pageState, handleStart]
   );
+
+  // ── Load a saved session ──────────────────────────────────────────
+  const handleLoadSession = useCallback(async (sessionId: number) => {
+    try {
+      setPageState("running");
+      setProgressMessage("Loading saved research...");
+
+      const res = await fetch(`/api/deep-research/sessions/${sessionId}`);
+      if (!res.ok) throw new Error("Failed to load session");
+      const data = await res.json();
+
+      const loadedReport: EnhancedSynthesisReport = {
+        topic: data.topic,
+        mode: data.mode,
+        summary: "",
+        keyFindings: data.keyFindings || [],
+        perspectives: [],
+        gaps: data.gaps || [],
+        contradictions: [],
+        totalSources: data.sources?.length || 0,
+        sources: data.sources || [],
+        markdownReport: data.markdownReport,
+      };
+
+      setReport(loadedReport);
+      setTopic(data.topic);
+      setMode(data.mode as ResearchMode);
+      setPageState("done");
+    } catch {
+      setError("Failed to load saved research");
+      setPageState("error");
+    }
+  }, []);
 
   // ── Determine if report has markdownReport (enhanced) ─────────────
   const isEnhancedReport = report && "markdownReport" in report && (report as EnhancedSynthesisReport).markdownReport;
@@ -310,6 +387,10 @@ export default function DeepResearchPage() {
                   <ExportButtons
                     markdownReport={enhancedReport.markdownReport}
                     topic={report.topic}
+                    sources={sources}
+                    keyFindings={report.keyFindings}
+                    gaps={report.gaps}
+                    mode={report.mode}
                   />
                 )}
                 <SaveToLibraryButton
@@ -324,8 +405,8 @@ export default function DeepResearchPage() {
               </div>
             )}
 
-            {/* Abort button - visible when running */}
-            {pageState === "running" && (
+            {/* Abort button - visible when running or plan-preview */}
+            {(pageState === "running" || pageState === "plan-preview") && (
               <button
                 onClick={handleAbort}
                 className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors"
@@ -407,11 +488,14 @@ export default function DeepResearchPage() {
               <Search size={18} />
               Start Deep Research
             </button>
+
+            {/* Past research sessions */}
+            <PastResearchSessions onLoadSession={handleLoadSession} />
           </div>
         )}
 
         {/* ── Plan Preview State ─────────────────────────────────── */}
-        {pageState === "running" && planPerspectives.length > 0 && (
+        {pageState === "plan-preview" && planPerspectives.length > 0 && (
           <div className="py-8">
             <ResearchPlanPreview
               perspectives={planPerspectives}
@@ -421,8 +505,25 @@ export default function DeepResearchPage() {
           </div>
         )}
 
+        {/* ── Plan Loading State ──────────────────────────────────── */}
+        {pageState === "plan-preview" && planPerspectives.length === 0 && (
+          <div className="flex items-center justify-center min-h-[400px]">
+            <div className="text-center space-y-4">
+              <div className="w-16 h-16 mx-auto rounded-full bg-purple-500/10 flex items-center justify-center">
+                <Microscope size={28} className="text-purple-400 animate-pulse" />
+              </div>
+              <div>
+                <p className="text-white font-medium">{progressMessage}</p>
+                <p className="text-gray-500 text-sm mt-1">
+                  Preparing research plan for: {topic}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ── Running State: Progress + Streaming ────────────────── */}
-        {pageState === "running" && planPerspectives.length === 0 && (
+        {pageState === "running" && (
           <div className="flex gap-8">
             {/* Progress stepper on the left */}
             <ProgressStepper
@@ -501,6 +602,8 @@ export default function DeepResearchPage() {
                   setReport(null);
                   setStreamingSections([]);
                   setProgressStages([]);
+                  seenStageIdsRef.current = [];
+                  currentStageIdRef.current = null;
                   setTopic("");
                 }}
                 className="px-6 py-2.5 text-sm font-medium text-gray-300 bg-gray-800/50 border border-gray-700/50 rounded-lg hover:bg-gray-700/50 hover:text-white transition-colors"

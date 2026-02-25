@@ -128,6 +128,18 @@ export async function extractStructuredData(
   for (let i = 0; i < papersWithAbstracts.length; i += batchSize) {
     const batch = papersWithAbstracts.slice(i, i + batchSize);
 
+    // Emit per-paper progress for each paper in this batch
+    for (const paper of batch) {
+      const titleShort =
+        paper.title.length > 80
+          ? paper.title.slice(0, 77) + "..."
+          : paper.title;
+      onProgress?.(
+        "data-extraction",
+        `Extracting from: ${titleShort} — ${paper.journal || "Unknown"} ${paper.year || ""}`
+      );
+    }
+
     const batchResults = await Promise.allSettled(
       batch.map((paper) => extractSinglePaper(paper))
     );

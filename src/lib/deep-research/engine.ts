@@ -25,6 +25,7 @@ import { batchLookupUnpaywall } from "@/lib/search/sources/unpaywall";
 import { deduplicateResults } from "@/lib/search/dedup";
 import { traverseCitationGraph, selectTopPapers } from "./citation-traversal";
 import { extractStructuredData } from "./data-extraction";
+import { extractFullTexts } from "./full-text-extractor";
 import { generatePerspectives } from "./perspectives";
 import { synthesizeFindings } from "./synthesis";
 import type { UnifiedSearchResult } from "@/types/search";
@@ -364,7 +365,8 @@ function enhancePapers(
   papers: UnifiedSearchResult[],
   perspectiveMap: Map<string, Set<string>>,
   extractedData: Map<string, ExtractedPaperData>,
-  unpaywallData: Map<string, { pdfUrl: string | null; isOpenAccess: boolean }>
+  unpaywallData: Map<string, { pdfUrl: string | null; isOpenAccess: boolean }>,
+  fullTextMap?: Map<string, string>
 ): EnhancedPaper[] {
   return papers.map((paper) => {
     const key = getPaperKey(paper);
@@ -379,6 +381,7 @@ function enhancePapers(
       ...paper,
       perspectiveIds,
       extractedData: extraction,
+      fullText: fullTextMap?.get(key),
       fullTextUrl: unpaywall?.pdfUrl || paper.openAccessPdfUrl || undefined,
       isOpenAccess: unpaywall?.isOpenAccess || paper.isOpenAccess,
     };
@@ -399,7 +402,9 @@ function sleep(ms: number): Promise<void> {
 export async function runDeepResearch(
   topic: string,
   modeOrConfig?: ResearchMode | Partial<ResearchConfig>,
-  onProgress?: ResearchProgressCallback
+  onProgress?: ResearchProgressCallback,
+  onPerspectives?: (perspectives: Perspective[]) => void,
+  suppliedPerspectives?: Perspective[]
 ): Promise<DeepResearchResult> {
   const startTime = Date.now();
 
@@ -419,10 +424,19 @@ export async function runDeepResearch(
     resolvedConfig = buildConfig(mode, modeOrConfig);
   }
 
-  // ── Step 2: Generate perspectives ─────────────────────────────────
-  onProgress?.("generating-perspectives", "Generating research perspectives...");
-  const perspectives = await generatePerspectives(topic, resolvedConfig);
-  onProgress?.("generating-perspectives", `Generated ${perspectives.length} perspectives`);
+  // ── Step 2: Generate or use supplied perspectives ─────────────────
+  let perspectives: Perspective[];
+  if (suppliedPerspectives && suppliedPerspectives.length > 0) {
+    perspectives = suppliedPerspectives;
+    onProgress?.("generating-perspectives", `Using ${perspectives.length} user-confirmed perspectives`);
+  } else {
+    onProgress?.("generating-perspectives", "Generating research perspectives...");
+    perspectives = await generatePerspectives(topic, resolvedConfig);
+    onProgress?.("generating-perspectives", `Generated ${perspectives.length} perspectives`);
+  }
+
+  // Emit perspectives to the client (useful for the legacy single-endpoint flow)
+  onPerspectives?.(perspectives);
 
   // ── Step 3: Build exploration tree ────────────────────────────────
   onProgress?.("building-tree", "Building exploration tree...");
@@ -497,6 +511,32 @@ export async function runDeepResearch(
   // ── Step 9: Unpaywall lookup ──────────────────────────────────────
   const unpaywallData = await lookupFullTextAccess(deduplicated, onProgress);
 
+  // ── Step 9.5: Full-text extraction (before data extraction) ──────
+  // Build temporary enhanced papers with fullTextUrl so the extractor can fetch PDFs.
+  // We do this before full enhancePapers() because we need fullText populated first.
+  const papersWithUrls: EnhancedPaper[] = deduplicated.map((paper) => {
+    const unpaywall = paper.doi ? unpaywallData.get(paper.doi) : undefined;
+    return {
+      ...paper,
+      perspectiveIds: [],
+      fullTextUrl: unpaywall?.pdfUrl || paper.openAccessPdfUrl || undefined,
+      isOpenAccess: unpaywall?.isOpenAccess || paper.isOpenAccess,
+    };
+  });
+
+  const fullTextTopN = resolvedConfig.mode === "quick" ? 5 :
+    resolvedConfig.mode === "standard" ? 10 : 20;
+  const fullTextResults = await extractFullTexts(papersWithUrls, onProgress, fullTextTopN);
+
+  // Build a map of DOI/title → fullText so enhancePapers can pick it up
+  const fullTextMap = new Map<string, string>();
+  for (const paper of papersWithUrls) {
+    if (paper.fullText) {
+      const key = paper.doi || paper.pmid || paper.s2Id || paper.title.slice(0, 50);
+      fullTextMap.set(key, paper.fullText);
+    }
+  }
+
   // ── Step 10: Structured data extraction ───────────────────────────
   const papersForExtraction = deduplicated
     .filter((p) => p.abstract)
@@ -510,7 +550,8 @@ export async function runDeepResearch(
     deduplicated,
     perspectiveMap,
     extractedData,
-    unpaywallData
+    unpaywallData,
+    fullTextMap
   );
 
   // ── Step 12: Synthesize via multi-pass pipeline ───────────────────

@@ -99,6 +99,7 @@ export type ResearchStage =
   | "search-round-3"
   | "citation-traversal"
   | "unpaywall-lookup"
+  | "full-text-extraction"
   | "data-extraction"
   | "deduplicating"
   | "synthesizing"

@@ -95,6 +95,11 @@ async function pass1PerspectiveSections(
       p.perspectiveIds.includes(perspective.id)
     );
 
+    onProgress?.(
+      "synthesis-perspectives",
+      `Analyzing ${perspectivePapers.length} papers for: ${perspective.name}`
+    );
+
     if (perspectivePapers.length === 0) {
       return {
         perspectiveId: perspective.id,
@@ -144,7 +149,7 @@ Abstract: ${paper.abstract || "No abstract available"}`;
         }
 
         if (paper.fullText) {
-          block += `\nExcerpt: ${paper.fullText.slice(0, 1500)}`;
+          block += `\nFull-text excerpt (Results/Discussion): ${paper.fullText.slice(0, 3000)}`;
         }
 
         return block;
@@ -156,12 +161,18 @@ Abstract: ${paper.abstract || "No abstract available"}`;
       system: `You are writing one section of a systematic literature review for an academic medical audience. This section covers the perspective: "${perspective.name}" — ${perspective.description}.
 
 Rules:
-- Write a flowing 500-800 word narrative section organized by theme, not by paper
+- Write a detailed 1,000-1,500 word narrative section organized by theme, not by paper
+- Use sub-sections with ### sub-headings within each perspective to organize findings by theme (e.g., ### Efficacy Outcomes, ### Safety Profile, ### Subgroup Analyses)
 - Every factual claim MUST cite the source using [N] where N is the paper's reference number
 - Report exact statistics when available: HR, OR, RR, CI, p-values, sample sizes, NNT
+- When full-text excerpts are provided, extract and report specific numerical results, not just abstract-level summaries
 - Start with the strongest evidence (systematic reviews, meta-analyses), then RCTs, then observational
+- For each major finding, indicate the evidence strength based on study design using these inline markers:
+  * (strong evidence — RCT/meta-analysis) for randomized trials and systematic reviews
+  * (moderate evidence — cohort/case-control) for observational studies
+  * (limited evidence — case series/expert opinion) for lower-quality evidence
+- Flag disputed or contradictory findings explicitly with a "⚠ Disputed:" prefix, then explain the conflicting results
 - Note study limitations and quality concerns
-- Identify contradictions or conflicting findings between papers
 - End with a brief synthesis statement for this perspective
 - Use formal academic English suitable for a medical journal
 - Do NOT introduce information not present in the provided papers
@@ -174,8 +185,8 @@ Papers (${perspectivePapers.length} total):
 
 ${paperBlock}
 
-Write the narrative section for this perspective. Use [N] citation markers that match the paper numbers above.`,
-      maxOutputTokens: 4000,
+Write the narrative section for this perspective. Use [N] citation markers that match the paper numbers above. Aim for 1,000-1,500 words with ### sub-headings.`,
+      maxOutputTokens: 7000,
       temperature: 0.3,
     });
 
@@ -222,20 +233,22 @@ async function pass2ExecutiveSummary(
 
 Respond in this exact JSON format:
 {
-  "executiveSummary": "300-500 word executive summary...",
-  "introduction": "200-400 word introduction..."
+  "executiveSummary": "500-800 word executive summary...",
+  "introduction": "400-600 word introduction..."
 }
 
 The executive summary should:
-- Highlight the most important findings across ALL perspectives
-- Note the overall strength and direction of evidence
-- Call out key gaps or contradictions
-- Be suitable for a busy clinician or researcher to read alone
+- Highlight the most important findings across ALL perspectives with specific data points
+- Quantify the overall strength and direction of evidence (e.g., "across N RCTs enrolling X patients...")
+- Call out key gaps or contradictions with specific examples
+- Note the balance of evidence quality (how many meta-analyses, RCTs, observational studies)
+- Be suitable for a busy clinician or researcher to read alone — but be thorough, not superficial
 
 The introduction should:
-- Frame the research question and its clinical significance
-- Briefly describe the scope (number of papers, perspectives examined)
-- Preview the structure of the review`,
+- Frame the research question and its clinical significance with epidemiological context
+- Briefly describe the scope (number of papers, perspectives examined, date range of studies)
+- Preview the structure of the review
+- Note any methodological considerations for interpreting the findings`,
     prompt: `Topic: ${topic}
 Total papers analyzed: ${totalPapers}
 Number of perspectives: ${perspectiveSections.length}
@@ -243,7 +256,7 @@ Number of perspectives: ${perspectiveSections.length}
 Perspective sections written:
 
 ${sectionsOverview}`,
-    maxOutputTokens: 3000,
+    maxOutputTokens: 4000,
     temperature: 0.3,
   });
 
@@ -306,21 +319,26 @@ async function pass3TablesAndAnalysis(
 
 Respond in this exact JSON format:
 {
-  "tablesSection": "Markdown tables comparing key studies (use | column | format). Include 1-3 tables as appropriate.",
-  "gapsAnalysis": "2-4 paragraphs analyzing research gaps identified across all perspectives.",
-  "contradictionsAnalysis": "1-3 paragraphs discussing contradictions or conflicting evidence found.",
-  "conclusions": "2-3 paragraphs with overall conclusions and future directions.",
-  "keyFindings": ["finding 1", "finding 2", "...up to 8 key findings"],
+  "tablesSection": "Markdown tables comparing key studies...",
+  "gapsAnalysis": "3-5 paragraphs analyzing research gaps identified across all perspectives.",
+  "contradictionsAnalysis": "2-4 paragraphs discussing contradictions or conflicting evidence found.",
+  "conclusions": "3-4 paragraphs with overall conclusions and future directions.",
+  "keyFindings": ["finding 1", "finding 2", "...up to 10 key findings"],
   "gaps": ["gap 1", "gap 2", "...concise gap descriptions"],
   "contradictions": ["contradiction 1", "contradiction 2", "...concise contradiction descriptions"]
 }
 
-For the tables:
-- Create a comparison table of the most important studies
-- Include columns for: Study [N], Design, N, Key Outcome, Effect Size, Quality
-- If relevant, create sub-tables by study type or outcome
+For the tables — generate AT LEAST 2-3 comparison tables:
+- Table 1: Main comparison table of the most important studies. Columns: Study [N], Design, Sample Size (N), Key Outcome, Effect Size (with CI if available), Evidence Level
+- Table 2: Outcomes comparison grouped by intervention or outcome type
+- Table 3 (if data supports): Safety/adverse events comparison, OR a timeline table showing how evidence evolved over time
+- Use the | column | markdown format
+- Include an "Evidence Level" column in each table (High/Moderate/Low based on study design)
+- Be specific with numbers — don't write "significant improvement", write "HR 0.74 (95% CI 0.65-0.84)"
 
-For gaps and contradictions, be specific and cite papers with [N] references.`,
+For gaps analysis, be specific and cite papers with [N] references. Identify methodological gaps, population gaps, and outcome gaps separately.
+
+For contradictions, describe specific conflicting findings between named studies and hypothesize why they may differ (methodology, population, dosing, etc.).`,
     prompt: `Topic: ${topic}
 
 Perspective sections:
@@ -328,7 +346,7 @@ ${sectionsText}
 
 Paper data:
 ${paperDataBlock}`,
-    maxOutputTokens: 4000,
+    maxOutputTokens: 6000,
     temperature: 0.3,
   });
 
@@ -359,14 +377,17 @@ async function pass4CritiqueAndRevise(
     model: getDeepResearchModel(),
     system: `You are a senior medical researcher reviewing a literature synthesis report. Your task is to:
 
-1. Identify weaknesses: vague claims without specific data, missing citation markers, unsupported statements, logical gaps, areas needing more specificity
+1. Identify weaknesses: vague claims without specific data, missing citation markers, unsupported statements, logical gaps, sections that are too brief or lack specificity
 2. Then output a REVISED version of the full report that addresses these weaknesses
 
 Rules for revision:
-- Strengthen vague claims by adding specific data points where the original sections contained them
+- Expand sections that are too brief. Add more specific data points, exact statistics, and quantitative results from the cited papers
+- Do NOT shorten the report — make it MORE detailed where evidence supports it. The goal is a comprehensive review article, not a summary
 - Ensure all factual claims have [N] citation markers
-- Improve transitions between sections
-- Tighten language — remove hedging where evidence is clear
+- Improve transitions between sections and between paragraphs within sections
+- Where a section summarizes a finding vaguely (e.g., "showed improvement"), replace with specific data (e.g., "demonstrated a 23% reduction (HR 0.77, 95% CI 0.68-0.87, p<0.001)")
+- Add cross-references between perspectives where findings relate to each other
+- Strengthen the conclusions by connecting findings across multiple perspectives
 - Do NOT add new information or citations not present in the original
 - Do NOT change the section structure or headings
 - Output ONLY the revised full report (no critique commentary)`,

@@ -39,54 +39,60 @@ export function ProgressStepper({ stages, currentMessage, progress }: ProgressSt
             const isError = stage.status === "error";
 
             return (
-              <div key={stage.id} className="flex items-start gap-3 relative">
-                {/* Connector line */}
-                {idx < stages.length - 1 && (
-                  <div
-                    className={`absolute left-[11px] top-6 w-px h-6 ${
-                      isCompleted ? "bg-blue-500/50" : "bg-gray-700/50"
-                    }`}
-                  />
-                )}
-
-                {/* Icon */}
-                <div className="flex-shrink-0 mt-0.5">
-                  {isCompleted ? (
-                    <CheckCircle2 size={16} className="text-blue-400" />
-                  ) : isActive ? (
-                    <Loader2 size={16} className="text-blue-400 animate-spin" />
-                  ) : isError ? (
-                    <Circle size={16} className="text-red-400" />
-                  ) : (
-                    <Circle size={16} className="text-gray-600" />
+              <div key={stage.id}>
+                <div className="flex items-start gap-3 relative">
+                  {/* Connector line */}
+                  {idx < stages.length - 1 && (
+                    <div
+                      className={`absolute left-[11px] top-6 w-px ${
+                        isActive && currentMessage ? "h-12" : "h-6"
+                      } ${
+                        isCompleted ? "bg-blue-500/50" : "bg-gray-700/50"
+                      }`}
+                    />
                   )}
+
+                  {/* Icon */}
+                  <div className="flex-shrink-0 mt-0.5">
+                    {isCompleted ? (
+                      <CheckCircle2 size={16} className="text-blue-400" />
+                    ) : isActive ? (
+                      <Loader2 size={16} className="text-blue-400 animate-spin" />
+                    ) : isError ? (
+                      <Circle size={16} className="text-red-400" />
+                    ) : (
+                      <Circle size={16} className="text-gray-600" />
+                    )}
+                  </div>
+
+                  {/* Label */}
+                  <span
+                    className={`text-xs leading-relaxed py-1 ${
+                      isActive
+                        ? "text-blue-400 font-medium"
+                        : isCompleted
+                          ? "text-gray-400"
+                          : isError
+                            ? "text-red-400"
+                            : "text-gray-600"
+                    }`}
+                  >
+                    {label}
+                  </span>
                 </div>
 
-                {/* Label */}
-                <span
-                  className={`text-xs leading-relaxed py-1 ${
-                    isActive
-                      ? "text-blue-400 font-medium"
-                      : isCompleted
-                        ? "text-gray-400"
-                        : isError
-                          ? "text-red-400"
-                          : "text-gray-600"
-                  }`}
-                >
-                  {label}
-                </span>
+                {/* Inline current message below active stage */}
+                {isActive && currentMessage && (
+                  <div className="ml-[28px] mt-0.5 mb-1">
+                    <p className="text-[10px] text-gray-500 leading-snug truncate max-w-[200px]">
+                      {currentMessage}
+                    </p>
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
-
-        {/* Current message */}
-        {currentMessage && (
-          <div className="mt-4 px-3 py-2 bg-gray-800/50 border border-gray-700/30 rounded-lg">
-            <p className="text-xs text-gray-400 leading-relaxed">{currentMessage}</p>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -101,6 +107,7 @@ export function buildStagesFromEvents(
     "search-round-1",
     "citation-traversal",
     "search-round-2",
+    "full-text-extraction",
     "data-extraction",
     "synthesis-perspectives",
     "synthesis-summary",

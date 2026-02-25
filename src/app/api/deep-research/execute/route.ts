@@ -1,23 +1,27 @@
 /**
- * Deep Research API Route.
+ * Deep Research Execute API Route.
  *
- * POST /api/deep-research
+ * POST /api/deep-research/execute
  *
- * Accepts a research topic and optional configuration, runs the full
- * deep research pipeline, and streams progress events via SSE.
+ * Phase 2 of the two-phase deep research flow.
+ * Accepts user-confirmed (and possibly edited) perspectives along with
+ * topic and mode, then runs the full search + synthesis pipeline.
  *
- * SSE event types (all sent as `data:` JSON with a `type` field):
- *   - progress:     { type, stage, message }
- *   - perspectives: { type, perspectives }
- *   - report:       { type, report }
- *   - done:         { type }
- *   - error:        { type, error }
+ * SSE events: same as the main /api/deep-research route
+ *   - { type: "progress", stage, message }
+ *   - { type: "report", report: {...} }
+ *   - { type: "done" }
+ *   - { type: "error", error: "..." }
  */
 
 import { NextRequest } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { runDeepResearch } from "@/lib/deep-research/engine";
-import type { ResearchConfig, ResearchStage, Perspective } from "@/lib/deep-research/types";
+import type {
+  ResearchConfig,
+  ResearchStage,
+  Perspective,
+} from "@/lib/deep-research/types";
 
 export const maxDuration = 300; // 5 minutes max for deep research
 export const dynamic = "force-dynamic";
@@ -29,7 +33,7 @@ const STAGE_MAP: Partial<Record<ResearchStage, string>> = {
   "building-tree": "search-round-1",
   searching: "search-round-1",
   "search-round-2": "search-round-2",
-  "search-round-3": "search-round-2", // round 3 grouped under round 2 in UI
+  "search-round-3": "search-round-2",
   deduplicating: "full-text-extraction",
   "unpaywall-lookup": "full-text-extraction",
   synthesizing: "synthesis-perspectives",
@@ -40,9 +44,18 @@ function mapStageId(stage: ResearchStage): string {
   return STAGE_MAP[stage] || stage;
 }
 
-interface DeepResearchRequest {
+interface PlanPerspective {
+  id?: string;
+  name: string;
+  description?: string;
+  queries: string[];
+  expectedPaperTypes?: string[];
+}
+
+interface ExecuteRequest {
   topic: string;
   mode?: "quick" | "standard" | "deep" | "exhaustive";
+  perspectives: PlanPerspective[];
   config?: Partial<ResearchConfig>;
 }
 
@@ -58,7 +71,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Parse request ───────────────────────────────────────────────────
-  let body: DeepResearchRequest;
+  let body: ExecuteRequest;
   try {
     body = await req.json();
   } catch {
@@ -68,7 +81,7 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const { topic, mode, config } = body;
+  const { topic, mode, perspectives: planPerspectives, config } = body;
 
   if (!topic || typeof topic !== "string") {
     return new Response(JSON.stringify({ error: "topic is required" }), {
@@ -77,15 +90,27 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  if (!Array.isArray(planPerspectives) || planPerspectives.length === 0) {
+    return new Response(
+      JSON.stringify({ error: "perspectives array is required" }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
+    );
+  }
+
+  // Convert PlanPerspective[] to engine Perspective[] format
+  const enginePerspectives: Perspective[] = planPerspectives.map((p, idx) => ({
+    id: p.id || `perspective-${idx + 1}`,
+    name: p.name,
+    description: p.description || p.name,
+    searchQueries: p.queries.filter((q) => q.trim().length > 0),
+    expectedPaperTypes: p.expectedPaperTypes || [],
+  }));
+
   // ── SSE stream setup ───────────────────────────────────────────────
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
-      /**
-       * Send an SSE event with the `type` field embedded in the data payload.
-       * The client parses `data:` lines and routes on `parsed.type`.
-       */
       function sendEvent(type: string, data: Record<string, unknown> = {}) {
         try {
           const payload = `data: ${JSON.stringify({ type, ...data })}\n\n`;
@@ -95,37 +120,26 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // Progress callback for the research engine
       const onProgress = (stage: ResearchStage, message: string) => {
         sendEvent("progress", { stage: mapStageId(stage), message });
       };
 
-      // Perspectives callback — emits the research plan before search begins
-      const onPerspectives = (perspectives: Perspective[]) => {
-        sendEvent("perspectives", {
-          perspectives: perspectives.map((p) => ({
-            name: p.name,
-            queries: p.searchQueries,
-          })),
-        });
-      };
-
       try {
-        // Merge mode into config
         const resolvedConfig: Partial<ResearchConfig> = {
           ...config,
           ...(mode ? { mode } : {}),
         };
 
-        // Run the full research pipeline
+        // Run with pre-supplied perspectives — skips AI perspective generation
         const result = await runDeepResearch(
           topic,
           resolvedConfig,
           onProgress,
-          onPerspectives
+          undefined, // no onPerspectives callback needed
+          enginePerspectives
         );
 
-        // Send the full report — nested under `report` to match client expectation
+        // Send the full report
         sendEvent("report", {
           report: {
             markdownReport: result.report.markdownReport,
@@ -168,7 +182,7 @@ export async function POST(req: NextRequest) {
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Deep research failed";
-        console.error("[DeepResearch API] Error:", error);
+        console.error("[DeepResearch Execute] Error:", error);
         sendEvent("error", { error: message });
       } finally {
         controller.close();
