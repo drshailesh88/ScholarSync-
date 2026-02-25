@@ -82,8 +82,12 @@ export async function getSemanticScholarPaper(
   identifier: string
 ): Promise<UnifiedSearchResult | null> {
   const url = `https://api.semanticscholar.org/graph/v1/paper/${encodeURIComponent(identifier)}?fields=${S2_FIELDS}`;
+  const headers: Record<string, string> = {};
+  if (process.env.SEMANTIC_SCHOLAR_API_KEY) {
+    headers["x-api-key"] = process.env.SEMANTIC_SCHOLAR_API_KEY;
+  }
   try {
-    const res = await resilientFetch(url);
+    const res = await resilientFetch(url, { headers });
     const paper: S2Paper = await res.json();
     return mapPaper(paper);
   } catch {

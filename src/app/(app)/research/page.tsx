@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import {
   MagnifyingGlass,
   ChatCircleDots,
@@ -11,20 +11,32 @@ import {
   ArrowRight,
   SortAscending,
   Lightning,
+  CircleNotch,
   Brain,
   CaretDown,
   PaperPlaneTilt,
+  ClockCounterClockwise,
+  BookmarkSimple,
+  Lightbulb,
 } from "@phosphor-icons/react";
 import { useChat } from "@ai-sdk/react";
 import { TextStreamChatTransport } from "ai";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { savePaper } from "@/lib/actions/papers";
-import { saveSearchQuery } from "@/lib/actions/search-history";
+import { getUserPapers } from "@/lib/actions/papers";
+import {
+  saveSearchQuery,
+  getRecentSearches,
+} from "@/lib/actions/search-history";
 import type {
   UnifiedSearchResult,
   SearchResponse,
 } from "@/types/search";
+
+// ── Constants ────────────────────────────────────────────────────────
+
+const SESSION_KEY = "scholar-sync-research-page";
 
 const EVIDENCE_COLORS: Record<string, string> = {
   I: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
@@ -42,18 +54,6 @@ const EVIDENCE_LABELS: Record<string, string> = {
   V: "Level V",
 };
 
-const SOURCE_COLORS: Record<string, string> = {
-  pubmed: "bg-blue-500/10 text-blue-600",
-  semantic_scholar: "bg-purple-500/10 text-purple-600",
-  openalex: "bg-teal-500/10 text-teal-600",
-};
-
-const SOURCE_LABELS: Record<string, string> = {
-  pubmed: "PubMed",
-  semantic_scholar: "S2",
-  openalex: "OpenAlex",
-};
-
 type SortOption = "relevance" | "citations" | "year" | "evidence";
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
@@ -62,6 +62,26 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "year", label: "Year (Newest)" },
   { value: "evidence", label: "Evidence Level" },
 ];
+
+const SUGGESTED_SEARCHES = [
+  "SGLT2 inhibitors cardiovascular outcomes",
+  "CAR-T cell therapy solid tumors",
+  "GLP-1 agonists weight management",
+  "mRNA vaccine technology advances",
+  "AI-assisted diagnostic imaging accuracy",
+  "Immune checkpoint inhibitors biomarkers",
+  "CRISPR sickle cell gene therapy",
+  "Gut microbiome mental health",
+  "Liquid biopsy early cancer detection",
+  "Ketamine treatment-resistant depression",
+  "Wearable devices atrial fibrillation detection",
+  "Fecal microbiota transplant C. difficile",
+  "Psilocybin-assisted psychotherapy PTSD",
+  "Dapagliflozin heart failure outcomes",
+  "Whole genome sequencing rare diseases",
+];
+
+// ── Types ────────────────────────────────────────────────────────────
 
 interface FilterState {
   last5Years: boolean;
@@ -74,48 +94,189 @@ interface FilterState {
   yearEnd: string;
 }
 
+const DEFAULT_FILTERS: FilterState = {
+  last5Years: false,
+  pdfAvailable: false,
+  highImpact: false,
+  rctsOnly: false,
+  reviews: false,
+  metaAnalyses: false,
+  yearStart: "",
+  yearEnd: "",
+};
+
+interface PersistedState {
+  query: string;
+  results: UnifiedSearchResult[];
+  filters: FilterState;
+  sort: SortOption;
+  hasSearched: boolean;
+  page: number;
+  totalResults: number;
+  hasMore: boolean;
+  sourceCounts: {
+    pubmed: number;
+    semanticScholar: number;
+    openAlex: number;
+    clinicalTrials: number;
+  };
+  augmentedQueries: SearchResponse["augmentedQueries"] | null;
+}
+
+// ── Session helpers ──────────────────────────────────────────────────
+
+function readSession(): PersistedState | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as PersistedState;
+  } catch {
+    return null;
+  }
+}
+
+function writeSession(state: PersistedState) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
+  } catch {
+    // quota exceeded — ignore
+  }
+}
+
+// ── Component ────────────────────────────────────────────────────────
+
 export default function ResearchPage() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<UnifiedSearchResult[]>([]);
+  // Restore session state on first render (synchronous to avoid flash)
+  const cached = useRef(readSession());
+
+  const [query, setQuery] = useState(cached.current?.query ?? "");
+  const [results, setResults] = useState<UnifiedSearchResult[]>(
+    cached.current?.results ?? []
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sourceCounts, setSourceCounts] = useState({
-    pubmed: 0,
-    semanticScholar: 0,
-    openAlex: 0,
-    clinicalTrials: 0,
-  });
-  const [filters, setFilters] = useState<FilterState>({
-    last5Years: false,
-    pdfAvailable: false,
-    highImpact: false,
-    rctsOnly: false,
-    reviews: false,
-    metaAnalyses: false,
-    yearStart: "",
-    yearEnd: "",
-  });
-  const [sort, setSort] = useState<SortOption>("relevance");
+  const [sourceCounts, setSourceCounts] = useState(
+    cached.current?.sourceCounts ?? {
+      pubmed: 0,
+      semanticScholar: 0,
+      openAlex: 0,
+      clinicalTrials: 0,
+    }
+  );
+  const [filters, setFilters] = useState<FilterState>(
+    cached.current?.filters ?? { ...DEFAULT_FILTERS }
+  );
+  const [sort, setSort] = useState<SortOption>(
+    cached.current?.sort ?? "relevance"
+  );
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showCopilot, setShowCopilot] = useState(false);
   const [saved, setSaved] = useState<Set<string>>(new Set());
-  const [hasSearched, setHasSearched] = useState(false);
-  const [page, setPage] = useState(0);
-  const [totalResults, setTotalResults] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasSearched, setHasSearched] = useState(
+    cached.current?.hasSearched ?? false
+  );
+  const [page, setPage] = useState(cached.current?.page ?? 0);
+  const [totalResults, setTotalResults] = useState(
+    cached.current?.totalResults ?? 0
+  );
+  const [hasMore, setHasMore] = useState(cached.current?.hasMore ?? false);
   const [augmentedQueries, setAugmentedQueries] = useState<
     SearchResponse["augmentedQueries"] | null
-  >(null);
+  >(cached.current?.augmentedQueries ?? null);
   const [showAugmented, setShowAugmented] = useState(false);
   const [similarResults, setSimilarResults] = useState<
     Record<string, UnifiedSearchResult[]>
   >({});
-  const [loadingSimilar, setLoadingSimilar] = useState<Set<string>>(new Set());
+  const [similarErrors, setSimilarErrors] = useState<Set<string>>(new Set());
+  const [similarEmpty, setSimilarEmpty] = useState<Set<string>>(new Set());
+  const [loadingSimilar, setLoadingSimilar] = useState<Set<string>>(
+    new Set()
+  );
   const perPage = 20;
 
-  const [chatInput, setChatInput] = useState("");
+  // Track whether the filter/sort useEffect should skip (during init)
+  const isInitRef = useRef(!!cached.current?.hasSearched);
 
-  // Research Copilot chat
+  // ── Empty state data ───────────────────────────────────────────────
+  const [recentSearches, setRecentSearches] = useState<
+    { query: string; resultCount: number; searchedAt: string }[]
+  >([]);
+  const [recentPapers, setRecentPapers] = useState<
+    { title: string; authors: string; journal: string | null; year: number | null }[]
+  >([]);
+  const [emptyStateLoaded, setEmptyStateLoaded] = useState(false);
+
+  // Pick 4 random suggestions (stable per mount)
+  const suggestions = useMemo(() => {
+    const shuffled = [...SUGGESTED_SEARCHES].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 5);
+  }, []);
+
+  // Load empty state data only when needed
+  useEffect(() => {
+    if (hasSearched && results.length > 0) return; // have persisted results — skip
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const [searches, papers] = await Promise.all([
+          getRecentSearches().catch(() => []),
+          getUserPapers().catch(() => []),
+        ]);
+        if (cancelled) return;
+        setRecentSearches(searches);
+        setRecentPapers(
+          (papers as { title: string; authors: unknown; journal: string | null; year: number | null }[])
+            .slice(0, 4)
+            .map((p) => ({
+              title: p.title,
+              authors: Array.isArray(p.authors)
+                ? (p.authors as string[]).slice(0, 2).join(", ") +
+                  ((p.authors as string[]).length > 2 ? " et al." : "")
+                : "",
+              journal: p.journal,
+              year: p.year,
+            }))
+        );
+      } finally {
+        if (!cancelled) setEmptyStateLoaded(true);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Persist to sessionStorage on changes ───────────────────────────
+  useEffect(() => {
+    writeSession({
+      query,
+      results,
+      filters,
+      sort,
+      hasSearched,
+      page,
+      totalResults,
+      hasMore,
+      sourceCounts,
+      augmentedQueries,
+    });
+  }, [
+    query,
+    results,
+    filters,
+    sort,
+    hasSearched,
+    page,
+    totalResults,
+    hasMore,
+    sourceCounts,
+    augmentedQueries,
+  ]);
+
+  // ── Chat ───────────────────────────────────────────────────────────
+  const [chatInput, setChatInput] = useState("");
   const {
     messages: chatMessages,
     sendMessage,
@@ -125,7 +286,6 @@ export default function ResearchPage() {
       api: "/api/research-agent",
     }),
   });
-
   const chatLoading = chatStatus === "streaming" || chatStatus === "submitted";
 
   const handleChatSubmit = (e: React.FormEvent) => {
@@ -135,11 +295,11 @@ export default function ResearchPage() {
     setChatInput("");
   };
 
+  // ── Filters ────────────────────────────────────────────────────────
   const toggleFilter = (key: keyof FilterState) => {
     setFilters((prev) => {
       const val = prev[key];
       if (typeof val === "boolean") {
-        // When toggling last5Years on, clear custom year range
         if (key === "last5Years" && !val) {
           return { ...prev, [key]: true, yearStart: "", yearEnd: "" };
         }
@@ -149,6 +309,7 @@ export default function ResearchPage() {
     });
   };
 
+  // ── Search ─────────────────────────────────────────────────────────
   const buildSearchUrl = useCallback(
     (pageNum: number) => {
       const params = new URLSearchParams();
@@ -160,27 +321,17 @@ export default function ResearchPage() {
       if (filters.last5Years) {
         params.set("yearStart", (new Date().getFullYear() - 5).toString());
       } else {
-        if (filters.yearStart) {
-          params.set("yearStart", filters.yearStart);
-        }
-        if (filters.yearEnd) {
-          params.set("yearEnd", filters.yearEnd);
-        }
+        if (filters.yearStart) params.set("yearStart", filters.yearStart);
+        if (filters.yearEnd) params.set("yearEnd", filters.yearEnd);
       }
-      if (filters.pdfAvailable) {
-        params.set("openAccessOnly", "true");
-      }
-      if (filters.highImpact) {
-        params.set("sort", "citations");
-      }
+      if (filters.pdfAvailable) params.set("openAccessOnly", "true");
+      if (filters.highImpact) params.set("sort", "citations");
 
       const studyTypes: string[] = [];
       if (filters.rctsOnly) studyTypes.push("rct");
       if (filters.reviews) studyTypes.push("review", "systematic_review");
       if (filters.metaAnalyses) studyTypes.push("meta_analysis");
-      if (studyTypes.length > 0) {
-        params.set("studyTypes", studyTypes.join(","));
-      }
+      if (studyTypes.length > 0) params.set("studyTypes", studyTypes.join(","));
 
       return `/api/search/unified?${params.toString()}`;
     },
@@ -212,7 +363,6 @@ export default function ResearchPage() {
         setSourceCounts(data.sourceCounts);
         setAugmentedQueries(data.augmentedQueries || null);
 
-        // Save search history with full context
         saveSearchQuery({
           originalQuery: query,
           queryType: "user",
@@ -225,10 +375,7 @@ export default function ResearchPage() {
                 openAlex: data.augmentedQueries.openAlex,
               }
             : undefined,
-          filtersApplied: {
-            sort,
-            ...filters,
-          },
+          filtersApplied: { sort, ...filters },
         }).catch(() => {});
       } catch (err) {
         setError(
@@ -244,14 +391,35 @@ export default function ResearchPage() {
     [query, buildSearchUrl]
   );
 
-  // Re-search when filters or sort change (if we've already searched)
+  // Re-search when filters or sort change — but skip the first render
+  // when we're restoring from sessionStorage
   useEffect(() => {
+    if (isInitRef.current) {
+      isInitRef.current = false;
+      return;
+    }
     if (hasSearched && query.trim()) {
       handleSearch(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, sort]);
 
+  // ── Run a search from empty state ──────────────────────────────────
+  const runSuggestion = (q: string) => {
+    setQuery(q);
+    // We need to trigger search after state update. Use a ref + effect.
+    pendingSearchRef.current = q;
+  };
+
+  const pendingSearchRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (pendingSearchRef.current && query === pendingSearchRef.current) {
+      pendingSearchRef.current = null;
+      handleSearch(0);
+    }
+  }, [query, handleSearch]);
+
+  // ── Save paper ─────────────────────────────────────────────────────
   const [savingKeys, setSavingKeys] = useState<Set<string>>(new Set());
 
   const handleSave = async (result: UnifiedSearchResult) => {
@@ -301,17 +469,28 @@ export default function ResearchPage() {
     const key = result.s2Id || result.doi || result.title;
     if (!result.s2Id || similarResults[key]) return;
 
+    // Clear any prior error/empty state for this key before retrying
+    setSimilarErrors((prev) => { const n = new Set(prev); n.delete(key); return n; });
+    setSimilarEmpty((prev) => { const n = new Set(prev); n.delete(key); return n; });
     setLoadingSimilar((prev) => new Set(prev).add(key));
+
     try {
       const res = await fetch(
-        `/api/search/s2-recommendations?paperId=${result.s2Id}&limit=5`
+        `/api/search/s2-recommendations?paperId=${result.s2Id}&limit=5&paperTitle=${encodeURIComponent(result.title)}`
       );
-      if (res.ok) {
-        const data = await res.json();
-        setSimilarResults((prev) => ({ ...prev, [key]: data.results }));
+      if (!res.ok) {
+        setSimilarErrors((prev) => new Set(prev).add(key));
+        return;
+      }
+      const data = await res.json();
+      const papers: UnifiedSearchResult[] = data.results ?? [];
+      if (papers.length === 0) {
+        setSimilarEmpty((prev) => new Set(prev).add(key));
+      } else {
+        setSimilarResults((prev) => ({ ...prev, [key]: papers }));
       }
     } catch {
-      // silently fail
+      setSimilarErrors((prev) => new Set(prev).add(key));
     } finally {
       setLoadingSimilar((prev) => {
         const next = new Set(prev);
@@ -322,6 +501,8 @@ export default function ResearchPage() {
   };
 
   const totalPages = Math.ceil(totalResults / perPage);
+  const showEmptyState = !loading && !hasSearched;
+  const showNoResults = !loading && hasSearched && results.length === 0 && !error;
 
   return (
     <div className="flex gap-6 h-[calc(100vh-7rem)]">
@@ -447,6 +628,102 @@ export default function ResearchPage() {
           </div>
         </div>
 
+        {/* ── Smart Empty State ────────────────────────────────────── */}
+        {showEmptyState && (
+          <div className="max-w-2xl mx-auto pt-4 space-y-8">
+            {/* Recent Searches */}
+            {recentSearches.length > 0 && (
+              <section>
+                <h3 className="flex items-center gap-2 text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">
+                  <ClockCounterClockwise size={14} />
+                  Recent Searches
+                </h3>
+                <div className="space-y-1">
+                  {recentSearches.map((s, i) => (
+                    <button
+                      key={i}
+                      onClick={() => runSuggestion(s.query)}
+                      className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-left glass-panel hover:bg-surface-raised/50 transition-colors group"
+                    >
+                      <span className="flex items-center gap-3">
+                        <MagnifyingGlass
+                          size={14}
+                          className="text-ink-muted shrink-0"
+                        />
+                        <span className="text-sm text-ink group-hover:text-brand transition-colors truncate">
+                          {s.query}
+                        </span>
+                      </span>
+                      <span className="text-[10px] text-ink-muted shrink-0 ml-4">
+                        {s.resultCount > 0
+                          ? `${s.resultCount.toLocaleString()} results`
+                          : ""}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Recently Saved Papers */}
+            {recentPapers.length > 0 && (
+              <section>
+                <h3 className="flex items-center gap-2 text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">
+                  <BookmarkSimple size={14} />
+                  Recently Saved
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {recentPapers.map((p, i) => (
+                    <div
+                      key={i}
+                      className="glass-panel rounded-xl p-4 hover:bg-surface-raised/30 transition-colors"
+                    >
+                      <p className="text-sm font-medium text-ink leading-snug line-clamp-2 mb-1.5">
+                        {p.title}
+                      </p>
+                      <p className="text-[11px] text-ink-muted truncate">
+                        {p.authors}
+                      </p>
+                      <p className="text-[11px] text-ink-muted">
+                        {[p.journal, p.year].filter(Boolean).join(" · ")}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Suggested Searches */}
+            <section>
+              <h3 className="flex items-center gap-2 text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">
+                <Lightbulb size={14} />
+                Try searching for
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {suggestions.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => runSuggestion(s)}
+                    className="px-4 py-2 rounded-full text-xs font-medium glass-panel text-ink-muted hover:text-brand hover:border-brand/30 border border-transparent transition-colors"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Subtle loading indicator for empty state data */}
+            {!emptyStateLoaded && recentSearches.length === 0 && (
+              <div className="text-center py-8">
+                <div className="inline-flex items-center gap-2 text-xs text-ink-muted">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand/40 animate-pulse" />
+                  Loading your history...
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Source counts + augmented query info */}
         {hasSearched && !loading && results.length > 0 && (
           <div className="mb-4">
@@ -511,7 +788,7 @@ export default function ResearchPage() {
         )}
 
         {/* Results */}
-        {!loading && (
+        {!loading && results.length > 0 && (
           <div className="space-y-3">
             {results.map((r, idx) => {
               const key = r.doi || r.pmid || r.s2Id || r.title;
@@ -615,9 +892,18 @@ export default function ResearchPage() {
                         <button
                           onClick={() => handleFindSimilar(r)}
                           disabled={loadingSimilar.has(similarKey)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-ink-muted hover:text-ink transition-colors"
+                          className={cn(
+                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised transition-colors",
+                            loadingSimilar.has(similarKey)
+                              ? "opacity-60 pointer-events-none text-ink-muted"
+                              : "text-ink-muted hover:text-ink"
+                          )}
                         >
-                          <Lightning size={14} />
+                          {loadingSimilar.has(similarKey) ? (
+                            <CircleNotch size={14} className="animate-spin" />
+                          ) : (
+                            <Lightning size={14} />
+                          )}
                           {loadingSimilar.has(similarKey)
                             ? "Finding..."
                             : "Similar"}
@@ -637,19 +923,6 @@ export default function ResearchPage() {
                         </span>
                       )}
 
-                      {/* Source Badges */}
-                      {r.sources.map((source) => (
-                        <span
-                          key={source}
-                          className={cn(
-                            "px-2 py-0.5 rounded text-[10px] font-medium",
-                            SOURCE_COLORS[source] || "bg-surface-raised text-ink-muted"
-                          )}
-                        >
-                          {SOURCE_LABELS[source] || source}
-                        </span>
-                      ))}
-
                       {/* Open Access badge */}
                       {r.isOpenAccess && (
                         <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-600">
@@ -657,17 +930,41 @@ export default function ResearchPage() {
                         </span>
                       )}
 
-                      {/* RRF Score */}
-                      {r.rrfScore && (
+                      {/* Relevance indicator */}
+                      {r.rrfScore != null && r.rrfScore >= 1.0 && (
                         <span className="text-[10px] text-ink-muted ml-auto">
-                          Score: {(r.rrfScore * 100).toFixed(1)}
+                          {r.rrfScore >= 1.5 ? "High relevance" : "Relevant"}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Similar Papers (inline) */}
-                  {similarResults[similarKey] && (
+                  {/* Similar Papers — error state */}
+                  {similarErrors.has(similarKey) && (
+                    <div className="ml-6 mt-1.5 mb-2 flex items-center gap-2 px-2">
+                      <span className="text-[11px] text-amber-500">
+                        Couldn&apos;t load similar papers.
+                      </span>
+                      <button
+                        onClick={() => handleFindSimilar(r)}
+                        className="text-[11px] text-brand font-medium hover:underline"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Similar Papers — empty state */}
+                  {similarEmpty.has(similarKey) && (
+                    <div className="ml-6 mt-1.5 mb-2 px-2">
+                      <span className="text-[11px] text-ink-muted">
+                        No similar papers found for this article.
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Similar Papers — results */}
+                  {similarResults[similarKey] && similarResults[similarKey].length > 0 && (
                     <div className="ml-6 mt-1 mb-2 space-y-1">
                       <p className="text-[10px] text-ink-muted uppercase tracking-wider font-medium px-2">
                         Similar Papers
@@ -728,8 +1025,8 @@ export default function ResearchPage() {
           </div>
         )}
 
-        {/* Empty state */}
-        {!loading && hasSearched && results.length === 0 && !error && (
+        {/* No results after search */}
+        {showNoResults && (
           <div className="text-center py-16">
             <p className="text-ink-muted">
               No results found. Try a different query.
@@ -791,10 +1088,14 @@ export default function ResearchPage() {
               </GlassPanel>
             )}
             {chatMessages.map((msg) => {
-              const textContent = msg.parts
-                ?.filter((p): p is { type: "text"; text: string } => p.type === "text")
-                .map((p) => p.text)
-                .join("") || "";
+              const textContent =
+                msg.parts
+                  ?.filter(
+                    (p): p is { type: "text"; text: string } =>
+                      p.type === "text"
+                  )
+                  .map((p) => p.text)
+                  .join("") || "";
               if (!textContent) return null;
               return (
                 <div

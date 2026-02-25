@@ -27,6 +27,7 @@ export async function GET(req: Request) {
 
   const { searchParams } = new URL(req.url);
   const paperId = searchParams.get("paperId");
+  const paperTitle = searchParams.get("paperTitle") || undefined;
   const limit = Math.min(parseInt(searchParams.get("limit") || "10", 10), 100);
 
   if (!paperId) {
@@ -37,7 +38,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    const results = await getRecommendationsForPaper(paperId, limit);
+    const results = await getRecommendationsForPaper(paperId, limit, paperTitle);
     return NextResponse.json({ results });
   } catch (error) {
     log.error("S2 recommendations error", error);

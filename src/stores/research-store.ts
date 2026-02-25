@@ -6,6 +6,7 @@
  */
 
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type {
   PaperResult,
   ResearchSearchFilters,
@@ -46,6 +47,7 @@ interface ResearchStore {
   hasSearchedBefore: boolean;
   aiSummary: string | null;
   isGeneratingSummary: boolean;
+  searchScrollPosition: number;
 
   // Library state
   libraryPapers: PaperResult[];
@@ -99,6 +101,7 @@ interface ResearchStore {
   setHasSearchedBefore: (val: boolean) => void;
   setAiSummary: (summary: string | null) => void;
   setIsGeneratingSummary: (loading: boolean) => void;
+  setSearchScrollPosition: (position: number) => void;
   clearSearch: () => void;
 
   // Library actions
@@ -146,7 +149,9 @@ function generateId(): string {
 
 // ── Store ────────────────────────────────────────────────────────────
 
-export const useResearchStore = create<ResearchStore>((set, get) => ({
+export const useResearchStore = create<ResearchStore>()(
+  persist(
+    (set, get) => ({
   // Initial state
   isOpen: false,
   activeTab: "search",
@@ -165,6 +170,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
   hasSearchedBefore: false,
   aiSummary: null,
   isGeneratingSummary: false,
+  searchScrollPosition: 0,
 
   libraryPapers: [],
 
@@ -232,6 +238,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
   setHasSearchedBefore: (val) => set({ hasSearchedBefore: val }),
   setAiSummary: (summary) => set({ aiSummary: summary }),
   setIsGeneratingSummary: (loading) => set({ isGeneratingSummary: loading }),
+  setSearchScrollPosition: (position) => set({ searchScrollPosition: position }),
   clearSearch: () =>
     set({
       query: "",
@@ -243,6 +250,7 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
       searchPlan: null,
       showPlan: false,
       aiSummary: null,
+      searchScrollPosition: 0,
       selectedPaperId: null,
       selectedPaperDetail: null,
     }),
@@ -396,4 +404,44 @@ export const useResearchStore = create<ResearchStore>((set, get) => ({
         r.id === paperId ? { ...r, verificationStatus: result.status } : r
       ),
     })),
-}));
+    }),
+    {
+      name: "scholar-sync-research",
+      storage: {
+        getItem: (name) => {
+          const str = sessionStorage.getItem(name);
+          return str ? JSON.parse(str) : null;
+        },
+        setItem: (name, value) => {
+          sessionStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => {
+          sessionStorage.removeItem(name);
+        },
+      },
+      partialize: (state) =>
+        ({
+          // Search state (persist query, results, filters, pagination)
+          query: state.query,
+          filters: state.filters,
+          parsedChips: state.parsedChips,
+          results: state.results,
+          totalResults: state.totalResults,
+          currentPage: state.currentPage,
+          searchPlan: state.searchPlan,
+          hasSearchedBefore: state.hasSearchedBefore,
+          aiSummary: state.aiSummary,
+          searchScrollPosition: state.searchScrollPosition,
+
+          // Library state
+          libraryPapers: state.libraryPapers,
+
+          // Active tab (so user returns to same tab)
+          activeTab: state.activeTab,
+
+          // Verification cache (expensive to re-fetch)
+          verificationCache: state.verificationCache,
+        }) as unknown as ResearchStore,
+    },
+  ),
+);

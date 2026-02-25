@@ -1,6 +1,8 @@
 "use client";
 
+import { useRef, useEffect, useCallback } from "react";
 import { ResultRow } from "./ResultRow";
+import { useResearchStore } from "@/stores/research-store";
 import type { PaperResult } from "@/lib/research/types";
 
 interface ResultsTableProps {
@@ -32,6 +34,24 @@ export function ResultsTable({
   onLoadMore,
   hasMore,
 }: ResultsTableProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const savedScrollPosition = useResearchStore((s) => s.searchScrollPosition);
+  const setSearchScrollPosition = useResearchStore((s) => s.setSearchScrollPosition);
+
+  // Restore scroll position on mount when results exist
+  useEffect(() => {
+    if (scrollRef.current && results.length > 0 && savedScrollPosition > 0) {
+      scrollRef.current.scrollTop = savedScrollPosition;
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Save scroll position on scroll
+  const handleScroll = useCallback(() => {
+    if (scrollRef.current) {
+      setSearchScrollPosition(scrollRef.current.scrollTop);
+    }
+  }, [setSearchScrollPosition]);
+
   if (results.length === 0 && !isSearching) {
     return null;
   }
@@ -81,7 +101,7 @@ export function ResultsTable({
       )}
 
       {/* Results list */}
-      <div className="flex-1 overflow-y-auto">
+      <div ref={scrollRef} onScroll={handleScroll} className="flex-1 overflow-y-auto">
         {results.map((paper) => (
           <ResultRow
             key={paper.id}
