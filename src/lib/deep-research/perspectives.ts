@@ -7,7 +7,7 @@
  */
 
 import { generateText } from "ai";
-import { getBigModel } from "@/lib/ai/models";
+import { getDeepResearchModel } from "@/lib/ai/models";
 import type { ResearchConfig, Perspective } from "./types";
 
 /**
@@ -24,7 +24,7 @@ export async function generatePerspectives(
   const perspectiveCount = Math.min(config.breadth, 7);
 
   const { text } = await generateText({
-    model: getBigModel(),
+    model: getDeepResearchModel(),
     system: `You are a medical research strategist designing a multi-perspective literature search.
 
 Given a research topic, generate ${perspectiveCount} distinct research perspectives. Each perspective should explore a different angle of the topic (e.g., clinical efficacy, safety/adverse effects, mechanisms of action, specific populations, diagnostic approaches, economic/cost-effectiveness, guidelines/recommendations).

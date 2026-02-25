@@ -1,4 +1,5 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createZhipu } from "zhipu-ai-provider";
 
 // ── Provider selection ─────────────────────────────────────────────
@@ -15,6 +16,7 @@ export const AI_PROVIDER: Provider =
 // ── Lazy-initialised clients (created once, reused) ────────────────
 let _zhipu: ReturnType<typeof createZhipu> | null = null;
 let _anthropic: ReturnType<typeof createAnthropic> | null = null;
+let _openai: ReturnType<typeof createOpenAI> | null = null;
 
 function getZhipu() {
   if (!_zhipu) {
@@ -28,6 +30,13 @@ function getAnthropic() {
     _anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
   }
   return _anthropic;
+}
+
+function getOpenAI() {
+  if (!_openai) {
+    _openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+  }
+  return _openai;
 }
 
 // ── Public helpers ─────────────────────────────────────────────────
@@ -68,4 +77,9 @@ export function getBigModel() {
     return getAnthropic()("claude-sonnet-4-20250514");
   }
   return getZhipu()("glm-5");
+}
+
+/** GPT-5.2 for deep research synthesis — best reasoning per dollar. */
+export function getDeepResearchModel() {
+  return getOpenAI()("gpt-5.2");
 }

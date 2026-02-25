@@ -12,7 +12,7 @@
  */
 
 import { generateText } from "ai";
-import { getBigModel } from "@/lib/ai/models";
+import { getDeepResearchModel } from "@/lib/ai/models";
 import type {
   ResearchConfig,
   Perspective,
@@ -152,7 +152,7 @@ Abstract: ${paper.abstract || "No abstract available"}`;
       .join("\n\n---\n\n");
 
     const { text } = await generateText({
-      model: getBigModel(),
+      model: getDeepResearchModel(),
       system: `You are writing one section of a systematic literature review for an academic medical audience. This section covers the perspective: "${perspective.name}" — ${perspective.description}.
 
 Rules:
@@ -217,7 +217,7 @@ async function pass2ExecutiveSummary(
     .join("\n\n");
 
   const { text } = await generateText({
-    model: getBigModel(),
+    model: getDeepResearchModel(),
     system: `You are writing the executive summary and introduction for a multi-perspective literature review. You have already written individual perspective sections; now tie them together.
 
 Respond in this exact JSON format:
@@ -301,7 +301,7 @@ async function pass3TablesAndAnalysis(
     .join("\n");
 
   const { text } = await generateText({
-    model: getBigModel(),
+    model: getDeepResearchModel(),
     system: `You are completing a multi-perspective literature review. Based on the perspective sections already written and the paper data, generate the final analytical components.
 
 Respond in this exact JSON format:
@@ -356,7 +356,7 @@ async function pass4CritiqueAndRevise(
   onProgress?.("synthesis-critique", "Self-critiquing and revising the report...");
 
   const { text } = await generateText({
-    model: getBigModel(),
+    model: getDeepResearchModel(),
     system: `You are a senior medical researcher reviewing a literature synthesis report. Your task is to:
 
 1. Identify weaknesses: vague claims without specific data, missing citation markers, unsupported statements, logical gaps, areas needing more specificity
