@@ -1,432 +1,536 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import {
-  MagnifyingGlass,
-  Sparkle,
-  CircleNotch,
-  ArrowRight,
-  BookOpen,
-  Warning,
-  CheckCircle,
-  Brain,
-  TreeStructure,
-  FileText,
-} from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
-import { GlassPanel } from "@/components/ui/glass-panel";
+  Search,
+  Zap,
+  Layers,
+  Database,
+  AlertCircle,
+  Microscope,
+  StopCircle,
+} from "lucide-react";
+import {
+  ResearchDocument,
+  LegacyReportView,
+  ExportButtons,
+  ResearchPlanPreview,
+  ProgressStepper,
+  buildStagesFromEvents,
+  SaveToLibraryButton,
+  RESEARCH_MODES,
+} from "@/components/deep-research";
 import type {
   ResearchMode,
-  ResearchProgress,
+  EnhancedSynthesisReport,
   SynthesisReport,
-} from "@/lib/deep-research/types";
-import { RESEARCH_MODES } from "@/lib/deep-research/types";
+  PlanPerspective,
+  DeepResearchSource,
+  ProgressStage,
+} from "@/components/deep-research";
 
-type ResearchState = "idle" | "running" | "done" | "error";
-
-const STAGE_ICONS: Record<string, React.ReactNode> = {
-  initialization: <CircleNotch size={16} className="animate-spin" />,
-  "perspective-generation": <Brain size={16} />,
-  research: <MagnifyingGlass size={16} />,
-  deduplication: <TreeStructure size={16} />,
-  synthesis: <FileText size={16} />,
-  complete: <CheckCircle size={16} />,
-  error: <Warning size={16} />,
+// ── Mode icon mapping ───────────────────────────────────────────────
+const MODE_ICONS: Record<ResearchMode, typeof Zap> = {
+  quick: Zap,
+  standard: Search,
+  deep: Layers,
+  exhaustive: Database,
 };
 
+// ── Page state types ────────────────────────────────────────────────
+type PageState = "idle" | "plan-preview" | "running" | "done" | "error";
+
+// ── Streaming section type ──────────────────────────────────────────
+interface StreamingSection {
+  markdown: string;
+  animating: boolean;
+}
+
 export default function DeepResearchPage() {
+  // Input state
   const [topic, setTopic] = useState("");
   const [mode, setMode] = useState<ResearchMode>("standard");
-  const [state, setState] = useState<ResearchState>("idle");
-  const [progress, setProgress] = useState<ResearchProgress | null>(null);
-  const [report, setReport] = useState<SynthesisReport | null>(null);
+
+  // Page flow state
+  const [pageState, setPageState] = useState<PageState>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [progressLog, setProgressLog] = useState<ResearchProgress[]>([]);
+
+  // Research plan state
+  const [planPerspectives, setPlanPerspectives] = useState<PlanPerspective[]>([]);
+
+  // Progress state
+  const [progressStages, setProgressStages] = useState<ProgressStage[]>([]);
+  const [progressMessage, setProgressMessage] = useState("");
+  const [progressPercent, setProgressPercent] = useState(0);
+  const [seenStageIds, setSeenStageIds] = useState<string[]>([]);
+  const [currentStageId, setCurrentStageId] = useState<string | null>(null);
+
+  // Streaming sections
+  const [streamingSections, setStreamingSections] = useState<StreamingSection[]>([]);
+
+  // Final report state
+  const [report, setReport] = useState<EnhancedSynthesisReport | SynthesisReport | null>(null);
+
+  // Abort controller
   const abortRef = useRef<AbortController | null>(null);
 
-  const startResearch = useCallback(async () => {
-    if (!topic.trim() || state === "running") return;
+  // Update progress stages whenever seen/current changes
+  useEffect(() => {
+    if (pageState === "running") {
+      setProgressStages(buildStagesFromEvents(seenStageIds, currentStageId));
+    }
+  }, [seenStageIds, currentStageId, pageState]);
 
-    setState("running");
-    setError(null);
-    setReport(null);
-    setProgressLog([]);
-    setProgress(null);
+  // ── Start research (direct or after plan confirm) ─────────────────
+  const startResearch = useCallback(
+    async (confirmedPerspectives?: PlanPerspective[]) => {
+      if (!topic.trim()) return;
 
-    const controller = new AbortController();
-    abortRef.current = controller;
+      setPageState("running");
+      setError(null);
+      setReport(null);
+      setStreamingSections([]);
+      setSeenStageIds([]);
+      setCurrentStageId(null);
+      setProgressPercent(0);
+      setProgressMessage("Initializing research...");
 
-    try {
-      const response = await fetch("/api/deep-research", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic: topic.trim(), mode }),
-        signal: controller.signal,
-      });
+      const controller = new AbortController();
+      abortRef.current = controller;
 
-      if (!response.ok) {
-        const err = await response.json().catch(() => null);
-        throw new Error(err?.error || `Request failed (${response.status})`);
-      }
+      try {
+        const body: Record<string, unknown> = { topic: topic.trim(), mode };
+        if (confirmedPerspectives) {
+          body.perspectives = confirmedPerspectives;
+        }
 
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("No response stream");
+        const response = await fetch("/api/deep-research", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          signal: controller.signal,
+        });
 
-      const decoder = new TextDecoder();
-      let buffer = "";
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.error || `Research failed (${response.status})`);
+        }
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        if (!response.body) {
+          throw new Error("No response stream");
+        }
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() || "";
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
 
-        let currentEvent = "";
-        for (const line of lines) {
-          if (line.startsWith("event: ")) {
-            currentEvent = line.slice(7).trim();
-          } else if (line.startsWith("data: ") && currentEvent) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            const dataStr = line.slice(6).trim();
+            if (!dataStr || dataStr === "[DONE]") continue;
+
             try {
-              const data = JSON.parse(line.slice(6));
-              if (currentEvent === "progress") {
-                setProgress(data as ResearchProgress);
-                setProgressLog((prev) => [...prev, data as ResearchProgress]);
-              } else if (currentEvent === "report") {
-                setReport(data as SynthesisReport);
-              } else if (currentEvent === "error") {
-                throw new Error(data.message);
+              const event = JSON.parse(dataStr);
+
+              switch (event.type) {
+                case "progress": {
+                  const stage = event.stage as string;
+                  const message = event.message as string;
+                  const progress = event.progress as number;
+
+                  setProgressMessage(message);
+                  if (progress) setProgressPercent(progress);
+
+                  if (stage && stage !== currentStageId) {
+                    setSeenStageIds((prev) => {
+                      if (currentStageId && !prev.includes(currentStageId)) {
+                        return [...prev, currentStageId];
+                      }
+                      return prev;
+                    });
+                    setCurrentStageId(stage);
+                  }
+                  break;
+                }
+
+                case "perspectives": {
+                  // Got perspectives from backend — show plan preview
+                  const perspectives = event.perspectives as PlanPerspective[];
+                  if (perspectives && perspectives.length > 0 && !confirmedPerspectives) {
+                    setPlanPerspectives(perspectives);
+                    // Note: we stay in running state since we already started
+                    // The plan preview is only shown on the first phase (before confirmedPerspectives)
+                  }
+                  break;
+                }
+
+                case "section": {
+                  // Streaming section of markdown
+                  const markdown = event.markdown as string;
+                  if (markdown) {
+                    setStreamingSections((prev) => [
+                      ...prev,
+                      { markdown, animating: true },
+                    ]);
+                    // Mark as not animating after delay
+                    setTimeout(() => {
+                      setStreamingSections((prev) =>
+                        prev.map((s, i) =>
+                          i === prev.length - 1 ? { ...s, animating: false } : s
+                        )
+                      );
+                    }, 800);
+                  }
+                  break;
+                }
+
+                case "report": {
+                  setReport(event.report);
+                  setPageState("done");
+                  setProgressPercent(100);
+                  // Mark all remaining stages as completed
+                  setSeenStageIds((prev) => {
+                    const all = [
+                      "search-round-1", "citation-traversal", "search-round-2",
+                      "data-extraction", "synthesis-perspectives", "synthesis-summary",
+                      "synthesis-tables", "synthesis-critique",
+                    ];
+                    return all.filter((id) => prev.includes(id) || id === currentStageId || true);
+                  });
+                  setCurrentStageId(null);
+                  break;
+                }
+
+                case "error": {
+                  throw new Error(event.error || "Research failed");
+                }
               }
-            } catch (e) {
-              if (e instanceof Error && e.message !== "Unexpected end of JSON input") {
-                throw e;
-              }
+            } catch (parseErr) {
+              // Skip malformed JSON lines
+              if (parseErr instanceof SyntaxError) continue;
+              throw parseErr;
             }
-            currentEvent = "";
           }
         }
-      }
 
-      setState("done");
-    } catch (err) {
-      if (err instanceof Error && err.name === "AbortError") {
-        setState("idle");
-      } else {
-        setError(err instanceof Error ? err.message : "Research failed");
-        setState("error");
+        // If no report event was received but stream ended, check if we got sections
+        if (pageState !== "done" && streamingSections.length > 0) {
+          setPageState("done");
+        }
+      } catch (err) {
+        if ((err as Error).name === "AbortError") {
+          setPageState("idle");
+          return;
+        }
+        setError(err instanceof Error ? err.message : "An error occurred");
+        setPageState("error");
+      } finally {
+        abortRef.current = null;
       }
+    },
+    [topic, mode, currentStageId, pageState, streamingSections.length]
+  );
+
+  // ── Handle initial start button ───────────────────────────────────
+  const handleStart = useCallback(() => {
+    startResearch();
+  }, [startResearch]);
+
+  // ── Handle plan confirmation ──────────────────────────────────────
+  const handlePlanConfirm = useCallback(
+    (perspectives: PlanPerspective[]) => {
+      setPlanPerspectives([]);
+      startResearch(perspectives);
+    },
+    [startResearch]
+  );
+
+  // ── Handle plan regeneration ──────────────────────────────────────
+  const handlePlanRegenerate = useCallback(() => {
+    // Re-trigger the research to get new perspectives
+    startResearch();
+  }, [startResearch]);
+
+  // ── Abort research ────────────────────────────────────────────────
+  const handleAbort = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
     }
-  }, [topic, mode, state]);
+    setPageState("idle");
+  }, []);
 
-  const handleStop = () => {
-    abortRef.current?.abort();
-    setState("idle");
-  };
+  // ── Handle key press ──────────────────────────────────────────────
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && !e.shiftKey && topic.trim() && pageState === "idle") {
+        e.preventDefault();
+        handleStart();
+      }
+    },
+    [topic, pageState, handleStart]
+  );
+
+  // ── Determine if report has markdownReport (enhanced) ─────────────
+  const isEnhancedReport = report && "markdownReport" in report && (report as EnhancedSynthesisReport).markdownReport;
+  const enhancedReport = isEnhancedReport ? (report as EnhancedSynthesisReport) : null;
+  const sources: DeepResearchSource[] = report?.sources || [];
+
+  // ── Build combined streaming markdown ─────────────────────────────
+  const streamingMarkdown = streamingSections.map((s) => s.markdown).join("\n\n");
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-serif font-semibold text-ink mb-2">
-          Deep Research
-        </h1>
-        <p className="text-sm text-ink-muted">
-          AI-powered multi-perspective literature synthesis. Enter a research
-          question and get a comprehensive report with citations.
-        </p>
+    <div className="flex-1 min-h-screen bg-gray-950">
+      {/* Header area - always visible */}
+      <div className="sticky top-0 z-20 bg-gray-950/80 backdrop-blur-xl border-b border-gray-800/50 print:hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex items-center justify-between gap-4">
+            {/* Title */}
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                <Microscope size={18} className="text-blue-400" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold text-white">Deep Research</h1>
+                <p className="text-xs text-gray-500">Multi-perspective literature synthesis</p>
+              </div>
+            </div>
+
+            {/* Export & Save buttons - visible when done */}
+            {pageState === "done" && report && (
+              <div className="flex items-center gap-3">
+                {enhancedReport?.markdownReport && (
+                  <ExportButtons
+                    markdownReport={enhancedReport.markdownReport}
+                    topic={report.topic}
+                  />
+                )}
+                <SaveToLibraryButton
+                  topic={report.topic}
+                  mode={report.mode}
+                  markdownReport={enhancedReport?.markdownReport || ""}
+                  sources={sources}
+                  keyFindings={report.keyFindings}
+                  gaps={report.gaps}
+                  isComplete={pageState === "done"}
+                />
+              </div>
+            )}
+
+            {/* Abort button - visible when running */}
+            {pageState === "running" && (
+              <button
+                onClick={handleAbort}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg hover:bg-red-500/20 transition-colors"
+              >
+                <StopCircle size={16} />
+                Stop
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* Input Section */}
-      <GlassPanel className="p-6 mb-6">
-        {/* Topic input */}
-        <div className="mb-4">
-          <label className="block text-xs font-medium text-ink-muted mb-1.5">
-            Research Question
-          </label>
-          <textarea
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                startResearch();
-              }
-            }}
-            placeholder="e.g., What is the efficacy of CRISPR-based gene therapy for sickle cell disease?"
-            rows={2}
-            disabled={state === "running"}
-            className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-ink placeholder:text-ink-muted text-sm focus:outline-none focus:ring-2 focus:ring-brand/40 resize-none transition-all"
-          />
-        </div>
+      {/* Main content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        {/* ── Idle State: Input form ──────────────────────────────── */}
+        {pageState === "idle" && (
+          <div className="max-w-2xl mx-auto space-y-8">
+            {/* Hero text */}
+            <div className="text-center space-y-3 pt-12">
+              <h2 className="text-3xl font-bold text-white">
+                What would you like to research?
+              </h2>
+              <p className="text-gray-400 text-base max-w-lg mx-auto">
+                Enter a research topic and we will synthesize findings from multiple
+                academic perspectives with full citations.
+              </p>
+            </div>
 
-        {/* Mode selector */}
-        <div className="mb-4">
-          <label className="block text-xs font-medium text-ink-muted mb-1.5">
-            Research Depth
-          </label>
-          <div className="grid grid-cols-4 gap-2">
-            {(Object.entries(RESEARCH_MODES) as [ResearchMode, typeof RESEARCH_MODES.quick][]).map(
-              ([key, cfg]) => (
-                <button
-                  key={key}
-                  onClick={() => setMode(key)}
-                  disabled={state === "running"}
-                  className={cn(
-                    "px-3 py-2 rounded-xl border text-xs font-medium transition-all text-left",
-                    mode === key
-                      ? "bg-brand/10 text-brand border-brand/30"
-                      : "bg-surface-raised text-ink-muted border-border hover:text-ink"
-                  )}
-                >
-                  <div>{cfg.label}</div>
-                  <div className="text-[10px] mt-0.5 opacity-70">
-                    ~{cfg.estimatedMinutes} min · {cfg.maxSources} papers
-                  </div>
-                </button>
-              )
-            )}
+            {/* Topic input */}
+            <div className="relative">
+              <input
+                type="text"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management"
+                className="w-full bg-gray-800/50 border border-gray-700/50 rounded-xl px-5 py-4 text-white text-base placeholder-gray-500 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+              />
+            </div>
+
+            {/* Mode selector - segmented control */}
+            <div className="bg-gray-800/30 border border-gray-700/30 rounded-xl p-1.5 flex gap-1">
+              {RESEARCH_MODES.map((m) => {
+                const Icon = MODE_ICONS[m.id];
+                const isSelected = mode === m.id;
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => setMode(m.id)}
+                    className={`flex-1 flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg text-center transition-all ${
+                      isSelected
+                        ? "bg-gray-700/60 border border-gray-600/50 shadow-sm"
+                        : "hover:bg-gray-800/40"
+                    }`}
+                  >
+                    <Icon
+                      size={18}
+                      className={isSelected ? "text-blue-400" : "text-gray-500"}
+                    />
+                    <span
+                      className={`text-sm font-medium ${
+                        isSelected ? "text-white" : "text-gray-400"
+                      }`}
+                    >
+                      {m.label}
+                    </span>
+                    <span className="text-[10px] text-gray-500">{m.estimatedTime}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Start button */}
+            <button
+              onClick={handleStart}
+              disabled={!topic.trim()}
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold text-base rounded-xl transition-colors flex items-center justify-center gap-2"
+            >
+              <Search size={18} />
+              Start Deep Research
+            </button>
           </div>
-        </div>
-
-        {/* Start / Stop button */}
-        {state === "running" ? (
-          <button
-            onClick={handleStop}
-            className="w-full py-3 rounded-xl bg-red-500/10 text-red-500 text-sm font-medium hover:bg-red-500/20 transition-colors"
-          >
-            Stop Research
-          </button>
-        ) : (
-          <button
-            onClick={startResearch}
-            disabled={!topic.trim()}
-            className="w-full py-3 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            <Sparkle size={16} weight="fill" />
-            Start Deep Research
-          </button>
         )}
-      </GlassPanel>
 
-      {/* Progress Section */}
-      {state === "running" && progress && (
-        <GlassPanel className="p-6 mb-6">
-          <div className="flex items-center gap-3 mb-4">
-            <CircleNotch size={20} className="animate-spin text-brand" />
-            <span className="text-sm font-medium text-ink">
-              {progress.message}
-            </span>
-          </div>
-
-          {/* Progress bar */}
-          <div className="w-full h-2 rounded-full bg-surface-raised mb-4">
-            <div
-              className="h-full rounded-full bg-brand transition-all duration-500"
-              style={{ width: `${progress.progress}%` }}
+        {/* ── Plan Preview State ─────────────────────────────────── */}
+        {pageState === "running" && planPerspectives.length > 0 && (
+          <div className="py-8">
+            <ResearchPlanPreview
+              perspectives={planPerspectives}
+              onConfirm={handlePlanConfirm}
+              onRegenerate={handlePlanRegenerate}
             />
           </div>
+        )}
 
-          {/* Stats */}
-          <div className="flex gap-4 text-xs text-ink-muted">
-            {progress.perspectivesGenerated != null && (
-              <span>{progress.perspectivesGenerated} perspectives</span>
-            )}
-            {progress.nodesExplored != null && (
-              <span>{progress.nodesExplored} queries explored</span>
-            )}
-            {progress.sourcesFound != null && (
-              <span>{progress.sourcesFound} papers found</span>
-            )}
-          </div>
+        {/* ── Running State: Progress + Streaming ────────────────── */}
+        {pageState === "running" && planPerspectives.length === 0 && (
+          <div className="flex gap-8">
+            {/* Progress stepper on the left */}
+            <ProgressStepper
+              stages={progressStages}
+              currentMessage={progressMessage}
+              progress={progressPercent}
+            />
 
-          {/* Progress log */}
-          <div className="mt-4 max-h-32 overflow-y-auto space-y-1">
-            {progressLog.map((p, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 text-[11px] text-ink-muted"
-              >
-                {STAGE_ICONS[p.stage] || <ArrowRight size={12} />}
-                <span>{p.message}</span>
-              </div>
-            ))}
-          </div>
-        </GlassPanel>
-      )}
-
-      {/* Error */}
-      {state === "error" && error && (
-        <GlassPanel className="p-6 mb-6 border-red-500/20">
-          <div className="flex items-center gap-2 text-red-500 text-sm">
-            <Warning size={18} />
-            <span>{error}</span>
-          </div>
-        </GlassPanel>
-      )}
-
-      {/* Report */}
-      {report && state === "done" && (
-        <div className="space-y-6">
-          {/* Summary */}
-          <GlassPanel className="p-6">
-            <h2 className="text-lg font-serif font-semibold text-ink mb-3">
-              Research Summary
-            </h2>
-            <p className="text-sm text-ink leading-relaxed">
-              {report.summary}
-            </p>
-            <div className="flex gap-3 mt-4 text-xs text-ink-muted">
-              <span>{report.totalSources} sources analyzed</span>
-              <span>·</span>
-              <span>{report.perspectives.length} perspectives</span>
-              <span>·</span>
-              <span>{report.keyFindings.length} key findings</span>
-            </div>
-          </GlassPanel>
-
-          {/* Key Findings */}
-          {report.keyFindings.length > 0 && (
-            <GlassPanel className="p-6">
-              <h2 className="text-lg font-serif font-semibold text-ink mb-3">
-                Key Findings
-              </h2>
-              <ul className="space-y-2">
-                {report.keyFindings.map((finding, i) => (
-                  <li key={i} className="flex gap-2 text-sm text-ink">
-                    <CheckCircle
-                      size={16}
-                      className="text-emerald-500 shrink-0 mt-0.5"
-                    />
-                    <span>{finding}</span>
-                  </li>
-                ))}
-              </ul>
-            </GlassPanel>
-          )}
-
-          {/* Perspectives */}
-          {report.perspectives.length > 0 && (
-            <GlassPanel className="p-6">
-              <h2 className="text-lg font-serif font-semibold text-ink mb-3">
-                Perspectives
-              </h2>
-              <div className="space-y-4">
-                {report.perspectives.map((p, i) => (
-                  <div
-                    key={i}
-                    className="p-4 rounded-xl bg-surface-raised/50"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Brain size={14} className="text-brand" />
-                      <h3 className="text-sm font-medium text-ink">
-                        {p.name}
-                      </h3>
-                      <span className="text-[10px] text-ink-muted">
-                        ({p.sourceCount} sources)
-                      </span>
+            {/* Streaming content on the right */}
+            <div className="flex-1 min-w-0">
+              {streamingSections.length > 0 ? (
+                <div className="max-w-4xl mx-auto space-y-6">
+                  {streamingSections.map((section, idx) => (
+                    <div
+                      key={idx}
+                      className={`transition-all duration-700 ${
+                        section.animating
+                          ? "opacity-0 translate-y-4"
+                          : "opacity-100 translate-y-0"
+                      }`}
+                    >
+                      <ResearchDocument
+                        markdownReport={section.markdown}
+                        sources={sources}
+                      />
                     </div>
-                    <p className="text-xs text-ink-muted leading-relaxed">
-                      {p.findings}
-                    </p>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center min-h-[400px]">
+                  <div className="text-center space-y-4">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-blue-500/10 flex items-center justify-center">
+                      <Microscope size={28} className="text-blue-400 animate-pulse" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">{progressMessage}</p>
+                      <p className="text-gray-500 text-sm mt-1">
+                        Researching: {topic}
+                      </p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </GlassPanel>
-          )}
-
-          {/* Gaps & Contradictions */}
-          {(report.gaps.length > 0 || report.contradictions.length > 0) && (
-            <GlassPanel className="p-6">
-              {report.gaps.length > 0 && (
-                <div className="mb-4">
-                  <h2 className="text-lg font-serif font-semibold text-ink mb-3">
-                    Research Gaps
-                  </h2>
-                  <ul className="space-y-1">
-                    {report.gaps.map((gap, i) => (
-                      <li
-                        key={i}
-                        className="flex gap-2 text-sm text-amber-600"
-                      >
-                        <Warning size={14} className="shrink-0 mt-0.5" />
-                        <span className="text-ink-muted">{gap}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               )}
-
-              {report.contradictions.length > 0 && (
-                <div>
-                  <h2 className="text-lg font-serif font-semibold text-ink mb-3">
-                    Contradictions
-                  </h2>
-                  <ul className="space-y-1">
-                    {report.contradictions.map((c, i) => (
-                      <li
-                        key={i}
-                        className="flex gap-2 text-sm text-red-500"
-                      >
-                        <Warning size={14} className="shrink-0 mt-0.5" />
-                        <span className="text-ink-muted">{c}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </GlassPanel>
-          )}
-
-          {/* Sources */}
-          <GlassPanel className="p-6">
-            <h2 className="text-lg font-serif font-semibold text-ink mb-3">
-              Sources ({report.sources.length})
-            </h2>
-            <div className="space-y-2 max-h-96 overflow-y-auto">
-              {report.sources.slice(0, 50).map((s, i) => (
-                <div
-                  key={i}
-                  className="p-3 rounded-lg bg-surface-raised/30 text-xs"
-                >
-                  <p className="font-medium text-ink leading-snug">
-                    {s.doi ? (
-                      <a
-                        href={`https://doi.org/${s.doi}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-brand transition-colors"
-                      >
-                        {s.title}
-                      </a>
-                    ) : (
-                      s.title
-                    )}
-                  </p>
-                  <p className="text-ink-muted mt-0.5">
-                    {s.authors.slice(0, 3).join(", ")}
-                    {s.authors.length > 3 && " et al."} · {s.journal} ·{" "}
-                    {s.year}
-                    {s.citationCount ? ` · ${s.citationCount} citations` : ""}
-                  </p>
-                </div>
-              ))}
             </div>
-          </GlassPanel>
-        </div>
-      )}
+          </div>
+        )}
 
-      {/* Empty state */}
-      {state === "idle" && !report && (
-        <GlassPanel className="p-12 text-center">
-          <BookOpen size={48} className="mx-auto text-ink-muted/30 mb-4" />
-          <p className="text-sm text-ink-muted">
-            Enter a research question above to begin. Deep Research will search
-            across PubMed, Semantic Scholar, and OpenAlex, then synthesize
-            findings into a structured report.
-          </p>
-        </GlassPanel>
-      )}
+        {/* ── Done State: Full Report ────────────────────────────── */}
+        {pageState === "done" && report && (
+          <div>
+            {/* Topic & mode header */}
+            <div className="mb-8 text-center">
+              <h2 className="text-2xl font-bold text-white mb-2">{report.topic}</h2>
+              <div className="flex items-center justify-center gap-3 text-sm text-gray-400">
+                <span className="capitalize">{report.mode} mode</span>
+                <span>&middot;</span>
+                <span>{report.totalSources} sources analyzed</span>
+              </div>
+            </div>
+
+            {/* Render enhanced markdown report or legacy card view */}
+            {enhancedReport?.markdownReport ? (
+              <ResearchDocument
+                markdownReport={enhancedReport.markdownReport}
+                sources={sources}
+              />
+            ) : (
+              <LegacyReportView report={report as SynthesisReport} />
+            )}
+
+            {/* New research button */}
+            <div className="max-w-4xl mx-auto mt-12 text-center print:hidden">
+              <button
+                onClick={() => {
+                  setPageState("idle");
+                  setReport(null);
+                  setStreamingSections([]);
+                  setProgressStages([]);
+                  setTopic("");
+                }}
+                className="px-6 py-2.5 text-sm font-medium text-gray-300 bg-gray-800/50 border border-gray-700/50 rounded-lg hover:bg-gray-700/50 hover:text-white transition-colors"
+              >
+                Start New Research
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Error State ────────────────────────────────────────── */}
+        {pageState === "error" && (
+          <div className="max-w-lg mx-auto text-center space-y-4 pt-20">
+            <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
+              <AlertCircle size={28} className="text-red-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-white">Research Failed</h3>
+            <p className="text-gray-400 text-sm">{error}</p>
+            <button
+              onClick={() => {
+                setPageState("idle");
+                setError(null);
+              }}
+              className="px-6 py-2.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

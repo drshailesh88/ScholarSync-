@@ -1,274 +1,545 @@
 /**
- * Deep Research Engine — core orchestration.
+ * Deep Research Engine.
  *
- * Adapted from CursorWriter2. Uses ScholarSync's existing search
- * infrastructure (PubMed, Semantic Scholar, OpenAlex) and dedup logic.
- *
- * Pipeline:
+ * Implements a multi-round, citation-traversing, AI-guided research pipeline:
  *   1. Validate topic
- *   2. Generate expert perspectives (AI)
+ *   2. Generate perspectives (AI-guided research angles)
  *   3. Build exploration tree
- *   4. Execute parallel searches per perspective node
- *   5. Deduplicate across all sources
- *   6. Synthesize findings into a report (AI)
+ *   4. Round 1: Perspective-based searches across PubMed, Semantic Scholar, OpenAlex
+ *   5. Citation graph traversal (forward + backward via S2 API)
+ *   6. Round 2: AI-guided follow-up searches based on gaps
+ *   7. Round 3: Additional gap-filling (deep/exhaustive modes only)
+ *   8. Deduplicate all results
+ *   9. Unpaywall lookup for open-access full texts
+ *  10. Structured data extraction via AI
+ *  11. Convert to EnhancedPaper with perspectiveIds
+ *  12. Synthesize findings via multi-pass pipeline
  */
 
-import { randomUUID } from "crypto";
+import { generateText } from "ai";
+import { getSmallModel } from "@/lib/ai/models";
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
+import { batchLookupUnpaywall } from "@/lib/search/sources/unpaywall";
 import { deduplicateResults } from "@/lib/search/dedup";
-import type { UnifiedSearchResult } from "@/types/search";
+import { traverseCitationGraph, selectTopPapers } from "./citation-traversal";
+import { extractStructuredData } from "./data-extraction";
 import { generatePerspectives } from "./perspectives";
 import { synthesizeFindings } from "./synthesis";
+import type { UnifiedSearchResult } from "@/types/search";
 import type {
   ResearchConfig,
-  ResearchProgress,
+  ResearchMode,
+  Perspective,
+  ResearchProgressCallback,
   ExplorationTree,
   ExplorationNode,
-  Perspective,
-  SynthesisReport,
+  EnhancedPaper,
+  ExtractedPaperData,
+  DeepResearchResult,
 } from "./types";
+import { buildConfig } from "./types";
 
-// ── Topic validation ────────────────────────────────────────────────
+// ── Validation ────────────────────────────────────────────────────────
 
-export function validateTopic(topic: string): { valid: boolean; reason?: string } {
+export function validateTopic(topic: string): { valid: boolean; error?: string } {
   const trimmed = topic.trim();
   if (trimmed.length < 5) {
-    return { valid: false, reason: "Topic must be at least 5 characters." };
+    return { valid: false, error: "Topic must be at least 5 characters long" };
   }
   if (trimmed.length > 500) {
-    return { valid: false, reason: "Topic must be under 500 characters." };
+    return { valid: false, error: "Topic must be 500 characters or fewer" };
   }
   return { valid: true };
 }
 
-// ── Exploration tree ────────────────────────────────────────────────
+// ── Exploration Tree ──────────────────────────────────────────────────
 
+/**
+ * Build an exploration tree with the topic as root and one node per
+ * perspective search query.
+ */
 export function buildExplorationTree(
   topic: string,
   perspectives: Perspective[]
 ): ExplorationTree {
-  const nodes = new Map<string, ExplorationNode>();
-  const rootId = `root-${randomUUID().slice(0, 8)}`;
+  // Create one node per search query, grouped by perspective
+  const children: ExplorationNode[] = [];
+  let nodeIdx = 0;
 
-  // Root node
-  nodes.set(rootId, {
-    id: rootId,
-    query: topic,
-    perspectiveId: "root",
-    depth: 0,
-    status: "done",
-    results: [],
-    followUpQueries: [],
-  });
-
-  // One node per perspective search query
-  for (const perspective of perspectives) {
-    for (const query of perspective.searchQueries) {
-      const nodeId = `node-${randomUUID().slice(0, 8)}`;
-      nodes.set(nodeId, {
-        id: nodeId,
+  for (const p of perspectives) {
+    for (const query of p.searchQueries) {
+      children.push({
+        id: `node-${++nodeIdx}`,
         query,
-        perspectiveId: perspective.id,
+        perspectiveId: p.id,
         depth: 1,
-        status: "pending",
+        status: "pending" as const,
         results: [],
-        followUpQueries: [],
+        children: [],
       });
     }
   }
 
+  const root: ExplorationNode = {
+    id: "root",
+    query: topic,
+    perspectiveId: "",
+    depth: 0,
+    status: "complete",
+    results: [],
+    children,
+  };
+
   return {
-    rootId,
     topic,
-    nodes,
-    totalNodes: nodes.size,
-    completedNodes: 1, // root is "done"
+    root,
+    totalNodes: 1 + children.length,
   };
 }
 
-// ── Search execution ────────────────────────────────────────────────
+// ── Multi-Source Search ───────────────────────────────────────────────
 
+/**
+ * Search across PubMed, Semantic Scholar, and OpenAlex in parallel.
+ */
 async function searchAllSources(
   query: string,
   config: ResearchConfig,
-  perSourceLimit: number
+  perSourceLimit?: number
 ): Promise<UnifiedSearchResult[]> {
-  const params = {
-    query,
-    limit: perSourceLimit,
-    yearStart: config.yearStart,
-    yearEnd: config.yearEnd,
-  };
+  const limit = perSourceLimit || config.perSourceLimit;
 
-  const results = await Promise.allSettled([
-    searchPubMed(params.query, {
-      maxResults: params.limit,
-      yearStart: params.yearStart,
-      yearEnd: params.yearEnd,
+  const [pubmedResult, s2Result, oaResult] = await Promise.allSettled([
+    searchPubMed(query, {
+      maxResults: limit,
+      yearStart: config.yearStart,
+      yearEnd: config.yearEnd,
     }),
-    searchSemanticScholar(params.query, {
-      limit: params.limit,
-      yearStart: params.yearStart,
-      yearEnd: params.yearEnd,
+    searchSemanticScholar(query, {
+      limit,
+      yearStart: config.yearStart,
+      yearEnd: config.yearEnd,
     }),
-    searchOpenAlex(params.query, {
-      limit: params.limit,
-      yearStart: params.yearStart,
-      yearEnd: params.yearEnd,
+    searchOpenAlex(query, {
+      limit,
+      yearStart: config.yearStart,
+      yearEnd: config.yearEnd,
     }),
   ]);
 
-  const all: UnifiedSearchResult[] = [];
-  for (const result of results) {
-    if (result.status === "fulfilled" && result.value?.results) {
-      all.push(...result.value.results);
-    }
+  const results: UnifiedSearchResult[] = [];
+
+  if (pubmedResult.status === "fulfilled") {
+    results.push(...pubmedResult.value.results);
   }
-  return all;
+  if (s2Result.status === "fulfilled") {
+    results.push(...s2Result.value.results);
+  }
+  if (oaResult.status === "fulfilled") {
+    results.push(...oaResult.value.results);
+  }
+
+  return results;
 }
 
-// ── Main execution ──────────────────────────────────────────────────
+// ── Round 1: Execute Exploration Tree ─────────────────────────────────
 
-export async function executeResearch(
+/**
+ * Execute searches for all pending nodes in the exploration tree.
+ * Processes in batches of 3 with 500ms pause between batches.
+ */
+async function executeResearch(
   tree: ExplorationTree,
   config: ResearchConfig,
-  onProgress?: (progress: ResearchProgress) => void
-): Promise<UnifiedSearchResult[]> {
-  const allResults: UnifiedSearchResult[] = [];
-  const perSourceLimit = Math.max(5, Math.ceil(config.maxSources / 6));
-  const pendingNodes = [...tree.nodes.values()].filter(
-    (n) => n.status === "pending"
-  );
+  onProgress?: ResearchProgressCallback
+): Promise<void> {
+  const pendingNodes = tree.root.children.filter((n) => n.status === "pending");
 
-  // Process nodes in batches of 3 (to respect rate limits)
+  onProgress?.("searching", `Round 1: Searching ${pendingNodes.length} queries across 3 databases...`);
+
   const batchSize = 3;
+
   for (let i = 0; i < pendingNodes.length; i += batchSize) {
     const batch = pendingNodes.slice(i, i + batchSize);
 
-    const batchResults = await Promise.allSettled(
-      batch.map(async (node) => {
-        node.status = "searching";
-        try {
-          const results = await searchAllSources(node.query, config, perSourceLimit);
-          node.results = results;
-          node.status = "done";
-          tree.completedNodes++;
-          return results;
-        } catch {
-          node.status = "failed";
-          tree.completedNodes++;
-          return [] as UnifiedSearchResult[];
-        }
-      })
+    const batchPromises = batch.map(async (node) => {
+      node.status = "searching";
+      try {
+        node.results = await searchAllSources(node.query, config);
+        node.status = "complete";
+      } catch (error) {
+        console.error(`[DeepResearch] Search failed for node ${node.id}:`, error);
+        node.status = "failed";
+      }
+    });
+
+    await Promise.all(batchPromises);
+
+    const processed = Math.min(i + batchSize, pendingNodes.length);
+    const totalResults = pendingNodes
+      .filter((n) => n.status === "complete")
+      .reduce((sum, n) => sum + n.results.length, 0);
+
+    onProgress?.(
+      "searching",
+      `Round 1: ${processed}/${pendingNodes.length} queries searched (${totalResults} papers found)`
     );
 
+    if (i + batchSize < pendingNodes.length) {
+      await sleep(500);
+    }
+  }
+}
+
+// ── Round 2 & 3: AI-Guided Follow-up Searches ────────────────────────
+
+/**
+ * Analyze initial findings and generate follow-up search queries using AI.
+ */
+async function generateFollowUpQueries(
+  topic: string,
+  existingResults: UnifiedSearchResult[],
+  round: number
+): Promise<string[]> {
+  const topPapers = existingResults
+    .sort((a, b) => (b.citationCount || 0) - (a.citationCount || 0))
+    .slice(0, 20)
+    .map((p) => `- "${p.title}" (${p.year}) [${p.citationCount} citations] ${p.studyType || ""}`)
+    .join("\n");
+
+  try {
+    const { text } = await generateText({
+      model: getSmallModel(),
+      system: `You are a research librarian helping to deepen a literature search. Given a topic and initial findings, identify gaps and generate targeted follow-up search queries.
+
+Focus on:
+- Key clinical trials or landmark studies that may be missing
+- Specific author names who are leaders in this field
+- Drug names, intervention types, or specific methodologies
+- Sub-populations or sub-topics that need more coverage
+- Recent developments or emerging evidence
+
+Return a JSON array of 3-6 search query strings. Each query should be specific and different from what was already searched.`,
+      prompt: `Research topic: "${topic}"
+
+Round ${round} analysis. Current findings (${existingResults.length} papers):
+${topPapers}
+
+What specific follow-up searches would deepen this research? Return as JSON array of search query strings.`,
+      maxOutputTokens: 1000,
+    });
+
+    let jsonStr = text.trim();
+    const codeBlockMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (codeBlockMatch) {
+      jsonStr = codeBlockMatch[1].trim();
+    }
+
+    const queries: string[] = JSON.parse(jsonStr);
+    return Array.isArray(queries) ? queries.slice(0, 6) : [];
+  } catch (error) {
+    console.error(`[DeepResearch] Failed to generate follow-up queries (round ${round}):`, error);
+    return [];
+  }
+}
+
+/**
+ * Run a follow-up search round with AI-generated queries.
+ */
+async function executeFollowUpRound(
+  topic: string,
+  existingResults: UnifiedSearchResult[],
+  config: ResearchConfig,
+  round: number,
+  onProgress?: ResearchProgressCallback
+): Promise<UnifiedSearchResult[]> {
+  const stage = round === 2 ? "search-round-2" as const : "search-round-3" as const;
+  onProgress?.(stage, `Analyzing gaps and generating follow-up queries (round ${round})...`);
+
+  const followUpQueries = await generateFollowUpQueries(topic, existingResults, round);
+
+  if (followUpQueries.length === 0) {
+    onProgress?.(stage, `Round ${round}: No additional queries needed`);
+    return [];
+  }
+
+  onProgress?.(stage, `Round ${round}: Running ${followUpQueries.length} follow-up searches...`);
+
+  const allNewResults: UnifiedSearchResult[] = [];
+  const batchSize = 3;
+
+  for (let i = 0; i < followUpQueries.length; i += batchSize) {
+    const batch = followUpQueries.slice(i, i + batchSize);
+
+    const batchPromises = batch.map((query) =>
+      searchAllSources(query, config, Math.min(config.perSourceLimit, 10))
+    );
+
+    const batchResults = await Promise.allSettled(batchPromises);
     for (const result of batchResults) {
       if (result.status === "fulfilled") {
-        allResults.push(...result.value);
+        allNewResults.push(...result.value);
       }
     }
 
-    // Report progress
-    onProgress?.({
-      stage: "research",
-      message: `Searched ${Math.min(i + batchSize, pendingNodes.length)} of ${pendingNodes.length} queries...`,
-      progress: 30 + Math.round(((i + batchSize) / pendingNodes.length) * 50),
-      nodesExplored: tree.completedNodes,
-      sourcesFound: allResults.length,
-    });
+    const processed = Math.min(i + batchSize, followUpQueries.length);
+    onProgress?.(
+      stage,
+      `Round ${round}: ${processed}/${followUpQueries.length} queries completed (${allNewResults.length} new papers)`
+    );
 
-    // Brief pause between batches for rate limits
-    if (i + batchSize < pendingNodes.length) {
-      await new Promise((r) => setTimeout(r, 500));
+    if (i + batchSize < followUpQueries.length) {
+      await sleep(500);
     }
   }
 
-  return allResults;
+  return allNewResults;
 }
 
-// ── Full pipeline ───────────────────────────────────────────────────
+// ── Unpaywall Lookup ──────────────────────────────────────────────────
 
-export async function runDeepResearch(
-  topic: string,
-  config: ResearchConfig,
-  onProgress?: (progress: ResearchProgress) => void
-): Promise<SynthesisReport> {
-  // 1. Validate
-  const validation = validateTopic(topic);
-  if (!validation.valid) {
-    throw new Error(validation.reason);
+async function lookupFullTextAccess(
+  papers: UnifiedSearchResult[],
+  onProgress?: ResearchProgressCallback
+): Promise<Map<string, { pdfUrl: string | null; isOpenAccess: boolean }>> {
+  const doisToLookup = papers
+    .filter((p) => p.doi)
+    .map((p) => p.doi!)
+    .slice(0, 100);
+
+  if (doisToLookup.length === 0) {
+    return new Map();
   }
 
-  onProgress?.({
-    stage: "initialization",
-    message: "Starting deep research session...",
-    progress: 0,
+  onProgress?.("unpaywall-lookup", `Looking up full-text access for ${doisToLookup.length} papers...`);
+
+  try {
+    const results = await batchLookupUnpaywall(doisToLookup);
+    const oaCount = Array.from(results.values()).filter((r) => r.isOpenAccess).length;
+    onProgress?.(
+      "unpaywall-lookup",
+      `Unpaywall: ${oaCount}/${doisToLookup.length} papers have open access`
+    );
+    return results;
+  } catch (error) {
+    console.warn("[DeepResearch] Unpaywall lookup failed:", error);
+    return new Map();
+  }
+}
+
+// ── Paper Enhancement ─────────────────────────────────────────────────
+
+/**
+ * Track which perspective found each paper.
+ */
+function buildPerspectiveMap(
+  tree: ExplorationTree
+): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>();
+
+  for (const node of tree.root.children) {
+    if (!node.perspectiveId) continue;
+    for (const result of node.results) {
+      const key = result.doi || result.pmid || result.s2Id || result.title;
+      if (!map.has(key)) {
+        map.set(key, new Set());
+      }
+      map.get(key)!.add(node.perspectiveId);
+    }
+  }
+
+  return map;
+}
+
+function getPaperKey(paper: UnifiedSearchResult): string {
+  return paper.doi || paper.pmid || paper.s2Id || paper.title.slice(0, 50);
+}
+
+/**
+ * Convert UnifiedSearchResult papers to EnhancedPaper format.
+ */
+function enhancePapers(
+  papers: UnifiedSearchResult[],
+  perspectiveMap: Map<string, Set<string>>,
+  extractedData: Map<string, ExtractedPaperData>,
+  unpaywallData: Map<string, { pdfUrl: string | null; isOpenAccess: boolean }>
+): EnhancedPaper[] {
+  return papers.map((paper) => {
+    const key = getPaperKey(paper);
+    const perspectiveIds = perspectiveMap.has(key)
+      ? Array.from(perspectiveMap.get(key)!)
+      : [];
+
+    const extraction = extractedData.get(key);
+    const unpaywall = paper.doi ? unpaywallData.get(paper.doi) : undefined;
+
+    return {
+      ...paper,
+      perspectiveIds,
+      extractedData: extraction,
+      fullTextUrl: unpaywall?.pdfUrl || paper.openAccessPdfUrl || undefined,
+      isOpenAccess: unpaywall?.isOpenAccess || paper.isOpenAccess,
+    };
   });
+}
 
-  // 2. Generate perspectives
-  onProgress?.({
-    stage: "perspective-generation",
-    message: "Generating expert perspectives...",
-    progress: 5,
-  });
+// ── Utility ───────────────────────────────────────────────────────────
 
-  const perspectives = await generatePerspectives(topic, config);
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  onProgress?.({
-    stage: "perspective-generation",
-    message: `Generated ${perspectives.length} research perspectives.`,
-    progress: 15,
-    perspectivesGenerated: perspectives.length,
-  });
+// ── Main Pipeline ─────────────────────────────────────────────────────
 
-  // 3. Build exploration tree
+/**
+ * Run the full deep research pipeline.
+ */
+export async function runDeepResearch(
+  topic: string,
+  modeOrConfig?: ResearchMode | Partial<ResearchConfig>,
+  onProgress?: ResearchProgressCallback
+): Promise<DeepResearchResult> {
+  const startTime = Date.now();
+
+  // ── Step 1: Validate ──────────────────────────────────────────────
+  onProgress?.("validating", "Validating research topic...");
+  const validation = validateTopic(topic);
+  if (!validation.valid) {
+    throw new Error(validation.error);
+  }
+
+  // ── Resolve config ────────────────────────────────────────────────
+  let resolvedConfig: ResearchConfig;
+  if (typeof modeOrConfig === "string") {
+    resolvedConfig = buildConfig(modeOrConfig);
+  } else {
+    const mode: ResearchMode = modeOrConfig?.mode || "standard";
+    resolvedConfig = buildConfig(mode, modeOrConfig);
+  }
+
+  // ── Step 2: Generate perspectives ─────────────────────────────────
+  onProgress?.("generating-perspectives", "Generating research perspectives...");
+  const perspectives = await generatePerspectives(topic, resolvedConfig);
+  onProgress?.("generating-perspectives", `Generated ${perspectives.length} perspectives`);
+
+  // ── Step 3: Build exploration tree ────────────────────────────────
+  onProgress?.("building-tree", "Building exploration tree...");
   const tree = buildExplorationTree(topic, perspectives);
 
-  onProgress?.({
-    stage: "research",
-    message: `Exploring ${tree.totalNodes - 1} search queries across databases...`,
-    progress: 20,
-  });
+  // ── Step 4: Round 1 search ────────────────────────────────────────
+  await executeResearch(tree, resolvedConfig, onProgress);
 
-  // 4. Execute searches
-  const allResults = await executeResearch(tree, config, onProgress);
+  // Collect Round 1 results
+  let allResults: UnifiedSearchResult[] = [];
+  const perspectiveMap = buildPerspectiveMap(tree);
 
-  // 5. Deduplicate
-  onProgress?.({
-    stage: "deduplication",
-    message: `Deduplicating ${allResults.length} results...`,
-    progress: 82,
-    sourcesFound: allResults.length,
-  });
+  for (const node of tree.root.children) {
+    allResults.push(...node.results);
+  }
 
+  let searchRounds = 1;
+
+  // ── Step 5: Citation graph traversal ──────────────────────────────
+  let citationTraversalCount = 0;
+  try {
+    const dedupedRound1 = deduplicateResults(allResults);
+    const seedPapers = selectTopPapers(
+      dedupedRound1,
+      resolvedConfig.mode === "quick" ? 5 : 10
+    );
+
+    if (seedPapers.length > 0) {
+      const citationResults = await traverseCitationGraph(seedPapers, onProgress);
+      citationTraversalCount = citationResults.length;
+      allResults.push(...citationResults);
+    }
+  } catch (error) {
+    console.warn("[DeepResearch] Citation traversal failed, continuing:", error);
+    onProgress?.("citation-traversal", "Citation traversal failed — continuing without it");
+  }
+
+  // ── Step 6: Round 2 search (AI-guided follow-up) ──────────────────
+  if (resolvedConfig.depth >= 2) {
+    const round2Results = await executeFollowUpRound(
+      topic,
+      deduplicateResults(allResults),
+      resolvedConfig,
+      2,
+      onProgress
+    );
+    allResults.push(...round2Results);
+    searchRounds = 2;
+  }
+
+  // ── Step 7: Round 3 search (deep/exhaustive only) ─────────────────
+  if (resolvedConfig.depth >= 3) {
+    const round3Results = await executeFollowUpRound(
+      topic,
+      deduplicateResults(allResults),
+      resolvedConfig,
+      3,
+      onProgress
+    );
+    allResults.push(...round3Results);
+    searchRounds = 3;
+  }
+
+  // ── Step 8: Deduplicate ───────────────────────────────────────────
+  onProgress?.("deduplicating", `Deduplicating ${allResults.length} results...`);
   const deduplicated = deduplicateResults(allResults);
+  onProgress?.(
+    "deduplicating",
+    `Deduplication: ${allResults.length} → ${deduplicated.length} unique papers`
+  );
 
-  onProgress?.({
-    stage: "deduplication",
-    message: `${deduplicated.length} unique papers (${allResults.length - deduplicated.length} duplicates removed).`,
-    progress: 85,
-    sourcesFound: deduplicated.length,
-  });
+  // ── Step 9: Unpaywall lookup ──────────────────────────────────────
+  const unpaywallData = await lookupFullTextAccess(deduplicated, onProgress);
 
-  // 6. Synthesize
-  onProgress?.({
-    stage: "synthesis",
-    message: "Synthesizing findings into a report...",
-    progress: 88,
-  });
+  // ── Step 10: Structured data extraction ───────────────────────────
+  const papersForExtraction = deduplicated
+    .filter((p) => p.abstract)
+    .sort((a, b) => (b.citationCount || 0) - (a.citationCount || 0))
+    .slice(0, resolvedConfig.mode === "quick" ? 10 : resolvedConfig.mode === "standard" ? 20 : 40);
 
-  const report = await synthesizeFindings(topic, config, perspectives, deduplicated);
+  const extractedData = await extractStructuredData(papersForExtraction, onProgress);
 
-  onProgress?.({
-    stage: "complete",
-    message: "Research complete!",
-    progress: 100,
-    sourcesFound: deduplicated.length,
-    perspectivesGenerated: perspectives.length,
-    nodesExplored: tree.completedNodes,
-  });
+  // ── Step 11: Enhance papers ───────────────────────────────────────
+  const enhancedPapers = enhancePapers(
+    deduplicated,
+    perspectiveMap,
+    extractedData,
+    unpaywallData
+  );
 
-  return report;
+  // ── Step 12: Synthesize via multi-pass pipeline ───────────────────
+  onProgress?.("synthesizing", `Synthesizing findings from ${enhancedPapers.length} papers...`);
+
+  const synthesisProgress: import("./types").SynthesisProgressCallback = (stage, message) => {
+    // Bridge synthesis progress to research progress
+    onProgress?.(stage as import("./types").ResearchStage, message);
+  };
+
+  const report = await synthesizeFindings(
+    topic,
+    resolvedConfig,
+    perspectives,
+    enhancedPapers,
+    synthesisProgress
+  );
+
+  // ── Build result ──────────────────────────────────────────────────
+  const durationMs = Date.now() - startTime;
+
+  onProgress?.("complete", `Research complete: ${enhancedPapers.length} papers, ${searchRounds} rounds, ${Math.round(durationMs / 1000)}s`);
+
+  return {
+    report,
+    sources: enhancedPapers,
+    searchRounds,
+    citationTraversalPapers: citationTraversalCount,
+    extractedDataCount: extractedData.size,
+    durationMs,
+  };
 }
