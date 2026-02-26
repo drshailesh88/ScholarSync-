@@ -13,6 +13,7 @@ import {
   computeEffectSize,
   computeFixedEffectsMeta,
   computeRandomEffectsMeta,
+  computeREML,
   eggerTest,
   trimAndFill,
   runSubgroupAnalysis,
@@ -807,5 +808,107 @@ describe("runSensitivityAnalysis", () => {
     const withoutOutlier = result.find((r) => r.excludedStudyName === "Outlier");
     const fullMeta = computeFixedEffectsMeta(withOutlier);
     expect(Math.abs(withoutOutlier!.pooled.effect - fullMeta.pooled.effect)).toBeGreaterThan(0.1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// REML estimator
+// ---------------------------------------------------------------------------
+
+describe("REML estimator", () => {
+  // Dataset with genuine heterogeneity (effects spread across a range)
+  const typicalStudies: StudyEffect[] = [
+    makeStudy("A", 0.1,  0.20),
+    makeStudy("B", 0.8,  0.30),
+    makeStudy("C", -0.2, 0.25),
+    makeStudy("D", 1.2,  0.40),
+    makeStudy("E", 0.5,  0.15),
+  ];
+
+  it("REML converges for typical heterogeneous data (3+ studies)", () => {
+    const result = computeREML(typicalStudies);
+    expect(result.converged).toBe(true);
+    expect(result.iterations).toBeGreaterThan(0);
+  });
+
+  it("REML tau² is always non-negative", () => {
+    const result = computeREML(typicalStudies);
+    expect(result.tau2).toBeGreaterThanOrEqual(0);
+  });
+
+  it("REML tau² for identical effects is approximately 0", () => {
+    const identical: StudyEffect[] = [
+      makeStudy("A", 0.5, 0.2),
+      makeStudy("B", 0.5, 0.15),
+      makeStudy("C", 0.5, 0.3),
+    ];
+    const result = computeREML(identical);
+    expect(result.tau2).toBeCloseTo(0, 4);
+  });
+
+  it("REML with a single study returns tau2 = 0 without iterating", () => {
+    const single = [makeStudy("X", 0.7, 0.3)];
+    const result = computeREML(single);
+    expect(result.tau2).toBe(0);
+    expect(result.converged).toBe(true);
+    expect(result.iterations).toBe(0);
+  });
+
+  it("computeRandomEffectsMeta with method='REML' produces a valid pooled result", () => {
+    const { pooled, heterogeneity, weightedStudies } =
+      computeRandomEffectsMeta(typicalStudies, "REML");
+
+    expect(typeof pooled.effect).toBe("number");
+    expect(isNaN(pooled.effect)).toBe(false);
+    expect(pooled.ciLower).toBeLessThan(pooled.effect);
+    expect(pooled.ciUpper).toBeGreaterThan(pooled.effect);
+    expect(pooled.pValue).toBeGreaterThanOrEqual(0);
+    expect(pooled.pValue).toBeLessThanOrEqual(1);
+    expect(heterogeneity.tau2).toBeGreaterThanOrEqual(0);
+
+    const totalPct = weightedStudies.reduce((s, st) => s + (st.weight ?? 0), 0);
+    expect(totalPct).toBeCloseTo(100, 2);
+  });
+
+  it("REML method='REML' tau² equals computeREML tau²", () => {
+    const remlDirect = computeREML(typicalStudies);
+    const { heterogeneity } = computeRandomEffectsMeta(typicalStudies, "REML");
+    expect(heterogeneity.tau2).toBeCloseTo(remlDirect.tau2, 6);
+  });
+
+  it("REML CI is typically different from DL CI when heterogeneity exists", () => {
+    const dl   = computeRandomEffectsMeta(typicalStudies, "DL");
+    const reml = computeRandomEffectsMeta(typicalStudies, "REML");
+    // CI widths may differ; at minimum the estimates should not be identical
+    // (REML and DL tau² estimators differ for finite-sample data)
+    const dlWidth   = dl.pooled.ciUpper   - dl.pooled.ciLower;
+    const remlWidth = reml.pooled.ciUpper - reml.pooled.ciLower;
+    // Both must be positive
+    expect(dlWidth).toBeGreaterThan(0);
+    expect(remlWidth).toBeGreaterThan(0);
+    // Their tau² estimates should differ by at least a small amount for this dataset
+    expect(Math.abs(reml.heterogeneity.tau2 - dl.heterogeneity.tau2)).toBeGreaterThan(1e-6);
+  });
+
+  it("DL method (default) is backward compatible — same result as before", () => {
+    const defaultResult = computeRandomEffectsMeta(typicalStudies);
+    const explicitDL    = computeRandomEffectsMeta(typicalStudies, "DL");
+    expect(defaultResult.pooled.effect).toBeCloseTo(explicitDL.pooled.effect, 8);
+    expect(defaultResult.pooled.se).toBeCloseTo(explicitDL.pooled.se, 8);
+    expect(defaultResult.heterogeneity.tau2).toBeCloseTo(explicitDL.heterogeneity.tau2, 8);
+  });
+
+  it("REML tau² is positive for a clearly heterogeneous dataset", () => {
+    // Five studies with wildly different effects: REML must detect heterogeneity
+    const highHet: StudyEffect[] = [
+      makeStudy("A", -0.5, 0.1),
+      makeStudy("B",  0.0, 0.1),
+      makeStudy("C",  0.5, 0.1),
+      makeStudy("D",  1.0, 0.1),
+      makeStudy("E",  1.5, 0.1),
+    ];
+    const result = computeREML(highHet);
+    expect(result.tau2).toBeGreaterThan(0);
+    expect(result.converged).toBe(true);
   });
 });

@@ -277,15 +277,111 @@ export function computeFixedEffectsMeta(
 }
 
 // ---------------------------------------------------------------------------
-// Random-effects meta-analysis (DerSimonian-Laird)
+// REML (Restricted Maximum Likelihood) estimator for tau²
 // ---------------------------------------------------------------------------
 
-export function computeRandomEffectsMeta(
+/**
+ * Computes the REML estimate of tau² using the Fisher scoring algorithm.
+ *
+ * REML is the default estimator in Cochrane RevMan 2025 and is generally
+ * preferred over DerSimonian-Laird for its better statistical properties,
+ * particularly reduced bias when the number of studies is small.
+ *
+ * Reference: Viechtbauer (2005), "Bias and efficiency of meta-analytic
+ * variance estimators in the random-effects model", JASA.
+ */
+export function computeREML(
   studies: StudyEffect[]
+): { tau2: number; converged: boolean; iterations: number } {
+  const k = studies.length;
+  if (k < 2) return { tau2: 0, converged: true, iterations: 0 };
+
+  const effects = studies.map((s) => s.effect);
+  const variances = studies.map((s) => s.se * s.se);
+
+  // Step 1: Compute DerSimonian-Laird tau² as starting value
+  const wFixed = variances.map((v) => 1 / v);
+  const sumW = wFixed.reduce((a, b) => a + b, 0);
+  const muFixed =
+    wFixed.reduce((acc, w, i) => acc + w * effects[i], 0) / sumW;
+  const Q = wFixed.reduce(
+    (acc, w, i) => acc + w * (effects[i] - muFixed) ** 2,
+    0
+  );
+  const c =
+    sumW - wFixed.reduce((acc, w) => acc + (w * w) / sumW, 0);
+  let tau2 = Math.max(0, (Q - (k - 1)) / c);
+
+  // Step 2: Fisher scoring iterations
+  const maxIter = 100;
+  const tol = 1e-5;
+  let converged = false;
+  let iter = 0;
+
+  for (iter = 0; iter < maxIter; iter++) {
+    const w = variances.map((v) => 1 / (tau2 + v));
+    const sumW_re = w.reduce((a, b) => a + b, 0);
+    const mu =
+      w.reduce((acc, wi, i) => acc + wi * effects[i], 0) / sumW_re;
+
+    // P_i = w_i - w_i² / sum(w)
+    const P = w.map((wi) => wi - (wi * wi) / sumW_re);
+
+    // Score: s = 0.5 * [-sum(P_i) + sum(P_i² * (y_i - mu)²)]
+    const score =
+      0.5 *
+      (-P.reduce((a, b) => a + b, 0) +
+        P.reduce((acc, pi, i) => acc + pi * pi * (effects[i] - mu) ** 2, 0));
+
+    // Fisher information: I = 0.5 * sum(P_i²)
+    const info = 0.5 * P.reduce((acc, pi) => acc + pi * pi, 0);
+
+    if (info === 0) break;
+
+    let tau2New = tau2 + score / info;
+
+    // Step halving if tau2New is negative
+    let halving = 0;
+    while (tau2New < 0 && halving < 20) {
+      halving++;
+      tau2New = tau2 + Math.pow(0.5, halving) * (score / info);
+    }
+    if (tau2New < 0) tau2New = 0;
+
+    if (Math.abs(tau2New - tau2) < tol) {
+      tau2 = tau2New;
+      converged = true;
+      iter++;
+      break;
+    }
+    tau2 = tau2New;
+  }
+
+  return { tau2, converged, iterations: iter };
+}
+
+// ---------------------------------------------------------------------------
+// Random-effects meta-analysis (DerSimonian-Laird or REML)
+// ---------------------------------------------------------------------------
+
+export type RandomEffectsMethod = "DL" | "REML";
+
+export function computeRandomEffectsMeta(
+  studies: StudyEffect[],
+  method: RandomEffectsMethod = "DL"
 ): { pooled: PooledResult; heterogeneity: HeterogeneityStats; weightedStudies: StudyEffect[] } {
-  // First compute fixed-effects to get tau²
+  // Compute fixed-effects first to get Q, I², df, H² (used for heterogeneity stats)
   const fixed = computeFixedEffectsMeta(studies);
-  const tau2 = fixed.heterogeneity.tau2;
+
+  // Determine tau² using the requested method
+  let tau2: number;
+  if (method === "REML") {
+    const reml = computeREML(studies);
+    tau2 = reml.tau2;
+  } else {
+    // DerSimonian-Laird (default — backward compatible)
+    tau2 = fixed.heterogeneity.tau2;
+  }
 
   // Random-effects weights: w*_i = 1 / (SE_i² + tau²)
   const weights = studies.map((s) => 1 / (s.se * s.se + tau2));
@@ -302,6 +398,12 @@ export function computeRandomEffectsMeta(
     weight: (weights[i] / totalWeight) * 100,
   }));
 
+  // Build heterogeneity stats; tau2 reflects the chosen estimator
+  const heterogeneity: HeterogeneityStats = {
+    ...fixed.heterogeneity,
+    tau2,
+  };
+
   return {
     pooled: {
       effect: pooledEffect,
@@ -311,7 +413,7 @@ export function computeRandomEffectsMeta(
       zValue,
       pValue: zToPValue(zValue),
     },
-    heterogeneity: fixed.heterogeneity,
+    heterogeneity,
     weightedStudies,
   };
 }
