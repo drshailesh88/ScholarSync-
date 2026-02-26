@@ -296,3 +296,17 @@ export {
   type ScreeningDecision,
   type ScreeningFunction,
 } from "./validation/screening-benchmark";
+
+// ---------------------------------------------------------------------------
+// Network Meta-Analysis — Graph-theoretical approach (Ruecker 2012)
+// ---------------------------------------------------------------------------
+
+export {
+  buildNetworkGraph,
+  computeNMA,
+  computeLeagueTable,
+  computePScores,
+  testInconsistency,
+  type NMAStudy,
+  type NMAResult,
+} from "./network-meta-analysis";

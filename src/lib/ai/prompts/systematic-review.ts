@@ -377,3 +377,61 @@ Respond as a JSON object with:
   ]
 }`;
 }
+
+// ---------------------------------------------------------------------------
+// Data Extraction with Chunked Full-Text (source linking)
+// ---------------------------------------------------------------------------
+
+export function getChunkedDataExtractionPrompt(
+  schema: Array<{ field: string; description: string; type: string }>,
+  title: string,
+  chunks: Array<{ chunkId: number; chunkIndex: number; text: string; sectionType: string | null; pageNumber: number | null }>
+): string {
+  const schemaFormatted = schema
+    .map((s) => `- ${s.field} (${s.type}): ${s.description}`)
+    .join("\n");
+
+  // Format chunks with their IDs so the AI can reference them
+  const chunksFormatted = chunks
+    .map(
+      (c) =>
+        `[CHUNK_ID:${c.chunkId}|INDEX:${c.chunkIndex}${c.sectionType ? `|SECTION:${c.sectionType}` : ""}${c.pageNumber ? `|PAGE:${c.pageNumber}` : ""}]\n${c.text}`
+    )
+    .join("\n\n---\n\n");
+
+  return `You are extracting structured data from a research paper for a systematic review.
+You have access to the FULL TEXT of the paper, split into labeled chunks. Each chunk has a CHUNK_ID you must reference.
+
+PAPER:
+Title: ${title}
+
+FULL TEXT (chunked):
+${chunksFormatted}
+
+EXTRACTION SCHEMA:
+${schemaFormatted}
+
+For each field in the schema, extract the value from the paper text.
+If a value is not found or not applicable, use null for the value.
+
+CRITICAL: For each extraction you MUST provide:
+1. The extracted value
+2. The CHUNK_ID of the chunk where the information was found (sourceChunkId)
+3. An exact or near-exact quote from that chunk (sourceQuote) — copy the relevant sentence(s) verbatim
+4. Your confidence level (0.0-1.0)
+
+If you cannot find a value, set sourceChunkId to the most relevant chunk's ID and explain in sourceQuote why the data was not found.
+
+Respond as a JSON object with:
+{
+  "extractions": [
+    {
+      "field": "field_name",
+      "value": "extracted value or null",
+      "sourceChunkId": 123,
+      "sourceQuote": "exact quote from the chunk text",
+      "confidence": 0.0-1.0
+    }
+  ]
+}`;
+}
