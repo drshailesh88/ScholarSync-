@@ -185,6 +185,14 @@ export {
 } from "./collaboration";
 
 export {
+  generateEvidenceGapMap,
+  type GapMapCell,
+  type GapMapData,
+  type EffectDirection,
+  type CertaintyLevel,
+} from "./evidence-gap-map";
+
+export {
   generateRevManExport,
   type RevManExportPackage,
 } from "./revman-export";
@@ -197,3 +205,16 @@ export {
   type PRESSElement,
   type PRESSValidation,
 } from "./press-validation";
+
+export {
+  AMSTAR2_ITEMS,
+  assessAMSTAR2,
+  getAMSTAR2Assessment,
+  AMSTAR2_RATING_LABELS,
+  CONFIDENCE_LABELS,
+  type AMSTAR2Item,
+  type AMSTAR2Rating,
+  type AMSTAR2ItemResult,
+  type AMSTAR2Assessment,
+  type OverallConfidence,
+} from "./amstar2-checklist";
