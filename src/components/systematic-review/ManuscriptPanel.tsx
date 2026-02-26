@@ -87,6 +87,7 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
   const [customInstructions, setCustomInstructions] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [copiedSection, setCopiedSection] = useState<ManuscriptSection | null>(null);
+  const [isExportingDocx, setIsExportingDocx] = useState(false);
 
   const generatedCount = Object.values(sections).filter(Boolean).length;
 
@@ -284,6 +285,52 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
     URL.revokeObjectURL(url);
   };
 
+  // Export as DOCX via API
+  const exportDocx = async () => {
+    const generatedSections = Object.entries(sections).filter(
+      ([, data]) => data !== null
+    ) as [ManuscriptSection, SectionData][];
+    if (generatedSections.length === 0) return;
+
+    setIsExportingDocx(true);
+    setError(null);
+
+    try {
+      const sectionsMap: Record<string, string> = {};
+      for (const [key, data] of generatedSections) {
+        sectionsMap[key] = data.content;
+      }
+
+      const res = await fetch("/api/systematic-review/manuscript-export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectId,
+          title: "Systematic Review Manuscript Draft",
+          sections: sectionsMap,
+          format: "docx",
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "DOCX export failed");
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "manuscript-draft.docx";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to export DOCX");
+    } finally {
+      setIsExportingDocx(false);
+    }
+  };
+
   const currentData = sections[activeSection];
   const isEditing = editingSection === activeSection;
   const isLoading = generatingSection === activeSection;
@@ -340,6 +387,23 @@ export function ManuscriptPanel({ projectId }: ManuscriptPanelProps) {
               >
                 <Download size={14} />
                 Export Markdown
+              </button>
+              <button
+                onClick={exportDocx}
+                disabled={isExportingDocx}
+                className="flex items-center gap-1.5 px-3 py-2 border border-border rounded-md text-sm text-ink-muted hover:text-ink disabled:opacity-50 transition-colors"
+              >
+                {isExportingDocx ? (
+                  <>
+                    <CircleNotch weight="bold" className="animate-spin" size={14} />
+                    Exporting...
+                  </>
+                ) : (
+                  <>
+                    <Download size={14} />
+                    Download DOCX
+                  </>
+                )}
               </button>
               <a
                 href="/studio"
