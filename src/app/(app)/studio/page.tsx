@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
 import { CircularGauge } from "@/components/ui/circular-gauge";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { CitationDialog } from "@/components/citations/citation-dialog";
 import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
@@ -309,8 +310,9 @@ function StudioContent() {
           prompt = "Help me add a citation from my library. What paper should I cite here?";
           break;
         case "integrity-check":
-          prompt = `Analyze the following text for potential integrity issues (AI-generated content, plagiarism risks, citation gaps):\n\n${detail.context || ""}`;
-          break;
+          // Switch to the Checks tab — the IntegrityPanel handles the API call
+          setAiTab("checks");
+          return;
         default:
           return;
       }
@@ -933,33 +935,9 @@ function StudioContent() {
           )}
 
           {aiTab === "checks" && (
-            <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto">
-              <div className="flex flex-col items-center py-4">
-                <CircularGauge value={92} label="Human Score" size={100} />
-              </div>
-              <div className="space-y-3">
-                <div className="p-3 rounded-lg bg-surface-raised">
-                  <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck size={14} className="text-emerald-500" />
-                    <span className="text-xs font-medium text-ink">AI Detection</span>
-                  </div>
-                  <p className="text-xs text-ink-muted">92% human-written confidence</p>
-                </div>
-                <div className="p-3 rounded-lg bg-surface-raised">
-                  <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck size={14} className="text-amber-500" />
-                    <span className="text-xs font-medium text-ink">Plagiarism</span>
-                  </div>
-                  <p className="text-xs text-ink-muted">2 matches found</p>
-                  <Link
-                    href="/compliance"
-                    className="text-xs text-brand hover:text-brand-hover mt-1 inline-block"
-                  >
-                    Review Matches →
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <IntegrityPanel
+              getEditorText={() => editorRef.current?.getText() ?? ""}
+            />
           )}
         </aside>
       )}
