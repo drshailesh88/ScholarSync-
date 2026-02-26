@@ -7,7 +7,7 @@ import {
   VideoCamera,
   X,
   Record,
-  Corners,
+  CornersOut,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { RecordingOptions } from "@/lib/recording/presentation-recorder";
@@ -345,7 +345,7 @@ export function RecordingSetupModal({
                     {/* Position picker */}
                     <div className="space-y-1">
                       <span className="text-xs text-white/40 flex items-center gap-1">
-                        <Corners weight="bold" className="w-3 h-3" />
+                        <CornersOut weight="bold" className="w-3 h-3" />
                         Position
                       </span>
                       <div className="grid grid-cols-2 gap-1.5">
