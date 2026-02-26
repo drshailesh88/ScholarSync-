@@ -216,6 +216,128 @@ Respond as a JSON object with:
 }
 
 // ---------------------------------------------------------------------------
+// ROBINS-I (Risk of Bias in Non-randomized Studies of Interventions)
+// ---------------------------------------------------------------------------
+
+export const ROBINS_I_DOMAINS = [
+  {
+    id: "robins_i_confounding",
+    name: "Bias due to confounding",
+    questions: [
+      "Is there potential for confounding of the effect of intervention in this study?",
+      "Were all important confounders measured and controlled for?",
+      "Did the authors use appropriate methods to control for confounding?",
+    ],
+  },
+  {
+    id: "robins_i_selection",
+    name: "Bias in selection of participants into the study",
+    questions: [
+      "Was selection of participants into the study (or into the analysis) based on participant characteristics observed after the start of intervention?",
+      "Do start of follow-up and start of intervention coincide for most participants?",
+      "Were adjustment techniques used that are likely to correct for the presence of selection biases?",
+    ],
+  },
+  {
+    id: "robins_i_classification",
+    name: "Bias in classification of interventions",
+    questions: [
+      "Were intervention groups clearly defined?",
+      "Was the information used to define intervention groups recorded at the start of the intervention?",
+      "Could classification of intervention status have been affected by knowledge of the outcome or risk of the outcome?",
+    ],
+  },
+  {
+    id: "robins_i_deviations",
+    name: "Bias due to deviations from intended interventions",
+    questions: [
+      "Were there deviations from the intended intervention beyond what would be expected in usual care?",
+      "Were these deviations from intended intervention unbalanced between groups and likely to have affected the outcome?",
+      "Was an appropriate analysis used to estimate the effect of assignment to intervention?",
+      "Was there potential for failure to implement the intended intervention?",
+    ],
+  },
+  {
+    id: "robins_i_missing_data",
+    name: "Bias due to missing data",
+    questions: [
+      "Were outcome data available for all, or nearly all, participants?",
+      "Is there evidence that the result was not biased by missing outcome data?",
+      "Could missingness in the outcome depend on its true value?",
+      "Could missingness in the outcome have been related to assignment to intervention?",
+    ],
+  },
+  {
+    id: "robins_i_measurement",
+    name: "Bias in measurement of outcomes",
+    questions: [
+      "Could the outcome measure have been influenced by knowledge of the intervention received?",
+      "Were outcome assessors aware of the intervention received by study participants?",
+      "Were the methods of outcome assessment comparable across intervention groups?",
+      "Were any systematic errors in measurement of the outcome related to intervention received?",
+    ],
+  },
+  {
+    id: "robins_i_reporting",
+    name: "Bias in selection of the reported result",
+    questions: [
+      "Were the data that produced this result analysed in accordance with a pre-specified analysis plan?",
+      "Were multiple eligible outcome measurements or analysis methods available for this outcome?",
+      "Is the reported result likely to have been selected from multiple eligible analyses?",
+    ],
+  },
+] as const;
+
+export function getROBINSIAssessmentPrompt(
+  title: string,
+  textContent: string,
+  domain: (typeof ROBINS_I_DOMAINS)[number]
+): string {
+  const questionsFormatted = domain.questions
+    .map((q, i) => `  ${i + 1}. ${q}`)
+    .join("\n");
+
+  return `You are an expert in assessing risk of bias in non-randomized studies of interventions (NRSI) using the ROBINS-I tool developed by Cochrane.
+
+ROBINS-I uses four judgment categories:
+- "Low": The study is comparable to a well-performed randomised trial with respect to this domain.
+- "Moderate": The study is sound for a non-randomised study with respect to this domain but cannot be considered comparable to a well-performed randomised trial.
+- "Serious": The study has some important problems in this domain.
+- "Critical": The study is too seriously flawed to provide any useful evidence on this domain.
+- "No information": No information is provided to allow a judgment.
+
+PAPER:
+Title: ${title}
+
+Relevant text:
+${textContent.slice(0, 12000)}
+
+DOMAIN: ${domain.id} — ${domain.name}
+
+SIGNALING QUESTIONS:
+${questionsFormatted}
+
+For each signaling question, provide:
+- "answer": "Yes" | "Probably yes" | "Probably no" | "No" | "No information"
+- "support": quote or paraphrase from the text supporting your answer
+
+Then provide an overall domain judgment:
+- "judgment": "Low" | "Moderate" | "Serious" | "Critical" | "No information"
+- "rationale": 2-3 sentence explanation citing evidence from the paper
+
+Respond as a JSON object with:
+{
+  "domain": "${domain.id}",
+  "domainName": "${domain.name}",
+  "signalingQuestions": [
+    { "question": "...", "answer": "...", "support": "..." }
+  ],
+  "judgment": "Low" | "Moderate" | "Serious" | "Critical" | "No information",
+  "rationale": "..."
+}`;
+}
+
+// ---------------------------------------------------------------------------
 // Data Extraction
 // ---------------------------------------------------------------------------
 

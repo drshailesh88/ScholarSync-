@@ -11,6 +11,7 @@ import { eq, and } from "drizzle-orm";
 import { searchPubMed } from "@/lib/search/sources/pubmed";
 import { searchSemanticScholar } from "@/lib/search/sources/semantic-scholar";
 import { searchOpenAlex } from "@/lib/search/sources/openalex";
+import { searchClinicalTrials as searchClinicalTrialsLowLevel } from "@/lib/search/sources/clinical-trials";
 import {
   normalizeTitle,
   isSamePaper,
@@ -22,7 +23,11 @@ import type { UnifiedSearchResult } from "@/types/search";
 // Types
 // ---------------------------------------------------------------------------
 
-export type ImportSource = "pubmed" | "semantic_scholar" | "openalex";
+export type ImportSource =
+  | "pubmed"
+  | "semantic_scholar"
+  | "openalex"
+  | "clinicaltrials";
 
 export interface ImportResult {
   totalFound: number;
@@ -60,6 +65,13 @@ export async function importFromSearch(
   if (sources.includes("openalex")) {
     searchPromises.push(
       searchOpenAlex(searchString, { limit: maxResults }).then((r) => r.results)
+    );
+  }
+  if (sources.includes("clinicaltrials")) {
+    searchPromises.push(
+      searchClinicalTrialsLowLevel(searchString, { limit: maxResults }).then(
+        (r) => r.results
+      )
     );
   }
 
@@ -165,11 +177,15 @@ async function findOrCreatePaper(result: UnifiedSearchResult): Promise<number> {
   }
 
   // Create new paper
+  // Note: "clinical_trials" maps to "deep_research" in the DB enum until
+  // a migration adds "clinical_trials" to the paper_source enum.
   const source = result.sources.includes("pubmed")
     ? "pubmed"
     : result.sources.includes("semantic_scholar")
       ? "semantic_scholar"
-      : "openalex";
+      : result.sources.includes("clinical_trials")
+        ? "deep_research"
+        : "openalex";
 
   const [newPaper] = await db
     .insert(papers)
