@@ -50,6 +50,11 @@ export interface PooledResult {
   pValue: number;
 }
 
+export interface PredictionInterval {
+  lower: number;
+  upper: number;
+}
+
 export interface MetaAnalysisOutput {
   model: ModelType;
   effectType: EffectType;
@@ -57,6 +62,15 @@ export interface MetaAnalysisOutput {
   pooled: PooledResult;
   heterogeneity: HeterogeneityStats;
   eggerTest: { intercept: number; se: number; pValue: number } | null;
+  predictionInterval?: PredictionInterval | null;
+}
+
+/** Options for random-effects confidence interval and prediction interval. */
+export interface RandomEffectsOptions {
+  /** "wald" = standard z-based CI (default); "hksj" = Knapp-Hartung adjusted CI */
+  ci?: "wald" | "hksj";
+  /** When true, compute the 95% prediction interval */
+  predictionInterval?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -97,6 +111,221 @@ function chiSquaredPValue(x: number, df: number): number {
 }
 
 const Z_95 = 1.96; // z-value for 95% CI
+
+// ---------------------------------------------------------------------------
+// t-distribution quantile (inverse CDF)
+// ---------------------------------------------------------------------------
+
+/**
+ * Approximates the quantile function (inverse CDF) of the standard normal
+ * distribution using the rational approximation by Peter J. Acklam.
+ * Maximum absolute error < 1.15e-9.
+ */
+function normalQuantile(p: number): number {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return Infinity;
+
+  const a = [
+    -3.969683028665376e1,  2.209460984245205e2,
+    -2.759285104469687e2,  1.383577518672690e2,
+    -3.066479806614716e1,  2.506628277459239e0,
+  ];
+  const b = [
+    -5.447609879822406e1,  1.615858368580409e2,
+    -1.556989798598866e2,  6.680131188771972e1,
+    -1.328068155288572e1,
+  ];
+  const c = [
+    -7.784894002430293e-3, -3.223964580411365e-1,
+    -2.400758277161838e0,  -2.549732539343734e0,
+     4.374664141464968e0,   2.938163982698783e0,
+  ];
+  const d = [
+     7.784695709041462e-3,  3.224671290700398e-1,
+     2.445134137142996e0,   3.754408661907416e0,
+  ];
+
+  const pLow  = 0.02425;
+  const pHigh = 1 - pLow;
+
+  let q: number;
+  if (p < pLow) {
+    q = Math.sqrt(-2 * Math.log(p));
+    return (
+      (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+      ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+    );
+  } else if (p <= pHigh) {
+    q = p - 0.5;
+    const r = q * q;
+    return (
+      ((((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q) /
+      (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1)
+    );
+  } else {
+    q = Math.sqrt(-2 * Math.log(1 - p));
+    return -(
+      (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+      ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1)
+    );
+  }
+}
+
+/**
+ * Approximates the inverse CDF (quantile function) of the Student t-distribution
+ * with `df` degrees of freedom at cumulative probability `p`.
+ *
+ * Uses the Hill (1970) algorithm for small df and falls back to the normal
+ * quantile for df > 300.
+ *
+ * Reference: Hill, G.W. (1970). Algorithm 395: Student's t-distribution.
+ * Communications of the ACM, 13(10), 617-619.
+ */
+export function tQuantile(p: number, df: number): number {
+  if (df > 300) return normalQuantile(p);
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return Infinity;
+
+  // Work with the upper tail probability for the two-sided case
+  // Reflect so we work in the upper tail: p > 0.5
+  const sign = p < 0.5 ? -1 : 1;
+  const pp = p < 0.5 ? 1 - p : p;
+
+  // For df = 1 (Cauchy)
+  if (df === 1) return sign * Math.tan(Math.PI * (pp - 0.5));
+
+  // For df = 2: CDF is F(t) = 0.5*(1 + t/sqrt(t^2+2)), inverse is:
+  // t = alpha * sqrt(2 / (1 - alpha^2)) where alpha = 2*pp - 1
+  if (df === 2) {
+    const alpha = 2 * pp - 1;
+    return sign * alpha * Math.sqrt(2 / (1 - alpha * alpha));
+  }
+
+  // General case: use normal approximation as starting point, then refine
+  // via Cornish-Fisher expansion (Abramowitz & Stegun 26.7.8)
+  const z = normalQuantile(pp);
+  const g1 = (z * z * z + z) / 4;
+  const g2 = (5 * z * z * z * z * z + 16 * z * z * z + 3 * z) / 96;
+  const g3 =
+    (3 * z * z * z * z * z * z * z +
+      19 * z * z * z * z * z +
+      17 * z * z * z -
+      15 * z) /
+    384;
+  const g4 =
+    (79 * Math.pow(z, 9) +
+      776 * Math.pow(z, 7) +
+      1482 * Math.pow(z, 5) -
+      1920 * Math.pow(z, 3) -
+      945 * z) /
+    92160;
+
+  const t0 =
+    z +
+    g1 / df +
+    g2 / (df * df) +
+    g3 / (df * df * df) +
+    g4 / (df * df * df * df);
+
+  return sign * t0;
+}
+
+/**
+ * Two-tailed p-value from a t-statistic with given degrees of freedom.
+ * Uses the relationship between the t-CDF and the incomplete beta function,
+ * approximated via a series expansion for computational tractability.
+ */
+export function tToPValue(tVal: number, df: number): number {
+  // For large df the t-distribution approaches normality
+  if (df > 300) return zToPValue(tVal);
+
+  const t = Math.abs(tVal);
+  // Use the regularized incomplete beta function approximation
+  // I_x(a, b) where x = df/(df + t^2), a = df/2, b = 0.5
+  const x = df / (df + t * t);
+  const a = df / 2;
+  const b = 0.5;
+
+  // Compute regularized incomplete beta I_x(a, b) via continued fraction (Lentz)
+  // We use the relation: P(T > t) = 0.5 * I_x(a, b) for the one-tail probability
+  const ibeta = incompleteBeta(x, a, b);
+  return ibeta; // this is already two-tailed: P(|T| >= t) = I_x(df/2, 0.5)
+}
+
+/** Regularized incomplete beta function I_x(a, b) via continued fraction. */
+function incompleteBeta(x: number, a: number, b: number): number {
+  if (x <= 0) return 0;
+  if (x >= 1) return 1;
+
+  // Use symmetry: I_x(a,b) = 1 - I_{1-x}(b,a) when x > (a+1)/(a+b+2)
+  if (x > (a + 1) / (a + b + 2)) {
+    return 1 - incompleteBeta(1 - x, b, a);
+  }
+
+  // Log of beta function via Stirling
+  const logBeta =
+    lgamma(a) + lgamma(b) - lgamma(a + b);
+
+  const front =
+    Math.exp(Math.log(x) * a + Math.log(1 - x) * b - logBeta) / a;
+
+  // Lentz continued fraction
+  let f = 1;
+  let C = 1;
+  let D = 1 - ((a + b) * x) / (a + 1);
+  D = D === 0 ? 1e-30 : 1 / D;
+  f = D;
+
+  for (let m = 1; m <= 200; m++) {
+    // Even step
+    let num = (m * (b - m) * x) / ((a + 2 * m - 1) * (a + 2 * m));
+    D = 1 + num * D;
+    C = 1 + num / C;
+    D = D === 0 ? 1e-30 : 1 / D;
+    C = C === 0 ? 1e-30 : C;
+    f *= C * D;
+
+    // Odd step
+    num = -((a + m) * (a + b + m) * x) / ((a + 2 * m) * (a + 2 * m + 1));
+    D = 1 + num * D;
+    C = 1 + num / C;
+    D = D === 0 ? 1e-30 : 1 / D;
+    C = C === 0 ? 1e-30 : C;
+    const delta = C * D;
+    f *= delta;
+
+    if (Math.abs(delta - 1) < 1e-10) break;
+  }
+
+  return front * f;
+}
+
+/** Log-gamma function via Lanczos approximation. */
+function lgamma(z: number): number {
+  const g = 7;
+  const p = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7,
+  ];
+
+  if (z < 0.5) {
+    return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z);
+  }
+
+  z -= 1;
+  let x = p[0];
+  for (let i = 1; i < g + 2; i++) {
+    x += p[i] / (z + i);
+  }
+  const t = z + g + 0.5;
+  return (
+    0.5 * Math.log(2 * Math.PI) +
+    (z + 0.5) * Math.log(t) -
+    t +
+    Math.log(x)
+  );
+}
 
 // ---------------------------------------------------------------------------
 // Effect size computation from raw data
@@ -368,8 +597,16 @@ export type RandomEffectsMethod = "DL" | "REML";
 
 export function computeRandomEffectsMeta(
   studies: StudyEffect[],
-  method: RandomEffectsMethod = "DL"
-): { pooled: PooledResult; heterogeneity: HeterogeneityStats; weightedStudies: StudyEffect[] } {
+  method: RandomEffectsMethod = "DL",
+  options?: RandomEffectsOptions
+): {
+  pooled: PooledResult;
+  heterogeneity: HeterogeneityStats;
+  weightedStudies: StudyEffect[];
+  predictionInterval: PredictionInterval | null;
+} {
+  const k = studies.length;
+
   // Compute fixed-effects first to get Q, I², df, H² (used for heterogeneity stats)
   const fixed = computeFixedEffectsMeta(studies);
 
@@ -391,7 +628,6 @@ export function computeRandomEffectsMeta(
     studies.reduce((sum, s, i) => sum + weights[i] * s.effect, 0) / totalWeight;
 
   const pooledSE = Math.sqrt(1 / totalWeight);
-  const zValue = pooledEffect / pooledSE;
 
   const weightedStudies = studies.map((s, i) => ({
     ...s,
@@ -404,17 +640,79 @@ export function computeRandomEffectsMeta(
     tau2,
   };
 
+  // -----------------------------------------------------------------------
+  // Confidence interval: Wald (default) or Knapp-Hartung (HKSJ)
+  // -----------------------------------------------------------------------
+  let ciLower: number;
+  let ciUpper: number;
+  let zValue: number;
+  let pValue: number;
+
+  const ciMethod = options?.ci ?? "wald";
+
+  if (ciMethod === "hksj" && k >= 2) {
+    // Knapp-Hartung / HKSJ adjustment
+    // q = (1 / (k - 1)) * sum_i[ w_i * (y_i - pooledEffect)^2 ]
+    // Truncated at 1 per Knapp-Hartung (2003) recommendation
+    const qHKSJ =
+      (1 / (k - 1)) *
+      studies.reduce(
+        (sum, s, i) => sum + weights[i] * (s.effect - pooledEffect) ** 2,
+        0
+      );
+    const qTruncated = Math.max(1, qHKSJ);
+
+    // SE under HKSJ: sqrt(q / sum(w_i))
+    const seHKSJ = Math.sqrt(qTruncated / totalWeight);
+
+    // t-distribution with k-1 degrees of freedom
+    const tCrit = tQuantile(0.975, k - 1); // two-sided 95% CI => 0.975 quantile
+    ciLower = pooledEffect - tCrit * seHKSJ;
+    ciUpper = pooledEffect + tCrit * seHKSJ;
+
+    // t-statistic and p-value under HKSJ
+    const tStat = pooledEffect / seHKSJ;
+    pValue = tToPValue(tStat, k - 1);
+    zValue = tStat; // stored in zValue field (represents t-statistic here)
+  } else {
+    // Standard Wald CI using z-distribution
+    zValue = pooledEffect / pooledSE;
+    ciLower = pooledEffect - Z_95 * pooledSE;
+    ciUpper = pooledEffect + Z_95 * pooledSE;
+    pValue = zToPValue(zValue);
+  }
+
+  // -----------------------------------------------------------------------
+  // Prediction interval (Higgins et al. 2009; Cochrane Handbook 2025)
+  // PI: pooledEffect ± t_{k-2, 0.025} * sqrt(tau² + se_pooled²)
+  // Undefined for k < 3.
+  // -----------------------------------------------------------------------
+  let predInterval: PredictionInterval | null = null;
+
+  if (options?.predictionInterval) {
+    if (k >= 3) {
+      const tCritPI = tQuantile(0.975, k - 2);
+      const piSE = Math.sqrt(tau2 + pooledSE * pooledSE);
+      predInterval = {
+        lower: pooledEffect - tCritPI * piSE,
+        upper: pooledEffect + tCritPI * piSE,
+      };
+    }
+    // For k < 3, predInterval remains null
+  }
+
   return {
     pooled: {
       effect: pooledEffect,
       se: pooledSE,
-      ciLower: pooledEffect - Z_95 * pooledSE,
-      ciUpper: pooledEffect + Z_95 * pooledSE,
+      ciLower,
+      ciUpper,
       zValue,
-      pValue: zToPValue(zValue),
+      pValue,
     },
     heterogeneity,
     weightedStudies,
+    predictionInterval: predInterval,
   };
 }
 

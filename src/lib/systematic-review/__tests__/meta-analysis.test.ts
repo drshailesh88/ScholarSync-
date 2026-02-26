@@ -20,6 +20,7 @@ import {
   runSensitivityAnalysis,
   toNaturalScale,
   toNaturalScaleCI,
+  tQuantile,
   type StudyEffect,
   type EffectType,
 } from "@/lib/systematic-review/meta-analysis";
@@ -910,5 +911,245 @@ describe("REML estimator", () => {
     const result = computeREML(highHet);
     expect(result.tau2).toBeGreaterThan(0);
     expect(result.converged).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// tQuantile helper
+// ---------------------------------------------------------------------------
+
+describe("tQuantile", () => {
+  it("returns 0 for p = 0.5 (median of symmetric t-distribution)", () => {
+    expect(tQuantile(0.5, 10)).toBeCloseTo(0, 3);
+  });
+
+  it("is symmetric: tQuantile(p, df) = -tQuantile(1-p, df)", () => {
+    const q = tQuantile(0.975, 10);
+    expect(tQuantile(0.025, 10)).toBeCloseTo(-q, 3);
+  });
+
+  it("t_0.975 for df=1 (Cauchy) is approximately 12.7", () => {
+    // From standard t-tables: t(0.975, 1) = 12.706
+    expect(tQuantile(0.975, 1)).toBeCloseTo(12.706, 1);
+  });
+
+  it("t_0.975 for df=5 is approximately 2.571", () => {
+    // From standard t-tables: t(0.975, 5) = 2.5706
+    expect(tQuantile(0.975, 5)).toBeCloseTo(2.5706, 1);
+  });
+
+  it("t_0.975 for df=10 is approximately 2.228", () => {
+    expect(tQuantile(0.975, 10)).toBeCloseTo(2.228, 1);
+  });
+
+  it("t_0.975 for df=30 is approximately 2.042", () => {
+    expect(tQuantile(0.975, 30)).toBeCloseTo(2.042, 1);
+  });
+
+  it("approaches z_0.975 (1.96) as df increases", () => {
+    // For df = 1000, should be very close to 1.96
+    expect(tQuantile(0.975, 1000)).toBeCloseTo(1.96, 1);
+  });
+
+  it("returns normalQuantile for df > 300", () => {
+    // For df = 500, the t-quantile should be indistinguishable from z
+    const t500 = tQuantile(0.975, 500);
+    expect(Math.abs(t500 - 1.96)).toBeLessThan(0.01);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// HKSJ confidence intervals
+// ---------------------------------------------------------------------------
+
+describe("HKSJ confidence intervals", () => {
+  // Heterogeneous dataset — HKSJ will have a wider CI than Wald
+  const heterogeneousStudies: StudyEffect[] = [
+    makeStudy("A", 0.1,  0.20),
+    makeStudy("B", 0.8,  0.30),
+    makeStudy("C", -0.2, 0.25),
+    makeStudy("D", 1.2,  0.40),
+    makeStudy("E", 0.5,  0.15),
+  ];
+
+  it("HKSJ CI is wider than (or equal to) Wald CI when q >= 1", () => {
+    const wald = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "wald" });
+    const hksj = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "hksj" });
+    const waldWidth = wald.pooled.ciUpper - wald.pooled.ciLower;
+    const hksjWidth = hksj.pooled.ciUpper - hksj.pooled.ciLower;
+    expect(hksjWidth).toBeGreaterThanOrEqual(waldWidth - TOLERANCE);
+  });
+
+  it("HKSJ produces a valid (finite, non-NaN) pooled estimate", () => {
+    const result = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "hksj" });
+    expect(isNaN(result.pooled.effect)).toBe(false);
+    expect(isFinite(result.pooled.ciLower)).toBe(true);
+    expect(isFinite(result.pooled.ciUpper)).toBe(true);
+  });
+
+  it("HKSJ pooled point estimate equals Wald point estimate (same weights)", () => {
+    const wald = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "wald" });
+    const hksj = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "hksj" });
+    // The pooled effect estimate is the same; only the CI changes
+    expect(hksj.pooled.effect).toBeCloseTo(wald.pooled.effect, 6);
+  });
+
+  it("HKSJ p-value is between 0 and 1", () => {
+    const result = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "hksj" });
+    expect(result.pooled.pValue).toBeGreaterThanOrEqual(0);
+    expect(result.pooled.pValue).toBeLessThanOrEqual(1);
+  });
+
+  it("HKSJ CI bounds correctly ordered: lower < effect < upper", () => {
+    const result = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "hksj" });
+    expect(result.pooled.ciLower).toBeLessThan(result.pooled.effect);
+    expect(result.pooled.ciUpper).toBeGreaterThan(result.pooled.effect);
+  });
+
+  it("HKSJ with k=2 studies still works (df=1, very wide CI)", () => {
+    const twoStudies = [makeStudy("A", 0.5, 0.3), makeStudy("B", 1.0, 0.4)];
+    const result = computeRandomEffectsMeta(twoStudies, "DL", { ci: "hksj" });
+    expect(isNaN(result.pooled.effect)).toBe(false);
+    // With df=1, t-critical is ~12.7, so CI should be very wide
+    const width = result.pooled.ciUpper - result.pooled.ciLower;
+    expect(width).toBeGreaterThan(1.0);
+  });
+
+  it("HKSJ truncation: q is always >= 1 (Knapp-Hartung truncation rule)", () => {
+    // With identical effects, q would be 0 without truncation;
+    // with truncation the CI uses q = 1
+    const identical = [
+      makeStudy("A", 0.5, 0.2),
+      makeStudy("B", 0.5, 0.15),
+      makeStudy("C", 0.5, 0.3),
+    ];
+    const hksj = computeRandomEffectsMeta(identical, "DL", { ci: "hksj" });
+    const wald = computeRandomEffectsMeta(identical, "DL", { ci: "wald" });
+    // Truncation means HKSJ CI is at least as wide as without truncation
+    const hksjWidth = hksj.pooled.ciUpper - hksj.pooled.ciLower;
+    const waldWidth = wald.pooled.ciUpper - wald.pooled.ciLower;
+    expect(hksjWidth).toBeGreaterThanOrEqual(waldWidth - TOLERANCE);
+  });
+
+  it("HKSJ with REML method also works correctly", () => {
+    const result = computeRandomEffectsMeta(
+      heterogeneousStudies,
+      "REML",
+      { ci: "hksj" }
+    );
+    expect(isNaN(result.pooled.effect)).toBe(false);
+    expect(result.pooled.ciLower).toBeLessThan(result.pooled.ciUpper);
+  });
+
+  it("default (no options) is backward compatible with Wald CI", () => {
+    const defaultResult = computeRandomEffectsMeta(heterogeneousStudies, "DL");
+    const waldResult    = computeRandomEffectsMeta(heterogeneousStudies, "DL", { ci: "wald" });
+    expect(defaultResult.pooled.ciLower).toBeCloseTo(waldResult.pooled.ciLower, 6);
+    expect(defaultResult.pooled.ciUpper).toBeCloseTo(waldResult.pooled.ciUpper, 6);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Prediction intervals
+// ---------------------------------------------------------------------------
+
+describe("Prediction intervals", () => {
+  const heterogeneousStudies: StudyEffect[] = [
+    makeStudy("A", 0.1,  0.20),
+    makeStudy("B", 0.8,  0.30),
+    makeStudy("C", -0.2, 0.25),
+    makeStudy("D", 1.2,  0.40),
+    makeStudy("E", 0.5,  0.15),
+  ];
+
+  it("prediction interval is null when option not set", () => {
+    const result = computeRandomEffectsMeta(heterogeneousStudies, "DL");
+    expect(result.predictionInterval).toBeNull();
+  });
+
+  it("prediction interval is wider than the pooled CI", () => {
+    const result = computeRandomEffectsMeta(
+      heterogeneousStudies, "DL", { predictionInterval: true }
+    );
+    expect(result.predictionInterval).not.toBeNull();
+    const ciWidth = result.pooled.ciUpper - result.pooled.ciLower;
+    const piWidth =
+      result.predictionInterval!.upper - result.predictionInterval!.lower;
+    expect(piWidth).toBeGreaterThanOrEqual(ciWidth - TOLERANCE);
+  });
+
+  it("prediction interval lower < pooled effect < prediction interval upper", () => {
+    const result = computeRandomEffectsMeta(
+      heterogeneousStudies, "DL", { predictionInterval: true }
+    );
+    expect(result.predictionInterval!.lower).toBeLessThan(result.pooled.effect);
+    expect(result.predictionInterval!.upper).toBeGreaterThan(result.pooled.effect);
+  });
+
+  it("prediction interval is null for k = 2 (requires k >= 3)", () => {
+    const twoStudies = [makeStudy("A", 0.5, 0.2), makeStudy("B", 0.3, 0.15)];
+    const result = computeRandomEffectsMeta(
+      twoStudies, "DL", { predictionInterval: true }
+    );
+    expect(result.predictionInterval).toBeNull();
+  });
+
+  it("prediction interval with tau2 = 0 is still at least as wide as CI", () => {
+    // Identical effects -> tau2 = 0 (or near 0)
+    // PI = pooledEffect +/- t_{k-2,0.025} * sqrt(0 + se_pooled^2)
+    //    = pooledEffect +/- t_{k-2} * se_pooled >= z * se_pooled (since t > z for k>2)
+    const identical = [
+      makeStudy("A", 0.5, 0.2),
+      makeStudy("B", 0.5, 0.15),
+      makeStudy("C", 0.5, 0.3),
+    ];
+    const result = computeRandomEffectsMeta(
+      identical, "DL", { predictionInterval: true }
+    );
+    expect(result.predictionInterval).not.toBeNull();
+    const ciWidth = result.pooled.ciUpper - result.pooled.ciLower;
+    const piWidth =
+      result.predictionInterval!.upper - result.predictionInterval!.lower;
+    // PI uses t_{k-2} rather than z_0.975, so it must be at least as wide
+    expect(piWidth).toBeGreaterThanOrEqual(ciWidth - TOLERANCE);
+  });
+
+  it("prediction interval with high heterogeneity is very wide", () => {
+    const highHet: StudyEffect[] = [
+      makeStudy("A", -1.0, 0.1),
+      makeStudy("B",  0.0, 0.1),
+      makeStudy("C",  1.0, 0.1),
+      makeStudy("D",  2.0, 0.1),
+      makeStudy("E",  3.0, 0.1),
+    ];
+    const result = computeRandomEffectsMeta(
+      highHet, "DL", { predictionInterval: true }
+    );
+    const piWidth =
+      result.predictionInterval!.upper - result.predictionInterval!.lower;
+    // High heterogeneity should produce a very wide prediction interval
+    expect(piWidth).toBeGreaterThan(2.0);
+  });
+
+  it("HKSJ + prediction interval can be requested together", () => {
+    const result = computeRandomEffectsMeta(
+      heterogeneousStudies,
+      "DL",
+      { ci: "hksj", predictionInterval: true }
+    );
+    expect(result.predictionInterval).not.toBeNull();
+    expect(result.pooled.ciLower).toBeLessThan(result.pooled.effect);
+    expect(result.pooled.ciUpper).toBeGreaterThan(result.pooled.effect);
+  });
+
+  it("predictionInterval is returned in the correct shape", () => {
+    const result = computeRandomEffectsMeta(
+      heterogeneousStudies, "DL", { predictionInterval: true }
+    );
+    const pi = result.predictionInterval!;
+    expect(typeof pi.lower).toBe("number");
+    expect(typeof pi.upper).toBe("number");
+    expect(isNaN(pi.lower)).toBe(false);
+    expect(isNaN(pi.upper)).toBe(false);
   });
 });

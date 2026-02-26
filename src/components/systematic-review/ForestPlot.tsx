@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import type { EffectType } from "@/lib/systematic-review/meta-analysis";
+import type { EffectType, PredictionInterval } from "@/lib/systematic-review/meta-analysis";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -31,6 +31,7 @@ interface ForestPlotProps {
     tau2: number;
     pValue: number;
   };
+  predictionInterval?: PredictionInterval | null;
   title?: string;
 }
 
@@ -56,6 +57,7 @@ export function ForestPlot({
   pooled,
   effectType,
   heterogeneity,
+  predictionInterval,
   title,
 }: ForestPlotProps) {
   const config = useMemo(() => {
@@ -65,13 +67,19 @@ export function ForestPlot({
     const statsWidth = 200;
     const totalWidth = labelWidth + plotWidth + statsWidth;
     const headerHeight = 40;
+    // Add an extra row for the prediction interval when present
+    const piRows = predictionInterval ? 1 : 0;
     const footerHeight = 60;
-    const totalHeight = headerHeight + (studies.length + 1) * rowHeight + footerHeight;
+    const totalHeight =
+      headerHeight + (studies.length + 1 + piRows) * rowHeight + footerHeight;
 
-    // Compute x-axis range
+    // Compute x-axis range (include prediction interval bounds if present)
     const allValues = studies
       .flatMap((s) => [s.ciLower, s.ciUpper])
       .concat([pooled.ciLower, pooled.ciUpper]);
+    if (predictionInterval) {
+      allValues.push(predictionInterval.lower, predictionInterval.upper);
+    }
     const dataMin = Math.min(...allValues);
     const dataMax = Math.max(...allValues);
     const padding = (dataMax - dataMin) * 0.15 || 0.5;
@@ -321,6 +329,59 @@ export function ForestPlot({
             </g>
           );
         })()}
+
+        {/* Prediction interval row (dashed, lighter diamond) */}
+        {predictionInterval &&
+          (() => {
+            const piRows = 1; // one extra row after pooled
+            const y =
+              config.headerHeight +
+              (studies.length + 1 + piRows - 0.5) * config.rowHeight;
+            const cx = xScale(pooled.effect);
+            const piLeft = xScale(
+              Math.max(predictionInterval.lower, config.xMin)
+            );
+            const piRight = xScale(
+              Math.min(predictionInterval.upper, config.xMax)
+            );
+            const dh = 5;
+
+            return (
+              <g>
+                {/* Label */}
+                <text
+                  x={8}
+                  y={y + 4}
+                  className="text-[11px] fill-current"
+                  opacity={0.55}
+                  fontStyle="italic"
+                >
+                  Prediction interval
+                </text>
+
+                {/* Dashed diamond outline for prediction interval */}
+                <polygon
+                  points={`${piLeft},${y} ${cx},${y - dh} ${piRight},${y} ${cx},${y + dh}`}
+                  fill="none"
+                  stroke="#dc2626"
+                  strokeWidth={1.5}
+                  strokeDasharray="4,3"
+                  opacity={0.55}
+                />
+
+                {/* Stats */}
+                <text
+                  x={config.labelWidth + config.plotWidth + 10}
+                  y={y + 4}
+                  className="text-[10px] fill-current"
+                  opacity={0.55}
+                >
+                  [{formatVal(predictionInterval.lower, effectType)},{" "}
+                  {formatVal(predictionInterval.upper, effectType)}]
+                </text>
+              </g>
+            );
+          })()}
 
         {/* Footer: heterogeneity stats */}
         {heterogeneity && (
