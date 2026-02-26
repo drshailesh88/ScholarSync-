@@ -20,6 +20,12 @@ export interface AIParagraphResult {
   flags: string[];
   /** Actionable suggestion to improve originality */
   suggestion?: string;
+  /** Sentence-level breakdown for compliance highlighting */
+  sentences?: Array<{
+    text: string;
+    startOffset: number;
+    endOffset: number;
+  }>;
 }
 
 export interface AIDetectionResult {
@@ -82,6 +88,18 @@ export interface PlagiarismResult {
   engine: "shingling-scholarly" | "copyleaks";
 }
 
+// ── Self-Plagiarism Detection ────────────────────────────────────
+
+export interface SelfPlagiarismResult {
+  selfSimilarityScore: number;
+  matchedDocuments: Array<{
+    checkId: number;
+    checkedAt: string;
+    similarity: number;
+    excerpt: string;
+  }>;
+}
+
 // ── Citation Audit ──────────────────────────────────────────────
 
 export interface CitationIssue {
@@ -125,6 +143,8 @@ export interface IntegrityCheckResult {
   plagiarism: PlagiarismResult | null;
   /** Citation audit results (null for free tier) */
   citationAudit: CitationAuditResult | null;
+  /** Self-plagiarism results (null if no userId available) */
+  selfPlagiarism?: SelfPlagiarismResult | null;
   /** Writing quality metrics */
   writingQuality: {
     passiveVoiceCount: number;
@@ -143,6 +163,8 @@ export interface IntegrityCheckInput {
   text: string;
   /** User's plan tier */
   plan: "free" | "basic" | "pro" | "institutional";
+  /** Optional: user ID for self-plagiarism detection */
+  userId?: string;
   /** Optional: sources/references from the document (for citation audit) */
   sources?: Array<{
     title?: string;

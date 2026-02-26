@@ -12,10 +12,12 @@ import type {
   AIDetectionResult,
   PlagiarismResult,
   CitationAuditResult,
+  SelfPlagiarismResult,
 } from "./types";
 import { runAIDetection } from "./ai-detection";
 import { runPlagiarismCheck } from "./plagiarism-engine";
 import { runCitationAudit } from "./citation-audit";
+import { runSelfPlagiarismCheck } from "./self-plagiarism";
 
 const PAID_PLANS = new Set(["basic", "pro", "institutional"]);
 
@@ -35,11 +37,12 @@ export async function runIntegrityCheck(
   const runAI = mode === "full" || mode === "ai_detection";
   const runPlagiarism = isPaid && (mode === "full" || mode === "plagiarism");
   const runCitations = isPaid && (mode === "full" || mode === "citation_audit");
+  const runSelfPlag = !!input.userId && (mode === "full" || mode === "plagiarism");
 
   // Launch engines in parallel
   // Paid users get Binoculars (Replicate GPU) in addition to LLM-heuristic
   const useBinoculars = isPaid;
-  const [aiResult, plagiarismResult, citationResult] = await Promise.all([
+  const [aiResult, plagiarismResult, citationResult, selfPlagiarismResult] = await Promise.all([
     runAI
       ? runAIDetection(input.text, useBinoculars)
       : Promise.resolve(null),
@@ -67,6 +70,14 @@ export async function runIntegrityCheck(
           },
         )
       : Promise.resolve(null),
+    runSelfPlag
+      ? runSelfPlagiarismCheck(input.text, input.userId!).catch(
+          (err): SelfPlagiarismResult => {
+            console.error("[integrity] Self-plagiarism engine error:", err);
+            return { selfSimilarityScore: 0, matchedDocuments: [] };
+          },
+        )
+      : Promise.resolve(null),
   ]);
 
   // Build a default AI result if AI detection was skipped
@@ -91,6 +102,7 @@ export async function runIntegrityCheck(
     aiDetection: ai,
     plagiarism: plagiarismResult,
     citationAudit: citationResult,
+    selfPlagiarism: selfPlagiarismResult,
     writingQuality: {
       passiveVoiceCount: Math.round(
         (ai.stats.passiveVoicePercent / 100) *

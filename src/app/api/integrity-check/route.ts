@@ -92,6 +92,7 @@ export async function POST(req: Request) {
       plan,
       mode: parsed.data.mode,
       sources: parsed.data.sources,
+      userId,
     });
 
     log.info("Integrity check completed", {
@@ -103,41 +104,40 @@ export async function POST(req: Request) {
       engine: result.aiDetection.engine,
     });
 
-    // Persist results to database if projectId is provided
-    if (parsed.data.projectId) {
-      try {
-        const wordCount = parsed.data.text.split(/\s+/).filter(Boolean).length;
-        await db.insert(integrityChecks).values({
-          projectId: parsed.data.projectId,
-          documentId: parsed.data.documentId ?? null,
-          checkType: result.plagiarism ? "both" : "ai_detection",
-          contentChecked: parsed.data.text.slice(0, 5000),
-          wordCount,
-          plagiarismScore: result.plagiarism?.similarityScore ?? null,
-          plagiarismMatches: result.plagiarism?.matches ?? null,
-          plagiarismEngine: result.plagiarism?.engine ?? null,
-          aiScore: result.aiDetection.aiScore,
-          aiDetectionDetails: {
-            humanScore: result.aiDetection.humanScore,
-            overallRisk: result.aiDetection.overallRisk,
-            engine: result.aiDetection.engine,
-            stats: result.aiDetection.stats,
-            paragraphCount: result.aiDetection.paragraphs.length,
-          },
-          aiDetectionEngine: result.aiDetection.engine,
-          flaggedPassages: result.aiDetection.paragraphs
-            .filter((p) => p.humanProbability < 50)
-            .map((p) => ({
-              excerpt: p.excerpt,
-              humanProbability: p.humanProbability,
-              flags: p.flags,
-            })),
-          sourceMatches: result.plagiarism?.matches ?? null,
-        });
-      } catch (dbErr) {
-        // Non-fatal — still return results even if DB save fails
-        log.error("Failed to persist integrity check results", dbErr);
-      }
+    // Always persist results to database
+    try {
+      const wordCount = parsed.data.text.split(/\s+/).filter(Boolean).length;
+      await db.insert(integrityChecks).values({
+        userId,
+        projectId: parsed.data.projectId ?? null,
+        documentId: parsed.data.documentId ?? null,
+        checkType: result.plagiarism ? "both" : "ai_detection",
+        contentChecked: parsed.data.text.slice(0, 5000),
+        wordCount,
+        plagiarismScore: result.plagiarism?.similarityScore ?? null,
+        plagiarismMatches: result.plagiarism?.matches ?? null,
+        plagiarismEngine: result.plagiarism?.engine ?? null,
+        aiScore: result.aiDetection.aiScore,
+        aiDetectionDetails: {
+          humanScore: result.aiDetection.humanScore,
+          overallRisk: result.aiDetection.overallRisk,
+          engine: result.aiDetection.engine,
+          stats: result.aiDetection.stats,
+          paragraphCount: result.aiDetection.paragraphs.length,
+        },
+        aiDetectionEngine: result.aiDetection.engine,
+        flaggedPassages: result.aiDetection.paragraphs
+          .filter((p) => p.humanProbability < 50)
+          .map((p) => ({
+            excerpt: p.excerpt,
+            humanProbability: p.humanProbability,
+            flags: p.flags,
+          })),
+        sourceMatches: result.plagiarism?.matches ?? null,
+      });
+    } catch (dbErr) {
+      // Non-fatal — still return results even if DB save fails
+      log.error("Failed to persist integrity check results", dbErr);
     }
 
     return new Response(JSON.stringify(result), {

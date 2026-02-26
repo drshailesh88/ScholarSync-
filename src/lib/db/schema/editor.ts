@@ -409,9 +409,12 @@ export const integrityChecks = pgTable(
   "integrity_checks",
   {
     id: serial("id").primaryKey(),
-    projectId: integer("project_id")
+    userId: text("user_id")
       .notNull()
-      .references(() => projects.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: integer("project_id").references(() => projects.id, {
+      onDelete: "cascade",
+    }),
     documentId: integer("document_id").references(
       () => synthesisDocuments.id,
       { onDelete: "set null" }
@@ -434,6 +437,7 @@ export const integrityChecks = pgTable(
     createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => [
+    index("idx_integrity_user").on(table.userId),
     index("idx_integrity_project").on(table.projectId),
     index("idx_integrity_document").on(table.documentId),
   ]

@@ -456,6 +456,32 @@ Be calibrated: not all polished writing is AI-generated. Academic writing natura
   }));
 }
 
+// ── Sentence splitting for compliance highlighting ───────────────────
+
+/**
+ * Splits paragraph text into individual sentences with character offsets.
+ * Used to provide sentence-level data for the compliance page highlighting.
+ */
+function splitIntoSentences(text: string): Array<{ text: string; startOffset: number; endOffset: number }> {
+  const sentences: Array<{ text: string; startOffset: number; endOffset: number }> = [];
+  const regex = /[^.!?]+[.!?]+[\s]*/g;
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    sentences.push({
+      text: match[0].trim(),
+      startOffset: match.index,
+      endOffset: match.index + match[0].trimEnd().length,
+    });
+  }
+  // Handle remaining text without terminal punctuation
+  const lastEnd = sentences.length > 0 ? sentences[sentences.length - 1].endOffset : 0;
+  const remaining = text.slice(lastEnd).trim();
+  if (remaining) {
+    sentences.push({ text: remaining, startOffset: lastEnd, endOffset: text.length });
+  }
+  return sentences;
+}
+
 // ── Part 3: Combined Detection ───────────────────────────────────────
 
 /**
@@ -512,6 +538,14 @@ async function runLLMHeuristicDetection(
 
   const batchResults = await Promise.all(batchPromises);
   const allParagraphResults = batchResults.flat();
+
+  // Attach sentence-level data to each paragraph result for compliance highlighting
+  for (const result of allParagraphResults) {
+    const paragraphText = paragraphs[result.paragraphIndex];
+    if (paragraphText) {
+      result.sentences = splitIntoSentences(paragraphText);
+    }
+  }
 
   const avgHumanProbability =
     allParagraphResults.reduce((sum, p) => sum + p.humanProbability, 0) /
