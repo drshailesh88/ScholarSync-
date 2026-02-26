@@ -24,6 +24,7 @@ export type WorkflowTab =
   | "export"
   | "living"
   | "protocol"
+  | "prospero"
   | "grade"
   | "manuscript";
 

@@ -18,6 +18,7 @@ import {
   Scroll,
   Certificate,
   Article,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
 import { Tabs } from "@/components/ui/tabs";
 import {
@@ -38,6 +39,7 @@ import { PRISMAChecklistPanel } from "@/components/systematic-review/PRISMACheck
 import { ImportExportPanel } from "@/components/systematic-review/ImportExportPanel";
 import { LivingReviewPanel } from "@/components/systematic-review/LivingReviewPanel";
 import { ProtocolPanel } from "@/components/systematic-review/ProtocolPanel";
+import { PROSPEROExport } from "@/components/systematic-review/PROSPEROExport";
 import { GRADEPanel } from "@/components/systematic-review/GRADEPanel";
 import { ManuscriptPanel } from "@/components/systematic-review/ManuscriptPanel";
 import Link from "next/link";
@@ -60,6 +62,7 @@ const WORKFLOW_TABS = [
   { key: "export", label: "Export", icon: Export },
   { key: "living", label: "Living Review", icon: Bell },
   { key: "protocol", label: "Protocol", icon: Scroll },
+  { key: "prospero", label: "PROSPERO", icon: ArrowSquareOut },
 ];
 
 // ---------------------------------------------------------------------------
@@ -252,6 +255,9 @@ export default function SystematicReviewWorkflowPage() {
         )}
         {activeTab === "protocol" && (
           <ProtocolPanel projectId={projectId} />
+        )}
+        {activeTab === "prospero" && (
+          <PROSPEROExport projectId={projectId} />
         )}
       </div>
     </div>

@@ -370,3 +370,266 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
+
+// ---------------------------------------------------------------------------
+// PROSPERO mandatory field registration helper
+// ---------------------------------------------------------------------------
+
+export interface PROSPEROField {
+  fieldNumber: number;
+  fieldName: string;
+  value: string;
+  source: "auto" | "manual"; // auto = populated from project data, manual = needs user input
+  required: boolean;
+}
+
+/**
+ * Generate the 22 mandatory PROSPERO fields, auto-populating from project
+ * configuration where possible and marking the rest as manual-entry required.
+ */
+export async function generatePROSPEROFields(
+  projectId: number
+): Promise<PROSPEROField[]> {
+  // Load SR config
+  const [config] = await db
+    .select()
+    .from(systematicReviewConfig)
+    .where(eq(systematicReviewConfig.projectId, projectId));
+
+  // Load the project title from projects table
+  const { projects } = await import("@/lib/db/schema");
+  const [project] = await db
+    .select({ title: projects.title })
+    .from(projects)
+    .where(eq(projects.id, projectId))
+    .limit(1);
+
+  const pico = config?.pico as ProtocolInput["pico"] | undefined;
+  const strategy = config?.searchStrategy as
+    | { pubmedQuery?: string; databases?: string[]; fullSearchString?: string }
+    | undefined;
+  const databases =
+    (config?.searchDatabases as string[] | undefined) ??
+    strategy?.databases ??
+    [];
+  const searchDateStr = config?.searchDate
+    ? config.searchDate.toISOString().split("T")[0]
+    : "";
+  const searchQuery =
+    strategy?.pubmedQuery ?? strategy?.fullSearchString ?? "";
+  const dbList =
+    databases.length > 0 ? databases.join(", ") : "PubMed, EMBASE, Cochrane Library";
+
+  // Build review question from PICO
+  let reviewQuestion = "";
+  if (pico) {
+    const parts: string[] = [];
+    if (pico.population) parts.push(`In ${pico.population}`);
+    if (pico.intervention) parts.push(`does ${pico.intervention}`);
+    if (pico.comparison) parts.push(`compared with ${pico.comparison}`);
+    if (pico.outcome) parts.push(`affect ${pico.outcome}`);
+    reviewQuestion = parts.join(", ");
+    if (reviewQuestion && !reviewQuestion.endsWith("?")) reviewQuestion += "?";
+  }
+
+  // Build searches field
+  let searchesField = "";
+  if (dbList) searchesField += `Databases: ${dbList}.`;
+  if (searchDateStr) searchesField += ` Search date: ${searchDateStr}.`;
+  if (searchQuery) searchesField += `\n\nSearch query (PubMed): ${searchQuery}`;
+
+  // Condition/domain from PICO population + intervention
+  let condition = "";
+  if (pico?.population && pico?.intervention) {
+    condition = `${pico.intervention} in ${pico.population}`;
+  } else if (pico?.population) {
+    condition = pico.population;
+  } else if (pico?.intervention) {
+    condition = pico.intervention;
+  }
+
+  const prosperoId = config?.protocolRegistration ?? "";
+
+  const fields: PROSPEROField[] = [
+    {
+      fieldNumber: 1,
+      fieldName: "Review title",
+      value: project?.title ?? "",
+      source: project?.title ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 2,
+      fieldName: "Original language title",
+      value: project?.title ?? "",
+      source: project?.title ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 3,
+      fieldName: "Anticipated or actual start date",
+      value: config?.createdAt
+        ? config.createdAt.toISOString().split("T")[0]
+        : "",
+      source: config?.createdAt ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 4,
+      fieldName: "Anticipated completion date",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 5,
+      fieldName: "Stage of review",
+      value: config?.reviewStage
+        ? config.reviewStage.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+        : "",
+      source: config?.reviewStage ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 6,
+      fieldName: "Named contact",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 7,
+      fieldName: "Named contact email",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 8,
+      fieldName: "Named contact address",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 9,
+      fieldName: "Named contact phone",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 10,
+      fieldName: "Organisational affiliation",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 11,
+      fieldName: "Review team members and affiliations",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 12,
+      fieldName: "Funding sources/sponsors",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 13,
+      fieldName: "Conflicts of interest",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 14,
+      fieldName: "Collaborators",
+      value: "",
+      source: "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 15,
+      fieldName: "Review question",
+      value: reviewQuestion,
+      source: reviewQuestion ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 16,
+      fieldName: "Searches (databases, date range)",
+      value: searchesField,
+      source: searchesField ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 17,
+      fieldName: "URL to search strategy",
+      value: prosperoId ? `https://www.crd.york.ac.uk/prospero/display_record.php?RecordID=${prosperoId.replace(/\D/g, "")}` : "",
+      source: prosperoId ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 18,
+      fieldName: "Condition or domain being studied",
+      value: condition,
+      source: condition ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 19,
+      fieldName: "Participants/population",
+      value: pico?.population ?? "",
+      source: pico?.population ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 20,
+      fieldName: "Intervention(s), exposure(s)",
+      value: pico?.intervention ?? "",
+      source: pico?.intervention ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 21,
+      fieldName: "Comparator(s)/control",
+      value: pico?.comparison ?? "",
+      source: pico?.comparison ? "auto" : "manual",
+      required: true,
+    },
+    {
+      fieldNumber: 22,
+      fieldName: "Main outcome(s)",
+      value: pico?.outcome ?? "",
+      source: pico?.outcome ? "auto" : "manual",
+      required: true,
+    },
+  ];
+
+  return fields;
+}
+
+/**
+ * Export PROSPERO fields as formatted plain text for pasting into the
+ * PROSPERO web form.
+ */
+export function exportPROSPEROText(fields: PROSPEROField[]): string {
+  const lines: string[] = [];
+  lines.push("PROSPERO REGISTRATION — MANDATORY FIELDS");
+  lines.push("=".repeat(60));
+  lines.push("");
+
+  for (const field of fields) {
+    lines.push(`${field.fieldNumber}. ${field.fieldName}`);
+    lines.push("-".repeat(field.fieldName.length + 4));
+    lines.push(field.value || "[REQUIRED — please fill in]");
+    lines.push("");
+  }
+
+  return lines.join("\n");
+}
