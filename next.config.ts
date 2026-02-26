@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const csp = [
   "default-src 'self'",
@@ -6,7 +7,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline' https://cdn.clerk.io https://*.clerk.accounts.dev",
   "img-src 'self' data: blob: https://img.clerk.com https://*.clerk.accounts.dev https://*.googleusercontent.com",
   "font-src 'self' data: https://*.clerk.accounts.dev",
-  "connect-src 'self' https://api.clerk.io https://*.clerk.accounts.dev https://api.anthropic.com https://api.openai.com https://eutils.ncbi.nlm.nih.gov https://api.semanticscholar.org https://api.openalex.org https://api.copyleaks.com https://checkout.razorpay.com https://lumberjack.razorpay.com https://*.upstash.io",
+  "connect-src 'self' https://api.clerk.io https://*.clerk.accounts.dev https://api.anthropic.com https://api.openai.com https://eutils.ncbi.nlm.nih.gov https://api.semanticscholar.org https://api.openalex.org https://api.copyleaks.com https://checkout.razorpay.com https://lumberjack.razorpay.com https://*.upstash.io https://*.sentry.io https://*.ingest.sentry.io",
   "frame-src https://checkout.razorpay.com https://accounts.clerk.dev https://*.clerk.accounts.dev",
   "worker-src 'self' blob:",
 ].join("; ");
@@ -53,4 +54,18 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  // Upload source maps for better stack traces in Sentry
+  silent: !process.env.CI,
+
+  // Automatically tree-shake Sentry logger in production
+  disableLogger: true,
+
+  // Hide source maps from the client (security best practice)
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+
+  // Tunnel Sentry events through your Next.js server to avoid ad blockers
+  tunnelRoute: "/monitoring",
+});

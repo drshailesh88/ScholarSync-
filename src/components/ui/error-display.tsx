@@ -1,11 +1,14 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
 import { WarningCircle, ArrowCounterClockwise } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface ErrorDisplayProps {
   title?: string;
   message?: string;
+  error?: Error;
   onRetry?: () => void;
   className?: string;
 }
@@ -13,9 +16,15 @@ interface ErrorDisplayProps {
 export function ErrorDisplay({
   title = "Something went wrong",
   message = "An unexpected error occurred. Please try again.",
+  error,
   onRetry,
   className,
 }: ErrorDisplayProps) {
+  useEffect(() => {
+    if (error) {
+      Sentry.captureException(error);
+    }
+  }, [error]);
   return (
     <div
       className={cn(
