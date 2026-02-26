@@ -17,6 +17,7 @@ import {
   Bell,
   Scroll,
   Certificate,
+  Article,
 } from "@phosphor-icons/react";
 import { Tabs } from "@/components/ui/tabs";
 import {
@@ -38,6 +39,7 @@ import { ImportExportPanel } from "@/components/systematic-review/ImportExportPa
 import { LivingReviewPanel } from "@/components/systematic-review/LivingReviewPanel";
 import { ProtocolPanel } from "@/components/systematic-review/ProtocolPanel";
 import { GRADEPanel } from "@/components/systematic-review/GRADEPanel";
+import { ManuscriptPanel } from "@/components/systematic-review/ManuscriptPanel";
 import Link from "next/link";
 
 // ---------------------------------------------------------------------------
@@ -53,6 +55,7 @@ const WORKFLOW_TABS = [
   { key: "extraction", label: "Data Extraction", icon: Table },
   { key: "meta_analysis", label: "Meta-Analysis", icon: ChartBar },
   { key: "grade", label: "GRADE", icon: Certificate },
+  { key: "manuscript", label: "Manuscript", icon: Article },
   { key: "snowball", label: "Snowballing", icon: Graph },
   { key: "export", label: "Export", icon: Export },
   { key: "living", label: "Living Review", icon: Bell },
@@ -235,6 +238,9 @@ export default function SystematicReviewWorkflowPage() {
           <MetaAnalysisPanel projectId={projectId} />
         )}
         {activeTab === "grade" && <GRADEPanel projectId={projectId} />}
+        {activeTab === "manuscript" && (
+          <ManuscriptPanel projectId={projectId} />
+        )}
         {activeTab === "snowball" && (
           <SnowballingPanel projectId={projectId} />
         )}

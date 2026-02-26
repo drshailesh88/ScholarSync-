@@ -24,7 +24,8 @@ export type WorkflowTab =
   | "export"
   | "living"
   | "protocol"
-  | "grade";
+  | "grade"
+  | "manuscript";
 
 export type ReviewStage =
   | "search_strategy"
