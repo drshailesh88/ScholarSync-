@@ -250,6 +250,39 @@ export const slideComments = pgTable(
 );
 
 // ---------------------------------------------------------------------------
+// 18e. presentation_recordings
+// ---------------------------------------------------------------------------
+export const presentationRecordings = pgTable(
+  "presentation_recordings",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    deckId: integer("deck_id")
+      .notNull()
+      .references(() => slideDecks.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(),
+    title: text("title"),
+    storageUrl: text("storage_url"),
+    storagePath: text("storage_path").notNull(),
+    thumbnailUrl: text("thumbnail_url"),
+    durationMs: integer("duration_ms"),
+    fileSizeBytes: integer("file_size_bytes"),
+    format: text("format").default("webm"),
+    slideMarkers: jsonb("slide_markers"),
+    hasWebcam: boolean("has_webcam").default(false),
+    status: text("status").default("recording"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_pres_recordings_deck").on(table.deckId),
+    index("idx_pres_recordings_user").on(table.userId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
 // 19. deep_research_sessions
 // ---------------------------------------------------------------------------
 export const deepResearchSessions = pgTable(
