@@ -492,6 +492,114 @@ export async function getMetaAnalysisResults(projectId: number) {
 // Helper: convert log-scale effect to natural scale for display
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Subgroup Analysis
+// ---------------------------------------------------------------------------
+
+export interface SubgroupResult {
+  groupName: string;
+  studyCount: number;
+  pooled: PooledResult;
+  heterogeneity: HeterogeneityStats;
+  studies: StudyEffect[];
+}
+
+export interface SubgroupAnalysisOutput {
+  subgroups: SubgroupResult[];
+  testForDifferences: { Q: number; df: number; p: number };
+}
+
+export function runSubgroupAnalysis(
+  studies: StudyEffect[],
+  groups: { name: string; studyIndices: number[] }[],
+  effectType: EffectType,
+  modelType: ModelType
+): SubgroupAnalysisOutput {
+  const compute =
+    modelType === "fixed" ? computeFixedEffectsMeta : computeRandomEffectsMeta;
+
+  const subgroups: SubgroupResult[] = groups
+    .filter((g) => g.studyIndices.length >= 2)
+    .map((g) => {
+      const subset = g.studyIndices
+        .filter((idx) => idx >= 0 && idx < studies.length)
+        .map((idx) => studies[idx]);
+      const result = compute(subset);
+      return {
+        groupName: g.name,
+        studyCount: subset.length,
+        pooled: result.pooled,
+        heterogeneity: result.heterogeneity,
+        studies: result.weightedStudies,
+      };
+    });
+
+  // Test for subgroup differences (between-group heterogeneity)
+  // Q_between = Q_total - sum(Q_within)
+  const allIndices = groups.flatMap((g) => g.studyIndices);
+  const allStudiesUsed = allIndices
+    .filter((idx) => idx >= 0 && idx < studies.length)
+    .map((idx) => studies[idx]);
+
+  let QBetween = 0;
+  const K = subgroups.length;
+
+  if (K >= 2 && allStudiesUsed.length >= 2) {
+    const totalResult = compute(allStudiesUsed);
+    const QTotal = totalResult.heterogeneity.Q;
+    const QWithinSum = subgroups.reduce(
+      (sum, sg) => sum + sg.heterogeneity.Q,
+      0
+    );
+    QBetween = Math.max(0, QTotal - QWithinSum);
+  }
+
+  const dfBetween = Math.max(0, K - 1);
+  const pBetween = dfBetween > 0 ? chiSquaredPValue(QBetween, dfBetween) : 1;
+
+  return {
+    subgroups,
+    testForDifferences: { Q: QBetween, df: dfBetween, p: pBetween },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Sensitivity Analysis (Leave-One-Out)
+// ---------------------------------------------------------------------------
+
+export interface LeaveOneOutResult {
+  excludedStudyName: string;
+  excludedIndex: number;
+  pooled: PooledResult;
+  heterogeneity: HeterogeneityStats;
+}
+
+export function runSensitivityAnalysis(
+  studies: StudyEffect[],
+  effectType: EffectType,
+  modelType: ModelType
+): LeaveOneOutResult[] {
+  if (studies.length < 3) return [];
+
+  const compute =
+    modelType === "fixed" ? computeFixedEffectsMeta : computeRandomEffectsMeta;
+
+  return studies.map((excluded, i) => {
+    const subset = studies.filter((_, j) => j !== i);
+    const result = compute(subset);
+    return {
+      excludedStudyName: excluded.studyLabel,
+      excludedIndex: i,
+      pooled: result.pooled,
+      heterogeneity: result.heterogeneity,
+    };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Helper: convert log-scale effect to natural scale for display
+// ---------------------------------------------------------------------------
+
 export function toNaturalScale(
   effect: number,
   effectType: EffectType

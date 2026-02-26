@@ -84,10 +84,15 @@ export {
   trimAndFill,
   runMetaAnalysis,
   getMetaAnalysisResults,
+  runSubgroupAnalysis,
+  runSensitivityAnalysis,
   type StudyEffect,
   type EffectType,
   type ModelType,
   type MetaAnalysisOutput,
+  type SubgroupResult,
+  type SubgroupAnalysisOutput,
+  type LeaveOneOutResult,
 } from "./meta-analysis";
 
 export {
@@ -144,3 +149,15 @@ export {
   type ProtocolSection,
   type ProtocolInput,
 } from "./protocol-builder";
+
+export {
+  assessGRADE,
+  getGRADESummary,
+  exportGRADETable,
+  type GRADEAssessment,
+  type GRADEDomainAssessment,
+  type GRADEDomain,
+  type CertaintyRating,
+  GRADE_DOMAIN_LABELS,
+  CERTAINTY_LABELS,
+} from "./grade-assessment";

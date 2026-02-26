@@ -15,6 +15,8 @@ import {
   runMetaAnalysis,
   getMetaAnalysisResults,
   trimAndFill,
+  runSubgroupAnalysis,
+  runSensitivityAnalysis,
   type StudyEffect,
   type EffectType,
   type ModelType,
@@ -34,6 +36,11 @@ const studySchema = z.object({
   n: z.number().optional(),
 });
 
+const subgroupSchema = z.object({
+  name: z.string().min(1),
+  studyIndices: z.array(z.number().int().nonnegative()),
+});
+
 const runSchema = z.object({
   projectId: z.number().int().positive(),
   analysisName: z.string().min(1).max(200),
@@ -42,6 +49,8 @@ const runSchema = z.object({
   model: z.enum(["fixed", "random"]),
   studies: z.array(studySchema).min(2),
   includeTrimAndFill: z.boolean().default(false),
+  mode: z.enum(["standard", "subgroup", "sensitivity"]).default("standard"),
+  groups: z.array(subgroupSchema).optional(),
 });
 
 export async function POST(req: Request) {
@@ -65,6 +74,8 @@ export async function POST(req: Request) {
       model,
       studies,
       includeTrimAndFill,
+      mode,
+      groups,
     } = parsed.data;
 
     // Verify project ownership
@@ -81,7 +92,40 @@ export async function POST(req: Request) {
       );
     }
 
-    // Run meta-analysis
+    // --- Subgroup analysis mode ---
+    if (mode === "subgroup") {
+      if (!groups || groups.length < 2) {
+        return NextResponse.json(
+          { error: "Subgroup analysis requires at least 2 groups" },
+          { status: 400 }
+        );
+      }
+      const subgroupResult = runSubgroupAnalysis(
+        studies as StudyEffect[],
+        groups,
+        effectType as EffectType,
+        model as ModelType
+      );
+      return NextResponse.json({ mode: "subgroup", result: subgroupResult });
+    }
+
+    // --- Sensitivity analysis mode ---
+    if (mode === "sensitivity") {
+      if (studies.length < 3) {
+        return NextResponse.json(
+          { error: "Sensitivity analysis requires at least 3 studies" },
+          { status: 400 }
+        );
+      }
+      const sensitivityResult = runSensitivityAnalysis(
+        studies as StudyEffect[],
+        effectType as EffectType,
+        model as ModelType
+      );
+      return NextResponse.json({ mode: "sensitivity", result: sensitivityResult });
+    }
+
+    // --- Standard meta-analysis mode ---
     const result = await runMetaAnalysis(
       projectId,
       analysisName,
@@ -100,7 +144,7 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ result, trimAndFill: trimFillResult });
+    return NextResponse.json({ mode: "standard", result, trimAndFill: trimFillResult });
   } catch (error) {
     console.error("Meta-analysis error", error);
     return NextResponse.json(
