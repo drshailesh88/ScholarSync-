@@ -346,9 +346,7 @@ export function ForestPlot({
           className="text-[10px] fill-current"
           opacity={0.5}
         >
-          {effectType === "OR" || effectType === "RR"
-            ? `Favours control`
-            : `Favours control`}
+          Favours control
         </text>
         <text
           x={config.labelWidth + config.plotWidth * 0.75}
@@ -357,9 +355,7 @@ export function ForestPlot({
           className="text-[10px] fill-current"
           opacity={0.5}
         >
-          {effectType === "OR" || effectType === "RR"
-            ? `Favours treatment`
-            : `Favours treatment`}
+          Favours treatment
         </text>
       </svg>
     </div>

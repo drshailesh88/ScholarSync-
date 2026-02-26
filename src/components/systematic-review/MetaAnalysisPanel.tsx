@@ -7,7 +7,6 @@ import {
   Trash,
   CircleNotch,
   Play,
-  DownloadSimple,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";

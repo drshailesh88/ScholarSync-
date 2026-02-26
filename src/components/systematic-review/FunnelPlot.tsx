@@ -62,8 +62,6 @@ export function FunnelPlot({
   const pooledDisplay = displayEffect(pooledEffect);
 
   // Compute pseudo-95% CI funnel boundaries
-  const maxSE = Math.max(...studies.map((s) => s.se), 0.01);
-
   // Axis label
   const effectLabel =
     effectType === "OR"

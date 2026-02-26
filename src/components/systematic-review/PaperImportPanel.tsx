@@ -8,7 +8,6 @@ import {
   Database,
   FileArrowUp,
   Trash,
-  Eye,
   FilePdf,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
