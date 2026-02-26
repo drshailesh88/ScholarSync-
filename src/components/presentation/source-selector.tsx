@@ -3,7 +3,7 @@
 import { FileText, TextT, BookOpen } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-export type SourceType = "papers" | "document" | "text";
+export type SourceType = "papers" | "document" | "text" | "deep_research";
 
 interface SourceSelectorProps {
   sourceType: SourceType;

@@ -10,6 +10,13 @@ import {
   ListBullets,
   ArrowCounterClockwise,
   CircleNotch,
+  MathOperations,
+  TreeStructure,
+  ChartBar,
+  ShieldCheck,
+  TextAa,
+  SpeakerHigh,
+  Translate,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { SlideEditAction, ContentBlock } from "@/types/presentation";
@@ -61,6 +68,48 @@ const AI_ACTIONS: {
     label: "Regenerate Slide",
     description: "Completely rewrite this slide",
     icon: <ArrowCounterClockwise size={14} />,
+  },
+  {
+    action: "add_math",
+    label: "Add Math",
+    description: "Generate LaTeX equations and formulas",
+    icon: <MathOperations size={14} />,
+  },
+  {
+    action: "add_diagram",
+    label: "Add Diagram",
+    description: "Generate Mermaid flowcharts and diagrams",
+    icon: <TreeStructure size={14} />,
+  },
+  {
+    action: "add_chart",
+    label: "Add Chart",
+    description: "Convert data to visual charts",
+    icon: <ChartBar size={14} />,
+  },
+  {
+    action: "strengthen_evidence",
+    label: "Strengthen Evidence",
+    description: "Add stats, citations, and callouts",
+    icon: <ShieldCheck size={14} />,
+  },
+  {
+    action: "simplify_language",
+    label: "Simplify Language",
+    description: "Make accessible to non-specialists",
+    icon: <TextAa size={14} />,
+  },
+  {
+    action: "add_speaker_notes",
+    label: "Add Speaker Notes",
+    description: "Generate comprehensive speaker notes",
+    icon: <SpeakerHigh size={14} />,
+  },
+  {
+    action: "translate",
+    label: "Translate",
+    description: "Translate slide content to another language",
+    icon: <Translate size={14} />,
   },
 ];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "@phosphor-icons/react";
@@ -45,6 +45,12 @@ import { SlideToolbar } from "@/components/presentation/slide-toolbar";
 import { SpeakerNotesPanel } from "@/components/presentation/speaker-notes-panel";
 import { AiToolsDropdown } from "@/components/presentation/ai-tools-dropdown";
 import { CoachPanel } from "@/components/presentation/coach-panel";
+import { AgentPanel } from "@/components/presentation/agent-panel";
+import { DefensePrepPanel } from "@/components/presentation/defense-prep-panel";
+
+const PresenterMode = lazy(() =>
+  import("@/components/presentation/presenter-mode").then((m) => ({ default: m.PresenterMode }))
+);
 
 type DeckWithSlides = NonNullable<Awaited<ReturnType<typeof getDeck>>>;
 type _SlideRow = DeckWithSlides["slides"][number];
@@ -62,6 +68,9 @@ export default function DeckEditorPage() {
   const [isEditing, setIsEditing] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showAgentPanel, setShowAgentPanel] = useState(false);
+  const [showDefensePrep, setShowDefensePrep] = useState(false);
+  const [showPresenterMode, setShowPresenterMode] = useState(false);
 
   // Save timer for debouncing
   const [saveTimer, setSaveTimer] = useState<NodeJS.Timeout | null>(null);
@@ -279,6 +288,17 @@ export default function DeckEditorPage() {
           onToggleEdit={() => setIsEditing(!isEditing)}
           onExportPptx={handleExportPptx}
           onExportPdf={handleExportPdf}
+          onPresenterMode={() => setShowPresenterMode(true)}
+          onToggleAgentPanel={() => {
+            setShowAgentPanel(!showAgentPanel);
+            if (!showAgentPanel) setShowDefensePrep(false);
+          }}
+          onToggleDefensePrep={() => {
+            setShowDefensePrep(!showDefensePrep);
+            if (!showDefensePrep) setShowAgentPanel(false);
+          }}
+          showAgentPanel={showAgentPanel}
+          showDefensePrep={showDefensePrep}
         />
 
         <SlideCanvas
@@ -349,6 +369,62 @@ export default function DeckEditorPage() {
           />
         }
       />
+
+      {/* AI Agent Panel (slide-over) */}
+      {showAgentPanel && (
+        <div className="w-80 shrink-0 border-l border-border bg-surface overflow-y-auto">
+          <AgentPanel
+            deckId={deckId}
+            slides={slides.map((s) => ({
+              id: s.id,
+              title: s.title,
+              contentBlocks: (s.contentBlocks as ContentBlock[]) ?? [],
+              speakerNotes: s.speakerNotes,
+            }))}
+            audienceType={deck?.audienceType ?? "general"}
+            onSlidesUpdated={() => loadDeck()}
+          />
+        </div>
+      )}
+
+      {/* Defense Prep Panel (slide-over) */}
+      {showDefensePrep && (
+        <div className="w-80 shrink-0 border-l border-border bg-surface overflow-y-auto">
+          <DefensePrepPanel
+            deckId={deckId}
+            slides={slides.map((s) => ({
+              id: s.id,
+              title: s.title,
+              contentBlocks: (s.contentBlocks as ContentBlock[]) ?? [],
+              speakerNotes: s.speakerNotes,
+            }))}
+            audienceType={deck?.audienceType ?? "general"}
+          />
+        </div>
+      )}
+
+      {/* Presenter Mode (full-screen overlay) */}
+      {showPresenterMode && (
+        <Suspense fallback={
+          <div className="fixed inset-0 z-50 bg-black flex items-center justify-center text-white">
+            Loading presenter mode...
+          </div>
+        }>
+          <PresenterMode
+            slides={slides.map((s) => ({
+              id: s.id,
+              title: s.title,
+              subtitle: s.subtitle,
+              layout: (s.layout ?? "title_content") as string,
+              contentBlocks: (s.contentBlocks as ContentBlock[]) ?? [],
+              speakerNotes: s.speakerNotes,
+            }))}
+            themeKey={themeKey}
+            themeConfig={themeConfig}
+            onExit={() => setShowPresenterMode(false)}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }
