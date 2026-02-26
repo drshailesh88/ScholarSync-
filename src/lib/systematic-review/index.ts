@@ -188,3 +188,12 @@ export {
   generateRevManExport,
   type RevManExportPackage,
 } from "./revman-export";
+
+export {
+  validateSearchStrategy,
+  PRESS_ELEMENTS,
+  PRESS_ASSESSMENT_LABELS,
+  PRESS_OVERALL_LABELS,
+  type PRESSElement,
+  type PRESSValidation,
+} from "./press-validation";
