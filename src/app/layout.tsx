@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { inter, plusJakarta, merriweather } from "@/lib/fonts";
 import "./globals.css";
 
@@ -48,7 +49,7 @@ export default function RootLayout({
             enableSystem={false}
             disableTransitionOnChange
           >
-            {children}
+            <PostHogProvider>{children}</PostHogProvider>
           </ThemeProvider>
         </body>
       </html>

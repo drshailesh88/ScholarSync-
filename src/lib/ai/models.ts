@@ -1,6 +1,7 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createZhipu } from "zhipu-ai-provider";
+import { getLangfuse, isLangfuseConfigured } from "@/lib/langfuse";
 
 // ── Provider selection ─────────────────────────────────────────────
 // Set AI_PROVIDER="zhipu" to use GLM-5, otherwise defaults to "anthropic" (Claude).
@@ -37,6 +38,37 @@ function getOpenAI() {
     _openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY! });
   }
   return _openai;
+}
+
+// ── LangFuse tracing helper ────────────────────────────────────────
+// Creates a LangFuse trace for each model invocation.
+// Call traceGeneration() before your LLM call, end it after.
+// When LangFuse is not configured, returns no-ops.
+
+export function traceGeneration(meta: { tier: string; modelId: string; feature?: string }) {
+  if (!isLangfuseConfigured()) {
+    return { end: () => {}, error: () => {} };
+  }
+
+  const trace = getLangfuse().trace({
+    name: `llm-${meta.tier}`,
+    metadata: { tier: meta.tier, provider: AI_PROVIDER, feature: meta.feature },
+  });
+  const generation = trace.generation({
+    name: meta.modelId,
+    model: meta.modelId,
+  });
+
+  return {
+    end(usage?: { promptTokens?: number; completionTokens?: number }) {
+      generation.end({
+        usage: usage ? { input: usage.promptTokens, output: usage.completionTokens } : undefined,
+      });
+    },
+    error(err: unknown) {
+      generation.end({ level: "ERROR", statusMessage: String(err) });
+    },
+  };
 }
 
 // ── Public helpers ─────────────────────────────────────────────────
