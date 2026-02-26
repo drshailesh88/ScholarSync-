@@ -161,3 +161,12 @@ export {
   GRADE_DOMAIN_LABELS,
   CERTAINTY_LABELS,
 } from "./grade-assessment";
+
+export {
+  generateManuscriptSection,
+  getProjectDataForManuscript,
+  exportManuscriptDraft,
+  type ManuscriptSection,
+  type ManuscriptSectionOutput,
+  type ManuscriptProjectData,
+} from "./manuscript-generator";
