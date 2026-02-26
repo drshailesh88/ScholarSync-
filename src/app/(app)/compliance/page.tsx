@@ -11,49 +11,22 @@ import {
   listProjectsForAnalysis,
   type DocumentForAnalysis,
 } from "@/lib/actions/analysis";
+import type { IntegrityCheckResult } from "@/lib/integrity/types";
 
-interface ParagraphAnalysis {
-  paragraphIndex: number;
-  humanProbability: number;
-  flags: string[];
-  suggestion?: string;
-}
-
-interface PlagiarismIndicator {
-  excerpt: string;
-  concern: string;
-  severity: "low" | "medium" | "high";
-}
+type SourceMode = "document" | "paste";
 
 interface CopyleaksSource {
   url: string;
   title: string;
   matchPercentage: number;
-  matchedText: string;
+  matchedText?: string;
 }
 
 interface CopyleaksResult {
-  scanId: string;
-  status: "completed" | "pending" | "error";
+  status: "completed" | "error" | "pending" | string;
   score: number;
   sources: CopyleaksSource[];
 }
-
-interface IntegrityResult {
-  humanScore: number;
-  aiScore: number;
-  overallRisk: "low" | "medium" | "high";
-  paragraphAnalysis: ParagraphAnalysis[];
-  plagiarismIndicators: PlagiarismIndicator[];
-  writingQuality: {
-    passiveVoiceCount: number;
-    averageSentenceLength: number;
-    readabilityGrade: number;
-    suggestions: string[];
-  };
-}
-
-type SourceMode = "document" | "paste";
 
 export default function CompliancePage() {
   // Source mode
@@ -69,7 +42,7 @@ export default function CompliancePage() {
 
   // Text state
   const [inputText, setInputText] = useState("");
-  const [result, setResult] = useState<IntegrityResult | null>(null);
+  const [result, setResult] = useState<IntegrityCheckResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [paragraphs, setParagraphs] = useState<string[]>([]);
@@ -401,24 +374,31 @@ export default function CompliancePage() {
                 >
                   &larr; Check New Text
                 </button>
-                {activeDoc && (
-                  <span className="text-xs text-ink-muted">
-                    {activeDoc.documentTitle}
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {result.aiDetection.engine === "binoculars" && (
+                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 font-medium">
+                      Binoculars
+                    </span>
+                  )}
+                  {activeDoc && (
+                    <span className="text-xs text-ink-muted">
+                      {activeDoc.documentTitle}
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="font-serif text-ink leading-relaxed space-y-4">
                 {paragraphs.map((p, i) => {
-                  const analysis = result.paragraphAnalysis.find((a) => a.paragraphIndex === i);
-                  const prob = analysis ? 100 - analysis.humanProbability : 0;
+                  const analysis = result.aiDetection.paragraphs.find((a) => a.paragraphIndex === i);
+                  const aiProb = analysis ? 100 - analysis.humanProbability : 0;
                   return (
                     <p
                       key={i}
                       className={cn(
                         "rounded-lg px-3 py-2",
-                        prob > 60 && "bg-orange-500/10 border-l-2 border-orange-500",
-                        prob > 30 && prob <= 60 && "bg-amber-500/5 border-l-2 border-amber-300",
-                        prob <= 30 && "border-l-2 border-emerald-400"
+                        aiProb > 60 && "bg-orange-500/10 border-l-2 border-orange-500",
+                        aiProb > 30 && aiProb <= 60 && "bg-amber-500/5 border-l-2 border-amber-300",
+                        aiProb <= 30 && "border-l-2 border-emerald-400"
                       )}
                     >
                       {p}
@@ -438,21 +418,26 @@ export default function CompliancePage() {
           <aside className="w-96 shrink-0 glass-panel rounded-2xl p-5 flex flex-col overflow-y-auto">
             {/* AI Detection */}
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-ink mb-4">AI Content Detection</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-ink">AI Content Detection</h3>
+                <span className="text-[10px] text-ink-muted">
+                  {result.aiDetection.engine === "binoculars" ? "Binoculars + LLM" : "LLM Heuristic"}
+                </span>
+              </div>
               <div className="flex flex-col items-center mb-4">
                 <CircularGauge
-                  value={result.humanScore}
-                  label={result.overallRisk === "low" ? "Low Risk" : result.overallRisk === "medium" ? "Moderate Risk" : "High Risk"}
+                  value={result.aiDetection.humanScore}
+                  label={result.aiDetection.overallRisk === "low" ? "Low Risk" : result.aiDetection.overallRisk === "medium" ? "Moderate Risk" : "High Risk"}
                   size={110}
                 />
               </div>
               <div className="flex justify-between text-xs text-ink-muted mb-4 px-2">
-                <span>Human: {result.humanScore}%</span>
-                <span>AI: {result.aiScore}%</span>
+                <span>Human: {result.aiDetection.humanScore}%</span>
+                <span>AI: {result.aiDetection.aiScore}%</span>
               </div>
 
               <div className="space-y-3">
-                {result.paragraphAnalysis.map((p) => (
+                {result.aiDetection.paragraphs.map((p) => (
                   <div key={p.paragraphIndex} className="p-3 rounded-lg bg-surface-raised">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-xs font-medium text-ink">Paragraph {p.paragraphIndex + 1}</span>
@@ -483,25 +468,61 @@ export default function CompliancePage() {
               </div>
             </div>
 
-            {/* Plagiarism */}
+            {/* Plagiarism — from built-in shingling engine */}
             <div className="border-t border-border-subtle pt-6 mb-6">
-              <h3 className="text-sm font-semibold text-ink mb-4">Plagiarism Indicators</h3>
-              {result.plagiarismIndicators.length === 0 ? (
-                <p className="text-xs text-emerald-500">No plagiarism concerns detected.</p>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-ink">Plagiarism Check</h3>
+                {result.plagiarism && (
+                  <span className={cn(
+                    "text-xs font-semibold",
+                    result.plagiarism.similarityScore > 30 ? "text-red-500" : result.plagiarism.similarityScore > 15 ? "text-amber-500" : "text-emerald-500"
+                  )}>
+                    {result.plagiarism.similarityScore}% similar
+                  </span>
+                )}
+              </div>
+              {!result.plagiarism ? (
+                <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-500/10">
+                  <span className="text-[10px] text-amber-500">Upgrade to a paid plan for plagiarism scanning.</span>
+                </div>
+              ) : result.plagiarism.matches.length === 0 ? (
+                <p className="text-xs text-emerald-500">No plagiarism concerns detected across {result.plagiarism.sourcesScanned} sources.</p>
               ) : (
                 <div className="space-y-3">
-                  {result.plagiarismIndicators.map((match, i) => (
+                  <p className="text-[10px] text-ink-muted">
+                    {result.plagiarism.sourcesScanned} scholarly sources scanned
+                  </p>
+                  {result.plagiarism.matches.map((match, i) => (
                     <div key={i} className="p-3 rounded-lg bg-surface-raised">
                       <div className="flex items-center justify-between mb-1">
                         <span className={cn(
                           "text-xs font-medium",
-                          match.severity === "high" ? "text-red-500" : match.severity === "medium" ? "text-amber-500" : "text-ink"
+                          match.severity === "high" ? "text-red-500" : match.severity === "medium" ? "text-amber-500" : "text-emerald-500"
                         )}>
-                          {match.severity.toUpperCase()} risk
+                          {(match.similarity * 100).toFixed(0)}% match
+                        </span>
+                        <span className={cn(
+                          "text-[9px] px-1.5 py-0.5 rounded-full font-medium",
+                          match.severity === "high" ? "bg-red-500/10 text-red-400" : match.severity === "medium" ? "bg-amber-500/10 text-amber-500" : "bg-emerald-500/10 text-emerald-500"
+                        )}>
+                          {match.severity}
                         </span>
                       </div>
-                      <p className="text-xs text-ink-muted italic mb-1">&ldquo;{match.excerpt}&rdquo;</p>
-                      <p className="text-[10px] text-ink-muted mb-2">{match.concern}</p>
+                      <p className="text-xs text-ink-muted italic mb-1 line-clamp-2">&ldquo;{match.excerpt}&rdquo;</p>
+                      <p className="text-[10px] text-ink truncate mb-2">
+                        {match.source.title}
+                        {match.source.year ? ` (${match.source.year})` : ""}
+                      </p>
+                      {match.source.doi && (
+                        <a
+                          href={`https://doi.org/${match.source.doi}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[9px] text-brand hover:underline block mb-2"
+                        >
+                          DOI: {match.source.doi}
+                        </a>
+                      )}
                       <div className="flex gap-2">
                         <button className="flex items-center gap-1 px-2 py-1 rounded text-xs font-medium text-brand bg-brand/10 hover:bg-brand/20 transition-colors">
                           <BookOpen size={12} />
@@ -518,19 +539,49 @@ export default function CompliancePage() {
               )}
             </div>
 
-            {/* Copyleaks Plagiarism Scan */}
+            {/* Citation Audit */}
+            {result.citationAudit && (
+              <div className="border-t border-border-subtle pt-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-semibold text-ink">Citation Audit</h3>
+                  <span className="text-xs text-ink-muted">
+                    {result.citationAudit.verifiedCitations}/{result.citationAudit.totalCitations} verified
+                  </span>
+                </div>
+                {result.citationAudit.issues.length === 0 ? (
+                  <p className="text-xs text-emerald-500">All citations verified successfully.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {result.citationAudit.issues.slice(0, 8).map((issue, i) => (
+                      <div key={i} className="flex items-start gap-2 p-2 rounded-lg bg-surface-raised">
+                        <span className={cn(
+                          "shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full",
+                          issue.severity === "error" ? "bg-red-500" : issue.severity === "warning" ? "bg-amber-500" : "bg-blue-400"
+                        )} />
+                        <div>
+                          <p className="text-[10px] text-ink">{issue.message}</p>
+                          {issue.reference && (
+                            <p className="text-[9px] text-ink-muted mt-0.5">Ref: {issue.reference}</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Copyleaks Source Matching (optional external scan) */}
             <div className="border-t border-border-subtle pt-6 mb-6">
-              <h3 className="text-sm font-semibold text-ink mb-4">Source Matching</h3>
+              <h3 className="text-sm font-semibold text-ink mb-4">External Source Matching</h3>
               {copyleaksAvailable === false ? (
                 <p className="text-xs text-ink-muted">
-                  Configure Copyleaks API keys for source matching
+                  Configure Copyleaks API keys for additional source matching.
                 </p>
               ) : copyleaksResult?.status === "completed" ? (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-medium text-ink">
-                      Plagiarism Score
-                    </span>
+                    <span className="text-xs font-medium text-ink">Score</span>
                     <span className={cn(
                       "text-xs font-semibold",
                       copyleaksResult.score > 30 ? "text-red-500" : copyleaksResult.score > 10 ? "text-amber-500" : "text-emerald-500"
@@ -549,7 +600,7 @@ export default function CompliancePage() {
                     <p className="text-xs text-emerald-500 mt-2">No matching sources found.</p>
                   ) : (
                     <div className="space-y-2 mt-3">
-                      {copyleaksResult.sources.map((src, i) => (
+                      {copyleaksResult.sources.map((src: CopyleaksSource, i: number) => (
                         <div key={i} className="p-3 rounded-lg bg-surface-raised">
                           <div className="flex items-center justify-between mb-1">
                             <a
@@ -589,7 +640,7 @@ export default function CompliancePage() {
                   className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-brand bg-brand/10 hover:bg-brand/20 transition-colors"
                 >
                   <MagnifyingGlass size={14} />
-                  Run Plagiarism Scan
+                  Run External Scan
                 </button>
               )}
             </div>
@@ -603,11 +654,11 @@ export default function CompliancePage() {
                   <p className="text-[10px] text-ink-muted">Passive Voice</p>
                 </div>
                 <div className="p-3 rounded-lg bg-surface-raised text-center">
-                  <p className="text-lg font-semibold text-ink">{result.writingQuality.averageSentenceLength}</p>
+                  <p className="text-lg font-semibold text-ink">{result.writingQuality.averageSentenceLength.toFixed(1)}</p>
                   <p className="text-[10px] text-ink-muted">Avg Words/Sentence</p>
                 </div>
                 <div className="col-span-2 p-3 rounded-lg bg-surface-raised text-center">
-                  <p className="text-lg font-semibold text-ink">Grade {result.writingQuality.readabilityGrade}</p>
+                  <p className="text-lg font-semibold text-ink">Grade {result.writingQuality.readabilityGrade.toFixed(1)}</p>
                   <p className="text-[10px] text-ink-muted">Readability Level</p>
                 </div>
               </div>
