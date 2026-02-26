@@ -51,6 +51,59 @@ interface PRISMAChecklistPanelProps {
 }
 
 // ---------------------------------------------------------------------------
+// Checklist variants
+// ---------------------------------------------------------------------------
+
+type ChecklistVariant = "prisma2020" | "prismaS" | "prismaNMA";
+
+interface VariantConfig {
+  label: string;
+  shortLabel: string;
+  description: string;
+  itemCount: number;
+  apiEndpoint: string;
+  apiVariant: string;
+  csvFilename: string;
+  verifyingText: string;
+}
+
+const VARIANT_CONFIG: Record<ChecklistVariant, VariantConfig> = {
+  prisma2020: {
+    label: "PRISMA 2020",
+    shortLabel: "PRISMA 2020",
+    description:
+      "Verify your manuscript against all 27 PRISMA 2020 checklist items. Paste your manuscript text below and click verify.",
+    itemCount: 27,
+    apiEndpoint: "/api/systematic-review/prisma-checklist",
+    apiVariant: "prisma2020",
+    csvFilename: "prisma-2020-checklist.csv",
+    verifyingText: "Verifying 27 items...",
+  },
+  prismaS: {
+    label: "PRISMA-S (Search)",
+    shortLabel: "PRISMA-S",
+    description:
+      "Verify your search reporting against all 16 PRISMA-S checklist items for literature search documentation.",
+    itemCount: 16,
+    apiEndpoint: "/api/systematic-review/prisma-checklist",
+    apiVariant: "prismaS",
+    csvFilename: "prisma-s-checklist.csv",
+    verifyingText: "Verifying 16 items...",
+  },
+  prismaNMA: {
+    label: "PRISMA-NMA (Network MA)",
+    shortLabel: "PRISMA-NMA",
+    description:
+      "Verify your network meta-analysis against all 5 PRISMA-NMA extension items for reporting network geometry and inconsistency.",
+    itemCount: 5,
+    apiEndpoint: "/api/systematic-review/prisma-checklist",
+    apiVariant: "prismaNMA",
+    csvFilename: "prisma-nma-checklist.csv",
+    verifyingText: "Verifying 5 items...",
+  },
+};
+
+// ---------------------------------------------------------------------------
 // Status config
 // ---------------------------------------------------------------------------
 
@@ -89,12 +142,26 @@ const STATUS_CONFIG: Record<
 // ---------------------------------------------------------------------------
 
 export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
+  const [activeVariant, setActiveVariant] =
+    useState<ChecklistVariant>("prisma2020");
   const [manuscriptText, setManuscriptText] = useState("");
-  const [result, setResult] = useState<ComplianceResult | null>(null);
+  const [results, setResults] = useState<
+    Partial<Record<ChecklistVariant, ComplianceResult>>
+  >({});
   const [isVerifying, setIsVerifying] = useState(false);
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const [filter, setFilter] = useState<ComplianceStatus | "all">("all");
   const [error, setError] = useState<string | null>(null);
+
+  const variantCfg = VARIANT_CONFIG[activeVariant];
+  const result = results[activeVariant] ?? null;
+
+  const switchVariant = (variant: ChecklistVariant) => {
+    setActiveVariant(variant);
+    setFilter("all");
+    setExpandedItems(new Set());
+    setError(null);
+  };
 
   const verify = useCallback(async () => {
     if (manuscriptText.length < 100) return;
@@ -102,10 +169,14 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
     setError(null);
 
     try {
-      const res = await fetch("/api/systematic-review/prisma-checklist", {
+      const res = await fetch(variantCfg.apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId, manuscriptText }),
+        body: JSON.stringify({
+          projectId,
+          manuscriptText,
+          variant: variantCfg.apiVariant,
+        }),
       });
 
       if (!res.ok) {
@@ -114,13 +185,13 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
       }
 
       const data = await res.json();
-      setResult(data.result);
+      setResults((prev) => ({ ...prev, [activeVariant]: data.result }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Verification failed");
     } finally {
       setIsVerifying(false);
     }
-  }, [projectId, manuscriptText]);
+  }, [projectId, manuscriptText, activeVariant, variantCfg]);
 
   const toggleItem = (itemNumber: number) => {
     setExpandedItems((prev) => {
@@ -137,12 +208,13 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
 
   const downloadCSV = async () => {
     try {
-      const res = await fetch("/api/systematic-review/prisma-checklist", {
+      const res = await fetch(variantCfg.apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           projectId,
           manuscriptText,
+          variant: variantCfg.apiVariant,
           exportFormat: "csv",
         }),
       });
@@ -151,7 +223,7 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "prisma-2020-checklist.csv";
+      a.download = variantCfg.csvFilename;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
@@ -181,12 +253,29 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
       <div>
         <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
           <ClipboardText weight="duotone" className="text-brand" />
-          PRISMA 2020 Compliance Checker
+          PRISMA Compliance Checker
         </h2>
         <p className="text-sm text-ink-muted mt-1">
-          Verify your manuscript against all 27 PRISMA 2020 checklist items.
-          Paste your manuscript text below and click verify.
+          {variantCfg.description}
         </p>
+      </div>
+
+      {/* Variant tab selector */}
+      <div className="flex gap-1 p-1 bg-surface-alt rounded-lg border border-border w-fit">
+        {(Object.keys(VARIANT_CONFIG) as ChecklistVariant[]).map((variant) => (
+          <button
+            key={variant}
+            onClick={() => switchVariant(variant)}
+            className={cn(
+              "px-3 py-1.5 rounded text-sm font-medium transition-colors whitespace-nowrap",
+              activeVariant === variant
+                ? "bg-brand text-white shadow-sm"
+                : "text-ink-muted hover:text-ink hover:bg-surface"
+            )}
+          >
+            {VARIANT_CONFIG[variant].label}
+          </button>
+        ))}
       </div>
 
       {/* Manuscript input */}
@@ -213,12 +302,12 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
                   className="animate-spin"
                   size={16}
                 />
-                Verifying 27 items...
+                {variantCfg.verifyingText}
               </>
             ) : (
               <>
                 <MagnifyingGlass weight="bold" size={16} />
-                Verify Compliance
+                Verify {variantCfg.shortLabel} Compliance
               </>
             )}
           </button>
@@ -226,7 +315,12 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
         {error && (
           <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
             <span>{error}</span>
-            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+            <button
+              onClick={() => setError(null)}
+              className="text-red-400 hover:text-red-300"
+            >
+              &#x2715;
+            </button>
           </div>
         )}
       </div>

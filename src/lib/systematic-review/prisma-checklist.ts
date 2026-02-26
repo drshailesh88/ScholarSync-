@@ -1,9 +1,13 @@
 /**
- * PRISMA 2020 Compliance Checklist Engine
+ * PRISMA Compliance Checklist Engine
  *
- * All 27 items from the PRISMA 2020 Statement (Page et al., BMJ 2021).
- * Verifies each item against a manuscript text using AI to determine
- * reporting status.
+ * Covers three PRISMA checklists:
+ *  - PRISMA 2020 (27 items) — Page et al., BMJ 2021
+ *  - PRISMA-S (16 items)    — Rethlefsen et al., systematic literature search reporting
+ *  - PRISMA-NMA (5 items)   — Hutton et al., network meta-analysis extension
+ *
+ * Each checklist is verified against a manuscript text using AI to determine
+ * the reporting status of every item.
  */
 
 import { generateObject } from "ai";
@@ -274,11 +278,187 @@ const batchResultSchema = z.object({
 export async function verifyPRISMACompliance(
   manuscriptText: string
 ): Promise<ComplianceResult> {
+  return verifyItemsCompliance(
+    PRISMA_2020_ITEMS,
+    "PRISMA 2020",
+    manuscriptText
+  );
+}
+
+// ---------------------------------------------------------------------------
+// PRISMA-S — 16 items for search reporting
+// ---------------------------------------------------------------------------
+
+export const PRISMA_S_ITEMS: PRISMAItem[] = [
+  {
+    number: 1,
+    section: "INFORMATION SOURCES AND METHODS",
+    topic: "Database name",
+    description:
+      "Name each database searched, stating the platform for each",
+  },
+  {
+    number: 2,
+    section: "INFORMATION SOURCES AND METHODS",
+    topic: "Multi-database searching",
+    description:
+      "If databases were searched simultaneously on a single platform, state the name of the platform, listing all of the databases searched",
+  },
+  {
+    number: 3,
+    section: "INFORMATION SOURCES AND METHODS",
+    topic: "Study registries",
+    description:
+      "List any study registries, clinical trial registries, or other data sources searched",
+  },
+  {
+    number: 4,
+    section: "INFORMATION SOURCES AND METHODS",
+    topic: "Online resources and browsing",
+    description:
+      "Describe any online or print source purposefully searched or browsed, including methods used",
+  },
+  {
+    number: 5,
+    section: "INFORMATION SOURCES AND METHODS",
+    topic: "Citation searching",
+    description:
+      "Indicate whether cited references or citing references were examined, and describe any methods used",
+  },
+  {
+    number: 6,
+    section: "INFORMATION SOURCES AND METHODS",
+    topic: "Contacts",
+    description:
+      "Indicate whether additional studies or data were sought by contacting authors, experts, manufacturers, or others",
+  },
+  {
+    number: 7,
+    section: "INFORMATION SOURCES AND METHODS",
+    topic: "Other methods",
+    description:
+      "Describe any additional information sources or search methods used",
+  },
+  {
+    number: 8,
+    section: "SEARCH STRATEGIES",
+    topic: "Full search strategies",
+    description:
+      "Include the search strategies for each database and information source, copied and pasted exactly as run",
+  },
+  {
+    number: 9,
+    section: "SEARCH STRATEGIES",
+    topic: "Limits and restrictions",
+    description:
+      "Specify that no limits were used, or describe any limits or restrictions applied to a search and justify their use",
+  },
+  {
+    number: 10,
+    section: "SEARCH STRATEGIES",
+    topic: "Search filters",
+    description:
+      "Indicate whether published search filters were used and cite them",
+  },
+  {
+    number: 11,
+    section: "SEARCH STRATEGIES",
+    topic: "Prior work",
+    description:
+      "Indicate when search strategies from other literature reviews were adapted or translated",
+  },
+  {
+    number: 12,
+    section: "SEARCH STRATEGIES",
+    topic: "Updates and reruns",
+    description:
+      "Report the date of the most recent search or the date of the last search update",
+  },
+  {
+    number: 13,
+    section: "SEARCH STRATEGIES",
+    topic: "Dates of searches",
+    description:
+      "For each search strategy, provide the date when the last search occurred",
+  },
+  {
+    number: 14,
+    section: "PEER REVIEW",
+    topic: "Peer review",
+    description: "Describe any search peer review process",
+  },
+  {
+    number: 15,
+    section: "MANAGING RECORDS",
+    topic: "Total records",
+    description:
+      "Document the total number of records identified from each database and other information sources",
+  },
+  {
+    number: 16,
+    section: "MANAGING RECORDS",
+    topic: "Deduplication",
+    description:
+      "Describe the processes and any software used to deduplicate records",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// PRISMA-NMA — 5 additional items for network meta-analysis
+// ---------------------------------------------------------------------------
+
+export const PRISMA_NMA_ITEMS: PRISMAItem[] = [
+  {
+    number: 1,
+    section: "METHODS",
+    topic: "Geometry of the network",
+    description:
+      "Describe methods used to present and examine the network geometry",
+  },
+  {
+    number: 2,
+    section: "METHODS",
+    topic: "Assessment of inconsistency",
+    description:
+      "Describe the statistical methods used to evaluate consistency/coherence",
+  },
+  {
+    number: 3,
+    section: "RESULTS",
+    topic: "Network geometry presentation",
+    description:
+      "Provide a network graph showing the available direct comparisons between treatments",
+  },
+  {
+    number: 4,
+    section: "RESULTS",
+    topic: "Summary effects",
+    description:
+      "Provide league table or forest plots showing all pairwise comparisons, including treatment ranking",
+  },
+  {
+    number: 5,
+    section: "RESULTS",
+    topic: "Inconsistency assessment",
+    description:
+      "Present results of the inconsistency assessment and any exploration of causes",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// AI-powered checklist verification — shared helper
+// ---------------------------------------------------------------------------
+
+async function verifyItemsCompliance(
+  items: PRISMAItem[],
+  checklistName: string,
+  manuscriptText: string
+): Promise<ComplianceResult> {
   const batchSize = 9;
   const allResults: ChecklistItemResult[] = [];
 
-  for (let i = 0; i < PRISMA_2020_ITEMS.length; i += batchSize) {
-    const batch = PRISMA_2020_ITEMS.slice(i, i + batchSize);
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
 
     const itemDescriptions = batch
       .map(
@@ -290,9 +470,9 @@ export async function verifyPRISMACompliance(
     const { object } = await generateObject({
       model: getModel(),
       schema: batchResultSchema,
-      prompt: `You are a PRISMA 2020 compliance reviewer for systematic reviews.
+      prompt: `You are a ${checklistName} compliance reviewer for systematic reviews.
 
-Evaluate the following manuscript text against each PRISMA 2020 checklist item below. For each item, determine:
+Evaluate the following manuscript text against each ${checklistName} checklist item below. For each item, determine:
 - "reported": The item is fully and adequately reported in the manuscript.
 - "partially_reported": The item is mentioned but incomplete or lacking important details.
 - "not_reported": The item is not addressed in the manuscript.
@@ -302,7 +482,7 @@ Also provide:
 - "location": A brief quote or section reference showing where the item is addressed (empty if not found).
 - "suggestion": A concise recommendation for improving compliance (empty if fully reported).
 
-PRISMA 2020 Items to check:
+${checklistName} Items to check:
 ${itemDescriptions}
 
 Manuscript text:
@@ -324,8 +504,8 @@ ${manuscriptText.slice(0, 30000)}`,
     }
   }
 
-  // Ensure all 27 items are accounted for (fill in any missed by AI)
-  for (const item of PRISMA_2020_ITEMS) {
+  // Ensure all items are accounted for (fill in any missed by AI)
+  for (const item of items) {
     if (!allResults.find((r) => r.itemNumber === item.number)) {
       allResults.push({
         itemNumber: item.number,
@@ -342,18 +522,24 @@ ${manuscriptText.slice(0, 30000)}`,
   allResults.sort((a, b) => a.itemNumber - b.itemNumber);
 
   const reported = allResults.filter((r) => r.status === "reported").length;
-  const partial = allResults.filter((r) => r.status === "partially_reported").length;
-  const notReported = allResults.filter((r) => r.status === "not_reported").length;
-  const notApplicable = allResults.filter((r) => r.status === "not_applicable").length;
-  const applicable = 27 - notApplicable;
+  const partial = allResults.filter(
+    (r) => r.status === "partially_reported"
+  ).length;
+  const notReported = allResults.filter(
+    (r) => r.status === "not_reported"
+  ).length;
+  const notApplicable = allResults.filter(
+    (r) => r.status === "not_applicable"
+  ).length;
+  const applicable = items.length - notApplicable;
 
   return {
     items: allResults,
     summary: {
       reported,
       partiallyReported: partial,
-      notReported: notReported,
-      notApplicable: notApplicable,
+      notReported,
+      notApplicable,
       compliancePercentage:
         applicable > 0
           ? Math.round(((reported + partial * 0.5) / applicable) * 100)
@@ -363,10 +549,66 @@ ${manuscriptText.slice(0, 30000)}`,
 }
 
 // ---------------------------------------------------------------------------
+// AI-powered PRISMA-S compliance verification
+// ---------------------------------------------------------------------------
+
+/**
+ * Verify PRISMA-S compliance by checking a manuscript against all 16
+ * search-reporting items.
+ */
+export async function verifyPRISMASCompliance(
+  manuscriptText: string
+): Promise<ComplianceResult> {
+  return verifyItemsCompliance(
+    PRISMA_S_ITEMS,
+    "PRISMA-S (Preferred Reporting Items for Systematic reviews and Meta-Analyses literature Searches)",
+    manuscriptText
+  );
+}
+
+// ---------------------------------------------------------------------------
+// AI-powered PRISMA-NMA compliance verification
+// ---------------------------------------------------------------------------
+
+/**
+ * Verify PRISMA-NMA compliance by checking a manuscript against all 5
+ * network meta-analysis extension items.
+ */
+export async function verifyPRISMANMACompliance(
+  manuscriptText: string
+): Promise<ComplianceResult> {
+  return verifyItemsCompliance(
+    PRISMA_NMA_ITEMS,
+    "PRISMA-NMA (Network Meta-Analysis extension)",
+    manuscriptText
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Export checklist as CSV
 // ---------------------------------------------------------------------------
 
 export function exportChecklistCSV(result: ComplianceResult): string {
+  const header =
+    "Item #,Section,Topic,Description,Status,Location,Suggestion";
+  const rows = result.items.map(
+    (item) =>
+      `${item.itemNumber},"${item.section}","${item.topic}","${item.description.replace(/"/g, '""')}","${item.status}","${item.location.replace(/"/g, '""')}","${item.suggestion.replace(/"/g, '""')}"`
+  );
+  return [header, ...rows].join("\n");
+}
+
+export function exportPRISMASChecklistCSV(result: ComplianceResult): string {
+  const header =
+    "Item #,Section,Topic,Description,Status,Location,Suggestion";
+  const rows = result.items.map(
+    (item) =>
+      `${item.itemNumber},"${item.section}","${item.topic}","${item.description.replace(/"/g, '""')}","${item.status}","${item.location.replace(/"/g, '""')}","${item.suggestion.replace(/"/g, '""')}"`
+  );
+  return [header, ...rows].join("\n");
+}
+
+export function exportPRISMANMAChecklistCSV(result: ComplianceResult): string {
   const header =
     "Item #,Section,Topic,Description,Status,Location,Suggestion";
   const rows = result.items.map(
