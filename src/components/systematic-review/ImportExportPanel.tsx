@@ -12,6 +12,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import type { RevManExportPackage } from "@/lib/systematic-review/revman-export";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -46,6 +47,11 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
   const [exportFilter, setExportFilter] = useState<PaperFilter>("all");
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+
+  // RevMan export state
+  const [revmanData, setRevmanData] = useState<RevManExportPackage | null>(null);
+  const [isRevmanLoading, setIsRevmanLoading] = useState(false);
+  const [revmanError, setRevmanError] = useState<string | null>(null);
 
   // File drop handler
   const handleFileDrop = useCallback(
@@ -136,6 +142,44 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
     } finally {
       setIsExporting(false);
     }
+  };
+
+  // RevMan export fetch + download helper
+  const handleRevManExport = async () => {
+    setIsRevmanLoading(true);
+    setRevmanError(null);
+    setRevmanData(null);
+
+    try {
+      const res = await fetch(
+        `/api/systematic-review/revman-export?projectId=${projectId}`
+      );
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "RevMan export failed");
+      }
+      const data: RevManExportPackage = await res.json();
+      setRevmanData(data);
+    } catch (err) {
+      setRevmanError(
+        err instanceof Error ? err.message : "Failed to generate RevMan export"
+      );
+    } finally {
+      setIsRevmanLoading(false);
+    }
+  };
+
+  const downloadRevManCSV = (
+    content: string,
+    filename: string
+  ) => {
+    const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -398,6 +442,148 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
           <p>
             <strong>CSV</strong> — Spreadsheet-friendly format for custom
             analysis.
+          </p>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <hr className="border-border" />
+
+      {/* ─── RevMan Export Section ─── */}
+      <div className="space-y-4">
+        <h3 className="text-sm font-medium text-ink flex items-center gap-2">
+          <FileCsv weight="bold" size={16} className="text-brand" />
+          Export for RevMan (Cochrane)
+        </h3>
+
+        <p className="text-sm text-ink-muted">
+          Generate a data package for import into RevMan 5 or RevMan Web.
+          Four CSV files are produced — click below to prepare them, then
+          download each file individually.
+        </p>
+
+        {/* Generate button */}
+        {!revmanData && (
+          <button
+            onClick={handleRevManExport}
+            disabled={isRevmanLoading}
+            className="flex items-center gap-1.5 px-4 py-2 bg-brand text-white rounded-md text-sm font-medium hover:bg-brand/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {isRevmanLoading ? (
+              <>
+                <CircleNotch weight="bold" className="animate-spin" size={14} />
+                Preparing export...
+              </>
+            ) : (
+              <>
+                <Download weight="bold" size={14} />
+                Prepare RevMan Export
+              </>
+            )}
+          </button>
+        )}
+
+        {/* Error */}
+        {revmanError && (
+          <div className="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg">
+            <WarningCircle weight="fill" className="text-red-600" size={20} />
+            <p className="text-sm text-red-600 dark:text-red-400">
+              {revmanError}
+            </p>
+          </div>
+        )}
+
+        {/* Download buttons — shown once data is ready */}
+        {revmanData && (
+          <div className="rounded-lg border border-border bg-surface-alt p-4 space-y-4">
+            <div className="flex items-center gap-2">
+              <CheckCircle weight="fill" className="text-green-500" size={18} />
+              <span className="text-sm font-medium text-ink">
+                RevMan data package ready
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {(
+                [
+                  {
+                    label: "Study Characteristics",
+                    description: "Study design, PICO, and authors",
+                    key: "studyCharacteristics" as const,
+                    filename: "revman-study-characteristics.csv",
+                  },
+                  {
+                    label: "Risk of Bias",
+                    description: "RoB 2 domain judgments and support",
+                    key: "riskOfBias" as const,
+                    filename: "revman-risk-of-bias.csv",
+                  },
+                  {
+                    label: "Outcome Data",
+                    description: "Dichotomous and continuous outcome data",
+                    key: "outcomeData" as const,
+                    filename: "revman-outcome-data.csv",
+                  },
+                  {
+                    label: "Excluded Studies",
+                    description: "Studies excluded with reasons",
+                    key: "excludedStudies" as const,
+                    filename: "revman-excluded-studies.csv",
+                  },
+                ] as const
+              ).map(({ label, description, key, filename }) => (
+                <button
+                  key={key}
+                  onClick={() => downloadRevManCSV(revmanData[key], filename)}
+                  className={cn(
+                    "flex items-start gap-3 p-3 rounded-lg border border-border",
+                    "bg-surface hover:bg-surface-alt hover:border-brand/40 transition-colors text-left group"
+                  )}
+                >
+                  <FileCsv
+                    weight="duotone"
+                    size={28}
+                    className="text-brand shrink-0 mt-0.5"
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-ink group-hover:text-brand transition-colors">
+                      {label}
+                    </p>
+                    <p className="text-xs text-ink-muted mt-0.5 truncate">
+                      {description}
+                    </p>
+                    <p className="text-xs text-ink-faint font-mono mt-1 truncate">
+                      {filename}
+                    </p>
+                  </div>
+                  <Download
+                    weight="bold"
+                    size={14}
+                    className="text-ink-faint group-hover:text-brand transition-colors shrink-0 ml-auto mt-1"
+                  />
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                setRevmanData(null);
+                setRevmanError(null);
+              }}
+              className="text-xs text-ink-muted hover:text-ink transition-colors"
+            >
+              Regenerate export
+            </button>
+          </div>
+        )}
+
+        <div className="text-xs text-ink-faint space-y-1">
+          <p>
+            <strong>RevMan 5 / RevMan Web</strong> — Import each CSV via the
+            corresponding data entry tab in RevMan. Study Characteristics maps
+            to the &quot;Included Studies&quot; table; Risk of Bias to the RoB
+            assessment tool; Outcome Data to the data tables; Excluded Studies
+            to the &quot;Excluded Studies&quot; table.
           </p>
         </div>
       </div>
