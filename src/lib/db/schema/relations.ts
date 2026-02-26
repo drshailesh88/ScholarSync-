@@ -51,7 +51,7 @@ import {
   pdfAnnotations,
 } from "./billing";
 
-// Systematic review tables (42-53)
+// Systematic review tables (42-54)
 import {
   screeningCriteria,
   screeningDecisions,
@@ -65,6 +65,7 @@ import {
   milestoneProgress,
   systematicReviewConfig,
   searchAlerts,
+  projectCollaborators,
 } from "./systematic";
 
 // Institutional tables (53-55)
@@ -119,6 +120,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   marketplaceItems: many(marketplaceItems),
   marketplaceReviews: many(marketplaceReviews),
   institutionMemberships: many(institutionMemberships),
+  projectCollaborators: many(projectCollaborators),
 
   // One-to-one relationships
   userProfilePublic: one(userProfilesPublic),
@@ -166,6 +168,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   knowledgeNotes: many(knowledgeNotes),
   audioSummaries: many(audioSummaries),
   supervisorAssignments: many(supervisorAssignments),
+  projectCollaborators: many(projectCollaborators),
 }));
 
 // ============================================================
@@ -1221,6 +1224,23 @@ export const searchAlertsRelations = relations(
     project: one(projects, {
       fields: [searchAlerts.projectId],
       references: [projects.id],
+    }),
+  })
+);
+
+// ============================================================
+// 74. project_collaborators
+// ============================================================
+export const projectCollaboratorsRelations = relations(
+  projectCollaborators,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [projectCollaborators.projectId],
+      references: [projects.id],
+    }),
+    user: one(users, {
+      fields: [projectCollaborators.userId],
+      references: [users.id],
     }),
   })
 );

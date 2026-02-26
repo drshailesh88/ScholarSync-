@@ -9,6 +9,7 @@ import {
   jsonb,
   index,
   unique,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 import {
@@ -294,6 +295,30 @@ export const systematicReviewConfig = pgTable(
   },
   (table) => [
     index("idx_sr_config_project").on(table.projectId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 54. project_collaborators
+// ---------------------------------------------------------------------------
+export const projectCollaborators = pgTable(
+  "project_collaborators",
+  {
+    id: serial("id").primaryKey(),
+    projectId: integer("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    role: text("role").notNull().default("reviewer"), // 'owner' | 'reviewer' | 'extractor' | 'statistician' | 'viewer'
+    invitedAt: timestamp("invited_at").defaultNow(),
+    acceptedAt: timestamp("accepted_at"),
+  },
+  (t) => [
+    uniqueIndex("uq_project_collaborator").on(t.projectId, t.userId),
+    index("idx_project_collaborators_project").on(t.projectId),
   ]
 );
 

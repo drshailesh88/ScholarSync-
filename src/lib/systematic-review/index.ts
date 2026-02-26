@@ -170,3 +170,21 @@ export {
   type ManuscriptSectionOutput,
   type ManuscriptProjectData,
 } from "./manuscript-generator";
+
+export {
+  inviteCollaborator,
+  getProjectCollaborators,
+  removeCollaborator,
+  updateCollaboratorRole,
+  canAccessProject,
+  getProjectRole,
+  verifyProjectAccess,
+  type CollaboratorRole,
+  type CollaboratorRecord,
+  type ProjectAccessResult,
+} from "./collaboration";
+
+export {
+  generateRevManExport,
+  type RevManExportPackage,
+} from "./revman-export";
