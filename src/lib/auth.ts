@@ -11,8 +11,13 @@ export async function getCurrentUserId(): Promise<string> {
   if (hasClerkKeys) {
     const { auth } = await import("@clerk/nextjs/server");
     const { userId } = await auth();
-    if (!userId) throw new Error("Not authenticated");
-    return userId;
+    if (userId) return userId;
+
+    // In dev, fall back to a synthetic user when no session cookie is present
+    // (e.g. curl, server-side calls, preview environments)
+    if (isDev) return DEV_USER_ID;
+
+    throw new Error("Not authenticated");
   }
 
   // Dev fallback ONLY works in development. In production, missing Clerk keys is a fatal error.

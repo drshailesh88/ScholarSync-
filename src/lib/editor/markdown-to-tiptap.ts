@@ -2,8 +2,8 @@
  * Lightweight markdown → Tiptap JSON converter.
  *
  * Handles the subset of markdown that our deep-research synthesis produces:
- * headings, paragraphs, bold, italic, links, bullet/ordered lists, blockquotes, and horizontal rules.
- * Tables and code blocks are rendered as plain text paragraphs to keep things simple.
+ * headings, paragraphs, bold, italic, links, bullet/ordered lists, blockquotes,
+ * horizontal rules, and citation markers like [5], [5,12], [5-8].
  */
 
 interface TiptapNode {
@@ -14,10 +14,22 @@ interface TiptapNode {
   marks?: Array<{ type: string; attrs?: Record<string, unknown> }>;
 }
 
+export interface SourceReference {
+  doi?: string;
+  pmid?: string;
+  title?: string;
+}
+
 /**
  * Convert a markdown string to Tiptap JSONContent.
+ * @param markdown  The markdown source
+ * @param sources   Optional array of source references (index = citation number - 1).
+ *                  Used to generate DOI/PubMed hyperlinks for [N] citation markers.
  */
-export function markdownToTiptap(markdown: string): TiptapNode {
+export function markdownToTiptap(
+  markdown: string,
+  sources?: SourceReference[],
+): TiptapNode {
   const lines = markdown.split("\n");
   const nodes: TiptapNode[] = [];
   let i = 0;
@@ -40,13 +52,13 @@ export function markdownToTiptap(markdown: string): TiptapNode {
     }
 
     // Heading
-    const headingMatch = trimmed.match(/^(#{1,3})\s+(.+)$/);
+    const headingMatch = trimmed.match(/^(#{1,6})\s+(.+)$/);
     if (headingMatch) {
-      const level = headingMatch[1].length;
+      const level = Math.min(headingMatch[1].length, 6);
       nodes.push({
         type: "heading",
         attrs: { level },
-        content: parseInline(headingMatch[2]),
+        content: parseInline(headingMatch[2], sources),
       });
       i++;
       continue;
@@ -64,7 +76,7 @@ export function markdownToTiptap(markdown: string): TiptapNode {
         content: [
           {
             type: "paragraph",
-            content: parseInline(quoteLines.join(" ")),
+            content: parseInline(quoteLines.join(" "), sources),
           },
         ],
       });
@@ -78,7 +90,7 @@ export function markdownToTiptap(markdown: string): TiptapNode {
         const itemText = lines[i].trimEnd().replace(/^[-*]\s+/, "");
         items.push({
           type: "listItem",
-          content: [{ type: "paragraph", content: parseInline(itemText) }],
+          content: [{ type: "paragraph", content: parseInline(itemText, sources) }],
         });
         i++;
       }
@@ -93,7 +105,7 @@ export function markdownToTiptap(markdown: string): TiptapNode {
         const itemText = lines[i].trimEnd().replace(/^\d+\.\s+/, "");
         items.push({
           type: "listItem",
-          content: [{ type: "paragraph", content: parseInline(itemText) }],
+          content: [{ type: "paragraph", content: parseInline(itemText, sources) }],
         });
         i++;
       }
@@ -119,7 +131,7 @@ export function markdownToTiptap(markdown: string): TiptapNode {
 
     if (paraLines.length > 0) {
       const text = paraLines.join(" ");
-      const inlineContent = parseInline(text);
+      const inlineContent = parseInline(text, sources);
       if (inlineContent.length > 0) {
         nodes.push({ type: "paragraph", content: inlineContent });
       }
@@ -135,44 +147,68 @@ export function markdownToTiptap(markdown: string): TiptapNode {
 }
 
 /**
- * Parse inline markdown (bold, italic, links, code) into Tiptap text nodes with marks.
+ * Build a URL for a source reference (DOI preferred, then PubMed).
  */
-function parseInline(text: string): TiptapNode[] {
+function sourceUrl(src: SourceReference | undefined): string | null {
+  if (!src) return null;
+  if (src.doi) return `https://doi.org/${src.doi}`;
+  if (src.pmid) return `https://pubmed.ncbi.nlm.nih.gov/${src.pmid}`;
+  return null;
+}
+
+/**
+ * Expand a citation group like "5,8-10" into [5, 8, 9, 10].
+ */
+function expandCitationNums(inner: string): number[] {
+  const nums: number[] = [];
+  for (const seg of inner.split(/[,;]\s*/)) {
+    const rangeMatch = seg.match(/^(\d+)\s*[-\u2013\u2014]\s*(\d+)$/);
+    if (rangeMatch) {
+      const a = parseInt(rangeMatch[1], 10);
+      const b = parseInt(rangeMatch[2], 10);
+      for (let n = a; n <= b; n++) nums.push(n);
+    } else {
+      const n = parseInt(seg, 10);
+      if (!isNaN(n)) nums.push(n);
+    }
+  }
+  return nums;
+}
+
+/**
+ * Parse inline markdown (bold, italic, links, code, citations) into Tiptap
+ * text nodes with marks.
+ */
+function parseInline(text: string, sources?: SourceReference[]): TiptapNode[] {
   const nodes: TiptapNode[] = [];
 
-  // Regex to match: **bold**, *italic*, `code`, [text](url)
-  const pattern = /(\*\*(.+?)\*\*)|(\*(.+?)\*)|(`(.+?)`)|(\[([^\]]+)\]\(([^)]+)\))/g;
+  // Combined regex — order matters:
+  //   groups 1-2:  **bold**
+  //   groups 3-4:  *italic*
+  //   groups 5-6:  `code`
+  //   groups 7-9:  [text](url)  — markdown link
+  //   groups 10-11: [N] or [N,M,K]  — citation markers
+  const pattern =
+    /(\*\*(.+?)\*\*)|(\*(.+?)\*)|(`(.+?)`)|(\[([^\]]+)\]\(([^)]+)\))|(\[([\d,;\s\-\u2013\u2014]+)\])/g;
 
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
   while ((match = pattern.exec(text)) !== null) {
-    // Add text before the match
+    // Plain text before the match
     if (match.index > lastIndex) {
       nodes.push({ type: "text", text: text.slice(lastIndex, match.index) });
     }
 
     if (match[1]) {
       // **bold**
-      nodes.push({
-        type: "text",
-        text: match[2],
-        marks: [{ type: "bold" }],
-      });
+      nodes.push({ type: "text", text: match[2], marks: [{ type: "bold" }] });
     } else if (match[3]) {
       // *italic*
-      nodes.push({
-        type: "text",
-        text: match[4],
-        marks: [{ type: "italic" }],
-      });
+      nodes.push({ type: "text", text: match[4], marks: [{ type: "italic" }] });
     } else if (match[5]) {
       // `code`
-      nodes.push({
-        type: "text",
-        text: match[6],
-        marks: [{ type: "code" }],
-      });
+      nodes.push({ type: "text", text: match[6], marks: [{ type: "code" }] });
     } else if (match[7]) {
       // [text](url)
       nodes.push({
@@ -180,12 +216,29 @@ function parseInline(text: string): TiptapNode[] {
         text: match[8],
         marks: [{ type: "link", attrs: { href: match[9], target: "_blank" } }],
       });
+    } else if (match[10]) {
+      // Citation marker: [N], [N,M,K], [N-M]
+      const nums = expandCitationNums(match[11]);
+      for (const num of nums) {
+        const src = sources ? sources[num - 1] : undefined;
+        const url = sourceUrl(src);
+
+        if (url) {
+          nodes.push({
+            type: "text",
+            text: `[${num}]`,
+            marks: [{ type: "link", attrs: { href: url, target: "_blank" } }],
+          });
+        } else {
+          nodes.push({ type: "text", text: `[${num}]`, marks: [{ type: "bold" }] });
+        }
+      }
     }
 
     lastIndex = match.index + match[0].length;
   }
 
-  // Add remaining text
+  // Remaining text after last match
   if (lastIndex < text.length) {
     nodes.push({ type: "text", text: text.slice(lastIndex) });
   }

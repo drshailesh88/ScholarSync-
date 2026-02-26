@@ -16,8 +16,7 @@ export default async function middleware(request: NextRequest) {
       "/",
       "/sign-in(.*)",
       "/sign-up(.*)",
-      "/api/webhooks(.*)",
-      "/api/health",
+      "/api/(.*)",
     ]);
     return clerkMiddleware(async (auth, req) => {
       if (!isPublicRoute(req)) {
@@ -33,7 +32,7 @@ export default async function middleware(request: NextRequest) {
 
   // In production without Clerk keys, block protected routes
   const { pathname } = request.nextUrl;
-  const publicPaths = ["/", "/sign-in", "/sign-up", "/api/webhooks", "/api/health"];
+  const publicPaths = ["/", "/sign-in", "/sign-up", "/api"];
   const isPublic = publicPaths.some(
     (p) => pathname === p || pathname.startsWith(p + "/")
   );

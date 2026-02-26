@@ -191,12 +191,34 @@ interface ParsedCitationTextProps {
   onScrollToRef?: (index: number) => void;
 }
 
+/**
+ * Expand a bracket citation group into individual numbers.
+ * Handles: [5], [5,12,30], [5, 12, 30], [5-8], [5,8-10]
+ */
+function expandCitationNumbers(inner: string): number[] {
+  const nums: number[] = [];
+  const segments = inner.split(/[,;]\s*/);
+  for (const segment of segments) {
+    const rangeMatch = segment.match(/^(\d+)\s*[-\u2013\u2014]\s*(\d+)$/);
+    if (rangeMatch) {
+      const start = parseInt(rangeMatch[1], 10);
+      const end = parseInt(rangeMatch[2], 10);
+      for (let n = start; n <= end; n++) nums.push(n);
+    } else {
+      const n = parseInt(segment, 10);
+      if (!isNaN(n)) nums.push(n);
+    }
+  }
+  return nums;
+}
+
 export function ParsedCitationText({
   text,
   sources,
   onScrollToRef,
 }: ParsedCitationTextProps) {
-  const citationPattern = /\[(\d+)\]/g;
+  // Match bracket groups containing digits, commas, spaces, hyphens, semicolons
+  const citationPattern = /\[([\d,;\s\-\u2013\u2014]+)\]/g;
   const parts: Array<{ kind: "text"; content: string } | { kind: "cite"; num: number }> = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
@@ -205,7 +227,10 @@ export function ParsedCitationText({
     if (match.index > lastIndex) {
       parts.push({ kind: "text", content: text.slice(lastIndex, match.index) });
     }
-    parts.push({ kind: "cite", num: parseInt(match[1], 10) });
+    const nums = expandCitationNumbers(match[1]);
+    for (const num of nums) {
+      parts.push({ kind: "cite", num });
+    }
     lastIndex = match.index + match[0].length;
   }
 

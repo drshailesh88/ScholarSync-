@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { List, X, BookOpen } from "lucide-react";
@@ -8,6 +8,72 @@ import { ParsedCitationText } from "./CitationReference";
 import { CitationsPanel } from "./CitationsPanel";
 import type { DeepResearchSource } from "./types";
 import type { Components } from "react-markdown";
+
+/**
+ * Recursively walk React children and replace text nodes containing
+ * citation markers (e.g. [5], [5,12]) with interactive ParsedCitationText.
+ * This handles the case where ReactMarkdown passes mixed element arrays
+ * (e.g. ["text ", <strong>bold [5]</strong>, " more"]) instead of a flat string.
+ */
+function parseCitationsInChildren(
+  children: React.ReactNode,
+  sources: DeepResearchSource[],
+  onScrollToRef?: (index: number) => void,
+  keyPrefix = "c",
+): React.ReactNode {
+  // Quick check: does this tree even contain a citation marker?
+  const hasMarker = /\[\d/.test(reactNodeToText(children));
+  if (!hasMarker) return children;
+
+  return React.Children.map(children, (child, idx) => {
+    // String node → parse citations directly
+    if (typeof child === "string") {
+      if (/\[\d/.test(child)) {
+        return (
+          <ParsedCitationText
+            key={`${keyPrefix}-${idx}`}
+            text={child}
+            sources={sources}
+            onScrollToRef={onScrollToRef}
+          />
+        );
+      }
+      return child;
+    }
+
+    // React element → clone and recursively process its children
+    if (React.isValidElement(child)) {
+      const element = child as React.ReactElement<{ children?: React.ReactNode }>;
+      if (element.props.children != null) {
+        return React.cloneElement(element, {
+          ...element.props,
+          children: parseCitationsInChildren(
+            element.props.children,
+            sources,
+            onScrollToRef,
+            `${keyPrefix}-${idx}`,
+          ),
+        } as React.Attributes & { children: React.ReactNode });
+      }
+      return child;
+    }
+
+    return child;
+  });
+}
+
+/** Extract raw text from a React node tree (for quick regex testing). */
+function reactNodeToText(node: React.ReactNode): string {
+  if (typeof node === "string") return node;
+  if (typeof node === "number") return String(node);
+  if (!node) return "";
+  if (Array.isArray(node)) return node.map(reactNodeToText).join("");
+  if (React.isValidElement(node)) {
+    const el = node as React.ReactElement<{ children?: React.ReactNode }>;
+    return reactNodeToText(el.props.children);
+  }
+  return "";
+}
 
 // ── Table of Contents ───────────────────────────────────────────────
 interface TOCItem {
@@ -230,24 +296,27 @@ export function ResearchDocument({
           {children}
         </h1>
       ),
-      p: ({ children }) => {
-        if (typeof children === "string") {
-          return (
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 text-[15px]">
-              <ParsedCitationText
-                text={children}
-                sources={sources}
-                onScrollToRef={scrollToReference}
-              />
-            </p>
-          );
-        }
-        return (
-          <p className="text-gray-300 leading-relaxed mb-4 text-[15px]">
-            {children}
-          </p>
-        );
-      },
+      h4: ({ children, ...props }) => (
+        <h4
+          className="text-base font-semibold text-gray-800 dark:text-gray-100 mt-6 mb-2 italic"
+          {...props}
+        >
+          {children}
+        </h4>
+      ),
+      h5: ({ children, ...props }) => (
+        <h5
+          className="text-sm font-semibold text-gray-700 dark:text-gray-200 mt-4 mb-2"
+          {...props}
+        >
+          {children}
+        </h5>
+      ),
+      p: ({ children }) => (
+        <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 text-[15px]">
+          {parseCitationsInChildren(children, sources, scrollToReference, "p")}
+        </p>
+      ),
       table: ({ children }) => (
         <div className="overflow-x-auto my-6 rounded-lg border border-gray-200 dark:border-gray-700/50">
           <table className="w-full text-sm">{children}</table>
@@ -267,20 +336,11 @@ export function ResearchDocument({
           {children}
         </th>
       ),
-      td: ({ children }) => {
-        if (typeof children === "string") {
-          return (
-            <td className="px-4 py-3 text-gray-600 dark:text-gray-300 text-sm">
-              <ParsedCitationText
-                text={children}
-                sources={sources}
-                onScrollToRef={scrollToReference}
-              />
-            </td>
-          );
-        }
-        return <td className="px-4 py-3 text-gray-300 text-sm">{children}</td>;
-      },
+      td: ({ children }) => (
+        <td className="px-4 py-3 text-gray-600 dark:text-gray-300 text-sm">
+          {parseCitationsInChildren(children, sources, scrollToReference, "td")}
+        </td>
+      ),
       blockquote: ({ children }) => (
         <blockquote className="border-l-4 border-blue-500/50 pl-4 my-4 text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800/20 py-2 rounded-r-lg">
           {children}
@@ -296,20 +356,11 @@ export function ResearchDocument({
           {children}
         </ol>
       ),
-      li: ({ children }) => {
-        if (typeof children === "string") {
-          return (
-            <li className="leading-relaxed pl-1">
-              <ParsedCitationText
-                text={children}
-                sources={sources}
-                onScrollToRef={scrollToReference}
-              />
-            </li>
-          );
-        }
-        return <li className="leading-relaxed pl-1">{children}</li>;
-      },
+      li: ({ children }) => (
+        <li className="leading-relaxed pl-1">
+          {parseCitationsInChildren(children, sources, scrollToReference, "li")}
+        </li>
+      ),
       strong: ({ children }) => (
         <strong className="font-semibold text-gray-900 dark:text-white">{children}</strong>
       ),
@@ -363,7 +414,7 @@ export function ResearchDocument({
         )}
         <button
           onClick={() => setTocOpen(true)}
-          className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition-colors"
+          className="w-12 h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           title="Table of Contents"
         >
           <List size={20} className="text-gray-600 dark:text-gray-300" />

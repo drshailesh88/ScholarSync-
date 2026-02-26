@@ -67,7 +67,9 @@ function markdownToSimpleHTML(md: string): string {
     if (line === "") continue;
 
     // Headings
-    if (line.startsWith("### ")) {
+    if (line.startsWith("#### ")) {
+      htmlParts.push(`<h4>${escapeHTML(line.slice(5))}</h4>`);
+    } else if (line.startsWith("### ")) {
       htmlParts.push(`<h3>${escapeHTML(line.slice(4))}</h3>`);
     } else if (line.startsWith("## ")) {
       htmlParts.push(`<h2>${escapeHTML(line.slice(3))}</h2>`);
@@ -133,6 +135,7 @@ function markdownToRichHTML(
     h1: "font-size:24px;font-weight:bold;margin:24px 0 12px 0;color:#1a1a1a;",
     h2: "font-size:20px;font-weight:bold;margin:20px 0 10px 0;color:#1a1a1a;",
     h3: "font-size:16px;font-weight:bold;margin:16px 0 8px 0;color:#1a1a1a;",
+    h4: "font-size:14px;font-weight:bold;font-style:italic;margin:12px 0 6px 0;color:#1a1a1a;",
     p: "margin:8px 0;line-height:1.6;color:#333;",
     table: "border-collapse:collapse;margin:12px 0;width:100%;",
     th: "border:1px solid #ccc;padding:8px 12px;background:#f5f5f5;font-weight:bold;text-align:left;",
@@ -159,7 +162,12 @@ function markdownToRichHTML(
       continue;
     }
 
-    // Headings
+    // Headings (order matters: #### before ### before ## before #)
+    if (line.startsWith("#### ")) {
+      out.push(`<h4 style="${S.h4}">${fmt(line.slice(5))}</h4>`);
+      i++;
+      continue;
+    }
     if (line.startsWith("### ")) {
       out.push(`<h3 style="${S.h3}">${fmt(line.slice(4))}</h3>`);
       i++;
@@ -325,9 +333,11 @@ export function ExportButtons({
   }, [markdownReport, topic]);
 
   const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
 
   const handleExportPDF = useCallback(async () => {
     setPdfLoading(true);
+    setPdfError(null);
     try {
       // Convert markdown to simple HTML block elements for the PDF generator
       const htmlContent = markdownToSimpleHTML(markdownReport);
@@ -356,7 +366,10 @@ export function ExportButtons({
         }),
       });
 
-      if (!res.ok) throw new Error("PDF generation failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `PDF generation failed (${res.status})`);
+      }
 
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
@@ -369,6 +382,9 @@ export function ExportButtons({
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error("PDF export failed:", err);
+      const message = err instanceof Error ? err.message : "PDF export failed";
+      setPdfError(message);
+      setTimeout(() => setPdfError(null), 5000);
     } finally {
       setPdfLoading(false);
     }
@@ -480,15 +496,26 @@ export function ExportButtons({
         <Download size={14} />
         <span className="hidden sm:inline">.md</span>
       </button>
-      <button
-        onClick={handleExportPDF}
-        disabled={pdfLoading}
-        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors disabled:opacity-50"
-        title="Download as PDF"
-      >
-        {pdfLoading ? <Loader2 size={14} className="animate-spin" /> : <Printer size={14} />}
-        <span className="hidden sm:inline">{pdfLoading ? "..." : "PDF"}</span>
-      </button>
+      <div className="relative">
+        <button
+          onClick={handleExportPDF}
+          disabled={pdfLoading}
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors disabled:opacity-50 ${
+            pdfError
+              ? "text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700/50"
+              : "text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white"
+          }`}
+          title={pdfError || "Download as PDF"}
+        >
+          {pdfLoading ? <Loader2 size={14} className="animate-spin" /> : <Printer size={14} />}
+          <span className="hidden sm:inline">{pdfLoading ? "..." : pdfError ? "Failed" : "PDF"}</span>
+        </button>
+        {pdfError && (
+          <div className="absolute top-full left-0 mt-1 px-2 py-1 text-xs text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 rounded-md whitespace-nowrap z-10">
+            {pdfError}
+          </div>
+        )}
+      </div>
       <button
         onClick={handleCopyClipboard}
         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/60 hover:text-gray-900 dark:hover:text-white transition-colors"
