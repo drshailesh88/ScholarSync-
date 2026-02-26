@@ -17,6 +17,7 @@ import {
   getScreeningQueue,
   getScreeningProgress,
   computeInterRaterAgreement,
+  getUnblindedResults,
 } from "@/lib/systematic-review/dual-screening";
 import { updateScreeningPriorities } from "@/lib/systematic-review/active-learning";
 
@@ -38,6 +39,8 @@ export async function GET(req: Request) {
     const stage =
       (searchParams.get("stage") as "title_abstract" | "full_text") ||
       "title_abstract";
+    const mode = searchParams.get("mode");
+    const blinded = searchParams.get("blinded") === "true";
 
     if (!projectId) {
       return NextResponse.json(
@@ -60,8 +63,24 @@ export async function GET(req: Request) {
       );
     }
 
+    // Unblind mode: return full results with conflict detection
+    if (mode === "unblind") {
+      const results = await getUnblindedResults(projectId, stage);
+      const conflicts = results.filter((r) => r.isConflict);
+      const agreements = results.filter((r) => r.aiDecision && r.humanDecision && !r.isConflict);
+      return NextResponse.json({
+        results,
+        summary: {
+          total: results.length,
+          withBothDecisions: agreements.length + conflicts.length,
+          agreements: agreements.length,
+          conflicts: conflicts.length,
+        },
+      });
+    }
+
     const [queue, progress, agreement] = await Promise.all([
-      getScreeningQueue(projectId, stage, filter),
+      getScreeningQueue(projectId, stage, filter, { blinded }),
       getScreeningProgress(projectId),
       computeInterRaterAgreement(projectId),
     ]);

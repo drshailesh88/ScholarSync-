@@ -43,6 +43,20 @@ export interface AgreementStats {
   interpretation: string;
 }
 
+export interface UnblindedResult {
+  paperId: number;
+  paperTitle: string;
+  aiDecision: string | null;
+  humanDecision: string | null;
+  isConflict: boolean;
+  conflictType: "ai-include-human-exclude" | "ai-exclude-human-include" | "ai-include-human-maybe" | "ai-exclude-human-maybe" | "none";
+}
+
+export interface ScreeningQueueOptions {
+  filter?: "all" | "unscreened" | "conflicts" | "uncertain";
+  blinded?: boolean;
+}
+
 // ---------------------------------------------------------------------------
 // Record a human screening decision
 // ---------------------------------------------------------------------------
@@ -111,8 +125,10 @@ export async function recordHumanDecision(
 export async function getScreeningQueue(
   projectId: number,
   stage: "title_abstract" | "full_text" = "title_abstract",
-  filter: "all" | "unscreened" | "conflicts" | "uncertain" = "unscreened"
+  filter: "all" | "unscreened" | "conflicts" | "uncertain" = "unscreened",
+  options?: ScreeningQueueOptions
 ) {
+  const blinded = options?.blinded ?? false;
   // Get all project papers with their current screening status
   const allPapers = await db
     .select({
@@ -196,7 +212,76 @@ export async function getScreeningQueue(
     return a.paperId - b.paperId;
   });
 
+  // In blinded mode, strip AI decision data so the reviewer is not influenced
+  if (blinded) {
+    return filtered.map((p) => ({
+      ...p,
+      aiDecision: null,
+      aiReason: null,
+    }));
+  }
+
   return filtered;
+}
+
+// ---------------------------------------------------------------------------
+// Get unblinded results with conflict detection
+// ---------------------------------------------------------------------------
+
+export async function getUnblindedResults(
+  projectId: number,
+  stage: "title_abstract" | "full_text" = "title_abstract"
+): Promise<UnblindedResult[]> {
+  // Get all project papers with human decisions
+  const allPapers = await db
+    .select({
+      paperId: papers.id,
+      title: papers.title,
+      humanDecision: projectPapers.screening_decision,
+    })
+    .from(projectPapers)
+    .innerJoin(papers, eq(projectPapers.paper_id, papers.id))
+    .where(eq(projectPapers.project_id, projectId));
+
+  // Get AI decisions
+  const aiDecisions = await db
+    .select({
+      paperId: screeningDecisions.paperId,
+      decision: screeningDecisions.decision,
+    })
+    .from(screeningDecisions)
+    .where(
+      and(
+        eq(screeningDecisions.projectId, projectId),
+        eq(screeningDecisions.decidedBy, "ai"),
+        eq(screeningDecisions.stage, stage)
+      )
+    );
+
+  const aiMap = new Map(aiDecisions.map((d) => [d.paperId, d.decision]));
+
+  return allPapers.map((p) => {
+    const aiDec = aiMap.get(p.paperId) ?? null;
+    const humanDec = p.humanDecision;
+    const isConflict = !!(aiDec && humanDec && aiDec !== humanDec);
+
+    let conflictType: UnblindedResult["conflictType"] = "none";
+    if (isConflict) {
+      if (aiDec === "include" && humanDec === "exclude") conflictType = "ai-include-human-exclude";
+      else if (aiDec === "exclude" && humanDec === "include") conflictType = "ai-exclude-human-include";
+      else if (aiDec === "include" && humanDec === "maybe") conflictType = "ai-include-human-maybe";
+      else if (aiDec === "exclude" && humanDec === "maybe") conflictType = "ai-exclude-human-maybe";
+    }
+
+    return {
+      paperId: p.paperId,
+      paperTitle: p.title,
+      aiDecision: aiDec,
+      humanDecision: humanDec,
+      isConflict,
+      conflictType,
+    };
+  });
 }
 
 // ---------------------------------------------------------------------------

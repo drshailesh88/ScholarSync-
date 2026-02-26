@@ -14,6 +14,8 @@ import {
   Robot,
   User,
   Handshake,
+  EyeSlash,
+  Eye,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -63,6 +65,27 @@ interface Agreement {
   interpretation: string;
 }
 
+interface UnblindedResult {
+  paperId: number;
+  paperTitle: string;
+  aiDecision: string | null;
+  humanDecision: string | null;
+  isConflict: boolean;
+  conflictType: string;
+}
+
+interface UnblindedSummary {
+  total: number;
+  withBothDecisions: number;
+  agreements: number;
+  conflicts: number;
+}
+
+interface UnblindedData {
+  results: UnblindedResult[];
+  summary: UnblindedSummary;
+}
+
 export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const { criteria, setCriteria } = useSystematicReviewStore();
 
@@ -76,13 +99,17 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [expandedPaper, setExpandedPaper] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [blindedMode, setBlindedMode] = useState(false);
+  const [unblindedData, setUnblindedData] = useState<UnblindedData | null>(null);
+  const [isUnblinding, setIsUnblinding] = useState(false);
 
   // Load screening queue
   const loadQueue = useCallback(async () => {
     setIsLoading(true);
     try {
+      const blindedParam = blindedMode ? "&blinded=true" : "";
       const res = await fetch(
-        `/api/systematic-review/screening-queue?projectId=${projectId}&filter=${filter}`
+        `/api/systematic-review/screening-queue?projectId=${projectId}&filter=${filter}${blindedParam}`
       );
       if (res.ok) {
         const data = await res.json();
@@ -95,7 +122,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [projectId, filter]);
+  }, [projectId, filter, blindedMode]);
 
   useEffect(() => {
     loadQueue();
@@ -183,6 +210,33 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
       setIsRecomputing(false);
     }
   }, [projectId, loadQueue]);
+
+  // Fetch unblinded results (reveals AI decisions + conflicts)
+  const fetchUnblindedResults = useCallback(async () => {
+    setIsUnblinding(true);
+    try {
+      // Fetch unblinded summary and the full queue simultaneously
+      const [unblindRes, queueRes] = await Promise.all([
+        fetch(`/api/systematic-review/screening-queue?projectId=${projectId}&mode=unblind`),
+        fetch(`/api/systematic-review/screening-queue?projectId=${projectId}&filter=${filter}&blinded=false`),
+      ]);
+      if (unblindRes.ok) {
+        const data: UnblindedData = await unblindRes.json();
+        setUnblindedData(data);
+      }
+      if (queueRes.ok) {
+        const data = await queueRes.json();
+        setQueue(data.queue ?? []);
+        setProgress(data.progress ?? null);
+        setAgreement(data.agreement ?? null);
+      }
+      setBlindedMode(false);
+    } catch {
+      setError("Failed to unblind results. Please try again.");
+    } finally {
+      setIsUnblinding(false);
+    }
+  }, [projectId, filter]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -336,6 +390,119 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </GlassPanel>
       )}
 
+      {/* Blinded Mode Banner */}
+      {blindedMode && (
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm text-amber-600">
+            <EyeSlash weight="duotone" size={18} />
+            <span>Blinded mode active — AI decisions are hidden to prevent anchoring bias</span>
+          </div>
+          <button
+            onClick={fetchUnblindedResults}
+            disabled={isUnblinding}
+            className="px-3 py-1.5 text-sm font-medium text-amber-700 bg-amber-500/20 hover:bg-amber-500/30 rounded flex items-center gap-1.5 transition-colors disabled:opacity-50"
+          >
+            {isUnblinding ? (
+              <CircleNotch weight="bold" className="animate-spin" size={14} />
+            ) : (
+              <Eye weight="bold" size={14} />
+            )}
+            Unblind &amp; Show Conflicts
+          </button>
+        </div>
+      )}
+
+      {/* Unblinded Conflict Summary */}
+      {unblindedData && !blindedMode && (
+        <GlassPanel className="p-4 border-amber-500/20">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Eye weight="duotone" className="text-brand" size={20} />
+              <span className="text-sm font-semibold text-ink">
+                Unblinded Results
+              </span>
+            </div>
+            <button
+              onClick={() => setUnblindedData(null)}
+              className="text-xs text-ink-muted hover:text-ink"
+            >
+              Dismiss
+            </button>
+          </div>
+          <div className="grid grid-cols-4 gap-3 mb-3">
+            <div className="text-center">
+              <div className="text-lg font-bold text-ink">
+                {unblindedData.summary.total}
+              </div>
+              <div className="text-xs text-ink-muted">Total Papers</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-bold text-ink">
+                {unblindedData.summary.withBothDecisions}
+              </div>
+              <div className="text-xs text-ink-muted">Both Decided</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-bold text-emerald-600">
+                {unblindedData.summary.agreements}
+              </div>
+              <div className="text-xs text-emerald-600">Agreements</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-bold text-red-600">
+                {unblindedData.summary.conflicts}
+              </div>
+              <div className="text-xs text-red-600">Conflicts</div>
+            </div>
+          </div>
+          {unblindedData.summary.conflicts > 0 && (
+            <div className="space-y-1.5 max-h-48 overflow-y-auto">
+              <div className="text-xs font-medium text-ink-muted mb-1">Conflicting Papers:</div>
+              {unblindedData.results
+                .filter((r) => r.isConflict)
+                .map((r) => (
+                  <div
+                    key={r.paperId}
+                    className="flex items-center justify-between px-3 py-2 bg-red-500/5 border border-red-500/20 rounded text-xs"
+                  >
+                    <span className="text-ink truncate flex-1 mr-3">
+                      {r.paperTitle}
+                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span
+                        className={cn(
+                          "flex items-center gap-1 px-1.5 py-0.5 rounded",
+                          r.aiDecision === "include"
+                            ? "bg-emerald-500/10 text-emerald-600"
+                            : r.aiDecision === "exclude"
+                              ? "bg-red-500/10 text-red-600"
+                              : "bg-amber-500/10 text-amber-600"
+                        )}
+                      >
+                        <Robot size={10} />
+                        {r.aiDecision}
+                      </span>
+                      <span
+                        className={cn(
+                          "flex items-center gap-1 px-1.5 py-0.5 rounded",
+                          r.humanDecision === "include"
+                            ? "bg-emerald-500/10 text-emerald-600"
+                            : r.humanDecision === "exclude"
+                              ? "bg-red-500/10 text-red-600"
+                              : "bg-amber-500/10 text-amber-600"
+                        )}
+                      >
+                        <User size={10} />
+                        {r.humanDecision}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+        </GlassPanel>
+      )}
+
       {/* Criteria Setup */}
       <GlassPanel className="p-6">
         <h2 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">
@@ -418,6 +585,30 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Blinded Mode Toggle */}
+          <button
+            onClick={() => {
+              setBlindedMode((prev) => !prev);
+              setUnblindedData(null);
+            }}
+            className={cn(
+              "px-3 py-1.5 text-sm rounded flex items-center gap-1.5 transition-colors border",
+              blindedMode
+                ? "border-amber-500/40 bg-amber-500/10 text-amber-600 font-medium"
+                : "border-border text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
+            title={blindedMode ? "Blinded mode is ON — AI decisions are hidden" : "Enable blinded mode to hide AI decisions"}
+          >
+            {blindedMode ? (
+              <EyeSlash weight="bold" size={14} />
+            ) : (
+              <Eye weight="bold" size={14} />
+            )}
+            {blindedMode ? "Blinded" : "Blind Mode"}
+          </button>
+
+          <div className="w-px h-5 bg-border" />
+
           {/* Recompute priorities */}
           <button
             onClick={recomputePriorities}
@@ -547,7 +738,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
                 {/* Decision badges */}
                 <div className="flex items-center gap-2 shrink-0 ml-3">
-                  {paper.aiDecision && (
+                  {!blindedMode && paper.aiDecision && (
                     <span
                       className={cn(
                         "flex items-center gap-1 px-2 py-0.5 text-xs rounded",
@@ -590,8 +781,8 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                     </p>
                   )}
 
-                  {/* AI reasoning */}
-                  {paper.aiReason && (
+                  {/* AI reasoning (hidden in blinded mode) */}
+                  {!blindedMode && paper.aiReason && (
                     <div className="mb-3 px-3 py-2 bg-surface-raised rounded text-xs">
                       <span className="font-medium text-ink">
                         AI reasoning:{" "}
