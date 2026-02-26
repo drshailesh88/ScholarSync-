@@ -218,3 +218,20 @@ export {
   type AMSTAR2Assessment,
   type OverallConfidence,
 } from "./amstar2-checklist";
+
+export {
+  retrievePDF,
+  batchRetrievePDFs,
+  type RetrievalStatus,
+  type RetrievalResult,
+} from "./pdf-retrieval";
+
+export {
+  logAuditEvent,
+  getAuditLog,
+  exportAuditLog,
+  getAuditSummary,
+  type AuditEvent,
+  type AuditLogEntry,
+  type AuditSummary,
+} from "./audit-trail";
