@@ -50,6 +50,8 @@ import { DefensePrepPanel } from "@/components/presentation/defense-prep-panel";
 import { SharePanel } from "@/components/presentation/share-panel";
 import { AnalyticsPanel } from "@/components/presentation/analytics-panel";
 import { CommentsPanel, useCommentCounts } from "@/components/presentation/comments-panel";
+import { VersionHistoryPanel } from "@/components/presentation/version-history-panel";
+import { RecordingsPanel } from "@/components/presentation/recordings-panel";
 
 const PresenterMode = lazy(() =>
   import("@/components/presentation/presenter-mode").then((m) => ({ default: m.PresenterMode }))
@@ -77,6 +79,8 @@ export default function DeckEditorPage() {
   const [showSharePanel, setShowSharePanel] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [showRecordings, setShowRecordings] = useState(false);
   const [currentUserId, setCurrentUserId] = useState("dev_user_001");
 
   // Comment counts for sidebar badges
@@ -274,6 +278,17 @@ export default function DeckEditorPage() {
       setShowAnalytics(false);
       setShowAgentPanel(false);
       setShowDefensePrep(false);
+      setShowVersionHistory(false);
+    }
+  }
+
+  function handleToggleVersionHistory() {
+    setShowVersionHistory(!showVersionHistory);
+    if (!showVersionHistory) {
+      setShowComments(false);
+      setShowAnalytics(false);
+      setShowAgentPanel(false);
+      setShowDefensePrep(false);
     }
   }
 
@@ -350,10 +365,13 @@ export default function DeckEditorPage() {
           }}
           onToggleAnalytics={handleToggleAnalytics}
           onToggleComments={handleToggleComments}
+          onToggleVersionHistory={handleToggleVersionHistory}
+          onToggleRecordings={() => setShowRecordings(true)}
           showAgentPanel={showAgentPanel}
           showDefensePrep={showDefensePrep}
           showAnalytics={showAnalytics}
           showComments={showComments}
+          showVersionHistory={showVersionHistory}
           unresolvedCommentCount={totalUnresolved}
         />
 
@@ -486,6 +504,30 @@ export default function DeckEditorPage() {
           />
         </div>
       )}
+
+      {/* Version History Panel (slide-over) */}
+      {showVersionHistory && (
+        <div className="w-80 shrink-0 border-l border-border bg-surface overflow-y-auto">
+          <VersionHistoryPanel
+            deckId={deckId}
+            onDeckRestored={() => {
+              setShowVersionHistory(false);
+              loadDeck();
+            }}
+            onCompareVersions={() => {
+              // Compare view not yet implemented in editor; close panel
+              setShowVersionHistory(false);
+            }}
+          />
+        </div>
+      )}
+
+      {/* Recordings Panel (modal overlay) */}
+      <RecordingsPanel
+        deckId={deckId}
+        open={showRecordings}
+        onClose={() => setShowRecordings(false)}
+      />
 
       {/* Presenter Mode (full-screen overlay) */}
       {showPresenterMode && (

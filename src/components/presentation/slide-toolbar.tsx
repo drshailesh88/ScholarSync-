@@ -1,6 +1,6 @@
 "use client";
 
-import { Export, PencilSimple, Eye, FilePdf, Presentation, Robot, Target, LinkSimple, ChartBar, ChatCircle, ClockCounterClockwise } from "@phosphor-icons/react";
+import { Export, PencilSimple, Eye, FilePdf, Presentation, Robot, Target, LinkSimple, ChartBar, ChatCircle, ClockCounterClockwise, VideoCamera } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface SlideToolbarProps {
@@ -16,6 +16,7 @@ interface SlideToolbarProps {
   onToggleAnalytics?: () => void;
   onToggleComments?: () => void;
   onToggleVersionHistory?: () => void;
+  onToggleRecordings?: () => void;
   showAgentPanel?: boolean;
   showDefensePrep?: boolean;
   showAnalytics?: boolean;
@@ -37,6 +38,7 @@ export function SlideToolbar({
   onToggleAnalytics,
   onToggleComments,
   onToggleVersionHistory,
+  onToggleRecordings,
   showAgentPanel,
   showDefensePrep,
   showAnalytics,
@@ -136,6 +138,16 @@ export function SlideToolbar({
         >
           <ClockCounterClockwise size={14} />
           History
+        </button>
+      )}
+
+      {onToggleRecordings && (
+        <button
+          onClick={onToggleRecordings}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+        >
+          <VideoCamera size={14} />
+          Recordings
         </button>
       )}
 
