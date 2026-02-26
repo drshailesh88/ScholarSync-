@@ -75,6 +75,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const [isRecomputing, setIsRecomputing] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [expandedPaper, setExpandedPaper] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Load screening queue
   const loadQueue = useCallback(async () => {
@@ -90,7 +91,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         setAgreement(data.agreement ?? null);
       }
     } catch {
-      // Error state
+      setError("Failed to load screening queue. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +130,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
           }
         }
       } catch {
-        // Error state
+        setError("Failed to record screening decision. Please try again.");
       }
     },
     [projectId, filter]
@@ -160,7 +161,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         await loadQueue();
       }
     } catch {
-      // Error state
+      setError("Failed to run AI screening. Please try again.");
     } finally {
       setIsScreeningAI(false);
     }
@@ -177,7 +178,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
       });
       await loadQueue();
     } catch {
-      // Error state
+      setError("Failed to recompute priorities. Please try again.");
     } finally {
       setIsRecomputing(false);
     }
@@ -247,6 +248,13 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
   return (
     <div className="space-y-6 max-w-5xl">
+      {error && (
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+        </div>
+      )}
+
       {/* Progress Bar */}
       {progress && progress.total > 0 && (
         <GlassPanel className="p-4">

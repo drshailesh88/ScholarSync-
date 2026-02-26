@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Scroll,
   CircleNotch,
@@ -59,11 +59,11 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
   const { reviewConfig } = useSystematicReviewStore();
 
   // Load saved PROSPERO ID
-  useState(() => {
+  useEffect(() => {
     if (reviewConfig?.protocolRegistration) {
       setProsperoId(reviewConfig.protocolRegistration);
     }
-  });
+  }, [reviewConfig?.protocolRegistration]);
 
   // Generate protocol
   const generate = useCallback(async () => {
@@ -143,7 +143,7 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
         }
       }
     } catch {
-      // Silent
+      setError("Failed to save PROSPERO ID. Please try again.");
     }
   };
 
@@ -151,22 +151,20 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
   const exportProtocol = async (format: "text" | "html") => {
     if (!protocol) return;
 
-    const encodedProtocol = encodeURIComponent(JSON.stringify(protocol));
-    const url = `/api/systematic-review/protocol?projectId=${projectId}&format=${format}&protocol=${encodedProtocol}`;
-
     try {
-      const res = await fetch(url);
+      const res = await fetch(`/api/systematic-review/protocol?projectId=${projectId}&format=${format}`, {
+        method: "GET",
+      });
       if (!res.ok) throw new Error("Export failed");
-
       const blob = await res.blob();
-      const blobUrl = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = blobUrl;
-      a.download = format === "html" ? "protocol.html" : "protocol.txt";
+      a.href = url;
+      a.download = `protocol.${format === "text" ? "txt" : "html"}`;
       a.click();
-      URL.revokeObjectURL(blobUrl);
+      URL.revokeObjectURL(url);
     } catch {
-      // Silent
+      setError("Failed to export protocol. Please try again.");
     }
   };
 
@@ -260,7 +258,12 @@ export function ProtocolPanel({ projectId }: ProtocolPanelProps) {
               </>
             )}
           </button>
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && (
+            <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+              <span>{error}</span>
+              <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+            </div>
+          )}
         </div>
       )}
 

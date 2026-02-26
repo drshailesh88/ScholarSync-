@@ -85,6 +85,7 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [view, setView] = useState<"seeds" | "results">("seeds");
+  const [error, setError] = useState<string | null>(null);
 
   // Load included papers and existing sessions
   const loadData = useCallback(async () => {
@@ -112,8 +113,8 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
         setSessions(data.sessions || []);
         setNetwork(data.network || { nodes: [], edges: [] });
       }
-    } catch (error) {
-      console.error("Failed to load snowball data:", error);
+    } catch {
+      setError("Failed to load snowball data. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -177,8 +178,8 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
       // Refresh data
       await loadData();
       setView("results");
-    } catch (error) {
-      console.error("Snowball error:", error);
+    } catch {
+      setError("Failed to run snowballing. Please try again.");
     } finally {
       setIsRunning(false);
     }
@@ -194,6 +195,13 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
 
   return (
     <div className="max-w-5xl space-y-6">
+      {error && (
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+        </div>
+      )}
+
       {/* Header */}
       <div>
         <h2 className="text-lg font-semibold text-ink">Citation Snowballing</h2>

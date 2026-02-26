@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   MagnifyingGlass,
   CircleNotch,
@@ -22,6 +22,8 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
     setActiveTab,
   } = useSystematicReviewStore();
 
+  const [error, setError] = useState<string | null>(null);
+
   const loading = useSystematicReviewStore(
     (s) => s.reviewConfig === null && s.projectId !== null
   );
@@ -31,6 +33,7 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
 
     // Optimistic: mark generating
     setGeneratedStrategy(null);
+    setError(null);
 
     try {
       const res = await fetch("/api/systematic-review/search-strategy", {
@@ -53,7 +56,7 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
         }),
       });
     } catch {
-      // Error handled by UI state
+      setError("Failed to generate search strategy. Please try again.");
     }
   }, [pico, projectId, setGeneratedStrategy]);
 
@@ -98,6 +101,13 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
             </div>
           ))}
         </div>
+
+        {error && (
+          <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+            <span>{error}</span>
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+          </div>
+        )}
 
         <button
           onClick={generateStrategy}

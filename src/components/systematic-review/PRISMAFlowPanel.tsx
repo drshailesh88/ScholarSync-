@@ -11,9 +11,11 @@ interface PRISMAFlowPanelProps {
 export function PRISMAFlowPanel({ projectId }: PRISMAFlowPanelProps) {
   const [flowSvg, setFlowSvg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loadFlow = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch(
         `/api/systematic-review/prisma-flow?projectId=${projectId}`
@@ -22,7 +24,7 @@ export function PRISMAFlowPanel({ projectId }: PRISMAFlowPanelProps) {
       const data = await res.json();
       setFlowSvg(data.svg);
     } catch {
-      // Error handled
+      setError("Failed to generate PRISMA flow diagram. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -50,6 +52,13 @@ export function PRISMAFlowPanel({ projectId }: PRISMAFlowPanelProps) {
           Auto-generated from your actual screening numbers. Tracks records
           through identification, screening, eligibility, and inclusion.
         </p>
+
+        {error && (
+          <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+            <span>{error}</span>
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+          </div>
+        )}
 
         <div className="flex gap-3 items-end">
           <button

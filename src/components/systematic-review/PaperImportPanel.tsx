@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   DownloadSimple,
   CircleNotch,
@@ -58,6 +58,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
   const [maxResults, setMaxResults] = useState(100);
   const [customSearch, setCustomSearch] = useState("");
   const [expandedPaper, setExpandedPaper] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Load papers for this project
   const loadPapers = useCallback(async () => {
@@ -71,7 +72,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
         setPapers(data.papers ?? []);
       }
     } catch {
-      // Non-critical
+      setError("Failed to load papers. Please try again.");
     } finally {
       setIsLoadingPapers(false);
     }
@@ -85,6 +86,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
 
     setIsImporting(true);
     setImportResult(null);
+    setError(null);
     try {
       const res = await fetch("/api/systematic-review/import", {
         method: "POST",
@@ -104,7 +106,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
       // Reload papers
       await loadPapers();
     } catch {
-      // Error state
+      setError("Failed to import papers. Please try again.");
     } finally {
       setIsImporting(false);
     }
@@ -139,7 +141,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
 
         await loadPapers();
       } catch {
-        // Error state
+        setError("Failed to upload paper. Please try again.");
       } finally {
         setIsUploading(false);
       }
@@ -156,12 +158,19 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
   };
 
   // Load papers on first render
-  useState(() => {
+  useEffect(() => {
     loadPapers();
-  });
+  }, [loadPapers]);
 
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+        </div>
+      )}
+
       {/* Database Import */}
       <GlassPanel className="p-6">
         <h3 className="text-lg font-semibold text-ink mb-4 flex items-center gap-2">

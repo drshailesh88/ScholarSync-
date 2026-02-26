@@ -47,6 +47,7 @@ export default function SystematicReviewHubPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [showCreate, setShowCreate] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch projects
   useEffect(() => {
@@ -55,13 +56,14 @@ export default function SystematicReviewHubPage() {
 
   async function fetchProjects() {
     setIsLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/systematic-review/projects");
       if (!res.ok) throw new Error("Failed to fetch projects");
       const data = await res.json();
       setProjects(data.projects ?? []);
     } catch {
-      // Error handled
+      setError("Failed to load projects. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +83,7 @@ export default function SystematicReviewHubPage() {
       setShowCreate(false);
       await fetchProjects();
     } catch {
-      // Error handled
+      setError("Failed to create project. Please try again.");
     } finally {
       setIsCreating(false);
     }
@@ -111,6 +113,14 @@ export default function SystematicReviewHubPage() {
           </button>
         </div>
       </div>
+
+      {/* Error banner */}
+      {error && (
+        <div className="mx-6 mt-4 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+        </div>
+      )}
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">

@@ -45,6 +45,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
   const [exportFormat, setExportFormat] = useState<ExportFormat>("ris");
   const [exportFilter, setExportFilter] = useState<PaperFilter>("all");
   const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
 
   // File drop handler
   const handleFileDrop = useCallback(
@@ -108,6 +109,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
   // Export
   const handleExport = async () => {
     setIsExporting(true);
+    setExportError(null);
     try {
       const res = await fetch(
         `/api/systematic-review/export-references?projectId=${projectId}&format=${exportFormat}&filter=${exportFilter}`
@@ -130,7 +132,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      // Silent fail
+      setExportError("Failed to export references. Please try again.");
     } finally {
       setIsExporting(false);
     }
@@ -373,6 +375,13 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
             )}
           </button>
         </div>
+
+        {exportError && (
+          <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+            <span>{exportError}</span>
+            <button onClick={() => setExportError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+          </div>
+        )}
 
         {/* Format info */}
         <div className="text-xs text-ink-faint space-y-1">

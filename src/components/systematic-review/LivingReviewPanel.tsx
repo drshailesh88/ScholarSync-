@@ -57,6 +57,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
   const [lastCheckResult, setLastCheckResult] = useState<CheckResult | null>(
     null
   );
+  const [error, setError] = useState<string | null>(null);
 
   // New alert form
   const [showForm, setShowForm] = useState(false);
@@ -78,7 +79,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
         setAlerts(data.alerts || []);
       }
     } catch {
-      // Silent
+      setError("Failed to load alerts. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +121,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
         await loadAlerts();
       }
     } catch {
-      // Silent
+      setError("Failed to create alert. Please try again.");
     } finally {
       setIsCreating(false);
     }
@@ -149,7 +150,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
         await loadAlerts();
       }
     } catch {
-      // Silent
+      setError("Failed to update alert. Please try again.");
     } finally {
       setCheckingId(null);
     }
@@ -164,7 +165,7 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
       );
       await loadAlerts();
     } catch {
-      // Silent
+      setError("Failed to delete alert. Please try again.");
     }
   };
 
@@ -182,6 +183,13 @@ export function LivingReviewPanel({ projectId }: LivingReviewPanelProps) {
 
   return (
     <div className="max-w-4xl space-y-6">
+      {error && (
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

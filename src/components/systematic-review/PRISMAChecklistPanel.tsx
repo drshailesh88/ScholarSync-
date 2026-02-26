@@ -155,7 +155,7 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      // Silent fail
+      setError("Failed to export checklist. Please try again.");
     }
   };
 
@@ -224,7 +224,10 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
           </button>
         </div>
         {error && (
-          <p className="text-sm text-red-500">{error}</p>
+          <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400 flex items-center justify-between">
+            <span>{error}</span>
+            <button onClick={() => setError(null)} className="text-red-400 hover:text-red-300">&#x2715;</button>
+          </div>
         )}
       </div>
 
