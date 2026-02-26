@@ -22,6 +22,9 @@ import {
   columnTypeEnum,
   matrixSourceEnum,
   milestoneStatusEnum,
+  reviewStageEnum,
+  alertFrequencyEnum,
+  alertStatusEnum,
 } from "./enums";
 
 import { users, projects, papers } from "./core";
@@ -265,3 +268,57 @@ export const milestoneProgress = pgTable("milestone_progress", {
   }),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// ---------------------------------------------------------------------------
+// 52. systematic_review_config
+// ---------------------------------------------------------------------------
+export const systematicReviewConfig = pgTable(
+  "systematic_review_config",
+  {
+    id: serial("id").primaryKey(),
+    projectId: integer("project_id")
+      .notNull()
+      .unique()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    pico: jsonb("pico"), // { population, intervention, comparison, outcome }
+    searchStrategy: jsonb("search_strategy"), // stored generated strategy
+    searchDatabases: jsonb("search_databases").default(["pubmed"]),
+    protocolRegistration: text("protocol_registration"), // PROSPERO ID
+    protocolDoi: text("protocol_doi"),
+    searchDate: timestamp("search_date"),
+    lastSearchDate: timestamp("last_search_date"),
+    reviewStage: reviewStageEnum("review_stage").default("search_strategy"),
+    settings: jsonb("settings").default({}),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [
+    index("idx_sr_config_project").on(table.projectId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 53. search_alerts (Living Reviews)
+// ---------------------------------------------------------------------------
+export const searchAlerts = pgTable(
+  "search_alerts",
+  {
+    id: serial("id").primaryKey(),
+    projectId: integer("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    searchString: text("search_string").notNull(),
+    frequency: alertFrequencyEnum("frequency").default("weekly"),
+    status: alertStatusEnum("status").default("active"),
+    lastChecked: timestamp("last_checked"),
+    nextCheck: timestamp("next_check"),
+    newPapersFound: integer("new_papers_found").default(0),
+    totalChecks: integer("total_checks").default(0),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [
+    index("idx_search_alerts_project").on(table.projectId),
+    index("idx_search_alerts_status").on(table.status),
+  ]
+);

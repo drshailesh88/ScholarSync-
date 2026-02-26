@@ -201,6 +201,12 @@ export const reviewStageEnum = pgEnum("review_stage", [
 ]);
 
 // ---------------------------------------------------------------------------
+// Search Alerts (Living Reviews)
+// ---------------------------------------------------------------------------
+export const alertFrequencyEnum = pgEnum("alert_frequency", ["daily", "weekly", "monthly"]);
+export const alertStatusEnum = pgEnum("alert_status", ["active", "paused", "completed"]);
+
+// ---------------------------------------------------------------------------
 // Marketplace Items
 // ---------------------------------------------------------------------------
 export const itemTypeEnum = pgEnum("item_type", ["template", "workflow", "style_guide"]);

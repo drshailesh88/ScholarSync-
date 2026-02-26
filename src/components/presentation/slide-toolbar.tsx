@@ -1,6 +1,6 @@
 "use client";
 
-import { Export, PencilSimple, Eye, FilePdf, Presentation, Robot, Target } from "@phosphor-icons/react";
+import { Export, PencilSimple, Eye, FilePdf, Presentation, Robot, Target, LinkSimple, ChartBar, ChatCircle, ClockCounterClockwise } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 interface SlideToolbarProps {
@@ -12,8 +12,16 @@ interface SlideToolbarProps {
   onPresenterMode?: () => void;
   onToggleAgentPanel?: () => void;
   onToggleDefensePrep?: () => void;
+  onShare?: () => void;
+  onToggleAnalytics?: () => void;
+  onToggleComments?: () => void;
+  onToggleVersionHistory?: () => void;
   showAgentPanel?: boolean;
   showDefensePrep?: boolean;
+  showAnalytics?: boolean;
+  showComments?: boolean;
+  showVersionHistory?: boolean;
+  unresolvedCommentCount?: number;
 }
 
 export function SlideToolbar({
@@ -25,8 +33,16 @@ export function SlideToolbar({
   onPresenterMode,
   onToggleAgentPanel,
   onToggleDefensePrep,
+  onShare,
+  onToggleAnalytics,
+  onToggleComments,
+  onToggleVersionHistory,
   showAgentPanel,
   showDefensePrep,
+  showAnalytics,
+  showComments,
+  showVersionHistory,
+  unresolvedCommentCount,
 }: SlideToolbarProps) {
   return (
     <div className="flex items-center gap-2 px-4 py-2 border-b border-border-subtle">
@@ -73,7 +89,67 @@ export function SlideToolbar({
         </button>
       )}
 
+      {onToggleAnalytics && (
+        <button
+          onClick={onToggleAnalytics}
+          className={cn(
+            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+            showAnalytics
+              ? "bg-blue-500/10 text-blue-500"
+              : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+          )}
+        >
+          <ChartBar size={14} />
+          Analytics
+        </button>
+      )}
+
+      {onToggleComments && (
+        <button
+          onClick={onToggleComments}
+          className={cn(
+            "relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+            showComments
+              ? "bg-amber-500/10 text-amber-500"
+              : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+          )}
+        >
+          <ChatCircle size={14} />
+          Comments
+          {(unresolvedCommentCount ?? 0) > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[16px] h-4 flex items-center justify-center px-1 rounded-full text-[9px] font-bold bg-amber-500 text-white">
+              {unresolvedCommentCount}
+            </span>
+          )}
+        </button>
+      )}
+
+      {onToggleVersionHistory && (
+        <button
+          onClick={onToggleVersionHistory}
+          className={cn(
+            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+            showVersionHistory
+              ? "bg-teal-500/10 text-teal-600"
+              : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+          )}
+        >
+          <ClockCounterClockwise size={14} />
+          History
+        </button>
+      )}
+
       <div className="flex-1" />
+
+      {onShare && (
+        <button
+          onClick={onShare}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+        >
+          <LinkSimple size={14} />
+          Share
+        </button>
+      )}
 
       {onPresenterMode && (
         <button

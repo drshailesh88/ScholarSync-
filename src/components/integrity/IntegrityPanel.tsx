@@ -189,7 +189,7 @@ export function IntegrityPanel({ getEditorText, sources }: IntegrityPanelProps) 
         <CollapsibleSection
           title="AI Detection"
           icon={<Robot size={14} className={ai.humanScore >= 80 ? "text-emerald-500" : ai.humanScore >= 50 ? "text-amber-500" : "text-red-400"} />}
-          summary={`${ai.humanScore}% human · ${ai.overallRisk} risk`}
+          summary={`${ai.humanScore}% human · ${ai.overallRisk} risk${ai.engine === "binoculars" ? " · Binoculars" : ""}`}
           expanded={expandedSections.has("ai")}
           onToggle={() => toggleSection("ai")}
         >

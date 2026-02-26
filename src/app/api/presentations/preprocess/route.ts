@@ -11,11 +11,13 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
 const preprocessSchema = z.object({
-  sourceType: z.enum(["papers", "document", "text", "deep_research"]),
+  sourceType: z.enum(["papers", "document", "text", "deep_research", "references"]),
   paperIds: z.array(z.number().int().positive()).max(50).optional(),
   documentId: z.number().int().positive().optional(),
   deepResearchSessionId: z.number().int().positive().optional(),
   rawText: z.string().max(500000).optional(),
+  /** Formatted reference content (used when sourceType is "references") */
+  referenceContent: z.string().max(500000).optional(),
 });
 
 export async function POST(req: Request) {
@@ -89,6 +91,9 @@ export async function POST(req: Request) {
         sourceLabel = "deep research synthesis";
         sourceContent = `Research Query: ${session.originalQuery}\n\nFinal Report:\n${session.finalReport ?? ""}\n\nKey Findings:\n${JSON.stringify(session.keyFindings)}`;
       }
+    } else if (body.sourceType === "references" && (body.referenceContent || body.rawText)) {
+      sourceLabel = "imported reference library";
+      sourceContent = body.referenceContent || body.rawText || "";
     } else if (body.sourceType === "text" && body.rawText) {
       sourceLabel = "text";
       sourceContent = body.rawText;

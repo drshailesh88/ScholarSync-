@@ -17,6 +17,8 @@ import { SourceSelector, type SourceType } from "./source-selector";
 import { TemplateSelector } from "./template-selector";
 import { PRESET_THEMES, ACADEMIC_TEMPLATES } from "@/types/presentation";
 import type { AudienceType } from "@/types/presentation";
+import type { ParsedReference } from "@/lib/references/types";
+import { formatReferencesAsContent } from "@/lib/references/format";
 
 const STEPS = ["Select Source", "Template & Audience", "Configure", "Generate"];
 
@@ -51,6 +53,7 @@ export function GenerationWizard() {
   const [documentId, setDocumentId] = useState<number | null>(null);
   const [rawText, setRawText] = useState("");
   const [deepResearchSessionId, setDeepResearchSessionId] = useState<number | null>(null);
+  const [selectedReferences, setSelectedReferences] = useState<ParsedReference[]>([]);
 
   // Step 1: Template & Audience
   const [templateId, setTemplateId] = useState<string | null>(null);
@@ -79,7 +82,8 @@ export function GenerationWizard() {
     (sourceType === "papers" && paperIds.length > 0) ||
     (sourceType === "document" && documentId != null) ||
     (sourceType === "text" && rawText.trim().length > 50) ||
-    (sourceType === "deep_research" && deepResearchSessionId != null);
+    (sourceType === "deep_research" && deepResearchSessionId != null) ||
+    (sourceType === "references" && selectedReferences.length > 0);
 
   const canProceedStep2 = title.trim().length > 0;
 
@@ -89,15 +93,24 @@ export function GenerationWizard() {
     setPreprocessing(true);
     setError("");
     try {
+      // For references source type, format the references as text and send as rawText
+      let effectiveSourceType: string = sourceType;
+      let effectiveRawText: string | undefined;
+
+      if (sourceType === "references" && selectedReferences.length > 0) {
+        effectiveSourceType = "text";
+        effectiveRawText = formatReferencesAsContent(selectedReferences);
+      }
+
       const res = await fetch("/api/presentations/preprocess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sourceType,
-          paperIds: sourceType === "papers" ? paperIds : undefined,
-          documentId: sourceType === "document" ? documentId : undefined,
-          rawText: sourceType === "text" ? rawText : undefined,
-          deepResearchSessionId: sourceType === "deep_research" ? deepResearchSessionId : undefined,
+          sourceType: effectiveSourceType,
+          paperIds: effectiveSourceType === "papers" ? paperIds : undefined,
+          documentId: effectiveSourceType === "document" ? documentId : undefined,
+          rawText: effectiveSourceType === "text" ? (effectiveRawText ?? rawText) : undefined,
+          deepResearchSessionId: effectiveSourceType === "deep_research" ? deepResearchSessionId : undefined,
         }),
       });
 
@@ -229,6 +242,8 @@ export function GenerationWizard() {
             onDocumentIdChange={setDocumentId}
             rawText={rawText}
             onRawTextChange={setRawText}
+            onReferencesSelected={setSelectedReferences}
+            selectedReferences={selectedReferences}
           />
 
           {/* Deep Research source option */}

@@ -3,7 +3,7 @@ import { isAIConfigured } from "@/lib/ai/models";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { users, integrityChecks } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { runIntegrityCheck } from "@/lib/integrity";
@@ -29,6 +29,8 @@ const requestSchema = z.object({
       }),
     )
     .optional(),
+  projectId: z.number().int().positive().optional(),
+  documentId: z.number().int().positive().optional(),
 });
 
 export async function POST(req: Request) {
@@ -98,7 +100,45 @@ export async function POST(req: Request) {
       mode: parsed.data.mode,
       tier: result.tier,
       humanScore: result.aiDetection.humanScore,
+      engine: result.aiDetection.engine,
     });
+
+    // Persist results to database if projectId is provided
+    if (parsed.data.projectId) {
+      try {
+        const wordCount = parsed.data.text.split(/\s+/).filter(Boolean).length;
+        await db.insert(integrityChecks).values({
+          projectId: parsed.data.projectId,
+          documentId: parsed.data.documentId ?? null,
+          checkType: result.plagiarism ? "both" : "ai_detection",
+          contentChecked: parsed.data.text.slice(0, 5000),
+          wordCount,
+          plagiarismScore: result.plagiarism?.similarityScore ?? null,
+          plagiarismMatches: result.plagiarism?.matches ?? null,
+          plagiarismEngine: result.plagiarism?.engine ?? null,
+          aiScore: result.aiDetection.aiScore,
+          aiDetectionDetails: {
+            humanScore: result.aiDetection.humanScore,
+            overallRisk: result.aiDetection.overallRisk,
+            engine: result.aiDetection.engine,
+            stats: result.aiDetection.stats,
+            paragraphCount: result.aiDetection.paragraphs.length,
+          },
+          aiDetectionEngine: result.aiDetection.engine,
+          flaggedPassages: result.aiDetection.paragraphs
+            .filter((p) => p.humanProbability < 50)
+            .map((p) => ({
+              excerpt: p.excerpt,
+              humanProbability: p.humanProbability,
+              flags: p.flags,
+            })),
+          sourceMatches: result.plagiarism?.matches ?? null,
+        });
+      } catch (dbErr) {
+        // Non-fatal — still return results even if DB save fails
+        log.error("Failed to persist integrity check results", dbErr);
+      }
+    }
 
     return new Response(JSON.stringify(result), {
       headers: { "Content-Type": "application/json" },

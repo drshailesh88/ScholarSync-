@@ -91,23 +91,37 @@ export interface TimelineData {
   title?: string;
 }
 
+/** Animation config for per-block reveal in presenter mode */
+export interface BlockAnimation {
+  type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
+  delay: number;      // seconds delay before this block animates in
+  duration: number;    // seconds for the animation
+  order: number;       // sequential order (1, 2, 3...)
+}
+
+export type AnimationPresetKey = "sequential_build" | "fade_all" | "stagger" | "results_reveal" | "none";
+
+type ContentBlockBase = {
+  animation?: BlockAnimation;
+};
+
 export type ContentBlock =
-  | { type: "text"; data: { text: string; style?: "title" | "subtitle" | "body" | "caption" } }
-  | { type: "bullets"; data: { items: string[]; ordered?: boolean } }
-  | { type: "image"; data: { url?: string; alt: string; caption?: string; suggestion?: string } }
-  | { type: "chart"; data: ChartData }
-  | { type: "table"; data: { headers: string[]; rows: string[][] } }
-  | { type: "citation"; data: CitationData }
-  | { type: "quote"; data: { text: string; attribution: string } }
+  | (ContentBlockBase & { type: "text"; data: { text: string; style?: "title" | "subtitle" | "body" | "caption" } })
+  | (ContentBlockBase & { type: "bullets"; data: { items: string[]; ordered?: boolean } })
+  | (ContentBlockBase & { type: "image"; data: { url?: string; alt: string; caption?: string; suggestion?: string }; figureLabel?: string })
+  | (ContentBlockBase & { type: "chart"; data: ChartData; figureLabel?: string; caption?: string })
+  | (ContentBlockBase & { type: "table"; data: { headers: string[]; rows: string[][] }; figureLabel?: string; caption?: string })
+  | (ContentBlockBase & { type: "citation"; data: CitationData })
+  | (ContentBlockBase & { type: "quote"; data: { text: string; attribution: string } })
   // V2: New content block types
-  | { type: "math"; data: MathData }
-  | { type: "diagram"; data: DiagramData }
-  | { type: "code"; data: CodeData }
-  | { type: "callout"; data: CalloutData }
-  | { type: "stat_result"; data: StatResultData }
-  | { type: "bibliography"; data: BibliographyData }
-  | { type: "timeline"; data: TimelineData }
-  | { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } };
+  | (ContentBlockBase & { type: "math"; data: MathData })
+  | (ContentBlockBase & { type: "diagram"; data: DiagramData; figureLabel?: string })
+  | (ContentBlockBase & { type: "code"; data: CodeData })
+  | (ContentBlockBase & { type: "callout"; data: CalloutData })
+  | (ContentBlockBase & { type: "stat_result"; data: StatResultData })
+  | (ContentBlockBase & { type: "bibliography"; data: BibliographyData })
+  | (ContentBlockBase & { type: "timeline"; data: TimelineData })
+  | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)
@@ -444,7 +458,7 @@ export const ACADEMIC_TEMPLATES: Record<string, AcademicTemplate> = {
     icon: "Microphone",
     structure: [
       { layout: "title_slide", role: "title", title: "Title & Authors", guidance: "Title, all authors with affiliations, conference name", required: true },
-      { layout: "title_content", role: "hook", title: "The Problem", guidance: "Open with a compelling hook — a statistic, question, or clinical scenario", required: true },
+      { layout: "title_content", role: "hook", title: "The Problem", guidance: "Open with a compelling hook -- a statistic, question, or clinical scenario", required: true },
       { layout: "title_content", role: "background", title: "Background", guidance: "Brief context, what we know, what's missing (2 slides max)", required: true },
       { layout: "title_content", role: "objective", title: "Study Objective", guidance: "One clear research question or aim", required: true },
       { layout: "methodology", role: "methods", title: "Methods", guidance: "Concise study design diagram, key methods", required: true },
@@ -517,12 +531,12 @@ export const ACADEMIC_TEMPLATES: Record<string, AcademicTemplate> = {
       { layout: "title_content", role: "background", title: "Background & Rationale", guidance: "Why was this review needed?", required: true },
       { layout: "title_content", role: "objectives", title: "Review Question", guidance: "PICO-formatted question, primary/secondary outcomes", required: true },
       { layout: "methodology", role: "search_strategy", title: "Search Strategy", guidance: "Databases searched, date range, key terms", required: true },
-      { layout: "title_content", role: "prisma", title: "PRISMA Flow Diagram", guidance: "Records identified → screened → included", required: true, contentHints: ["diagram:prisma"] },
+      { layout: "title_content", role: "prisma", title: "PRISMA Flow Diagram", guidance: "Records identified -> screened -> included", required: true, contentHints: ["diagram:prisma"] },
       { layout: "table_slide", role: "study_characteristics", title: "Study Characteristics", guidance: "Summary table of included studies", required: true },
       { layout: "title_content", role: "rob", title: "Risk of Bias Assessment", guidance: "Traffic light plot or summary figure", required: true },
-      { layout: "chart_slide", role: "forest_plot", title: "Forest Plot — Primary Outcome", guidance: "Main meta-analysis result", required: true, contentHints: ["chart:forest_plot"] },
+      { layout: "chart_slide", role: "forest_plot", title: "Forest Plot -- Primary Outcome", guidance: "Main meta-analysis result", required: true, contentHints: ["chart:forest_plot"] },
       { layout: "chart_slide", role: "secondary_forest", title: "Secondary Outcomes", guidance: "Additional forest plots or summary", required: false },
-      { layout: "title_content", role: "heterogeneity", title: "Heterogeneity & Subgroup Analyses", guidance: "I², tau², subgroup comparisons", required: true },
+      { layout: "title_content", role: "heterogeneity", title: "Heterogeneity & Subgroup Analyses", guidance: "I-squared, tau-squared, subgroup comparisons", required: true },
       { layout: "title_content", role: "certainty", title: "Certainty of Evidence (GRADE)", guidance: "GRADE summary of findings table", required: true },
       { layout: "two_column", role: "strengths_limitations", title: "Strengths & Limitations", guidance: "Review quality assessment", required: true },
       { layout: "key_findings", role: "conclusions", title: "Conclusions & Implications", guidance: "Key findings, clinical implications, research gaps", required: true },
@@ -659,6 +673,20 @@ export interface PreprocessedData {
     analysisMethod?: string;
   };
   researchQuestions?: string[];
+  // V3: PRISMA flow data for systematic reviews
+  prismaData?: {
+    databaseRecords?: number;
+    registerRecords?: number;
+    otherSourceRecords?: number;
+    duplicatesRemoved?: number;
+    recordsScreened?: number;
+    recordsExcluded?: number;
+    fullTextAssessed?: number;
+    fullTextExcluded?: number;
+    fullTextExclusionReasons?: { reason: string; count: number }[];
+    studiesIncluded?: number;
+    reportsIncluded?: number;
+  };
 }
 
 export interface PreprocessedSection {
@@ -688,7 +716,9 @@ export type SlideEditAction =
   | "strengthen_evidence"
   | "simplify_language"
   | "add_speaker_notes"
-  | "translate";
+  | "translate"
+  // V3: Academic-aware translation
+  | "translate_academic";
 
 export interface SlideEditRequest {
   slideId: number;
@@ -714,6 +744,7 @@ export type AgentCommand =
   | "adapt_audience"
   | "add_slide"
   | "remove_slide"
+  | "translate_all"
   | "custom";
 
 export interface AgentRequest {
@@ -751,6 +782,7 @@ export interface PresenterConfig {
   showProgress: boolean;
   transition: "none" | "fade" | "slide" | "zoom";
   autoAdvance?: number; // seconds per slide
+  animationPreset?: AnimationPresetKey;
 }
 
 // ---------------------------------------------------------------------------

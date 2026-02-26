@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Plus, Trash, DotsSixVertical } from "@phosphor-icons/react";
+import { Plus, Trash, DotsSixVertical, ChatCircle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { SlideRenderer } from "./slide-renderer";
 import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
@@ -24,6 +24,7 @@ interface SlideOutlineSidebarProps {
   onAddSlide: () => void;
   onDeleteSlide: (id: number) => void;
   onReorderSlides?: (slideIds: number[]) => void;
+  commentCounts?: Map<number, { total: number; unresolved: number }>;
 }
 
 export function SlideOutlineSidebar({
@@ -35,6 +36,7 @@ export function SlideOutlineSidebar({
   onAddSlide,
   onDeleteSlide,
   onReorderSlides,
+  commentCounts,
 }: SlideOutlineSidebarProps) {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
@@ -86,66 +88,87 @@ export function SlideOutlineSidebar({
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-2">
-        {slides.map((slide, idx) => (
-          <div
-            key={slide.id}
-            className={cn(
-              "relative group",
-              draggedIdx === idx && "opacity-40",
-              dragOverIdx === idx && draggedIdx !== null && "ring-2 ring-brand rounded-lg"
-            )}
-            draggable
-            onDragStart={(e) => handleDragStart(e, idx)}
-            onDragOver={(e) => handleDragOver(e, idx)}
-            onDragEnd={handleDragEnd}
-            onMouseEnter={() => setHoveredId(slide.id)}
-            onMouseLeave={() => setHoveredId(null)}
-          >
-            <button
-              onClick={() => onSelectSlide(slide.id)}
-              className={cn(
-                "w-full rounded-lg overflow-hidden border-2 transition-all text-left",
-                activeSlideId === slide.id
-                  ? "border-brand ring-1 ring-brand/30"
-                  : "border-border hover:border-brand/40"
-              )}
-            >
-              <div className="pointer-events-none">
-                <SlideRenderer
-                  title={slide.title}
-                  subtitle={slide.subtitle}
-                  layout={(slide.layout as SlideLayout) ?? "title_content"}
-                  contentBlocks={slide.contentBlocks ?? []}
-                  themeKey={themeKey}
-                  themeConfig={themeConfig}
-                  scale={0.35}
-                />
-              </div>
-              <div className="px-2 py-1.5 bg-surface flex items-center gap-1">
-                <DotsSixVertical
-                  size={10}
-                  className="text-ink-muted/50 cursor-grab shrink-0"
-                />
-                <p className="text-[10px] text-ink-muted truncate">
-                  {idx + 1}. {slide.title || "Untitled"}
-                </p>
-              </div>
-            </button>
+        {slides.map((slide, idx) => {
+          const counts = commentCounts?.get(slide.id);
+          const hasUnresolved = (counts?.unresolved ?? 0) > 0;
+          const hasComments = (counts?.total ?? 0) > 0;
 
-            {hoveredId === slide.id && slides.length > 1 && (
+          return (
+            <div
+              key={slide.id}
+              className={cn(
+                "relative group",
+                draggedIdx === idx && "opacity-40",
+                dragOverIdx === idx && draggedIdx !== null && "ring-2 ring-brand rounded-lg"
+              )}
+              draggable
+              onDragStart={(e) => handleDragStart(e, idx)}
+              onDragOver={(e) => handleDragOver(e, idx)}
+              onDragEnd={handleDragEnd}
+              onMouseEnter={() => setHoveredId(slide.id)}
+              onMouseLeave={() => setHoveredId(null)}
+            >
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteSlide(slide.id);
-                }}
-                className="absolute top-1 right-1 p-1 rounded bg-red-500/90 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                title="Delete slide"
+                onClick={() => onSelectSlide(slide.id)}
+                className={cn(
+                  "w-full rounded-lg overflow-hidden border-2 transition-all text-left",
+                  activeSlideId === slide.id
+                    ? "border-brand ring-1 ring-brand/30"
+                    : "border-border hover:border-brand/40"
+                )}
               >
-                <Trash size={12} />
+                <div className="pointer-events-none">
+                  <SlideRenderer
+                    title={slide.title}
+                    subtitle={slide.subtitle}
+                    layout={(slide.layout as SlideLayout) ?? "title_content"}
+                    contentBlocks={slide.contentBlocks ?? []}
+                    themeKey={themeKey}
+                    themeConfig={themeConfig}
+                    scale={0.35}
+                  />
+                </div>
+                <div className="px-2 py-1.5 bg-surface flex items-center gap-1">
+                  <DotsSixVertical
+                    size={10}
+                    className="text-ink-muted/50 cursor-grab shrink-0"
+                  />
+                  <p className="text-[10px] text-ink-muted truncate flex-1">
+                    {idx + 1}. {slide.title || "Untitled"}
+                  </p>
+
+                  {/* Comment count badge */}
+                  {hasComments && (
+                    <span
+                      className={cn(
+                        "flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold shrink-0",
+                        hasUnresolved
+                          ? "bg-amber-500/15 text-amber-500"
+                          : "bg-emerald-500/15 text-emerald-500"
+                      )}
+                    >
+                      <ChatCircle size={8} weight="fill" />
+                      {counts!.total}
+                    </span>
+                  )}
+                </div>
               </button>
-            )}
-          </div>
-        ))}
+
+              {hoveredId === slide.id && slides.length > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteSlide(slide.id);
+                  }}
+                  className="absolute top-1 right-1 p-1 rounded bg-red-500/90 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Delete slide"
+                >
+                  <Trash size={12} />
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
     </aside>
   );

@@ -37,9 +37,11 @@ export async function runIntegrityCheck(
   const runCitations = isPaid && (mode === "full" || mode === "citation_audit");
 
   // Launch engines in parallel
+  // Paid users get Binoculars (Replicate GPU) in addition to LLM-heuristic
+  const useBinoculars = isPaid;
   const [aiResult, plagiarismResult, citationResult] = await Promise.all([
     runAI
-      ? runAIDetection(input.text)
+      ? runAIDetection(input.text, useBinoculars)
       : Promise.resolve(null),
     runPlagiarism
       ? runPlagiarismCheck(input.text).catch((err): PlagiarismResult => {

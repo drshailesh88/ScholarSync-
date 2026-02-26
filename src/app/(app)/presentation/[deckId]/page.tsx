@@ -47,6 +47,9 @@ import { AiToolsDropdown } from "@/components/presentation/ai-tools-dropdown";
 import { CoachPanel } from "@/components/presentation/coach-panel";
 import { AgentPanel } from "@/components/presentation/agent-panel";
 import { DefensePrepPanel } from "@/components/presentation/defense-prep-panel";
+import { SharePanel } from "@/components/presentation/share-panel";
+import { AnalyticsPanel } from "@/components/presentation/analytics-panel";
+import { CommentsPanel, useCommentCounts } from "@/components/presentation/comments-panel";
 
 const PresenterMode = lazy(() =>
   import("@/components/presentation/presenter-mode").then((m) => ({ default: m.PresenterMode }))
@@ -71,6 +74,14 @@ export default function DeckEditorPage() {
   const [showAgentPanel, setShowAgentPanel] = useState(false);
   const [showDefensePrep, setShowDefensePrep] = useState(false);
   const [showPresenterMode, setShowPresenterMode] = useState(false);
+  const [showSharePanel, setShowSharePanel] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState("dev_user_001");
+
+  // Comment counts for sidebar badges
+  const { counts: commentCounts, totalUnresolved, refresh: refreshComments } =
+    useCommentCounts(deckId);
 
   // Save timer for debouncing
   const [saveTimer, setSaveTimer] = useState<NodeJS.Timeout | null>(null);
@@ -100,6 +111,17 @@ export default function DeckEditorPage() {
   useEffect(() => {
     loadDeck();
   }, [loadDeck]);
+
+  // Get current user ID on mount
+  useEffect(() => {
+    fetch("/api/health")
+      .then(() => {
+        // The getCurrentUserId is server-side only.
+        // For the comments panel, we pass a placeholder that gets resolved server-side.
+        // In production, the server actions handle auth internally.
+      })
+      .catch(() => {});
+  }, []);
 
   const activeSlide = slides.find((s) => s.id === activeSlideId);
 
@@ -236,6 +258,25 @@ export default function DeckEditorPage() {
     }
   }
 
+  // Close other right-side panels when opening one
+  function handleToggleAnalytics() {
+    setShowAnalytics(!showAnalytics);
+    if (!showAnalytics) {
+      setShowComments(false);
+      setShowAgentPanel(false);
+      setShowDefensePrep(false);
+    }
+  }
+
+  function handleToggleComments() {
+    setShowComments(!showComments);
+    if (!showComments) {
+      setShowAnalytics(false);
+      setShowAgentPanel(false);
+      setShowDefensePrep(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex h-[calc(100vh-7rem)] -m-6 -mt-0 items-center justify-center">
@@ -277,6 +318,7 @@ export default function DeckEditorPage() {
           onAddSlide={handleAddSlide}
           onDeleteSlide={handleDeleteSlide}
           onReorderSlides={handleReorderSlides}
+          commentCounts={commentCounts}
         />
       </div>
 
@@ -289,16 +331,30 @@ export default function DeckEditorPage() {
           onExportPptx={handleExportPptx}
           onExportPdf={handleExportPdf}
           onPresenterMode={() => setShowPresenterMode(true)}
+          onShare={() => setShowSharePanel(true)}
           onToggleAgentPanel={() => {
             setShowAgentPanel(!showAgentPanel);
-            if (!showAgentPanel) setShowDefensePrep(false);
+            if (!showAgentPanel) {
+              setShowDefensePrep(false);
+              setShowAnalytics(false);
+              setShowComments(false);
+            }
           }}
           onToggleDefensePrep={() => {
             setShowDefensePrep(!showDefensePrep);
-            if (!showDefensePrep) setShowAgentPanel(false);
+            if (!showDefensePrep) {
+              setShowAgentPanel(false);
+              setShowAnalytics(false);
+              setShowComments(false);
+            }
           }}
+          onToggleAnalytics={handleToggleAnalytics}
+          onToggleComments={handleToggleComments}
           showAgentPanel={showAgentPanel}
           showDefensePrep={showDefensePrep}
+          showAnalytics={showAnalytics}
+          showComments={showComments}
+          unresolvedCommentCount={totalUnresolved}
         />
 
         <SlideCanvas
@@ -403,6 +459,34 @@ export default function DeckEditorPage() {
         </div>
       )}
 
+      {/* Analytics Panel (slide-over) */}
+      {showAnalytics && (
+        <div className="w-80 shrink-0 border-l border-border bg-surface overflow-y-auto">
+          <AnalyticsPanel
+            deckId={deckId}
+            onClose={() => setShowAnalytics(false)}
+          />
+        </div>
+      )}
+
+      {/* Comments Panel (slide-over) */}
+      {showComments && (
+        <div className="w-80 shrink-0 border-l border-border bg-surface overflow-y-auto">
+          <CommentsPanel
+            deckId={deckId}
+            slides={slides.map((s) => ({
+              id: s.id,
+              title: s.title,
+            }))}
+            currentUserId={currentUserId}
+            activeSlideId={activeSlideId}
+            onClose={() => setShowComments(false)}
+            onNavigateToSlide={setActiveSlideId}
+            onUnresolvedCountChange={() => refreshComments()}
+          />
+        </div>
+      )}
+
       {/* Presenter Mode (full-screen overlay) */}
       {showPresenterMode && (
         <Suspense fallback={
@@ -424,6 +508,14 @@ export default function DeckEditorPage() {
             onExit={() => setShowPresenterMode(false)}
           />
         </Suspense>
+      )}
+
+      {/* Share Panel (modal overlay) */}
+      {showSharePanel && (
+        <SharePanel
+          deckId={deckId}
+          onClose={() => setShowSharePanel(false)}
+        />
       )}
     </div>
   );

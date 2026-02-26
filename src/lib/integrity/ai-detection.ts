@@ -1,20 +1,79 @@
 /**
  * AI Content Detection Engine
  *
- * Combines statistical text analysis (sentence burstiness, TTR, passive voice,
- * readability, hedging phrases) with LLM-powered per-paragraph assessment to
- * produce a combined human-vs-AI score for academic writing.
+ * Two-tier architecture:
+ *   Free  → LLM-heuristic (statistical features + Claude Haiku per-paragraph)
+ *   Paid  → Binoculars on Replicate (Falcon-7B dual-model, ICML 2024) + LLM-heuristic
+ *
+ * Binoculars produces a single high-confidence score (90%+ accuracy at 0.01% FPR).
+ * The LLM-heuristic provides per-paragraph granularity and actionable suggestions.
+ * For paid users, both run in parallel and scores are combined (60% Binoculars, 40% LLM).
  */
 
 import { generateObject } from "ai";
 import { getSmallModel } from "@/lib/ai/models";
 import { z } from "zod";
+import Replicate from "replicate";
 
 import type {
   AIDetectionResult,
   AIParagraphResult,
   TextStatistics,
 } from "./types";
+
+// ── Binoculars on Replicate ─────────────────────────────────────────
+
+const BINOCULARS_MODEL = "drshailesh88/binoculars-ai-detection" as const;
+const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;
+
+interface BinocularsResponse {
+  score: number;
+  prediction: "ai" | "human";
+  threshold: number;
+  mode: string;
+  tokens_processed: number;
+}
+
+/**
+ * Calls the Binoculars model on Replicate.
+ * Returns a human probability score (0-100) derived from the Binoculars ratio.
+ */
+async function runBinocularsDetection(
+  text: string,
+): Promise<{ humanScore: number; raw: BinocularsResponse } | null> {
+  const apiToken = process.env.REPLICATE_API_TOKEN;
+  if (!apiToken) {
+    console.warn("[ai-detection] REPLICATE_API_TOKEN not set, skipping Binoculars");
+    return null;
+  }
+
+  try {
+    const replicate = new Replicate({ auth: apiToken });
+
+    const output = await replicate.run(BINOCULARS_MODEL, {
+      input: {
+        text: text.slice(0, 10000), // Truncate to ~2K tokens worth
+        mode: "low-fpr",
+        max_length: 512,
+      },
+    }) as BinocularsResponse;
+
+    // Convert Binoculars score to a 0-100 human probability.
+    // Score > threshold = human, score < threshold = AI.
+    // We map the score to a 0-100 scale centred on the threshold.
+    const ratio = output.score / BINOCULARS_FPR_THRESHOLD;
+    // ratio > 1 = human, ratio < 1 = AI
+    // Map: 0.5 → 0, 1.0 → 50, 1.5+ → 100
+    const humanScore = Math.round(
+      Math.min(100, Math.max(0, (ratio - 0.5) * 100)),
+    );
+
+    return { humanScore, raw: output };
+  } catch (error) {
+    console.error("[ai-detection] Binoculars Replicate call failed:", error);
+    return null;
+  }
+}
 
 // ── Constants ────────────────────────────────────────────────────────
 
@@ -407,69 +466,53 @@ function clamp(value: number, min = 0, max = 100): number {
 }
 
 /**
- * Runs the full AI detection pipeline:
+ * Runs the LLM-heuristic detection pipeline (used for all users):
  *   1. Compute statistical text features (pure computation)
  *   2. Run LLM-powered per-paragraph analysis (batched API calls)
  *   3. Combine signals into a final score with heuristic adjustments
- *
- * @param text - The document text to analyse
- * @returns A combined AI detection result with per-paragraph breakdowns
  */
-export async function runAIDetection(text: string): Promise<AIDetectionResult> {
-  // Step 1: Statistical analysis
-  const stats = computeTextStatistics(text);
-
-  // Step 2: Split into paragraphs (non-empty, trimmed)
+async function runLLMHeuristicDetection(
+  text: string,
+  stats: TextStatistics,
+): Promise<{ humanScore: number; paragraphs: AIParagraphResult[] }> {
   const paragraphs = text
     .split(/\n\s*\n/)
     .map((p) => p.trim())
-    .filter((p) => p.length > 20); // Skip very short fragments
+    .filter((p) => p.length > 20);
 
   if (paragraphs.length === 0) {
-    return {
-      humanScore: 50,
-      aiScore: 50,
-      overallRisk: "medium",
-      paragraphs: [],
-      engine: "llm-heuristic",
-      stats,
-    };
+    return { humanScore: 50, paragraphs: [] };
   }
 
-  // Step 3: Batch LLM analysis
+  // Batch LLM analysis
   const batches: string[][] = [];
   for (let i = 0; i < paragraphs.length; i += PARAGRAPH_BATCH_SIZE) {
     batches.push(paragraphs.slice(i, i + PARAGRAPH_BATCH_SIZE));
   }
 
-  let allParagraphResults: AIParagraphResult[] = [];
-
-  // Process batches concurrently for speed (typically 2-5 batches)
   const batchPromises = batches.map((batch, batchIdx) =>
     analyseParagraphBatch(
       batch,
       batchIdx * PARAGRAPH_BATCH_SIZE,
-      stats
+      stats,
     ).catch((error): AIParagraphResult[] => {
-      // On LLM failure, fall back to stats-only estimation for this batch
       console.error(
         `AI detection batch ${batchIdx} failed, using heuristic fallback:`,
-        error
+        error,
       );
       return batch.map((p, i) => ({
         paragraphIndex: batchIdx * PARAGRAPH_BATCH_SIZE + i,
         excerpt: p.slice(0, 80),
-        humanProbability: 50, // Neutral when LLM unavailable
+        humanProbability: 50,
         flags: ["llm-analysis-unavailable"],
         suggestion: undefined,
       }));
-    })
+    }),
   );
 
   const batchResults = await Promise.all(batchPromises);
-  allParagraphResults = batchResults.flat();
+  const allParagraphResults = batchResults.flat();
 
-  // Step 4: Compute combined score
   const avgHumanProbability =
     allParagraphResults.reduce((sum, p) => sum + p.humanProbability, 0) /
     (allParagraphResults.length || 1);
@@ -486,17 +529,57 @@ export async function runAIDetection(text: string): Promise<AIDetectionResult> {
     humanScore -= 5;
   }
 
-  // Hedging density: count per 500 words
   const hedgingDensity = (stats.hedgingPhraseCount / totalWords) * 500;
   if (hedgingDensity > 2) {
     humanScore -= 10;
   }
 
-  // Clamp to valid range
+  humanScore = clamp(humanScore);
+
+  return { humanScore, paragraphs: allParagraphResults };
+}
+
+/**
+ * Runs the full AI detection pipeline.
+ *
+ * @param text - The document text to analyse
+ * @param useBinoculars - If true, also runs Binoculars on Replicate (paid users)
+ * @returns A combined AI detection result with per-paragraph breakdowns
+ */
+export async function runAIDetection(
+  text: string,
+  useBinoculars = false,
+): Promise<AIDetectionResult> {
+  // Step 1: Statistical analysis (always runs — pure computation)
+  const stats = computeTextStatistics(text);
+
+  // Step 2: Run engines in parallel
+  const [llmResult, binocularsResult] = await Promise.all([
+    runLLMHeuristicDetection(text, stats),
+    useBinoculars ? runBinocularsDetection(text) : Promise.resolve(null),
+  ]);
+
+  // Step 3: Combine scores
+  let humanScore: number;
+  let engine: AIDetectionResult["engine"];
+
+  if (binocularsResult) {
+    // Paid tier: 60% Binoculars (research-grade) + 40% LLM-heuristic (granular)
+    humanScore = Math.round(
+      binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4,
+    );
+    engine = "binoculars";
+    console.log(
+      `[ai-detection] Binoculars: ${binocularsResult.humanScore}% human (raw score: ${binocularsResult.raw.score}), LLM: ${llmResult.humanScore}% → combined: ${humanScore}%`,
+    );
+  } else {
+    humanScore = llmResult.humanScore;
+    engine = "llm-heuristic";
+  }
+
   humanScore = clamp(humanScore);
   const aiScore = clamp(100 - humanScore);
 
-  // Determine overall risk level
   let overallRisk: "low" | "medium" | "high";
   if (humanScore >= 70) {
     overallRisk = "low";
@@ -510,8 +593,8 @@ export async function runAIDetection(text: string): Promise<AIDetectionResult> {
     humanScore,
     aiScore,
     overallRisk,
-    paragraphs: allParagraphResults,
-    engine: "llm-heuristic",
+    paragraphs: llmResult.paragraphs,
+    engine,
     stats,
   };
 }
