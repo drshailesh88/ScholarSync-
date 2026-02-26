@@ -55,11 +55,15 @@ export {
 
 export {
   extractDataFromPaper,
+  extractDataFromPaperWithChunks,
   batchExtractData,
+  batchExtractDataWithChunks,
   getExtractionTable,
+  getPaperChunks,
   type ExtractionField,
   type ExtractionResult,
   type PaperExtraction,
+  type ChunkInfo,
 } from "./data-extraction";
 
 export {
@@ -276,3 +280,19 @@ export {
   type QUADAS2DomainAssessment,
   type FullQUADAS2Assessment,
 } from "./quadas2-assessment";
+
+// ---------------------------------------------------------------------------
+// Screening Validation — benchmark AI screening against gold-standard datasets
+// ---------------------------------------------------------------------------
+
+export {
+  runBenchmark,
+  computeMetrics,
+  computeWSS,
+  generateValidationReport,
+  createCohenDataset,
+  type BenchmarkDataset,
+  type BenchmarkResult,
+  type ScreeningDecision,
+  type ScreeningFunction,
+} from "./validation/screening-benchmark";
