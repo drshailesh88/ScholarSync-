@@ -19,10 +19,15 @@ import {
   Eye,
   GitBranch,
   CheckSquare,
+  FileText,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { useSystematicReviewStore } from "@/stores/systematic-review-store";
+import {
+  ScreeningPDFViewer,
+  type ScreeningPaper,
+} from "@/components/systematic-review/ScreeningPDFViewer";
 
 interface ScreeningPanelProps {
   projectId: number;
@@ -153,6 +158,11 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const [blindedMode, setBlindedMode] = useState(false);
   const [unblindedData, setUnblindedData] = useState<UnblindedData | null>(null);
   const [isUnblinding, setIsUnblinding] = useState(false);
+
+  // PDF screening viewer state
+  const [pdfViewerPaper, setPdfViewerPaper] = useState<ScreeningPaper | null>(
+    null
+  );
 
   // Conflict resolution state
   const [viewMode, setViewMode] = useState<ViewMode>("queue");
@@ -354,6 +364,79 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
       setIsUnblinding(false);
     }
   }, [projectId, filter]);
+
+  // Open PDF screening viewer for a paper
+  const openPdfViewer = useCallback(
+    (paper: QueuePaper) => {
+      setPdfViewerPaper({
+        paperId: paper.paperId,
+        ppId: paper.ppId,
+        title: paper.title,
+        authors: paper.authors,
+        journal: paper.journal,
+        year: paper.year,
+        abstract: paper.abstract,
+        doi: paper.doi,
+        pmid: paper.pmid,
+        pdfUrl: null, // will be resolved by API based on paperId
+        pdfStoragePath: null,
+        screeningDecision: paper.screeningDecision,
+        screeningReason: paper.screeningReason,
+        aiDecision: paper.aiDecision,
+        aiReason: paper.aiReason,
+      });
+
+      // Fetch PDF path for the paper
+      fetch(
+        `/api/systematic-review/paper-pdf?paperId=${paper.paperId}&projectId=${projectId}`
+      )
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            setPdfViewerPaper((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    pdfUrl: data.pdfUrl ?? null,
+                    pdfStoragePath: data.pdfStoragePath ?? null,
+                  }
+                : null
+            );
+          }
+        })
+        .catch(() => {
+          /* PDF path fetch is best-effort */
+        });
+    },
+    [projectId]
+  );
+
+  // Handle decision from PDF viewer (wraps handleDecision + closes viewer)
+  const handlePdfViewerDecision = useCallback(
+    (paperId: number, decision: "include" | "exclude" | "maybe", reason?: string) => {
+      handleDecision(paperId, decision);
+      // If there is a reason, we store it via the screening reason field
+      if (reason) {
+        fetch("/api/systematic-review/screening-queue", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            paperId,
+            decision,
+            reason,
+          }),
+        }).catch(() => {
+          /* best-effort reason save */
+        });
+      }
+      // Update the viewer paper state to reflect the new decision
+      setPdfViewerPaper((prev) =>
+        prev ? { ...prev, screeningDecision: decision, screeningReason: reason ?? prev.screeningReason } : null
+      );
+    },
+    [handleDecision, projectId]
+  );
 
   // Keyboard shortcuts (only active in queue view)
   useEffect(() => {
@@ -1070,8 +1153,18 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                           Uncertain
                         </button>
 
-                        {/* Links */}
+                        {/* Links + PDF viewer */}
                         <div className="flex items-center gap-2 ml-auto text-xs">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openPdfViewer(paper);
+                            }}
+                            className="px-2 py-1 text-brand bg-brand/10 hover:bg-brand/20 rounded font-medium flex items-center gap-1 transition-colors"
+                          >
+                            <FileText weight="bold" size={12} />
+                            Full Text
+                          </button>
                           {paper.doi && (
                             <a
                               href={`https://doi.org/${paper.doi}`}
@@ -1103,6 +1196,16 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
             </div>
           )}
         </>
+      )}
+
+      {/* PDF Screening Viewer (full-screen overlay) */}
+      {pdfViewerPaper && (
+        <ScreeningPDFViewer
+          paper={pdfViewerPaper}
+          projectId={projectId}
+          onDecision={handlePdfViewerDecision}
+          onClose={() => setPdfViewerPaper(null)}
+        />
       )}
     </div>
   );
