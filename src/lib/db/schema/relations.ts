@@ -51,7 +51,7 @@ import {
   pdfAnnotations,
 } from "./billing";
 
-// Systematic review tables (42-51)
+// Systematic review tables (42-53)
 import {
   screeningCriteria,
   screeningDecisions,
@@ -63,6 +63,8 @@ import {
   matrixCells,
   projectMilestones,
   milestoneProgress,
+  systematicReviewConfig,
+  searchAlerts,
 } from "./systematic";
 
 // Institutional tables (53-55)
@@ -1196,3 +1198,29 @@ export const syncLogRelations = relations(syncLog, ({ one }) => ({
     references: [integrations.id],
   }),
 }));
+
+// ============================================================
+// 72. systematic_review_config
+// ============================================================
+export const systematicReviewConfigRelations = relations(
+  systematicReviewConfig,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [systematicReviewConfig.projectId],
+      references: [projects.id],
+    }),
+  })
+);
+
+// ============================================================
+// 73. search_alerts
+// ============================================================
+export const searchAlertsRelations = relations(
+  searchAlerts,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [searchAlerts.projectId],
+      references: [projects.id],
+    }),
+  })
+);
