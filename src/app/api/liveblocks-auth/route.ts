@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     },
   });
 
-  // Room IDs follow pattern: "presentation:{deckId}"
+  // Room IDs follow patterns: "presentation:{deckId}", "sr-project-{projectId}"
   const { room } = await req.json();
   session.allow(room, session.FULL_ACCESS);
 

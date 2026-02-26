@@ -42,6 +42,10 @@ import { ProtocolPanel } from "@/components/systematic-review/ProtocolPanel";
 import { PROSPEROExport } from "@/components/systematic-review/PROSPEROExport";
 import { GRADEPanel } from "@/components/systematic-review/GRADEPanel";
 import { ManuscriptPanel } from "@/components/systematic-review/ManuscriptPanel";
+import { SRRoomProvider } from "@/lib/liveblocks/sr-config";
+import { CollaboratorPresence } from "@/components/systematic-review/CollaboratorPresence";
+import { ActivityFeed } from "@/components/systematic-review/ActivityFeed";
+import { useCollaborativeReview } from "@/hooks/use-collaborative-review";
 import Link from "next/link";
 
 // ---------------------------------------------------------------------------
@@ -66,22 +70,56 @@ const WORKFLOW_TABS = [
 ];
 
 // ---------------------------------------------------------------------------
-// Main Workflow Page
+// Main Workflow Page — wraps content in Liveblocks SRRoomProvider
 // ---------------------------------------------------------------------------
 
 export default function SystematicReviewWorkflowPage() {
   const params = useParams();
-  const router = useRouter();
   const projectId = parseInt(params.projectId as string, 10);
 
+  if (isNaN(projectId)) {
+    return null; // Router redirect handled inside inner component
+  }
+
+  const roomId = `sr-project-${projectId}`;
+
+  return (
+    <SRRoomProvider
+      id={roomId}
+      initialPresence={{
+        userId: "",
+        name: "",
+        avatar: "",
+        color: "",
+        activeTab: null,
+        currentPaperId: null,
+      }}
+    >
+      <SystematicReviewWorkflowContent projectId={projectId} />
+    </SRRoomProvider>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Inner content — has access to Liveblocks hooks via SRRoomProvider
+// ---------------------------------------------------------------------------
+
+function SystematicReviewWorkflowContent({
+  projectId,
+}: {
+  projectId: number;
+}) {
+  const router = useRouter();
+
   const {
-    projectId: storeProjectId,
     projectTitle,
     reviewStage,
     activeTab,
     setProject,
     setActiveTab,
   } = useSystematicReviewStore();
+
+  const { activityFeed, updatePresence } = useCollaborativeReview();
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -96,6 +134,11 @@ export default function SystematicReviewWorkflowPage() {
 
     loadProject();
   }, [projectId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Sync active tab to Liveblocks presence
+  useEffect(() => {
+    updatePresence({ activeTab });
+  }, [activeTab, updatePresence]);
 
   async function loadProject() {
     setIsLoading(true);
@@ -187,7 +230,7 @@ export default function SystematicReviewWorkflowPage() {
   return (
     <div className="flex flex-col h-full">
       {/* Back link */}
-      <div className="px-6 pt-3">
+      <div className="px-6 pt-3 flex items-center justify-between">
         <Link
           href="/systematic-review"
           className="text-xs text-ink-muted hover:text-brand flex items-center gap-1"
@@ -195,6 +238,9 @@ export default function SystematicReviewWorkflowPage() {
           <ArrowLeft size={12} />
           All Reviews
         </Link>
+
+        {/* Collaborator presence avatars */}
+        <CollaboratorPresence />
       </div>
 
       {/* Project Header with progress stepper */}
@@ -260,6 +306,9 @@ export default function SystematicReviewWorkflowPage() {
           <PROSPEROExport projectId={projectId} />
         )}
       </div>
+
+      {/* Real-time activity feed sidebar */}
+      <ActivityFeed entries={activityFeed} />
     </div>
   );
 }
