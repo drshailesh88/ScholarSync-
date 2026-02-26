@@ -18,6 +18,7 @@ export type WorkflowTab =
   | "screening"
   | "prisma"
   | "rob2"
+  | "rob"
   | "extraction"
   | "meta_analysis"
   | "snowball"

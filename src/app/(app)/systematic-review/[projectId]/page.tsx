@@ -30,7 +30,7 @@ import { ProjectHeader } from "@/components/systematic-review/ProjectHeader";
 import { SearchStrategyPanel } from "@/components/systematic-review/SearchStrategyPanel";
 import { ScreeningPanel } from "@/components/systematic-review/ScreeningPanel";
 import { PRISMAFlowPanel } from "@/components/systematic-review/PRISMAFlowPanel";
-import { RoB2Panel } from "@/components/systematic-review/RoB2Panel";
+import { UnifiedRoBPanel } from "@/components/systematic-review/UnifiedRoBPanel";
 import { DataExtractionPanel } from "@/components/systematic-review/DataExtractionPanel";
 import { PaperImportPanel } from "@/components/systematic-review/PaperImportPanel";
 import { MetaAnalysisPanel } from "@/components/systematic-review/MetaAnalysisPanel";
@@ -57,7 +57,7 @@ const WORKFLOW_TABS = [
   { key: "import", label: "Import Papers", icon: DownloadSimple },
   { key: "screening", label: "AI Screening", icon: Funnel },
   { key: "prisma", label: "PRISMA Flow", icon: FlowArrow },
-  { key: "rob2", label: "Risk of Bias", icon: ShieldCheck },
+  { key: "rob", label: "Risk of Bias", icon: ShieldCheck },
   { key: "extraction", label: "Data Extraction", icon: Table },
   { key: "meta_analysis", label: "Meta-Analysis", icon: ChartBar },
   { key: "grade", label: "GRADE", icon: Certificate },
@@ -279,7 +279,7 @@ function SystematicReviewWorkflowContent({
             <PRISMAChecklistPanel projectId={projectId} />
           </div>
         )}
-        {activeTab === "rob2" && <RoB2Panel projectId={projectId} />}
+        {activeTab === "rob" && <UnifiedRoBPanel projectId={projectId} />}
         {activeTab === "extraction" && (
           <DataExtractionPanel projectId={projectId} />
         )}
