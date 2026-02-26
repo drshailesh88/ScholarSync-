@@ -21,6 +21,7 @@ export type WorkflowTab =
   | "rob"
   | "extraction"
   | "meta_analysis"
+  | "nma"
   | "snowball"
   | "export"
   | "living"

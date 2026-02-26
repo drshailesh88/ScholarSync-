@@ -19,6 +19,7 @@ import {
   Certificate,
   Article,
   ArrowSquareOut,
+  ShareNetwork,
 } from "@phosphor-icons/react";
 import { Tabs } from "@/components/ui/tabs";
 import {
@@ -42,6 +43,7 @@ import { ProtocolPanel } from "@/components/systematic-review/ProtocolPanel";
 import { PROSPEROExport } from "@/components/systematic-review/PROSPEROExport";
 import { GRADEPanel } from "@/components/systematic-review/GRADEPanel";
 import { ManuscriptPanel } from "@/components/systematic-review/ManuscriptPanel";
+import { NMAPanel } from "@/components/systematic-review/NMAPanel";
 import { SRRoomProvider } from "@/lib/liveblocks/sr-config";
 import { CollaboratorPresence } from "@/components/systematic-review/CollaboratorPresence";
 import { ActivityFeed } from "@/components/systematic-review/ActivityFeed";
@@ -60,6 +62,7 @@ const WORKFLOW_TABS = [
   { key: "rob", label: "Risk of Bias", icon: ShieldCheck },
   { key: "extraction", label: "Data Extraction", icon: Table },
   { key: "meta_analysis", label: "Meta-Analysis", icon: ChartBar },
+  { key: "nma", label: "Network MA", icon: ShareNetwork },
   { key: "grade", label: "GRADE", icon: Certificate },
   { key: "manuscript", label: "Manuscript", icon: Article },
   { key: "snowball", label: "Snowballing", icon: Graph },
@@ -286,6 +289,7 @@ function SystematicReviewWorkflowContent({
         {activeTab === "meta_analysis" && (
           <MetaAnalysisPanel projectId={projectId} />
         )}
+        {activeTab === "nma" && <NMAPanel projectId={projectId} />}
         {activeTab === "grade" && <GRADEPanel projectId={projectId} />}
         {activeTab === "manuscript" && (
           <ManuscriptPanel projectId={projectId} />
