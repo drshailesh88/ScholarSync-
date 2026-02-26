@@ -13,9 +13,12 @@ import {
   ArrowsClockwise,
   Robot,
   User,
+  Users,
   Handshake,
   EyeSlash,
   Eye,
+  GitBranch,
+  CheckSquare,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -26,6 +29,7 @@ interface ScreeningPanelProps {
 }
 
 type FilterMode = "all" | "unscreened" | "conflicts" | "uncertain";
+type ViewMode = "queue" | "conflicts";
 
 interface QueuePaper {
   ppId: number;
@@ -45,6 +49,7 @@ interface QueuePaper {
   screeningReason: string | null;
   aiDecision: string | null;
   aiReason: string | null;
+  reviewerScreened: boolean | null;
 }
 
 interface Progress {
@@ -54,6 +59,12 @@ interface Progress {
   included: number;
   excluded: number;
   maybe: number;
+  progress: number;
+}
+
+interface ReviewerProgress {
+  total: number;
+  screened: number;
   progress: number;
 }
 
@@ -86,11 +97,51 @@ interface UnblindedData {
   summary: UnblindedSummary;
 }
 
+interface ReviewerDecision {
+  reviewerId: string;
+  decision: string;
+  reason: string | null;
+}
+
+interface MultiReviewerConflict {
+  paperId: number;
+  paperTitle: string;
+  decisions: ReviewerDecision[];
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function DecisionBadge({ decision, icon }: { decision: string; icon?: React.ReactNode }) {
+  return (
+    <span
+      className={cn(
+        "flex items-center gap-1 px-2 py-0.5 text-xs rounded font-medium",
+        decision === "include"
+          ? "bg-emerald-500/10 text-emerald-600"
+          : decision === "exclude"
+            ? "bg-red-500/10 text-red-600"
+            : "bg-amber-500/10 text-amber-600"
+      )}
+    >
+      {icon}
+      {decision}
+    </span>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main Component
+// ---------------------------------------------------------------------------
+
 export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const { criteria, setCriteria } = useSystematicReviewStore();
 
+  // Queue state
   const [queue, setQueue] = useState<QueuePaper[]>([]);
   const [progress, setProgress] = useState<Progress | null>(null);
+  const [reviewerProgress, setReviewerProgress] = useState<ReviewerProgress | null>(null);
   const [agreement, setAgreement] = useState<Agreement | null>(null);
   const [filter, setFilter] = useState<FilterMode>("unscreened");
   const [isLoading, setIsLoading] = useState(false);
@@ -102,6 +153,12 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const [blindedMode, setBlindedMode] = useState(false);
   const [unblindedData, setUnblindedData] = useState<UnblindedData | null>(null);
   const [isUnblinding, setIsUnblinding] = useState(false);
+
+  // Conflict resolution state
+  const [viewMode, setViewMode] = useState<ViewMode>("queue");
+  const [conflicts, setConflicts] = useState<MultiReviewerConflict[]>([]);
+  const [isLoadingConflicts, setIsLoadingConflicts] = useState(false);
+  const [resolvingPaperId, setResolvingPaperId] = useState<number | null>(null);
 
   // Load screening queue
   const loadQueue = useCallback(async () => {
@@ -116,6 +173,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         setQueue(data.queue ?? []);
         setProgress(data.progress ?? null);
         setAgreement(data.agreement ?? null);
+        setReviewerProgress(data.reviewerProgress ?? null);
       }
     } catch {
       setError("Failed to load screening queue. Please try again.");
@@ -127,6 +185,30 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   useEffect(() => {
     loadQueue();
   }, [loadQueue]);
+
+  // Load multi-reviewer conflicts
+  const loadConflicts = useCallback(async () => {
+    setIsLoadingConflicts(true);
+    try {
+      const res = await fetch(
+        `/api/systematic-review/screening-queue?projectId=${projectId}&mode=conflicts`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setConflicts(data.conflicts ?? []);
+      }
+    } catch {
+      setError("Failed to load conflicts. Please try again.");
+    } finally {
+      setIsLoadingConflicts(false);
+    }
+  }, [projectId]);
+
+  // Switch to conflict view
+  const openConflictView = useCallback(() => {
+    setViewMode("conflicts");
+    loadConflicts();
+  }, [loadConflicts]);
 
   // Record screening decision
   const handleDecision = useCallback(
@@ -141,12 +223,13 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         if (res.ok) {
           const data = await res.json();
           setProgress(data.progress);
+          if (data.reviewerProgress) setReviewerProgress(data.reviewerProgress);
 
           // Update local queue
           setQueue((prev) =>
             prev.map((p) =>
               p.paperId === paperId
-                ? { ...p, screeningDecision: decision }
+                ? { ...p, screeningDecision: decision, reviewerScreened: true }
                 : p
             )
           );
@@ -161,6 +244,40 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
       }
     },
     [projectId, filter]
+  );
+
+  // Resolve a conflict
+  const handleResolve = useCallback(
+    async (paperId: number, resolution: "include" | "exclude" | "maybe", reason?: string) => {
+      setResolvingPaperId(paperId);
+      try {
+        const res = await fetch("/api/systematic-review/screening-queue", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            paperId,
+            resolution,
+            reason,
+            action: "resolve",
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setProgress(data.progress ?? null);
+          // Remove resolved conflict from the list
+          setConflicts((prev) => prev.filter((c) => c.paperId !== paperId));
+        } else {
+          setError("Failed to resolve conflict. Please try again.");
+        }
+      } catch {
+        setError("Failed to resolve conflict. Please try again.");
+      } finally {
+        setResolvingPaperId(null);
+      }
+    },
+    [projectId]
   );
 
   // Run AI batch screening
@@ -211,11 +328,10 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
     }
   }, [projectId, loadQueue]);
 
-  // Fetch unblinded results (reveals AI decisions + conflicts)
+  // Fetch unblinded results
   const fetchUnblindedResults = useCallback(async () => {
     setIsUnblinding(true);
     try {
-      // Fetch unblinded summary and the full queue simultaneously
       const [unblindRes, queueRes] = await Promise.all([
         fetch(`/api/systematic-review/screening-queue?projectId=${projectId}&mode=unblind`),
         fetch(`/api/systematic-review/screening-queue?projectId=${projectId}&filter=${filter}&blinded=false`),
@@ -229,6 +345,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         setQueue(data.queue ?? []);
         setProgress(data.progress ?? null);
         setAgreement(data.agreement ?? null);
+        setReviewerProgress(data.reviewerProgress ?? null);
       }
       setBlindedMode(false);
     } catch {
@@ -238,10 +355,11 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
     }
   }, [projectId, filter]);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (only active in queue view)
   useEffect(() => {
+    if (viewMode !== "queue") return;
+
     function handleKeyDown(e: KeyboardEvent) {
-      // Don't capture when in input/textarea
       if (
         e.target instanceof HTMLInputElement ||
         e.target instanceof HTMLTextAreaElement ||
@@ -277,7 +395,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [queue, activeIndex, handleDecision]);
+  }, [queue, activeIndex, handleDecision, viewMode]);
 
   // Criteria management
   const addCriterion = () => {
@@ -309,7 +427,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </div>
       )}
 
-      {/* Progress Bar */}
+      {/* Overall Progress Bar */}
       {progress && progress.total > 0 && (
         <GlassPanel className="p-4">
           <div className="flex items-center justify-between mb-2">
@@ -355,6 +473,45 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </GlassPanel>
       )}
 
+      {/* Reviewer-specific Progress */}
+      {reviewerProgress && reviewerProgress.total > 0 && (
+        <GlassPanel className="p-3 bg-gradient-to-r from-brand/5 to-indigo-500/5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <User weight="duotone" className="text-brand" size={16} />
+              <span className="text-sm font-medium text-ink">Your Progress</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-ink-muted">
+                <strong className="text-ink">{reviewerProgress.screened}</strong>
+                {" / "}
+                <strong className="text-ink">{reviewerProgress.total}</strong>
+                {" screened"}
+              </span>
+              <span
+                className={cn(
+                  "px-2 py-0.5 rounded text-xs font-medium",
+                  reviewerProgress.progress === 100
+                    ? "bg-emerald-500/10 text-emerald-600"
+                    : reviewerProgress.progress >= 50
+                      ? "bg-brand/10 text-brand"
+                      : "bg-surface-raised text-ink-muted"
+                )}
+              >
+                {reviewerProgress.progress}%
+              </span>
+            </div>
+          </div>
+          {/* Mini progress bar */}
+          <div className="mt-2 h-1 bg-surface-raised rounded-full overflow-hidden">
+            <div
+              className="h-full bg-brand rounded-full transition-all"
+              style={{ width: `${reviewerProgress.progress}%` }}
+            />
+          </div>
+        </GlassPanel>
+      )}
+
       {/* Inter-rater Agreement */}
       {agreement && agreement.totalPapers > 0 && (
         <GlassPanel className="p-4 bg-gradient-to-r from-indigo-500/5 to-purple-500/5">
@@ -362,7 +519,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
             <div className="flex items-center gap-2">
               <Handshake weight="duotone" className="text-brand" size={20} />
               <span className="text-sm font-semibold text-ink">
-                AI-Human Agreement
+                Inter-Rater Agreement
               </span>
             </div>
             <div className="flex items-center gap-3 text-sm">
@@ -412,7 +569,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </div>
       )}
 
-      {/* Unblinded Conflict Summary */}
+      {/* Unblinded Conflict Summary (AI vs Human) */}
       {unblindedData && !blindedMode && (
         <GlassPanel className="p-4 border-amber-500/20">
           <div className="flex items-center justify-between mb-3">
@@ -457,7 +614,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
           </div>
           {unblindedData.summary.conflicts > 0 && (
             <div className="space-y-1.5 max-h-48 overflow-y-auto">
-              <div className="text-xs font-medium text-ink-muted mb-1">Conflicting Papers:</div>
+              <div className="text-xs font-medium text-ink-muted mb-1">Conflicting Papers (AI vs Human):</div>
               {unblindedData.results
                 .filter((r) => r.isConflict)
                 .map((r) => (
@@ -469,32 +626,8 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
                       {r.paperTitle}
                     </span>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span
-                        className={cn(
-                          "flex items-center gap-1 px-1.5 py-0.5 rounded",
-                          r.aiDecision === "include"
-                            ? "bg-emerald-500/10 text-emerald-600"
-                            : r.aiDecision === "exclude"
-                              ? "bg-red-500/10 text-red-600"
-                              : "bg-amber-500/10 text-amber-600"
-                        )}
-                      >
-                        <Robot size={10} />
-                        {r.aiDecision}
-                      </span>
-                      <span
-                        className={cn(
-                          "flex items-center gap-1 px-1.5 py-0.5 rounded",
-                          r.humanDecision === "include"
-                            ? "bg-emerald-500/10 text-emerald-600"
-                            : r.humanDecision === "exclude"
-                              ? "bg-red-500/10 text-red-600"
-                              : "bg-amber-500/10 text-amber-600"
-                        )}
-                      >
-                        <User size={10} />
-                        {r.humanDecision}
-                      </span>
+                      <DecisionBadge decision={r.aiDecision ?? ""} icon={<Robot size={10} />} />
+                      <DecisionBadge decision={r.humanDecision ?? ""} icon={<User size={10} />} />
                     </div>
                   </div>
                 ))}
@@ -554,58 +687,94 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         </button>
       </GlassPanel>
 
-      {/* Action Bar */}
+      {/* View Mode Tabs + Action Bar */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {/* Filter tabs */}
-          {(
-            [
-              ["unscreened", "Unscreened"],
-              ["all", "All"],
-              ["conflicts", "Conflicts"],
-              ["uncertain", "Uncertain"],
-            ] as const
-          ).map(([key, label]) => (
-            <button
-              key={key}
-              onClick={() => {
-                setFilter(key);
-                setActiveIndex(0);
-              }}
-              className={cn(
-                "px-3 py-1.5 rounded text-sm transition-colors",
-                filter === key
-                  ? "bg-brand/10 text-brand font-medium"
-                  : "text-ink-muted hover:text-ink hover:bg-surface-raised"
-              )}
-            >
-              {label}
-            </button>
-          ))}
+        <div className="flex items-center gap-1">
+          {/* View mode tabs */}
+          <button
+            onClick={() => setViewMode("queue")}
+            className={cn(
+              "px-3 py-1.5 rounded text-sm transition-colors flex items-center gap-1.5",
+              viewMode === "queue"
+                ? "bg-brand/10 text-brand font-medium"
+                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
+          >
+            <Funnel size={14} />
+            Queue
+          </button>
+          <button
+            onClick={openConflictView}
+            className={cn(
+              "px-3 py-1.5 rounded text-sm transition-colors flex items-center gap-1.5",
+              viewMode === "conflicts"
+                ? "bg-red-500/10 text-red-600 font-medium"
+                : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
+          >
+            <GitBranch size={14} />
+            View Conflicts
+            {conflicts.length > 0 && viewMode === "conflicts" && (
+              <span className="px-1.5 py-0.5 bg-red-500/20 text-red-600 rounded text-xs font-bold">
+                {conflicts.length}
+              </span>
+            )}
+          </button>
+
+          <div className="w-px h-5 bg-border mx-1" />
+
+          {/* Filter tabs (only in queue view) */}
+          {viewMode === "queue" &&
+            (
+              [
+                ["unscreened", "Unscreened"],
+                ["all", "All"],
+                ["conflicts", "Conflicts"],
+                ["uncertain", "Uncertain"],
+              ] as const
+            ).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => {
+                  setFilter(key);
+                  setActiveIndex(0);
+                }}
+                className={cn(
+                  "px-3 py-1.5 rounded text-sm transition-colors",
+                  filter === key
+                    ? "bg-brand/10 text-brand font-medium"
+                    : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+                )}
+              >
+                {label}
+              </button>
+            ))}
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Blinded Mode Toggle */}
-          <button
-            onClick={() => {
-              setBlindedMode((prev) => !prev);
-              setUnblindedData(null);
-            }}
-            className={cn(
-              "px-3 py-1.5 text-sm rounded flex items-center gap-1.5 transition-colors border",
-              blindedMode
-                ? "border-amber-500/40 bg-amber-500/10 text-amber-600 font-medium"
-                : "border-border text-ink-muted hover:text-ink hover:bg-surface-raised"
-            )}
-            title={blindedMode ? "Blinded mode is ON — AI decisions are hidden" : "Enable blinded mode to hide AI decisions"}
-          >
-            {blindedMode ? (
-              <EyeSlash weight="bold" size={14} />
-            ) : (
-              <Eye weight="bold" size={14} />
-            )}
-            {blindedMode ? "Blinded" : "Blind Mode"}
-          </button>
+          {/* Blinded Mode Toggle (queue view only) */}
+          {viewMode === "queue" && (
+            <button
+              onClick={() => {
+                setBlindedMode((prev) => !prev);
+                setUnblindedData(null);
+              }}
+              className={cn(
+                "px-3 py-1.5 text-sm rounded flex items-center gap-1.5 transition-colors border",
+                blindedMode
+                  ? "border-amber-500/40 bg-amber-500/10 text-amber-600 font-medium"
+                  : "border-border text-ink-muted hover:text-ink hover:bg-surface-raised"
+              )}
+              title={blindedMode ? "Blinded mode is ON — AI decisions are hidden" : "Enable blinded mode to hide AI decisions"}
+            >
+              {blindedMode ? (
+                <EyeSlash weight="bold" size={14} />
+              ) : (
+                <Eye weight="bold" size={14} />
+              )}
+              {blindedMode ? "Blinded" : "Blind Mode"}
+            </button>
+          )}
 
           <div className="w-px h-5 bg-border" />
 
@@ -624,253 +793,466 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
             Reprioritize
           </button>
 
-          {/* AI Batch Screen */}
-          <button
-            onClick={runAIScreening}
-            disabled={
-              isScreeningAI ||
-              queue.filter((p) => !p.screeningDecision).length === 0
-            }
-            className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
-          >
-            {isScreeningAI ? (
-              <CircleNotch weight="bold" className="animate-spin" size={16} />
-            ) : (
-              <Lightning weight="fill" size={16} />
-            )}
-            {isScreeningAI ? "Screening..." : "AI Screen All"}
-          </button>
+          {/* AI Batch Screen (queue view only) */}
+          {viewMode === "queue" && (
+            <button
+              onClick={runAIScreening}
+              disabled={
+                isScreeningAI ||
+                queue.filter((p) => !p.screeningDecision).length === 0
+              }
+              className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+            >
+              {isScreeningAI ? (
+                <CircleNotch weight="bold" className="animate-spin" size={16} />
+              ) : (
+                <Lightning weight="fill" size={16} />
+              )}
+              {isScreeningAI ? "Screening..." : "AI Screen All"}
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Loading */}
-      {isLoading && (
-        <div className="flex items-center justify-center py-12">
-          <CircleNotch
-            weight="bold"
-            className="animate-spin text-brand"
-            size={24}
-          />
-        </div>
-      )}
+      {/* ------------------------------------------------------------------ */}
+      {/* CONFLICT RESOLUTION VIEW */}
+      {/* ------------------------------------------------------------------ */}
+      {viewMode === "conflicts" && (
+        <div className="space-y-4">
+          {isLoadingConflicts && (
+            <div className="flex items-center justify-center py-12">
+              <CircleNotch weight="bold" className="animate-spin text-brand" size={24} />
+            </div>
+          )}
 
-      {/* Empty state */}
-      {!isLoading && queue.length === 0 && (
-        <GlassPanel className="p-8 text-center">
-          <Funnel weight="duotone" className="text-ink-muted mb-3 mx-auto" size={40} />
-          <h3 className="text-sm font-semibold text-ink mb-1">
-            {filter === "unscreened"
-              ? "All papers screened!"
-              : `No ${filter} papers`}
-          </h3>
-          <p className="text-xs text-ink-muted">
-            {filter === "unscreened"
-              ? "Import more papers or review conflicts."
-              : "Try a different filter."}
-          </p>
-        </GlassPanel>
-      )}
+          {!isLoadingConflicts && conflicts.length === 0 && (
+            <GlassPanel className="p-8 text-center">
+              <CheckSquare weight="duotone" className="text-emerald-500 mb-3 mx-auto" size={40} />
+              <h3 className="text-sm font-semibold text-ink mb-1">No Conflicts Found</h3>
+              <p className="text-xs text-ink-muted">
+                All reviewers are in agreement, or fewer than two reviewers have
+                screened the same paper.
+              </p>
+            </GlassPanel>
+          )}
 
-      {/* Paper Queue */}
-      {!isLoading && queue.length > 0 && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-ink-muted">
-              {queue.length} paper{queue.length !== 1 ? "s" : ""} &middot;
-              Keyboard: <kbd className="px-1 bg-surface-raised rounded">I</kbd>
-              =Include{" "}
-              <kbd className="px-1 bg-surface-raised rounded">E</kbd>=Exclude{" "}
-              <kbd className="px-1 bg-surface-raised rounded">U</kbd>=Uncertain{" "}
-              <kbd className="px-1 bg-surface-raised rounded">J/K</kbd>=Navigate
-            </span>
-          </div>
-
-          {queue.map((paper, idx) => (
-            <div
-              key={paper.ppId}
-              className={cn(
-                "border rounded-lg p-4 transition-all cursor-pointer",
-                idx === activeIndex
-                  ? "border-brand/40 bg-brand/5 ring-1 ring-brand/20"
-                  : "border-border hover:border-brand/20",
-                paper.screeningDecision === "include" &&
-                  "border-emerald-500/30 bg-emerald-500/5",
-                paper.screeningDecision === "exclude" &&
-                  "border-red-500/30 bg-red-500/5",
-                paper.screeningDecision === "maybe" &&
-                  "border-amber-500/30 bg-amber-500/5"
-              )}
-              onClick={() => setActiveIndex(idx)}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <div
-                    className="text-sm font-medium text-ink mb-1 cursor-pointer hover:text-brand"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setExpandedPaper(
-                        expandedPaper === paper.paperId
-                          ? null
-                          : paper.paperId
-                      );
-                    }}
-                  >
-                    {paper.title}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-ink-muted">
-                    {paper.journal && <span>{paper.journal}</span>}
-                    {paper.year && <span>({paper.year})</span>}
-                    {paper.citationCount != null && paper.citationCount > 0 && (
-                      <span>{paper.citationCount} cites</span>
-                    )}
-                    {paper.studyType && (
-                      <span className="px-1.5 py-0.5 bg-surface-raised rounded">
-                        {paper.studyType}
-                      </span>
-                    )}
-                    {paper.priority != null && paper.priority > 0 && (
-                      <span className="px-1.5 py-0.5 bg-brand/10 text-brand rounded">
-                        Priority: {Math.round(paper.priority * 100)}%
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Decision badges */}
-                <div className="flex items-center gap-2 shrink-0 ml-3">
-                  {!blindedMode && paper.aiDecision && (
-                    <span
-                      className={cn(
-                        "flex items-center gap-1 px-2 py-0.5 text-xs rounded",
-                        paper.aiDecision === "include"
-                          ? "bg-emerald-500/10 text-emerald-600"
-                          : paper.aiDecision === "exclude"
-                            ? "bg-red-500/10 text-red-600"
-                            : "bg-amber-500/10 text-amber-600"
-                      )}
-                    >
-                      <Robot size={12} />
-                      {paper.aiDecision}
-                    </span>
-                  )}
-                  {paper.screeningDecision && (
-                    <span
-                      className={cn(
-                        "flex items-center gap-1 px-2 py-0.5 text-xs rounded font-medium",
-                        paper.screeningDecision === "include"
-                          ? "bg-emerald-500/10 text-emerald-600"
-                          : paper.screeningDecision === "exclude"
-                            ? "bg-red-500/10 text-red-600"
-                            : "bg-amber-500/10 text-amber-600"
-                      )}
-                    >
-                      <User size={12} />
-                      {paper.screeningDecision}
-                    </span>
-                  )}
-                </div>
+          {!isLoadingConflicts && conflicts.length > 0 && (
+            <>
+              <div className="flex items-center gap-2 text-sm text-ink-muted">
+                <GitBranch weight="duotone" className="text-red-500" size={16} />
+                <span>
+                  <strong className="text-ink">{conflicts.length}</strong> paper
+                  {conflicts.length !== 1 ? "s" : ""} with reviewer disagreements
+                </span>
               </div>
 
-              {/* Expanded: abstract + AI reasoning + decision buttons */}
-              {(expandedPaper === paper.paperId || idx === activeIndex) && (
-                <div className="mt-3 pt-3 border-t border-border/50">
-                  {/* Abstract */}
-                  {paper.abstract && (
-                    <p className="text-xs text-ink-muted mb-3 leading-relaxed line-clamp-6">
-                      {paper.abstract}
-                    </p>
-                  )}
+              {/* Conflict table */}
+              <div className="border border-border rounded-lg overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-surface-raised border-b border-border">
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold text-ink-muted">
+                        Paper
+                      </th>
+                      <th className="px-4 py-2.5 text-left text-xs font-semibold text-ink-muted">
+                        Reviewer Decisions
+                      </th>
+                      <th className="px-4 py-2.5 text-right text-xs font-semibold text-ink-muted">
+                        Resolve
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {conflicts.map((conflict, idx) => (
+                      <ConflictRow
+                        key={conflict.paperId}
+                        conflict={conflict}
+                        isResolving={resolvingPaperId === conflict.paperId}
+                        onResolve={handleResolve}
+                        isEven={idx % 2 === 0}
+                      />
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
-                  {/* AI reasoning (hidden in blinded mode) */}
-                  {!blindedMode && paper.aiReason && (
-                    <div className="mb-3 px-3 py-2 bg-surface-raised rounded text-xs">
-                      <span className="font-medium text-ink">
-                        AI reasoning:{" "}
-                      </span>
-                      <span className="text-ink-muted">{paper.aiReason}</span>
+      {/* ------------------------------------------------------------------ */}
+      {/* QUEUE VIEW */}
+      {/* ------------------------------------------------------------------ */}
+      {viewMode === "queue" && (
+        <>
+          {/* Loading */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-12">
+              <CircleNotch
+                weight="bold"
+                className="animate-spin text-brand"
+                size={24}
+              />
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!isLoading && queue.length === 0 && (
+            <GlassPanel className="p-8 text-center">
+              <Funnel weight="duotone" className="text-ink-muted mb-3 mx-auto" size={40} />
+              <h3 className="text-sm font-semibold text-ink mb-1">
+                {filter === "unscreened"
+                  ? "All papers screened!"
+                  : `No ${filter} papers`}
+              </h3>
+              <p className="text-xs text-ink-muted">
+                {filter === "unscreened"
+                  ? "Import more papers or review conflicts."
+                  : "Try a different filter."}
+              </p>
+            </GlassPanel>
+          )}
+
+          {/* Paper Queue */}
+          {!isLoading && queue.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-ink-muted">
+                  {queue.length} paper{queue.length !== 1 ? "s" : ""} &middot;
+                  Keyboard: <kbd className="px-1 bg-surface-raised rounded">I</kbd>
+                  =Include{" "}
+                  <kbd className="px-1 bg-surface-raised rounded">E</kbd>=Exclude{" "}
+                  <kbd className="px-1 bg-surface-raised rounded">U</kbd>=Uncertain{" "}
+                  <kbd className="px-1 bg-surface-raised rounded">J/K</kbd>=Navigate
+                </span>
+              </div>
+
+              {queue.map((paper, idx) => (
+                <div
+                  key={paper.ppId}
+                  className={cn(
+                    "border rounded-lg p-4 transition-all cursor-pointer",
+                    idx === activeIndex
+                      ? "border-brand/40 bg-brand/5 ring-1 ring-brand/20"
+                      : "border-border hover:border-brand/20",
+                    paper.screeningDecision === "include" &&
+                      "border-emerald-500/30 bg-emerald-500/5",
+                    paper.screeningDecision === "exclude" &&
+                      "border-red-500/30 bg-red-500/5",
+                    paper.screeningDecision === "maybe" &&
+                      "border-amber-500/30 bg-amber-500/5"
+                  )}
+                  onClick={() => setActiveIndex(idx)}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div
+                        className="text-sm font-medium text-ink mb-1 cursor-pointer hover:text-brand"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setExpandedPaper(
+                            expandedPaper === paper.paperId
+                              ? null
+                              : paper.paperId
+                          );
+                        }}
+                      >
+                        {paper.title}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-ink-muted">
+                        {paper.journal && <span>{paper.journal}</span>}
+                        {paper.year && <span>({paper.year})</span>}
+                        {paper.citationCount != null && paper.citationCount > 0 && (
+                          <span>{paper.citationCount} cites</span>
+                        )}
+                        {paper.studyType && (
+                          <span className="px-1.5 py-0.5 bg-surface-raised rounded">
+                            {paper.studyType}
+                          </span>
+                        )}
+                        {paper.priority != null && paper.priority > 0 && (
+                          <span className="px-1.5 py-0.5 bg-brand/10 text-brand rounded">
+                            Priority: {Math.round(paper.priority * 100)}%
+                          </span>
+                        )}
+                        {/* Reviewer-screened indicator */}
+                        {paper.reviewerScreened === true && (
+                          <span className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-600 rounded flex items-center gap-0.5">
+                            <User size={10} />
+                            Your decision recorded
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  )}
 
-                  {/* Quick decision buttons */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDecision(paper.paperId, "include");
-                      }}
-                      className={cn(
-                        "px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 transition-colors",
-                        paper.screeningDecision === "include"
-                          ? "bg-emerald-500 text-white"
-                          : "border border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10"
+                    {/* Decision badges */}
+                    <div className="flex items-center gap-2 shrink-0 ml-3">
+                      {!blindedMode && paper.aiDecision && (
+                        <DecisionBadge
+                          decision={paper.aiDecision}
+                          icon={<Robot size={12} />}
+                        />
                       )}
-                    >
-                      <CheckCircle weight="bold" size={14} />
-                      Include
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDecision(paper.paperId, "exclude");
-                      }}
-                      className={cn(
-                        "px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 transition-colors",
-                        paper.screeningDecision === "exclude"
-                          ? "bg-red-500 text-white"
-                          : "border border-red-500/30 text-red-600 hover:bg-red-500/10"
-                      )}
-                    >
-                      <XCircle weight="bold" size={14} />
-                      Exclude
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDecision(paper.paperId, "maybe");
-                      }}
-                      className={cn(
-                        "px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 transition-colors",
-                        paper.screeningDecision === "maybe"
-                          ? "bg-amber-500 text-white"
-                          : "border border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
-                      )}
-                    >
-                      <Warning weight="bold" size={14} />
-                      Uncertain
-                    </button>
-
-                    {/* Links */}
-                    <div className="flex items-center gap-2 ml-auto text-xs">
-                      {paper.doi && (
-                        <a
-                          href={`https://doi.org/${paper.doi}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-brand hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          DOI
-                        </a>
-                      )}
-                      {paper.pmid && (
-                        <a
-                          href={`https://pubmed.ncbi.nlm.nih.gov/${paper.pmid}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-brand hover:underline"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          PubMed
-                        </a>
+                      {paper.screeningDecision && (
+                        <DecisionBadge
+                          decision={paper.screeningDecision}
+                          icon={<User size={12} />}
+                        />
                       )}
                     </div>
                   </div>
+
+                  {/* Expanded: abstract + AI reasoning + decision buttons */}
+                  {(expandedPaper === paper.paperId || idx === activeIndex) && (
+                    <div className="mt-3 pt-3 border-t border-border/50">
+                      {/* Abstract */}
+                      {paper.abstract && (
+                        <p className="text-xs text-ink-muted mb-3 leading-relaxed line-clamp-6">
+                          {paper.abstract}
+                        </p>
+                      )}
+
+                      {/* AI reasoning (hidden in blinded mode) */}
+                      {!blindedMode && paper.aiReason && (
+                        <div className="mb-3 px-3 py-2 bg-surface-raised rounded text-xs">
+                          <span className="font-medium text-ink">
+                            AI reasoning:{" "}
+                          </span>
+                          <span className="text-ink-muted">{paper.aiReason}</span>
+                        </div>
+                      )}
+
+                      {/* Quick decision buttons */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDecision(paper.paperId, "include");
+                          }}
+                          className={cn(
+                            "px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 transition-colors",
+                            paper.screeningDecision === "include"
+                              ? "bg-emerald-500 text-white"
+                              : "border border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10"
+                          )}
+                        >
+                          <CheckCircle weight="bold" size={14} />
+                          Include
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDecision(paper.paperId, "exclude");
+                          }}
+                          className={cn(
+                            "px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 transition-colors",
+                            paper.screeningDecision === "exclude"
+                              ? "bg-red-500 text-white"
+                              : "border border-red-500/30 text-red-600 hover:bg-red-500/10"
+                          )}
+                        >
+                          <XCircle weight="bold" size={14} />
+                          Exclude
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDecision(paper.paperId, "maybe");
+                          }}
+                          className={cn(
+                            "px-3 py-1.5 rounded text-xs font-medium flex items-center gap-1 transition-colors",
+                            paper.screeningDecision === "maybe"
+                              ? "bg-amber-500 text-white"
+                              : "border border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                          )}
+                        >
+                          <Warning weight="bold" size={14} />
+                          Uncertain
+                        </button>
+
+                        {/* Links */}
+                        <div className="flex items-center gap-2 ml-auto text-xs">
+                          {paper.doi && (
+                            <a
+                              href={`https://doi.org/${paper.doi}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-brand hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              DOI
+                            </a>
+                          )}
+                          {paper.pmid && (
+                            <a
+                              href={`https://pubmed.ncbi.nlm.nih.gov/${paper.pmid}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-brand hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              PubMed
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ConflictRow — individual conflict resolution row
+// ---------------------------------------------------------------------------
+
+interface ConflictRowProps {
+  conflict: MultiReviewerConflict;
+  isResolving: boolean;
+  onResolve: (
+    paperId: number,
+    resolution: "include" | "exclude" | "maybe",
+    reason?: string
+  ) => Promise<void>;
+  isEven: boolean;
+}
+
+function ConflictRow({ conflict, isResolving, onResolve, isEven }: ConflictRowProps) {
+  const [showReasonInput, setShowReasonInput] = useState(false);
+  const [pendingResolution, setPendingResolution] = useState<"include" | "exclude" | "maybe" | null>(null);
+  const [reason, setReason] = useState("");
+
+  const initiateResolve = (resolution: "include" | "exclude" | "maybe") => {
+    setPendingResolution(resolution);
+    setShowReasonInput(true);
+  };
+
+  const confirmResolve = async () => {
+    if (!pendingResolution) return;
+    await onResolve(conflict.paperId, pendingResolution, reason || undefined);
+    setShowReasonInput(false);
+    setPendingResolution(null);
+    setReason("");
+  };
+
+  const cancelResolve = () => {
+    setShowReasonInput(false);
+    setPendingResolution(null);
+    setReason("");
+  };
+
+  // Truncate reviewer ID for display (show last 6 chars or use R1, R2, etc.)
+  const formatReviewer = (reviewerId: string, index: number) => {
+    if (reviewerId.startsWith("resolver:")) return "Arbiter";
+    return `Reviewer ${index + 1}`;
+  };
+
+  return (
+    <>
+      <tr className={cn("border-b border-border/50", isEven ? "bg-transparent" : "bg-surface-raised/30")}>
+        <td className="px-4 py-3">
+          <div className="text-sm font-medium text-ink leading-snug line-clamp-2 max-w-xs">
+            {conflict.paperTitle}
+          </div>
+        </td>
+        <td className="px-4 py-3">
+          <div className="flex flex-wrap items-center gap-2">
+            {conflict.decisions.map((d, idx) => (
+              <div key={d.reviewerId} className="flex items-center gap-1">
+                <span className="text-xs text-ink-muted">{formatReviewer(d.reviewerId, idx)}:</span>
+                <DecisionBadge
+                  decision={d.decision}
+                  icon={<Users size={10} />}
+                />
+              </div>
+            ))}
+          </div>
+        </td>
+        <td className="px-4 py-3 text-right">
+          {isResolving ? (
+            <CircleNotch weight="bold" className="animate-spin text-brand ml-auto" size={16} />
+          ) : !showReasonInput ? (
+            <div className="flex items-center justify-end gap-1">
+              <button
+                onClick={() => initiateResolve("include")}
+                className="px-2 py-1 text-xs rounded border border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10 transition-colors flex items-center gap-0.5"
+              >
+                <CheckCircle weight="bold" size={12} />
+                Include
+              </button>
+              <button
+                onClick={() => initiateResolve("exclude")}
+                className="px-2 py-1 text-xs rounded border border-red-500/30 text-red-600 hover:bg-red-500/10 transition-colors flex items-center gap-0.5"
+              >
+                <XCircle weight="bold" size={12} />
+                Exclude
+              </button>
+              <button
+                onClick={() => initiateResolve("maybe")}
+                className="px-2 py-1 text-xs rounded border border-amber-500/30 text-amber-600 hover:bg-amber-500/10 transition-colors flex items-center gap-0.5"
+              >
+                <Warning weight="bold" size={12} />
+                Maybe
+              </button>
+            </div>
+          ) : null}
+        </td>
+      </tr>
+      {/* Reason input row */}
+      {showReasonInput && (
+        <tr className={cn("border-b border-border", isEven ? "bg-transparent" : "bg-surface-raised/30")}>
+          <td colSpan={3} className="px-4 pb-3">
+            <div className="flex items-center gap-2 pt-1">
+              <span className="text-xs text-ink-muted shrink-0">
+                Resolving as{" "}
+                <strong
+                  className={cn(
+                    pendingResolution === "include"
+                      ? "text-emerald-600"
+                      : pendingResolution === "exclude"
+                        ? "text-red-600"
+                        : "text-amber-600"
+                  )}
+                >
+                  {pendingResolution}
+                </strong>
+                {" — "}
+                Add reason (optional):
+              </span>
+              <input
+                type="text"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") confirmResolve();
+                  if (e.key === "Escape") cancelResolve();
+                }}
+                placeholder="e.g., Meets primary outcome criteria"
+                className="flex-1 px-2 py-1 text-xs bg-surface-raised border border-border rounded outline-none focus:ring-1 focus:ring-brand/40"
+                autoFocus
+              />
+              <button
+                onClick={confirmResolve}
+                className="px-2 py-1 text-xs bg-brand text-white rounded hover:bg-brand/90"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={cancelResolve}
+                className="px-2 py-1 text-xs text-ink-muted hover:text-ink rounded hover:bg-surface-raised"
+              >
+                Cancel
+              </button>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
   );
 }

@@ -2,7 +2,9 @@
  * /api/systematic-review/screening-queue
  *
  * GET   — Get screening queue (papers to review, ordered by priority)
+ *         ?mode=conflicts — return human-reviewer conflict list
  * POST  — Record a human screening decision
+ *         body.action="resolve" — resolve a conflict with a final decision
  * PUT   — Trigger priority recomputation (active learning)
  */
 
@@ -18,8 +20,12 @@ import {
   getScreeningProgress,
   computeInterRaterAgreement,
   getUnblindedResults,
+  getReviewerProgress,
+  detectConflicts,
+  resolveConflict,
 } from "@/lib/systematic-review/dual-screening";
 import { updateScreeningPriorities } from "@/lib/systematic-review/active-learning";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // GET — Get screening queue + progress
@@ -49,43 +55,47 @@ export async function GET(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
       );
     }
 
+    // mode=conflicts — return multi-reviewer conflict list
+    if (mode === "conflicts") {
+      const conflicts = await detectConflicts(projectId, stage);
+      return NextResponse.json({ conflicts, total: conflicts.length });
+    }
+
     // Unblind mode: return full results with conflict detection
     if (mode === "unblind") {
       const results = await getUnblindedResults(projectId, stage);
-      const conflicts = results.filter((r) => r.isConflict);
-      const agreements = results.filter((r) => r.aiDecision && r.humanDecision && !r.isConflict);
+      const conflictsInResults = results.filter((r) => r.isConflict);
+      const agreements = results.filter(
+        (r) => r.aiDecision && r.humanDecision && !r.isConflict
+      );
       return NextResponse.json({
         results,
         summary: {
           total: results.length,
-          withBothDecisions: agreements.length + conflicts.length,
+          withBothDecisions: agreements.length + conflictsInResults.length,
           agreements: agreements.length,
-          conflicts: conflicts.length,
+          conflicts: conflictsInResults.length,
         },
       });
     }
 
-    const [queue, progress, agreement] = await Promise.all([
-      getScreeningQueue(projectId, stage, filter, { blinded }),
+    const [queue, progress, agreement, reviewerProgress] = await Promise.all([
+      getScreeningQueue(projectId, stage, filter, { blinded, reviewerId: userId }),
       getScreeningProgress(projectId),
       computeInterRaterAgreement(projectId),
+      getReviewerProgress(projectId, userId),
     ]);
 
-    return NextResponse.json({ queue, progress, agreement });
+    return NextResponse.json({ queue, progress, agreement, reviewerProgress });
   } catch (error) {
     console.error("Screening queue error", error);
     return NextResponse.json(
@@ -96,7 +106,7 @@ export async function GET(req: Request) {
 }
 
 // ---------------------------------------------------------------------------
-// POST — Record human decision
+// POST — Record human decision OR resolve a conflict
 // ---------------------------------------------------------------------------
 
 const decisionSchema = z.object({
@@ -105,13 +115,25 @@ const decisionSchema = z.object({
   decision: z.enum(["include", "exclude", "maybe"]),
   reason: z.string().optional(),
   stage: z.enum(["title_abstract", "full_text"]).default("title_abstract"),
+  action: z.literal("decide").optional(),
 });
+
+const resolveSchema = z.object({
+  projectId: z.number().int().positive(),
+  paperId: z.number().int().positive(),
+  stage: z.enum(["title_abstract", "full_text"]).default("title_abstract"),
+  resolution: z.enum(["include", "exclude", "maybe"]),
+  reason: z.string().optional(),
+  action: z.literal("resolve"),
+});
+
+const postSchema = z.union([resolveSchema, decisionSchema]);
 
 export async function POST(req: Request) {
   try {
     const userId = await getCurrentUserId();
     const body = await req.json();
-    const parsed = decisionSchema.safeParse(body);
+    const parsed = postSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json(
@@ -120,34 +142,44 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(
-        and(
-          eq(projects.id, parsed.data.projectId),
-          eq(projects.user_id, userId)
-        )
-      )
-      .limit(1);
-
-    if (!project) {
+    // Verify access (owner or collaborator)
+    const access = await verifyProjectAccess(parsed.data.projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
       );
     }
 
+    // Handle conflict resolution
+    if (parsed.data.action === "resolve") {
+      await resolveConflict(
+        parsed.data.projectId,
+        parsed.data.paperId,
+        parsed.data.stage,
+        parsed.data.resolution,
+        userId,
+        parsed.data.reason
+      );
+
+      const progress = await getScreeningProgress(parsed.data.projectId);
+      return NextResponse.json({ success: true, progress });
+    }
+
+    // Handle regular screening decision — pass userId as the reviewerId
     await recordHumanDecision({
       ...parsed.data,
       userId,
+      reviewerId: userId,
     });
 
-    // Get updated progress
-    const progress = await getScreeningProgress(parsed.data.projectId);
+    // Get updated progress (overall + per-reviewer)
+    const [progress, reviewerProgress] = await Promise.all([
+      getScreeningProgress(parsed.data.projectId),
+      getReviewerProgress(parsed.data.projectId, userId),
+    ]);
 
-    return NextResponse.json({ success: true, progress });
+    return NextResponse.json({ success: true, progress, reviewerProgress });
   } catch (error) {
     console.error("Screening decision error", error);
     return NextResponse.json(
@@ -174,14 +206,9 @@ export async function PUT(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
