@@ -1,7 +1,10 @@
 "use client";
 
-import { Export, PencilSimple, Eye, FilePdf, Presentation, Robot, Target, LinkSimple, ChartBar, ChatCircle, ClockCounterClockwise, VideoCamera } from "@phosphor-icons/react";
+import { useState } from "react";
+import { Export, PencilSimple, Eye, FilePdf, Presentation, Robot, Target, LinkSimple, ChartBar, ChatCircle, ClockCounterClockwise, VideoCamera, ShareNetwork } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { SocialExportModal } from "./social-export-modal";
+import type { SlideData } from "@/lib/presentation/social-export";
 
 interface SlideToolbarProps {
   isEditing: boolean;
@@ -23,6 +26,10 @@ interface SlideToolbarProps {
   showComments?: boolean;
   showVersionHistory?: boolean;
   unresolvedCommentCount?: number;
+  // Social export props
+  socialSlides?: SlideData[];
+  socialThemeKey?: string;
+  deckTitle?: string;
 }
 
 export function SlideToolbar({
@@ -45,8 +52,14 @@ export function SlideToolbar({
   showComments,
   showVersionHistory,
   unresolvedCommentCount,
+  socialSlides,
+  socialThemeKey = "modern",
+  deckTitle = "Presentation",
 }: SlideToolbarProps) {
+  const [showSocialExport, setShowSocialExport] = useState(false);
+
   return (
+    <>
     <div className="flex items-center gap-2 px-4 py-2 border-b border-border-subtle">
       <button
         onClick={onToggleEdit}
@@ -153,6 +166,16 @@ export function SlideToolbar({
 
       <div className="flex-1" />
 
+      {socialSlides && socialSlides.length > 0 && (
+        <button
+          onClick={() => setShowSocialExport(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+        >
+          <ShareNetwork size={14} />
+          Social Export
+        </button>
+      )}
+
       {onShare && (
         <button
           onClick={onShare}
@@ -198,5 +221,15 @@ export function SlideToolbar({
         {exporting ? "Exporting..." : "Export PPTX"}
       </button>
     </div>
+
+    {showSocialExport && socialSlides && socialSlides.length > 0 && (
+      <SocialExportModal
+        slides={socialSlides}
+        themeKey={socialThemeKey}
+        deckTitle={deckTitle}
+        onClose={() => setShowSocialExport(false)}
+      />
+    )}
+  </>
   );
 }
