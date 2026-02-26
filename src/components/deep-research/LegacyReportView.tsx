@@ -11,18 +11,18 @@ export function LegacyReportView({ report }: LegacyReportViewProps) {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Summary */}
-      <section className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6">
-        <h2 className="text-lg font-bold text-white mb-3">Summary</h2>
-        <p className="text-gray-300 leading-relaxed text-[15px]">{report.summary}</p>
+      <section className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6">
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Summary</h2>
+        <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-[15px]">{report.summary}</p>
       </section>
 
       {/* Key Findings */}
       {report.keyFindings.length > 0 && (
-        <section className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-white mb-3">Key Findings</h2>
+        <section className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Key Findings</h2>
           <ul className="space-y-2">
             {report.keyFindings.map((finding, idx) => (
-              <li key={idx} className="flex gap-3 text-gray-300 text-[15px]">
+              <li key={idx} className="flex gap-3 text-gray-600 dark:text-gray-300 text-[15px]">
                 <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-semibold mt-0.5">
                   {idx + 1}
                 </span>
@@ -35,18 +35,18 @@ export function LegacyReportView({ report }: LegacyReportViewProps) {
 
       {/* Perspectives */}
       {report.perspectives.length > 0 && (
-        <section className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-white mb-4">Perspectives</h2>
+        <section className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Perspectives</h2>
           <div className="space-y-4">
             {report.perspectives.map((perspective, idx) => (
               <div key={idx} className="border-l-2 border-purple-500/40 pl-4">
-                <h3 className="text-sm font-semibold text-white mb-1">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
                   {perspective.name}
                   <span className="ml-2 text-gray-500 font-normal text-xs">
                     ({perspective.sourceCount} sources)
                   </span>
                 </h3>
-                <p className="text-gray-300 text-sm leading-relaxed">{perspective.findings}</p>
+                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">{perspective.findings}</p>
               </div>
             ))}
           </div>
@@ -55,11 +55,11 @@ export function LegacyReportView({ report }: LegacyReportViewProps) {
 
       {/* Gaps & Contradictions */}
       {(report.gaps.length > 0 || report.contradictions.length > 0) && (
-        <section className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6">
+        <section className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6">
           {report.gaps.length > 0 && (
             <>
-              <h2 className="text-lg font-bold text-white mb-3">Research Gaps</h2>
-              <ul className="list-disc list-outside ml-5 space-y-1.5 text-gray-300 text-sm mb-6">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Research Gaps</h2>
+              <ul className="list-disc list-outside ml-5 space-y-1.5 text-gray-600 dark:text-gray-300 text-sm mb-6">
                 {report.gaps.map((gap, idx) => (
                   <li key={idx} className="leading-relaxed">{gap}</li>
                 ))}
@@ -68,8 +68,8 @@ export function LegacyReportView({ report }: LegacyReportViewProps) {
           )}
           {report.contradictions.length > 0 && (
             <>
-              <h2 className="text-lg font-bold text-white mb-3">Contradictions</h2>
-              <ul className="list-disc list-outside ml-5 space-y-1.5 text-gray-300 text-sm">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Contradictions</h2>
+              <ul className="list-disc list-outside ml-5 space-y-1.5 text-gray-600 dark:text-gray-300 text-sm">
                 {report.contradictions.map((item, idx) => (
                   <li key={idx} className="leading-relaxed">{item}</li>
                 ))}
@@ -81,8 +81,8 @@ export function LegacyReportView({ report }: LegacyReportViewProps) {
 
       {/* Sources */}
       {report.sources.length > 0 && (
-        <section className="bg-gray-800/50 border border-gray-700/50 rounded-xl p-6">
-          <h2 className="text-lg font-bold text-white mb-4">
+        <section className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             Sources ({report.totalSources})
           </h2>
           <div className="space-y-3">
@@ -98,10 +98,10 @@ export function LegacyReportView({ report }: LegacyReportViewProps) {
                     {idx + 1}.
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-gray-200 font-medium leading-snug line-clamp-1">
+                    <p className="text-gray-700 dark:text-gray-200 font-medium leading-snug line-clamp-1">
                       {source.title}
                     </p>
-                    <p className="text-gray-400 text-xs mt-0.5">
+                    <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
                       {authorsText} &middot; {source.journal} ({source.year})
                     </p>
                     {source.doi && (

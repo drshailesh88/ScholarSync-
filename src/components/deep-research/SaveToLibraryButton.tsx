@@ -106,7 +106,7 @@ export function SaveToLibraryButton({
 
       {/* Error tooltip */}
       {state === "error" && errorMessage && (
-        <div className="absolute top-full mt-2 left-0 w-64 p-2 bg-gray-800 border border-red-500/30 rounded-lg text-xs text-red-400 shadow-lg z-10">
+        <div className="absolute top-full mt-2 left-0 w-64 p-2 bg-white dark:bg-gray-800 border border-red-500/30 rounded-lg text-xs text-red-400 shadow-lg z-10">
           {errorMessage}
         </div>
       )}

@@ -69,16 +69,16 @@ function CitationTooltip({ source, position, onClose }: CitationTooltipProps) {
   return (
     <div
       ref={ref}
-      className="fixed z-50 w-80 p-4 bg-gray-800 border border-gray-600 rounded-lg shadow-2xl text-sm"
+      className="fixed z-50 w-80 p-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-2xl text-sm"
       style={{
         top: Math.min(position.top, window.innerHeight - 240),
         left: Math.min(position.left, window.innerWidth - 340),
       }}
     >
-      <h4 className="font-semibold text-white text-sm leading-snug mb-1.5 line-clamp-2">
+      <h4 className="font-semibold text-gray-900 dark:text-white text-sm leading-snug mb-1.5 line-clamp-2">
         {source.title}
       </h4>
-      <p className="text-gray-400 text-xs mb-1">{authorsText}</p>
+      <p className="text-gray-500 dark:text-gray-400 text-xs mb-1">{authorsText}</p>
       <p className="text-gray-400 text-xs mb-1.5">
         {source.journal} {source.year && `(${source.year})`}
         {source.citationCount > 0 && (
@@ -91,7 +91,7 @@ function CitationTooltip({ source, position, onClose }: CitationTooltipProps) {
         <EvidenceBadge source={source} />
       </div>
       {source.abstract && (
-        <p className="text-gray-400 text-xs leading-relaxed line-clamp-3 mb-2">
+        <p className="text-gray-500 dark:text-gray-400 text-xs leading-relaxed line-clamp-3 mb-2">
           {source.abstract}
         </p>
       )}

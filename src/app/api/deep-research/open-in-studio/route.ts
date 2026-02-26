@@ -25,19 +25,24 @@ export async function POST(request: NextRequest) {
 
     const docTitle = `Literature Review: ${topic.length > 80 ? topic.slice(0, 77) + "..." : topic}`;
 
-    // 1. Save the research session (if not already saved)
-    await db.insert(deepResearchSessions).values({
-      userId,
-      originalQuery: topic,
-      finalReport: markdownReport,
-      keyFindings: keyFindings || [],
-      gapsIdentified: gaps || [],
-      researchPlan: { mode: mode || "standard", sources: sources || [] },
-      status: "completed",
-      papersFound: Array.isArray(sources) ? sources.length : 0,
-      papersRead: Array.isArray(sources) ? sources.length : 0,
-      completedAt: new Date(),
-    });
+    // 1. Save the research session (best-effort — don't block if FK fails)
+    try {
+      await db.insert(deepResearchSessions).values({
+        userId,
+        originalQuery: topic,
+        finalReport: markdownReport,
+        keyFindings: keyFindings || [],
+        gapsIdentified: gaps || [],
+        researchPlan: { mode: mode || "standard", sources: sources || [] },
+        status: "completed",
+        papersFound: Array.isArray(sources) ? sources.length : 0,
+        papersRead: Array.isArray(sources) ? sources.length : 0,
+        completedAt: new Date(),
+      });
+    } catch (sessionErr) {
+      // Non-fatal: log but continue creating the studio document
+      console.warn("[open-in-studio] Could not save research session:", sessionErr);
+    }
 
     // 2. Create a project for this research
     const [project] = await db

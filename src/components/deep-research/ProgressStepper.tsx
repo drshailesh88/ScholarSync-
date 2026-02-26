@@ -17,11 +17,11 @@ export function ProgressStepper({ stages, currentMessage, progress }: ProgressSt
         {/* Progress bar */}
         {typeof progress === "number" && progress > 0 && (
           <div className="mb-4">
-            <div className="flex items-center justify-between text-xs text-gray-400 mb-1.5">
+            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-1.5">
               <span>Progress</span>
               <span>{Math.round(progress)}%</span>
             </div>
-            <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
               <div
                 className="h-full bg-blue-500 rounded-full transition-all duration-700 ease-out"
                 style={{ width: `${Math.min(progress, 100)}%` }}
@@ -47,7 +47,7 @@ export function ProgressStepper({ stages, currentMessage, progress }: ProgressSt
                       className={`absolute left-[11px] top-6 w-px ${
                         isActive && currentMessage ? "h-12" : "h-6"
                       } ${
-                        isCompleted ? "bg-blue-500/50" : "bg-gray-700/50"
+                        isCompleted ? "bg-blue-500/50" : "bg-gray-300 dark:bg-gray-700/50"
                       }`}
                     />
                   )}
@@ -71,10 +71,10 @@ export function ProgressStepper({ stages, currentMessage, progress }: ProgressSt
                       isActive
                         ? "text-blue-400 font-medium"
                         : isCompleted
-                          ? "text-gray-400"
+                          ? "text-gray-500 dark:text-gray-400"
                           : isError
                             ? "text-red-400"
-                            : "text-gray-600"
+                            : "text-gray-400 dark:text-gray-600"
                     }`}
                   >
                     {label}

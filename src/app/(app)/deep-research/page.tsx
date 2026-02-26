@@ -364,9 +364,9 @@ export default function DeepResearchPage() {
   const streamingMarkdown = streamingSections.map((s) => s.markdown).join("\n\n");
 
   return (
-    <div className="flex-1 min-h-screen bg-gray-950">
+    <div className="flex-1 min-h-screen bg-white dark:bg-gray-950">
       {/* Header area - always visible */}
-      <div className="sticky top-0 z-20 bg-gray-950/80 backdrop-blur-xl border-b border-gray-800/50 print:hidden">
+      <div className="sticky top-0 z-20 bg-white/80 dark:bg-gray-950/80 backdrop-blur-xl border-b border-gray-200 dark:border-gray-800/50 print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             {/* Title */}
@@ -375,7 +375,7 @@ export default function DeepResearchPage() {
                 <Microscope size={18} className="text-blue-400" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-white">Deep Research</h1>
+                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Deep Research</h1>
                 <p className="text-xs text-gray-500">Multi-perspective literature synthesis</p>
               </div>
             </div>
@@ -426,10 +426,10 @@ export default function DeepResearchPage() {
           <div className="max-w-2xl mx-auto space-y-8">
             {/* Hero text */}
             <div className="text-center space-y-3 pt-12">
-              <h2 className="text-3xl font-bold text-white">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                 What would you like to research?
               </h2>
-              <p className="text-gray-400 text-base max-w-lg mx-auto">
+              <p className="text-gray-500 dark:text-gray-400 text-base max-w-lg mx-auto">
                 Enter a research topic and we will synthesize findings from multiple
                 academic perspectives with full citations.
               </p>
@@ -443,12 +443,12 @@ export default function DeepResearchPage() {
                 onChange={(e) => setTopic(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management"
-                className="w-full bg-gray-800/50 border border-gray-700/50 rounded-xl px-5 py-4 text-white text-base placeholder-gray-500 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
+                className="w-full bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-base placeholder-gray-500 outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all"
               />
             </div>
 
             {/* Mode selector - segmented control */}
-            <div className="bg-gray-800/30 border border-gray-700/30 rounded-xl p-1.5 flex gap-1">
+            <div className="bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/30 rounded-xl p-1.5 flex gap-1">
               {RESEARCH_MODES.map((m) => {
                 const Icon = MODE_ICONS[m.id];
                 const isSelected = mode === m.id;
@@ -458,8 +458,8 @@ export default function DeepResearchPage() {
                     onClick={() => setMode(m.id)}
                     className={`flex-1 flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg text-center transition-all ${
                       isSelected
-                        ? "bg-gray-700/60 border border-gray-600/50 shadow-sm"
-                        : "hover:bg-gray-800/40"
+                        ? "bg-white dark:bg-gray-700/60 border border-gray-300 dark:border-gray-600/50 shadow-sm"
+                        : "hover:bg-gray-100 dark:hover:bg-gray-800/40"
                     }`}
                   >
                     <Icon
@@ -468,7 +468,7 @@ export default function DeepResearchPage() {
                     />
                     <span
                       className={`text-sm font-medium ${
-                        isSelected ? "text-white" : "text-gray-400"
+                        isSelected ? "text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400"
                       }`}
                     >
                       {m.label}
@@ -513,7 +513,7 @@ export default function DeepResearchPage() {
                 <Microscope size={28} className="text-purple-400 animate-pulse" />
               </div>
               <div>
-                <p className="text-white font-medium">{progressMessage}</p>
+                <p className="text-gray-900 dark:text-white font-medium">{progressMessage}</p>
                 <p className="text-gray-500 text-sm mt-1">
                   Preparing research plan for: {topic}
                 </p>
@@ -559,7 +559,7 @@ export default function DeepResearchPage() {
                       <Microscope size={28} className="text-blue-400 animate-pulse" />
                     </div>
                     <div>
-                      <p className="text-white font-medium">{progressMessage}</p>
+                      <p className="text-gray-900 dark:text-white font-medium">{progressMessage}</p>
                       <p className="text-gray-500 text-sm mt-1">
                         Researching: {topic}
                       </p>
@@ -576,8 +576,8 @@ export default function DeepResearchPage() {
           <div>
             {/* Topic & mode header */}
             <div className="mb-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-2">{report.topic}</h2>
-              <div className="flex items-center justify-center gap-3 text-sm text-gray-400">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{report.topic}</h2>
+              <div className="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                 <span className="capitalize">{report.mode} mode</span>
                 <span>&middot;</span>
                 <span>{report.totalSources} sources analyzed</span>
@@ -606,7 +606,7 @@ export default function DeepResearchPage() {
                   currentStageIdRef.current = null;
                   setTopic("");
                 }}
-                className="px-6 py-2.5 text-sm font-medium text-gray-300 bg-gray-800/50 border border-gray-700/50 rounded-lg hover:bg-gray-700/50 hover:text-white transition-colors"
+                className="px-6 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white transition-colors"
               >
                 Start New Research
               </button>
@@ -620,8 +620,8 @@ export default function DeepResearchPage() {
             <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
               <AlertCircle size={28} className="text-red-400" />
             </div>
-            <h3 className="text-lg font-semibold text-white">Research Failed</h3>
-            <p className="text-gray-400 text-sm">{error}</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Research Failed</h3>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">{error}</p>
             <button
               onClick={() => {
                 setPageState("idle");

@@ -69,16 +69,16 @@ export function ResearchPlanPreview({
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="bg-gray-800/50 border border-gray-700/50 rounded-xl overflow-hidden">
+      <div className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-gray-700/50 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700/50 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
               <Sparkles size={16} className="text-purple-400" />
             </div>
             <div>
-              <h3 className="text-white font-semibold text-sm">Research Plan</h3>
-              <p className="text-gray-400 text-xs">
+              <h3 className="text-gray-900 dark:text-white font-semibold text-sm">Research Plan</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-xs">
                 Review and customize the research perspectives before starting
               </p>
             </div>
@@ -86,7 +86,7 @@ export function ResearchPlanPreview({
           <button
             onClick={onRegenerate}
             disabled={isRegenerating}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-300 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 hover:text-white transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-700/50 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600/50 hover:text-gray-900 dark:hover:text-white transition-colors disabled:opacity-50"
           >
             <RefreshCw size={12} className={isRegenerating ? "animate-spin" : ""} />
             Regenerate
@@ -94,7 +94,7 @@ export function ResearchPlanPreview({
         </div>
 
         {/* Perspectives list */}
-        <div className="divide-y divide-gray-700/30">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700/30">
           {perspectives.map((perspective, pIdx) => (
             <div key={pIdx} className="px-6 py-3">
               {/* Perspective header */}
@@ -106,12 +106,12 @@ export function ResearchPlanPreview({
                   type="text"
                   value={perspective.name}
                   onChange={(e) => updatePerspectiveName(pIdx, e.target.value)}
-                  className="flex-1 bg-transparent text-white text-sm font-medium border-none outline-none focus:ring-0 placeholder-gray-500"
+                  className="flex-1 bg-transparent text-gray-900 dark:text-white text-sm font-medium border-none outline-none focus:ring-0 placeholder-gray-500"
                   placeholder="Perspective name..."
                 />
                 <button
                   onClick={() => toggleExpanded(pIdx)}
-                  className="p-1 text-gray-400 hover:text-gray-200 transition-colors"
+                  className="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
                 >
                   {expandedIndex === pIdx ? (
                     <ChevronUp size={16} />
@@ -133,7 +133,7 @@ export function ResearchPlanPreview({
                         type="text"
                         value={query}
                         onChange={(e) => updateQuery(pIdx, qIdx, e.target.value)}
-                        className="flex-1 bg-gray-900/50 border border-gray-700/50 rounded-lg px-3 py-1.5 text-gray-300 text-xs outline-none focus:border-blue-500/50 transition-colors placeholder-gray-600"
+                        className="flex-1 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700/50 rounded-lg px-3 py-1.5 text-gray-600 dark:text-gray-300 text-xs outline-none focus:border-blue-500/50 transition-colors placeholder-gray-400 dark:placeholder-gray-600"
                         placeholder="Search query..."
                       />
                       {perspective.queries.length > 1 && (
@@ -160,7 +160,7 @@ export function ResearchPlanPreview({
         </div>
 
         {/* Footer with confirm button */}
-        <div className="px-6 py-4 border-t border-gray-700/50 flex justify-end">
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700/50 flex justify-end">
           <button
             onClick={() => onConfirm(perspectives)}
             className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors"

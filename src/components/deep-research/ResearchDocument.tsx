@@ -63,7 +63,7 @@ function TableOfContents({ items, activeId, onNavigate, isOpen, onClose }: Table
                   } ${
                     activeId === item.id
                       ? "text-blue-400 bg-blue-500/10 font-medium"
-                      : "text-gray-400 hover:text-gray-200 hover:bg-gray-800/50"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/50"
                   }`}
                 >
                   {item.text}
@@ -78,10 +78,10 @@ function TableOfContents({ items, activeId, onNavigate, isOpen, onClose }: Table
       {isOpen && (
         <div className="fixed inset-0 z-40 lg:hidden print:hidden">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-          <nav className="absolute left-0 top-0 bottom-0 w-72 bg-gray-900 border-r border-gray-700 p-4 overflow-y-auto">
+          <nav className="absolute left-0 top-0 bottom-0 w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 p-4 overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-sm font-semibold text-white">Contents</h4>
-              <button onClick={onClose} className="p-1 text-gray-400 hover:text-white">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Contents</h4>
+              <button onClick={onClose} className="p-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                 <X size={16} />
               </button>
             </div>
@@ -98,7 +98,7 @@ function TableOfContents({ items, activeId, onNavigate, isOpen, onClose }: Table
                     } ${
                       activeId === item.id
                         ? "text-blue-400 bg-blue-500/10 font-medium"
-                        : "text-gray-300 hover:text-white hover:bg-gray-800/50"
+                        : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800/50"
                     }`}
                   >
                     {item.text}
@@ -199,7 +199,7 @@ export function ResearchDocument({
         return (
           <h2
             id={id}
-            className="text-xl font-bold text-white mt-10 mb-4 pb-2 border-b border-gray-700/50 scroll-mt-24"
+            className="text-xl font-bold text-gray-900 dark:text-white mt-10 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700/50 scroll-mt-24"
             {...props}
           >
             {children}
@@ -215,7 +215,7 @@ export function ResearchDocument({
         return (
           <h3
             id={id}
-            className="text-lg font-semibold text-gray-100 mt-8 mb-3 scroll-mt-24"
+            className="text-lg font-semibold text-gray-800 dark:text-gray-100 mt-8 mb-3 scroll-mt-24"
             {...props}
           >
             {children}
@@ -224,7 +224,7 @@ export function ResearchDocument({
       },
       h1: ({ children, ...props }) => (
         <h1
-          className="text-2xl font-bold text-white mt-8 mb-6 pb-3 border-b border-gray-600/50"
+          className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-6 pb-3 border-b border-gray-300 dark:border-gray-600/50"
           {...props}
         >
           {children}
@@ -233,7 +233,7 @@ export function ResearchDocument({
       p: ({ children }) => {
         if (typeof children === "string") {
           return (
-            <p className="text-gray-300 leading-relaxed mb-4 text-[15px]">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 text-[15px]">
               <ParsedCitationText
                 text={children}
                 sources={sources}
@@ -249,28 +249,28 @@ export function ResearchDocument({
         );
       },
       table: ({ children }) => (
-        <div className="overflow-x-auto my-6 rounded-lg border border-gray-700/50">
+        <div className="overflow-x-auto my-6 rounded-lg border border-gray-200 dark:border-gray-700/50">
           <table className="w-full text-sm">{children}</table>
         </div>
       ),
       thead: ({ children }) => (
-        <thead className="bg-gray-800/80 text-gray-200 text-left">{children}</thead>
+        <thead className="bg-gray-100 dark:bg-gray-800/80 text-gray-700 dark:text-gray-200 text-left">{children}</thead>
       ),
-      tbody: ({ children }) => <tbody className="divide-y divide-gray-700/30">{children}</tbody>,
+      tbody: ({ children }) => <tbody className="divide-y divide-gray-200 dark:divide-gray-700/30">{children}</tbody>,
       tr: ({ children }) => (
-        <tr className="hover:bg-gray-800/30 transition-colors even:bg-gray-800/15">
+        <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors even:bg-gray-100/50 dark:even:bg-gray-800/15">
           {children}
         </tr>
       ),
       th: ({ children }) => (
-        <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-gray-300 border-b border-gray-700/50">
+        <th className="px-4 py-3 font-semibold text-xs uppercase tracking-wider text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700/50">
           {children}
         </th>
       ),
       td: ({ children }) => {
         if (typeof children === "string") {
           return (
-            <td className="px-4 py-3 text-gray-300 text-sm">
+            <td className="px-4 py-3 text-gray-600 dark:text-gray-300 text-sm">
               <ParsedCitationText
                 text={children}
                 sources={sources}
@@ -282,17 +282,17 @@ export function ResearchDocument({
         return <td className="px-4 py-3 text-gray-300 text-sm">{children}</td>;
       },
       blockquote: ({ children }) => (
-        <blockquote className="border-l-4 border-blue-500/50 pl-4 my-4 text-gray-400 italic bg-gray-800/20 py-2 rounded-r-lg">
+        <blockquote className="border-l-4 border-blue-500/50 pl-4 my-4 text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800/20 py-2 rounded-r-lg">
           {children}
         </blockquote>
       ),
       ul: ({ children }) => (
-        <ul className="list-disc list-outside ml-6 mb-4 space-y-1.5 text-gray-300 text-[15px]">
+        <ul className="list-disc list-outside ml-6 mb-4 space-y-1.5 text-gray-600 dark:text-gray-300 text-[15px]">
           {children}
         </ul>
       ),
       ol: ({ children }) => (
-        <ol className="list-decimal list-outside ml-6 mb-4 space-y-1.5 text-gray-300 text-[15px]">
+        <ol className="list-decimal list-outside ml-6 mb-4 space-y-1.5 text-gray-600 dark:text-gray-300 text-[15px]">
           {children}
         </ol>
       ),
@@ -311,9 +311,9 @@ export function ResearchDocument({
         return <li className="leading-relaxed pl-1">{children}</li>;
       },
       strong: ({ children }) => (
-        <strong className="font-semibold text-white">{children}</strong>
+        <strong className="font-semibold text-gray-900 dark:text-white">{children}</strong>
       ),
-      em: ({ children }) => <em className="italic text-gray-200">{children}</em>,
+      em: ({ children }) => <em className="italic text-gray-700 dark:text-gray-200">{children}</em>,
       a: ({ href, children }) => (
         <a
           href={href}
@@ -328,14 +328,14 @@ export function ResearchDocument({
         const isInline = !codeClassName;
         if (isInline) {
           return (
-            <code className="bg-gray-800 text-emerald-400 text-sm px-1.5 py-0.5 rounded font-mono">
+            <code className="bg-gray-100 dark:bg-gray-800 text-emerald-400 text-sm px-1.5 py-0.5 rounded font-mono">
               {children}
             </code>
           );
         }
         return (
           <code
-            className={`block bg-gray-900 border border-gray-700/50 rounded-lg p-4 overflow-x-auto text-sm font-mono text-gray-300 my-4 ${codeClassName || ""}`}
+            className={`block bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-lg p-4 overflow-x-auto text-sm font-mono text-gray-600 dark:text-gray-300 my-4 ${codeClassName || ""}`}
             {...props}
           >
             {children}
@@ -343,7 +343,7 @@ export function ResearchDocument({
         );
       },
       pre: ({ children }) => <pre className="my-4">{children}</pre>,
-      hr: () => <hr className="my-8 border-gray-700/50" />,
+      hr: () => <hr className="my-8 border-gray-200 dark:border-gray-700/50" />,
     }),
     [sources, scrollToReference]
   );
@@ -355,10 +355,10 @@ export function ResearchDocument({
         {sources.length > 0 && (
           <button
             onClick={() => setCitationsPanelOpen(true)}
-            className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition-colors"
+            className="w-12 h-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             title="Citations"
           >
-            <BookOpen size={20} className="text-gray-300" />
+            <BookOpen size={20} className="text-gray-600 dark:text-gray-300" />
           </button>
         )}
         <button
@@ -366,7 +366,7 @@ export function ResearchDocument({
           className="w-12 h-12 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-700 transition-colors"
           title="Table of Contents"
         >
-          <List size={20} className="text-gray-300" />
+          <List size={20} className="text-gray-600 dark:text-gray-300" />
         </button>
       </div>
 
@@ -392,8 +392,8 @@ export function ResearchDocument({
 
         {/* References section */}
         {sources.length > 0 && (
-          <section id="references" className="mt-12 pt-8 border-t border-gray-700/50 scroll-mt-24">
-            <h2 className="text-xl font-bold text-white mb-6">References</h2>
+          <section id="references" className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700/50 scroll-mt-24">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">References</h2>
             <ol className="space-y-4 list-none p-0">
               {sources.slice(0, 50).map((source, idx) => {
                 const authorsText =
@@ -415,10 +415,10 @@ export function ResearchDocument({
                       [{idx + 1}]
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-gray-200 font-medium leading-snug">
+                      <p className="text-gray-700 dark:text-gray-200 font-medium leading-snug">
                         {source.title}
                       </p>
-                      <p className="text-gray-400 text-xs mt-1">
+                      <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">
                         {authorsText}
                       </p>
                       <p className="text-gray-500 text-xs mt-0.5">
@@ -483,7 +483,7 @@ export function ResearchDocument({
               <div className="sticky top-24">
                 <button
                   onClick={() => setCitationsPanelOpen(true)}
-                  className="p-2 text-gray-500 hover:text-gray-300 hover:bg-gray-800/50 rounded-lg transition-colors"
+                  className="p-2 text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-colors"
                   title="Open Citations Panel"
                 >
                   <BookOpen size={18} />

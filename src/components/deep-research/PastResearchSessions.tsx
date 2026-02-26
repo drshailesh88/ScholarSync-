@@ -65,7 +65,7 @@ export function PastResearchSessions({ onLoadSession }: PastResearchSessionsProp
     <div className="mt-12">
       <div className="flex items-center gap-2 mb-4">
         <Clock size={16} className="text-gray-500" />
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+        <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
           Past Research
         </h3>
       </div>
@@ -79,13 +79,13 @@ export function PastResearchSessions({ onLoadSession }: PastResearchSessionsProp
             <button
               key={session.id}
               onClick={() => onLoadSession(session.id)}
-              className="w-full text-left flex items-center gap-3 px-4 py-3 bg-gray-800/30 border border-gray-700/30 rounded-xl hover:bg-gray-800/60 hover:border-gray-600/40 transition-all group"
+              className="w-full text-left flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800/30 border border-gray-200 dark:border-gray-700/30 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800/60 hover:border-gray-300 dark:hover:border-gray-600/40 transition-all group"
             >
-              <div className="w-9 h-9 rounded-lg bg-gray-700/40 flex items-center justify-center shrink-0">
-                <FileText size={16} className="text-gray-400 group-hover:text-blue-400 transition-colors" />
+              <div className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-700/40 flex items-center justify-center shrink-0">
+                <FileText size={16} className="text-gray-500 dark:text-gray-400 group-hover:text-blue-400 transition-colors" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-200 group-hover:text-white truncate transition-colors">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white truncate transition-colors">
                   {session.topic}
                 </p>
                 <p className="text-xs text-gray-500 mt-0.5">
@@ -96,7 +96,7 @@ export function PastResearchSessions({ onLoadSession }: PastResearchSessionsProp
                   {relativeDate}
                 </p>
               </div>
-              <ChevronRight size={16} className="text-gray-600 group-hover:text-gray-400 shrink-0 transition-colors" />
+              <ChevronRight size={16} className="text-gray-400 dark:text-gray-600 group-hover:text-gray-500 dark:group-hover:text-gray-400 shrink-0 transition-colors" />
             </button>
           );
         })}
