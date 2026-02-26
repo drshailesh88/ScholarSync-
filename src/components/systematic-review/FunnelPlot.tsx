@@ -47,6 +47,7 @@ export function FunnelPlot({
   const displayEffect = (val: number) =>
     effectType === "OR" || effectType === "RR" ? Math.exp(val) : val;
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const data = useMemo(() => {
     return studies.map((s) => ({
       name: s.studyLabel,

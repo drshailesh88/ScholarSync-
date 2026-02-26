@@ -34,7 +34,7 @@ export default function LiveJoinPage() {
             Join Live Session
           </h1>
           <p className="text-sm text-white/50">
-            Enter the 6-character code shown on the presenter's screen
+            Enter the 6-character code shown on the presenter&apos;s screen
           </p>
         </div>
 

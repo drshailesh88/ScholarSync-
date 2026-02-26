@@ -232,9 +232,11 @@ export function useCommentCounts(deckId: number) {
     }
   }, [deckId]);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     refresh();
   }, [refresh]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return { counts, totalUnresolved, refresh };
 }

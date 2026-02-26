@@ -52,11 +52,13 @@ export function RecordingPreview({
   const [errorMsg, setErrorMsg] = useState("");
 
   // Create object URL
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const url = URL.createObjectURL(blob);
     setVideoUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [blob]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Play / pause
   const togglePlay = useCallback(() => {

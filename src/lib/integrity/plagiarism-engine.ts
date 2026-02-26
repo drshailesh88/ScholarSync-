@@ -176,13 +176,13 @@ function normalizeText(text: string): string {
 }
 
 /** Split text into word tokens. */
-function tokenize(text: string): string[] {
+export function tokenize(text: string): string[] {
   const normalized = normalizeText(text);
   return normalized.split(" ").filter((w) => w.length > 0);
 }
 
 /** Create k-shingles (k consecutive words joined by space). */
-function createShingles(tokens: string[], k: number = SHINGLE_K): Set<number> {
+export function createShingles(tokens: string[], k: number = SHINGLE_K): Set<number> {
   const shingles = new Set<number>();
   if (tokens.length < k) {
     // If text is too short, use what we have as a single shingle
@@ -207,7 +207,7 @@ function hashShingle(shingle: string): number {
 // ── MinHash ────────────────────────────────────────────────────────
 
 /** Compute a MinHash signature for a set of shingle hashes. */
-function computeMinHash(shingles: Set<number>): Uint32Array {
+export function computeMinHash(shingles: Set<number>): Uint32Array {
   const signature = new Uint32Array(NUM_HASHES).fill(MAX_HASH);
 
   const shingleArr = Array.from(shingles);
@@ -228,7 +228,7 @@ function computeMinHash(shingles: Set<number>): Uint32Array {
 }
 
 /** Estimate Jaccard similarity from two MinHash signatures. */
-function estimateJaccard(sigA: Uint32Array, sigB: Uint32Array): number {
+export function estimateJaccard(sigA: Uint32Array, sigB: Uint32Array): number {
   let matches = 0;
   for (let i = 0; i < NUM_HASHES; i++) {
     if (sigA[i] === sigB[i]) {
@@ -546,7 +546,7 @@ export async function runPlagiarismCheck(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
 
-  let allPapers: ScholarlyPaper[] = [];
+  const allPapers: ScholarlyPaper[] = [];
 
   try {
     // Fire all API calls in parallel — one per key phrase per API

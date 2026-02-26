@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -263,12 +264,12 @@ export default function LiveSessionPage() {
             Cannot Join Session
           </h1>
           <p className="text-white/50 mb-6">{error}</p>
-          <a
+          <Link
             href="/live"
             className="px-6 py-2.5 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-400 transition-colors"
           >
             Try Another Code
-          </a>
+          </Link>
         </div>
       </div>
     );

@@ -202,7 +202,7 @@ export async function runSnowballing(
 
     result.sessionIds.push(session.id);
 
-    let discovered: Array<{
+    const discovered: Array<{
       paper: UnifiedSearchResult;
       dir: "forward" | "backward";
     }> = [];

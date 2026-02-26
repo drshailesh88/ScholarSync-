@@ -77,6 +77,7 @@ export function useCollaborativeSlides(
 
   // Track whether initialSlides changed (e.g. on deck reload)
   const prevInitialRef = useRef(initialSlides);
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (prevInitialRef.current !== initialSlides) {
       prevInitialRef.current = initialSlides;
@@ -86,6 +87,7 @@ export function useCollaborativeSlides(
       }
     }
   }, [initialSlides, activeSlideId]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const activeSlide = slides.find((s) => s.id === activeSlideId) ?? null;
 

@@ -446,7 +446,7 @@ export async function runDeepResearch(
   await executeResearch(tree, resolvedConfig, onProgress);
 
   // Collect Round 1 results
-  let allResults: UnifiedSearchResult[] = [];
+  const allResults: UnifiedSearchResult[] = [];
   const perspectiveMap = buildPerspectiveMap(tree);
 
   for (const node of tree.root.children) {
