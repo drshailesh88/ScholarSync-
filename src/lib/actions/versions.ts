@@ -218,7 +218,10 @@ export async function restoreVersion(
       title: snapshot.deck.title,
       theme: snapshot.deck.theme ?? "modern",
       themeConfig: snapshot.deck.themeConfig as Record<string, unknown>,
-      audienceType: snapshot.deck.audienceType as "general" | "academic" | "industry" | "committee" | null,
+      audienceType: snapshot.deck.audienceType as
+        | "thesis_defense" | "conference" | "journal_club" | "classroom" | "general"
+        | "grant_presentation" | "poster_session" | "systematic_review" | "patient_case" | "grand_rounds"
+        | null,
       templateId: snapshot.deck.templateId,
       citationStyle: snapshot.deck.citationStyle ?? "apa",
       institutionKit: snapshot.deck.institutionKit as Record<string, unknown>,
@@ -235,7 +238,13 @@ export async function restoreVersion(
       snapshot.slides.map((s) => ({
         deckId,
         sortOrder: s.sortOrder,
-        layout: s.layout as "title_content" | "title_only" | "two_column" | "blank" | "section_header" | "image_full" | "comparison" | "quote" | null,
+        layout: s.layout as
+          | "title_slide" | "title_content" | "two_column" | "section_header"
+          | "image_text" | "chart_slide" | "table_slide" | "quote_slide"
+          | "comparison" | "blank"
+          | "bibliography_slide" | "methodology" | "results_summary" | "key_findings"
+          | "timeline_slide" | "stat_overview" | "three_column" | "big_number"
+          | null,
         title: s.title,
         subtitle: s.subtitle,
         contentBlocks: (s.contentBlocks ?? []) as Record<string, unknown>[],
