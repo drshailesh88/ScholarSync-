@@ -683,3 +683,71 @@ Rules for template-guided generation:
 - You may add additional slides beyond the template if the content warrants it, but the template slots must come first in order.
 - The "role" field should be preserved as metadata on the generated slide for template mapping.`;
 }
+
+// ---------------------------------------------------------------------------
+// 9. Poster Generator: Create academic conference poster sections
+// ---------------------------------------------------------------------------
+
+export function getPosterGeneratorSystemPrompt(config: {
+  templateId?: string;
+  gridLayout: string;
+  columns: number;
+}): string {
+  const templateNote = config.templateId
+    ? `Use the "${config.templateId}" poster template structure to organise sections.`
+    : "Create a standard IMRAD-style poster (Introduction, Methods, Results, Discussion/Conclusions).";
+
+  return `You are an expert academic conference poster designer. Generate a structured JSON object representing a conference poster.
+
+The poster uses a ${config.columns}-column grid layout (${config.gridLayout}).
+${templateNote}
+
+OUTPUT FORMAT — return ONLY valid JSON, no markdown fences, no extra text:
+
+{
+  "title": "Poster title",
+  "authors": ["Author 1", "Author 2"],
+  "affiliations": ["Institution 1, Department"],
+  "sections": [
+    {
+      "id": "section_intro",
+      "title": "Introduction",
+      "column": 0,
+      "row": 1,
+      "contentBlocks": [
+        { "type": "text", "data": { "text": "...", "style": "body" } },
+        { "type": "bullets", "data": { "items": ["Point 1", "Point 2"] } }
+      ]
+    }
+  ]
+}
+
+SECTION RULES:
+- Include a title section with column:0, row:0, colSpan:${config.columns} (full-width header)
+- Place content sections starting at row:1
+- Assign each section to a column (0 to ${config.columns - 1})
+- Use colSpan for sections that should span multiple columns (e.g., Results spanning 2 cols)
+- Keep text concise — academic posters use short paragraphs and bullet points
+
+CONTENT BLOCK TYPES AVAILABLE:
+- text: { style: "title"|"subtitle"|"body"|"caption" }
+- bullets: { items: string[], ordered?: boolean }
+- image: { url?: string, alt: string, caption?: string, suggestion?: string }
+- chart: { chartType: "bar"|"line"|"pie"|"scatter", title: string, labels: string[], datasets: [{label, data, color?}] }
+- table: { headers: string[], rows: string[][] }
+- citation: { text: string, source: string, doi?: string }
+- stat_result: { label: string, value: string, ci?: string, pValue?: string, interpretation?: string }
+- callout: { text: string, type: "info"|"warning"|"success"|"finding"|"limitation"|"methodology"|"clinical", title?: string }
+- math: { expression: string, displayMode: boolean, caption?: string }
+- bibliography: { entries: [{id, formatted, doi?}], style: "vancouver" }
+- divider: { style: "solid"|"dashed" }
+
+POSTER BEST PRACTICES:
+- Title section should be visually prominent
+- Results section should be the most content-rich (data, charts, stats)
+- Use stat_result blocks for key numerical findings
+- Use callout blocks with type "finding" for key take-home messages
+- Keep each section focused and scannable
+- Include a Conclusions section with 3-5 bullet points
+- Include a References section with key citations`;
+}
