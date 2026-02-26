@@ -4,6 +4,7 @@ import {
   text,
   integer,
   real,
+  boolean,
   timestamp,
   date,
   jsonb,
@@ -67,16 +68,19 @@ export const screeningDecisions = pgTable(
     decision: screeningDecisionEnum("decision"),
     reason: text("reason"),
     decidedBy: decidedByEnum("decided_by"),
+    reviewerId: text("reviewer_id"), // nullable for backward compat with existing AI decisions
     createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => [
-    unique("screening_decisions_project_paper_stage_unique").on(
+    unique("screening_decisions_project_paper_stage_reviewer_unique").on(
       table.projectId,
       table.paperId,
-      table.stage
+      table.stage,
+      table.reviewerId
     ),
     index("idx_screening_decisions_proj").on(table.projectId),
     index("idx_screening_decisions_paper").on(table.paperId),
+    index("idx_screening_decisions_reviewer").on(table.reviewerId),
   ]
 );
 
@@ -347,3 +351,23 @@ export const searchAlerts = pgTable(
     index("idx_search_alerts_status").on(table.status),
   ]
 );
+
+// ---------------------------------------------------------------------------
+// 55. sr_audit_log (RAISE compliance — transparent AI usage disclosure)
+// ---------------------------------------------------------------------------
+export const srAuditLog = pgTable("sr_audit_log", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull(),
+  action: text("action").notNull(),          // 'screen', 'extract', 'rob2_assess', 'resolve_conflict', 'import', 'export', 'config_change', 'meta_analysis', 'grade_assess'
+  entityType: text("entity_type").notNull(), // 'paper', 'decision', 'extraction', 'config', 'analysis'
+  entityId: integer("entity_id"),
+  details: jsonb("details"),                 // action-specific metadata
+  aiInvolved: boolean("ai_involved").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (t) => [
+  index("idx_audit_log_project").on(t.projectId),
+  index("idx_audit_log_action").on(t.action),
+]);

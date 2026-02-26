@@ -219,6 +219,20 @@ export {
   type OverallConfidence,
 } from "./amstar2-checklist";
 
+// ---------------------------------------------------------------------------
+// Search Connectors — additional database sources for Cochrane-compliant reviews
+// ---------------------------------------------------------------------------
+
+export {
+  searchClinicalTrials,
+  type ClinicalTrialResult,
+} from "./search-connectors/clinicaltrials-gov";
+
+export {
+  searchCochraneCENTRAL,
+  type CochraneReviewResult,
+} from "./search-connectors/cochrane-central";
+
 export {
   retrievePDF,
   batchRetrievePDFs,

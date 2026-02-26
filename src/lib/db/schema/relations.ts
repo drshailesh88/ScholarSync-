@@ -51,7 +51,7 @@ import {
   pdfAnnotations,
 } from "./billing";
 
-// Systematic review tables (42-54)
+// Systematic review tables (42-55)
 import {
   screeningCriteria,
   screeningDecisions,
@@ -66,6 +66,7 @@ import {
   systematicReviewConfig,
   searchAlerts,
   projectCollaborators,
+  srAuditLog,
 } from "./systematic";
 
 // Institutional tables (53-55)
@@ -169,6 +170,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   audioSummaries: many(audioSummaries),
   supervisorAssignments: many(supervisorAssignments),
   projectCollaborators: many(projectCollaborators),
+  srAuditLog: many(srAuditLog),
 }));
 
 // ============================================================
@@ -1244,3 +1246,13 @@ export const projectCollaboratorsRelations = relations(
     }),
   })
 );
+
+// ============================================================
+// 75. sr_audit_log
+// ============================================================
+export const srAuditLogRelations = relations(srAuditLog, ({ one }) => ({
+  project: one(projects, {
+    fields: [srAuditLog.projectId],
+    references: [projects.id],
+  }),
+}));
