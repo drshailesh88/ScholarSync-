@@ -23,7 +23,8 @@ export type WorkflowTab =
   | "snowball"
   | "export"
   | "living"
-  | "protocol";
+  | "protocol"
+  | "grade";
 
 export type ReviewStage =
   | "search_strategy"
