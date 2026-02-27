@@ -1,12 +1,16 @@
 "use client";
 
-import { useCallback, useRef, useEffect } from "react";
+import { useCallback, useRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import { updateLatexFile } from "@/lib/actions/latex";
 import { TopBar } from "./top-bar";
 import { SourceEditor } from "./source-editor";
 import { PreviewPanel } from "./preview-panel";
+import { AgentPanel } from "./agent-panel";
+import { ErrorGutterPanel, type CompilationDiagnostic } from "./error-gutter";
+import { InlineAiBar } from "./inline-ai-bar";
+import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
 import {
   SidebarSimple,
   ChatCircle,
@@ -49,6 +53,23 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   // Get the main file content
   const mainFile = initialFiles.find((f) => f.isMain);
   const initialContent = mainFile?.content ?? "";
+
+  // Error diagnostics from compilation
+  const [diagnostics, setDiagnostics] = useState<CompilationDiagnostic[]>([]);
+
+  // Inline AI bar state
+  const [inlineAi, setInlineAi] = useState<{
+    visible: boolean;
+    selectedText: string;
+    position: { top: number; left: number };
+  }>({ visible: false, selectedText: "", position: { top: 0, left: 0 } });
+
+  // Slash command menu state
+  const [_slashMenu, setSlashMenu] = useState<{
+    visible: boolean;
+    filter: string;
+    position: { top: number; left: number };
+  }>({ visible: false, filter: "", position: { top: 0, left: 0 } });
 
   // Debounced auto-save
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -103,27 +124,52 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         e.preventDefault();
         handleCompile();
       }
+      // Cmd+K: toggle inline AI on selection
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        const sel = window.getSelection();
+        if (sel && sel.toString().trim()) {
+          const range = sel.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          setInlineAi({
+            visible: true,
+            selectedText: sel.toString(),
+            position: { top: rect.bottom + 8, left: rect.left },
+          });
+        }
+      }
+      // Escape: dismiss panels
+      if (e.key === "Escape") {
+        if (inlineAi.visible) setInlineAi((s) => ({ ...s, visible: false }));
+        if (_slashMenu.visible) setSlashMenu((s) => ({ ...s, visible: false }));
+      }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFileId, documentContent]);
+  }, [activeFileId, documentContent, inlineAi.visible, _slashMenu.visible]);
 
   const handleCompile = useCallback(async () => {
     setCompileStatus("compiling");
     setCompileError(null);
+    setDiagnostics([]);
     try {
       const res = await fetch("/api/latex/compile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ projectId: project.id }),
       });
+
       if (!res.ok) {
         const data = await res.json().catch(() => ({ error: "Compilation failed" }));
         setCompileStatus("error");
         setCompileError(data.error || "Compilation failed");
+        if (data.errors) {
+          setDiagnostics(data.errors as CompilationDiagnostic[]);
+        }
         return;
       }
+
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       setCompiledPdfUrl(url);
@@ -134,6 +180,78 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
       setCompileError("Network error — could not reach server");
     }
   }, [project.id, setCompileStatus, setCompileError, setCompiledPdfUrl, setPreviewMode]);
+
+  // Handle inline AI apply
+  const handleInlineAiApply = useCallback((_newText: string) => {
+    navigator.clipboard.writeText(_newText);
+    setInlineAi({ visible: false, selectedText: "", position: { top: 0, left: 0 } });
+  }, []);
+
+  // Handle slash command selection
+  const handleSlashCommand = useCallback(async (command: SlashCommand) => {
+    setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } });
+
+    if (command.id === "cite") {
+      useLatexEditorStore.getState().setAgentPanelOpen(true);
+      useLatexEditorStore.getState().setAgentTab("cite");
+      return;
+    }
+
+    if (command.aiModel !== "none") {
+      useLatexEditorStore.getState().setAgentPanelOpen(true);
+      useLatexEditorStore.getState().setAgentTab("draft");
+    }
+  }, []);
+
+  // Handle AI fix for compilation errors
+  const handleFixError = useCallback(async (diagnostic: CompilationDiagnostic) => {
+    if (!diagnostic.line) return;
+
+    const lines = documentContent.split("\n");
+    const context = lines.slice(Math.max(0, diagnostic.line - 3), diagnostic.line + 2).join("\n");
+
+    try {
+      const res = await fetch("/api/latex/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          command: "fix",
+          description: context,
+          errorMessage: diagnostic.message,
+        }),
+      });
+
+      if (res.ok) {
+        const reader = res.body?.getReader();
+        if (!reader) return;
+        const decoder = new TextDecoder();
+        let fixed = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          fixed += decoder.decode(value, { stream: true });
+        }
+        navigator.clipboard.writeText(fixed);
+      }
+    } catch {
+      // Silent failure
+    }
+  }, [documentContent]);
+
+  // Handle BibTeX insertion from Cite tab
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { bibtex: string; citeKey: string };
+      if (!detail?.bibtex) return;
+      const bibFile = initialFiles.find((f) => f.path.endsWith(".bib"));
+      if (bibFile) {
+        const newContent = (bibFile.content || "") + "\n\n" + detail.bibtex;
+        updateLatexFile(bibFile.id, { content: newContent }).catch(() => {});
+      }
+    };
+    window.addEventListener("latex:insert-bibtex", handler);
+    return () => window.removeEventListener("latex:insert-bibtex", handler);
+  }, [initialFiles]);
 
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)] -m-6 -mt-0">
@@ -151,7 +269,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
               ? "bg-brand/10 text-brand"
               : "bg-surface-raised/80 text-ink-muted hover:text-ink hover:bg-surface-raised"
           )}
-          title="Toggle file tree"
+          title="Toggle file tree (Cmd+B)"
         >
           <SidebarSimple size={14} />
         </button>
@@ -188,10 +306,17 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         )}
 
         {/* Editor Panel */}
-        <div className="flex-1 min-w-0 border-r border-border-subtle">
-          <SourceEditor
-            initialContent={initialContent}
-            onChange={handleEditorChange}
+        <div className="flex-1 min-w-0 flex flex-col border-r border-border-subtle">
+          <div className="flex-1 overflow-hidden">
+            <SourceEditor
+              initialContent={initialContent}
+              onChange={handleEditorChange}
+            />
+          </div>
+          {/* Error gutter below editor */}
+          <ErrorGutterPanel
+            diagnostics={diagnostics}
+            onFixError={handleFixError}
           />
         </div>
 
@@ -209,42 +334,37 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
               ? "bg-brand/10 text-brand"
               : "bg-surface-raised/80 text-ink-muted hover:text-ink hover:bg-surface-raised"
           )}
-          title="Toggle AI panel"
+          title="Toggle AI panel (Cmd+J)"
         >
           <ChatCircle size={14} />
         </button>
 
-        {/* Agent Panel (collapsible) — Phase 4 shell */}
+        {/* Agent Panel (collapsible) */}
         {agentPanelOpen && (
-          <aside className="w-72 shrink-0 border-l border-border-subtle bg-surface/50 overflow-y-auto p-4">
-            <div className="text-xs font-semibold text-ink-muted/60 tracking-wider uppercase mb-3">
-              AI Assistant
-            </div>
-            <div className="flex p-0.5 bg-surface-raised rounded-lg mb-4">
-              {(["draft", "learn", "cite", "check"] as const).map((tab) => {
-                const agentTab = useLatexEditorStore.getState().agentTab;
-                return (
-                  <button
-                    key={tab}
-                    onClick={() => useLatexEditorStore.getState().setAgentTab(tab)}
-                    className={cn(
-                      "flex-1 py-1.5 rounded-md text-[10px] font-medium capitalize transition-all",
-                      agentTab === tab
-                        ? "bg-brand text-white"
-                        : "text-ink-muted hover:text-ink"
-                    )}
-                  >
-                    {tab}
-                  </button>
-                );
-              })}
-            </div>
-            <div className="text-xs text-ink-muted text-center py-8">
-              Coming in Phase 4
-            </div>
+          <aside className="w-72 shrink-0 border-l border-border-subtle bg-surface/50">
+            <AgentPanel />
           </aside>
         )}
       </div>
+
+      {/* Floating overlays */}
+      {inlineAi.visible && (
+        <InlineAiBar
+          selectedText={inlineAi.selectedText}
+          position={inlineAi.position}
+          onApply={handleInlineAiApply}
+          onDismiss={() => setInlineAi({ visible: false, selectedText: "", position: { top: 0, left: 0 } })}
+        />
+      )}
+
+      {_slashMenu.visible && (
+        <SlashCommandMenu
+          position={_slashMenu.position}
+          filter={_slashMenu.filter}
+          onSelect={handleSlashCommand}
+          onDismiss={() => setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } })}
+        />
+      )}
     </div>
   );
 }
