@@ -9,24 +9,17 @@ function createDb() {
     );
   }
 
-  const instanceConnection = process.env.CLOUD_SQL_CONNECTION_NAME;
-  if (instanceConnection) {
-    // Cloud Run: connect via Unix socket at /cloudsql/<connection-name>
-    const url = new URL(process.env.DATABASE_URL);
-    const client = postgres({
-      host: `/cloudsql/${instanceConnection}`,
-      port: 5432,
-      database: url.pathname.slice(1) || "scholarsync",
-      username: url.username,
-      password: decodeURIComponent(url.password),
-    });
-    return drizzle(client, { schema });
-  }
+  const client = postgres(process.env.DATABASE_URL, {
+    max: 5,
+    prepare: false, // required for Neon serverless + Hyperdrive compatibility
+  });
 
-  const client = postgres(process.env.DATABASE_URL);
   return drizzle(client, { schema });
 }
 
+// Lazy proxy — creates connection on first use.
+// In Workers with Hyperdrive, DATABASE_URL is injected per-request
+// but the singleton pattern still works within a single request lifecycle.
 let _db: ReturnType<typeof createDb> | undefined;
 
 export const db = new Proxy({} as ReturnType<typeof createDb>, {

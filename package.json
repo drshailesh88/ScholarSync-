@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "vite preview",
+    "deploy": "vinext deploy",
+    "dev:next": "next dev",
+    "build:next": "next build",
+    "start:next": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix .",
     "lint:strict": "eslint --max-warnings 0 .",
@@ -18,9 +22,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "prepare": "husky",
-    "dev:vinext": "vite dev --port 3001",
-    "build:vinext": "vite build"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -45,12 +47,12 @@
     "@codemirror/view": "^6.39.15",
     "@floating-ui/dom": "^1.7.5",
     "@floating-ui/react": "^0.27.17",
-    "@google-cloud/storage": "^7.19.0",
     "@liveblocks/client": "^3.14.1",
     "@liveblocks/node": "^3.14.1",
     "@liveblocks/react": "^3.14.1",
     "@phosphor-icons/react": "^2.1.10",
     "@react-pdf/renderer": "^4.3.2",
+    "@sentry/cloudflare": "^10.40.0",
     "@sentry/nextjs": "^10.40.0",
     "@tanstack/react-table": "^8.21.3",
     "@tiptap/core": "^3.19.0",
@@ -131,6 +133,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@google-cloud/storage": "^7.19.0",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20.19.33",
