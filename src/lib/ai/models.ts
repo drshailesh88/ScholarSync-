@@ -115,3 +115,15 @@ export function getBigModel() {
 export function getDeepResearchModel() {
   return getOpenAI()("gpt-5.2");
 }
+
+/** Claude Sonnet for LaTeX writing tasks — Draft mode, complex edits, TikZ.
+ *  This is where users feel the quality difference vs Prism (GPT-5.2). */
+export function getLatexWriteModel() {
+  return getAnthropic()("claude-sonnet-4-20250514");
+}
+
+/** GPT-5 Nano for mechanical LaTeX tasks — grammar fixes, equation gen, error fixes.
+ *  20x cheaper than Haiku ($0.05 vs $1.00 input). Same quality for structured output. */
+export function getLatexUtilModel() {
+  return getOpenAI()("gpt-5-nano");
+}

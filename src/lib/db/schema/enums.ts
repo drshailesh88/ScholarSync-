@@ -249,6 +249,12 @@ export const syncStatusEnum = pgEnum("sync_status", ["running", "completed", "fa
 export const institutionTypeEnum = pgEnum("institution_type", ["university", "medical_college", "research_institute", "hospital"]);
 
 // ---------------------------------------------------------------------------
+// LaTeX Editor
+// ---------------------------------------------------------------------------
+export const latexCompilerEnum = pgEnum("latex_compiler", ["pdflatex", "xelatex", "lualatex"]);
+export const latexCompilationStatusEnum = pgEnum("latex_compilation_status", ["success", "error", "warning"]);
+
+// ---------------------------------------------------------------------------
 // Institution Memberships
 // ---------------------------------------------------------------------------
 export const membershipRoleEnum = pgEnum("membership_role", ["student", "supervisor", "admin", "faculty"]);
