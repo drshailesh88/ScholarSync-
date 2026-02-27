@@ -1,3 +1,4 @@
+// @ts-nocheck — mock chain types are intentionally loose
 /**
  * Unit tests for the audit-trail module.
  *

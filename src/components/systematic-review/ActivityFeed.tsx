@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  Activity,
+  Lightning,
   CheckCircle,
   XCircle,
   Question,
@@ -49,7 +49,7 @@ export function ActivityFeed({ entries, className }: ActivityFeedProps) {
           )}
           title="Open activity feed"
         >
-          <Activity size={16} weight="bold" />
+          <Lightning size={16} weight="bold" />
           {entries.length > 0 && (
             <span className="absolute -top-1.5 -left-1.5 w-4 h-4 bg-brand text-white text-[9px] font-bold rounded-full flex items-center justify-center">
               {entries.length > 9 ? "9+" : entries.length}
@@ -72,7 +72,7 @@ export function ActivityFeed({ entries, className }: ActivityFeedProps) {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <div className="flex items-center gap-2">
-              <Activity size={16} weight="bold" className="text-brand" />
+              <Lightning size={16} weight="bold" className="text-brand" />
               <h3 className="text-sm font-semibold text-ink">Activity Feed</h3>
               {entries.length > 0 && (
                 <span className="px-1.5 py-0.5 bg-brand/10 text-brand rounded text-[10px] font-medium">
@@ -92,7 +92,7 @@ export function ActivityFeed({ entries, className }: ActivityFeedProps) {
           <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
             {entries.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center px-6">
-                <Activity
+                <Lightning
                   size={32}
                   weight="light"
                   className="text-ink-muted/40 mb-2"
