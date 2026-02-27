@@ -5,16 +5,13 @@ import {
   Scroll,
   CircleNotch,
   PencilSimple,
-  Download,
   CheckCircle,
   CaretDown,
   CaretRight,
-  FilePdf,
   FileText,
   FileHtml,
   Clipboard,
 } from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
 import { useSystematicReviewStore } from "@/stores/systematic-review-store";
 
 // ---------------------------------------------------------------------------

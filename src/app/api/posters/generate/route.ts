@@ -13,8 +13,8 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import type { ContentBlock } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
-import type { PosterGridLayout, PosterSection, PosterSize } from "@/types/poster";
-import { POSTER_GRID_LAYOUTS, POSTER_SIZES } from "@/types/poster";
+import type { PosterGridLayout, PosterSection } from "@/types/poster";
+import { POSTER_GRID_LAYOUTS } from "@/types/poster";
 
 const generatePosterSchema = z.object({
   title: z.string().min(1).max(500),

@@ -59,7 +59,7 @@ export function VersionHistoryPanel({
       setLoading(true);
       const data = await getVersions(deckId);
       setVersions(data);
-    } catch (err) {
+    } catch {
       setError("Failed to load versions");
     } finally {
       setLoading(false);
@@ -85,7 +85,7 @@ export function VersionHistoryPanel({
       await saveVersion(deckId, "Manual save");
       setSuccessMsg("Version saved");
       await loadVersions();
-    } catch (err) {
+    } catch {
       setError("Failed to save version");
     } finally {
       setSaving(false);
@@ -105,7 +105,7 @@ export function VersionHistoryPanel({
       setSuccessMsg("Version restored");
       onDeckRestored();
       await loadVersions();
-    } catch (err) {
+    } catch {
       setError("Failed to restore version");
     } finally {
       setRestoring(null);
@@ -124,7 +124,7 @@ export function VersionHistoryPanel({
       setSuccessMsg("Version deleted");
       setSelectedForCompare((prev) => prev.filter((id) => id !== versionId));
       await loadVersions();
-    } catch (err) {
+    } catch {
       setError("Failed to delete version");
     }
   }
@@ -155,7 +155,7 @@ export function VersionHistoryPanel({
       const labelA = vA ? `v${vA.versionNumber}${vA.label ? ` - ${vA.label}` : ""}` : "Version A";
       const labelB = vB ? `v${vB.versionNumber}${vB.label ? ` - ${vB.label}` : ""}` : "Version B";
       onCompareVersions(snapshotA, snapshotB, labelA, labelB);
-    } catch (err) {
+    } catch {
       setError("Failed to load version snapshots for comparison");
     } finally {
       setComparing(false);

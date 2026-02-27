@@ -6,7 +6,7 @@ import {
   slides,
   slideDeckVersions,
 } from "@/lib/db/schema";
-import { eq, and, desc, asc, count } from "drizzle-orm";
+import { eq, and, desc, asc } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 
 // ---------------------------------------------------------------------------

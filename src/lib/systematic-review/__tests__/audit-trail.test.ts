@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck — mock chain types are intentionally loose
 /**
  * Unit tests for the audit-trail module.
@@ -16,8 +17,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const {
   mockOffset,
   mockLimit,
-  mockOrderBy,
-  mockGroupBy,
+  _mockOrderBy,
+  _mockGroupBy,
   mockWhere,
   mockFrom,
   mockSelect,
@@ -40,8 +41,8 @@ const {
   return {
     mockOffset,
     mockLimit,
-    mockOrderBy,
-    mockGroupBy,
+    _mockOrderBy: mockOrderBy,
+    _mockGroupBy: mockGroupBy,
     mockWhere,
     mockFrom,
     mockSelect,

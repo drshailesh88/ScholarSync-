@@ -8,7 +8,6 @@ import {
   Users,
   Copy,
   EnvelopeSimple,
-  CircleNotch,
 } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------

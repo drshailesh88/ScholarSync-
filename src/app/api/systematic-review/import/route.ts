@@ -14,7 +14,6 @@ import { eq, and } from "drizzle-orm";
 import {
   importFromSearch,
   getProjectPapersWithDetails,
-  deduplicateProjectPapers,
 } from "@/lib/systematic-review/paper-import";
 
 // ---------------------------------------------------------------------------

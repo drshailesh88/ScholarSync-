@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { X, BookOpen } from "lucide-react";
 import type { DeepResearchSource } from "./types";
 import { getEvidenceLevel } from "./types";

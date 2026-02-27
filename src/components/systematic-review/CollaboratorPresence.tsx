@@ -2,6 +2,7 @@
 
 import { useSROthers, useSRSelf, useSRStatus } from "@/lib/liveblocks/sr-config";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { Users, WifiHigh, WifiSlash } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -77,9 +78,11 @@ export function CollaboratorPresence() {
               title="You"
             >
               {self.presence.avatar ? (
-                <img
+                <Image
                   src={self.presence.avatar}
                   alt={self.presence.name}
+                  width={28}
+                  height={28}
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (
@@ -110,9 +113,11 @@ export function CollaboratorPresence() {
               }}
             >
               {collab.presence.avatar || collab.info?.avatar ? (
-                <img
+                <Image
                   src={collab.presence.avatar || collab.info?.avatar || ""}
                   alt={collab.presence.name || collab.info?.name || "User"}
+                  width={28}
+                  height={28}
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (

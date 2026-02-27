@@ -499,7 +499,7 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
     );
   };
 
-  const activePaper = queue[activeIndex];
+  const _activePaper = queue[activeIndex];
 
   return (
     <div className="space-y-6 max-w-5xl">

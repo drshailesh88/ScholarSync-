@@ -472,6 +472,6 @@ function sanitizeForPdf(text: string): string {
     .replace(/\u203A/g, ">")                   // single right-pointing angle
     .replace(/\u00B7/g, "*")                   // middle dot
     .replace(/[\u200B-\u200D\uFEFF]/g, "")    // zero-width chars
-    // eslint-disable-next-line no-control-regex
+     
     .replace(/[^\x00-\xFF]/g, "");             // drop anything outside Latin-1
 }

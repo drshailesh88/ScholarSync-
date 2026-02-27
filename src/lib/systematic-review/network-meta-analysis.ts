@@ -25,7 +25,6 @@
  *    meta-analysis. Statistics in Medicine, 29(7-8), 932-944.
  */
 
-import { computeREML, type StudyEffect } from "./meta-analysis";
 
 // ---------------------------------------------------------------------------
 // Types

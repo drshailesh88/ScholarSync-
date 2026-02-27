@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
-  ChatCircle,
   Check,
   ArrowBendDownRight,
   Trash,
@@ -209,9 +209,11 @@ function CommentBubble({
       {/* Header */}
       <div className="flex items-center gap-2 mb-1.5">
         {comment.userAvatar ? (
-          <img
+          <Image
             src={comment.userAvatar}
             alt=""
+            width={20}
+            height={20}
             className="w-5 h-5 rounded-full"
           />
         ) : (

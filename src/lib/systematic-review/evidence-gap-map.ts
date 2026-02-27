@@ -102,7 +102,7 @@ function pooledEffectToDirection(
 }
 
 /** Normalise a GRADE certainty string into our CertaintyLevel. */
-function normaliseCertainty(raw: string | null | undefined): CertaintyLevel {
+function _normaliseCertainty(raw: string | null | undefined): CertaintyLevel {
   if (!raw) return "not_assessed";
   const lower = raw.toLowerCase().replace(/-/g, "_");
   if (lower === "high") return "high";

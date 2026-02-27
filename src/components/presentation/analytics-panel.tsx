@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Eye,
   Users,
@@ -89,11 +89,7 @@ export function AnalyticsPanel({ deckId, onClose }: AnalyticsPanelProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    loadStats();
-  }, [deckId]);
-
-  async function loadStats() {
+  const loadStats = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -101,12 +97,16 @@ export function AnalyticsPanel({ deckId, onClose }: AnalyticsPanelProps) {
       if (!res.ok) throw new Error("Failed to load analytics");
       const data = await res.json();
       setStats(data);
-    } catch (err) {
+    } catch {
       setError("Failed to load analytics data");
     } finally {
       setLoading(false);
     }
-  }
+  }, [deckId]);
+
+  useEffect(() => {
+    loadStats();
+  }, [loadStats]);
 
   return (
     <div className="flex flex-col h-full">

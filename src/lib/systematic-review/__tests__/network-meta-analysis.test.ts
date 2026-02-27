@@ -20,7 +20,7 @@ import {
   computeNMA,
   computeLeagueTable,
   computePScores,
-  testInconsistency,
+  testInconsistency as _testInconsistency,
   type NMAStudy,
 } from "@/lib/systematic-review/network-meta-analysis";
 
@@ -29,7 +29,7 @@ import {
 // ---------------------------------------------------------------------------
 
 const TOL = 1e-3; // tolerance for floating-point comparison
-const LOOSE_TOL = 0.05; // looser tolerance for complex computations
+const _LOOSE_TOL = 0.05; // looser tolerance for complex computations
 
 function makeStudy(
   id: string,

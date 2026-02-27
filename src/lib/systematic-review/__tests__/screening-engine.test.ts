@@ -8,9 +8,9 @@ const {
   mockOnConflictDoUpdate,
   mockValues,
   mockInsert,
-  mockGroupBy,
-  mockWhere,
-  mockFrom,
+  _mockGroupBy,
+  _mockWhere,
+  _mockFrom,
   mockSelect,
 } = vi.hoisted(() => {
   const mockOnConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
@@ -28,9 +28,9 @@ const {
     mockOnConflictDoUpdate,
     mockValues,
     mockInsert,
-    mockGroupBy,
-    mockWhere,
-    mockFrom,
+    _mockGroupBy: mockGroupBy,
+    _mockWhere: mockWhere,
+    _mockFrom: mockFrom,
     mockSelect,
   };
 });

@@ -14,7 +14,6 @@ import { searchOpenAlex } from "@/lib/search/sources/openalex";
 import { searchClinicalTrials as searchClinicalTrialsLowLevel } from "@/lib/search/sources/clinical-trials";
 import {
   normalizeTitle,
-  isSamePaper,
   deduplicateResults,
 } from "@/lib/search/dedup";
 import type { UnifiedSearchResult } from "@/types/search";

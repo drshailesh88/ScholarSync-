@@ -361,7 +361,7 @@ export default function DeepResearchPage() {
   const sources: DeepResearchSource[] = report?.sources || [];
 
   // ── Build combined streaming markdown ─────────────────────────────
-  const streamingMarkdown = streamingSections.map((s) => s.markdown).join("\n\n");
+  const _streamingMarkdown = streamingSections.map((s) => s.markdown).join("\n\n");
 
   return (
     <div className="flex-1 min-h-screen bg-white dark:bg-gray-950">

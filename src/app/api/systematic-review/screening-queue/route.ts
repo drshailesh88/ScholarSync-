@@ -11,9 +11,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import {
   recordHumanDecision,
   getScreeningQueue,

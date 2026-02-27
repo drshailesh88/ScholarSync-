@@ -838,7 +838,7 @@ function renderChartSlide(
     // Build chart data -- scatter needs special handling
     let chartData: PptxGenJS.OptsChartData[];
     if (cd.chartType === "scatter") {
-      chartData = cd.datasets.map((ds, dsIdx) => ({
+      chartData = cd.datasets.map((ds, _dsIdx) => ({
         name: ds.label,
         values: ds.data.map((val, i) => ({
           x: cd.labels[i] ? parseFloat(cd.labels[i]) || i : i,
@@ -2783,7 +2783,7 @@ function renderTimelineBlock(
   }
 
   const lineY = y + (block.data.title ? 0.9 : 0.7);
-  const endX = x + w;
+  const _endX = x + w;
 
   // Horizontal line
   slide.addShape(pptx.ShapeType.rect, {

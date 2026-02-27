@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -12,11 +12,11 @@ import {
   Palette,
   List,
 } from "@phosphor-icons/react";
-import { getDeck, updateSlide as updateSlideAction } from "@/lib/actions/presentations";
+import { getDeck } from "@/lib/actions/presentations";
 import { PRESET_THEMES } from "@/types/presentation";
 import type { ContentBlock, ThemeConfig } from "@/types/presentation";
-import type { PosterData, PosterSection, PosterSize, PosterGridLayout } from "@/types/poster";
-import { POSTER_SIZES, POSTER_GRID_LAYOUTS } from "@/types/poster";
+import type { PosterData, PosterSection } from "@/types/poster";
+import { POSTER_SIZES } from "@/types/poster";
 import { PosterRenderer } from "@/components/presentation/poster-renderer";
 import { cn } from "@/lib/utils";
 
@@ -39,7 +39,7 @@ export default function PosterEditorPage() {
   const posterId = Number(params.posterId);
 
   const [loading, setLoading] = useState(true);
-  const [deck, setDeck] = useState<DeckData | null>(null);
+  const [_deck, setDeck] = useState<DeckData | null>(null);
   const [posterData, setPosterData] = useState<PosterData | null>(null);
   const [scale, setScale] = useState(0.25);
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);

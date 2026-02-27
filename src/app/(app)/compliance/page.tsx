@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { ArrowLeft, BookOpen, PenNib, DownloadSimple, Sparkle, MagnifyingGlass, CircleNotch, CaretDown, FileText, ClockCounterClockwise, SplitHorizontal, Lightning, Copy, Check } from "@phosphor-icons/react";
+import { ArrowLeft, BookOpen, PenNib, DownloadSimple, Sparkle, MagnifyingGlass, CircleNotch, CaretDown, FileText, ClockCounterClockwise, SplitHorizontal, Lightning, Check } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { CircularGauge } from "@/components/ui/circular-gauge";
 import { ProgressBar } from "@/components/ui/progress-bar";

@@ -9,7 +9,7 @@ import {
   extractTextFromBlocks,
   computeTextDiff,
 } from "@/lib/presentation/version-diff";
-import type { DeckDiff, SlideDiff, TextDiffSegment } from "@/lib/presentation/version-diff";
+import type { SlideDiff, TextDiffSegment } from "@/lib/presentation/version-diff";
 import type { VersionSnapshot } from "@/lib/actions/versions";
 import type { ContentBlock } from "@/types/presentation";
 

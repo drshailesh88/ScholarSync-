@@ -2,6 +2,7 @@
 
 import { useOthers, useSelf } from "@/lib/liveblocks/config";
 import { useState } from "react";
+import Image from "next/image";
 
 // ---------------------------------------------------------------------------
 // Collaboration Avatars — shows who is in the room
@@ -94,9 +95,11 @@ function AvatarBubble({
         }}
       >
         {avatar ? (
-          <img
+          <Image
             src={avatar}
             alt={name}
+            width={32}
+            height={32}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />

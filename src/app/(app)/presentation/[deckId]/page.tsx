@@ -81,7 +81,7 @@ export default function DeckEditorPage() {
   const [showComments, setShowComments] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [showRecordings, setShowRecordings] = useState(false);
-  const [currentUserId, setCurrentUserId] = useState("dev_user_001");
+  const [currentUserId, _setCurrentUserId] = useState("dev_user_001");
 
   // Comment counts for sidebar badges
   const { counts: commentCounts, totalUnresolved, refresh: refreshComments } =

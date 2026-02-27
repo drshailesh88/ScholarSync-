@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { slideComments } from "@/lib/db/schema";
-import { eq, and, asc, desc, isNull } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 
 // ---------------------------------------------------------------------------

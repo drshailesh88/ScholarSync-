@@ -159,7 +159,7 @@ export function computeDeckDiff(
   }
 
   // Build slide maps keyed by slide ID for matching
-  const aSlidesById = new Map(
+  const _aSlidesById = new Map(
     versionA.slides.map((s) => [s.id, s])
   );
   const bSlidesById = new Map(

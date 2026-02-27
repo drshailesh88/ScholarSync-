@@ -16,7 +16,7 @@ import type {
   ChartData,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
-import type { PosterData, PosterSection, PosterSize } from "@/types/poster";
+import type { PosterData, PosterSection } from "@/types/poster";
 import { POSTER_SIZES, POSTER_GRID_LAYOUTS } from "@/types/poster";
 import katex from "katex";
 import "katex/dist/katex.min.css";
@@ -662,7 +662,7 @@ function PosterCodeBlock({ data, theme }: { data: CodeData; theme: ThemeConfig }
 // Callout Block
 // ---------------------------------------------------------------------------
 
-function PosterCalloutBlock({ data, theme }: { data: CalloutData; theme: ThemeConfig }) {
+function PosterCalloutBlock({ data, theme: _theme }: { data: CalloutData; theme: ThemeConfig }) {
   const colors = CALLOUT_COLORS[data.type] ?? CALLOUT_COLORS.info;
   return (
     <div
@@ -718,7 +718,7 @@ function PosterStatResultBlock({ data, theme }: { data: StatResultData; theme: T
 // Bibliography Block
 // ---------------------------------------------------------------------------
 
-function PosterBibliographyBlock({ data, theme }: { data: BibliographyData; theme: ThemeConfig }) {
+function PosterBibliographyBlock({ data, theme: _theme }: { data: BibliographyData; theme: ThemeConfig }) {
   return (
     <div className="space-y-[0.1em]">
       {data.entries.map((entry, i) => (

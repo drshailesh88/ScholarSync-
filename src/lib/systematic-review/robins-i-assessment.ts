@@ -17,7 +17,7 @@ import {
 } from "@/lib/ai/prompts/systematic-review";
 import { db } from "@/lib/db";
 import { riskOfBias } from "@/lib/db/schema";
-import { eq, like } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 // ---------------------------------------------------------------------------

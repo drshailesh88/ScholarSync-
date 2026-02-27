@@ -1,5 +1,5 @@
 import { createClient, LiveMap, LiveObject } from "@liveblocks/client";
-import type { JsonObject, LsonObject } from "@liveblocks/client";
+import type { JsonObject } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
 
 // ---------------------------------------------------------------------------

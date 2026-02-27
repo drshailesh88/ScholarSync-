@@ -15,7 +15,6 @@ import {
   prismaFlow,
   riskOfBias,
   metaAnalysisResults,
-  papers,
 } from "@/lib/db/schema";
 import { eq, and, sql } from "drizzle-orm";
 

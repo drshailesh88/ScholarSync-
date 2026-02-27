@@ -15,7 +15,7 @@ import {
   type Icon,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import type { ContentBlock, ThemeConfig } from "@/types/presentation";
+import type { ThemeConfig } from "@/types/presentation";
 import { SOCIAL_FORMATS, type SocialFormatKey } from "@/lib/presentation/social-formats";
 import { SocialSlideRenderer } from "./social-slide-renderer";
 import {
@@ -62,7 +62,7 @@ export function SocialExportModal({
   const [exporting, setExporting] = useState(false);
   const [showBranding, setShowBranding] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [twitterThread, setTwitterThread] = useState<string[]>([]);
+  const [_twitterThread, setTwitterThread] = useState<string[]>([]);
   const [editedThread, setEditedThread] = useState<string[]>([]);
   const slideRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const offscreenContainerRef = useRef<HTMLDivElement>(null);

@@ -253,7 +253,7 @@ async function gatherProjectContext(projectId: number): Promise<string> {
     return `Paper ${r.paperId} — domain: ${r.domain}, judgment: ${r.judgment ?? "unset"}, support: ${(r.supportText ?? "").slice(0, 120)}`;
   });
 
-  const hasMetaAnalysis = maRows.length > 0;
+  const _hasMetaAnalysis = maRows.length > 0;
   const maNames = maRows.map((m) => m.analysisName).filter(Boolean).join(", ");
   const heterogeneity = maRows
     .filter((m) => m.heterogeneityI2 !== null)

@@ -22,7 +22,6 @@ import {
   toNaturalScaleCI,
   tQuantile,
   type StudyEffect,
-  type EffectType,
 } from "@/lib/systematic-review/meta-analysis";
 
 // ---------------------------------------------------------------------------

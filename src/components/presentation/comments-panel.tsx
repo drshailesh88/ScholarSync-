@@ -72,7 +72,7 @@ export function CommentsPanel({
   }
 
   // Slides that have comments
-  const slidesWithComments = slides.filter(
+  const _slidesWithComments = slides.filter(
     (s) => commentsBySlide[String(s.id)]?.length > 0
   );
 

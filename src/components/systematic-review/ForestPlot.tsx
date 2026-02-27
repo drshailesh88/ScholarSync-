@@ -102,7 +102,7 @@ export function ForestPlot({
       xMax,
       nullValue,
     };
-  }, [studies, pooled]);
+  }, [studies, pooled, predictionInterval]);
 
   const xScale = (val: number) => {
     const { xMin, xMax, plotWidth, labelWidth } = config;

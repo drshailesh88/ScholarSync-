@@ -8,9 +8,8 @@
  */
 
 import { db } from "@/lib/db";
-import { papers, projectPapers, paperChunks, screeningDecisions } from "@/lib/db/schema";
-import { eq, and, isNull, isNotNull, sql, inArray } from "drizzle-orm";
-import { generateEmbedding } from "@/lib/ai/embeddings";
+import { papers, projectPapers, screeningDecisions } from "@/lib/db/schema";
+import { eq, and, sql } from "drizzle-orm";
 
 // ---------------------------------------------------------------------------
 // Types

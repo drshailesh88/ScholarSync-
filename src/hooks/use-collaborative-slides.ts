@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { LiveObject } from "@liveblocks/client";
-import type { LiveSlideData } from "@/lib/liveblocks/config";
 
 // ---------------------------------------------------------------------------
 // Types — matching the shape used in the deck editor page

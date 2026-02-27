@@ -14,7 +14,7 @@ import { generateObject } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { db } from "@/lib/db";
 import { riskOfBias } from "@/lib/db/schema";
-import { eq, like } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 // ---------------------------------------------------------------------------

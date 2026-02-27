@@ -1,7 +1,7 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
-import type { SynthesisReport, DeepResearchSource } from "./types";
+import type { SynthesisReport } from "./types";
 
 interface LegacyReportViewProps {
   report: SynthesisReport;

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { presentationViews, slideDecks } from "@/lib/db/schema";
-import { eq, sql, desc } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 
 interface SlideTimingEntry {

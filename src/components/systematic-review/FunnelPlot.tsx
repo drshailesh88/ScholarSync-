@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import {
   ScatterChart,
   Scatter,
@@ -44,10 +44,9 @@ export function FunnelPlot({
   eggerTest,
   title,
 }: FunnelPlotProps) {
-  const displayEffect = (val: number) =>
-    effectType === "OR" || effectType === "RR" ? Math.exp(val) : val;
+  const displayEffect = useCallback((val: number) =>
+    effectType === "OR" || effectType === "RR" ? Math.exp(val) : val, [effectType]);
 
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const data = useMemo(() => {
     return studies.map((s) => ({
       name: s.studyLabel,
@@ -55,7 +54,7 @@ export function FunnelPlot({
       y: s.se,
       isImputed: s.isImputed || false,
     }));
-  }, [studies, effectType]);
+  }, [studies, displayEffect]);
 
   const realStudies = data.filter((d) => !d.isImputed);
   const imputedStudies = data.filter((d) => d.isImputed);

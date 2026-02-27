@@ -89,8 +89,8 @@ function forceDirectedLayout(
     // Repulsion (Coulomb's law between all pairs)
     for (let i = 0; i < n; i++) {
       for (let j = i + 1; j < n; j++) {
-        let dx = positions[i].x - positions[j].x;
-        let dy = positions[i].y - positions[j].y;
+        const dx = positions[i].x - positions[j].x;
+        const dy = positions[i].y - positions[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
         const force = repulsionStrength / (dist * dist);
         const fxComp = (force * dx) / dist;

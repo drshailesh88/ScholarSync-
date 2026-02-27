@@ -11,7 +11,6 @@ import {
   GlobeHemisphereWest,
   Books,
   MagnifyingGlass,
-  ShieldCheck,
   Sparkle,
   DownloadSimple,
   FileDoc,
@@ -23,7 +22,6 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
-import { CircularGauge } from "@/components/ui/circular-gauge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";

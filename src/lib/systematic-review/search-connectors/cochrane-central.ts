@@ -54,7 +54,7 @@ function extractTagContent(xml: string, tag: string): string {
   return match ? stripXml(match[1]) : "";
 }
 
-function extractAllTagContent(xml: string, tag: string): string[] {
+function _extractAllTagContent(xml: string, tag: string): string[] {
   const re = new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "g");
   const matches = [...xml.matchAll(re)];
   return matches.map((m) => stripXml(m[1])).filter(Boolean);

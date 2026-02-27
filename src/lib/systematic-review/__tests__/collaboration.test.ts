@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck — mock chain types are intentionally loose
 /**
  * Unit tests for the collaboration module.
@@ -13,8 +14,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // ---------------------------------------------------------------------------
 
 const {
-  mockReturning,
-  mockSet,
+  _mockReturning,
+  _mockSet,
   mockDelete,
   mockSelect,
   mockInsert,
@@ -34,8 +35,8 @@ const {
   const mockUpdate = vi.fn(() => ({ set: mockSet }));
 
   return {
-    mockReturning,
-    mockSet,
+    _mockReturning: mockReturning,
+    _mockSet: mockSet,
     mockDelete,
     mockSelect,
     mockInsert,
@@ -53,6 +54,7 @@ function makeSelectChain(rows: unknown[]) {
   // where can also resolve directly (for getProjectCollaborators which has no .limit)
   where.mockImplementation(() => {
     const result = Promise.resolve(rows);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (result as any).limit = limit;
     return result;
   });

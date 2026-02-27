@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   X,
   Copy,
@@ -30,11 +30,7 @@ export function SharePanel({ deckId, onClose }: SharePanelProps) {
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    loadSettings();
-  }, [deckId]);
-
-  async function loadSettings() {
+  const loadSettings = useCallback(async () => {
     setLoading(true);
     try {
       const settings = await getDeckShareSettings(deckId);
@@ -53,7 +49,11 @@ export function SharePanel({ deckId, onClose }: SharePanelProps) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [deckId]);
+
+  useEffect(() => {
+    loadSettings();
+  }, [loadSettings]);
 
   async function handleToggleShare() {
     setSaving(true);

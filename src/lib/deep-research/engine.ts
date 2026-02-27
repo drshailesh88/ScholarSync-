@@ -526,7 +526,7 @@ export async function runDeepResearch(
 
   const fullTextTopN = resolvedConfig.mode === "quick" ? 5 :
     resolvedConfig.mode === "standard" ? 10 : 20;
-  const fullTextResults = await extractFullTexts(papersWithUrls, onProgress, fullTextTopN);
+  const _fullTextResults = await extractFullTexts(papersWithUrls, onProgress, fullTextTopN);
 
   // Build a map of DOI/title → fullText so enhancePapers can pick it up
   const fullTextMap = new Map<string, string>();

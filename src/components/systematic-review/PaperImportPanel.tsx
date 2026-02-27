@@ -7,7 +7,6 @@ import {
   CheckCircle,
   Database,
   FileArrowUp,
-  Trash,
   FilePdf,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";

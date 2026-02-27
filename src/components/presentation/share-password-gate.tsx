@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Lock } from "@phosphor-icons/react";
 import { verifySharePassword } from "@/lib/actions/share";
 import { SharedPresentationViewer } from "./shared-presentation-viewer";
-import type { ContentBlock } from "@/types/presentation";
 
 interface SlideData {
   id: number;
