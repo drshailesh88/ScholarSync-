@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
-import { getModel, isAIConfigured } from "@/lib/ai/models";
+import { getModel, isAIConfigured, traceGeneration } from "@/lib/ai/models";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
@@ -78,11 +78,13 @@ export async function POST(request: NextRequest) {
     const systemPrompt =
       PDF_CHAT_SYSTEM_PROMPT + paperContext + highlightsContext;
 
+    const trace = traceGeneration({ tier: "standard", modelId: "claude-sonnet-4-20250514", feature: "pdf-chat", userId });
     const result = await generateText({
       model: getModel(),
       system: systemPrompt,
       prompt: message,
     });
+    trace.end(result.usage);
 
     // Parse source quotes from the response (basic extraction)
     const sourceQuotes = extractSourceQuotes(result.text, paperId);

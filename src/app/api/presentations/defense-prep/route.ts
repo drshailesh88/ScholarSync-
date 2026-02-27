@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateText } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, traceGeneration } from "@/lib/ai/models";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
@@ -149,11 +149,13 @@ export async function POST(req: Request) {
           .join("\n");
     }
 
-    const { text } = await generateText({
+    const trace = traceGeneration({ tier: "standard", modelId: "claude-sonnet-4-20250514", feature: "defense-prep", userId });
+    const { text, usage } = await generateText({
       model: getModel(),
       system: systemPrompt,
       prompt: `Here is the presentation (${body.slides.length} slides):\n\n${slideSummary}${conversationContext}\n\nGenerate your next question.`,
     });
+    trace.end(usage);
 
     const cleanText = text
       .replace(/```json\n?/g, "")

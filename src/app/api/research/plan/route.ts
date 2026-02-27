@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
-import { getSmallModel, isAIConfigured } from "@/lib/ai/models";
+import { getSmallModel, isAIConfigured, traceGeneration } from "@/lib/ai/models";
 import { buildPlanPrompt, parsePlanResponse } from "@/lib/research/plan-generator";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
@@ -48,12 +48,14 @@ export async function POST(req: NextRequest) {
       documentContext,
     });
 
-    const { text } = await generateText({
+    const trace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "research-plan", userId });
+    const { text, usage } = await generateText({
       model: getSmallModel(),
       system,
       prompt: user,
       temperature: 0.3,
     });
+    trace.end(usage);
 
     const plan = parsePlanResponse(question, text);
 

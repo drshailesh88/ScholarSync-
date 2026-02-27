@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateText } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, traceGeneration } from "@/lib/ai/models";
 import { getCoachSystemPrompt } from "@/lib/ai/prompts/presentation";
 import { saveCoachEvaluation } from "@/lib/actions/presentations";
 import { getCurrentUserId } from "@/lib/auth";
@@ -63,11 +63,13 @@ export async function POST(req: Request) {
       )
       .join("\n\n");
 
-    const { text } = await generateText({
+    const trace = traceGeneration({ tier: "standard", modelId: "claude-sonnet-4-20250514", feature: "presentation-coach", userId });
+    const { text, usage } = await generateText({
       model: getModel(),
       system: systemPrompt,
       prompt: `Evaluate this ${body.slides.length}-slide presentation:\n\n${slideSummary}`,
     });
+    trace.end(usage);
 
     const cleanText = text
       .replace(/```json\n?/g, "")

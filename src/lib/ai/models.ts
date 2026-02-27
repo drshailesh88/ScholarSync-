@@ -52,30 +52,43 @@ export function traceGeneration(meta: {
   userId?: string;
   projectId?: number;
 }) {
-  if (!isLangfuseConfigured()) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return { end: (_usage?: Record<string, unknown>) => {}, error: (_err?: unknown) => {} };
-  }
-
-  const trace = getLangfuse().trace({
-    name: `llm-${meta.tier}`,
-    metadata: { tier: meta.tier, provider: AI_PROVIDER, feature: meta.feature },
-  });
-  const generation = trace.generation({
+  const trace = isLangfuseConfigured()
+    ? getLangfuse().trace({
+        name: `llm-${meta.tier}`,
+        metadata: { tier: meta.tier, provider: AI_PROVIDER, feature: meta.feature },
+      })
+    : null;
+  const generation = trace?.generation({
     name: meta.modelId,
     model: meta.modelId,
   });
 
+  function writeCost(inputTokens: number, outputTokens: number) {
+    if (meta.userId && (inputTokens || outputTokens)) {
+      import("@/lib/ai/cost-tracker").then(({ trackAIUsage }) => {
+        trackAIUsage({
+          userId: meta.userId!,
+          modelId: meta.modelId,
+          feature: meta.feature ?? `llm-${meta.tier}`,
+          inputTokens,
+          outputTokens,
+          projectId: meta.projectId,
+        });
+      });
+    }
+  }
+
   return {
     end(usage?: Record<string, unknown>) {
-      const input = (usage?.promptTokens ?? usage?.inputTokens) as number | undefined;
-      const output = (usage?.completionTokens ?? usage?.outputTokens) as number | undefined;
-      generation.end({
+      const input = (usage?.promptTokens ?? usage?.inputTokens ?? 0) as number;
+      const output = (usage?.completionTokens ?? usage?.outputTokens ?? 0) as number;
+      generation?.end({
         usage: usage ? { input, output } : undefined,
       });
+      writeCost(input, output);
     },
     error(err: unknown) {
-      generation.end({ level: "ERROR", statusMessage: String(err) });
+      generation?.end({ level: "ERROR", statusMessage: String(err) });
     },
   };
 }

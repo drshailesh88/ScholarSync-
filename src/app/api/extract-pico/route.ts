@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateObject } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, traceGeneration } from "@/lib/ai/models";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
@@ -68,13 +68,15 @@ export async function POST(req: Request) {
 
     const { paperId, abstract, title } = parsed.data;
 
-    const { object: picoResult } = await generateObject({
+    const trace = traceGeneration({ tier: "standard", modelId: "claude-sonnet-4-20250514", feature: "extract-pico", userId });
+    const { object: picoResult, usage } = await generateObject({
       model: getModel(),
       schema: picoSchema,
       system:
         "You are an expert at extracting PICO elements from medical research abstracts. Extract the Population, Intervention, Comparison, and Outcome from the given paper. Be precise and concise.",
       prompt: `Title: ${title}\n\nAbstract: ${abstract}`,
     });
+    trace.end(usage);
 
     if (paperId) {
       await db.insert(paperExtractions).values({

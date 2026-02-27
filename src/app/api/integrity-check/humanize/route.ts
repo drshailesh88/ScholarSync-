@@ -1,5 +1,5 @@
 import { getCurrentUserId } from "@/lib/auth";
-import { isAIConfigured, getSmallModel } from "@/lib/ai/models";
+import { isAIConfigured, getSmallModel, traceGeneration } from "@/lib/ai/models";
 import { generateObject } from "ai";
 import { z } from "zod";
 
@@ -74,7 +74,8 @@ export async function POST(req: Request) {
       ? `\n\nSurrounding context for tone matching:\n${context}`
       : "";
 
-    const { object } = await generateObject({
+    const trace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "integrity-humanize", userId });
+    const { object, usage } = await generateObject({
       model: getSmallModel(),
       schema: humanizeResponseSchema,
       system:
@@ -87,6 +88,7 @@ export async function POST(req: Request) {
         `and list the specific changes you made.\n\n` +
         `Paragraph:\n${text}${contextPrompt}`,
     });
+    trace.end(usage);
 
     return new Response(
       JSON.stringify({

@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
-import { getSmallModel, isAIConfigured } from "@/lib/ai/models";
+import { getSmallModel, isAIConfigured, traceGeneration } from "@/lib/ai/models";
 import {
   buildExtractionPrompt,
   buildColumnExtractionPrompt,
@@ -48,12 +48,14 @@ export async function POST(req: NextRequest) {
         columns
       );
 
-      const { text } = await generateText({
+      const colTrace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "research-extract-columns", userId });
+      const { text, usage: colUsage } = await generateText({
         model: getSmallModel(),
         system,
         prompt: user,
         temperature: 0.2,
       });
+      colTrace.end(colUsage);
 
       const parsed = parseExtractionResponse(text);
       return NextResponse.json({ extraction: parsed });
@@ -74,12 +76,14 @@ export async function POST(req: NextRequest) {
         userQuery,
       });
 
-      const { text } = await generateText({
+      const detailTrace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "research-extract-detail", userId });
+      const { text, usage: detailUsage } = await generateText({
         model: getSmallModel(),
         system,
         prompt: user,
         temperature: 0.2,
       });
+      detailTrace.end(detailUsage);
 
       const parsed = parseExtractionResponse(text);
       return NextResponse.json({ extraction: parsed });

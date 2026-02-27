@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateText } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, traceGeneration } from "@/lib/ai/models";
 import { getPosterGeneratorSystemPrompt } from "@/lib/ai/prompts/presentation";
 import {
   createDeck,
@@ -84,11 +84,13 @@ export async function POST(req: Request) {
         userPrompt += `\n\nAdditional instructions: ${body.additionalInstructions}`;
       }
 
-      const { text } = await generateText({
+      const trace = traceGeneration({ tier: "standard", modelId: "claude-sonnet-4-20250514", feature: "poster-generate", userId });
+      const { text, usage } = await generateText({
         model: getModel(),
         system: systemPrompt,
         prompt: userPrompt.slice(0, 60000),
       });
+      trace.end(usage);
 
       // Parse the generated poster data
       const cleanText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();

@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
-import { getSmallModel, isAIConfigured } from "@/lib/ai/models";
+import { getSmallModel, isAIConfigured, traceGeneration } from "@/lib/ai/models";
 import { buildColumnExtractionPrompt, parseExtractionResponse } from "@/lib/research/extraction";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
@@ -70,12 +70,14 @@ export async function POST(req: NextRequest) {
             }))
           );
 
-          const { text } = await generateText({
+          const trace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "evidence-table-extract", userId });
+          const { text, usage } = await generateText({
             model: getSmallModel(),
             system,
             prompt: user,
             temperature: 0.2,
           });
+          trace.end(usage);
 
           const parsed = parseExtractionResponse(text);
           const cells: Record<

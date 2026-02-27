@@ -1,6 +1,5 @@
 import { getCurrentUserId } from "@/lib/auth";
-import { isAIConfigured } from "@/lib/ai/models";
-import { getSmallModel } from "@/lib/ai/models";
+import { isAIConfigured, getSmallModel, traceGeneration } from "@/lib/ai/models";
 import { generateObject } from "ai";
 import { z } from "zod";
 
@@ -77,7 +76,8 @@ export async function POST(req: Request) {
       .filter(Boolean)
       .join(", ");
 
-    const { object } = await generateObject({
+    const trace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "integrity-paraphrase", userId });
+    const { object, usage } = await generateObject({
       model: getSmallModel(),
       schema: paraphraseResponseSchema,
       system:
@@ -90,6 +90,7 @@ export async function POST(req: Request) {
         `Source: ${sourceInfo}\n\n` +
         `Passage:\n${text}`,
     });
+    trace.end(usage);
 
     return new Response(
       JSON.stringify({
