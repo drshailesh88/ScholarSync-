@@ -405,6 +405,38 @@ export const statisticalAnalyses = pgTable(
 );
 
 // ---------------------------------------------------------------------------
+// 22a. retracted_papers (Retraction Watch integration)
+// ---------------------------------------------------------------------------
+export const retractedPapers = pgTable("retracted_papers", {
+  doi: text("doi").primaryKey(),
+  retractionDate: timestamp("retraction_date"),
+  retractionNature: text("retraction_nature"),
+  reason: text("reason"),
+  originalPaperDate: timestamp("original_paper_date"),
+  journal: text("journal"),
+  title: text("title"),
+});
+
+// ---------------------------------------------------------------------------
+// 22b. integrity_batches (batch upload for integrity checks)
+// ---------------------------------------------------------------------------
+export const integrityBatches = pgTable(
+  "integrity_batches",
+  {
+    id: serial("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    fileCount: integer("file_count").notNull(),
+    completedCount: integer("completed_count").default(0),
+    status: text("status").notNull().default("processing"),
+    createdAt: timestamp("created_at").defaultNow(),
+  },
+  (table) => [index("idx_integrity_batches_user").on(table.userId)]
+);
+
+// ---------------------------------------------------------------------------
 // 23. integrity_checks
 // ---------------------------------------------------------------------------
 export const integrityChecks = pgTable(
@@ -421,6 +453,10 @@ export const integrityChecks = pgTable(
       () => synthesisDocuments.id,
       { onDelete: "set null" }
     ),
+    batchId: integer("batch_id").references(() => integrityBatches.id, {
+      onDelete: "set null",
+    }),
+    fileName: text("file_name"),
     sectionId: integer("section_id").references(() => synthesisSections.id, {
       onDelete: "set null",
     }),
@@ -433,8 +469,12 @@ export const integrityChecks = pgTable(
     aiScore: real("ai_score"),
     aiDetectionDetails: jsonb("ai_detection_details"),
     aiDetectionEngine: text("ai_detection_engine").default("copyleaks"),
+    citationAuditResults: jsonb("citation_audit_results"),
     flaggedPassages: jsonb("flagged_passages"),
     sourceMatches: jsonb("source_matches"),
+    fullResult: jsonb("full_result"),
+    status: text("status").default("completed"),
+    errorMessage: text("error_message"),
     userReviewed: boolean("user_reviewed").default(false),
     createdAt: timestamp("created_at").defaultNow(),
   },
@@ -442,6 +482,7 @@ export const integrityChecks = pgTable(
     index("idx_integrity_user").on(table.userId),
     index("idx_integrity_project").on(table.projectId),
     index("idx_integrity_document").on(table.documentId),
+    index("idx_integrity_batch").on(table.batchId),
   ]
 );
 

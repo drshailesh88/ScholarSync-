@@ -29,6 +29,8 @@ import {
   deepResearchSteps,
   datasets,
   statisticalAnalyses,
+  retractedPapers as _retractedPapers,
+  integrityBatches,
   integrityChecks,
   writingActionLog,
   writingAnalysisSnapshots,
@@ -532,6 +534,20 @@ export const statisticalAnalysesRelations = relations(
 );
 
 // ============================================================
+// 22b. integrity_batches
+// ============================================================
+export const integrityBatchesRelations = relations(
+  integrityBatches,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [integrityBatches.userId],
+      references: [users.id],
+    }),
+    checks: many(integrityChecks),
+  })
+);
+
+// ============================================================
 // 23. integrity_checks
 // ============================================================
 export const integrityChecksRelations = relations(
@@ -548,6 +564,10 @@ export const integrityChecksRelations = relations(
     section: one(synthesisSections, {
       fields: [integrityChecks.sectionId],
       references: [synthesisSections.id],
+    }),
+    batch: one(integrityBatches, {
+      fields: [integrityChecks.batchId],
+      references: [integrityBatches.id],
     }),
   })
 );
