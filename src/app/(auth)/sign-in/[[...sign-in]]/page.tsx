@@ -1,4 +1,6 @@
-import { SignIn } from "@clerk/nextjs";
+"use client";
+
+import { SignIn } from "@clerk/clerk-react";
 
 const hasClerkKeys =
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
