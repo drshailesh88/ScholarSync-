@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProviderWrapper } from "@/components/providers/clerk-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { PostHogProvider } from "@/components/providers/posthog-provider";
 import { inter, plusJakarta, merriweather } from "@/lib/fonts";
@@ -11,32 +11,13 @@ export const metadata: Metadata = {
     "AI-powered academic writing platform for medical students and researchers",
 };
 
-const hasClerkKeys =
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-  !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder");
-
-function Providers({ children }: { children: React.ReactNode }) {
-  if (hasClerkKeys) {
-    return (
-      <ClerkProvider
-        appearance={{
-          variables: { colorPrimary: "#6366f1" },
-        }}
-      >
-        {children}
-      </ClerkProvider>
-    );
-  }
-  return <>{children}</>;
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
+    <ClerkProviderWrapper>
       <html
         lang="en"
         suppressHydrationWarning
@@ -53,6 +34,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </Providers>
+    </ClerkProviderWrapper>
   );
 }

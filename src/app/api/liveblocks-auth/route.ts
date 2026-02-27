@@ -1,5 +1,6 @@
 import { Liveblocks } from "@liveblocks/node";
 import { NextResponse } from "next/server";
+import { getCurrentUserId, getCurrentUser } from "@/lib/auth";
 
 // Predefined collaboration colors assigned deterministically per user
 const COLLAB_COLORS = [
@@ -33,29 +34,15 @@ export async function POST(req: Request) {
   let userName = "Anonymous";
   let userAvatar = "";
 
-  const hasClerkKeys =
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-    !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder");
-
-  if (hasClerkKeys) {
-    const { auth, currentUser } = await import("@clerk/nextjs/server");
-    const { userId: clerkUserId } = await auth();
-    if (!clerkUserId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    userId = clerkUserId;
-
-    const user = await currentUser();
+  try {
+    userId = await getCurrentUserId();
+    const user = await getCurrentUser();
     if (user?.firstName) {
       userName = `${user.firstName} ${user.lastName || ""}`.trim();
     }
     userAvatar = user?.imageUrl || "";
-  } else if (process.env.NODE_ENV === "development") {
-    // Dev fallback
-    userId = "dev_user_001";
-    userName = "Dev User";
-  } else {
-    return NextResponse.json({ error: "Auth not configured" }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const colorIndex =

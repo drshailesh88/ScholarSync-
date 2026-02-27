@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { slideComments } from "@/lib/db/schema";
 import { eq, asc } from "drizzle-orm";
-import { getCurrentUserId } from "@/lib/auth";
+import { getCurrentUserId, getCurrentUser } from "@/lib/auth";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -44,13 +44,12 @@ export async function addComment(
   let userName = "User";
   let userAvatar: string | null = null;
   try {
-    const { currentUser } = await import("@clerk/nextjs/server");
-    const user = await currentUser();
+    const user = await getCurrentUser();
     if (user) {
       userName =
         user.firstName && user.lastName
           ? `${user.firstName} ${user.lastName}`
-          : user.firstName ?? user.emailAddresses?.[0]?.emailAddress ?? "User";
+          : user.firstName ?? "User";
       userAvatar = user.imageUrl ?? null;
     }
   } catch {

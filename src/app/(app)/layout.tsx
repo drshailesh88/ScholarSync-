@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
+import { getCurrentUserId } from "@/lib/auth";
 
 const hasClerkKeys =
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
@@ -11,9 +12,9 @@ export default async function AppLayout({
   children: React.ReactNode;
 }) {
   if (hasClerkKeys) {
-    const { auth } = await import("@clerk/nextjs/server");
-    const { userId } = await auth();
-    if (!userId) {
+    try {
+      await getCurrentUserId();
+    } catch {
       redirect("/sign-in");
     }
   }
