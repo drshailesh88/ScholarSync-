@@ -1,25 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Storage } from "@google-cloud/storage";
 import { db } from "@/lib/db";
 import { presentationRecordings } from "@/lib/db/schema";
 import { getCurrentUserId } from "@/lib/auth";
 import { eq, and, desc } from "drizzle-orm";
-import { writeFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import path from "node:path";
-
-// ---------------------------------------------------------------------------
-// GCS / local storage setup (mirrors gcs.ts pattern)
-// ---------------------------------------------------------------------------
-
-const USE_LOCAL_STORAGE = process.env.USE_LOCAL_STORAGE === "true";
-const LOCAL_STORAGE_DIR = path.join(process.cwd(), ".data", "recordings");
-const BUCKET_NAME = process.env.GCS_BUCKET_NAME || "scholarsync-pdfs";
-
-const storage = USE_LOCAL_STORAGE
-  ? null
-  : new Storage({ projectId: process.env.GCS_PROJECT_ID });
-const bucket = USE_LOCAL_STORAGE ? null : storage!.bucket(BUCKET_NAME);
+import {
+  uploadRecording,
+  downloadRecording,
+  deleteRecording,
+} from "@/lib/storage/r2";
 
 // ---------------------------------------------------------------------------
 // POST — Upload a recording
@@ -43,41 +31,14 @@ export async function POST(req: NextRequest) {
     }
 
     const recordingId = crypto.randomUUID();
-    const gcsPath = `recordings/${deckId}/${recordingId}.webm`;
     const buffer = Buffer.from(await videoFile.arrayBuffer());
 
-    // Upload
-    if (USE_LOCAL_STORAGE) {
-      const dir = path.join(LOCAL_STORAGE_DIR, deckId);
-      if (!existsSync(dir)) {
-        await mkdir(dir, { recursive: true });
-      }
-      await writeFile(path.join(dir, `${recordingId}.webm`), buffer);
-    } else {
-      const file = bucket!.file(gcsPath);
-      await file.save(buffer, {
-        contentType: "video/webm",
-        resumable: true,
-        metadata: {
-          cacheControl: "private, max-age=3600",
-        },
-      });
-    }
+    // Upload to R2 (or local filesystem in dev)
+    const storagePath = await uploadRecording(deckId, recordingId, buffer);
 
-    // Build storage URL
-    let storageUrl: string;
-    if (USE_LOCAL_STORAGE) {
-      storageUrl = `/api/recordings/upload?stream=${deckId}/${recordingId}.webm`;
-    } else {
-      // Generate a signed URL valid for 7 days
-      const file = bucket!.file(gcsPath);
-      const [signedUrl] = await file.getSignedUrl({
-        version: "v4",
-        action: "read",
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-      });
-      storageUrl = signedUrl;
-    }
+    // Build a URL the frontend can use to play the recording.
+    // In both Workers and local dev, we serve through our own API route.
+    const storageUrl = `/api/recordings/upload?stream=${deckId}/${recordingId}.webm`;
 
     // Parse slide markers
     let slideMarkers = null;
@@ -97,7 +58,7 @@ export async function POST(req: NextRequest) {
         deckId: parseInt(deckId, 10),
         userId,
         storageUrl,
-        storagePath: gcsPath,
+        storagePath,
         durationMs: durationMs ? parseInt(durationMs, 10) : null,
         fileSizeBytes: buffer.length,
         slideMarkers: slideMarkers as Record<string, unknown>,
@@ -107,30 +68,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ recording }, { status: 201 });
   } catch (err) {
     console.error("[recordings/upload] Error:", err);
-    return NextResponse.json(
-      { error: "Upload failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
   }
 }
 
 // ---------------------------------------------------------------------------
-// GET — List recordings for a deck (or stream a local file)
+// GET — List recordings for a deck (or stream a stored file)
 // ---------------------------------------------------------------------------
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
 
-  // Stream local file (dev only)
+  // Stream a stored file (works in both local dev and Workers)
   const streamPath = searchParams.get("stream");
-  if (streamPath && USE_LOCAL_STORAGE) {
-    const filePath = path.join(LOCAL_STORAGE_DIR, streamPath);
-    if (!existsSync(filePath)) {
+  if (streamPath) {
+    const storagePath = `recordings/${streamPath}`;
+    const buffer = await downloadRecording(storagePath);
+    if (!buffer) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-    const { readFile } = await import("node:fs/promises");
-    const buffer = await readFile(filePath);
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         "Content-Type": "video/webm",
         "Content-Length": String(buffer.length),
@@ -200,26 +157,8 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    // Delete from storage
-    if (USE_LOCAL_STORAGE) {
-      const filePath = path.join(
-        LOCAL_STORAGE_DIR,
-        recording.storagePath.replace("recordings/", "")
-      );
-      try {
-        const { unlink } = await import("node:fs/promises");
-        await unlink(filePath);
-      } catch {
-        // ignore
-      }
-    } else {
-      try {
-        const file = bucket!.file(recording.storagePath);
-        await file.delete({ ignoreNotFound: true });
-      } catch {
-        // ignore
-      }
-    }
+    // Delete from R2 / local filesystem
+    await deleteRecording(recording.storagePath);
 
     // Delete from DB
     await db
@@ -229,9 +168,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[recordings/upload] DELETE error:", err);
-    return NextResponse.json(
-      { error: "Delete failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
 }

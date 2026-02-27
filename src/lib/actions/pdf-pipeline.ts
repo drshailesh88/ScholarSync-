@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { uploadPdf, downloadPdf } from "@/lib/storage/gcs";
+import { uploadPdf, downloadPdf } from "@/lib/storage/r2";
 import { lookupUnpaywall } from "@/lib/search/sources/unpaywall";
 import { extractWithDocling } from "@/lib/actions/pdf-advanced";
 import { extractPdfText } from "@/lib/actions/pdf";

@@ -9,7 +9,7 @@ import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { papers, projectPapers, projects } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
-import { uploadPdf } from "@/lib/storage/gcs";
+import { uploadPdf } from "@/lib/storage/r2";
 
 export async function POST(req: Request) {
   try {

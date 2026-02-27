@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { uploadPdf, getSignedPdfUrl, downloadPdf } from "@/lib/storage/gcs";
+import { uploadPdf, getSignedPdfUrl, downloadPdf } from "@/lib/storage/r2";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
