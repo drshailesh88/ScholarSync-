@@ -45,9 +45,16 @@ function getOpenAI() {
 // Call traceGeneration() before your LLM call, end it after.
 // When LangFuse is not configured, returns no-ops.
 
-export function traceGeneration(meta: { tier: string; modelId: string; feature?: string }) {
+export function traceGeneration(meta: {
+  tier: string;
+  modelId: string;
+  feature?: string;
+  userId?: string;
+  projectId?: number;
+}) {
   if (!isLangfuseConfigured()) {
-    return { end: () => {}, error: () => {} };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return { end: (_usage?: Record<string, unknown>) => {}, error: (_err?: unknown) => {} };
   }
 
   const trace = getLangfuse().trace({
@@ -60,9 +67,11 @@ export function traceGeneration(meta: { tier: string; modelId: string; feature?:
   });
 
   return {
-    end(usage?: { promptTokens?: number; completionTokens?: number }) {
+    end(usage?: Record<string, unknown>) {
+      const input = (usage?.promptTokens ?? usage?.inputTokens) as number | undefined;
+      const output = (usage?.completionTokens ?? usage?.outputTokens) as number | undefined;
       generation.end({
-        usage: usage ? { input: usage.promptTokens, output: usage.completionTokens } : undefined,
+        usage: usage ? { input, output } : undefined,
       });
     },
     error(err: unknown) {
