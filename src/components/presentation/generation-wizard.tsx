@@ -9,13 +9,18 @@ import {
   CircleNotch,
   Check,
   Warning,
+  CaretDown,
+  CaretUp,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { SourceSelector, type SourceType } from "./source-selector";
-import { PRESET_THEMES } from "@/types/presentation";
+import { TemplateSelector } from "./template-selector";
+import { PRESET_THEMES, ACADEMIC_TEMPLATES } from "@/types/presentation";
 import type { AudienceType } from "@/types/presentation";
+import type { ParsedReference } from "@/lib/references/types";
+import { formatReferencesAsContent } from "@/lib/references/format";
 
-const STEPS = ["Select Source", "Configure", "Generate"];
+const STEPS = ["Select Source", "Template & Audience", "Configure", "Generate"];
 
 const AUDIENCE_OPTIONS: { key: AudienceType; label: string }[] = [
   { key: "general", label: "General" },
@@ -23,54 +28,89 @@ const AUDIENCE_OPTIONS: { key: AudienceType; label: string }[] = [
   { key: "conference", label: "Conference" },
   { key: "journal_club", label: "Journal Club" },
   { key: "classroom", label: "Classroom" },
+  { key: "grant_presentation", label: "Grant Presentation" },
+  { key: "poster_session", label: "Poster Session" },
+  { key: "systematic_review", label: "Systematic Review" },
+  { key: "patient_case", label: "Patient Case" },
+  { key: "grand_rounds", label: "Grand Rounds" },
+];
+
+const CITATION_STYLES: { key: "apa" | "mla" | "chicago" | "vancouver" | "harvard"; label: string }[] = [
+  { key: "apa", label: "APA" },
+  { key: "mla", label: "MLA" },
+  { key: "chicago", label: "Chicago" },
+  { key: "vancouver", label: "Vancouver" },
+  { key: "harvard", label: "Harvard" },
 ];
 
 export function GenerationWizard() {
   const router = useRouter();
   const [step, setStep] = useState(0);
 
-  // Step 1: Source
+  // Step 0: Source
   const [sourceType, setSourceType] = useState<SourceType>("text");
   const [paperIds, setPaperIds] = useState<number[]>([]);
   const [documentId, setDocumentId] = useState<number | null>(null);
   const [rawText, setRawText] = useState("");
+  const [deepResearchSessionId, setDeepResearchSessionId] = useState<number | null>(null);
+  const [selectedReferences, setSelectedReferences] = useState<ParsedReference[]>([]);
+
+  // Step 1: Template & Audience
+  const [templateId, setTemplateId] = useState<string | null>(null);
+  const [audienceType, setAudienceType] = useState<AudienceType>("general");
 
   // Step 2: Config
   const [title, setTitle] = useState("");
-  const [audienceType, setAudienceType] = useState<AudienceType>("general");
   const [slideCount, setSlideCount] = useState(12);
   const [themeKey, setThemeKey] = useState("modern");
   const [instructions, setInstructions] = useState("");
+  const [citationStyle, setCitationStyle] = useState<"apa" | "mla" | "chicago" | "vancouver" | "harvard">("apa");
+  const [structureExpanded, setStructureExpanded] = useState(false);
 
   // Step 3: Generation
   const [preprocessing, setPreprocessing] = useState(false);
   const [preprocessedData, setPreprocessedData] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [generatingBibliography, setGeneratingBibliography] = useState(false);
   const [generationResult, setGenerationResult] = useState<{
     deckId: number;
     slideCount: number;
   } | null>(null);
   const [error, setError] = useState("");
 
-  const canProceedStep1 =
+  const canProceedStep0 =
     (sourceType === "papers" && paperIds.length > 0) ||
     (sourceType === "document" && documentId != null) ||
-    (sourceType === "text" && rawText.trim().length > 50);
+    (sourceType === "text" && rawText.trim().length > 50) ||
+    (sourceType === "deep_research" && deepResearchSessionId != null) ||
+    (sourceType === "references" && selectedReferences.length > 0);
 
   const canProceedStep2 = title.trim().length > 0;
+
+  const selectedTemplate = templateId ? ACADEMIC_TEMPLATES[templateId] : null;
 
   async function handlePreprocess() {
     setPreprocessing(true);
     setError("");
     try {
+      // For references source type, format the references as text and send as rawText
+      let effectiveSourceType: string = sourceType;
+      let effectiveRawText: string | undefined;
+
+      if (sourceType === "references" && selectedReferences.length > 0) {
+        effectiveSourceType = "text";
+        effectiveRawText = formatReferencesAsContent(selectedReferences);
+      }
+
       const res = await fetch("/api/presentations/preprocess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sourceType,
-          paperIds: sourceType === "papers" ? paperIds : undefined,
-          documentId: sourceType === "document" ? documentId : undefined,
-          rawText: sourceType === "text" ? rawText : undefined,
+          sourceType: effectiveSourceType,
+          paperIds: effectiveSourceType === "papers" ? paperIds : undefined,
+          documentId: effectiveSourceType === "document" ? documentId : undefined,
+          rawText: effectiveSourceType === "text" ? (effectiveRawText ?? rawText) : undefined,
+          deepResearchSessionId: effectiveSourceType === "deep_research" ? deepResearchSessionId : undefined,
         }),
       });
 
@@ -122,6 +162,8 @@ export function GenerationWizard() {
           slideCount,
           themeKey,
           additionalInstructions: instructions || undefined,
+          templateId: templateId || undefined,
+          citationStyle,
         }),
       });
 
@@ -129,6 +171,11 @@ export function GenerationWizard() {
 
       const result = await res.json();
       setGenerationResult(result);
+
+      // Simulate bibliography generation step
+      setGeneratingBibliography(true);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setGeneratingBibliography(false);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Generation failed");
     } finally {
@@ -137,7 +184,7 @@ export function GenerationWizard() {
   }
 
   async function handleStartGeneration() {
-    setStep(2);
+    setStep(3);
     await handlePreprocess();
   }
 
@@ -174,7 +221,7 @@ export function GenerationWizard() {
         ))}
       </div>
 
-      {/* Step content */}
+      {/* Step 0: Source Selection */}
       {step === 0 && (
         <div className="space-y-6">
           <div>
@@ -195,15 +242,66 @@ export function GenerationWizard() {
             onDocumentIdChange={setDocumentId}
             rawText={rawText}
             onRawTextChange={setRawText}
+            onReferencesSelected={setSelectedReferences}
+            selectedReferences={selectedReferences}
           />
+
+          {/* Deep Research source option */}
+          <div>
+            <button
+              onClick={() => setSourceType("deep_research")}
+              className={cn(
+                "w-full flex items-start gap-3 p-4 rounded-xl border-2 text-left transition-all",
+                sourceType === "deep_research"
+                  ? "border-brand bg-brand/5"
+                  : "border-border bg-surface-raised hover:border-brand/40"
+              )}
+            >
+              <Sparkle
+                size={20}
+                className={cn(
+                  sourceType === "deep_research" ? "text-brand" : "text-ink-muted"
+                )}
+              />
+              <div>
+                <p
+                  className={cn(
+                    "text-sm font-medium",
+                    sourceType === "deep_research" ? "text-brand" : "text-ink"
+                  )}
+                >
+                  From Deep Research
+                </p>
+                <p className="text-xs text-ink-muted mt-0.5">
+                  Import findings from a Deep Research session
+                </p>
+              </div>
+            </button>
+
+            {sourceType === "deep_research" && (
+              <div className="mt-3">
+                <input
+                  type="number"
+                  value={deepResearchSessionId ?? ""}
+                  onChange={(e) =>
+                    setDeepResearchSessionId(
+                      e.target.value ? parseInt(e.target.value, 10) : null
+                    )
+                  }
+                  placeholder="Deep Research session ID"
+                  className="w-full px-4 py-3 rounded-xl bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
+                />
+              </div>
+            )}
+          </div>
 
           <div className="flex justify-end">
             <button
               onClick={() => setStep(1)}
-              disabled={!canProceedStep1}
+              disabled={!canProceedStep0}
               className={cn(
                 "flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-colors",
-                canProceedStep1
+                canProceedStep0
                   ? "bg-brand text-white hover:bg-brand/90"
                   : "bg-surface-raised text-ink-muted cursor-not-allowed"
               )}
@@ -214,25 +312,27 @@ export function GenerationWizard() {
         </div>
       )}
 
+      {/* Step 1: Template & Audience */}
       {step === 1 && (
         <div className="space-y-6">
           <div>
             <h2 className="text-lg font-semibold text-ink mb-1">
-              Configure Presentation
+              Template & Audience
             </h2>
             <p className="text-sm text-ink-muted">
-              Set title, audience, and generation preferences
+              Choose a presentation template and target audience
             </p>
           </div>
 
           <div>
-            <label className="text-sm font-medium text-ink block mb-2">Title</label>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Presentation title"
-              className="w-full px-4 py-3 rounded-xl bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
-              autoFocus
+            <label className="text-sm font-medium text-ink block mb-3">
+              Presentation Template{" "}
+              <span className="text-ink-muted font-normal">(optional)</span>
+            </label>
+            <TemplateSelector
+              selectedId={templateId}
+              onSelect={setTemplateId}
+              onAudienceChange={setAudienceType}
             />
           </div>
 
@@ -256,6 +356,46 @@ export function GenerationWizard() {
             </div>
           </div>
 
+          <div className="flex justify-between">
+            <button
+              onClick={() => setStep(0)}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-ink-muted hover:text-ink transition-colors"
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
+            <button
+              onClick={() => setStep(2)}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-brand text-white hover:bg-brand/90 transition-colors"
+            >
+              Next <ArrowRight size={14} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Step 2: Configure */}
+      {step === 2 && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-lg font-semibold text-ink mb-1">
+              Configure Presentation
+            </h2>
+            <p className="text-sm text-ink-muted">
+              Set title, theme, and generation preferences
+            </p>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-ink block mb-2">Title</label>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Presentation title"
+              className="w-full px-4 py-3 rounded-xl bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
+              autoFocus
+            />
+          </div>
+
           <div>
             <label className="text-sm font-medium text-ink block mb-2">
               Target Slide Count: {slideCount}
@@ -271,8 +411,28 @@ export function GenerationWizard() {
           </div>
 
           <div>
+            <label className="text-sm font-medium text-ink block mb-2">Citation Style</label>
+            <div className="flex flex-wrap gap-2">
+              {CITATION_STYLES.map((style) => (
+                <button
+                  key={style.key}
+                  onClick={() => setCitationStyle(style.key)}
+                  className={cn(
+                    "px-4 py-2 rounded-lg text-xs font-medium border transition-colors",
+                    citationStyle === style.key
+                      ? "border-brand bg-brand/5 text-brand"
+                      : "border-border text-ink-muted hover:border-brand/40"
+                  )}
+                >
+                  {style.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
             <label className="text-sm font-medium text-ink block mb-2">Theme</label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-7 gap-2">
               {Object.entries(PRESET_THEMES).map(([key, config]) => (
                 <button
                   key={key}
@@ -300,6 +460,43 @@ export function GenerationWizard() {
             </div>
           </div>
 
+          {/* Template Structure Preview */}
+          {selectedTemplate && (
+            <div>
+              <button
+                onClick={() => setStructureExpanded(!structureExpanded)}
+                className="flex items-center gap-2 text-sm font-medium text-ink hover:text-brand transition-colors"
+              >
+                {structureExpanded ? <CaretUp size={14} /> : <CaretDown size={14} />}
+                Template Structure Preview ({selectedTemplate.name})
+              </button>
+              {structureExpanded && (
+                <div className="mt-3 space-y-1.5 max-h-64 overflow-y-auto">
+                  {selectedTemplate.structure.map((slot, i) => (
+                    <div
+                      key={i}
+                      className="flex items-start gap-3 px-3 py-2 rounded-lg bg-surface-raised text-xs"
+                    >
+                      <span className="text-ink-muted font-mono w-5 shrink-0 text-right">
+                        {i + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <span className="font-medium text-ink">{slot.title}</span>
+                        {!slot.required && (
+                          <span className="ml-1.5 text-ink-muted">(optional)</span>
+                        )}
+                        <p className="text-ink-muted mt-0.5 line-clamp-1">{slot.guidance}</p>
+                      </div>
+                      <span className="ml-auto text-ink-muted shrink-0 capitalize">
+                        {slot.layout.replace(/_/g, " ")}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           <div>
             <label className="text-sm font-medium text-ink block mb-2">
               Additional Instructions{" "}
@@ -316,7 +513,7 @@ export function GenerationWizard() {
 
           <div className="flex justify-between">
             <button
-              onClick={() => setStep(0)}
+              onClick={() => setStep(1)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-ink-muted hover:text-ink transition-colors"
             >
               <ArrowLeft size={14} /> Back
@@ -337,7 +534,8 @@ export function GenerationWizard() {
         </div>
       )}
 
-      {step === 2 && (
+      {/* Step 3: Generation */}
+      {step === 3 && (
         <div className="space-y-6">
           <div>
             <h2 className="text-lg font-semibold text-ink mb-1">
@@ -374,6 +572,16 @@ export function GenerationWizard() {
                       : "pending"
               }
             />
+            <ProgressItem
+              label="Generating bibliography"
+              status={
+                generatingBibliography
+                  ? "loading"
+                  : generationResult && !generatingBibliography
+                    ? "done"
+                    : "pending"
+              }
+            />
           </div>
 
           {/* Auto-trigger generation after preprocess */}
@@ -388,11 +596,12 @@ export function GenerationWizard() {
             </div>
           )}
 
-          {generationResult && (
+          {generationResult && !generatingBibliography && (
             <div className="space-y-4">
               <div className="flex items-center gap-2 p-4 rounded-xl bg-green-500/10 border border-green-500/20 text-green-600 text-sm">
                 <Check size={16} weight="bold" />
-                Generated {generationResult.slideCount} slides successfully!
+                Generated {generationResult.slideCount} slides successfully
+                {selectedTemplate ? ` using the ${selectedTemplate.name} template` : ""}!
               </div>
 
               <button
@@ -410,7 +619,7 @@ export function GenerationWizard() {
             <div className="flex justify-between">
               <button
                 onClick={() => {
-                  setStep(1);
+                  setStep(2);
                   setError("");
                   setPreprocessedData("");
                   setGenerationResult(null);

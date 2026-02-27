@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateText } from "ai";
-import { getSmallModel, isAIConfigured } from "@/lib/ai/models";
+import { getSmallModel, isAIConfigured, traceGeneration } from "@/lib/ai/models";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
@@ -44,12 +44,14 @@ ${sectionHeadings?.length ? `Section headings: ${sectionHeadings.join(", ")}` : 
 
 Return ONLY the 5 questions, one per line, no numbering or bullets.`;
 
-    const result = await generateText({
+    const trace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "suggested-questions", userId });
+    const { text: rawText, usage } = await generateText({
       model: getSmallModel(),
       prompt,
     });
+    trace.end(usage);
 
-    const questions = result.text
+    const questions = rawText
       .split("\n")
       .map((q: string) => q.trim())
       .filter((q: string) => q.length > 0 && q.endsWith("?"))

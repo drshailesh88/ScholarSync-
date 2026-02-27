@@ -1,9 +1,11 @@
 "use client";
 
-import { FileText, TextT, BookOpen } from "@phosphor-icons/react";
+import { FileText, TextT, BookOpen, BookBookmark } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { ReferenceImportPanel } from "./reference-import-panel";
+import type { ParsedReference } from "@/lib/references/types";
 
-export type SourceType = "papers" | "document" | "text";
+export type SourceType = "papers" | "document" | "text" | "deep_research" | "references";
 
 interface SourceSelectorProps {
   sourceType: SourceType;
@@ -14,6 +16,10 @@ interface SourceSelectorProps {
   onDocumentIdChange: (id: number | null) => void;
   rawText: string;
   onRawTextChange: (text: string) => void;
+  /** Callback when references are selected from the import panel */
+  onReferencesSelected?: (refs: ParsedReference[]) => void;
+  /** Currently selected imported references */
+  selectedReferences?: ParsedReference[];
 }
 
 const SOURCE_OPTIONS: { key: SourceType; label: string; description: string; icon: React.ReactNode }[] = [
@@ -35,6 +41,12 @@ const SOURCE_OPTIONS: { key: SourceType; label: string; description: string; ico
     description: "Paste content directly",
     icon: <TextT size={20} />,
   },
+  {
+    key: "references",
+    label: "Reference Library",
+    description: "Import from Zotero, BibTeX, DOI",
+    icon: <BookBookmark size={20} />,
+  },
 ];
 
 export function SourceSelector({
@@ -46,11 +58,13 @@ export function SourceSelector({
   onDocumentIdChange,
   rawText,
   onRawTextChange,
+  onReferencesSelected,
+  selectedReferences,
 }: SourceSelectorProps) {
   return (
     <div className="space-y-4">
       {/* Source type selector */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-4 gap-3">
         {SOURCE_OPTIONS.map((opt) => (
           <button
             key={opt.key}
@@ -131,6 +145,46 @@ export function SourceSelector({
           <p className="text-[10px] text-ink-muted mt-1">
             {rawText.length} characters
           </p>
+        </div>
+      )}
+
+      {sourceType === "references" && onReferencesSelected && (
+        <div>
+          {selectedReferences && selectedReferences.length > 0 ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-ink">
+                  {selectedReferences.length} reference{selectedReferences.length !== 1 ? "s" : ""} selected
+                </p>
+                <button
+                  onClick={() => onReferencesSelected([])}
+                  className="text-xs text-ink-muted hover:text-ink transition-colors"
+                >
+                  Clear & re-import
+                </button>
+              </div>
+              <div className="max-h-48 overflow-y-auto space-y-1.5">
+                {selectedReferences.map((ref) => (
+                  <div
+                    key={ref.id}
+                    className="flex items-start gap-2 p-2 rounded-lg bg-surface-raised text-xs"
+                  >
+                    <BookBookmark size={14} className="text-brand shrink-0 mt-0.5" />
+                    <div className="min-w-0">
+                      <p className="font-medium text-ink line-clamp-1">{ref.title}</p>
+                      <p className="text-[10px] text-ink-muted truncate">
+                        {ref.authors.slice(0, 2).join(", ")}
+                        {ref.authors.length > 2 && " et al."}
+                        {ref.year ? ` (${ref.year})` : ""}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <ReferenceImportPanel onReferencesSelected={onReferencesSelected} />
+          )}
         </div>
       )}
     </div>

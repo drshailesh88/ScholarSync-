@@ -68,12 +68,48 @@ export const slideDecks = pgTable(
     sourceType: sourceTypeEnum("source_type"),
     sourcePaperIds: jsonb("source_paper_ids").default([]),
     exportPath: text("export_path"),
+    templateId: text("template_id"),
+    citationStyle: text("citation_style").default("apa"),
+    institutionKit: jsonb("institution_kit"),
+    deepResearchSessionId: integer("deep_research_session_id"),
+    shareToken: text("share_token").unique(),
+    shareEnabled: boolean("share_enabled").default(false),
+    sharePassword: text("share_password"),
+    shareExpiresAt: timestamp("share_expires_at"),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
   },
   (table) => [
     index("idx_slide_decks_project").on(table.projectId),
     index("idx_slide_decks_user").on(table.userId),
+    index("idx_slide_decks_share_token").on(table.shareToken),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 17a. slide_deck_versions
+// ---------------------------------------------------------------------------
+export const slideDeckVersions = pgTable(
+  "slide_deck_versions",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    deckId: integer("deck_id")
+      .notNull()
+      .references(() => slideDecks.id, { onDelete: "cascade" }),
+    versionNumber: integer("version_number").notNull(),
+    label: text("label"),
+    snapshot: jsonb("snapshot").notNull(),
+    changeSummary: text("change_summary"),
+    createdBy: text("created_by"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_deck_versions_deck").on(table.deckId),
+    index("idx_deck_versions_created").on(table.createdAt),
   ]
 );
 
@@ -144,6 +180,107 @@ export const slideTemplates = pgTable("slide_templates", {
   isSystem: boolean("is_system").default(true),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// ---------------------------------------------------------------------------
+// 18c. presentation_views (viewer/engagement analytics)
+// ---------------------------------------------------------------------------
+export const presentationViews = pgTable(
+  "presentation_views",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    deckId: integer("deck_id")
+      .notNull()
+      .references(() => slideDecks.id, { onDelete: "cascade" }),
+    shareToken: text("share_token"),
+    viewerFingerprint: text("viewer_fingerprint"),
+    ipCountry: text("ip_country"),
+    userAgent: text("user_agent"),
+    startedAt: timestamp("started_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+    slideTimings: jsonb("slide_timings"),
+    totalDurationMs: integer("total_duration_ms"),
+    slidesViewed: integer("slides_viewed"),
+    totalSlides: integer("total_slides"),
+    completed: boolean("completed").default(false),
+  },
+  (table) => [
+    index("idx_pres_views_deck").on(table.deckId),
+    index("idx_pres_views_fingerprint").on(table.viewerFingerprint),
+    index("idx_pres_views_started").on(table.startedAt),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 18d. slide_comments (slide-level commenting)
+// ---------------------------------------------------------------------------
+export const slideComments = pgTable(
+  "slide_comments",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    slideId: integer("slide_id")
+      .notNull()
+      .references(() => slides.id, { onDelete: "cascade" }),
+    deckId: integer("deck_id")
+      .notNull()
+      .references(() => slideDecks.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(),
+    userName: text("user_name"),
+    userAvatar: text("user_avatar"),
+    content: text("content").notNull(),
+    parentId: text("parent_id"),
+    resolved: boolean("resolved").default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_slide_comments_slide").on(table.slideId),
+    index("idx_slide_comments_deck").on(table.deckId),
+    index("idx_slide_comments_parent").on(table.parentId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 18e. presentation_recordings
+// ---------------------------------------------------------------------------
+export const presentationRecordings = pgTable(
+  "presentation_recordings",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    deckId: integer("deck_id")
+      .notNull()
+      .references(() => slideDecks.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(),
+    title: text("title"),
+    storageUrl: text("storage_url"),
+    storagePath: text("storage_path").notNull(),
+    thumbnailUrl: text("thumbnail_url"),
+    durationMs: integer("duration_ms"),
+    fileSizeBytes: integer("file_size_bytes"),
+    format: text("format").default("webm"),
+    slideMarkers: jsonb("slide_markers"),
+    hasWebcam: boolean("has_webcam").default(false),
+    status: text("status").default("recording"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_pres_recordings_deck").on(table.deckId),
+    index("idx_pres_recordings_user").on(table.userId),
+  ]
+);
 
 // ---------------------------------------------------------------------------
 // 19. deep_research_sessions
@@ -272,9 +409,12 @@ export const integrityChecks = pgTable(
   "integrity_checks",
   {
     id: serial("id").primaryKey(),
-    projectId: integer("project_id")
+    userId: text("user_id")
       .notNull()
-      .references(() => projects.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: integer("project_id").references(() => projects.id, {
+      onDelete: "cascade",
+    }),
     documentId: integer("document_id").references(
       () => synthesisDocuments.id,
       { onDelete: "set null" }
@@ -297,6 +437,7 @@ export const integrityChecks = pgTable(
     createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => [
+    index("idx_integrity_user").on(table.userId),
     index("idx_integrity_project").on(table.projectId),
     index("idx_integrity_document").on(table.documentId),
   ]
@@ -582,5 +723,114 @@ export const userLearningProgress = pgTable(
       table.userId,
       table.moduleId
     ),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 37. live_sessions (Live Audience Q&A)
+// ---------------------------------------------------------------------------
+export const liveSessions = pgTable(
+  "live_sessions",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    deckId: integer("deck_id")
+      .notNull()
+      .references(() => slideDecks.id, { onDelete: "cascade" }),
+    userId: text("user_id").notNull(), // presenter
+    joinCode: text("join_code").notNull().unique(),
+    status: text("status").default("active"), // 'active' | 'ended'
+    currentSlideIndex: integer("current_slide_index").default(0),
+    audienceCount: integer("audience_count").default(0),
+    settings: jsonb("settings"), // { allowAnonymous, moderateQuestions, maxQuestions }
+    startedAt: timestamp("started_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
+  },
+  (table) => [
+    index("idx_live_sessions_deck").on(table.deckId),
+    index("idx_live_sessions_join_code").on(table.joinCode),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 38. live_questions (Audience questions)
+// ---------------------------------------------------------------------------
+export const liveQuestions = pgTable(
+  "live_questions",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    sessionId: text("session_id")
+      .notNull()
+      .references(() => liveSessions.id, { onDelete: "cascade" }),
+    content: text("content").notNull(),
+    authorName: text("author_name"),
+    authorFingerprint: text("author_fingerprint"),
+    slideIndex: integer("slide_index"),
+    upvotes: integer("upvotes").default(0),
+    status: text("status").default("pending"), // 'pending' | 'answered' | 'dismissed' | 'highlighted'
+    answeredAt: timestamp("answered_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_live_questions_session").on(table.sessionId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 39. live_polls
+// ---------------------------------------------------------------------------
+export const livePolls = pgTable(
+  "live_polls",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    sessionId: text("session_id")
+      .notNull()
+      .references(() => liveSessions.id, { onDelete: "cascade" }),
+    question: text("question").notNull(),
+    options: jsonb("options").notNull(), // ["Option A", "Option B", "Option C"]
+    slideIndex: integer("slide_index"),
+    status: text("status").default("draft"), // 'draft' | 'active' | 'closed'
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_live_polls_session").on(table.sessionId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 40. live_poll_responses
+// ---------------------------------------------------------------------------
+export const livePollResponses = pgTable(
+  "live_poll_responses",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    pollId: text("poll_id")
+      .notNull()
+      .references(() => livePolls.id, { onDelete: "cascade" }),
+    optionIndex: integer("option_index").notNull(),
+    voterFingerprint: text("voter_fingerprint").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("live_poll_responses_unique_vote").on(
+      table.pollId,
+      table.voterFingerprint
+    ),
+    index("idx_live_poll_responses_poll").on(table.pollId),
   ]
 );

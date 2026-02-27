@@ -2,11 +2,12 @@
 
 import { ErrorDisplay } from "@/components/ui/error-display";
 
-export default function SettingsError({ reset }: { error: Error; reset: () => void }) {
+export default function SettingsError({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <ErrorDisplay
       title="Settings unavailable"
       message="We couldn't load your settings. Please try again."
+      error={error}
       onRetry={reset}
     />
   );

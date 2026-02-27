@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateText } from "ai";
-import { getModel } from "@/lib/ai/models";
+import { getModel, traceGeneration } from "@/lib/ai/models";
 import { getSlideGeneratorSystemPrompt } from "@/lib/ai/prompts/presentation";
 import {
   createDeck,
@@ -20,13 +20,18 @@ import { PRESET_THEMES } from "@/types/presentation";
 
 const generateSchema = z.object({
   title: z.string().min(1).max(500),
-  preprocessedData: z.string().min(1).max(100000),
-  audienceType: z.enum(["thesis_defense", "conference", "journal_club", "classroom", "general"]),
+  preprocessedData: z.string().min(1).max(200000),
+  audienceType: z.enum([
+    "thesis_defense", "conference", "journal_club", "classroom", "general",
+    "grant_presentation", "poster_session", "systematic_review", "patient_case", "grand_rounds",
+  ]),
   slideCount: z.number().int().positive().optional(),
   themeKey: z.string().optional(),
   projectId: z.number().int().positive().optional(),
   documentId: z.number().int().positive().optional(),
   additionalInstructions: z.string().optional(),
+  templateId: z.string().optional(),
+  citationStyle: z.enum(["apa", "mla", "chicago", "vancouver", "harvard"]).optional(),
 });
 
 export async function POST(req: Request) {
@@ -77,6 +82,7 @@ export async function POST(req: Request) {
         audienceType: body.audienceType,
         slideCount: body.slideCount,
         themeKey,
+        templateId: body.templateId,
       });
 
       let userPrompt = `Here is the preprocessed content to turn into slides:\n\n${body.preprocessedData}`;
@@ -84,11 +90,13 @@ export async function POST(req: Request) {
         userPrompt += `\n\nAdditional instructions: ${body.additionalInstructions}`;
       }
 
-      const { text } = await generateText({
+      const trace = traceGeneration({ tier: "standard", modelId: "claude-sonnet-4-20250514", feature: "presentation-generate", userId });
+      const { text, usage } = await generateText({
         model: getModel(),
         system: systemPrompt,
-        prompt: userPrompt.slice(0, 30000),
+        prompt: userPrompt.slice(0, 60000),
       });
+      trace.end(usage);
 
       // Parse the generated slides
       const cleanText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
@@ -99,6 +107,9 @@ export async function POST(req: Request) {
         "title_slide", "title_content", "two_column", "section_header",
         "image_text", "chart_slide", "table_slide", "quote_slide",
         "comparison", "blank",
+        // V2 layouts
+        "bibliography_slide", "methodology", "results_summary", "key_findings",
+        "timeline_slide", "stat_overview", "three_column", "big_number",
       ]);
 
       for (let i = 0; i < generatedSlides.length; i++) {

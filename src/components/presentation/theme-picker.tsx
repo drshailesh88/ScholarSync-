@@ -10,7 +10,7 @@ interface ThemePickerProps {
 
 export function ThemePicker({ activeKey, onChange }: ThemePickerProps) {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="grid grid-cols-3 gap-1.5">
       {Object.entries(PRESET_THEMES).map(([key, config]) => (
         <button
           key={key}

@@ -38,6 +38,22 @@ interface S2SearchResponse {
 
 const S2_FIELDS = "title,authors,year,abstract,citationCount,journal,tldr,externalIds,url,publicationTypes,openAccessPdf,fieldsOfStudy,isOpenAccess,referenceCount,influentialCitationCount";
 
+/**
+ * Strip boolean operators and parentheses from a query so it works with
+ * Semantic Scholar's plain-keyword search API. PubMed-style syntax like
+ * `(diabetes OR insulin) AND treatment` becomes `diabetes insulin treatment`.
+ * Also removes field tags like [MeSH], [tiab], etc.
+ */
+function sanitizeQueryForS2(query: string): string {
+  return query
+    .replace(/\[(?:MeSH|tiab|pt|au|ta|dp|mesh)[^\]]*\]/gi, "") // strip PubMed field tags
+    .replace(/[()]/g, "")                                        // strip parentheses
+    .replace(/\b(AND|OR|NOT)\b/g, " ")                           // strip boolean operators
+    .replace(/"/g, "")                                            // strip quotes
+    .replace(/\s+/g, " ")                                        // collapse whitespace
+    .trim();
+}
+
 function mapPaper(paper: S2Paper): UnifiedSearchResult {
   const publicationTypes = paper.publicationTypes || [];
   let studyType = "other";
@@ -106,8 +122,9 @@ export async function searchSemanticScholar(
 
   const limit = options.limit || 20;
   const offset = options.offset || 0;
+  const sanitizedQuery = sanitizeQueryForS2(query);
 
-  let url = `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodeURIComponent(query)}&limit=${limit}&offset=${offset}&fields=${S2_FIELDS}`;
+  let url = `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodeURIComponent(sanitizedQuery)}&limit=${limit}&offset=${offset}&fields=${S2_FIELDS}`;
 
   if (options.yearStart && options.yearEnd) {
     url += `&year=${options.yearStart}-${options.yearEnd}`;

@@ -15,6 +15,7 @@ import {
   Gear,
   X,
   FlowArrow,
+  Brain,
 } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,7 @@ const navSections = [
       { label: "Dashboard", href: "/dashboard", icon: House },
       { label: "Studio", href: "/studio", icon: PenNib },
       { label: "Literature Search", href: "/research", icon: GlobeHemisphereWest },
+      { label: "Deep Research", href: "/deep-research", icon: Brain },
       { label: "Notebook", href: "/notebook", icon: Notebook },
     ],
   },

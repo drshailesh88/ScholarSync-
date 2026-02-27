@@ -80,7 +80,7 @@ export function TiptapEditor({
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
-        heading: { levels: [1, 2, 3] },
+        heading: { levels: [1, 2, 3, 4, 5, 6] },
       }),
       Placeholder.configure({
         placeholder: "Start typing or press '/' for AI commands...",
@@ -94,7 +94,7 @@ export function TiptapEditor({
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm max-w-none font-serif text-ink focus:outline-none min-h-[400px] px-6 py-4",
+          "academic-editor-content max-w-none focus:outline-none min-h-[400px] px-6 py-4",
       },
     },
     onUpdate: ({ editor: ed }) => {

@@ -10,14 +10,18 @@
 
 import { generateObject } from "ai";
 import { getModel } from "@/lib/ai/models";
-import { getDataExtractionPrompt } from "@/lib/ai/prompts/systematic-review";
+import {
+  getDataExtractionPrompt,
+  getChunkedDataExtractionPrompt,
+} from "@/lib/ai/prompts/systematic-review";
 import { db } from "@/lib/db";
 import {
   comparisonMatrices,
   matrixColumns,
   matrixCells,
+  paperChunks,
 } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, asc } from "drizzle-orm";
 import { z } from "zod";
 
 // ---------------------------------------------------------------------------
@@ -35,12 +39,22 @@ export interface ExtractionResult {
   value: string | null;
   sourceQuote: string;
   confidence: number;
+  sourceChunkId?: number;
+}
+
+export interface ChunkInfo {
+  chunkId: number;
+  chunkIndex: number;
+  text: string;
+  sectionType: string | null;
+  pageNumber: number | null;
 }
 
 export interface PaperExtraction {
   paperId: number;
   title: string;
   extractions: ExtractionResult[];
+  chunks?: ChunkInfo[];
 }
 
 // ---------------------------------------------------------------------------
@@ -76,6 +90,129 @@ export async function extractDataFromPaper(
   });
 
   return object.extractions;
+}
+
+// ---------------------------------------------------------------------------
+// Schema for AI output (with chunk source linking)
+// ---------------------------------------------------------------------------
+
+const chunkedExtractionOutputSchema = z.object({
+  extractions: z.array(
+    z.object({
+      field: z.string(),
+      value: z.string().nullable(),
+      sourceChunkId: z.number(),
+      sourceQuote: z.string(),
+      confidence: z.number().min(0).max(1),
+    })
+  ),
+});
+
+// ---------------------------------------------------------------------------
+// Fetch chunks for a paper
+// ---------------------------------------------------------------------------
+
+export async function getPaperChunks(paperId: number): Promise<ChunkInfo[]> {
+  const chunks = await db
+    .select({
+      chunkId: paperChunks.id,
+      chunkIndex: paperChunks.chunk_index,
+      text: paperChunks.text,
+      sectionType: paperChunks.section_type,
+      pageNumber: paperChunks.page_number,
+    })
+    .from(paperChunks)
+    .where(eq(paperChunks.paper_id, paperId))
+    .orderBy(asc(paperChunks.chunk_index));
+
+  return chunks;
+}
+
+// ---------------------------------------------------------------------------
+// Extract data from a single paper using full-text chunks (source-linked)
+// ---------------------------------------------------------------------------
+
+export async function extractDataFromPaperWithChunks(
+  schema: ExtractionField[],
+  title: string,
+  paperId: number
+): Promise<{ extractions: ExtractionResult[]; chunks: ChunkInfo[] }> {
+  const chunks = await getPaperChunks(paperId);
+
+  if (chunks.length === 0) {
+    // Fall back to basic extraction if no chunks available
+    throw new Error(
+      `No full-text chunks found for paper ${paperId}. Upload and process the PDF first.`
+    );
+  }
+
+  // Budget: keep total text under ~60k chars to stay within context window
+  const MAX_CHARS = 60000;
+  let totalChars = 0;
+  const truncatedChunks = chunks.filter((c) => {
+    if (totalChars + c.text.length > MAX_CHARS) return false;
+    totalChars += c.text.length;
+    return true;
+  });
+
+  const prompt = getChunkedDataExtractionPrompt(schema, title, truncatedChunks);
+
+  const { object } = await generateObject({
+    model: getModel(),
+    schema: chunkedExtractionOutputSchema,
+    prompt,
+  });
+
+  return {
+    extractions: object.extractions,
+    chunks,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Batch extract with full-text chunks
+// ---------------------------------------------------------------------------
+
+export async function batchExtractDataWithChunks(
+  projectId: number,
+  matrixName: string,
+  schema: ExtractionField[],
+  papers: Array<{ paperId: number; title: string }>,
+  onProgress?: (completed: number, total: number) => void
+): Promise<PaperExtraction[]> {
+  const matrixId = await getOrCreateMatrix(projectId, matrixName, schema);
+  const results: PaperExtraction[] = [];
+
+  for (let i = 0; i < papers.length; i++) {
+    const paper = papers[i];
+    try {
+      const { extractions, chunks } = await extractDataFromPaperWithChunks(
+        schema,
+        paper.title,
+        paper.paperId
+      );
+
+      await saveExtractionToMatrix(matrixId, paper.paperId, extractions);
+
+      results.push({
+        paperId: paper.paperId,
+        title: paper.title,
+        extractions,
+        chunks,
+      });
+    } catch {
+      // If chunk extraction fails (no chunks), skip this paper
+      results.push({
+        paperId: paper.paperId,
+        title: paper.title,
+        extractions: [],
+      });
+    }
+
+    onProgress?.(i + 1, papers.length);
+  }
+
+  return results;
 }
 
 // ---------------------------------------------------------------------------

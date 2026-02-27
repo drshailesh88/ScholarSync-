@@ -4,17 +4,20 @@ import { streamText } from "ai";
 import { getModel } from "@/lib/ai/models";
 import { getPreProcessorSystemPrompt } from "@/lib/ai/prompts/presentation";
 import { db } from "@/lib/db";
-import { papers, synthesisDocuments, synthesisSections } from "@/lib/db/schema";
+import { papers, synthesisDocuments, synthesisSections, deepResearchSessions } from "@/lib/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
 const preprocessSchema = z.object({
-  sourceType: z.enum(["papers", "document", "text"]),
+  sourceType: z.enum(["papers", "document", "text", "deep_research", "references"]),
   paperIds: z.array(z.number().int().positive()).max(50).optional(),
   documentId: z.number().int().positive().optional(),
-  rawText: z.string().max(100000).optional(),
+  deepResearchSessionId: z.number().int().positive().optional(),
+  rawText: z.string().max(500000).optional(),
+  /** Formatted reference content (used when sourceType is "references") */
+  referenceContent: z.string().max(500000).optional(),
 });
 
 export async function POST(req: Request) {
@@ -57,7 +60,7 @@ export async function POST(req: Request) {
       sourceContent = paperData
         .map(
           (p) =>
-            `--- Paper: ${p.title} ---\nAuthors: ${p.authors}\nAbstract: ${p.abstract ?? "N/A"}\nFull Text: ${p.full_text_plain?.slice(0, 8000) ?? "Abstract only"}\n`
+            `--- Paper: ${p.title} ---\nAuthors: ${p.authors}\nAbstract: ${p.abstract ?? "N/A"}\nFull Text: ${p.full_text_plain?.slice(0, 15000) ?? "Abstract only"}\n`
         )
         .join("\n\n");
     } else if (body.sourceType === "document" && body.documentId) {
@@ -78,6 +81,19 @@ export async function POST(req: Request) {
           .map((s) => `## ${s.title}\n${s.plain_text_content ?? ""}`)
           .join("\n\n")}`;
       }
+    } else if (body.sourceType === "deep_research" && body.deepResearchSessionId) {
+      const [session] = await db
+        .select()
+        .from(deepResearchSessions)
+        .where(eq(deepResearchSessions.id, body.deepResearchSessionId));
+
+      if (session) {
+        sourceLabel = "deep research synthesis";
+        sourceContent = `Research Query: ${session.originalQuery}\n\nFinal Report:\n${session.finalReport ?? ""}\n\nKey Findings:\n${JSON.stringify(session.keyFindings)}`;
+      }
+    } else if (body.sourceType === "references" && (body.referenceContent || body.rawText)) {
+      sourceLabel = "imported reference library";
+      sourceContent = body.referenceContent || body.rawText || "";
     } else if (body.sourceType === "text" && body.rawText) {
       sourceLabel = "text";
       sourceContent = body.rawText;
@@ -93,7 +109,7 @@ export async function POST(req: Request) {
     const result = streamText({
       model: getModel(),
       system: getPreProcessorSystemPrompt(sourceLabel),
-      prompt: sourceContent.slice(0, 30000),
+      prompt: sourceContent.slice(0, 60000),
     });
 
     return result.toTextStreamResponse();

@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Plus, Trash, ArrowUp, ArrowDown } from "@phosphor-icons/react";
+import {
+  Plus, Trash, ArrowUp, ArrowDown,
+  MathOperations, TreeStructure, Code, Megaphone,
+  ChartBar, BookOpen, Clock, Minus,
+} from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { ContentBlock, ThemeConfig } from "@/types/presentation";
 
@@ -12,8 +16,45 @@ interface ContentBlockEditorProps {
   onChange: (blocks: ContentBlock[]) => void;
 }
 
+// Block type categories for the add menu
+const BLOCK_CATEGORIES = {
+  content: ["text", "bullets", "quote", "citation"] as ContentBlock["type"][],
+  media: ["image", "chart", "table"] as ContentBlock["type"][],
+  academic: ["math", "diagram", "code", "callout", "stat_result", "bibliography", "timeline", "divider"] as ContentBlock["type"][],
+};
+
+const BLOCK_LABELS: Record<string, string> = {
+  text: "Text",
+  bullets: "Bullets",
+  image: "Image",
+  chart: "Chart",
+  table: "Table",
+  citation: "Citation",
+  quote: "Quote",
+  math: "Math",
+  diagram: "Diagram",
+  code: "Code",
+  callout: "Callout",
+  stat_result: "Stat",
+  bibliography: "Bibliography",
+  timeline: "Timeline",
+  divider: "Divider",
+};
+
+const BLOCK_ICONS: Record<string, React.ReactNode> = {
+  math: <MathOperations size={10} />,
+  diagram: <TreeStructure size={10} />,
+  code: <Code size={10} />,
+  callout: <Megaphone size={10} />,
+  stat_result: <ChartBar size={10} />,
+  bibliography: <BookOpen size={10} />,
+  timeline: <Clock size={10} />,
+  divider: <Minus size={10} />,
+};
+
 export function ContentBlockEditor({ blocks, theme, onChange }: ContentBlockEditorProps) {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [showAllBlocks, setShowAllBlocks] = useState(false);
 
   const updateBlock = (index: number, block: ContentBlock) => {
     const next = [...blocks];
@@ -39,6 +80,7 @@ export function ContentBlockEditor({ blocks, theme, onChange }: ContentBlockEdit
     const newBlock = createDefaultBlock(type);
     onChange([...blocks, newBlock]);
     setEditingIndex(blocks.length);
+    setShowAllBlocks(false);
   };
 
   return (
@@ -87,17 +129,58 @@ export function ContentBlockEditor({ blocks, theme, onChange }: ContentBlockEdit
       ))}
 
       {/* Add Block Menu */}
-      <div className="flex items-center gap-1.5 pt-1">
-        {(["text", "bullets", "image", "chart", "table", "quote", "citation"] as ContentBlock["type"][]).map((type) => (
+      <div className="space-y-1.5 pt-1">
+        {/* Primary blocks row */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {BLOCK_CATEGORIES.content.map((type) => (
+            <button
+              key={type}
+              onClick={() => addBlock(type)}
+              className="flex items-center gap-1 px-2 py-1 rounded-md text-[10px] text-ink-muted border border-border hover:bg-surface-raised transition-colors"
+            >
+              <Plus size={10} />
+              {BLOCK_LABELS[type]}
+            </button>
+          ))}
+          {BLOCK_CATEGORIES.media.map((type) => (
+            <button
+              key={type}
+              onClick={() => addBlock(type)}
+              className="flex items-center gap-1 px-2 py-1 rounded-md text-[10px] text-ink-muted border border-border hover:bg-surface-raised transition-colors"
+            >
+              <Plus size={10} />
+              {BLOCK_LABELS[type]}
+            </button>
+          ))}
           <button
-            key={type}
-            onClick={() => addBlock(type)}
-            className="flex items-center gap-1 px-2 py-1 rounded-md text-[10px] text-ink-muted border border-border hover:bg-surface-raised transition-colors"
+            onClick={() => setShowAllBlocks(!showAllBlocks)}
+            className={cn(
+              "flex items-center gap-1 px-2 py-1 rounded-md text-[10px] border transition-colors",
+              showAllBlocks
+                ? "text-brand border-brand/30 bg-brand/5"
+                : "text-ink-muted border-border hover:bg-surface-raised"
+            )}
           >
             <Plus size={10} />
-            {type}
+            More
           </button>
-        ))}
+        </div>
+
+        {/* Academic blocks row (expanded) */}
+        {showAllBlocks && (
+          <div className="flex items-center gap-1.5 flex-wrap pl-1 border-l-2 border-brand/20">
+            {BLOCK_CATEGORIES.academic.map((type) => (
+              <button
+                key={type}
+                onClick={() => addBlock(type)}
+                className="flex items-center gap-1 px-2 py-1 rounded-md text-[10px] text-brand/80 border border-brand/20 hover:bg-brand/5 transition-colors"
+              >
+                {BLOCK_ICONS[type] ?? <Plus size={10} />}
+                {BLOCK_LABELS[type]}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -228,6 +311,22 @@ function BlockEditor({
             className="text-[10px] text-ink-muted mt-0.5"
             placeholder="Source"
           />
+          {isActive && (
+            <div className="mt-1 flex gap-2">
+              <input
+                value={block.data.doi ?? ""}
+                onChange={(e) => onChange({ ...block, data: { ...block.data, doi: e.target.value } })}
+                className="flex-1 text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/30"
+                placeholder="DOI (e.g., 10.1000/xyz123)"
+              />
+              <input
+                value={block.data.year?.toString() ?? ""}
+                onChange={(e) => onChange({ ...block, data: { ...block.data, year: e.target.value ? parseInt(e.target.value) : undefined } })}
+                className="w-16 text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/30"
+                placeholder="Year"
+              />
+            </div>
+          )}
         </div>
       );
 
@@ -310,8 +409,327 @@ function BlockEditor({
         </div>
       );
 
+    // -----------------------------------------------------------------------
+    // V2: New academic content block editors
+    // -----------------------------------------------------------------------
+
+    case "math":
+      return (
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 mb-1">
+            <MathOperations size={12} className="text-ink-muted" />
+            <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">LaTeX Math</span>
+            {isActive && (
+              <label className="flex items-center gap-1 text-[10px] text-ink-muted ml-auto">
+                <input
+                  type="checkbox"
+                  checked={block.data.displayMode}
+                  onChange={(e) => onChange({ ...block, data: { ...block.data, displayMode: e.target.checked } })}
+                  className="w-3 h-3"
+                />
+                Display mode
+              </label>
+            )}
+          </div>
+          <textarea
+            value={block.data.expression}
+            onChange={(e) => onChange({ ...block, data: { ...block.data, expression: e.target.value } })}
+            className="w-full px-2 py-1.5 rounded border border-border bg-surface-raised text-xs font-mono text-ink focus:outline-none focus:ring-1 focus:ring-brand/30 resize-none"
+            rows={2}
+            placeholder="e.g., E = mc^2 or \frac{a}{b}"
+          />
+          {block.data.caption && isActive && (
+            <EditableText
+              value={block.data.caption}
+              onChange={(caption) => onChange({ ...block, data: { ...block.data, caption } })}
+              className="text-[10px] text-ink-muted"
+              placeholder="Caption"
+            />
+          )}
+        </div>
+      );
+
+    case "diagram":
+      return (
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 mb-1">
+            <TreeStructure size={12} className="text-ink-muted" />
+            <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">Mermaid Diagram</span>
+            {isActive && (
+              <select
+                value={block.data.diagramType}
+                onChange={(e) => onChange({ ...block, data: { ...block.data, diagramType: e.target.value as typeof block.data.diagramType } })}
+                className="text-[10px] ml-auto bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
+              >
+                <option value="flowchart">Flowchart</option>
+                <option value="sequence">Sequence</option>
+                <option value="classDiagram">Class Diagram</option>
+                <option value="gantt">Gantt</option>
+                <option value="mindmap">Mind Map</option>
+                <option value="timeline">Timeline</option>
+                <option value="prisma">PRISMA Flow</option>
+              </select>
+            )}
+          </div>
+          <textarea
+            value={block.data.syntax}
+            onChange={(e) => onChange({ ...block, data: { ...block.data, syntax: e.target.value } })}
+            className="w-full px-2 py-1.5 rounded border border-border bg-surface-raised text-xs font-mono text-ink focus:outline-none focus:ring-1 focus:ring-brand/30 resize-none"
+            rows={4}
+            placeholder={`graph TD\n    A[Start] --> B[Process]\n    B --> C[End]`}
+          />
+        </div>
+      );
+
+    case "code":
+      return (
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 mb-1">
+            <Code size={12} className="text-ink-muted" />
+            <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">Code</span>
+            {isActive && (
+              <input
+                value={block.data.language}
+                onChange={(e) => onChange({ ...block, data: { ...block.data, language: e.target.value } })}
+                className="text-[10px] ml-auto w-20 bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
+                placeholder="Language"
+              />
+            )}
+          </div>
+          <textarea
+            value={block.data.code}
+            onChange={(e) => onChange({ ...block, data: { ...block.data, code: e.target.value } })}
+            className="w-full px-2 py-1.5 rounded border border-border text-xs font-mono text-ink focus:outline-none focus:ring-1 focus:ring-brand/30 resize-none"
+            style={{ backgroundColor: theme.codeBackground ?? "#1E1E2E", color: "#E2E8F0" }}
+            rows={4}
+            placeholder="// Your code here"
+          />
+        </div>
+      );
+
+    case "callout":
+      return (
+        <div
+          className="p-2.5 rounded-lg border-l-3"
+          style={{
+            borderLeftColor: getCalloutColor(block.data.type, theme),
+            backgroundColor: getCalloutColor(block.data.type, theme) + "10",
+          }}
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <Megaphone size={12} style={{ color: getCalloutColor(block.data.type, theme) }} />
+            {isActive && (
+              <select
+                value={block.data.type}
+                onChange={(e) => onChange({ ...block, data: { ...block.data, type: e.target.value as typeof block.data.type } })}
+                className="text-[10px] bg-transparent border border-border rounded px-1 py-0.5 text-ink-muted"
+              >
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="success">Success</option>
+                <option value="finding">Key Finding</option>
+                <option value="limitation">Limitation</option>
+                <option value="methodology">Methodology</option>
+                <option value="clinical">Clinical Note</option>
+              </select>
+            )}
+            {block.data.title && (
+              <EditableText
+                value={block.data.title}
+                onChange={(title) => onChange({ ...block, data: { ...block.data, title } })}
+                className="text-xs font-semibold flex-1"
+              />
+            )}
+          </div>
+          <EditableText
+            value={block.data.text}
+            onChange={(text) => onChange({ ...block, data: { ...block.data, text } })}
+            className="text-xs"
+          />
+        </div>
+      );
+
+    case "stat_result":
+      return (
+        <div className="p-2.5 rounded-lg border border-border bg-surface-raised/50">
+          <div className="flex items-center gap-3">
+            <div className="flex-1">
+              <EditableText
+                value={block.data.label}
+                onChange={(label) => onChange({ ...block, data: { ...block.data, label } })}
+                className="text-[10px] uppercase tracking-wider text-ink-muted font-medium"
+                placeholder="Metric name"
+              />
+              <EditableText
+                value={block.data.value}
+                onChange={(value) => onChange({ ...block, data: { ...block.data, value } })}
+                className="text-lg font-bold"
+                style={{ color: theme.primaryColor }}
+              />
+            </div>
+            {isActive && (
+              <div className="space-y-1">
+                <input
+                  value={block.data.ci ?? ""}
+                  onChange={(e) => onChange({ ...block, data: { ...block.data, ci: e.target.value } })}
+                  className="w-full text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted"
+                  placeholder="95% CI"
+                />
+                <input
+                  value={block.data.pValue ?? ""}
+                  onChange={(e) => onChange({ ...block, data: { ...block.data, pValue: e.target.value } })}
+                  className="w-full text-[10px] px-1.5 py-0.5 rounded border border-border bg-transparent text-ink-muted"
+                  placeholder="p-value"
+                />
+              </div>
+            )}
+          </div>
+          {block.data.interpretation && (
+            <p className="text-[10px] text-ink-muted italic mt-1">{block.data.interpretation}</p>
+          )}
+        </div>
+      );
+
+    case "bibliography":
+      return (
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 mb-1">
+            <BookOpen size={12} className="text-ink-muted" />
+            <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">
+              Bibliography ({block.data.style.toUpperCase()})
+            </span>
+          </div>
+          <div className="space-y-0.5 text-[10px]">
+            {block.data.entries.map((entry, i) => (
+              <div key={entry.id} className="flex gap-1.5 text-ink-muted">
+                <span className="shrink-0 font-medium">[{i + 1}]</span>
+                <span>{entry.formatted}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+
+    case "timeline":
+      return (
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock size={12} className="text-ink-muted" />
+            <span className="text-[10px] uppercase tracking-wider text-ink-muted font-medium">Timeline</span>
+          </div>
+          <div className="space-y-1.5 pl-3 border-l-2" style={{ borderColor: theme.accentColor }}>
+            {block.data.entries.map((entry, i) => (
+              <div key={i} className="relative">
+                <div
+                  className="absolute -left-[0.95rem] top-1 w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor:
+                      entry.status === "completed" ? "#22C55E" :
+                      entry.status === "in_progress" ? theme.primaryColor :
+                      "#94A3B8",
+                  }}
+                />
+                {isActive ? (
+                  <div className="space-y-0.5">
+                    <div className="flex gap-1">
+                      <EditableText
+                        value={entry.label}
+                        onChange={(label) => {
+                          const entries = [...block.data.entries];
+                          entries[i] = { ...entries[i], label };
+                          onChange({ ...block, data: { ...block.data, entries } });
+                        }}
+                        className="text-xs font-medium flex-1"
+                      />
+                      <input
+                        value={entry.date ?? ""}
+                        onChange={(e) => {
+                          const entries = [...block.data.entries];
+                          entries[i] = { ...entries[i], date: e.target.value };
+                          onChange({ ...block, data: { ...block.data, entries } });
+                        }}
+                        className="w-20 text-[10px] px-1 py-0.5 rounded border border-border bg-transparent text-ink-muted"
+                        placeholder="Date"
+                      />
+                    </div>
+                    {entry.description && (
+                      <EditableText
+                        value={entry.description}
+                        onChange={(description) => {
+                          const entries = [...block.data.entries];
+                          entries[i] = { ...entries[i], description };
+                          onChange({ ...block, data: { ...block.data, entries } });
+                        }}
+                        className="text-[10px] text-ink-muted"
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-xs font-medium">{entry.label} {entry.date && <span className="text-ink-muted font-normal">— {entry.date}</span>}</p>
+                    {entry.description && <p className="text-[10px] text-ink-muted">{entry.description}</p>}
+                  </div>
+                )}
+              </div>
+            ))}
+            {isActive && (
+              <button
+                onClick={() => onChange({
+                  ...block,
+                  data: {
+                    ...block.data,
+                    entries: [...block.data.entries, { label: "New milestone", status: "upcoming" as const }],
+                  },
+                })}
+                className="text-[10px] text-brand hover:underline"
+              >
+                + Add milestone
+              </button>
+            )}
+          </div>
+        </div>
+      );
+
+    case "divider":
+      return (
+        <div className="py-2">
+          <hr
+            className={cn(
+              "border-t",
+              block.data.style === "dashed" && "border-dashed",
+            )}
+            style={{
+              borderColor: block.data.style === "gradient"
+                ? undefined
+                : theme.borderColor ?? theme.accentColor + "40",
+              ...(block.data.style === "gradient" && {
+                border: "none",
+                height: "2px",
+                background: `linear-gradient(to right, ${theme.primaryColor}, ${theme.accentColor})`,
+              }),
+            }}
+          />
+          {isActive && (
+            <div className="flex gap-1 mt-1 justify-center">
+              {(["solid", "dashed", "gradient"] as const).map((style) => (
+                <button
+                  key={style}
+                  onClick={() => onChange({ ...block, data: { style } })}
+                  className={cn(
+                    "text-[10px] px-2 py-0.5 rounded border",
+                    block.data.style === style ? "border-brand text-brand" : "border-border text-ink-muted"
+                  )}
+                >
+                  {style}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+
     default:
-      return <p className="text-xs text-ink-muted">Unknown block type</p>;
+      return <p className="text-xs text-ink-muted">Unknown block type: {(block as ContentBlock).type}</p>;
   }
 }
 
@@ -320,11 +738,13 @@ function EditableText({
   onChange,
   className,
   placeholder,
+  style,
 }: {
   value: string;
   onChange: (value: string) => void;
   className?: string;
   placeholder?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <div
@@ -333,10 +753,24 @@ function EditableText({
       onBlur={(e) => onChange(e.currentTarget.textContent || "")}
       className={cn("focus:outline-none focus:ring-1 focus:ring-brand/30 rounded px-0.5 min-h-[1.2em]", className)}
       data-placeholder={placeholder}
+      style={style}
     >
       {value}
     </div>
   );
+}
+
+function getCalloutColor(type: string, theme: ThemeConfig): string {
+  switch (type) {
+    case "info": return "#3B82F6";
+    case "warning": return "#F59E0B";
+    case "success": return "#22C55E";
+    case "finding": return theme.accentColor;
+    case "limitation": return "#EF4444";
+    case "methodology": return "#6366F1";
+    case "clinical": return "#14B8A6";
+    default: return theme.primaryColor;
+  }
 }
 
 function createDefaultBlock(type: ContentBlock["type"]): ContentBlock {
@@ -346,7 +780,15 @@ function createDefaultBlock(type: ContentBlock["type"]): ContentBlock {
     case "image": return { type: "image", data: { alt: "Image description", suggestion: "Add an image" } };
     case "chart": return { type: "chart", data: { chartType: "bar", title: "Chart Title", labels: ["A", "B", "C"], datasets: [{ label: "Data", data: [10, 20, 30] }] } };
     case "table": return { type: "table", data: { headers: ["Column 1", "Column 2"], rows: [["Cell 1", "Cell 2"]] } };
-    case "citation": return { type: "citation", data: { text: "Citation text", source: "Source" } };
+    case "citation": return { type: "citation", data: { text: "Citation text", source: "Author et al., 2024" } };
     case "quote": return { type: "quote", data: { text: "Quote text", attribution: "Author" } };
+    case "math": return { type: "math", data: { expression: "E = mc^2", displayMode: true } };
+    case "diagram": return { type: "diagram", data: { syntax: "graph TD\n    A[Start] --> B[Process]\n    B --> C[End]", diagramType: "flowchart" } };
+    case "code": return { type: "code", data: { code: "// Your code here", language: "python" } };
+    case "callout": return { type: "callout", data: { text: "Key finding or note", type: "finding", title: "Key Finding" } };
+    case "stat_result": return { type: "stat_result", data: { label: "Primary Outcome", value: "0.73", ci: "95% CI: 0.65-0.81", pValue: "p < 0.001" } };
+    case "bibliography": return { type: "bibliography", data: { entries: [{ id: 1, formatted: "Author A, et al. (2024). Title. Journal, 1(1), 1-10." }], style: "apa" } };
+    case "timeline": return { type: "timeline", data: { entries: [{ label: "Phase 1", date: "Q1 2024", description: "Initial phase", status: "completed" }, { label: "Phase 2", date: "Q2 2024", status: "in_progress" }] } };
+    case "divider": return { type: "divider", data: { style: "solid" } };
   }
 }

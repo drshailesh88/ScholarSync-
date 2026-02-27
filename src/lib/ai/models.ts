@@ -1,5 +1,7 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
+import { createOpenAI } from "@ai-sdk/openai";
 import { createZhipu } from "zhipu-ai-provider";
+import { getLangfuse, isLangfuseConfigured } from "@/lib/langfuse";
 
 // ── Provider selection ─────────────────────────────────────────────
 // Set AI_PROVIDER="zhipu" to use GLM-5, otherwise defaults to "anthropic" (Claude).
@@ -15,6 +17,7 @@ export const AI_PROVIDER: Provider =
 // ── Lazy-initialised clients (created once, reused) ────────────────
 let _zhipu: ReturnType<typeof createZhipu> | null = null;
 let _anthropic: ReturnType<typeof createAnthropic> | null = null;
+let _openai: ReturnType<typeof createOpenAI> | null = null;
 
 function getZhipu() {
   if (!_zhipu) {
@@ -28,6 +31,66 @@ function getAnthropic() {
     _anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
   }
   return _anthropic;
+}
+
+function getOpenAI() {
+  if (!_openai) {
+    _openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+  }
+  return _openai;
+}
+
+// ── LangFuse tracing helper ────────────────────────────────────────
+// Creates a LangFuse trace for each model invocation.
+// Call traceGeneration() before your LLM call, end it after.
+// When LangFuse is not configured, returns no-ops.
+
+export function traceGeneration(meta: {
+  tier: string;
+  modelId: string;
+  feature?: string;
+  userId?: string;
+  projectId?: number;
+}) {
+  const trace = isLangfuseConfigured()
+    ? getLangfuse().trace({
+        name: `llm-${meta.tier}`,
+        metadata: { tier: meta.tier, provider: AI_PROVIDER, feature: meta.feature },
+      })
+    : null;
+  const generation = trace?.generation({
+    name: meta.modelId,
+    model: meta.modelId,
+  });
+
+  function writeCost(inputTokens: number, outputTokens: number) {
+    if (meta.userId && (inputTokens || outputTokens)) {
+      import("@/lib/ai/cost-tracker").then(({ trackAIUsage }) => {
+        trackAIUsage({
+          userId: meta.userId!,
+          modelId: meta.modelId,
+          feature: meta.feature ?? `llm-${meta.tier}`,
+          inputTokens,
+          outputTokens,
+          projectId: meta.projectId,
+        });
+      });
+    }
+  }
+
+  return {
+    end(usage?: Record<string, unknown>) {
+      const input = (usage?.promptTokens ?? usage?.inputTokens ?? 0) as number;
+      const output = (usage?.completionTokens ?? usage?.outputTokens ?? 0) as number;
+      generation?.end({
+        usage: usage ? { input, output } : undefined,
+      });
+      writeCost(input, output);
+    },
+    error(err: unknown) {
+      generation?.end({ level: "ERROR", statusMessage: String(err) });
+    },
+  };
 }
 
 // ── Public helpers ─────────────────────────────────────────────────
@@ -68,4 +131,9 @@ export function getBigModel() {
     return getAnthropic()("claude-sonnet-4-20250514");
   }
   return getZhipu()("glm-5");
+}
+
+/** GPT-5.2 for deep research synthesis — best reasoning per dollar. */
+export function getDeepResearchModel() {
+  return getOpenAI()("gpt-5.2");
 }

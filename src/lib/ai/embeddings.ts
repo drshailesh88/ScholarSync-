@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { getLangfuse, isLangfuseConfigured } from "@/lib/langfuse";
 
 let _openai: OpenAI | null = null;
 
@@ -16,10 +17,23 @@ function getOpenAI(): OpenAI {
 export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
   if (texts.length === 0) return [];
 
-  // OpenAI supports batch embedding (max ~8192 tokens per input)
+  const trace = isLangfuseConfigured()
+    ? getLangfuse().trace({ name: "embedding", metadata: { count: texts.length } })
+    : null;
+
+  const generation = trace?.generation({
+    name: "text-embedding-3-small",
+    model: "text-embedding-3-small",
+    input: { textCount: texts.length, totalChars: texts.reduce((s, t) => s + t.length, 0) },
+  });
+
   const response = await getOpenAI().embeddings.create({
     model: "text-embedding-3-small",
     input: texts,
+  });
+
+  generation?.end({
+    usage: { input: response.usage?.prompt_tokens, output: 0 },
   });
 
   return response.data.map((d) => d.embedding);

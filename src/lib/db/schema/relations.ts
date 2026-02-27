@@ -51,7 +51,7 @@ import {
   pdfAnnotations,
 } from "./billing";
 
-// Systematic review tables (42-51)
+// Systematic review tables (42-55)
 import {
   screeningCriteria,
   screeningDecisions,
@@ -63,6 +63,10 @@ import {
   matrixCells,
   projectMilestones,
   milestoneProgress,
+  systematicReviewConfig,
+  searchAlerts,
+  projectCollaborators,
+  srAuditLog,
 } from "./systematic";
 
 // Institutional tables (53-55)
@@ -117,6 +121,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   marketplaceItems: many(marketplaceItems),
   marketplaceReviews: many(marketplaceReviews),
   institutionMemberships: many(institutionMemberships),
+  projectCollaborators: many(projectCollaborators),
 
   // One-to-one relationships
   userProfilePublic: one(userProfilesPublic),
@@ -164,6 +169,8 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   knowledgeNotes: many(knowledgeNotes),
   audioSummaries: many(audioSummaries),
   supervisorAssignments: many(supervisorAssignments),
+  projectCollaborators: many(projectCollaborators),
+  srAuditLog: many(srAuditLog),
 }));
 
 // ============================================================
@@ -1194,5 +1201,58 @@ export const syncLogRelations = relations(syncLog, ({ one }) => ({
   integration: one(integrations, {
     fields: [syncLog.integrationId],
     references: [integrations.id],
+  }),
+}));
+
+// ============================================================
+// 72. systematic_review_config
+// ============================================================
+export const systematicReviewConfigRelations = relations(
+  systematicReviewConfig,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [systematicReviewConfig.projectId],
+      references: [projects.id],
+    }),
+  })
+);
+
+// ============================================================
+// 73. search_alerts
+// ============================================================
+export const searchAlertsRelations = relations(
+  searchAlerts,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [searchAlerts.projectId],
+      references: [projects.id],
+    }),
+  })
+);
+
+// ============================================================
+// 74. project_collaborators
+// ============================================================
+export const projectCollaboratorsRelations = relations(
+  projectCollaborators,
+  ({ one }) => ({
+    project: one(projects, {
+      fields: [projectCollaborators.projectId],
+      references: [projects.id],
+    }),
+    user: one(users, {
+      fields: [projectCollaborators.userId],
+      references: [users.id],
+    }),
+  })
+);
+
+// ============================================================
+// 75. sr_audit_log
+// ============================================================
+export const srAuditLogRelations = relations(srAuditLog, ({ one }) => ({
+  project: one(projects, {
+    fields: [srAuditLog.projectId],
+    references: [projects.id],
   }),
 }));

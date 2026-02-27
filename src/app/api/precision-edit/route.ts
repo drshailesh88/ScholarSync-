@@ -6,7 +6,7 @@ import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
-  const { isAIConfigured, requiredKeyName, getModel } = await import("@/lib/ai/models");
+  const { isAIConfigured, requiredKeyName, getModel, traceGeneration } = await import("@/lib/ai/models");
 
   if (!isAIConfigured()) {
     return NextResponse.json(
@@ -30,14 +30,16 @@ export async function POST(req: Request) {
 
     const { system, user } = getPrecisionEditPrompt(body);
 
-    const result = await generateText({
+    const trace = traceGeneration({ tier: "standard", modelId: "claude-sonnet-4-20250514", feature: "precision-edit", userId });
+    const { text: rawText, usage } = await generateText({
       model: getModel(),
       system,
       messages: [{ role: "user", content: user }],
     });
+    trace.end(usage);
 
     // Parse the JSON response from the model
-    const text = result.text.trim();
+    const text = rawText.trim();
 
     // Extract JSON from the response (handle markdown code blocks)
     let jsonStr = text;

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { generateText } from "ai";
-import { getSmallModel } from "@/lib/ai/models";
+import { getSmallModel, traceGeneration } from "@/lib/ai/models";
 import { getSlideEditorSystemPrompt } from "@/lib/ai/prompts/presentation";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
@@ -57,11 +57,13 @@ export async function POST(req: Request) {
       userPrompt += `\n\nAdditional context: ${body.additionalContext}`;
     }
 
-    const { text } = await generateText({
+    const trace = traceGeneration({ tier: "small", modelId: "claude-haiku-4-5-20251001", feature: "slide-edit", userId });
+    const { text, usage } = await generateText({
       model: getSmallModel(),
       system: systemPrompt,
       prompt: userPrompt,
     });
+    trace.end(usage);
 
     const cleanText = text
       .replace(/```json\n?/g, "")

@@ -23,12 +23,14 @@ import { useChat } from "@ai-sdk/react";
 import { TextStreamChatTransport } from "ai";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { AISynthesisPanel } from "@/components/research/AISynthesisPanel";
 import { savePaper } from "@/lib/actions/papers";
 import { getUserPapers } from "@/lib/actions/papers";
 import {
   saveSearchQuery,
   getRecentSearches,
 } from "@/lib/actions/search-history";
+import { getUserUsageStats } from "@/lib/actions/user";
 import type {
   UnifiedSearchResult,
   SearchResponse,
@@ -121,6 +123,7 @@ interface PersistedState {
     clinicalTrials: number;
   };
   augmentedQueries: SearchResponse["augmentedQueries"] | null;
+  aiSummary: string | null;
 }
 
 // ── Session helpers ──────────────────────────────────────────────────
@@ -184,6 +187,10 @@ export default function ResearchPage() {
     SearchResponse["augmentedQueries"] | null
   >(cached.current?.augmentedQueries ?? null);
   const [showAugmented, setShowAugmented] = useState(false);
+  const [aiSummary, setAiSummary] = useState<string | null>(
+    cached.current?.aiSummary ?? null
+  );
+  const [userPlan, setUserPlan] = useState<"free" | "basic" | "pro" | "institutional" | null>(null);
   const [similarResults, setSimilarResults] = useState<
     Record<string, UnifiedSearchResult[]>
   >({});
@@ -248,6 +255,13 @@ export default function ResearchPage() {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Fetch user plan for gating ──────────────────────────────────────
+  useEffect(() => {
+    getUserUsageStats()
+      .then((stats) => setUserPlan((stats?.plan as typeof userPlan) ?? "free"))
+      .catch(() => setUserPlan("free"));
+  }, []);
+
   // ── Persist to sessionStorage on changes ───────────────────────────
   useEffect(() => {
     writeSession({
@@ -261,6 +275,7 @@ export default function ResearchPage() {
       hasMore,
       sourceCounts,
       augmentedQueries,
+      aiSummary,
     });
   }, [
     query,
@@ -273,6 +288,7 @@ export default function ResearchPage() {
     hasMore,
     sourceCounts,
     augmentedQueries,
+    aiSummary,
   ]);
 
   // ── Chat ───────────────────────────────────────────────────────────
@@ -345,6 +361,7 @@ export default function ResearchPage() {
       setError(null);
       setHasSearched(true);
       setPage(pageNum);
+      setAiSummary(null);
 
       try {
         const url = buildSearchUrl(pageNum);
@@ -767,6 +784,17 @@ export default function ResearchPage() {
           </div>
         )}
 
+        {/* AI Synthesis Panel */}
+        {hasSearched && !loading && results.length > 0 && (
+          <AISynthesisPanel
+            query={query}
+            results={results}
+            userPlan={userPlan}
+            initialSynthesis={aiSummary}
+            onSynthesisChange={setAiSummary}
+          />
+        )}
+
         {/* Loading */}
         {loading && (
           <div className="space-y-4">
@@ -795,8 +823,8 @@ export default function ResearchPage() {
               const similarKey = r.s2Id || r.doi || r.title;
 
               return (
-                <div key={`${key}-${idx}`}>
-                  <div className="glass-panel rounded-xl p-5 hover:bg-surface-raised/30 transition-all">
+                <div key={`${key}-${idx}`} id={`paper-result-${idx}`}>
+                  <div className="glass-panel rounded-xl p-5 hover:bg-surface-raised/30 transition-all ring-0 transition-[box-shadow] duration-500">
                     {/* Title */}
                     <h3 className="font-medium text-ink text-sm leading-snug mb-1.5">
                       {r.doi ? (

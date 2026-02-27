@@ -4,11 +4,13 @@ import {
   text,
   integer,
   real,
+  boolean,
   timestamp,
   date,
   jsonb,
   index,
   unique,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 import {
@@ -22,6 +24,9 @@ import {
   columnTypeEnum,
   matrixSourceEnum,
   milestoneStatusEnum,
+  reviewStageEnum,
+  alertFrequencyEnum,
+  alertStatusEnum,
 } from "./enums";
 
 import { users, projects, papers } from "./core";
@@ -63,16 +68,19 @@ export const screeningDecisions = pgTable(
     decision: screeningDecisionEnum("decision"),
     reason: text("reason"),
     decidedBy: decidedByEnum("decided_by"),
+    reviewerId: text("reviewer_id"), // nullable for backward compat with existing AI decisions
     createdAt: timestamp("created_at").defaultNow(),
   },
   (table) => [
-    unique("screening_decisions_project_paper_stage_unique").on(
+    unique("screening_decisions_project_paper_stage_reviewer_unique").on(
       table.projectId,
       table.paperId,
-      table.stage
+      table.stage,
+      table.reviewerId
     ),
     index("idx_screening_decisions_proj").on(table.projectId),
     index("idx_screening_decisions_paper").on(table.paperId),
+    index("idx_screening_decisions_reviewer").on(table.reviewerId),
   ]
 );
 
@@ -265,3 +273,101 @@ export const milestoneProgress = pgTable("milestone_progress", {
   }),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// ---------------------------------------------------------------------------
+// 52. systematic_review_config
+// ---------------------------------------------------------------------------
+export const systematicReviewConfig = pgTable(
+  "systematic_review_config",
+  {
+    id: serial("id").primaryKey(),
+    projectId: integer("project_id")
+      .notNull()
+      .unique()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    pico: jsonb("pico"), // { population, intervention, comparison, outcome }
+    searchStrategy: jsonb("search_strategy"), // stored generated strategy
+    searchDatabases: jsonb("search_databases").default(["pubmed"]),
+    protocolRegistration: text("protocol_registration"), // PROSPERO ID
+    protocolDoi: text("protocol_doi"),
+    searchDate: timestamp("search_date"),
+    lastSearchDate: timestamp("last_search_date"),
+    reviewStage: reviewStageEnum("review_stage").default("search_strategy"),
+    settings: jsonb("settings").default({}),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [
+    index("idx_sr_config_project").on(table.projectId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 54. project_collaborators
+// ---------------------------------------------------------------------------
+export const projectCollaborators = pgTable(
+  "project_collaborators",
+  {
+    id: serial("id").primaryKey(),
+    projectId: integer("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    role: text("role").notNull().default("reviewer"), // 'owner' | 'reviewer' | 'extractor' | 'statistician' | 'viewer'
+    invitedAt: timestamp("invited_at").defaultNow(),
+    acceptedAt: timestamp("accepted_at"),
+  },
+  (t) => [
+    uniqueIndex("uq_project_collaborator").on(t.projectId, t.userId),
+    index("idx_project_collaborators_project").on(t.projectId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 53. search_alerts (Living Reviews)
+// ---------------------------------------------------------------------------
+export const searchAlerts = pgTable(
+  "search_alerts",
+  {
+    id: serial("id").primaryKey(),
+    projectId: integer("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    searchString: text("search_string").notNull(),
+    frequency: alertFrequencyEnum("frequency").default("weekly"),
+    status: alertStatusEnum("status").default("active"),
+    lastChecked: timestamp("last_checked"),
+    nextCheck: timestamp("next_check"),
+    newPapersFound: integer("new_papers_found").default(0),
+    totalChecks: integer("total_checks").default(0),
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => [
+    index("idx_search_alerts_project").on(table.projectId),
+    index("idx_search_alerts_status").on(table.status),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 55. sr_audit_log (RAISE compliance — transparent AI usage disclosure)
+// ---------------------------------------------------------------------------
+export const srAuditLog = pgTable("sr_audit_log", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull(),
+  action: text("action").notNull(),          // 'screen', 'extract', 'rob2_assess', 'resolve_conflict', 'import', 'export', 'config_change', 'meta_analysis', 'grade_assess'
+  entityType: text("entity_type").notNull(), // 'paper', 'decision', 'extraction', 'config', 'analysis'
+  entityId: integer("entity_id"),
+  details: jsonb("details"),                 // action-specific metadata
+  aiInvolved: boolean("ai_involved").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (t) => [
+  index("idx_audit_log_project").on(t.projectId),
+  index("idx_audit_log_action").on(t.action),
+]);

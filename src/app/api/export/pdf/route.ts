@@ -232,7 +232,7 @@ async function generatePDF(
 
   // ── Title ────────────────────────────────────────────────────────
 
-  const titleLines = wrapText(title, fontBold, TITLE_SIZE, CONTENT_WIDTH);
+  const titleLines = wrapText(sanitizeForPdf(title), fontBold, TITLE_SIZE, CONTENT_WIDTH);
   for (const line of titleLines) {
     ensureSpace(LINE_SPACING);
     const titleWidth = fontBold.widthOfTextAtSize(line, TITLE_SIZE);
@@ -255,7 +255,7 @@ async function generatePDF(
   const blocks = parseHTMLToBlocks(htmlContent);
 
   for (const block of blocks) {
-    const text = block.text.trim();
+    const text = sanitizeForPdf(block.text.trim());
     if (!text) {
       // Empty paragraph: just add spacing
       y -= LINE_SPACING;
@@ -338,7 +338,7 @@ async function generatePDF(
     const HANGING_INDENT = 36; // 0.5in
 
     for (const citation of citations) {
-      const citationText = stripHTML(citation).trim();
+      const citationText = sanitizeForPdf(stripHTML(citation).trim());
       if (!citationText) continue;
 
       // Hanging indent: first line at MARGIN, subsequent lines indented
@@ -370,10 +370,10 @@ function parseHTMLToBlocks(html: string): TextBlock[] {
   // Normalize: remove newlines and collapse whitespace between tags
   const normalized = html.replace(/\r?\n/g, " ").replace(/>\s+</g, "><");
 
-  // Match block-level elements: h1, h2, h3, p, div, li, blockquote
+  // Match block-level elements: h1-h4, p, div, li, blockquote
   // Also capture bare text nodes between blocks
   const blockPattern =
-    /<(h1|h2|h3|p|div|li|blockquote)(?:\s[^>]*)?>[\s\S]*?<\/\1>/gi;
+    /<(h1|h2|h3|h4|p|div|li|blockquote)(?:\s[^>]*)?>[\s\S]*?<\/\1>/gi;
 
   let lastIndex = 0;
   let match: RegExpExecArray | null;
@@ -401,6 +401,9 @@ function parseHTMLToBlocks(html: string): TextBlock[] {
           blocks.push({ type: "h2", text: innerText });
           break;
         case "h3":
+          blocks.push({ type: "h3", text: innerText });
+          break;
+        case "h4":
           blocks.push({ type: "h3", text: innerText });
           break;
         default:
@@ -437,15 +440,38 @@ function stripHTML(html: string): string {
     .replace(/&gt;/gi, ">")
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
-    .replace(/&rsquo;/gi, "\u2019")
-    .replace(/&lsquo;/gi, "\u2018")
-    .replace(/&rdquo;/gi, "\u201C")
-    .replace(/&ldquo;/gi, "\u201D")
-    .replace(/&mdash;/gi, "\u2014")
-    .replace(/&ndash;/gi, "\u2013")
-    .replace(/&hellip;/gi, "\u2026")
+    .replace(/&rsquo;/gi, "'")
+    .replace(/&lsquo;/gi, "'")
+    .replace(/&rdquo;/gi, '"')
+    .replace(/&ldquo;/gi, '"')
+    .replace(/&mdash;/gi, "--")
+    .replace(/&ndash;/gi, "-")
+    .replace(/&hellip;/gi, "...")
     .replace(/&#(\d+);/gi, (_m, code) =>
       String.fromCharCode(parseInt(code, 10)),
     )
     .replace(/\s+/g, " ");
+}
+
+/**
+ * Sanitize text for pdf-lib StandardFonts (WinAnsi encoding).
+ * Replaces Unicode characters that can't be embedded with ASCII equivalents.
+ */
+function sanitizeForPdf(text: string): string {
+  return text
+    .replace(/[\u2018\u2019\u201A]/g, "'")   // smart single quotes
+    .replace(/[\u201C\u201D\u201E]/g, '"')   // smart double quotes
+    .replace(/\u2014/g, "--")                  // em dash
+    .replace(/\u2013/g, "-")                   // en dash
+    .replace(/\u2026/g, "...")                 // ellipsis
+    .replace(/\u2022/g, "*")                   // bullet
+    .replace(/\u00A0/g, " ")                   // non-breaking space
+    .replace(/\u2032/g, "'")                   // prime
+    .replace(/\u2033/g, '"')                   // double prime
+    .replace(/\u2039/g, "<")                   // single left-pointing angle
+    .replace(/\u203A/g, ">")                   // single right-pointing angle
+    .replace(/\u00B7/g, "*")                   // middle dot
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")    // zero-width chars
+    // eslint-disable-next-line no-control-regex
+    .replace(/[^\x00-\xFF]/g, "");             // drop anything outside Latin-1
 }

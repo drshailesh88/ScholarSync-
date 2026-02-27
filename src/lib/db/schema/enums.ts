@@ -81,17 +81,20 @@ export const snowballStatusEnum = pgEnum("snowball_status", ["running", "complet
 // ---------------------------------------------------------------------------
 // Slide Decks
 // ---------------------------------------------------------------------------
-export const sourceTypeEnum = pgEnum("source_type", ["synthesis", "papers", "custom"]);
+export const sourceTypeEnum = pgEnum("source_type", ["synthesis", "papers", "custom", "deep_research"]);
 export const slideLayoutEnum = pgEnum("slide_layout", [
   "title_slide", "title_content", "two_column", "section_header",
   "image_text", "chart_slide", "table_slide", "quote_slide",
   "comparison", "blank",
+  "bibliography_slide", "methodology", "results_summary", "key_findings",
+  "timeline_slide", "stat_overview", "three_column", "big_number",
 ]);
 export const generationStatusEnum = pgEnum("generation_status", [
   "pending", "processing", "completed", "failed",
 ]);
 export const audienceTypeEnum = pgEnum("audience_type", [
   "thesis_defense", "conference", "journal_club", "classroom", "general",
+  "grant_presentation", "poster_session", "systematic_review", "patient_case", "grand_rounds",
 ]);
 
 // ---------------------------------------------------------------------------
@@ -188,6 +191,20 @@ export const matrixSourceEnum = pgEnum("matrix_source", ["manual", "ai_extracted
 // Project Milestones
 // ---------------------------------------------------------------------------
 export const milestoneStatusEnum = pgEnum("milestone_status", ["pending", "in_progress", "completed", "overdue"]);
+
+// ---------------------------------------------------------------------------
+// Systematic Review Config
+// ---------------------------------------------------------------------------
+export const reviewStageEnum = pgEnum("review_stage", [
+  "search_strategy", "screening", "full_text_screening",
+  "data_extraction", "risk_of_bias", "meta_analysis", "reporting",
+]);
+
+// ---------------------------------------------------------------------------
+// Search Alerts (Living Reviews)
+// ---------------------------------------------------------------------------
+export const alertFrequencyEnum = pgEnum("alert_frequency", ["daily", "weekly", "monthly"]);
+export const alertStatusEnum = pgEnum("alert_status", ["active", "paused", "completed"]);
 
 // ---------------------------------------------------------------------------
 // Marketplace Items
