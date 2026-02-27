@@ -40,16 +40,22 @@ A Prism-class LaTeX editor that lives at `/latex/[projectId]` with its own sideb
 **Compilation:** Tectonic binary installed in the existing Docker image (one line in Dockerfile). API route `/api/latex/compile` runs Tectonic as a child process. Returns PDF rendered by pdfjs-dist (already installed).
 
 **AI Model Strategy — CRITICAL:**
-- GPT-5.2 (`getLatexEditModel()`) for: complex inline edits, Draft mode chat, TikZ generation, AI-suggested citations
-- GPT-5 Nano (`getLatexUtilModel()`) for: simple inline edits (grammar, formalize), error fixes, table/equation/bib generation, Learn mode follow-ups
-- NO AI for: `/cite` slash command (uses existing PubMed/S2 search), Learn mode common concepts (static data file), `/template` (static)
-- DO NOT default to Anthropic models for LaTeX features. The cost math: GPT-5 Nano=$0.05/$0.40 per 1M tokens, GPT-5.2=$1.75/$14, Sonnet=$3/$15. Use the cheapest model that produces acceptable quality.
-- Add two new functions to `src/lib/ai/models.ts` using the existing `getOpenAI()` provider.
+
+Two models, each used where they excel:
+- **Claude Sonnet** (`getLatexWriteModel()`) for: complex inline edits (strengthen, expand, restructure), Draft mode chat, `/table`, `/figure`, `/tikz` generation, AI-suggested citations. Claude is used wherever writing quality matters — this is what differentiates us from Prism (which uses GPT-5.2). The user feels Claude's academic writing voice in their paper.
+- **GPT-5 Nano** (`getLatexUtilModel()`) for: simple inline edits (grammar, formalize, shorten), error fixes, `/equation` generation, Learn mode follow-ups. 20x cheaper than Haiku ($0.05 vs $1.00 input). Same quality for mechanical/structured tasks.
+- **NO AI for:** `/cite` (existing PubMed/S2 search), `/bib` (fetch metadata from CrossRef/S2 API and format as BibTeX), `/template` (static), Learn mode common concepts (static data file)
+
+The rule: Claude where users feel writing quality (it goes into their paper). Nano where they don't (grammar fixes, equation patterns, error fixes). No AI where an API call or static data does the job.
+
+Add two new functions to `src/lib/ai/models.ts`:
+- `getLatexWriteModel()` using existing `getAnthropic()` provider
+- `getLatexUtilModel()` using existing `getOpenAI()` provider
 
 **Agent Panel (4 tabs):**
-1. **Draft** — Streaming chat with GPT-5.2, smart context windowing (send current section + outline, not full doc)
+1. **Draft** — Streaming chat with Claude Sonnet (writing quality is the product), smart context windowing (send current section + outline, not full doc)
 2. **Learn** — Pre-written LaTeX concept explanations from `src/data/latex-concepts.ts` (static file, ~50 concepts). GPT-5 Nano only for follow-up questions. This is NOT an AI feature — it's mostly a data file displayed in a panel.
-3. **Cite** — Uses EXISTING PubMed/S2 search infrastructure. BibTeX management. Click to insert `\cite{key}`.
+3. **Cite** — Uses EXISTING PubMed/S2 search infrastructure. BibTeX from CrossRef/S2 API (no AI). Click to insert `\cite{key}`.
 4. **Check** — Uses EXISTING integrity check system (AI detection, plagiarism, citation verification) + new LaTeX-specific checks (unused refs, missing labels, package conflicts).
 
 **Database:** Three new tables in `src/lib/db/schema/editor.ts`: `latexProjects`, `latexFiles`, `latexCompilations`. See design doc for schema.
@@ -62,7 +68,7 @@ A Prism-class LaTeX editor that lives at `/latex/[projectId]` with its own sideb
 
 ### Key Existing Files
 
-- `src/lib/ai/models.ts` — Model factory functions (add getLatexEditModel, getLatexUtilModel here)
+- `src/lib/ai/models.ts` — Model factory functions (add getLatexWriteModel -> Claude Sonnet, getLatexUtilModel -> GPT-5 Nano)
 - `src/lib/db/schema/editor.ts` — Editor schema (add latex tables here)
 - `src/components/layout/app-sidebar.tsx` — Sidebar navigation (add LaTeX Editor entry)
 - `src/app/api/search/` — Existing PubMed/S2 search routes (Cite tab uses these)
@@ -96,7 +102,8 @@ Follow the 6-phase plan in the implementation doc. Start with Phase 1 (Foundatio
 ### What NOT to Do
 
 - Do NOT use the superseded design doc (2026-02-26 version)
-- Do NOT default to Anthropic models for LaTeX AI features without price comparison
+- Do NOT use Claude for mechanical tasks (grammar, equations, error fixes) — GPT-5 Nano is 20x cheaper and same quality for those
+- Do NOT use GPT-5.2 for writing tasks — that would just be rebuilding Prism. Claude Sonnet is our writing quality differentiator
 - Do NOT make the page look like Studio — Studio is busy, this is clean
 - Do NOT use TeX Live or Docker compilation service — use Tectonic binary in existing Docker image
 - Do NOT use SwiftLaTeX (AGPL license, not commercially safe)
