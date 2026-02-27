@@ -30,15 +30,26 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
+    // Guard: CLERK_SECRET_KEY must exist for server-side verification
+    if (!process.env.CLERK_SECRET_KEY) {
+      if (isDev) {
+        return NextResponse.next();
+      }
+      return NextResponse.json(
+        { error: "Server misconfiguration: CLERK_SECRET_KEY is not set" },
+        { status: 500 }
+      );
+    }
+
     // Protected route: verify the session via @clerk/backend
     const clerk = createClerkClient({
-      secretKey: process.env.CLERK_SECRET_KEY!,
+      secretKey: process.env.CLERK_SECRET_KEY,
       publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!,
     });
 
     const { isSignedIn } = await clerk.authenticateRequest(request, {
       publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!,
-      secretKey: process.env.CLERK_SECRET_KEY!,
+      secretKey: process.env.CLERK_SECRET_KEY,
     });
 
     if (!isSignedIn) {

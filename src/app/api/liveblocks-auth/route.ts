@@ -36,13 +36,24 @@ export async function POST(req: Request) {
 
   try {
     userId = await getCurrentUserId();
+  } catch {
+    // User not authenticated
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
     const user = await getCurrentUser();
     if (user?.firstName) {
       userName = `${user.firstName} ${user.lastName || ""}`.trim();
     }
     userAvatar = user?.imageUrl || "";
-  } catch {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  } catch (err) {
+    // Auth service error — user is authenticated but we can't fetch details
+    console.error("[liveblocks-auth] Failed to fetch user details:", err);
+    return NextResponse.json(
+      { error: "Auth service error" },
+      { status: 500 }
+    );
   }
 
   const colorIndex =

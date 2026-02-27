@@ -49,7 +49,7 @@ export async function addComment(
       userName =
         user.firstName && user.lastName
           ? `${user.firstName} ${user.lastName}`
-          : user.firstName ?? "User";
+          : user.firstName ?? ("emailAddresses" in user && Array.isArray(user.emailAddresses) ? user.emailAddresses[0]?.emailAddress : null) ?? "User";
       userAvatar = user.imageUrl ?? null;
     }
   } catch {
