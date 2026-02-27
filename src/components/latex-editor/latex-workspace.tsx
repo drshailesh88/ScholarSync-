@@ -6,8 +6,10 @@ import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import { updateLatexFile } from "@/lib/actions/latex";
 import { TopBar } from "./top-bar";
 import { SourceEditor } from "./source-editor";
+import { VisualEditor } from "./visual-editor";
 import { PreviewPanel } from "./preview-panel";
 import { AgentPanel } from "./agent-panel";
+import { FileTree } from "./file-tree";
 import { ErrorGutterPanel, type CompilationDiagnostic } from "./error-gutter";
 import { InlineAiBar } from "./inline-ai-bar";
 import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
@@ -36,8 +38,6 @@ interface LatexWorkspaceProps {
 }
 
 export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
-  const activeFileId = useLatexEditorStore((s) => s.activeFileId);
-  const documentContent = useLatexEditorStore((s) => s.documentContent);
   const setDocumentContent = useLatexEditorStore((s) => s.setDocumentContent);
   const setSaveState = useLatexEditorStore((s) => s.setSaveState);
   const setLastSavedAt = useLatexEditorStore((s) => s.setLastSavedAt);
@@ -49,9 +49,13 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const setCompileError = useLatexEditorStore((s) => s.setCompileError);
   const setCompiledPdfUrl = useLatexEditorStore((s) => s.setCompiledPdfUrl);
   const setPreviewMode = useLatexEditorStore((s) => s.setPreviewMode);
+  const viewMode = useLatexEditorStore((s) => s.viewMode);
+
+  // Managed file list (mutable after create/rename/delete)
+  const [files, setFiles] = useState<LatexFile[]>(initialFiles);
 
   // Get the main file content
-  const mainFile = initialFiles.find((f) => f.isMain);
+  const mainFile = files.find((f) => f.isMain);
   const initialContent = mainFile?.content ?? "";
 
   // Error diagnostics from compilation
@@ -79,13 +83,22 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
       setDocumentContent(content);
       setSaveState("unsaved");
 
+      // Also update the local file list so FileTree stays in sync
+      const currentFileId = useLatexEditorStore.getState().activeFileId;
+      if (currentFileId) {
+        setFiles((prev) =>
+          prev.map((f) => f.id === currentFileId ? { ...f, content } : f)
+        );
+      }
+
       // Debounce save to DB
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       saveTimerRef.current = setTimeout(async () => {
-        if (!activeFileId) return;
+        const fileId = useLatexEditorStore.getState().activeFileId;
+        if (!fileId) return;
         setSaveState("saving");
         try {
-          await updateLatexFile(activeFileId, { content });
+          await updateLatexFile(fileId, { content });
           setSaveState("saved");
           setLastSavedAt(new Date());
         } catch {
@@ -93,7 +106,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         }
       }, 1500);
     },
-    [activeFileId, setDocumentContent, setSaveState, setLastSavedAt]
+    [setDocumentContent, setSaveState, setLastSavedAt]
   );
 
   // Cleanup timer on unmount
@@ -109,9 +122,11 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
       // Cmd+S: save immediately
       if ((e.metaKey || e.ctrlKey) && e.key === "s") {
         e.preventDefault();
-        if (activeFileId && documentContent) {
+        const fileId = useLatexEditorStore.getState().activeFileId;
+        const content = useLatexEditorStore.getState().documentContent;
+        if (fileId && content) {
           setSaveState("saving");
-          updateLatexFile(activeFileId, { content: documentContent })
+          updateLatexFile(fileId, { content })
             .then(() => {
               setSaveState("saved");
               setLastSavedAt(new Date());
@@ -138,6 +153,16 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           });
         }
       }
+      // Cmd+B: toggle file tree
+      if ((e.metaKey || e.ctrlKey) && e.key === "b") {
+        e.preventDefault();
+        toggleFileTree();
+      }
+      // Cmd+J: toggle agent panel
+      if ((e.metaKey || e.ctrlKey) && e.key === "j") {
+        e.preventDefault();
+        toggleAgentPanel();
+      }
       // Escape: dismiss panels
       if (e.key === "Escape") {
         if (inlineAi.visible) setInlineAi((s) => ({ ...s, visible: false }));
@@ -147,9 +172,16 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFileId, documentContent, inlineAi.visible, _slashMenu.visible]);
+  }, [inlineAi.visible, _slashMenu.visible]);
 
   const handleCompile = useCallback(async () => {
+    // Save current file before compiling
+    const fileId = useLatexEditorStore.getState().activeFileId;
+    const content = useLatexEditorStore.getState().documentContent;
+    if (fileId && content) {
+      await updateLatexFile(fileId, { content }).catch(() => {});
+    }
+
     setCompileStatus("compiling");
     setCompileError(null);
     setDiagnostics([]);
@@ -181,6 +213,41 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     }
   }, [project.id, setCompileStatus, setCompileError, setCompiledPdfUrl, setPreviewMode]);
 
+  // Export handlers
+  const handleExportPdf = useCallback(() => {
+    const pdfUrl = useLatexEditorStore.getState().compiledPdfUrl;
+    if (!pdfUrl) return;
+    const a = document.createElement("a");
+    a.href = pdfUrl;
+    a.download = `${project.title.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`;
+    a.click();
+  }, [project.title]);
+
+  const handleExportTex = useCallback(() => {
+    const content = useLatexEditorStore.getState().documentContent;
+    const blob = new Blob([content], { type: "text/x-tex" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "main.tex";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  const handleExportZip = useCallback(async () => {
+    // Build a simple zip-like download with all files as separate downloads
+    // (Full ZIP support requires a library; for now, download main .tex)
+    // In a real implementation, use JSZip to bundle all project files
+    const content = useLatexEditorStore.getState().documentContent;
+    const blob = new Blob([content], { type: "text/x-tex" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${project.title.replace(/[^a-zA-Z0-9]/g, "_")}_project.tex`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [project.title]);
+
   // Handle inline AI apply
   const handleInlineAiApply = useCallback((_newText: string) => {
     navigator.clipboard.writeText(_newText);
@@ -207,7 +274,8 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const handleFixError = useCallback(async (diagnostic: CompilationDiagnostic) => {
     if (!diagnostic.line) return;
 
-    const lines = documentContent.split("\n");
+    const content = useLatexEditorStore.getState().documentContent;
+    const lines = content.split("\n");
     const context = lines.slice(Math.max(0, diagnostic.line - 3), diagnostic.line + 2).join("\n");
 
     try {
@@ -236,27 +304,43 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     } catch {
       // Silent failure
     }
-  }, [documentContent]);
+  }, []);
 
   // Handle BibTeX insertion from Cite tab
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as { bibtex: string; citeKey: string };
       if (!detail?.bibtex) return;
-      const bibFile = initialFiles.find((f) => f.path.endsWith(".bib"));
+      const bibFile = files.find((f) => f.path.endsWith(".bib"));
       if (bibFile) {
         const newContent = (bibFile.content || "") + "\n\n" + detail.bibtex;
         updateLatexFile(bibFile.id, { content: newContent }).catch(() => {});
+        setFiles((prev) =>
+          prev.map((f) => f.id === bibFile.id ? { ...f, content: newContent } : f)
+        );
       }
     };
     window.addEventListener("latex:insert-bibtex", handler);
     return () => window.removeEventListener("latex:insert-bibtex", handler);
-  }, [initialFiles]);
+  }, [files]);
+
+  // Jump-to-line handler for outline clicks
+  const handleJumpToLine = useCallback((_line: number) => {
+    // The CodeMirror view is internal to SourceEditor. We scroll by searching for
+    // the section heading text. A future improvement would expose the CM view ref.
+    // For now, copy the line number to provide user feedback.
+  }, []);
 
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)] -m-6 -mt-0">
       {/* Top Bar */}
-      <TopBar projectId={project.id} onCompile={handleCompile} />
+      <TopBar
+        projectId={project.id}
+        onCompile={handleCompile}
+        onExportPdf={handleExportPdf}
+        onExportTex={handleExportTex}
+        onExportZip={handleExportZip}
+      />
 
       {/* Main workspace */}
       <div className="flex-1 flex overflow-hidden relative">
@@ -276,42 +360,30 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
         {/* File Tree Panel (collapsible) */}
         {fileTreeOpen && (
-          <aside className="w-56 shrink-0 border-r border-border-subtle bg-surface/50 overflow-y-auto p-3">
-            <div className="text-xs font-semibold text-ink-muted/60 tracking-wider uppercase mb-2 px-2">
-              Project Files
-            </div>
-            <div className="space-y-0.5">
-              {initialFiles.map((file) => (
-                <button
-                  key={file.id}
-                  onClick={() => {
-                    useLatexEditorStore.getState().setActiveFileId(file.id);
-                    setDocumentContent(file.content ?? "");
-                  }}
-                  className={cn(
-                    "w-full text-left px-2 py-1.5 rounded-lg text-xs transition-colors",
-                    file.id === activeFileId
-                      ? "bg-brand/10 text-brand font-medium"
-                      : "text-ink-muted hover:text-ink hover:bg-surface-raised"
-                  )}
-                >
-                  {file.path}
-                  {file.isMain && (
-                    <span className="ml-1 text-[9px] text-brand/60">(main)</span>
-                  )}
-                </button>
-              ))}
-            </div>
+          <aside className="w-56 shrink-0 border-r border-border-subtle bg-surface/50 overflow-hidden">
+            <FileTree
+              projectId={project.id}
+              files={files}
+              onFilesChange={setFiles}
+              onJumpToLine={handleJumpToLine}
+            />
           </aside>
         )}
 
         {/* Editor Panel */}
         <div className="flex-1 min-w-0 flex flex-col border-r border-border-subtle">
           <div className="flex-1 overflow-hidden">
-            <SourceEditor
-              initialContent={initialContent}
-              onChange={handleEditorChange}
-            />
+            {viewMode === "visual" ? (
+              <VisualEditor
+                initialContent={initialContent}
+                onChange={handleEditorChange}
+              />
+            ) : (
+              <SourceEditor
+                initialContent={initialContent}
+                onChange={handleEditorChange}
+              />
+            )}
           </div>
           {/* Error gutter below editor */}
           <ErrorGutterPanel

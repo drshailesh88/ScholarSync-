@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Plus,
   Article,
@@ -10,7 +9,7 @@ import {
   Trash,
   CircleNotch,
 } from "@phosphor-icons/react";
-import { getLatexProjects, deleteLatexProject, createLatexProject } from "@/lib/actions/latex";
+import { getLatexProjects, deleteLatexProject } from "@/lib/actions/latex";
 
 type LatexProject = {
   id: string;
@@ -21,10 +20,8 @@ type LatexProject = {
 };
 
 export default function LatexProjectListPage() {
-  const router = useRouter();
   const [projects, setProjects] = useState<LatexProject[]>([]);
   const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     getLatexProjects()
@@ -32,16 +29,6 @@ export default function LatexProjectListPage() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
-
-  const handleNewProject = async () => {
-    setCreating(true);
-    try {
-      const project = await createLatexProject({ title: "Untitled Paper" });
-      router.push(`/latex/${project.id}`);
-    } catch {
-      setCreating(false);
-    }
-  };
 
   const handleDelete = async (id: string) => {
     setProjects((prev) => prev.filter((p) => p.id !== id));
@@ -57,18 +44,13 @@ export default function LatexProjectListPage() {
             Write, preview, and compile LaTeX papers
           </p>
         </div>
-        <button
-          onClick={handleNewProject}
-          disabled={creating}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50"
+        <Link
+          href="/latex/new"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors"
         >
-          {creating ? (
-            <CircleNotch size={16} className="animate-spin" />
-          ) : (
-            <Plus size={16} weight="bold" />
-          )}
+          <Plus size={16} weight="bold" />
           New Paper
-        </button>
+        </Link>
       </div>
 
       {loading ? (
@@ -84,18 +66,13 @@ export default function LatexProjectListPage() {
           <p className="text-sm text-ink-muted mb-6 max-w-sm">
             Create your first LaTeX paper to start writing with live preview and AI assistance.
           </p>
-          <button
-            onClick={handleNewProject}
-            disabled={creating}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors disabled:opacity-50"
+          <Link
+            href="/latex/new"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors"
           >
-            {creating ? (
-              <CircleNotch size={16} className="animate-spin" />
-            ) : (
-              <Plus size={16} weight="bold" />
-            )}
+            <Plus size={16} weight="bold" />
             Create Paper
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="grid gap-3">

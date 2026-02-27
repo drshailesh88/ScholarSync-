@@ -22,9 +22,12 @@ import { updateLatexProject } from "@/lib/actions/latex";
 interface TopBarProps {
   projectId: string;
   onCompile: () => void;
+  onExportPdf?: () => void;
+  onExportTex?: () => void;
+  onExportZip?: () => void;
 }
 
-export function TopBar({ projectId, onCompile }: TopBarProps) {
+export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExportZip }: TopBarProps) {
   const projectTitle = useLatexEditorStore((s) => s.projectTitle);
   const setProjectTitle = useLatexEditorStore((s) => s.setProjectTitle);
   const saveState = useLatexEditorStore((s) => s.saveState);
@@ -205,21 +208,21 @@ export function TopBar({ projectId, onCompile }: TopBarProps) {
           {showExport && (
             <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50 py-1">
               <button
-                onClick={() => setShowExport(false)}
+                onClick={() => { onExportPdf?.(); setShowExport(false); }}
                 className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
               >
                 <FilePdf size={14} className="text-red-400" />
                 Download PDF
               </button>
               <button
-                onClick={() => setShowExport(false)}
+                onClick={() => { onExportTex?.(); setShowExport(false); }}
                 className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
               >
                 <FileCode size={14} className="text-blue-400" />
                 Download .tex
               </button>
               <button
-                onClick={() => setShowExport(false)}
+                onClick={() => { onExportZip?.(); setShowExport(false); }}
                 className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
               >
                 <FolderOpen size={14} className="text-amber-400" />

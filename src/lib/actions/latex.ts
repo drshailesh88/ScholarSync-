@@ -125,6 +125,63 @@ export async function createLatexProject(data: {
 }
 
 // ---------------------------------------------------------------------------
+// Projects — Create from Template
+// ---------------------------------------------------------------------------
+
+export async function createLatexProjectFromTemplate(data: {
+  title?: string;
+  compiler?: "pdflatex" | "xelatex" | "lualatex";
+  templateId?: string;
+  projectId?: number;
+}) {
+  const { getTemplate } = await import("@/data/latex-templates");
+  const userId = await getCurrentUserId();
+  const title = data.title || "Untitled Paper";
+  const template = getTemplate(data.templateId || "blank");
+
+  const [project] = await db
+    .insert(latexProjects)
+    .values({
+      userId,
+      title,
+      compiler: template?.compiler || data.compiler || "pdflatex",
+      projectId: data.projectId ?? null,
+    })
+    .returning();
+
+  if (template) {
+    // Create files from template
+    await db.insert(latexFiles).values(
+      template.files.map((f) => ({
+        latexProjectId: project.id,
+        path: f.path,
+        content: f.content.replace(/__TITLE__/g, title),
+        isMain: f.isMain,
+      }))
+    );
+  } else {
+    // Fallback to default files
+    await db.insert(latexFiles).values([
+      {
+        latexProjectId: project.id,
+        path: "main.tex",
+        content: DEFAULT_MAIN_TEX.replace("Untitled Paper", title),
+        isMain: true,
+      },
+      {
+        latexProjectId: project.id,
+        path: "references.bib",
+        content: DEFAULT_BIB,
+        isMain: false,
+      },
+    ]);
+  }
+
+  revalidatePath("/latex");
+  return project;
+}
+
+// ---------------------------------------------------------------------------
 // Projects — Update
 // ---------------------------------------------------------------------------
 
