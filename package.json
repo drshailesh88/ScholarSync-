@@ -18,7 +18,9 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "prepare": "husky"
+    "prepare": "husky",
+    "dev:vinext": "vite dev --port 3001",
+    "build:vinext": "vite build"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -135,15 +137,25 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-rsc": "^0.5.21",
     "@vitest/coverage-v8": "^4.0.18",
     "drizzle-kit": "^0.31.9",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "react-server-dom-webpack": "^19.2.4",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5",
+    "vinext": "^0.0.13",
+    "vite": "^7.3.1",
     "vitest": "^4.0.18"
+  },
+  "type": "module",
+  "overrides": {
+    "editorconfig": {
+      "minimatch": "^9.0.8"
+    }
   }
 }
