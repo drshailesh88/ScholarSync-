@@ -156,6 +156,30 @@ export interface IntegrityCheckResult {
   checkedAt: string;
 }
 
+// ── Internal Engine Types ────────────────────────────────────────
+
+export interface PredatoryJournalInfo {
+  /** Publisher name */
+  publisher: string;
+  /** Journal name */
+  journal: string;
+  /** The list source where the match was found */
+  listSource: string;
+}
+
+export interface RetractionInfo {
+  /** DOI of the retracted paper */
+  doi: string;
+  /** ISO date string of retraction (YYYY-MM-DD) or "Unknown" */
+  retractionDate: string;
+  /** Nature of the retraction, e.g. "Retraction" */
+  retractionNature: string;
+  /** Reason for retraction */
+  reason: string;
+  /** Title of the retracted paper */
+  title?: string;
+}
+
 // ── Engine Input ────────────────────────────────────────────────
 
 export interface IntegrityCheckInput {
