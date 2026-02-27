@@ -115,45 +115,49 @@ npm run test:e2e
 npm run test:e2e:ui
 ```
 
-## Docker
-
-```bash
-# Build
-docker build -t scholarsync .
-
-# Run (needs DATABASE_URL and other env vars)
-docker run -p 3000:3000 \
-  -e DATABASE_URL=... \
-  -e CLERK_SECRET_KEY=... \
-  scholarsync
-```
-
-Image size: ~83 MB (Alpine-based, standalone output).
-
 ## Deployment
 
-### Environment Variables (Production Required)
+### Architecture
 
-| Variable | Purpose |
-|----------|---------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk auth (public) |
-| `CLERK_SECRET_KEY` | Clerk auth (server) |
-| `RAZORPAY_KEY_ID` | Payment gateway |
-| `RAZORPAY_KEY_SECRET` | Payment gateway |
-| `RAZORPAY_WEBHOOK_SECRET` | Payment webhook verification |
-| `ANTHROPIC_API_KEY` | AI features |
+| Component | Platform | Purpose |
+|-----------|----------|---------|
+| Frontend + Backend | Cloudflare Workers (Vinext) | App server |
+| Database | Neon PostgreSQL via Hyperdrive | Pooled DB connection |
+| Storage | Cloudflare R2 | PDFs, recordings (free egress) |
+| LaTeX Compiler | Google Cloud Run | Tectonic-based compilation |
+| Auth | Clerk | Authentication |
+| Monitoring | Sentry + PostHog + Langfuse | Observability |
+
+### Prerequisites
+
+- Cloudflare account (free plan works)
+- Neon account (free tier for database)
+- Google Cloud account (free tier, LaTeX service only)
+
+### First-time setup
+
+1. `npm install`
+2. Set up Neon database: enable pgvector, run `npx drizzle-kit push`
+3. Deploy LaTeX service: `bash scripts/deploy-latex-service.sh`
+4. Set up Cloudflare: `bash scripts/setup-cloudflare.sh`
+5. Fill in KV and Hyperdrive IDs in `wrangler.jsonc`
+6. `npm run build && npx wrangler deploy`
+
+### Subsequent deploys
+
+```bash
+npm run build && npx wrangler deploy
+```
 
 ### CI/CD
 
 The GitHub Actions pipeline runs:
 
 1. **quality** — TypeScript + ESLint (zero tolerance)
-2. **test** — 335 unit tests + coverage threshold (50%)
+2. **test** — Unit tests + coverage threshold
 3. **e2e** — Playwright tests with PostgreSQL service
 4. **security** — `npm audit` + hardcoded secrets scan
-5. **build** — Next.js + Docker image build
-6. **docker** — Push on main branch
+5. **build** — Vite build + type check
 
 ## Pricing
 

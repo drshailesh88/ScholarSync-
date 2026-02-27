@@ -2,14 +2,32 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 
-function createDb() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error(
-      "DATABASE_URL is not set. Add it to your .env.local file."
-    );
+/**
+ * Resolve the database connection string.
+ *
+ * In Cloudflare Workers, Hyperdrive provides a pooled connection via
+ * env.HYPERDRIVE.connectionString. Outside Workers (local dev, scripts),
+ * we fall back to process.env.DATABASE_URL.
+ */
+function getConnectionString(): string {
+  // Try Hyperdrive first (Workers runtime)
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { env } = require("cloudflare:workers");
+    if (env?.HYPERDRIVE?.connectionString) {
+      return env.HYPERDRIVE.connectionString;
+    }
+  } catch {
+    // Not in Workers — fall through
   }
 
-  const client = postgres(process.env.DATABASE_URL, {
+  // Fallback to process.env (local dev, scripts)
+  if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
+  throw new Error("DATABASE_URL is not set and Hyperdrive is not available");
+}
+
+function createDb() {
+  const client = postgres(getConnectionString(), {
     max: 5,
     prepare: false, // required for Neon serverless + Hyperdrive compatibility
   });
@@ -18,7 +36,7 @@ function createDb() {
 }
 
 // Lazy proxy — creates connection on first use.
-// In Workers with Hyperdrive, DATABASE_URL is injected per-request
+// In Workers with Hyperdrive, the connection string is injected per-request
 // but the singleton pattern still works within a single request lifecycle.
 let _db: ReturnType<typeof createDb> | undefined;
 

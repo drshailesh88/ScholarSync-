@@ -1,0 +1,75 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "scholarsync",
+  "compatibility_date": "2025-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+
+  // R2 bucket — accessed as env.STORAGE in src/lib/storage/r2.ts
+  "r2_buckets": [
+    {
+      "binding": "STORAGE",
+      "bucket_name": "scholarsync-files"
+    }
+  ],
+
+  // KV namespace — used by worker/index.ts for Vinext cache
+  "kv_namespaces": [
+    {
+      "binding": "VINEXT_CACHE",
+      "id": "<PASTE_ID: npx wrangler kv namespace create VINEXT_CACHE>"
+    }
+  ],
+
+  // Hyperdrive — provides pooled connection to Neon PostgreSQL
+  // Accessed as env.HYPERDRIVE.connectionString in src/lib/db/index.ts
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "<PASTE_ID: npx wrangler hyperdrive create scholarsync-db --connection-string=...>"
+    }
+  ],
+
+  // Public env vars — bundled into client JS, MUST be vars (not secrets)
+  "vars": {
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_APP_URL": "https://scholarsync.com",
+    "NEXT_PUBLIC_BRAND_NAME": "ScholarSync",
+    "NEXT_PUBLIC_BRAND_TAGLINE": "AI-powered academic writing",
+    "NEXT_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com",
+    "AI_PROVIDER": "anthropic"
+  }
+
+  // Secrets — set via CLI, NOT in this file:
+  //   npx wrangler secret put CLERK_SECRET_KEY
+  //   npx wrangler secret put NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  //   npx wrangler secret put NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY
+  //   npx wrangler secret put NEXT_PUBLIC_POSTHOG_KEY
+  //   npx wrangler secret put OPENAI_API_KEY
+  //   npx wrangler secret put ANTHROPIC_API_KEY
+  //   npx wrangler secret put COHERE_API_KEY
+  //   npx wrangler secret put ZHIPU_API_KEY
+  //   npx wrangler secret put REPLICATE_API_TOKEN
+  //   npx wrangler secret put DATABASE_URL
+  //   npx wrangler secret put LATEX_COMPILER_URL
+  //   npx wrangler secret put LATEX_COMPILER_SECRET
+  //   npx wrangler secret put RAZORPAY_KEY_ID
+  //   npx wrangler secret put RAZORPAY_KEY_SECRET
+  //   npx wrangler secret put RAZORPAY_WEBHOOK_SECRET
+  //   npx wrangler secret put SENTRY_DSN
+  //   npx wrangler secret put LANGFUSE_PUBLIC_KEY
+  //   npx wrangler secret put LANGFUSE_SECRET_KEY
+  //   npx wrangler secret put LANGFUSE_BASE_URL
+  //   npx wrangler secret put LIVEBLOCKS_SECRET_KEY
+  //   npx wrangler secret put UPSTASH_REDIS_REST_URL
+  //   npx wrangler secret put UPSTASH_REDIS_REST_TOKEN
+  //   npx wrangler secret put PUBMED_API_KEY
+  //   npx wrangler secret put NCBI_API_KEY
+  //   npx wrangler secret put SEMANTIC_SCHOLAR_API_KEY
+  //   npx wrangler secret put COPYLEAKS_API_KEY
+  //   npx wrangler secret put COPYLEAKS_EMAIL
+  //   npx wrangler secret put CRON_SECRET
+  //   npx wrangler secret put MIGRATION_SECRET
+}

@@ -4,10 +4,9 @@ import handler from "vinext/server/app-router-entry";
 
 interface Env {
   VINEXT_CACHE: KVNamespace;
+  STORAGE: R2Bucket;
+  HYPERDRIVE: Hyperdrive;
   ASSETS: Fetcher;
-  // Future bindings (will be configured by other migration instances):
-  // HYPERDRIVE: Hyperdrive;
-  // STORAGE: R2Bucket;
   [key: string]: unknown;
 }
 
