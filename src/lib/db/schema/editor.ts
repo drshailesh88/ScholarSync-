@@ -38,6 +38,8 @@ import {
   permissionEnum,
   difficultyEnum,
   learningStatusEnum,
+  latexCompilerEnum,
+  latexCompilationStatusEnum,
 } from "./enums";
 
 // ---------------------------------------------------------------------------
@@ -832,5 +834,87 @@ export const livePollResponses = pgTable(
       table.voterFingerprint
     ),
     index("idx_live_poll_responses_poll").on(table.pollId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 41. latex_projects
+// ---------------------------------------------------------------------------
+export const latexProjects = pgTable(
+  "latex_projects",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectId: integer("project_id").references(() => projects.id, {
+      onDelete: "set null",
+    }),
+    title: text("title").notNull().default("Untitled Paper"),
+    compiler: latexCompilerEnum("compiler").default("pdflatex"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_latex_projects_user").on(table.userId),
+    index("idx_latex_projects_project").on(table.projectId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 42. latex_files
+// ---------------------------------------------------------------------------
+export const latexFiles = pgTable(
+  "latex_files",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    latexProjectId: text("latex_project_id")
+      .notNull()
+      .references(() => latexProjects.id, { onDelete: "cascade" }),
+    path: text("path").notNull(),
+    content: text("content"),
+    isMain: boolean("is_main").default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_latex_files_project").on(table.latexProjectId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 43. latex_compilations
+// ---------------------------------------------------------------------------
+export const latexCompilations = pgTable(
+  "latex_compilations",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    latexProjectId: text("latex_project_id")
+      .notNull()
+      .references(() => latexProjects.id, { onDelete: "cascade" }),
+    status: latexCompilationStatusEnum("status").notNull(),
+    log: text("log"),
+    pdfStorageKey: text("pdf_storage_key"),
+    durationMs: integer("duration_ms"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_latex_compilations_project").on(table.latexProjectId),
   ]
 );

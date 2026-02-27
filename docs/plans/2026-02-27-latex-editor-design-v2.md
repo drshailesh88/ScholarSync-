@@ -184,14 +184,14 @@ User types `/` -> dropdown menu:
 
 | Command | Action | AI Model |
 |---------|--------|----------|
-| `/table` | Generate table from description | GPT-5 Nano |
+| `/table` | Generate table from description | Claude Sonnet (tables need domain knowledge) |
 | `/cite` | Search PubMed/S2 -> insert citation | No AI (API search) |
-| `/figure` | Insert figure environment | GPT-5 Nano |
-| `/equation` | Generate equation from description | GPT-5 Nano |
-| `/tikz` | Generate TikZ diagram | GPT-5.2 |
-| `/bib` | Generate BibTeX from DOI/title | GPT-5 Nano |
+| `/figure` | Insert figure environment | Claude Sonnet (needs to understand what user is presenting) |
+| `/equation` | Generate equation from description | GPT-5 Nano (pattern-based, every model knows equations) |
+| `/tikz` | Generate TikZ diagram | Claude Sonnet (complex spatial reasoning) |
+| `/bib` | Generate BibTeX from DOI/title | No AI (fetch metadata from CrossRef/S2 API, format as BibTeX) |
 | `/template` | Insert section template | No AI (static) |
-| `/fix` | Fix nearest compilation error | GPT-5 Nano |
+| `/fix` | Fix nearest compilation error | GPT-5 Nano (mechanical) |
 
 ### 6c. Error Gutter Markers
 
@@ -216,7 +216,7 @@ Streaming multi-turn chat with document context. Three intensity modes:
 | Collaborate | Brand purple | Balanced suggestions + discussion |
 | Accelerate | Violet | Proactive — generates sections, restructures |
 
-**AI Model:** GPT-5.2 for quality. Smart context windowing — send relevant section + document outline, not entire document every time.
+**AI Model:** Claude Sonnet for quality — this is where users feel the writing difference vs Prism (which uses GPT-5.2). Smart context windowing — send relevant section + document outline, not entire document every time.
 
 ### Tab 2: Learn — Socratic LaTeX Tutor
 
@@ -238,7 +238,7 @@ Uses existing ScholarSync search infrastructure:
 - Project references: if linked to ScholarSync project, shows collected papers
 - BibTeX management: view/edit .bib file
 - Insert: click reference -> inserts `\cite{key}` or formatted citation
-- AI-suggested citations (GPT-5.2, occasional)
+- AI-suggested citations (Claude Sonnet, occasional — needs document understanding for quality suggestions)
 - Import: .bib upload, DOI bulk import
 
 ### Tab 4: Check — Integrity Suite
@@ -367,17 +367,26 @@ No provider loyalty. Best tool for each job.
 
 | Feature | Model | Why | Cost Per Use |
 |---------|-------|-----|-------------|
-| Inline edit (simple): grammar, formal, shorten | GPT-5 Nano ($0.05/$0.40) | Mechanical edits | ~$0.0001 |
-| Inline edit (complex): strengthen, expand, restructure | GPT-5.2 ($1.75/$14) | Needs reasoning, proven in Deep Research | ~$0.0035 |
+| Inline edit (simple): grammar, formal, shorten | GPT-5 Nano ($0.05/$0.40) | Mechanical edits, 20x cheaper than Haiku | ~$0.0001 |
+| Inline edit (complex): strengthen, expand, restructure | Claude Sonnet ($3/$15) | Writing quality IS the product. Differentiates from Prism's GPT-5.2 voice | ~$0.005 |
 | Slash: /cite | No AI | PubMed/S2 API search | $0 |
-| Slash: /table, /equation, /bib, /figure | GPT-5 Nano | Structured LaTeX generation | ~$0.0002 |
-| Slash: /tikz | GPT-5.2 | Spatial reasoning | ~$0.002 |
-| Error fixes | GPT-5 Nano | Mechanical | ~$0.0001 |
-| Draft mode (agent panel) | GPT-5.2 | Full writing assistant, best reasoning per dollar | ~$0.021 |
-| Learn mode (follow-up questions) | GPT-5 Nano | Explaining concepts | ~$0.0001 |
+| Slash: /table | Claude Sonnet | Tables often need domain knowledge, can't risk hallucinated data | ~$0.005 |
+| Slash: /figure | Claude Sonnet | Needs to understand what user is presenting | ~$0.005 |
+| Slash: /equation | GPT-5 Nano | Pattern-based, every model knows standard equations | ~$0.0002 |
+| Slash: /tikz | Claude Sonnet | Complex spatial reasoning, quality matters | ~$0.005 |
+| Slash: /bib | No AI | Fetch metadata from CrossRef/Semantic Scholar API, format as BibTeX | $0 |
+| Error fixes | GPT-5 Nano | Mechanical, specific error | ~$0.0001 |
+| Draft mode (agent panel) | Claude Sonnet | Full writing assistant. This is where users feel the quality difference vs Prism. Our moat. | ~$0.03 |
+| Learn mode (follow-up questions) | GPT-5 Nano | Explaining concepts, not prose | ~$0.0001 |
 | Learn mode (common concepts) | No AI — static templates | Pre-written data file | $0 |
-| Cite: AI-suggested citations | GPT-5.2 | Needs document understanding | ~$0.01 |
+| Cite: AI-suggested citations | Claude Sonnet | Needs document understanding for quality suggestions | ~$0.01 |
 | Check tab | Existing infrastructure | Already built | Existing cost |
+
+### The Rule: Claude Where Users Feel Quality, Nano Where They Don't
+
+- **Claude Sonnet** = anything that becomes part of the user's paper or feels like a writing partner (Draft, complex inline edits, tables, figures, TikZ, citation suggestions). This is the differentiator — Prism uses GPT-5.2, we use Claude. Different voice, different quality.
+- **GPT-5 Nano** = anything mechanical where the user doesn't care about prose quality (grammar fixes, equation generation, error fixes, LaTeX concept explanations). 20x cheaper than Haiku, same quality for structured tasks.
+- **No AI** = citation search (/cite), BibTeX generation (/bib — use CrossRef/S2 API), templates, common Learn mode concepts
 
 ### Cost Per User Per Month
 
@@ -398,16 +407,21 @@ Don't send entire document as context every message:
 
 ```typescript
 // Add to existing src/lib/ai/models.ts:
-export function getLatexEditModel() {
-  return getOpenAI()("gpt-5.2");       // Complex inline edits + Draft mode
+
+/** Claude Sonnet for LaTeX writing tasks — Draft mode, complex edits, TikZ.
+ *  This is where users feel the quality difference vs Prism (GPT-5.2). */
+export function getLatexWriteModel() {
+  return getAnthropic()("claude-sonnet-4-20250514");
 }
 
+/** GPT-5 Nano for mechanical LaTeX tasks — grammar fixes, table gen, error fixes.
+ *  20x cheaper than Haiku ($0.05 vs $1.00 input). Same quality for structured output. */
 export function getLatexUtilModel() {
-  return getOpenAI()("gpt-5-nano");    // Simple edits, error fixes, LaTeX generation
+  return getOpenAI()("gpt-5-nano");
 }
 ```
 
-Uses existing `@ai-sdk/openai` provider — already installed and configured.
+Two providers, each used where they excel. Both already installed.
 
 ---
 

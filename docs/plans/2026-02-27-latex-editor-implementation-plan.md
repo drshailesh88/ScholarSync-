@@ -90,26 +90,28 @@
 
 ### Step 3.1: Model Functions
 - Add to `src/lib/ai/models.ts`:
-  - `getLatexEditModel()` -> GPT-5.2 (complex edits + Draft)
-  - `getLatexUtilModel()` -> GPT-5 Nano (simple edits, error fixes, LaTeX generation)
+  - `getLatexWriteModel()` -> Claude Sonnet (complex edits, Draft, tables, figures, TikZ — quality writing tasks)
+  - `getLatexUtilModel()` -> GPT-5 Nano (simple edits, error fixes, equation generation — mechanical tasks)
 
 ### Step 3.2: Inline AI — Highlight to Command
 - Create `src/components/latex-editor/inline-ai-bar.tsx`
 - On text selection: show floating bar with text input
-- On submit: call GPT-5 Nano (simple edits) or GPT-5.2 (complex edits) via API route
+- On submit: call GPT-5 Nano (simple edits) or Claude Sonnet (complex edits) via API route
 - Stream replacement into document
 - Show [Accept] [Revert] controls
 - Auto-accept on cursor move
 - API route: `src/app/api/latex/inline-edit/route.ts`
-- Smart routing: classify edit complexity (grammar/formal -> Nano, strengthen/expand -> 5.2)
+- Smart routing: classify edit complexity (grammar/formal -> Nano, strengthen/expand -> Sonnet)
 
 ### Step 3.3: Slash Commands
 - Extend CodeMirror with slash command extension
 - `/` triggers dropdown menu with command options
 - Each command has its own handler:
   - `/cite` -> opens citation search (no AI, uses existing PubMed/S2)
-  - `/table`, `/equation`, `/figure`, `/bib` -> GPT-5 Nano generates LaTeX
-  - `/tikz` -> GPT-5.2 generates TikZ
+  - `/bib` -> fetch metadata from CrossRef/Semantic Scholar API, format as BibTeX (no AI)
+  - `/table`, `/figure` -> Claude Sonnet generates LaTeX (needs domain understanding)
+  - `/equation` -> GPT-5 Nano generates LaTeX (pattern-based)
+  - `/tikz` -> Claude Sonnet generates TikZ (complex spatial reasoning)
   - `/fix` -> GPT-5 Nano fixes nearest error
   - `/template` -> inserts static template (no AI)
 - API route: `src/app/api/latex/generate/route.ts` (handles all slash command AI calls)
@@ -137,7 +139,7 @@
 - Three intensity modes (Focus/Collaborate/Accelerate) — same pattern as Studio
 - Smart context windowing: send current section + outline, not full document
 - Conversation history pruning after 10 messages
-- AI Model: GPT-5.2
+- AI Model: Claude Sonnet (writing quality is the product — differentiates from Prism's GPT-5.2)
 - API route: `src/app/api/latex/draft-chat/route.ts`
 
 ### Step 4.3: Learn Tab
