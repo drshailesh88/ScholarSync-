@@ -1,0 +1,1190 @@
+[    1616ms] [WARNING] Clerk: Clerk has been loaded with development keys. Development instances have strict usage limits and should not be used when deploying your application to production. Learn more: https://clerk.com/docs/deployments/overview @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[    1617ms] [WARNING] Clerk: The prop "afterSignInUrl" is deprecated and should be replaced with the new "fallbackRedirectUrl" or "forceRedirectUrl" props instead. Learn more: https://clerk.com/docs/guides/custom-redirects#redirect-url-props @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:2297
+[    1693ms] Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={<SegmentViewNode>} forbidden={undefined} unauthorized={undefined}>
+      <HTTPAccessFallbackErrorBoundary pathname="/compliance" notFound={<SegmentViewNode>} forbidden={undefined} ...>
+        <RedirectBoundary>
+          <RedirectErrorBoundary router={{...}}>
+            <InnerLayoutRouter url="/compliance" tree={[...]} params={{}} cacheNode={{...}} segmentPath={[...]} ...>
+              <SegmentViewNode type="layout" pagePath="(app)/layo...">
+                <SegmentTrieNode>
+                <script>
+                <script>
+                <script>
+                <script>
+                <AppLayout>
+                  <AppShell>
+                    <div className="flex h-screen">
+                      <AppSidebar open={false} onClose={function onClose}>
+                        <aside className="hidden md:...">
+                          <div>
+                          <nav>
+                          <div className="px-6 py-4 ...">
+                            <LoadableComponent afterSignOutUrl="/">
++                             <Suspense fallback={<loading>}>
+-                             <div className="w-8 h-8 rounded-full bg-brand/20 border border-brand/30">
+                      ...
+            ...
+
+    at throwOnHydrationMismatch (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:3348:56)
+    at updateSuspenseComponent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6330:99)
+    at beginWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:6779:24)
+    at runWithFiberInDEV (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:965:74)
+    at performUnitOfWork (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9562:97)
+    at workLoopConcurrentByScheduler (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9558:58)
+    at renderRootConcurrent (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9541:71)
+    at performWorkOnRoot (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:9068:150)
+    at performWorkOnRootViaSchedulerTask (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_react-dom_1e674e59._.js:10230:9)
+    at MessagePort.performWorkUntilDeadline (http://localhost:3000/_next/static/chunks/node_modules_next_dist_compiled_a0e4c7b4._.js:2647:64)
+[  755208ms] [ERROR] ./src/app/(app)/compliance/page.tsx:940:8
+Parsing ecmascript source code failed
+  938 |           </aside>
+  939 |         </div>
+> 940 |       )}
+      |        ^
+  941 |     </div>
+  942 |   );
+  943 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  763602ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  766689ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  766972ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  768699ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  768946ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  769181ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  769402ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  769686ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  769913ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  770214ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  770504ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  771151ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  771502ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  771753ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  772343ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  772628ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  772933ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  773138ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  773370ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  773597ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  774430ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  774894ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  775719ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  775934ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  776231ms] [ERROR] ./src/app/(app)/compliance/page.tsx:950:8
+Parsing ecmascript source code failed
+  948 |           </aside>
+  949 |         </div>
+> 950 |       )}
+      |        ^
+  951 |     </div>
+  952 |   );
+  953 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  776774ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  777024ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  778511ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  778647ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  778879ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  779013ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  779163ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  779306ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  779450ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  779638ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  779850ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  780051ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  780491ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  780639ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  780865ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  781057ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  781645ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  781887ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  782179ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  782330ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  782647ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  782787ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  783263ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  783496ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  784000ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  784223ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  784831ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  784999ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  785172ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  785401ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
+[  785683ms] [ERROR] ./src/app/(app)/compliance/page.tsx:968:8
+Parsing ecmascript source code failed
+  966 |           </aside>
+  967 |         </div>
+> 968 |       )}
+      |        ^
+  969 |     </div>
+  970 |   );
+  971 | }
+
+Expected '</', got '}'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(app)/compliance/page.tsx [Client Component Browser]
+    ./src/app/(app)/compliance/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(app)/compliance/page.tsx [Client Component SSR]
+    ./src/app/(app)/compliance/page.tsx [Server Component] @ http://localhost:3000/_next/static/chunks/node_modules_next_dist_f3530cac._.js:3127
