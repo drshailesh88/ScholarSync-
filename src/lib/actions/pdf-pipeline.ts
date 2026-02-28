@@ -8,6 +8,7 @@ import { lookupUnpaywall } from "@/lib/search/sources/unpaywall";
 import { extractWithDocling } from "@/lib/actions/pdf-advanced";
 import { extractPdfText } from "@/lib/actions/pdf";
 import { embedPaperChunks } from "@/lib/actions/embeddings";
+import { validateExternalUrl } from "@/lib/security/url-validator";
 
 /**
  * Attempt to find and fetch the full-text PDF for a paper.
@@ -48,6 +49,13 @@ async function fetchPdfFromWeb(paper: {
   // Try each URL until one works
   for (const url of urlsToTry) {
     try {
+      // Validate URL to prevent SSRF attacks
+      const validation = await validateExternalUrl(url);
+      if (!validation.valid) {
+        console.warn(`[pdf-pipeline] Skipping unsafe URL: ${validation.reason}`);
+        continue;
+      }
+
       const response = await fetch(url, {
         headers: {
           "User-Agent": "ScholarSync/1.0 (mailto:contact@scholarsync.com)",

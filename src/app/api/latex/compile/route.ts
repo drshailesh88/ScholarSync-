@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     // Verify ownership
     const [project] = await db
-      .select()
+      .select({ id: latexProjects.id, title: latexProjects.title })
       .from(latexProjects)
       .where(and(eq(latexProjects.id, projectId), eq(latexProjects.userId, userId)));
 
@@ -56,7 +56,11 @@ export async function POST(req: Request) {
     try {
       // Get all project files
       const files = await db
-        .select()
+        .select({
+          path: latexFiles.path,
+          content: latexFiles.content,
+          isMain: latexFiles.isMain,
+        })
         .from(latexFiles)
         .where(eq(latexFiles.latexProjectId, projectId));
 

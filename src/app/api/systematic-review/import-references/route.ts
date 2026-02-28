@@ -8,13 +8,14 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { papers, projectPapers, projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { papers, projectPapers } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import {
   parseReferences,
   type ParsedReference,
 } from "@/lib/systematic-review/reference-formats";
 import { normalizeTitle } from "@/lib/search/dedup";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // Schema
@@ -45,14 +46,9 @@ export async function POST(req: Request) {
 
     const { projectId, content } = parsed.data;
 
-    // Verify project ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }

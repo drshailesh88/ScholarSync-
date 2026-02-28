@@ -73,7 +73,12 @@ export async function POST(req: Request) {
 
     // Load screening criteria for the project
     const criteria = await db
-      .select()
+      .select({
+        id: screeningCriteria.id,
+        criterionType: screeningCriteria.criterionType,
+        description: screeningCriteria.description,
+        category: screeningCriteria.category,
+      })
       .from(screeningCriteria)
       .where(eq(screeningCriteria.projectId, data.projectId));
 

@@ -12,8 +12,15 @@ import { useLatexEditorStore } from "@/stores/latex-editor-store";
  * LaTeX.js integration can be enhanced in later phases.
  */
 
+const MAX_LATEX_LENGTH = 100_000;
+
 // Simple LaTeX-to-HTML converter for live preview (no server needed)
 function latexToHtml(tex: string): string {
+  // Guard against excessively long input that could cause ReDoS
+  if (tex.length > MAX_LATEX_LENGTH) {
+    return '<div class="latex-math-error">Document too large for live preview. Please use PDF compilation instead.</div>';
+  }
+
   let html = tex;
 
   // Remove preamble (everything before \begin{document})

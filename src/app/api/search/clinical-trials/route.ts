@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
 import { searchClinicalTrials } from "@/lib/search/sources/clinical-trials";
+import { rateLimit, getClientIP } from "@/lib/security/rate-limit";
 
 export async function GET(req: Request) {
+  const ip = getClientIP(req);
+  const { success } = await rateLimit(ip, { maxRequests: 30, windowMs: 60_000 });
+  if (!success) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q");
   const perPage = parseInt(searchParams.get("perPage") || "20", 10);

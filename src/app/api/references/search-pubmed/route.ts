@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parsePubMedXml } from "@/lib/citations/pubmed-parser";
+import { rateLimit, getClientIP } from "@/lib/security/rate-limit";
 
 /**
  * POST /api/references/search-pubmed
@@ -8,6 +9,12 @@ import { parsePubMedXml } from "@/lib/citations/pubmed-parser";
  */
 export async function POST(request: NextRequest) {
   try {
+    const ip = getClientIP(request);
+    const { success } = await rateLimit(ip, { maxRequests: 30, windowMs: 60_000 });
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const body = await request.json();
     const {
       query,

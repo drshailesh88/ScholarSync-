@@ -15,7 +15,8 @@ import {
   slides,
 } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { DEV_USER_ID } from "@/lib/auth";
+// Local constant — DEV_USER_ID is no longer exported from @/lib/auth
+const DEV_USER_ID = "dev_user_001";
 
 // Seeds the database with realistic dev data if it's empty
 export async function seedDevData() {

@@ -10,11 +10,12 @@ import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import {
   computeNMA,
   type NMAStudy,
 } from "@/lib/systematic-review/network-meta-analysis";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // Zod schemas
@@ -55,19 +56,21 @@ export async function POST(req: Request) {
 
     const { projectId, studies, model } = parsed.data;
 
-    // Verify project ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
       );
     }
+
+    // Fetch project for metadata
+    const [project] = await db
+      .select({ id: projects.id, metadata: projects.metadata })
+      .from(projects)
+      .where(eq(projects.id, projectId))
+      .limit(1);
 
     // Validate that treatment1 !== treatment2 for every study
     for (const s of studies) {
@@ -123,21 +126,22 @@ export async function GET(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const accessCheck = await verifyProjectAccess(projectId, userId);
+    if (!accessCheck.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
       );
     }
 
-    const metadata = (project.metadata as Record<string, unknown>) ?? {};
+    const [project] = await db
+      .select({ id: projects.id, metadata: projects.metadata })
+      .from(projects)
+      .where(eq(projects.id, projectId))
+      .limit(1);
+
+    const metadata = (project?.metadata as Record<string, unknown>) ?? {};
     const nmaResult = metadata.nmaResult ?? null;
     const nmaStudies = metadata.nmaStudies ?? null;
     const nmaLastRun = metadata.nmaLastRun ?? null;

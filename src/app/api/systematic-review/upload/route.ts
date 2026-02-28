@@ -7,9 +7,10 @@
 import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { papers, projectPapers, projects } from "@/lib/db/schema";
+import { papers, projectPapers } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { uploadPdf } from "@/lib/storage/gcs";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 export async function POST(req: Request) {
   try {
@@ -32,14 +33,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
@@ -60,6 +56,16 @@ export async function POST(req: Request) {
 
     // Upload PDF to storage
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    // Validate PDF magic bytes (%PDF-)
+    const PDF_MAGIC = Buffer.from([0x25, 0x50, 0x44, 0x46, 0x2d]); // %PDF-
+    if (buffer.length < 5 || !buffer.subarray(0, 5).equals(PDF_MAGIC)) {
+      return NextResponse.json(
+        { error: "Invalid PDF file" },
+        { status: 400 }
+      );
+    }
+
     const storagePath = await uploadPdf(newPaper.id, buffer);
 
     // Update paper with storage path

@@ -5,6 +5,7 @@ import { projects, projectPapers, synthesisDocuments } from "@/lib/db/schema";
 import { eq, and, desc, isNull, sql, count } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { auditLog } from "@/lib/security/audit-log";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -172,6 +173,14 @@ export async function deleteProject(id: number) {
     .update(projects)
     .set({ deleted_at: new Date() })
     .where(and(eq(projects.id, id), eq(projects.user_id, userId)));
+
+  auditLog({
+    action: "project.deleted",
+    userId,
+    resourceType: "project",
+    resourceId: id,
+  });
+
   revalidatePath("/projects");
   revalidatePath("/dashboard");
 }

@@ -8,13 +8,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import {
   importFromSearch,
   getProjectPapersWithDetails,
 } from "@/lib/systematic-review/paper-import";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // POST — Import papers from search
@@ -45,14 +43,9 @@ export async function POST(req: Request) {
 
     const { projectId, searchString, sources, maxResults } = parsed.data;
 
-    // Verify project ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
@@ -96,14 +89,9 @@ export async function GET(req: Request) {
 
     const pid = parseInt(projectId, 10);
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, pid), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const accessCheck = await verifyProjectAccess(pid, userId);
+    if (!accessCheck.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }

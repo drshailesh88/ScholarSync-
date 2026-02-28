@@ -7,6 +7,7 @@ import { queuePdfProcessing } from "@/lib/actions/pdf-pipeline";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import { validateExternalUrl } from "@/lib/security/url-validator";
 
 /**
  * GET /api/papers/[id]/pdf
@@ -68,9 +69,23 @@ export async function GET(
       .where(eq(papers.id, paperId));
 
     if (paper?.pdf_url) {
+      const validation = await validateExternalUrl(paper.pdf_url);
+      if (!validation.valid) {
+        return NextResponse.json(
+          { error: `Invalid PDF URL: ${validation.reason}` },
+          { status: 400 }
+        );
+      }
       return NextResponse.redirect(paper.pdf_url);
     }
     if (paper?.open_access_url) {
+      const validation = await validateExternalUrl(paper.open_access_url);
+      if (!validation.valid) {
+        return NextResponse.json(
+          { error: `Invalid open access URL: ${validation.reason}` },
+          { status: 400 }
+        );
+      }
       return NextResponse.redirect(paper.open_access_url);
     }
 

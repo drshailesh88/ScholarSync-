@@ -150,7 +150,20 @@ export async function GET(req: NextRequest) {
   try {
     const userId = await getCurrentUserId();
     const recordings = await db
-      .select()
+      .select({
+        id: presentationRecordings.id,
+        deckId: presentationRecordings.deckId,
+        title: presentationRecordings.title,
+        storageUrl: presentationRecordings.storageUrl,
+        thumbnailUrl: presentationRecordings.thumbnailUrl,
+        durationMs: presentationRecordings.durationMs,
+        fileSizeBytes: presentationRecordings.fileSizeBytes,
+        format: presentationRecordings.format,
+        slideMarkers: presentationRecordings.slideMarkers,
+        hasWebcam: presentationRecordings.hasWebcam,
+        status: presentationRecordings.status,
+        createdAt: presentationRecordings.createdAt,
+      })
       .from(presentationRecordings)
       .where(
         and(
@@ -187,7 +200,7 @@ export async function DELETE(req: NextRequest) {
 
     // Get the recording to find storage path
     const [recording] = await db
-      .select()
+      .select({ id: presentationRecordings.id, storagePath: presentationRecordings.storagePath })
       .from(presentationRecordings)
       .where(
         and(

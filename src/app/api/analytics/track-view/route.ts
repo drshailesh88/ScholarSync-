@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { presentationViews } from "@/lib/db/schema";
+import { rateLimit, getClientIP } from "@/lib/security/rate-limit";
 
 /**
  * POST /api/analytics/track-view
@@ -9,6 +10,12 @@ import { presentationViews } from "@/lib/db/schema";
  */
 export async function POST(req: Request) {
   try {
+    const clientIP = getClientIP(req);
+    const { success } = await rateLimit(clientIP, { maxRequests: 30, windowMs: 60_000 });
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const body = await req.json();
 
     const {
@@ -27,8 +34,7 @@ export async function POST(req: Request) {
     }
 
     // Generate a privacy-respecting fingerprint from IP + User-Agent
-    const forwarded = req.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0]?.trim() ?? "unknown";
+    const ip = clientIP;
     const ua = userAgent || req.headers.get("user-agent") || "";
     const fingerprintSource = `${ip}::${ua}`;
 

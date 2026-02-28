@@ -4,6 +4,53 @@ import { NodeViewWrapper } from "@tiptap/react";
 import type { NodeViewProps } from "@tiptap/react";
 import { useReferenceStore } from "@/stores/reference-store";
 
+// Safe HTML tags allowed in bibliography rendering
+const SAFE_TAGS = new Set(["i", "b", "em", "strong", "a", "span", "sup", "sub"]);
+
+/**
+ * Sanitize HTML to prevent XSS attacks.
+ * Only allows safe formatting tags and strips all event handlers.
+ */
+function sanitizeHtml(html: string): string {
+  // Remove all event handler attributes (onclick, onerror, onload, etc.)
+  let sanitized = html.replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, "");
+
+  // Process all HTML tags — keep only safe ones with safe attributes
+  sanitized = sanitized.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>/g, (match, tag, attrs) => {
+    const tagLower = tag.toLowerCase();
+    const isClosing = match.startsWith("</");
+
+    if (!SAFE_TAGS.has(tagLower)) {
+      return ""; // Strip unsafe tags entirely
+    }
+
+    if (isClosing) {
+      return `</${tagLower}>`;
+    }
+
+    // For <a> tags, only keep href with safe protocols
+    if (tagLower === "a") {
+      const hrefMatch = attrs.match(/\bhref\s*=\s*(?:"([^"]*)"|'([^']*)')/i);
+      if (hrefMatch) {
+        const href = hrefMatch[1] ?? hrefMatch[2] ?? "";
+        if (href.startsWith("http://") || href.startsWith("https://")) {
+          return `<a href="${href}" rel="noopener noreferrer">`;
+        }
+      }
+      return "<a>"; // Strip href if not safe
+    }
+
+    // For all other safe tags, strip all attributes
+    return `<${tagLower}>`;
+  });
+
+  // Remove <script> and <style> content (in case they slipped through with weird casing)
+  sanitized = sanitized.replace(/<script[\s\S]*?<\/script>/gi, "");
+  sanitized = sanitized.replace(/<style[\s\S]*?<\/style>/gi, "");
+
+  return sanitized;
+}
+
 /**
  * React NodeView for the auto-bibliography block.
  *
@@ -51,7 +98,7 @@ export function BibliographyView(_props: NodeViewProps) {
                 key={entry.id}
                 className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed pl-8 -indent-8 font-serif"
                 dangerouslySetInnerHTML={{
-                  __html: entry.html || entry.text,
+                  __html: sanitizeHtml(entry.html || entry.text),
                 }}
               />
             ))}

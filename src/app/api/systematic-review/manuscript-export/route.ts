@@ -21,11 +21,9 @@ import {
 } from "docx";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // Validation schema
@@ -197,14 +195,9 @@ export async function POST(req: Request) {
 
     const { projectId, title, sections } = parseResult.data;
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }

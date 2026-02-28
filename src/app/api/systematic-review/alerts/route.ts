@@ -10,9 +10,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import {
   createSearchAlert,
   getProjectAlerts,
@@ -22,6 +19,7 @@ import {
   deleteAlert,
   checkAlertForNewPapers,
 } from "@/lib/systematic-review/living-review";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // POST — Create alert
@@ -48,13 +46,9 @@ export async function POST(req: Request) {
 
     const { projectId, searchString, frequency } = parsed.data;
 
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
@@ -86,13 +80,9 @@ export async function GET(req: Request) {
       );
     }
 
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const accessCheck = await verifyProjectAccess(projectId, userId);
+    if (!accessCheck.allowed) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 

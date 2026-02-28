@@ -8,15 +8,13 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
 import {
   generateManuscriptSection,
   exportManuscriptDraft,
   type ManuscriptSection,
   type ManuscriptSectionOutput,
 } from "@/lib/systematic-review/manuscript-generator";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // POST — Generate a manuscript section
@@ -53,14 +51,9 @@ export async function POST(req: Request) {
     const { projectId, section, customInstructions, existingSections } =
       parsed.data;
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
@@ -102,14 +95,9 @@ export async function GET(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const accessCheck = await verifyProjectAccess(projectId, userId);
+    if (!accessCheck.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }

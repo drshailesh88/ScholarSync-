@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Liveblocks } from "@liveblocks/node";
+import { Liveblocks, WebhookHandler } from "@liveblocks/node";
 import type { SlideLayout, ContentBlock } from "@/types/presentation";
 
 // ---------------------------------------------------------------------------
@@ -14,6 +14,25 @@ import type { SlideLayout, ContentBlock } from "@/types/presentation";
 //   Events: storageUpdated
 // ---------------------------------------------------------------------------
 
+let webhookHandler: WebhookHandler | null = null;
+
+function getWebhookHandler(): WebhookHandler | null {
+  if (webhookHandler) return webhookHandler;
+  const secret = process.env.LIVEBLOCKS_WEBHOOK_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "[liveblocks-webhook] LIVEBLOCKS_WEBHOOK_SECRET is not set — skipping signature verification in development"
+      );
+      return null;
+    }
+    // In production, absence of the secret means we cannot verify — reject
+    return null;
+  }
+  webhookHandler = new WebhookHandler(secret);
+  return webhookHandler;
+}
+
 export async function POST(req: Request) {
   if (!process.env.LIVEBLOCKS_SECRET_KEY) {
     return NextResponse.json(
@@ -22,8 +41,35 @@ export async function POST(req: Request) {
     );
   }
 
+  // --- Signature verification ---
+  const handler = getWebhookHandler();
+  let body: Record<string, unknown>;
+
+  if (handler) {
+    try {
+      const rawBody = await req.text();
+      const headers = Object.fromEntries(req.headers.entries());
+      const event = handler.verifyRequest({ headers, rawBody });
+      body = event as unknown as Record<string, unknown>;
+    } catch (err) {
+      console.error("[liveblocks-webhook] Signature verification failed:", err);
+      return NextResponse.json(
+        { error: "Invalid webhook signature" },
+        { status: 401 }
+      );
+    }
+  } else if (process.env.NODE_ENV !== "development") {
+    // Not development and no handler — reject
+    return NextResponse.json(
+      { error: "Webhook secret not configured" },
+      { status: 401 }
+    );
+  } else {
+    // Development mode without secret — parse body without verification
+    body = await req.json();
+  }
+
   try {
-    const body = await req.json();
     const { type, data } = body;
 
     // We only care about storage update events

@@ -11,7 +11,8 @@ import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { projects, systematicReviewConfig } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // Schemas
@@ -77,19 +78,28 @@ export async function GET(req: Request) {
 
     const pid = parseInt(projectId, 10);
 
-    // Verify project ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, pid), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(pid, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }
       );
     }
+
+    // Fetch project and config
+    const [project] = await db
+      .select({
+        id: projects.id,
+        title: projects.title,
+        description: projects.description,
+        research_question: projects.research_question,
+        status: projects.status,
+        created_at: projects.created_at,
+      })
+      .from(projects)
+      .where(eq(projects.id, pid))
+      .limit(1);
 
     // Fetch config
     const [config] = await db
@@ -191,14 +201,9 @@ export async function PUT(req: Request) {
 
     const { projectId, ...updates } = parsed.data;
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const accessResult = await verifyProjectAccess(projectId, userId);
+    if (!accessResult.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }

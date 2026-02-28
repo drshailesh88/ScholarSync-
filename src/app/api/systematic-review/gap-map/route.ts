@@ -12,41 +12,7 @@ import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { generateEvidenceGapMap } from "@/lib/systematic-review/evidence-gap-map";
-import { db } from "@/lib/db";
-import { projects, projectCollaborators } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
-
-// ---------------------------------------------------------------------------
-// Ownership / collaboration check
-// ---------------------------------------------------------------------------
-
-async function canViewProject(
-  userId: string,
-  projectId: number
-): Promise<boolean> {
-  // Check direct ownership
-  const owned = await db
-    .select({ id: projects.id })
-    .from(projects)
-    .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-    .limit(1);
-
-  if (owned.length > 0) return true;
-
-  // Check collaboration
-  const collab = await db
-    .select({ id: projectCollaborators.id })
-    .from(projectCollaborators)
-    .where(
-      and(
-        eq(projectCollaborators.projectId, projectId),
-        eq(projectCollaborators.userId, userId)
-      )
-    )
-    .limit(1);
-
-  return collab.length > 0;
-}
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // GET handler
@@ -74,7 +40,7 @@ export async function GET(req: Request) {
       );
     }
 
-    const allowed = await canViewProject(userId, projectId);
+    const { allowed } = await verifyProjectAccess(projectId, userId);
     if (!allowed) {
       return NextResponse.json(
         { error: "Project not found or access denied" },

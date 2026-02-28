@@ -3,7 +3,10 @@
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { getCurrentUserId, DEV_USER_ID } from "@/lib/auth";
+import { getCurrentUserId } from "@/lib/auth";
+
+// Local constant — DEV_USER_ID is no longer exported from @/lib/auth
+const DEV_USER_ID = "dev_user_001";
 
 export async function getUser() {
   const userId = await getCurrentUserId();

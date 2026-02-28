@@ -65,7 +65,10 @@ export async function POST(req: Request) {
     // If searchStrategy or pico not provided, load from project config
     if (!searchStrategy || !pico) {
       const [config] = await db
-        .select()
+        .select({
+          searchStrategy: systematicReviewConfig.searchStrategy,
+          pico: systematicReviewConfig.pico,
+        })
         .from(systematicReviewConfig)
         .where(eq(systematicReviewConfig.projectId, projectId))
         .limit(1);

@@ -7,8 +7,20 @@ const hasClerkKeys =
   process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
   !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder");
 
+// Module-private — never exposed to other modules directly
 const DEV_USER_ID = "dev_user_001";
 const isDev = process.env.NODE_ENV === "development";
+
+// Startup-time warning for unexpected NODE_ENV values
+if (
+  process.env.NODE_ENV !== "production" &&
+  process.env.NODE_ENV !== "development"
+) {
+  console.warn(
+    `[auth] WARNING: NODE_ENV is "${process.env.NODE_ENV}" — expected "production" or "development". ` +
+      "Dev fallbacks will be disabled."
+  );
+}
 
 // Singleton Clerk client for server-side usage
 let _clerkClient: ReturnType<typeof createClerkClient> | null = null;
@@ -35,6 +47,9 @@ async function getSessionToken(): Promise<string | null> {
 }
 
 export async function getCurrentUserId(): Promise<string> {
+  // In production, NEVER fall back to DEV_USER_ID — always require real auth
+  const isProduction = process.env.NODE_ENV === "production";
+
   if (hasClerkKeys) {
     const token = await getSessionToken();
     if (token) {
@@ -48,6 +63,10 @@ export async function getCurrentUserId(): Promise<string> {
       }
     }
 
+    if (isProduction) {
+      throw new Error("Not authenticated");
+    }
+
     // In dev, fall back to a synthetic user when no session cookie is present
     // (e.g. curl, server-side calls, preview environments)
     if (isDev) return DEV_USER_ID;
@@ -55,7 +74,13 @@ export async function getCurrentUserId(): Promise<string> {
     throw new Error("Not authenticated");
   }
 
-  // Dev fallback ONLY works in development. In production, missing Clerk keys is a fatal error.
+  if (isProduction) {
+    throw new Error(
+      "Authentication is not configured. Set NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY."
+    );
+  }
+
+  // Dev fallback ONLY works in development (NODE_ENV === "development" strictly).
   if (isDev) {
     return DEV_USER_ID;
   }
@@ -81,4 +106,5 @@ export async function getCurrentUser() {
   return clerk.users.getUser(userId);
 }
 
-export { DEV_USER_ID };
+// DEV_USER_ID is intentionally NOT exported — it is module-private.
+// Consumers that need a dev user constant should define their own.

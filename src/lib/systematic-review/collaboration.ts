@@ -69,13 +69,21 @@ export async function inviteCollaborator(
     .limit(1);
 
   if (!user) {
-    throw new Error(`No user found with email: ${email}`);
+    throw new Error("Invitation processed. If this email is registered, they will receive access.");
   }
 
   // Insert — if the (projectId, userId) pair already exists the unique index
   // will prevent a duplicate; we re-fetch instead.
   const [existing] = await db
-    .select()
+    .select({
+      id: projectCollaborators.id,
+      projectId: projectCollaborators.projectId,
+      userId: projectCollaborators.userId,
+      email: projectCollaborators.email,
+      role: projectCollaborators.role,
+      invitedAt: projectCollaborators.invitedAt,
+      acceptedAt: projectCollaborators.acceptedAt,
+    })
     .from(projectCollaborators)
     .where(
       and(
@@ -113,7 +121,15 @@ export async function getProjectCollaborators(
   projectId: number
 ): Promise<CollaboratorRecord[]> {
   const rows = await db
-    .select()
+    .select({
+      id: projectCollaborators.id,
+      projectId: projectCollaborators.projectId,
+      userId: projectCollaborators.userId,
+      email: projectCollaborators.email,
+      role: projectCollaborators.role,
+      invitedAt: projectCollaborators.invitedAt,
+      acceptedAt: projectCollaborators.acceptedAt,
+    })
     .from(projectCollaborators)
     .where(eq(projectCollaborators.projectId, projectId));
 

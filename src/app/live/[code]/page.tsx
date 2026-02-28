@@ -18,6 +18,7 @@ import {
   upvoteQuestion,
   submitPollResponse,
   incrementAudienceCount,
+  getStreamToken,
 } from "@/lib/actions/live-session";
 
 // ---------------------------------------------------------------------------
@@ -97,6 +98,7 @@ export default function LiveSessionPage() {
   const [voting, setVoting] = useState(false);
 
   const [ended, setEnded] = useState(false);
+  const [streamToken, setStreamToken] = useState<string | null>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
 
   // ---------------------------------------------------------------------------
@@ -119,6 +121,9 @@ export default function LiveSessionPage() {
           currentSlideIndex: s.currentSlideIndex,
           audienceCount: s.audienceCount,
         });
+        // Generate an auth token for the SSE stream connection
+        const token = await getStreamToken(s.id);
+        setStreamToken(token);
         await incrementAudienceCount(s.id);
         setLoading(false);
       } catch {
@@ -134,10 +139,10 @@ export default function LiveSessionPage() {
   // ---------------------------------------------------------------------------
 
   useEffect(() => {
-    if (!session?.id) return;
+    if (!session?.id || !streamToken) return;
 
     const es = new EventSource(
-      `/api/live-session/${session.id}/stream`
+      `/api/live-session/${session.id}/stream?token=${encodeURIComponent(streamToken)}`
     );
     eventSourceRef.current = es;
 
@@ -181,7 +186,7 @@ export default function LiveSessionPage() {
       es.close();
       eventSourceRef.current = null;
     };
-  }, [session?.id]);
+  }, [session?.id, streamToken]);
 
   // ---------------------------------------------------------------------------
   // Handlers

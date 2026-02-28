@@ -7,6 +7,7 @@
  */
 
 import type { EnhancedPaper, ResearchProgressCallback } from "./types";
+import { validateExternalUrl } from "@/lib/security/url-validator";
 
 // ── Section extraction ────────────────────────────────────────────────
 
@@ -73,6 +74,12 @@ const FETCH_TIMEOUT_MS = 15_000;
  */
 async function downloadAndExtractPdf(url: string): Promise<string | null> {
   try {
+    // Validate URL to prevent SSRF attacks
+    const validation = await validateExternalUrl(url);
+    if (!validation.valid) {
+      return null;
+    }
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 

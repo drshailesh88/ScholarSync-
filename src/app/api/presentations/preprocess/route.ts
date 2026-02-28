@@ -53,7 +53,12 @@ export async function POST(req: Request) {
     if (body.sourceType === "papers" && body.paperIds?.length) {
       sourceLabel = "research papers";
       const paperData = await db
-        .select()
+        .select({
+          title: papers.title,
+          authors: papers.authors,
+          abstract: papers.abstract,
+          full_text_plain: papers.full_text_plain,
+        })
         .from(papers)
         .where(inArray(papers.id, body.paperIds));
 
@@ -66,13 +71,17 @@ export async function POST(req: Request) {
     } else if (body.sourceType === "document" && body.documentId) {
       sourceLabel = "synthesis document";
       const [doc] = await db
-        .select()
+        .select({ id: synthesisDocuments.id, title: synthesisDocuments.title })
         .from(synthesisDocuments)
         .where(eq(synthesisDocuments.id, body.documentId));
 
       if (doc) {
         const sections = await db
-          .select()
+          .select({
+            title: synthesisSections.title,
+            plain_text_content: synthesisSections.plain_text_content,
+            sort_order: synthesisSections.sort_order,
+          })
           .from(synthesisSections)
           .where(eq(synthesisSections.document_id, body.documentId))
           .orderBy(synthesisSections.sort_order);
@@ -83,7 +92,11 @@ export async function POST(req: Request) {
       }
     } else if (body.sourceType === "deep_research" && body.deepResearchSessionId) {
       const [session] = await db
-        .select()
+        .select({
+          originalQuery: deepResearchSessions.originalQuery,
+          finalReport: deepResearchSessions.finalReport,
+          keyFindings: deepResearchSessions.keyFindings,
+        })
         .from(deepResearchSessions)
         .where(eq(deepResearchSessions.id, body.deepResearchSessionId));
 

@@ -1,9 +1,55 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { slideComments } from "@/lib/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { slideComments, slideDecks } from "@/lib/db/schema";
+import { eq, asc, and } from "drizzle-orm";
 import { getCurrentUserId, getCurrentUser } from "@/lib/auth";
+
+// ---------------------------------------------------------------------------
+// Authorization helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Verify that the given user owns the deck or has share access.
+ * Throws if access is denied.
+ */
+async function verifyDeckAccess(deckId: number, userId: string): Promise<void> {
+  const [deck] = await db
+    .select({
+      userId: slideDecks.userId,
+      shareEnabled: slideDecks.shareEnabled,
+    })
+    .from(slideDecks)
+    .where(eq(slideDecks.id, deckId))
+    .limit(1);
+
+  if (!deck) {
+    throw new Error("Deck not found");
+  }
+
+  // Owner always has access
+  if (deck.userId === userId) return;
+
+  // Shared decks are readable by anyone who is authenticated
+  if (deck.shareEnabled) return;
+
+  throw new Error("Not authorized to access this deck");
+}
+
+/**
+ * Verify that the given user is the deck owner (required for resolve/unresolve).
+ */
+async function verifyDeckOwnership(deckId: number, userId: string): Promise<void> {
+  const [deck] = await db
+    .select({ userId: slideDecks.userId })
+    .from(slideDecks)
+    .where(and(eq(slideDecks.id, deckId), eq(slideDecks.userId, userId)))
+    .limit(1);
+
+  if (!deck) {
+    throw new Error("Not authorized — only the deck owner can perform this action");
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -77,6 +123,9 @@ export async function addComment(
 // ---------------------------------------------------------------------------
 
 export async function getComments(deckId: number): Promise<CommentsBySlide> {
+  const userId = await getCurrentUserId();
+  await verifyDeckAccess(deckId, userId);
+
   const rows = await db
     .select()
     .from(slideComments)
@@ -154,7 +203,20 @@ export async function getSlideComments(
 // ---------------------------------------------------------------------------
 
 export async function resolveComment(commentId: string) {
-  await getCurrentUserId(); // ensure authenticated
+  const userId = await getCurrentUserId();
+
+  // Look up the comment to find its deckId, then verify deck ownership
+  const [comment] = await db
+    .select({ deckId: slideComments.deckId })
+    .from(slideComments)
+    .where(eq(slideComments.id, commentId))
+    .limit(1);
+
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+
+  await verifyDeckOwnership(comment.deckId, userId);
 
   const [updated] = await db
     .update(slideComments)
@@ -170,7 +232,20 @@ export async function resolveComment(commentId: string) {
 // ---------------------------------------------------------------------------
 
 export async function unresolveComment(commentId: string) {
-  await getCurrentUserId();
+  const userId = await getCurrentUserId();
+
+  // Look up the comment to find its deckId, then verify deck ownership
+  const [comment] = await db
+    .select({ deckId: slideComments.deckId })
+    .from(slideComments)
+    .where(eq(slideComments.id, commentId))
+    .limit(1);
+
+  if (!comment) {
+    throw new Error("Comment not found");
+  }
+
+  await verifyDeckOwnership(comment.deckId, userId);
 
   const [updated] = await db
     .update(slideComments)

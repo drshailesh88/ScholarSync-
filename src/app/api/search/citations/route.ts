@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit, getClientIP } from "@/lib/security/rate-limit";
 
 interface S2Paper {
   paperId: string;
@@ -28,6 +29,12 @@ interface CitationEdge {
  */
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIP(req);
+    const { success } = await rateLimit(ip, { maxRequests: 30, windowMs: 60_000 });
+    if (!success) {
+      return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    }
+
     const { paperId, depth: _depth = 1 } = await req.json();
 
     if (!paperId) {

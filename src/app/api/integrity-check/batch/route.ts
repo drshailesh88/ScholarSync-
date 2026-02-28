@@ -336,7 +336,15 @@ export async function GET(req: Request) {
     }
 
     const [batch] = await db
-      .select()
+      .select({
+        id: integrityBatches.id,
+        userId: integrityBatches.userId,
+        name: integrityBatches.name,
+        fileCount: integrityBatches.fileCount,
+        completedCount: integrityBatches.completedCount,
+        status: integrityBatches.status,
+        createdAt: integrityBatches.createdAt,
+      })
       .from(integrityBatches)
       .where(eq(integrityBatches.id, batchId))
       .limit(1);

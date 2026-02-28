@@ -9,6 +9,7 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, desc, sql, asc } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
+import crypto from "crypto";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -91,7 +92,16 @@ export async function endLiveSession(sessionId: string) {
 export async function getActiveSession(deckId: number) {
   const userId = await getCurrentUserId();
   const [session] = await db
-    .select()
+    .select({
+      id: liveSessions.id,
+      deckId: liveSessions.deckId,
+      joinCode: liveSessions.joinCode,
+      status: liveSessions.status,
+      currentSlideIndex: liveSessions.currentSlideIndex,
+      audienceCount: liveSessions.audienceCount,
+      settings: liveSessions.settings,
+      startedAt: liveSessions.startedAt,
+    })
     .from(liveSessions)
     .where(
       and(
@@ -107,7 +117,16 @@ export async function getActiveSession(deckId: number) {
 /** Public — no auth required */
 export async function getSessionByJoinCode(code: string) {
   const [session] = await db
-    .select()
+    .select({
+      id: liveSessions.id,
+      deckId: liveSessions.deckId,
+      joinCode: liveSessions.joinCode,
+      status: liveSessions.status,
+      currentSlideIndex: liveSessions.currentSlideIndex,
+      audienceCount: liveSessions.audienceCount,
+      settings: liveSessions.settings,
+      startedAt: liveSessions.startedAt,
+    })
     .from(liveSessions)
     .where(
       and(
@@ -136,6 +155,19 @@ export async function incrementAudienceCount(sessionId: string) {
       audienceCount: sql`${liveSessions.audienceCount} + 1`,
     })
     .where(eq(liveSessions.id, sessionId));
+}
+
+/**
+ * Generate an HMAC token for authenticating the SSE stream connection.
+ * Called when a user joins a live session; the returned token is passed
+ * as a query parameter to the EventSource URL.
+ */
+export async function getStreamToken(sessionId: string): Promise<string> {
+  const secret = process.env.LIVE_SESSION_SECRET || "dev-secret";
+  return crypto
+    .createHmac("sha256", secret)
+    .update(sessionId + ":" + Date.now())
+    .digest("hex");
 }
 
 // ---------------------------------------------------------------------------
@@ -214,7 +246,17 @@ export async function updateQuestionStatus(
 
 export async function getQuestions(sessionId: string) {
   return db
-    .select()
+    .select({
+      id: liveQuestions.id,
+      sessionId: liveQuestions.sessionId,
+      content: liveQuestions.content,
+      authorName: liveQuestions.authorName,
+      slideIndex: liveQuestions.slideIndex,
+      upvotes: liveQuestions.upvotes,
+      status: liveQuestions.status,
+      answeredAt: liveQuestions.answeredAt,
+      createdAt: liveQuestions.createdAt,
+    })
     .from(liveQuestions)
     .where(eq(liveQuestions.sessionId, sessionId))
     .orderBy(desc(liveQuestions.upvotes), asc(liveQuestions.createdAt));
@@ -319,7 +361,15 @@ export async function getPollResults(pollId: string) {
 
 export async function getPolls(sessionId: string) {
   return db
-    .select()
+    .select({
+      id: livePolls.id,
+      sessionId: livePolls.sessionId,
+      question: livePolls.question,
+      options: livePolls.options,
+      slideIndex: livePolls.slideIndex,
+      status: livePolls.status,
+      createdAt: livePolls.createdAt,
+    })
     .from(livePolls)
     .where(eq(livePolls.sessionId, sessionId))
     .orderBy(desc(livePolls.createdAt));
@@ -327,7 +377,15 @@ export async function getPolls(sessionId: string) {
 
 export async function getActivePoll(sessionId: string) {
   const [poll] = await db
-    .select()
+    .select({
+      id: livePolls.id,
+      sessionId: livePolls.sessionId,
+      question: livePolls.question,
+      options: livePolls.options,
+      slideIndex: livePolls.slideIndex,
+      status: livePolls.status,
+      createdAt: livePolls.createdAt,
+    })
     .from(livePolls)
     .where(
       and(

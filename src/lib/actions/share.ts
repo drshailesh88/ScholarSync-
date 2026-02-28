@@ -5,6 +5,42 @@ import { slideDecks, slides } from "@/lib/db/schema";
 import { eq, and, asc } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import crypto from "crypto";
+import { hashPassword, verifyPassword } from "@/lib/security/password";
+import { auditLog } from "@/lib/security/audit-log";
+
+// ---------------------------------------------------------------------------
+// Rate limiting for password verification
+// ---------------------------------------------------------------------------
+const passwordAttempts = new Map<string, { count: number; resetAt: number }>();
+const MAX_ATTEMPTS = 5;
+const WINDOW_MS = 60_000; // 1 minute
+
+// Periodically clean up expired entries every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of passwordAttempts) {
+    if (now > entry.resetAt) {
+      passwordAttempts.delete(key);
+    }
+  }
+}, 5 * 60_000);
+
+function checkRateLimit(token: string): { allowed: boolean } {
+  const now = Date.now();
+  const entry = passwordAttempts.get(token);
+
+  if (!entry || now > entry.resetAt) {
+    passwordAttempts.set(token, { count: 1, resetAt: now + WINDOW_MS });
+    return { allowed: true };
+  }
+
+  if (entry.count >= MAX_ATTEMPTS) {
+    return { allowed: false };
+  }
+
+  entry.count += 1;
+  return { allowed: true };
+}
 
 // ---------------------------------------------------------------------------
 // Enable sharing — generates a unique token and sets shareEnabled = true
@@ -24,6 +60,14 @@ export async function enableDeckSharing(deckId: number) {
     .returning();
 
   if (!deck) throw new Error("Deck not found or not owned by user");
+
+  auditLog({
+    action: "share.permission_changed",
+    userId,
+    resourceType: "deck",
+    resourceId: deckId,
+    metadata: { shareEnabled: true },
+  });
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   return {
@@ -48,6 +92,15 @@ export async function disableDeckSharing(deckId: number) {
     .returning();
 
   if (!deck) throw new Error("Deck not found or not owned by user");
+
+  auditLog({
+    action: "share.permission_changed",
+    userId,
+    resourceType: "deck",
+    resourceId: deckId,
+    metadata: { shareEnabled: false },
+  });
+
   return { success: true };
 }
 
@@ -90,10 +143,14 @@ export async function updateShareSettings(
 ) {
   const userId = await getCurrentUserId();
 
+  const hashedPassword = settings.password
+    ? await hashPassword(settings.password)
+    : null;
+
   const [deck] = await db
     .update(slideDecks)
     .set({
-      sharePassword: settings.password ?? null,
+      sharePassword: hashedPassword,
       shareExpiresAt: settings.expiresAt ?? null,
       updatedAt: new Date(),
     })
@@ -101,6 +158,17 @@ export async function updateShareSettings(
     .returning();
 
   if (!deck) throw new Error("Deck not found or not owned by user");
+
+  if (settings.password !== undefined) {
+    auditLog({
+      action: "share.password_set",
+      userId,
+      resourceType: "deck",
+      resourceId: deckId,
+      metadata: { passwordSet: settings.password !== null },
+    });
+  }
+
   return { success: true };
 }
 
@@ -109,7 +177,16 @@ export async function updateShareSettings(
 // ---------------------------------------------------------------------------
 export async function getDeckByShareToken(token: string) {
   const [deck] = await db
-    .select()
+    .select({
+      id: slideDecks.id,
+      title: slideDecks.title,
+      description: slideDecks.description,
+      theme: slideDecks.theme,
+      themeConfig: slideDecks.themeConfig,
+      shareEnabled: slideDecks.shareEnabled,
+      sharePassword: slideDecks.sharePassword,
+      shareExpiresAt: slideDecks.shareExpiresAt,
+    })
     .from(slideDecks)
     .where(eq(slideDecks.shareToken, token));
 
@@ -122,7 +199,23 @@ export async function getDeckByShareToken(token: string) {
   }
 
   const deckSlides = await db
-    .select()
+    .select({
+      id: slides.id,
+      deckId: slides.deckId,
+      sortOrder: slides.sortOrder,
+      layout: slides.layout,
+      title: slides.title,
+      subtitle: slides.subtitle,
+      content: slides.content,
+      contentBlocks: slides.contentBlocks,
+      speakerNotes: slides.speakerNotes,
+      sourceCitations: slides.sourceCitations,
+      generatedByAi: slides.generatedByAi,
+      hasChart: slides.hasChart,
+      hasTable: slides.hasTable,
+      hasImage: slides.hasImage,
+      visualData: slides.visualData,
+    })
     .from(slides)
     .where(eq(slides.deckId, deck.id))
     .orderBy(asc(slides.sortOrder));
@@ -141,7 +234,16 @@ export async function getDeckByShareToken(token: string) {
 // ---------------------------------------------------------------------------
 // Public: verify share password
 // ---------------------------------------------------------------------------
-export async function verifySharePassword(token: string, password: string) {
+export async function verifySharePassword(
+  token: string,
+  password: string
+): Promise<boolean | { error: string }> {
+  // Rate limit check
+  const { allowed } = checkRateLimit(token);
+  if (!allowed) {
+    return { error: "Too many attempts. Please try again later." };
+  }
+
   const [deck] = await db
     .select({
       sharePassword: slideDecks.sharePassword,
@@ -152,5 +254,5 @@ export async function verifySharePassword(token: string, password: string) {
 
   if (!deck || !deck.shareEnabled) return false;
   if (!deck.sharePassword) return true; // no password set
-  return deck.sharePassword === password;
+  return verifyPassword(password, deck.sharePassword);
 }

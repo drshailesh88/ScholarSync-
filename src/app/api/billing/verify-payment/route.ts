@@ -3,6 +3,7 @@ import { getCurrentUserId } from "@/lib/auth";
 import { verifyPaymentSignature, PLAN_PRICES } from "@/lib/billing/razorpay";
 import { createSubscription } from "@/lib/actions/billing";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { auditLog } from "@/lib/security/audit-log";
 
 const VALID_PLANS = Object.keys(PLAN_PRICES).filter((p) => p !== "free") as string[];
 
@@ -43,6 +44,14 @@ export async function POST(req: NextRequest) {
       plan,
       razorpaySubscriptionId: paymentId,
       razorpayCustomerId: orderId,
+    });
+
+    auditLog({
+      action: "billing.payment_verified",
+      userId,
+      resourceType: "subscription",
+      resourceId: paymentId,
+      metadata: { plan, orderId },
     });
 
     return NextResponse.json({

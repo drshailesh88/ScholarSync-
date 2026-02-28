@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { createRazorpayOrder, isConfigured } from "@/lib/billing/razorpay";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { auditLog } from "@/lib/security/audit-log";
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,6 +28,14 @@ export async function POST(req: NextRequest) {
     }
 
     const order = await createRazorpayOrder(plan as "basic" | "pro", userId);
+
+    auditLog({
+      action: "billing.order_created",
+      userId,
+      resourceType: "order",
+      resourceId: order.id,
+      metadata: { plan, amount: order.amount, currency: order.currency },
+    });
 
     return NextResponse.json({
       orderId: order.id,

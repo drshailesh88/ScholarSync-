@@ -8,6 +8,7 @@ import {
 } from "@/lib/db/schema";
 import { eq, and, desc, asc, count, sql } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
+import { auditLog } from "@/lib/security/audit-log";
 import type {
   ContentBlock,
   ThemeConfig,
@@ -50,14 +51,52 @@ export async function createDeck(data: {
 export async function getDeck(deckId: number) {
   const userId = await getCurrentUserId();
   const [deck] = await db
-    .select()
+    .select({
+      id: slideDecks.id,
+      projectId: slideDecks.projectId,
+      userId: slideDecks.userId,
+      documentId: slideDecks.documentId,
+      title: slideDecks.title,
+      description: slideDecks.description,
+      theme: slideDecks.theme,
+      audienceType: slideDecks.audienceType,
+      generationStatus: slideDecks.generationStatus,
+      themeConfig: slideDecks.themeConfig,
+      slideOrder: slideDecks.slideOrder,
+      totalSlides: slideDecks.totalSlides,
+      sourceType: slideDecks.sourceType,
+      templateId: slideDecks.templateId,
+      citationStyle: slideDecks.citationStyle,
+      shareToken: slideDecks.shareToken,
+      shareEnabled: slideDecks.shareEnabled,
+      createdAt: slideDecks.createdAt,
+      updatedAt: slideDecks.updatedAt,
+    })
     .from(slideDecks)
     .where(and(eq(slideDecks.id, deckId), eq(slideDecks.userId, userId)));
 
   if (!deck) return null;
 
   const deckSlides = await db
-    .select()
+    .select({
+      id: slides.id,
+      deckId: slides.deckId,
+      sortOrder: slides.sortOrder,
+      layout: slides.layout,
+      title: slides.title,
+      subtitle: slides.subtitle,
+      content: slides.content,
+      contentBlocks: slides.contentBlocks,
+      speakerNotes: slides.speakerNotes,
+      sourceCitations: slides.sourceCitations,
+      generatedByAi: slides.generatedByAi,
+      hasChart: slides.hasChart,
+      hasTable: slides.hasTable,
+      hasImage: slides.hasImage,
+      visualData: slides.visualData,
+      createdAt: slides.createdAt,
+      lastEditedAt: slides.lastEditedAt,
+    })
     .from(slides)
     .where(eq(slides.deckId, deckId))
     .orderBy(asc(slides.sortOrder));
@@ -68,7 +107,19 @@ export async function getDeck(deckId: number) {
 export async function getDecksForProject(projectId: number) {
   const userId = await getCurrentUserId();
   return db
-    .select()
+    .select({
+      id: slideDecks.id,
+      projectId: slideDecks.projectId,
+      title: slideDecks.title,
+      description: slideDecks.description,
+      theme: slideDecks.theme,
+      audienceType: slideDecks.audienceType,
+      generationStatus: slideDecks.generationStatus,
+      totalSlides: slideDecks.totalSlides,
+      sourceType: slideDecks.sourceType,
+      createdAt: slideDecks.createdAt,
+      updatedAt: slideDecks.updatedAt,
+    })
     .from(slideDecks)
     .where(
       and(eq(slideDecks.projectId, projectId), eq(slideDecks.userId, userId))
@@ -143,6 +194,13 @@ export async function deleteDeck(deckId: number) {
   await db
     .delete(slideDecks)
     .where(and(eq(slideDecks.id, deckId), eq(slideDecks.userId, userId)));
+
+  auditLog({
+    action: "deck.deleted",
+    userId,
+    resourceType: "deck",
+    resourceId: deckId,
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -175,7 +233,7 @@ export async function createSlide(data: {
 
   // Update total slides count
   const allSlides = await db
-    .select()
+    .select({ id: slides.id })
     .from(slides)
     .where(eq(slides.deckId, data.deckId));
 
@@ -225,7 +283,7 @@ export async function deleteSlide(slideId: number) {
   if (deleted) {
     // Re-order remaining slides
     const remaining = await db
-      .select()
+      .select({ id: slides.id, sortOrder: slides.sortOrder })
       .from(slides)
       .where(eq(slides.deckId, deleted.deckId))
       .orderBy(asc(slides.sortOrder));

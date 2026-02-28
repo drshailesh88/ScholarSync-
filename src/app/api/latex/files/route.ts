@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     // Verify project ownership
     const [project] = await db
-      .select()
+      .select({ id: latexProjects.id })
       .from(latexProjects)
       .where(and(eq(latexProjects.id, projectId), eq(latexProjects.userId, userId)));
 
@@ -83,7 +83,7 @@ export async function PATCH(req: Request) {
 
     // Get file and verify ownership via project
     const [file] = await db
-      .select()
+      .select({ id: latexFiles.id, latexProjectId: latexFiles.latexProjectId })
       .from(latexFiles)
       .where(eq(latexFiles.id, fileId));
 
@@ -92,7 +92,7 @@ export async function PATCH(req: Request) {
     }
 
     const [project] = await db
-      .select()
+      .select({ id: latexProjects.id })
       .from(latexProjects)
       .where(and(eq(latexProjects.id, file.latexProjectId), eq(latexProjects.userId, userId)));
 
@@ -133,7 +133,7 @@ export async function DELETE(req: Request) {
 
     // Get file and verify ownership
     const [file] = await db
-      .select()
+      .select({ id: latexFiles.id, latexProjectId: latexFiles.latexProjectId, isMain: latexFiles.isMain })
       .from(latexFiles)
       .where(eq(latexFiles.id, fileId));
 
@@ -147,7 +147,7 @@ export async function DELETE(req: Request) {
     }
 
     const [project] = await db
-      .select()
+      .select({ id: latexProjects.id })
       .from(latexProjects)
       .where(and(eq(latexProjects.id, file.latexProjectId), eq(latexProjects.userId, userId)));
 

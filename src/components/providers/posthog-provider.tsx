@@ -16,6 +16,18 @@ import { usePathname, useSearchParams } from "next/navigation";
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
 
+function sanitizeUrl(url: string): string {
+  try {
+    const parsed = new URL(url, window.location.origin);
+    // Remove potentially sensitive query params
+    const sensitiveParams = ["email", "token", "key", "secret", "password", "code", "invite"];
+    sensitiveParams.forEach(param => parsed.searchParams.delete(param));
+    return parsed.pathname + (parsed.search || "");
+  } catch {
+    return url.split("?")[0]; // Fallback: strip all query params
+  }
+}
+
 function PostHogPageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -26,7 +38,7 @@ function PostHogPageView() {
       let url = window.origin + pathname;
       const search = searchParams.toString();
       if (search) url += `?${search}`;
-      ph.capture("$pageview", { $current_url: url });
+      ph.capture("$pageview", { $current_url: sanitizeUrl(url) });
     }
   }, [pathname, searchParams, ph]);
 

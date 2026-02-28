@@ -29,6 +29,14 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Security: In Kubernetes, apply these security contexts:
+# securityContext:
+#   readOnlyRootFilesystem: true
+#   runAsNonRoot: true
+#   allowPrivilegeEscalation: false
+#   capabilities:
+#     drop: ["ALL"]
+# volumeMounts for writable paths: /tmp, .next/cache
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000

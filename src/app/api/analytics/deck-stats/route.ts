@@ -45,7 +45,14 @@ export async function GET(req: Request) {
 
     // Fetch all views for this deck
     const views = await db
-      .select()
+      .select({
+        viewerFingerprint: presentationViews.viewerFingerprint,
+        totalDurationMs: presentationViews.totalDurationMs,
+        completed: presentationViews.completed,
+        slideTimings: presentationViews.slideTimings,
+        startedAt: presentationViews.startedAt,
+        slidesViewed: presentationViews.slidesViewed,
+      })
       .from(presentationViews)
       .where(eq(presentationViews.deckId, deckId))
       .orderBy(desc(presentationViews.startedAt));

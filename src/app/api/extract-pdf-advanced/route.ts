@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import { z } from "zod";
 
 const DOCLING_URL = process.env.DOCLING_SERVICE_URL || "http://localhost:8001";
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB for Docling (vs 20MB for pdf-parse)
@@ -36,6 +37,44 @@ interface DoclingChunkResult {
   total_chunks: number;
   sections_detected: string[];
 }
+
+// Zod schemas for validating Docling responses
+const DoclingParseSchema = z.object({
+  markdown: z.string(),
+  tables: z.array(
+    z.object({
+      index: z.number(),
+      data: z.array(z.record(z.unknown())),
+      columns: z.array(z.string()),
+      rows: z.number(),
+      caption: z.string().nullable(),
+    }).passthrough()
+  ),
+  sections: z.array(
+    z.object({
+      text: z.string(),
+      type: z.string(),
+      label: z.string(),
+    }).passthrough()
+  ),
+  metadata: z.object({
+    page_count: z.number().nullable(),
+    title: z.string().nullable(),
+  }).passthrough(),
+}).passthrough();
+
+const DoclingChunkSchema = z.object({
+  chunks: z.array(
+    z.object({
+      chunk_index: z.number(),
+      text: z.string(),
+      section_type: z.string(),
+      word_count: z.number(),
+    }).passthrough()
+  ),
+  total_chunks: z.number(),
+  sections_detected: z.array(z.string()),
+}).passthrough();
 
 export async function POST(req: Request): Promise<Response> {
   const log = logger.withRequestId();
@@ -114,8 +153,20 @@ export async function POST(req: Request): Promise<Response> {
       );
     }
 
-    const result: DoclingParseResult | DoclingChunkResult = await response.json();
-    return NextResponse.json(result);
+    const result = await response.json();
+
+    // Validate Docling response against expected schema
+    const schema = mode === "chunk" ? DoclingChunkSchema : DoclingParseSchema;
+    const validation = schema.safeParse(result);
+    if (!validation.success) {
+      log.error("Docling response validation failed", validation.error);
+      return NextResponse.json(
+        { error: "Advanced PDF extraction returned an unexpected response" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(validation.data);
   } catch (error) {
     log.error("Advanced PDF extraction error", error);
 

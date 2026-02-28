@@ -7,8 +7,8 @@
 import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { papers, projectPapers, projects } from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { papers, projectPapers } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import {
   generateRIS,
   generateBibTeX,
@@ -16,6 +16,7 @@ import {
   generateCSV,
   type ExportablePaper,
 } from "@/lib/systematic-review/reference-formats";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // GET
@@ -36,14 +37,9 @@ export async function GET(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json(
         { error: "Project not found" },
         { status: 404 }

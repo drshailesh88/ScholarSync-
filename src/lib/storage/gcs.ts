@@ -1,3 +1,4 @@
+// SECURITY: This bucket MUST have public access prevention enforced and uniform bucket-level access enabled
 import { Storage } from "@google-cloud/storage";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
@@ -151,4 +152,33 @@ export async function deletePdf(paperId: number): Promise<void> {
   } catch {
     // Ignore deletion errors
   }
+}
+
+/**
+ * Verify that the GCS bucket has proper security settings.
+ * Call this at startup or during health checks to ensure bucket security.
+ * Not called automatically — export for use in startup scripts or admin endpoints.
+ */
+export async function verifyBucketSecurity(): Promise<{ secure: boolean; issues: string[] }> {
+  const issues: string[] = [];
+
+  if (USE_LOCAL_STORAGE || !bucket) {
+    return { secure: true, issues: ["Using local storage — skipping GCS bucket security check"] };
+  }
+
+  try {
+    const [metadata] = await bucket.getMetadata();
+    // Check for public access
+    if (metadata.iamConfiguration?.publicAccessPrevention !== "enforced") {
+      issues.push("Public access prevention is not enforced on the bucket");
+    }
+    // Check uniform bucket-level access
+    if (!metadata.iamConfiguration?.uniformBucketLevelAccess?.enabled) {
+      issues.push("Uniform bucket-level access is not enabled");
+    }
+  } catch (error) {
+    issues.push(`Could not verify bucket security: ${error}`);
+  }
+
+  return { secure: issues.length === 0, issues };
 }

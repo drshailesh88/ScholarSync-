@@ -13,13 +13,14 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { papers, projectPapers, projects } from "@/lib/db/schema";
+import { papers, projectPapers } from "@/lib/db/schema";
 import { eq, and, inArray } from "drizzle-orm";
 import {
   batchRetrievePDFs,
   retrievePDF,
   type RetrievalResult,
 } from "@/lib/systematic-review/pdf-retrieval";
+import { verifyProjectAccess } from "@/lib/systematic-review/collaboration";
 
 // ---------------------------------------------------------------------------
 // POST — trigger retrieval
@@ -45,14 +46,9 @@ export async function POST(req: Request) {
 
     const { projectId, paperIds: requestedIds } = parsed.data;
 
-    // Verify the project belongs to the authenticated user
-    const [project] = await db
-      .select({ id: projects.id })
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const access = await verifyProjectAccess(projectId, userId);
+    if (!access.allowed) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
@@ -165,14 +161,9 @@ export async function GET(req: Request) {
       );
     }
 
-    // Verify ownership
-    const [project] = await db
-      .select({ id: projects.id })
-      .from(projects)
-      .where(and(eq(projects.id, projectId), eq(projects.user_id, userId)))
-      .limit(1);
-
-    if (!project) {
+    // Verify project access (owner or collaborator)
+    const accessCheck = await verifyProjectAccess(projectId, userId);
+    if (!accessCheck.allowed) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 

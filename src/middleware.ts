@@ -8,17 +8,29 @@ const hasClerkKeys =
 
 const isDev = process.env.NODE_ENV === "development";
 
-// Same public route patterns as before
-const PUBLIC_PATTERNS = [
+// Public page routes (no auth required)
+const PUBLIC_PAGE_PATTERNS = [
   /^\/$/,
   /^\/sign-in(\/.*)?$/,
   /^\/sign-up(\/.*)?$/,
-  /^\/api(\/.*)?$/,
   /^\/share(\/.*)?$/,
 ];
 
+// Explicit whitelist of public API routes that have their own auth or are
+// genuinely public. All other /api routes require Clerk session auth.
+const PUBLIC_API_PATTERNS = [
+  /^\/api\/webhooks(\/.*)?$/,             // webhook endpoints
+  /^\/api\/live-session\/[^/]+\/stream$/, // SSE stream (has its own token auth)
+  /^\/api\/health$/,                      // health check
+  /^\/api\/analytics\/track-view$/,       // public analytics
+  /^\/api\/billing\/webhook$/,            // payment webhook
+];
+
 function isPublicRoute(pathname: string): boolean {
-  return PUBLIC_PATTERNS.some((pattern) => pattern.test(pathname));
+  return (
+    PUBLIC_PAGE_PATTERNS.some((pattern) => pattern.test(pathname)) ||
+    PUBLIC_API_PATTERNS.some((pattern) => pattern.test(pathname))
+  );
 }
 
 export default async function middleware(request: NextRequest) {
@@ -53,6 +65,13 @@ export default async function middleware(request: NextRequest) {
     });
 
     if (!isSignedIn) {
+      // For API routes, return 401 instead of redirecting to sign-in
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json(
+          { error: "Authentication required" },
+          { status: 401 }
+        );
+      }
       const signInUrl = new URL("/sign-in", request.url);
       signInUrl.searchParams.set("redirect_url", request.url);
       return NextResponse.redirect(signInUrl);
@@ -68,10 +87,11 @@ export default async function middleware(request: NextRequest) {
 
   // In production without Clerk keys, block protected routes
   const { pathname } = request.nextUrl;
-  const publicPaths = ["/", "/sign-in", "/sign-up", "/api", "/share"];
-  const isPublic = publicPaths.some(
-    (p) => pathname === p || pathname.startsWith(p + "/")
-  );
+  const publicPaths = ["/", "/sign-in", "/sign-up", "/share"];
+  const isPublic =
+    publicPaths.some(
+      (p) => pathname === p || pathname.startsWith(p + "/")
+    ) || PUBLIC_API_PATTERNS.some((pattern) => pattern.test(pathname));
 
   if (!isPublic) {
     return NextResponse.json(

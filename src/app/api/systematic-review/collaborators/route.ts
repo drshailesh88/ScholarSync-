@@ -22,6 +22,7 @@ import {
   removeCollaborator,
   updateCollaboratorRole,
 } from "@/lib/systematic-review/collaboration";
+import { auditLog } from "@/lib/security/audit-log";
 
 // ---------------------------------------------------------------------------
 // Shared ownership guard — only the project owner may manage collaborators
@@ -112,10 +113,19 @@ export async function POST(req: Request) {
     }
 
     const collaborator = await inviteCollaborator(projectId, email, role);
+
+    auditLog({
+      action: "collaborator.added",
+      userId,
+      resourceType: "project",
+      resourceId: projectId,
+      metadata: { email, role },
+    });
+
     return NextResponse.json({ collaborator }, { status: 201 });
   } catch (error) {
-    if (error instanceof Error && error.message.startsWith("No user found")) {
-      return NextResponse.json({ error: error.message }, { status: 422 });
+    if (error instanceof Error && error.message.startsWith("Invitation processed")) {
+      return NextResponse.json({ message: error.message }, { status: 200 });
     }
     console.error("POST /collaborators error", error);
     return NextResponse.json(
@@ -227,6 +237,14 @@ export async function DELETE(req: Request) {
         { status: 404 }
       );
     }
+
+    auditLog({
+      action: "collaborator.removed",
+      userId: ownerId,
+      resourceType: "project",
+      resourceId: projectId,
+      metadata: { removedUserId: userId },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

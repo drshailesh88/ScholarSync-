@@ -18,7 +18,16 @@ export async function GET(
     }
 
     const [session] = await db
-      .select()
+      .select({
+        id: deepResearchSessions.id,
+        originalQuery: deepResearchSessions.originalQuery,
+        researchPlan: deepResearchSessions.researchPlan,
+        finalReport: deepResearchSessions.finalReport,
+        keyFindings: deepResearchSessions.keyFindings,
+        gapsIdentified: deepResearchSessions.gapsIdentified,
+        papersFound: deepResearchSessions.papersFound,
+        completedAt: deepResearchSessions.completedAt,
+      })
       .from(deepResearchSessions)
       .where(
         and(
