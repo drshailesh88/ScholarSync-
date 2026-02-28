@@ -3,30 +3,39 @@ import vinext from "vinext";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
 
+const isDev = process.env.NODE_ENV !== "production" && !process.argv.includes("build");
+
+// Workaround: vinext URL-encodes paths with spaces (%20) in virtual module imports.
+// This plugin decodes them back to real filesystem paths for both dev and build.
+const decodeUriPaths = () => ({
+  name: "decode-uri-paths",
+  enforce: "pre" as const,
+  resolveId(source: string) {
+    if (source.includes("%20")) {
+      return { id: decodeURIComponent(source), external: false };
+    }
+    return null;
+  },
+});
+
 export default defineConfig({
   build: {
     sourcemap: true,
     rollupOptions: {
-      // Workaround: vinext URL-encodes paths with spaces in virtual module imports.
-      // This plugin decodes %20 back to spaces before Rollup tries to resolve them.
-      plugins: [
-        {
-          name: "decode-uri-paths",
-          resolveId(source) {
-            if (source.includes("%20")) {
-              return { id: decodeURIComponent(source), external: false };
-            }
-            return null;
-          },
-        },
-      ],
+      plugins: [decodeUriPaths()],
     },
   },
   plugins: [
+    decodeUriPaths(),
     vinext(),
-    cloudflare({
-      viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
-    }),
+    // Cloudflare plugin only for production builds — in dev, Vite serves directly
+    ...(isDev
+      ? []
+      : [
+          cloudflare({
+            viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
+          }),
+        ]),
     // Upload source maps to Sentry (replaces withSentryConfig from next.config.ts).
     // Only runs in CI when SENTRY_AUTH_TOKEN is set.
     ...(process.env.SENTRY_AUTH_TOKEN
