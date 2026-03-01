@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -77,6 +78,29 @@ export function SlideFilmstrip() {
   const addSlide = useSlidesStore((s) => s.addSlide);
   const deleteSlide = useSlidesStore((s) => s.deleteSlide);
   const reorderSlides = useSlidesStore((s) => s.reorderSlides);
+  const copySlide = useSlidesStore((s) => s.copySlide);
+  const pasteSlide = useSlidesStore((s) => s.pasteSlide);
+
+  // Ctrl+C / Ctrl+V for copy-paste slides
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const mod = e.metaKey || e.ctrlKey;
+      if (!mod) return;
+
+      // Don't intercept when typing in an input/textarea
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement)?.isContentEditable) return;
+
+      if (e.key === "c" && activeSlideId) {
+        copySlide(activeSlideId);
+      } else if (e.key === "v") {
+        e.preventDefault();
+        pasteSlide();
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeSlideId, copySlide, pasteSlide]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),

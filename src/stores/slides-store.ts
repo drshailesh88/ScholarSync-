@@ -133,6 +133,11 @@ export interface SlidesStore {
   duplicateSlide: (id: number) => Promise<void>;
   reorderSlides: (ids: number[]) => Promise<void>;
 
+  // Clipboard (copy/paste slides)
+  clipboardSlide: Omit<SlideState, "id" | "sortOrder"> | null;
+  copySlide: (id: number) => void;
+  pasteSlide: () => Promise<void>;
+
   // Block-level update (convenience)
   updateBlock: (blockIndex: number, block: ContentBlock) => void;
 
@@ -225,6 +230,48 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Find & Replace
   showFindReplace: false,
   setShowFindReplace: (showFindReplace) => set({ showFindReplace }),
+
+  // Clipboard
+  clipboardSlide: null,
+  copySlide: (id) => {
+    const slide = get().slides.find((s) => s.id === id);
+    if (!slide) return;
+    const { id: _id, sortOrder: _so, ...rest } = slide;
+    set({ clipboardSlide: rest });
+  },
+  pasteSlide: async () => {
+    const { deckId, clipboardSlide, activeSlideId, slides } = get();
+    if (!deckId || !clipboardSlide) return;
+
+    const activeSlide = slides.find((s) => s.id === activeSlideId);
+    const sortOrder = activeSlide ? activeSlide.sortOrder + 1 : slides.length;
+
+    try {
+      const created = await createSlideAction({
+        deckId,
+        sortOrder,
+        layout: clipboardSlide.layout,
+        title: clipboardSlide.title,
+        contentBlocks: clipboardSlide.contentBlocks,
+        speakerNotes: clipboardSlide.speakerNotes,
+      });
+      const newSlide = normalizeSlide(
+        created as unknown as Record<string, unknown>
+      );
+
+      set((state) => {
+        const updated = [...state.slides];
+        updated.splice(sortOrder, 0, newSlide);
+        const reordered = updated.map((s, i) => ({
+          ...s,
+          sortOrder: i,
+        }));
+        return { slides: reordered, activeSlideId: newSlide.id };
+      });
+    } catch {
+      // ignore
+    }
+  },
 
   // Save
   saveStatus: "idle",
