@@ -19,6 +19,15 @@ import {
 // Types
 // ---------------------------------------------------------------------------
 
+export interface CardBackground {
+  color?: string;
+  imageUrl?: string;
+  imagePosition?: "none" | "top" | "left" | "right" | "background";
+  overlayType?: "none" | "frosted" | "faded" | "clear";
+  overlayIntensity?: number; // 0-100
+  overlayColor?: string;
+}
+
 export interface SlideState {
   id: number;
   sortOrder: number;
@@ -27,6 +36,7 @@ export interface SlideState {
   subtitle: string;
   contentBlocks: ContentBlock[];
   speakerNotes: string;
+  cardBackground?: CardBackground;
 }
 
 export type WorkspaceMode = "slides" | "create";
@@ -146,6 +156,7 @@ function normalizeSlide(raw: Record<string, unknown>): SlideState {
     subtitle: (raw.subtitle as string) ?? "",
     contentBlocks: (raw.contentBlocks as ContentBlock[]) ?? [],
     speakerNotes: (raw.speakerNotes as string) ?? "",
+    cardBackground: (raw.cardBackground as CardBackground | undefined) ?? undefined,
   };
 }
 

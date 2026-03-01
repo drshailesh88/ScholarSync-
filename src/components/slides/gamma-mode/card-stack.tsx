@@ -3,8 +3,53 @@
 import { useRef, useCallback } from "react";
 import { Plus, PlusCircle } from "@phosphor-icons/react";
 import { useSlidesStore } from "@/stores/slides-store";
+import type { CardBackground } from "@/stores/slides-store";
 import { CardEditor } from "./card-editor";
 import { CardSparkleMenu } from "./card-sparkle-menu";
+import { CardBackgroundButton } from "./card-background-picker";
+
+// ---------------------------------------------------------------------------
+// Background style helpers
+// ---------------------------------------------------------------------------
+
+function buildOverlayCss(bg: CardBackground): string {
+  const overlayColor = bg.overlayColor ?? "#000000";
+  const intensity = bg.overlayIntensity ?? 50;
+  const alpha = intensity / 100;
+
+  switch (bg.overlayType) {
+    case "frosted":
+      return `linear-gradient(${overlayColor}${Math.round(alpha * 255).toString(16).padStart(2, "0")}, ${overlayColor}${Math.round(alpha * 255).toString(16).padStart(2, "0")})`;
+    case "faded":
+      return `linear-gradient(to bottom, ${overlayColor}${Math.round(alpha * 0.8 * 255).toString(16).padStart(2, "0")}, transparent)`;
+    case "clear":
+      return `linear-gradient(${overlayColor}${Math.round(alpha * 0.3 * 255).toString(16).padStart(2, "0")}, ${overlayColor}${Math.round(alpha * 0.3 * 255).toString(16).padStart(2, "0")})`;
+    default:
+      return "";
+  }
+}
+
+function buildCardStyle(
+  bg: CardBackground | undefined,
+  defaultBgColor: string,
+  defaultTextColor: string,
+): React.CSSProperties {
+  const style: React.CSSProperties = {
+    backgroundColor: bg?.color ?? defaultBgColor,
+    color: defaultTextColor,
+  };
+
+  if (bg?.imageUrl && bg.imagePosition === "background") {
+    const overlay = bg.overlayType && bg.overlayType !== "none" ? buildOverlayCss(bg) : "";
+    style.backgroundImage = overlay
+      ? `${overlay}, url(${bg.imageUrl})`
+      : `url(${bg.imageUrl})`;
+    style.backgroundSize = "cover";
+    style.backgroundPosition = "center";
+  }
+
+  return style;
+}
 
 export function CardStack() {
   const slides = useSlidesStore((s) => s.slides);
@@ -51,6 +96,12 @@ export function CardStack() {
       <div className="max-w-3xl mx-auto flex flex-col gap-2">
         {slides.map((slide, index) => {
           const isActive = slide.id === activeSlideId;
+          const bg = slide.cardBackground;
+          const defaultBg = themeConfig.surfaceColor ?? themeConfig.backgroundColor;
+          const hasImageTop = bg?.imageUrl && bg.imagePosition === "top";
+          const hasImageLeft = bg?.imageUrl && bg.imagePosition === "left";
+          const hasImageRight = bg?.imageUrl && bg.imagePosition === "right";
+          const hasImageSide = hasImageLeft || hasImageRight;
 
           return (
             <div key={slide.id} className="flex flex-col items-center">
@@ -67,14 +118,10 @@ export function CardStack() {
                 }}
                 className={`
                   relative w-full text-left rounded-xl shadow-md transition-all duration-150
-                  border-2 overflow-visible cursor-pointer
+                  border-2 overflow-hidden cursor-pointer
                   ${isActive ? "border-brand ring-1 ring-brand/30" : "border-transparent hover:border-border"}
                 `}
-                style={{
-                  backgroundColor:
-                    themeConfig.surfaceColor ?? themeConfig.backgroundColor,
-                  color: themeConfig.textColor,
-                }}
+                style={buildCardStyle(bg, defaultBg, themeConfig.textColor)}
               >
                 {/* Accent bar */}
                 <div
@@ -82,15 +129,56 @@ export function CardStack() {
                   style={{ backgroundColor: themeConfig.primaryColor }}
                 />
 
-                {/* Per-card AI sparkle menu (active card only) */}
+                {/* Per-card action buttons (active card only) */}
                 {isActive && (
-                  <div className="absolute top-2 right-2 z-10">
+                  <div className="absolute top-2 right-2 z-10 flex items-center gap-1">
+                    <CardBackgroundButton slideId={slide.id} />
                     <CardSparkleMenu slideId={slide.id} />
                   </div>
                 )}
 
-                {/* Card body — delegated to CardEditor for inline editing */}
-                <CardEditor slide={slide} isActive={isActive} />
+                {/* Top image */}
+                {hasImageTop && (
+                  <div className="w-full h-48 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={bg!.imageUrl!}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Side image layout or normal body */}
+                {hasImageSide ? (
+                  <div
+                    className={`flex ${hasImageRight ? "flex-row-reverse" : "flex-row"}`}
+                  >
+                    <div className="w-2/5 shrink-0 overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={bg!.imageUrl!}
+                        alt=""
+                        className="w-full h-full object-cover min-h-[200px]"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <CardEditor slide={slide} isActive={isActive} />
+                    </div>
+                  </div>
+                ) : (
+                  <CardEditor slide={slide} isActive={isActive} />
+                )}
+
+                {/* Frosted glass overlay for background images */}
+                {bg?.imageUrl &&
+                  bg.imagePosition === "background" &&
+                  bg.overlayType === "frosted" && (
+                    <div
+                      className="absolute inset-0 pointer-events-none rounded-xl"
+                      style={{ backdropFilter: `blur(${(bg.overlayIntensity ?? 50) / 10}px)` }}
+                    />
+                  )}
               </div>
 
               {/* Insert button between cards */}
