@@ -22,7 +22,7 @@ import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 
 const ClerkUserButton = dynamic(
-  () => import("@clerk/clerk-react").then((mod) => mod.UserButton),
+  () => import("@clerk/nextjs").then((mod) => mod.UserButton),
   { ssr: false, loading: () => <div className="w-8 h-8 rounded-full bg-surface-raised" /> }
 );
 
