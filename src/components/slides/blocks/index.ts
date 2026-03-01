@@ -16,6 +16,7 @@ import { QuoteBlock } from "./quote-block";
 import { DividerBlock } from "./divider-block";
 import { ToggleBlock } from "../gamma-mode/blocks/toggle-block";
 import { EmbedBlock } from "../gamma-mode/blocks/embed-block";
+import { NestedCardBlock } from "../gamma-mode/blocks/nested-card-block";
 
 // ---------------------------------------------------------------------------
 // Block Registry — maps each content block type to its renderer + metadata
@@ -167,6 +168,17 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     iconName: "Globe",
     defaultData: () => ({ url: "", embedType: "generic" as const, aspectRatio: "16:9" as const }),
     category: "media",
+  },
+  nested_card: {
+    render: NestedCardBlock as any,
+    label: "Nested Card",
+    iconName: "Cards",
+    defaultData: () => ({
+      title: "Sub-section",
+      contentBlocks: [{ type: "text", data: { text: "Nested content", style: "body" } }],
+      collapsed: true,
+    }),
+    category: "content",
   },
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */

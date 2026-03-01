@@ -106,6 +106,13 @@ export interface EmbedData {
   aspectRatio?: "16:9" | "4:3" | "1:1";
 }
 
+/** Nested card block for drill-down sub-sections within a parent card */
+export interface NestedCardData {
+  title: string;
+  contentBlocks: ContentBlock[];
+  collapsed?: boolean;
+}
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
   type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
@@ -150,7 +157,8 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "timeline"; data: TimelineData })
   | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } })
   | (ContentBlockBase & { type: "toggle"; data: ToggleData })
-  | (ContentBlockBase & { type: "embed"; data: EmbedData });
+  | (ContentBlockBase & { type: "embed"; data: EmbedData })
+  | (ContentBlockBase & { type: "nested_card"; data: NestedCardData });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)
