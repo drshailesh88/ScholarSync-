@@ -101,8 +101,20 @@ export interface BlockAnimation {
 
 export type AnimationPresetKey = "sequential_build" | "fade_all" | "stagger" | "results_reveal" | "none";
 
+/** Positioning data for freeform layout blocks */
+export interface BlockPosition {
+  x: number;      // percentage of slide width (0-100)
+  y: number;      // percentage of slide height (0-100)
+  width: number;  // percentage of slide width
+  height: number; // percentage of slide height
+}
+
 type ContentBlockBase = {
   animation?: BlockAnimation;
+  /** Optional positioning for freeform layout */
+  position?: BlockPosition;
+  /** Z-index for layering in freeform layout */
+  zIndex?: number;
 };
 
 export type ContentBlock =
@@ -374,7 +386,9 @@ export type SlideLayout =
   | "timeline_slide"
   | "stat_overview"
   | "three_column"
-  | "big_number";
+  | "big_number"
+  // V3: Freeform layout — blocks use their position field
+  | "freeform";
 
 // V2: Extended audience types
 export type AudienceType =

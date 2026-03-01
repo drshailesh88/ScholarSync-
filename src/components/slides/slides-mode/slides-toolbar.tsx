@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import {
-  PencilSimple,
-  Eye,
   Export,
   FilePdf,
   Presentation,
@@ -18,6 +16,7 @@ import {
   Check,
   CircleNotch,
   Warning,
+  Wrench,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore, type RightPanel, type SaveStatus } from "@/stores/slides-store";
@@ -26,16 +25,12 @@ import { BLOCK_REGISTRY, createDefaultBlock } from "../blocks";
 import type { ContentBlock } from "@/types/presentation";
 
 interface SlidesToolbarProps {
-  isEditing: boolean;
-  onToggleEdit: () => void;
   onExportPptx: () => void;
   onExportPdf: () => void;
   exporting: boolean;
 }
 
 export function SlidesToolbar({
-  isEditing,
-  onToggleEdit,
   onExportPptx,
   onExportPdf,
   exporting,
@@ -71,18 +66,18 @@ export function SlidesToolbar({
 
       <div className="w-px h-5 bg-border mx-1" />
 
-      {/* Edit/Preview toggle */}
+      {/* Properties panel toggle */}
       <button
-        onClick={onToggleEdit}
+        onClick={() => togglePanel("properties")}
         className={cn(
-          "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
-          isEditing
+          "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+          rightPanel === "properties"
             ? "bg-brand/10 text-brand"
             : "text-ink-muted hover:text-ink hover:bg-surface-raised"
         )}
       >
-        {isEditing ? <PencilSimple size={14} /> : <Eye size={14} />}
-        {isEditing ? "Edit" : "Preview"}
+        <Wrench size={14} />
+        Design
       </button>
 
       {/* Insert menu */}

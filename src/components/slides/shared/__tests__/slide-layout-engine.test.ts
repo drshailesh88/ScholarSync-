@@ -163,6 +163,15 @@ describe("slide-layout-engine", () => {
       expect(result.regions[0].blocks[0].type).toBe("timeline");
     });
 
+    it("freeform layout puts all blocks in a single content region", () => {
+      const blocks = [textBlock("a"), chartBlock(), imageBlock()];
+      const result = computeLayout("freeform", blocks);
+      expect(result.hasBuiltInTitle).toBe(false);
+      expect(result.regions).toHaveLength(1);
+      expect(result.regions[0].id).toBe("content");
+      expect(result.regions[0].blocks).toHaveLength(3);
+    });
+
     it("handles empty blocks gracefully", () => {
       const result = computeLayout("title_content", []);
       expect(result.regions).toHaveLength(1);

@@ -58,9 +58,10 @@ describe("SlideRendererV2 layout integration", () => {
     "timeline_slide",
     "stat_overview",
     "big_number",
+    "freeform",
   ];
 
-  it("all 18 layouts produce valid layout results", () => {
+  it("all 19 layouts produce valid layout results", () => {
     for (const layout of layouts) {
       const blocks = makeBlocks("text", "bullets");
       const result = computeLayout(layout, blocks);
@@ -115,6 +116,26 @@ describe("SlideRendererV2 layout integration", () => {
     const result = computeLayout("key_findings", blocks);
     expect(result.regions).toHaveLength(1);
     expect(result.regions[0].blocks).toHaveLength(2);
+  });
+
+  it("freeform layout puts all blocks in single content region", () => {
+    const blocks = makeBlocks("text", "image", "chart");
+    const result = computeLayout("freeform", blocks);
+    expect(result.hasBuiltInTitle).toBe(false);
+    expect(result.regions).toHaveLength(1);
+    expect(result.regions[0].id).toBe("content");
+    expect(result.regions[0].blocks).toHaveLength(3);
+  });
+
+  it("blocks can carry position and zIndex for freeform layout", () => {
+    const block: ContentBlock = {
+      type: "text",
+      data: { text: "Positioned", style: "body" },
+      position: { x: 10, y: 20, width: 30, height: 40 },
+      zIndex: 5,
+    };
+    expect(block.position).toEqual({ x: 10, y: 20, width: 30, height: 40 });
+    expect(block.zIndex).toBe(5);
   });
 
   it("handles a realistic 10-slide deck worth of layouts", () => {

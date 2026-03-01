@@ -88,6 +88,7 @@ export const slideLayoutEnum = pgEnum("slide_layout", [
   "comparison", "blank",
   "bibliography_slide", "methodology", "results_summary", "key_findings",
   "timeline_slide", "stat_overview", "three_column", "big_number",
+  "freeform",
 ]);
 export const generationStatusEnum = pgEnum("generation_status", [
   "pending", "processing", "completed", "failed",

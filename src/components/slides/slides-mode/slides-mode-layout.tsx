@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
 import { SlideFilmstrip } from "./slide-filmstrip";
-import { SlideCanvasEditor } from "./slide-canvas-editor";
+import { SlideCanvasWYSIWYG } from "../wysiwyg/slide-canvas-wysiwyg";
 import { SlidesToolbar } from "./slides-toolbar";
 import { SpeakerNotesBar } from "./speaker-notes-bar";
 import { PropertiesPanel } from "./properties-panel";
@@ -18,7 +18,6 @@ import { AnalyticsPanel } from "@/components/presentation/analytics-panel";
 import { DefensePrepPanel } from "@/components/presentation/defense-prep-panel";
 
 export function SlidesModeLayout() {
-  const [isEditing, setIsEditing] = useState(true);
   const [exporting, setExporting] = useState(false);
 
   const deckId = useSlidesStore((s) => s.deckId);
@@ -102,8 +101,6 @@ export function SlidesModeLayout() {
     <div className="flex flex-col h-full">
       {/* Top toolbar */}
       <SlidesToolbar
-        isEditing={isEditing}
-        onToggleEdit={() => setIsEditing(!isEditing)}
         onExportPptx={handleExportPptx}
         onExportPdf={handleExportPdf}
         exporting={exporting}
@@ -114,9 +111,9 @@ export function SlidesModeLayout() {
         {/* Left: Filmstrip */}
         <SlideFilmstrip />
 
-        {/* Center: Canvas + Speaker notes */}
+        {/* Center: WYSIWYG Canvas + Speaker notes */}
         <main className="flex-1 flex flex-col overflow-hidden bg-surface-raised/30">
-          <SlideCanvasEditor isEditing={isEditing} />
+          <SlideCanvasWYSIWYG />
           <SpeakerNotesBar />
         </main>
 

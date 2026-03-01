@@ -159,6 +159,12 @@ const LAYOUT_DEFS: Record<SlideLayout, { regions: RegionDef[]; hasBuiltInTitle: 
       { id: "context", x: 10, y: 65, width: 80, height: 30, direction: "column" },
     ],
   },
+  freeform: {
+    hasBuiltInTitle: false,
+    regions: [
+      { id: "content", x: 0, y: 0, width: 100, height: 100, direction: "column" },
+    ],
+  },
 };
 
 // ---------------------------------------------------------------------------
