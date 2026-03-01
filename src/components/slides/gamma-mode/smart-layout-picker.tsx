@@ -16,6 +16,7 @@ import {
 import type { Icon } from "@phosphor-icons/react";
 import { SMART_LAYOUTS } from "./smart-layout-templates";
 import { useSlidesStore } from "@/stores/slides-store";
+import type { SlideLayout } from "@/types/presentation";
 
 // ---------------------------------------------------------------------------
 // SmartLayoutPicker — grid of pre-built layout templates
@@ -67,7 +68,21 @@ export function SmartLayoutPicker({ onClose }: SmartLayoutPickerProps) {
       if (!activeSlide) return;
       const template = SMART_LAYOUTS.find((t) => t.id === layoutId);
       if (!template) return;
-      updateSlide(activeSlide.id, { contentBlocks: template.generate() });
+      // Map smart layout IDs to the best-matching slide layout for presenter mode
+      const LAYOUT_MAP: Record<string, SlideLayout> = {
+        two_column: "two_column",
+        chart_with_caption: "chart_slide",
+        image_with_text: "image_text",
+        quote_highlight: "quote_slide",
+        methodology: "title_content",
+        big_number: "title_content",
+        bullets_with_header: "title_content",
+        timeline: "title_content",
+        steps: "title_content",
+        callout_key_finding: "title_content",
+      };
+      const layout = LAYOUT_MAP[layoutId] ?? "title_content";
+      updateSlide(activeSlide.id, { contentBlocks: template.generate(), layout });
       onClose();
     },
     [activeSlide, updateSlide, onClose],

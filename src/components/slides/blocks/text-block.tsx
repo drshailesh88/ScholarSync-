@@ -18,6 +18,9 @@ const STYLE_CLASSES: Record<string, string> = {
 export function TextBlock({ data, theme, scale: _scale }: TextBlockProps) {
   const style = data.style ?? "body";
   const isHeading = style === "title" || style === "subtitle";
+  // Tiptap stores formatted text as HTML (e.g. <p>Hello <strong>world</strong></p>).
+  // Detect HTML and render it properly instead of showing raw tags.
+  const hasHtml = /<[a-z][\s\S]*>/i.test(data.text);
 
   return (
     <div
@@ -28,8 +31,11 @@ export function TextBlock({ data, theme, scale: _scale }: TextBlockProps) {
           ? theme.headingFontFamily ?? theme.fontFamily
           : theme.fontFamily,
       }}
-    >
-      {data.text}
-    </div>
+      // Content is from the user's own Tiptap editor (same-origin authored content).
+       
+      {...(hasHtml
+        ? { dangerouslySetInnerHTML: { __html: data.text } }
+        : { children: data.text })}
+    />
   );
 }
