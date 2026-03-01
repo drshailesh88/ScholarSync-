@@ -35,10 +35,12 @@ function SegmentedControl<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="flex rounded-lg border border-border overflow-hidden">
+    <div className="flex rounded-lg border border-border overflow-hidden" role="radiogroup">
       {options.map((opt) => (
         <button
           key={opt.value}
+          role="radio"
+          aria-checked={value === opt.value}
           onClick={() => onChange(opt.value)}
           className={`flex-1 px-2 py-1 text-[11px] font-medium transition-colors ${
             value === opt.value
@@ -102,6 +104,7 @@ function ThemeSwatch({
     <button
       onClick={onClick}
       title={theme.name}
+      aria-label={`${theme.name} theme${isActive ? " (selected)" : ""}`}
       className={`relative rounded-md overflow-hidden border-2 transition-all hover:scale-105 ${
         isActive ? "border-brand ring-1 ring-brand" : "border-border"
       }`}
@@ -154,12 +157,12 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 // ThemeCustomizer — main export
 // ---------------------------------------------------------------------------
 
+const THEME_KEYS = Object.keys(PRESET_THEMES);
+
 export function ThemeCustomizer() {
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const setTheme = useSlidesStore((s) => s.setTheme);
-
-  const themeKeys = Object.keys(PRESET_THEMES);
 
   // Helper: update a single field on the current theme (marks key as "custom")
   function updateField<K extends keyof ThemeConfig>(
@@ -175,7 +178,7 @@ export function ThemeCustomizer() {
       {/* ---- Preset themes ---- */}
       <SectionHeading>Presets</SectionHeading>
       <div className="grid grid-cols-4 gap-2">
-        {themeKeys.map((key) => (
+        {THEME_KEYS.map((key) => (
           <ThemeSwatch
             key={key}
             themeKey={key}
