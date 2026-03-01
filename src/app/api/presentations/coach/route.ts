@@ -11,7 +11,7 @@ import type { CoachEvaluation } from "@/types/presentation";
 
 const coachSchema = z.object({
   deckId: z.number().int().positive(),
-  audienceType: z.enum(["thesis_defense", "conference", "journal_club", "classroom", "general"]).optional(),
+  audienceType: z.enum(["thesis_defense", "conference", "journal_club", "classroom", "general", "grant_presentation", "poster_session", "systematic_review", "patient_case", "grand_rounds"]).optional(),
   slides: z
     .array(
       z.object({

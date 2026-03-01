@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -686,10 +686,9 @@ function ProgressItem({
 }
 
 function AutoTrigger({ onTrigger }: { onTrigger: () => void }) {
-  useState(() => {
-    // Trigger generation automatically after a small delay
+  useEffect(() => {
     const t = setTimeout(onTrigger, 500);
     return () => clearTimeout(t);
-  });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 }

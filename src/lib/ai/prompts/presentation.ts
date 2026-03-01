@@ -119,13 +119,13 @@ Generate approximately ${targetSlides} slides as a JSON array. Each slide must h
     { "type": "citation", "data": { "text": "...", "source": "Author et al., Year", "doi": "10.xxxx/xxxxx" } },
     { "type": "quote", "data": { "text": "...", "attribution": "..." } },
     { "type": "image", "data": { "alt": "...", "suggestion": "Description of ideal image" } },
-    { "type": "math", "data": { "latex": "E = mc^2", "caption": "Optional caption" } },
-    { "type": "diagram", "data": { "mermaid": "graph TD; A-->B;", "caption": "Optional caption" } },
+    { "type": "math", "data": { "expression": "E = mc^2", "displayMode": true, "caption": "Optional caption" } },
+    { "type": "diagram", "data": { "syntax": "graph TD; A-->B;", "diagramType": "flowchart", "caption": "Optional caption" } },
     { "type": "code", "data": { "language": "python|r|sql|...", "code": "...", "caption": "Optional" } },
-    { "type": "callout", "data": { "variant": "info|warning|success|tip", "title": "Optional", "text": "..." } },
+    { "type": "callout", "data": { "type": "info|warning|success|finding|limitation|methodology|clinical", "title": "Optional", "text": "..." } },
     { "type": "stat_result", "data": { "label": "...", "value": "...", "ci": "95% CI [x, y]", "pValue": "p < 0.001", "interpretation": "Brief interpretation" } },
-    { "type": "bibliography", "data": { "entries": [{ "text": "APA-style reference", "doi": "10.xxxx/xxxxx" }] } },
-    { "type": "timeline", "data": { "events": [{ "date": "...", "title": "...", "description": "..." }] } },
+    { "type": "bibliography", "data": { "entries": [{ "id": 1, "formatted": "APA-style reference", "doi": "10.xxxx/xxxxx" }], "style": "apa|mla|chicago|vancouver|harvard" } },
+    { "type": "timeline", "data": { "entries": [{ "label": "...", "date": "...", "description": "...", "status": "completed|in_progress|upcoming" }], "title": "Optional title" } },
     { "type": "divider", "data": {} }
   ],
   "speakerNotes": "Detailed speaker notes for this slide"
@@ -247,7 +247,7 @@ Create fresh, engaging content with better structure and flow.`,
 
     add_math: `Generate LaTeX math expressions appropriate for this slide's content.
 Return math content blocks:
-{ "type": "math", "data": { "latex": "...", "caption": "Optional caption" } }
+{ "type": "math", "data": { "expression": "...", "displayMode": true, "caption": "Optional caption" } }
 Use proper LaTeX notation. Common academic needs:
 - Statistical formulas (regression, ANOVA, chi-square)
 - Confidence interval notation
@@ -257,7 +257,7 @@ Ensure the math is contextually relevant to the slide content.`,
 
     add_diagram: `Generate a Mermaid diagram that visualizes the concept on this slide.
 Return a diagram content block:
-{ "type": "diagram", "data": { "mermaid": "...", "caption": "Optional caption" } }
+{ "type": "diagram", "data": { "syntax": "...", "diagramType": "flowchart|sequence|classDiagram|stateDiagram|erDiagram|gantt|pie|mindmap|timeline", "caption": "Optional caption" } }
 Use valid Mermaid syntax. Common academic diagrams:
 - Flowcharts (graph TD/LR) for processes or PRISMA
 - Sequence diagrams for timelines
