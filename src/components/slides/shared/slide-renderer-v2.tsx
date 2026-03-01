@@ -1,6 +1,7 @@
 "use client";
 
-import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
+import { motion } from "framer-motion";
+import type { ContentBlock, SlideLayout, ThemeConfig, BlockAnimation } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 import { computeLayout, regionToCSS } from "./slide-layout-engine";
 import { ThemeProvider } from "./theme-engine";
@@ -21,6 +22,8 @@ interface SlideRendererV2Props {
   scale?: number;
   showSlideNumber?: boolean;
   slideNumber?: number;
+  /** When true, blocks with animation configs will animate in */
+  animateBlocks?: boolean;
 }
 
 export function SlideRendererV2({
@@ -34,6 +37,7 @@ export function SlideRendererV2({
   scale = 1,
   showSlideNumber,
   slideNumber,
+  animateBlocks = false,
 }: SlideRendererV2Props) {
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
   const layout = (rawLayout ?? "title_content") as SlideLayout;
@@ -120,7 +124,7 @@ export function SlideRendererV2({
                   const entry = BLOCK_REGISTRY[block.type];
                   if (!entry) return null;
                   const Renderer = entry.render;
-                  return (
+                  const rendered = (
                     <Renderer
                       key={`${block.type}-${i}`}
                       data={block.data as Record<string, unknown>}
@@ -128,6 +132,16 @@ export function SlideRendererV2({
                       scale={scale}
                     />
                   );
+
+                  if (animateBlocks && block.animation && block.animation.type !== "none") {
+                    return (
+                      <AnimatedBlockWrapper key={`${block.type}-${i}`} animation={block.animation}>
+                        {rendered}
+                      </AnimatedBlockWrapper>
+                    );
+                  }
+
+                  return rendered;
                 })}
               </div>
             ))}
@@ -145,5 +159,45 @@ export function SlideRendererV2({
         </div>
       )}
     </ThemeProvider>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// AnimatedBlockWrapper — animates a block on mount based on its animation config
+// ---------------------------------------------------------------------------
+
+const animationVariants: Record<string, { hidden: Record<string, number>; visible: Record<string, number> }> = {
+  fadeIn: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+  slideUp: { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } },
+  slideLeft: { hidden: { opacity: 0, x: -30 }, visible: { opacity: 1, x: 0 } },
+  scaleIn: { hidden: { opacity: 0, scale: 0.8 }, visible: { opacity: 1, scale: 1 } },
+  typewriter: { hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } },
+};
+
+function AnimatedBlockWrapper({
+  animation,
+  children,
+}: {
+  animation: BlockAnimation;
+  children: React.ReactNode;
+}) {
+  const variant = animationVariants[animation.type] ?? animationVariants.fadeIn;
+
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: variant.hidden,
+        visible: variant.visible,
+      }}
+      transition={{
+        duration: animation.duration ?? 0.4,
+        delay: animation.delay ?? 0,
+        ease: "easeOut",
+      }}
+    >
+      {children}
+    </motion.div>
   );
 }

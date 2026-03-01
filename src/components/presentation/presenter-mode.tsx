@@ -520,6 +520,7 @@ export function PresenterMode({
                   showSlideNumber
                   slideNumber={currentIndex + 1}
                   scale={1.5}
+                  animateBlocks
                 />
               </div>
               {/* Scroll indicator — visible when content overflows */}

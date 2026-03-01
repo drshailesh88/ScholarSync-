@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation } from "@/types/presentation";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -25,44 +25,68 @@ export function BlockPropertyEditor() {
 
   const onUpdate = (updated: ContentBlock) => updateBlock(selectedBlockIndex, updated);
 
+  let editor: React.ReactNode;
+
   switch (selectedBlock.type) {
     case "chart":
-      return <ChartEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <ChartEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "table":
-      return <TableEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <TableEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "stat_result":
-      return <StatEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <StatEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "image":
-      return <ImageEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <ImageEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "math":
-      return <MathEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <MathEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "code":
-      return <CodeEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <CodeEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "callout":
-      return <CalloutEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <CalloutEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "citation":
-      return <CitationEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <CitationEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "timeline":
-      return <TimelineEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <TimelineEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "diagram":
-      return <DiagramEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <DiagramEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "divider":
-      return <DividerEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <DividerEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "bibliography":
-      return <BibliographyEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <BibliographyEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "embed":
-      return <EmbedEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <EmbedEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "toggle":
-      return <ToggleEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <ToggleEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     case "nested_card":
-      return <NestedCardEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = <NestedCardEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     default:
-      return (
+      editor = (
         <div className="px-3 py-4 text-xs text-ink-muted">
           No property editor for {selectedBlock.type} blocks.
         </div>
       );
   }
+
+  return (
+    <>
+      {editor}
+      <AnimationSection block={selectedBlock} onUpdate={onUpdate} />
+    </>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -1138,6 +1162,85 @@ function NestedCardEditor({ block, onUpdate }: { block: NestedCardBlock; onUpdat
           Edit inner blocks by clicking on them in the canvas.
         </div>
       </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Animation Section — shown below every block editor
+// ---------------------------------------------------------------------------
+
+const ANIMATION_TYPES: { value: string; label: string }[] = [
+  { value: "none", label: "None" },
+  { value: "fadeIn", label: "Fade In" },
+  { value: "slideUp", label: "Slide Up" },
+  { value: "slideLeft", label: "Slide Left" },
+  { value: "scaleIn", label: "Scale In" },
+  { value: "typewriter", label: "Typewriter" },
+];
+
+function AnimationSection({
+  block,
+  onUpdate,
+}: {
+  block: ContentBlock;
+  onUpdate: (b: ContentBlock) => void;
+}) {
+  const anim: BlockAnimation = block.animation ?? { type: "none", delay: 0, duration: 0.4, order: 0 };
+
+  function updateAnimation(partial: Partial<BlockAnimation>) {
+    const updated = { ...anim, ...partial };
+    onUpdate({ ...block, animation: updated.type === "none" ? undefined : updated });
+  }
+
+  return (
+    <div className="px-3 py-3 border-t border-border">
+      <div className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider mb-2">
+        Animation
+      </div>
+      <div className="space-y-2">
+        <div>
+          <FieldLabel>Effect</FieldLabel>
+          <FieldSelect
+            value={anim.type}
+            onChange={(v) => updateAnimation({ type: v as BlockAnimation["type"] })}
+            options={ANIMATION_TYPES}
+          />
+        </div>
+        {anim.type !== "none" && (
+          <>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <FieldLabel>Duration (s)</FieldLabel>
+                <FieldInput
+                  type="number"
+                  value={String(anim.duration)}
+                  onChange={(v) => updateAnimation({ duration: parseFloat(v) || 0.4 })}
+                  placeholder="0.4"
+                />
+              </div>
+              <div>
+                <FieldLabel>Delay (s)</FieldLabel>
+                <FieldInput
+                  type="number"
+                  value={String(anim.delay)}
+                  onChange={(v) => updateAnimation({ delay: parseFloat(v) || 0 })}
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <div>
+              <FieldLabel>Order</FieldLabel>
+              <FieldInput
+                type="number"
+                value={String(anim.order)}
+                onChange={(v) => updateAnimation({ order: parseInt(v) || 0 })}
+                placeholder="0"
+              />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
