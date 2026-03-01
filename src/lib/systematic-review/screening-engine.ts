@@ -50,7 +50,7 @@ export interface ConsensusResult {
 
 const agentDecisionSchema = z.object({
   decision: z.enum(["include", "exclude", "uncertain"]),
-  confidence: z.number().min(0).max(1),
+  confidence: z.number().describe("Confidence score between 0 and 1"),
   reasoning: z.string(),
   matched_inclusion: z.array(z.number()),
   matched_exclusion: z.array(z.number()),
@@ -102,7 +102,7 @@ async function runScreeningAgent(
   return {
     agentIndex,
     decision: object.decision,
-    confidence: object.confidence,
+    confidence: Math.max(0, Math.min(1, object.confidence)),
     reasoning: object.reasoning,
     matchedInclusion: object.matched_inclusion,
     matchedExclusion: object.matched_exclusion,
