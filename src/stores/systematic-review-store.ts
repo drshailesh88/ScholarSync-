@@ -241,6 +241,7 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
         activeTab: state.activeTab,
         reviewStage: state.reviewStage,
         pico: state.pico,
+        criteria: state.criteria,
       }),
     }
   )

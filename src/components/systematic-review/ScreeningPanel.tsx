@@ -20,6 +20,7 @@ import {
   GitBranch,
   CheckSquare,
   FileText,
+  FloppyDisk,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
@@ -159,6 +160,10 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   const [unblindedData, setUnblindedData] = useState<UnblindedData | null>(null);
   const [isUnblinding, setIsUnblinding] = useState(false);
 
+  // Save/load criteria state
+  const [isSavingCriteria, setIsSavingCriteria] = useState(false);
+  const [criteriaLastSaved, setCriteriaLastSaved] = useState<Date | null>(null);
+
   // PDF screening viewer state
   const [pdfViewerPaper, setPdfViewerPaper] = useState<ScreeningPaper | null>(
     null
@@ -195,6 +200,22 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
   useEffect(() => {
     loadQueue();
   }, [loadQueue]);
+
+  // Load criteria from DB on mount
+  useEffect(() => {
+    if (!projectId) return;
+    fetch(`/api/systematic-review/screening-criteria?projectId=${projectId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.criteria?.length > 0) {
+          setCriteria(data.criteria);
+          setCriteriaLastSaved(new Date());
+        }
+      })
+      .catch(() => {
+        // Silently fall back to Zustand state
+      });
+  }, [projectId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Load multi-reviewer conflicts
   const loadConflicts = useCallback(async () => {
@@ -499,6 +520,25 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
     );
   };
 
+  const saveCriteria = async () => {
+    if (!projectId) return;
+    setIsSavingCriteria(true);
+    try {
+      const res = await fetch("/api/systematic-review/screening-criteria", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ projectId, criteria }),
+      });
+      if (res.ok) {
+        setCriteriaLastSaved(new Date());
+      }
+    } catch {
+      // Could add toast notification here
+    } finally {
+      setIsSavingCriteria(false);
+    }
+  };
+
   const _activePaper = queue[activeIndex];
 
   return (
@@ -768,6 +808,26 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         >
           <Plus size={14} /> Add Criterion
         </button>
+
+        <div className="mt-4 flex items-center gap-3">
+          <button
+            onClick={saveCriteria}
+            disabled={isSavingCriteria || criteria.length === 0}
+            className="px-4 py-2 bg-brand text-white rounded text-sm font-medium hover:bg-brand/90 disabled:opacity-50 flex items-center gap-2"
+          >
+            {isSavingCriteria ? (
+              <CircleNotch weight="bold" className="animate-spin" size={16} />
+            ) : (
+              <FloppyDisk weight="fill" size={16} />
+            )}
+            {isSavingCriteria ? "Saving..." : "Save Criteria"}
+          </button>
+          {criteriaLastSaved && (
+            <span className="text-xs text-ink-muted">
+              Last saved: {criteriaLastSaved.toLocaleTimeString()}
+            </span>
+          )}
+        </div>
       </GlassPanel>
 
       {/* View Mode Tabs + Action Bar */}
