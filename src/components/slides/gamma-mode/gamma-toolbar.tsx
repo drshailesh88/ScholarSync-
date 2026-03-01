@@ -14,7 +14,9 @@ import {
   CaretDown,
   Palette,
   Sparkle,
+  CircleNotch,
 } from "@phosphor-icons/react";
+import { exportDeck, type ExportFormat } from "./export-deck";
 
 // ---------------------------------------------------------------------------
 // Save status indicator dot
@@ -92,10 +94,13 @@ export function GammaToolbar() {
   const agentPanelOpen = useSlidesStore((s) => s.agentPanelOpen);
   const setAgentPanelOpen = useSlidesStore((s) => s.setAgentPanelOpen);
 
+  const themeConfig = useSlidesStore((s) => s.themeConfig);
+
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(title);
   const [themeOpen, setThemeOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
+  const [exporting, setExporting] = useState<ExportFormat | null>(null);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -112,6 +117,20 @@ export function GammaToolbar() {
     const trimmed = titleDraft.trim();
     if (trimmed && trimmed !== title) {
       setTitle(trimmed);
+    }
+  }
+
+  async function handleExport(format: ExportFormat) {
+    if (exporting) return; // prevent double-click
+    setExporting(format);
+    setExportOpen(false);
+    try {
+      await exportDeck({ format, slides, title, themeConfig });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Export failed";
+      alert(msg);
+    } finally {
+      setExporting(null);
     }
   }
 
@@ -182,14 +201,23 @@ export function GammaToolbar() {
       <div className="relative">
         <button
           onClick={() => {
-            setExportOpen(!exportOpen);
-            setThemeOpen(false);
+            if (!exporting) {
+              setExportOpen(!exportOpen);
+              setThemeOpen(false);
+            }
           }}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink hover:bg-surface-raised border border-border transition-colors"
+          disabled={!!exporting}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink hover:bg-surface-raised border border-border transition-colors disabled:opacity-50"
         >
-          <Export size={14} />
-          <span className="hidden sm:inline">Export</span>
-          <CaretDown size={10} />
+          {exporting ? (
+            <CircleNotch size={14} className="animate-spin" />
+          ) : (
+            <Export size={14} />
+          )}
+          <span className="hidden sm:inline">
+            {exporting ? "Exporting..." : "Export"}
+          </span>
+          {!exporting && <CaretDown size={10} />}
         </button>
         <Dropdown
           open={exportOpen}
@@ -198,24 +226,28 @@ export function GammaToolbar() {
         >
           <div className="py-1">
             <button
-              onClick={() => {
-                console.log("[Export] PPTX export — placeholder (Task 20)");
-                setExportOpen(false);
-              }}
-              className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+              onClick={() => handleExport("pptx")}
+              disabled={!!exporting}
+              className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors disabled:opacity-50"
             >
-              <MicrosoftPowerpointLogo size={16} />
-              Export PPTX
+              {exporting === "pptx" ? (
+                <CircleNotch size={16} className="animate-spin" />
+              ) : (
+                <MicrosoftPowerpointLogo size={16} />
+              )}
+              {exporting === "pptx" ? "Exporting..." : "Export PPTX"}
             </button>
             <button
-              onClick={() => {
-                console.log("[Export] PDF export — placeholder (Task 20)");
-                setExportOpen(false);
-              }}
-              className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+              onClick={() => handleExport("pdf")}
+              disabled={!!exporting}
+              className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors disabled:opacity-50"
             >
-              <FilePdf size={16} />
-              Export PDF
+              {exporting === "pdf" ? (
+                <CircleNotch size={16} className="animate-spin" />
+              ) : (
+                <FilePdf size={16} />
+              )}
+              {exporting === "pdf" ? "Exporting..." : "Export PDF"}
             </button>
           </div>
         </Dropdown>
