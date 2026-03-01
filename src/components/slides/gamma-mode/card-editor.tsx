@@ -9,6 +9,7 @@ import {
   EditableTextBlock,
   EditableBulletsBlock,
 } from "@/components/slides/wysiwyg/editable-text-block";
+import { AddBlockButton } from "./add-block-button";
 
 // ---------------------------------------------------------------------------
 // CardEditor — Makes each card's content inline-editable when active
@@ -136,6 +137,16 @@ export function CardEditor({ slide, isActive }: CardEditorProps) {
           />
         ))}
       </div>
+
+      {/* Add block button for active cards */}
+      {isActive && (
+        <AddBlockButton
+          onAddBlock={(block) => {
+            const newBlocks = [...slide.contentBlocks, block];
+            updateSlide(slide.id, { contentBlocks: newBlocks });
+          }}
+        />
+      )}
 
       {/* Empty state for active card with no content */}
       {isActive && slide.contentBlocks.length === 0 && (
