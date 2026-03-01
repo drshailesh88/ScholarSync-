@@ -2,6 +2,7 @@
 
 import { useSlidesStore } from "@/stores/slides-store";
 import { ModeSelector } from "../mode-selector";
+import { CardStack } from "./card-stack";
 
 export function GammaModeLayout() {
   const mode = useSlidesStore((s) => s.mode);
@@ -33,9 +34,9 @@ export function GammaModeLayout() {
           <p className="text-xs text-ink-muted">Card outline (TODO)</p>
         </div>
 
-        {/* Center — scrollable card stack (Task 3) */}
+        {/* Center — scrollable card stack */}
         <div className="flex-1 overflow-y-auto bg-surface-raised/30">
-          <p className="text-sm text-ink-muted text-center py-20">Card stack (TODO)</p>
+          <CardStack />
         </div>
 
         {/* Right panel — AI agent (Phase 2) */}
