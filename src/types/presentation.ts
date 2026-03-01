@@ -91,6 +91,13 @@ export interface TimelineData {
   title?: string;
 }
 
+/** Toggle/accordion block for expandable content sections */
+export interface ToggleData {
+  title: string;
+  content: string; // HTML content inside the toggle
+  defaultOpen?: boolean;
+}
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
   type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
@@ -133,7 +140,8 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "stat_result"; data: StatResultData })
   | (ContentBlockBase & { type: "bibliography"; data: BibliographyData })
   | (ContentBlockBase & { type: "timeline"; data: TimelineData })
-  | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } });
+  | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } })
+  | (ContentBlockBase & { type: "toggle"; data: ToggleData });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)

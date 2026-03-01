@@ -14,6 +14,7 @@ import { BibliographyBlock } from "./bibliography-block";
 import { TimelineBlock } from "./timeline-block";
 import { QuoteBlock } from "./quote-block";
 import { DividerBlock } from "./divider-block";
+import { ToggleBlock } from "../gamma-mode/blocks/toggle-block";
 
 // ---------------------------------------------------------------------------
 // Block Registry — maps each content block type to its renderer + metadata
@@ -150,6 +151,13 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     label: "Divider",
     iconName: "Minus",
     defaultData: () => ({ style: "solid" }),
+    category: "content",
+  },
+  toggle: {
+    render: ToggleBlock as any,
+    label: "Toggle",
+    iconName: "CaretCircleDown",
+    defaultData: () => ({ title: "Click to expand", content: "Hidden content goes here", defaultOpen: false }),
     category: "content",
   },
 };
