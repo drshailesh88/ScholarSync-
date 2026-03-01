@@ -28,6 +28,7 @@ export function SlidesModeLayout() {
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const audienceType = useSlidesStore((s) => s.audienceType);
   const rightPanel = useSlidesStore((s) => s.rightPanel);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
   const setActiveSlide = useSlidesStore((s) => s.setActiveSlide);
   const loadDeck = useSlidesStore((s) => s.loadDeck);
 
@@ -37,6 +38,7 @@ export function SlidesModeLayout() {
     return {
       title: title ?? "Presentation",
       themeConfig: themeConfig ?? PRESET_THEMES[themeKey],
+      ...(institutionKit && { institutionKit }),
       slides: slides.map((s) => ({
         title: s.title ?? "",
         subtitle: s.subtitle ?? "",

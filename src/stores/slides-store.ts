@@ -4,6 +4,7 @@ import type {
   SlideLayout,
   ThemeConfig,
   AudienceType,
+  InstitutionKit,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 import {
@@ -71,6 +72,10 @@ export interface SlidesStore {
   themeKey: string;
   themeConfig: ThemeConfig;
 
+  // Branding
+  institutionKit: Partial<InstitutionKit> | null;
+  setInstitutionKit: (kit: Partial<InstitutionKit> | null) => void;
+
   // Slides
   slides: SlideState[];
   activeSlideId: number | null;
@@ -90,6 +95,10 @@ export interface SlidesStore {
   // Agent
   agentMode: AgentMode;
   setAgentMode: (mode: AgentMode) => void;
+
+  // Presentation settings
+  transition: "none" | "fade" | "slide" | "zoom";
+  setTransition: (t: "none" | "fade" | "slide" | "zoom") => void;
 
   // UI state
   isPresenting: boolean;
@@ -173,6 +182,10 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   themeKey: "modern",
   themeConfig: PRESET_THEMES.modern,
 
+  // Branding
+  institutionKit: null,
+  setInstitutionKit: (institutionKit) => set({ institutionKit }),
+
   // Slides
   slides: [],
   activeSlideId: null,
@@ -192,6 +205,10 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Agent
   agentMode: "draft",
   setAgentMode: (agentMode) => set({ agentMode }),
+
+  // Presentation settings
+  transition: "fade",
+  setTransition: (transition) => set({ transition }),
 
   // UI
   isPresenting: false,

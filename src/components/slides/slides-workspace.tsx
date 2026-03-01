@@ -32,6 +32,7 @@ export function SlidesWorkspace({ deckId }: SlidesWorkspaceProps) {
   const activeSlideId = useSlidesStore((s) => s.activeSlideId);
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
+  const transition = useSlidesStore((s) => s.transition);
 
   useEffect(() => {
     let cancelled = false;
@@ -129,6 +130,7 @@ export function SlidesWorkspace({ deckId }: SlidesWorkspaceProps) {
               onExit={() => setIsPresenting(false)}
               themeKey={themeKey}
               themeConfig={themeConfig}
+              transition={transition}
             />
           </Suspense>
         )}

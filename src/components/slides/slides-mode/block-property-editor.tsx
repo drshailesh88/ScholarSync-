@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData } from "@/types/presentation";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -50,6 +50,12 @@ export function BlockPropertyEditor() {
       return <DividerEditor block={selectedBlock} onUpdate={onUpdate} />;
     case "bibliography":
       return <BibliographyEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "embed":
+      return <EmbedEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "toggle":
+      return <ToggleEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "nested_card":
+      return <NestedCardEditor block={selectedBlock} onUpdate={onUpdate} />;
     default:
       return (
         <div className="px-3 py-4 text-xs text-ink-muted">
@@ -991,6 +997,146 @@ function BibliographyEditor({ block, onUpdate }: { block: BibliographyBlock; onU
         >
           <Plus size={12} /> Add Reference
         </button>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Embed Block Editor
+// ---------------------------------------------------------------------------
+
+type EmbedBlock = ContentBlock & { type: "embed"; data: EmbedData };
+
+const EMBED_TYPES: { value: string; label: string }[] = [
+  { value: "youtube", label: "YouTube" },
+  { value: "vimeo", label: "Vimeo" },
+  { value: "figma", label: "Figma" },
+  { value: "google_sheets", label: "Google Sheets" },
+  { value: "google_docs", label: "Google Docs" },
+  { value: "twitter", label: "Twitter" },
+  { value: "generic", label: "Generic" },
+];
+
+function EmbedEditor({ block, onUpdate }: { block: EmbedBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<EmbedData>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Embed">
+        <div>
+          <FieldLabel>URL</FieldLabel>
+          <FieldInput
+            value={data.url ?? ""}
+            onChange={(v) => update({ url: v })}
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
+        </div>
+        <div>
+          <FieldLabel>Embed Type</FieldLabel>
+          <FieldSelect
+            value={data.embedType ?? "generic"}
+            onChange={(v) => update({ embedType: v as EmbedData["embedType"] })}
+            options={EMBED_TYPES}
+          />
+        </div>
+        <div>
+          <FieldLabel>Title</FieldLabel>
+          <FieldInput
+            value={data.title ?? ""}
+            onChange={(v) => update({ title: v })}
+            placeholder="Optional title"
+          />
+        </div>
+        <div>
+          <FieldLabel>Aspect Ratio</FieldLabel>
+          <FieldSelect
+            value={data.aspectRatio ?? "16:9"}
+            onChange={(v) => update({ aspectRatio: v as EmbedData["aspectRatio"] })}
+            options={[
+              { value: "16:9", label: "16:9 (Widescreen)" },
+              { value: "4:3", label: "4:3 (Standard)" },
+              { value: "1:1", label: "1:1 (Square)" },
+            ]}
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Toggle Block Editor
+// ---------------------------------------------------------------------------
+
+type ToggleBlock = ContentBlock & { type: "toggle"; data: ToggleData };
+
+function ToggleEditor({ block, onUpdate }: { block: ToggleBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<ToggleData>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Toggle / Accordion">
+        <div>
+          <FieldLabel>Header</FieldLabel>
+          <FieldInput
+            value={data.title ?? ""}
+            onChange={(v) => update({ title: v })}
+            placeholder="Toggle header text"
+          />
+        </div>
+        <div>
+          <FieldLabel>Content</FieldLabel>
+          <FieldTextarea
+            value={data.content ?? ""}
+            onChange={(v) => update({ content: v })}
+            placeholder="Content shown when expanded"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={data.defaultOpen ?? false}
+            onChange={(e) => update({ defaultOpen: e.target.checked })}
+            className="rounded border-border"
+          />
+          <span className="text-xs text-ink-muted">Open by default</span>
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Nested Card Block Editor
+// ---------------------------------------------------------------------------
+
+type NestedCardBlock = ContentBlock & { type: "nested_card"; data: NestedCardData };
+
+function NestedCardEditor({ block, onUpdate }: { block: NestedCardBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Nested Card">
+        <div>
+          <FieldLabel>Title</FieldLabel>
+          <FieldInput
+            value={data.title ?? ""}
+            onChange={(v) => onUpdate({ ...block, data: { ...data, title: v } })}
+            placeholder="Sub-section title"
+          />
+        </div>
+        <div className="text-[10px] text-ink-muted">
+          Contains {data.contentBlocks?.length ?? 0} inner block(s).
+          Edit inner blocks by clicking on them in the canvas.
+        </div>
       </EditorSection>
     </div>
   );
