@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 // ---------------------------------------------------------------------------
 // Hoisted mocks
@@ -49,6 +49,9 @@ function resetStore() {
     _saveTimer: null,
     _undoStack: [],
     _redoStack: [],
+    _undoTimer: null,
+    _pendingUndoBefore: null,
+    _pendingUndoSlideId: null,
   });
 }
 
@@ -403,13 +406,21 @@ describe("slides-store", () => {
   // -----------------------------------------------------------------------
   describe("undo / redo", () => {
     beforeEach(() => {
+      vi.useFakeTimers();
       useSlidesStore.setState({
         deckId: 1,
         slides: [mockSlide, mockSlide2],
         activeSlideId: 1,
         _undoStack: [],
         _redoStack: [],
+        _pendingUndoBefore: null,
+        _pendingUndoSlideId: null,
+        _undoTimer: null,
       });
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
     });
 
     it("starts with empty undo/redo stacks", () => {
@@ -417,17 +428,36 @@ describe("slides-store", () => {
       expect(useSlidesStore.getState().canRedo()).toBe(false);
     });
 
-    it("updateSlide pushes to undo stack", () => {
+    it("updateSlide marks canUndo immediately (pending entry)", () => {
       useSlidesStore.getState().updateSlide(1, { title: "New Title" });
+      // Before the debounce timer fires, canUndo is true via pending entry
       expect(useSlidesStore.getState().canUndo()).toBe(true);
+      expect(useSlidesStore.getState()._pendingUndoBefore).toEqual({ title: "Test Slide" });
+    });
+
+    it("debounce flushes pending entry to stack after 500ms", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "New Title" });
+      expect(useSlidesStore.getState()._undoStack).toHaveLength(0);
+      vi.advanceTimersByTime(500);
       expect(useSlidesStore.getState()._undoStack).toHaveLength(1);
       expect(useSlidesStore.getState()._undoStack[0].before).toEqual({ title: "Test Slide" });
     });
 
-    it("undo reverts the last change", () => {
+    it("rapid edits to same slide coalesce into one undo entry", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "V1" });
+      useSlidesStore.getState().updateSlide(1, { title: "V2" });
+      useSlidesStore.getState().updateSlide(1, { title: "V3" });
+      vi.advanceTimersByTime(500);
+      // All 3 coalesce — undo entry captures state BEFORE the first edit
+      expect(useSlidesStore.getState()._undoStack).toHaveLength(1);
+      expect(useSlidesStore.getState()._undoStack[0].before).toEqual({ title: "Test Slide" });
+    });
+
+    it("undo reverts the last change (flushes pending first)", () => {
       useSlidesStore.getState().updateSlide(1, { title: "Changed" });
       expect(useSlidesStore.getState().slides[0].title).toBe("Changed");
 
+      // Undo flushes the pending entry then applies it
       useSlidesStore.getState().undo();
       expect(useSlidesStore.getState().slides[0].title).toBe("Test Slide");
       expect(useSlidesStore.getState().canUndo()).toBe(false);
@@ -452,16 +482,23 @@ describe("slides-store", () => {
       expect(useSlidesStore.getState().canRedo()).toBe(false);
     });
 
-    it("multiple undos work in sequence", () => {
-      useSlidesStore.getState().updateSlide(1, { title: "V1" });
-      useSlidesStore.getState().updateSlide(1, { title: "V2" });
-      useSlidesStore.getState().updateSlide(1, { title: "V3" });
-      expect(useSlidesStore.getState()._undoStack).toHaveLength(3);
+    it("edits on different slides create separate undo entries", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "S1 edit" });
+      // Switching to a different slide flushes the pending entry for slide 1
+      useSlidesStore.getState().updateSlide(2, { title: "S2 edit" });
+      vi.advanceTimersByTime(500);
+      expect(useSlidesStore.getState()._undoStack).toHaveLength(2);
+      expect(useSlidesStore.getState()._undoStack[0].slideId).toBe(1);
+      expect(useSlidesStore.getState()._undoStack[1].slideId).toBe(2);
+    });
+
+    it("multiple undos across slides work in sequence", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "S1 changed" });
+      useSlidesStore.getState().updateSlide(2, { title: "S2 changed" });
+      vi.advanceTimersByTime(500);
 
       useSlidesStore.getState().undo();
-      expect(useSlidesStore.getState().slides[0].title).toBe("V2");
-      useSlidesStore.getState().undo();
-      expect(useSlidesStore.getState().slides[0].title).toBe("V1");
+      expect(useSlidesStore.getState().slides[1].title).toBe("Second Slide");
       useSlidesStore.getState().undo();
       expect(useSlidesStore.getState().slides[0].title).toBe("Test Slide");
     });

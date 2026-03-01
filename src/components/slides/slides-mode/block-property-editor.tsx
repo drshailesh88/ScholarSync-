@@ -449,12 +449,14 @@ type ImageBlock = Extract<ContentBlock, { type: "image" }>;
 function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: ContentBlock) => void }) {
   const data = block.data;
   const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
   const update = (partial: Partial<typeof data>) => {
     onUpdate({ ...block, data: { ...data, ...partial } });
   };
 
   const handleFileUpload = async (file: File) => {
+    if (!file.type.startsWith("image/")) return;
     setUploading(true);
     try {
       const formData = new FormData();
@@ -470,12 +472,36 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileUpload(file);
+  };
+
   return (
     <div className="space-y-3">
       <EditorSection title="Image">
-        {/* Upload area */}
+        {/* Upload area — click or drag-and-drop */}
         <div
-          className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-brand transition-colors cursor-pointer"
+          className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
+            dragOver
+              ? "border-brand bg-brand/5"
+              : "border-border hover:border-brand"
+          }`}
           onClick={() => {
             const input = document.createElement("input");
             input.type = "file";
@@ -486,6 +512,10 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
             };
             input.click();
           }}
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
         >
           {data.url ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -494,10 +524,12 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
             <div className="space-y-1">
               {uploading ? (
                 <p className="text-xs text-ink-muted">Uploading...</p>
+              ) : dragOver ? (
+                <p className="text-xs text-brand font-medium">Drop image here</p>
               ) : (
                 <>
                   <Upload size={24} className="mx-auto text-ink-muted" />
-                  <p className="text-xs text-ink-muted">Click to upload an image</p>
+                  <p className="text-xs text-ink-muted">Click or drag an image here</p>
                 </>
               )}
             </div>

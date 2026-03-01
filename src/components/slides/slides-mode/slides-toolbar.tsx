@@ -46,6 +46,10 @@ export function SlidesToolbar({
   const saveStatus = useSlidesStore((s) => s.saveStatus);
   const activeSlide = useSlidesStore((s) => s.getActiveSlide());
   const updateSlide = useSlidesStore((s) => s.updateSlide);
+  const undo = useSlidesStore((s) => s.undo);
+  const redo = useSlidesStore((s) => s.redo);
+  const undoAvailable = useSlidesStore((s) => s._undoStack.length > 0 || s._pendingUndoBefore !== null);
+  const redoAvailable = useSlidesStore((s) => s._redoStack.length > 0);
   const [showInsertMenu, setShowInsertMenu] = useState(false);
 
   function togglePanel(panel: RightPanel) {
@@ -109,16 +113,16 @@ export function SlidesToolbar({
       {/* Undo/Redo */}
       <div className="flex items-center gap-0.5">
         <button
-          onClick={() => useSlidesStore.getState().undo()}
-          disabled={!useSlidesStore.getState().canUndo()}
+          onClick={undo}
+          disabled={!undoAvailable}
           className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           title="Undo (Ctrl+Z)"
         >
           <ArrowUUpLeft size={14} />
         </button>
         <button
-          onClick={() => useSlidesStore.getState().redo()}
-          disabled={!useSlidesStore.getState().canRedo()}
+          onClick={redo}
+          disabled={!redoAvailable}
           className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           title="Redo (Ctrl+Y)"
         >

@@ -126,6 +126,9 @@ export interface SlidesStore {
   _undoStack: UndoEntry[];
   _redoStack: UndoEntry[];
   _pushUndo: (slideId: number, before: Partial<SlideState>) => void;
+  _undoTimer: ReturnType<typeof setTimeout> | null;
+  _pendingUndoBefore: Partial<SlideState> | null;
+  _pendingUndoSlideId: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -189,14 +192,61 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Undo / Redo stacks
   _undoStack: [],
   _redoStack: [],
+  _undoTimer: null,
+  _pendingUndoBefore: null,
+  _pendingUndoSlideId: null,
   _pushUndo: (slideId, before) => {
-    set((state) => ({
-      _undoStack: [
-        ...state._undoStack.slice(-(MAX_UNDO_HISTORY - 1)),
-        { slideId, before },
-      ],
-      _redoStack: [], // Clear redo on new action
-    }));
+    const state = get();
+
+    // If we're already coalescing changes for this slide, keep the
+    // *original* before-state (the one captured before the first keystroke)
+    // and just extend the debounce window.
+    if (state._pendingUndoSlideId === slideId && state._pendingUndoBefore !== null) {
+      // Merge any NEW keys from `before` that weren't in the pending snapshot.
+      // This handles the case where an earlier call captured `{ title }` and a
+      // later call in the same burst also touches `{ subtitle }`.
+      const merged = { ...state._pendingUndoBefore };
+      for (const key of Object.keys(before) as (keyof SlideState)[]) {
+        if (!(key in merged)) {
+          (merged as Record<string, unknown>)[key] = (before as Record<string, unknown>)[key];
+        }
+      }
+      set({ _pendingUndoBefore: merged });
+    } else {
+      // Flush any previous pending entry for a *different* slide
+      if (state._pendingUndoBefore !== null && state._pendingUndoSlideId !== null) {
+        set((s) => ({
+          _undoStack: [
+            ...s._undoStack.slice(-(MAX_UNDO_HISTORY - 1)),
+            { slideId: state._pendingUndoSlideId!, before: state._pendingUndoBefore! },
+          ],
+        }));
+      }
+      // Start a new pending entry
+      set({ _pendingUndoBefore: before, _pendingUndoSlideId: slideId });
+    }
+
+    // Clear redo on any new action
+    set({ _redoStack: [] });
+
+    // Reset the debounce timer — flush after 500ms of inactivity
+    const timer = get()._undoTimer;
+    if (timer) clearTimeout(timer);
+    const newTimer = setTimeout(() => {
+      const s = get();
+      if (s._pendingUndoBefore !== null && s._pendingUndoSlideId !== null) {
+        set((prev) => ({
+          _undoStack: [
+            ...prev._undoStack.slice(-(MAX_UNDO_HISTORY - 1)),
+            { slideId: s._pendingUndoSlideId!, before: s._pendingUndoBefore! },
+          ],
+          _pendingUndoBefore: null,
+          _pendingUndoSlideId: null,
+          _undoTimer: null,
+        }));
+      }
+    }, 500);
+    set({ _undoTimer: newTimer });
   },
 
   // Computed
@@ -405,6 +455,23 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
 
   // Undo / Redo
   undo: () => {
+    // Flush any pending debounced entry first
+    const pending = get()._pendingUndoBefore;
+    const pendingSlide = get()._pendingUndoSlideId;
+    const undoTimer = get()._undoTimer;
+    if (pending !== null && pendingSlide !== null) {
+      if (undoTimer) clearTimeout(undoTimer);
+      set((s) => ({
+        _undoStack: [
+          ...s._undoStack.slice(-(MAX_UNDO_HISTORY - 1)),
+          { slideId: pendingSlide, before: pending },
+        ],
+        _pendingUndoBefore: null,
+        _pendingUndoSlideId: null,
+        _undoTimer: null,
+      }));
+    }
+
     const stack = get()._undoStack;
     if (stack.length === 0) return;
     const entry = stack[stack.length - 1];
@@ -429,6 +496,23 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   },
 
   redo: () => {
+    // Flush any pending debounced entry first
+    const pending = get()._pendingUndoBefore;
+    const pendingSlide = get()._pendingUndoSlideId;
+    const undoTimerR = get()._undoTimer;
+    if (pending !== null && pendingSlide !== null) {
+      if (undoTimerR) clearTimeout(undoTimerR);
+      set((s) => ({
+        _undoStack: [
+          ...s._undoStack.slice(-(MAX_UNDO_HISTORY - 1)),
+          { slideId: pendingSlide, before: pending },
+        ],
+        _pendingUndoBefore: null,
+        _pendingUndoSlideId: null,
+        _undoTimer: null,
+      }));
+    }
+
     const stack = get()._redoStack;
     if (stack.length === 0) return;
     const entry = stack[stack.length - 1];
@@ -451,7 +535,7 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
     get()._debouncedSave(entry.slideId, entry.before);
   },
 
-  canUndo: () => get()._undoStack.length > 0,
+  canUndo: () => get()._undoStack.length > 0 || get()._pendingUndoBefore !== null,
   canRedo: () => get()._redoStack.length > 0,
 
   replaceAllSlides: (slides) => {
