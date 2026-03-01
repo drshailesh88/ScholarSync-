@@ -14,6 +14,7 @@ import {
   SpeakerHigh,
   Clock,
   Flashlight,
+  PencilSimple,
 } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -27,6 +28,7 @@ interface PresenterControlsProps {
   isTimerRunning: boolean;
   showNotes: boolean;
   spotlightActive?: boolean;
+  editActive?: boolean;
   onPrevious: () => void;
   onNext: () => void;
   onToggleTimer: () => void;
@@ -34,6 +36,7 @@ interface PresenterControlsProps {
   onToggleGrid: () => void;
   onToggleFullscreen: () => void;
   onToggleSpotlight?: () => void;
+  onToggleEdit?: () => void;
   onExit: () => void;
 }
 
@@ -80,6 +83,7 @@ export function PresenterControls({
   isTimerRunning,
   showNotes,
   spotlightActive = false,
+  editActive = false,
   onPrevious,
   onNext,
   onToggleTimer,
@@ -87,6 +91,7 @@ export function PresenterControls({
   onToggleGrid,
   onToggleFullscreen,
   onToggleSpotlight,
+  onToggleEdit,
   onExit,
 }: PresenterControlsProps) {
   const visible = useAutoHide(3000);
@@ -184,6 +189,18 @@ export function PresenterControls({
                 aria-label="Toggle spotlight mode"
               >
                 <Flashlight weight="bold" className="w-4 h-4" />
+              </ControlButton>
+            )}
+
+            {/* Quick Edit Toggle */}
+            {onToggleEdit && (
+              <ControlButton
+                onClick={onToggleEdit}
+                active={editActive}
+                tooltip="Quick Edit (E)"
+                aria-label="Toggle quick edit"
+              >
+                <PencilSimple weight="bold" className="w-4 h-4" />
               </ControlButton>
             )}
 

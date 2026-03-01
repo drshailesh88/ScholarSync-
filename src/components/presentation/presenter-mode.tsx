@@ -13,6 +13,7 @@ import {
   Pause,
   Play,
   SpeakerHigh,
+  Check,
 } from "@phosphor-icons/react";
 import { SpotlightBlockWrapper } from "@/components/slides/gamma-mode/spotlight-wrapper";
 
@@ -37,6 +38,14 @@ interface PresenterModeProps {
   transition?: "none" | "fade" | "slide" | "zoom";
   showPresenterView?: boolean;
   onExit: () => void;
+  onSlideUpdate?: (
+    slideId: number,
+    changes: {
+      title?: string;
+      subtitle?: string;
+      contentBlocks?: ContentBlock[];
+    }
+  ) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -168,6 +177,7 @@ export function PresenterMode({
   transition = "fade",
   showPresenterView = false,
   onExit,
+  onSlideUpdate,
 }: PresenterModeProps) {
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
   const totalSlides = slides.length;
@@ -181,10 +191,66 @@ export function PresenterMode({
   const [showNotes, setShowNotes] = useState(showPresenterView);
   const [spotlightActive, setSpotlightActive] = useState(false);
   const [spotlightIndex, setSpotlightIndex] = useState(0);
+  const [editMode, setEditMode] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editSubtitle, setEditSubtitle] = useState("");
+  const [editContent, setEditContent] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
 
   const timer = useTimer();
+
+  // Quick-edit helpers
+  const enterEditMode = useCallback(() => {
+    const slide = slides[currentIndex];
+    if (!slide) return;
+    setEditTitle(slide.title ?? "");
+    setEditSubtitle(slide.subtitle ?? "");
+    // Find the first text or bullets block for inline editing
+    const firstTextBlock = slide.contentBlocks.find(
+      (b) => b.type === "text" || b.type === "bullets"
+    );
+    if (firstTextBlock) {
+      if (firstTextBlock.type === "text") {
+        setEditContent(firstTextBlock.data.text);
+      } else if (firstTextBlock.type === "bullets") {
+        setEditContent(firstTextBlock.data.items.join("\n"));
+      }
+    } else {
+      setEditContent("");
+    }
+    setEditMode(true);
+  }, [slides, currentIndex]);
+
+  const commitEdit = useCallback(() => {
+    const slide = slides[currentIndex];
+    if (!slide || !onSlideUpdate) {
+      setEditMode(false);
+      return;
+    }
+    const updatedBlocks = slide.contentBlocks.map((block) => {
+      // Update the first text/bullets block we find
+      if (block.type === "text") {
+        return { ...block, data: { ...block.data, text: editContent } };
+      }
+      if (block.type === "bullets") {
+        return {
+          ...block,
+          data: {
+            ...block.data,
+            items: editContent.split("\n").filter((l) => l.length > 0),
+          },
+        };
+      }
+      return block;
+    });
+    onSlideUpdate(slide.id, {
+      title: editTitle || undefined,
+      subtitle: editSubtitle || undefined,
+      contentBlocks: updatedBlocks as ContentBlock[],
+    });
+    setEditMode(false);
+  }, [slides, currentIndex, editTitle, editSubtitle, editContent, onSlideUpdate]);
 
   // Navigation
   const goToSlide = useCallback(
@@ -238,7 +304,9 @@ export function PresenterMode({
           break;
         case "Escape":
           e.preventDefault();
-          if (showGrid) {
+          if (editMode) {
+            setEditMode(false);
+          } else if (showGrid) {
             setShowGrid(false);
           } else {
             // Exit fullscreen first, then exit presenter mode
@@ -246,6 +314,13 @@ export function PresenterMode({
               document.exitFullscreen().catch(() => {});
             }
             onExit();
+          }
+          break;
+        case "e":
+        case "E":
+          if (!spotlightActive && !editMode) {
+            e.preventDefault();
+            enterEditMode();
           }
           break;
         case "g":
@@ -277,7 +352,7 @@ export function PresenterMode({
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [goNext, goPrev, goToSlide, onExit, showGrid, totalSlides]);
+  }, [goNext, goPrev, goToSlide, onExit, showGrid, editMode, spotlightActive, enterEditMode, totalSlides]);
 
   // Touch support
   const swipeHandlers = useSwipe(goNext, goPrev);
@@ -376,6 +451,90 @@ export function PresenterMode({
               )}
             </div>
           </motion.div>
+        </AnimatePresence>
+
+        {/* Quick-edit overlay */}
+        <AnimatePresence>
+          {editMode && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="absolute inset-x-0 bottom-0 z-50 p-4"
+            >
+              <div className="mx-auto max-w-2xl rounded-2xl bg-black/80 backdrop-blur-xl ring-1 ring-white/15 p-5 shadow-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">
+                    Quick Edit &mdash; Slide {currentIndex + 1}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setEditMode(false)}
+                      className="px-3 py-1.5 text-xs rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={commitEdit}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-500 text-white hover:bg-blue-400 transition-colors"
+                    >
+                      <Check weight="bold" className="w-3.5 h-3.5" />
+                      Done
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Title */}
+                  <div>
+                    <label className="block text-[10px] font-medium text-white/40 uppercase tracking-wider mb-1">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
+                      placeholder="Slide title..."
+                    />
+                  </div>
+
+                  {/* Subtitle */}
+                  <div>
+                    <label className="block text-[10px] font-medium text-white/40 uppercase tracking-wider mb-1">
+                      Subtitle
+                    </label>
+                    <input
+                      type="text"
+                      value={editSubtitle}
+                      onChange={(e) => setEditSubtitle(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
+                      placeholder="Slide subtitle..."
+                    />
+                  </div>
+
+                  {/* Content (first text/bullets block) */}
+                  {slides[currentIndex]?.contentBlocks.some(
+                    (b) => b.type === "text" || b.type === "bullets"
+                  ) && (
+                    <div>
+                      <label className="block text-[10px] font-medium text-white/40 uppercase tracking-wider mb-1">
+                        Content
+                      </label>
+                      <textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        rows={4}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none"
+                        placeholder="Content text (one bullet per line for bullet lists)..."
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 
@@ -576,12 +735,20 @@ export function PresenterMode({
         isTimerRunning={timer.running}
         showNotes={showNotes}
         spotlightActive={spotlightActive}
+        editActive={editMode}
         onPrevious={goPrev}
         onNext={goNext}
         onToggleTimer={timer.toggle}
         onToggleNotes={() => setShowNotes((v) => !v)}
         onToggleGrid={() => setShowGrid((v) => !v)}
         onToggleFullscreen={toggleFullscreen}
+        onToggleEdit={() => {
+          if (editMode) {
+            commitEdit();
+          } else {
+            enterEditMode();
+          }
+        }}
         onToggleSpotlight={() => {
           setSpotlightActive((v) => !v);
           setSpotlightIndex(0);
