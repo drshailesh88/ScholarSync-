@@ -100,7 +100,7 @@ export function SlidesWorkspace({ deckId }: SlidesWorkspaceProps) {
   return (
     <ThemeProvider theme={themeConfig}>
       <div className="h-screen flex flex-col bg-surface">
-        {/* Main workspace — Slides or Chat mode */}
+        {/* Main workspace — Slides or Create mode */}
         {mode === "slides" ? <SlidesModeLayout /> : <ChatModeLayout />}
 
         {/* Presenter mode overlay */}

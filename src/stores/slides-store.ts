@@ -29,7 +29,7 @@ export interface SlideState {
   speakerNotes: string;
 }
 
-export type WorkspaceMode = "slides" | "chat";
+export type WorkspaceMode = "slides" | "create";
 export type RightPanel =
   | "properties"
   | "agent"

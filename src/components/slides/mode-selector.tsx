@@ -27,18 +27,18 @@ export function ModeSelector({ mode, onModeChange }: ModeSelectorProps) {
         Slides
       </button>
       <button
-        onClick={() => onModeChange("chat")}
+        onClick={() => onModeChange("create")}
         className={cn(
           "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all",
-          mode === "chat"
+          mode === "create"
             ? "bg-brand text-white shadow-sm"
             : "text-ink-muted hover:text-ink"
         )}
       >
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 2h8a1 1 0 011 1v5a1 1 0 01-1 1H5l-2 2V9H2a1 1 0 01-1-1V3a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.2" />
+          <path d="M6 1l1.3 2.6L10 4.4l-2 1.9.5 2.7L6 7.8 3.5 9l.5-2.7-2-1.9 2.7-.8L6 1z" stroke="currentColor" strokeWidth="1.0" fill="none" />
         </svg>
-        Chat
+        Create
       </button>
     </div>
   );
@@ -80,23 +80,21 @@ export function ModeSelectionScreen({ onSelect }: { onSelect: (mode: WorkspaceMo
         </button>
 
         <button
-          onClick={() => onSelect("chat")}
+          onClick={() => onSelect("create")}
           className="group flex flex-col items-center gap-4 p-8 rounded-2xl border-2 border-border hover:border-brand bg-surface hover:bg-brand/5 transition-all w-64"
         >
           <div className="w-16 h-16 rounded-xl bg-brand/10 flex items-center justify-center group-hover:bg-brand/20 transition-colors">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <path d="M6 6h20a2 2 0 012 2v12a2 2 0 01-2 2H14l-5 4V22H6a2 2 0 01-2-2V8a2 2 0 012-2z" stroke="currentColor" strokeWidth="2" className="text-brand" />
-              <circle cx="11" cy="14" r="1.5" fill="currentColor" className="text-brand/40" />
-              <circle cx="16" cy="14" r="1.5" fill="currentColor" className="text-brand/40" />
-              <circle cx="21" cy="14" r="1.5" fill="currentColor" className="text-brand/40" />
+              <path d="M16 4l3.5 7 7.5 2.2-5.4 5.2 1.3 7.6L16 22.2 9.1 26l1.3-7.6L5 13.2l7.5-2.2L16 4z" stroke="currentColor" strokeWidth="2" fill="none" className="text-brand" />
+              <circle cx="16" cy="15" r="2" fill="currentColor" className="text-brand/40" />
             </svg>
           </div>
           <div className="text-center">
             <div className="text-sm font-semibold text-ink group-hover:text-brand transition-colors">
-              Chat Mode
+              Create Mode
             </div>
             <div className="text-xs text-ink-muted mt-1">
-              Describe and watch it build
+              AI builds it, you refine
             </div>
           </div>
         </button>

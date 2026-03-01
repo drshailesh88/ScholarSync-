@@ -106,8 +106,8 @@ describe("slides-store", () => {
   // -----------------------------------------------------------------------
   describe("mode management", () => {
     it("setMode changes workspace mode", () => {
-      useSlidesStore.getState().setMode("chat");
-      expect(useSlidesStore.getState().mode).toBe("chat");
+      useSlidesStore.getState().setMode("create");
+      expect(useSlidesStore.getState().mode).toBe("create");
     });
 
     it("setRightPanel changes right panel", () => {
