@@ -197,6 +197,9 @@ export function PresenterMode({
   const [editContent, setEditContent] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
+  const slideContentRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [hasOverflow, setHasOverflow] = useState(false);
 
   const timer = useTimer();
 
@@ -282,6 +285,44 @@ export function PresenterMode({
     notesRef.current?.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentIndex]);
 
+  // Track scroll position and overflow state for the slide content
+  useEffect(() => {
+    const el = slideContentRef.current;
+    if (!el) return;
+
+    const checkOverflow = () => {
+      const isOverflowing = el.scrollHeight > el.clientHeight + 2;
+      setHasOverflow(isOverflowing);
+      if (isOverflowing) {
+        const maxScroll = el.scrollHeight - el.clientHeight;
+        setScrollProgress(maxScroll > 0 ? el.scrollTop / maxScroll : 0);
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
+    const onScroll = () => {
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      setScrollProgress(maxScroll > 0 ? el.scrollTop / maxScroll : 0);
+    };
+
+    checkOverflow();
+    el.addEventListener("scroll", onScroll, { passive: true });
+
+    const observer = new ResizeObserver(checkOverflow);
+    observer.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      observer.disconnect();
+    };
+  }, [currentIndex]);
+
+  // Reset slide content scroll on slide change
+  useEffect(() => {
+    slideContentRef.current?.scrollTo({ top: 0 });
+  }, [currentIndex]);
+
   // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -301,6 +342,14 @@ export function PresenterMode({
         case "ArrowLeft":
           e.preventDefault();
           goPrev();
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          slideContentRef.current?.scrollBy({ top: -200, behavior: "smooth" });
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          slideContentRef.current?.scrollBy({ top: 200, behavior: "smooth" });
           break;
         case "Escape":
           e.preventDefault();
@@ -407,17 +456,36 @@ export function PresenterMode({
             className="w-full h-full flex items-center justify-center p-4"
           >
             <div className="relative w-full max-w-[calc(100vh*16/9)] aspect-video rounded-lg overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
-              <SlideRenderer
-                title={currentSlide?.title}
-                subtitle={currentSlide?.subtitle}
-                layout={currentSlide?.layout as SlideLayout}
-                contentBlocks={currentSlide?.contentBlocks ?? []}
-                themeKey={themeKey}
-                themeConfig={themeConfig}
-                showSlideNumber
-                slideNumber={currentIndex + 1}
-                scale={1.5}
-              />
+              <div
+                ref={slideContentRef}
+                className="absolute inset-0 overflow-y-auto scrollbar-none"
+              >
+                <SlideRenderer
+                  title={currentSlide?.title}
+                  subtitle={currentSlide?.subtitle}
+                  layout={currentSlide?.layout as SlideLayout}
+                  contentBlocks={currentSlide?.contentBlocks ?? []}
+                  themeKey={themeKey}
+                  themeConfig={themeConfig}
+                  showSlideNumber
+                  slideNumber={currentIndex + 1}
+                  scale={1.5}
+                />
+              </div>
+              {/* Scroll indicator — visible when content overflows */}
+              {hasOverflow && (
+                <div className="absolute right-1 top-2 bottom-2 w-1 z-20 pointer-events-none">
+                  <div className="relative h-full w-full rounded-full bg-white/10">
+                    <motion.div
+                      className="absolute w-full rounded-full bg-white/40"
+                      style={{ height: "20%" }}
+                      initial={false}
+                      animate={{ top: `${scrollProgress * 80}%` }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  </div>
+                </div>
+              )}
               {/* Spotlight overlay — dims blocks based on spotlight index */}
               {spotlightActive && (currentSlide?.contentBlocks?.length ?? 0) > 0 && (
                 <div className="absolute inset-0 z-10 pointer-events-none">
@@ -638,20 +706,31 @@ export function PresenterMode({
       </AnimatePresence>
 
       {/* ------------------------------------------------------------------ */}
-      {/* Progress bar                                                       */}
+      {/* Card progress bar                                                  */}
       {/* ------------------------------------------------------------------ */}
-      <div className="h-1 bg-white/5 shrink-0">
-        <motion.div
-          className="h-full rounded-r-full"
-          style={{
-            background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
-          }}
-          initial={false}
-          animate={{
-            width: `${((currentIndex + 1) / totalSlides) * 100}%`,
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        />
+      <div className="relative shrink-0">
+        {/* Card position label */}
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-t-md bg-black/60 backdrop-blur-sm">
+          <span className="text-[10px] font-medium text-white/60 tabular-nums">
+            Card{" "}
+            <span className="text-white/90 font-semibold">{currentIndex + 1}</span>
+            {" of "}
+            <span className="text-white/90">{totalSlides}</span>
+          </span>
+        </div>
+        <div className="h-[3px] bg-white/5">
+          <motion.div
+            className="h-full rounded-r-full"
+            style={{
+              background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
+            }}
+            initial={false}
+            animate={{
+              width: `${((currentIndex + 1) / totalSlides) * 100}%`,
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          />
+        </div>
       </div>
 
       {/* ------------------------------------------------------------------ */}
