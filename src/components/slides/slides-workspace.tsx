@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, lazy, Suspense } from "react";
 import Link from "next/link";
 import { useSlidesStore } from "@/stores/slides-store";
 import { SlidesModeLayout } from "./slides-mode/slides-mode-layout";
-import { ChatModeLayout } from "./chat-mode/chat-mode-layout";
+import { GammaModeLayout } from "./gamma-mode/gamma-mode-layout";
 import { ModeSelectionScreen } from "./mode-selector";
 import { ThemeProvider } from "./shared/theme-engine";
 
@@ -101,7 +101,7 @@ export function SlidesWorkspace({ deckId }: SlidesWorkspaceProps) {
     <ThemeProvider theme={themeConfig}>
       <div className="h-screen flex flex-col bg-surface">
         {/* Main workspace — Slides or Create mode */}
-        {mode === "slides" ? <SlidesModeLayout /> : <ChatModeLayout />}
+        {mode === "slides" ? <SlidesModeLayout /> : <GammaModeLayout />}
 
         {/* Presenter mode overlay */}
         {isPresenting && (
