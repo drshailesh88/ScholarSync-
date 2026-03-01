@@ -280,6 +280,51 @@ export function PresenterMode({
     }
   }, [currentIndex]);
 
+  // BroadcastChannel: sync slide index to audience windows
+  const channelRef = useRef<BroadcastChannel | null>(null);
+  useEffect(() => {
+    const channel = new BroadcastChannel("presenter-slide-sync");
+    channelRef.current = channel;
+
+    // When audience window connects, send it all slide data
+    channel.onmessage = (e) => {
+      if (e.data?.type === "audience-ready") {
+        channel.postMessage({
+          type: "init",
+          slides: slides.map((s) => ({
+            title: s.title ?? "",
+            subtitle: s.subtitle ?? "",
+            layout: s.layout,
+            contentBlocks: s.contentBlocks,
+          })),
+          themeKey,
+          themeConfig: theme,
+        });
+        // Also send current slide index
+        channel.postMessage({ type: "slide", index: currentIndex });
+      }
+    };
+
+    return () => {
+      channel.close();
+    };
+  }, [slides, themeKey, theme, currentIndex]);
+
+  // Broadcast current slide whenever it changes
+  useEffect(() => {
+    channelRef.current?.postMessage({ type: "slide", index: currentIndex });
+  }, [currentIndex]);
+
+  const openAudienceWindow = useCallback(() => {
+    const url = new URL(window.location.href);
+    url.pathname = "/presentation/audience";
+    window.open(
+      url.toString(),
+      "audience-view",
+      "width=1280,height=720,menubar=no,toolbar=no"
+    );
+  }, []);
+
   // Auto-scroll speaker notes when slide changes
   useEffect(() => {
     notesRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -396,12 +441,17 @@ export function PresenterMode({
           e.preventDefault();
           goToSlide(totalSlides - 1);
           break;
+        case "d":
+        case "D":
+          e.preventDefault();
+          openAudienceWindow();
+          break;
       }
     };
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [goNext, goPrev, goToSlide, onExit, showGrid, editMode, spotlightActive, enterEditMode, totalSlides]);
+  }, [goNext, goPrev, goToSlide, onExit, showGrid, editMode, spotlightActive, enterEditMode, totalSlides, openAudienceWindow]);
 
   // Touch support
   const swipeHandlers = useSwipe(goNext, goPrev);
@@ -832,6 +882,7 @@ export function PresenterMode({
           setSpotlightActive((v) => !v);
           setSpotlightIndex(0);
         }}
+        onOpenAudienceWindow={openAudienceWindow}
         onExit={() => {
           if (document.fullscreenElement) {
             document.exitFullscreen().catch(() => {});

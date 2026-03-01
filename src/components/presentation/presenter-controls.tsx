@@ -15,6 +15,7 @@ import {
   Clock,
   Flashlight,
   PencilSimple,
+  Monitor,
 } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -37,6 +38,7 @@ interface PresenterControlsProps {
   onToggleFullscreen: () => void;
   onToggleSpotlight?: () => void;
   onToggleEdit?: () => void;
+  onOpenAudienceWindow?: () => void;
   onExit: () => void;
 }
 
@@ -94,6 +96,7 @@ export function PresenterControls({
   onToggleFullscreen,
   onToggleSpotlight,
   onToggleEdit,
+  onOpenAudienceWindow,
   onExit,
 }: PresenterControlsProps) {
   const visible = useAutoHide(3000);
@@ -214,6 +217,17 @@ export function PresenterControls({
             >
               <GridFour weight="bold" className="w-4 h-4" />
             </ControlButton>
+
+            {/* Audience Window */}
+            {onOpenAudienceWindow && (
+              <ControlButton
+                onClick={onOpenAudienceWindow}
+                tooltip="Open Audience Window (D)"
+                aria-label="Open audience window"
+              >
+                <Monitor weight="bold" className="w-4 h-4" />
+              </ControlButton>
+            )}
 
             {/* Fullscreen Toggle */}
             <ControlButton
