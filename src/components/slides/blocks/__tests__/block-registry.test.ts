@@ -26,10 +26,13 @@ describe("block-registry", () => {
       "timeline",
       "quote",
       "divider",
+      "toggle",
+      "embed",
+      "nested_card",
     ];
 
-    it("has entries for all 15 content block types", () => {
-      expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(15);
+    it("has entries for all 18 content block types", () => {
+      expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(18);
       for (const type of expectedTypes) {
         expect(BLOCK_REGISTRY[type]).toBeDefined();
       }
@@ -88,21 +91,24 @@ describe("block-registry", () => {
       expect(groups).toHaveProperty("academic");
     });
 
-    it("content category includes text, bullets, quote, citation, divider", () => {
+    it("content category includes text, bullets, quote, citation, divider, toggle, nested_card", () => {
       const groups = getBlocksByCategory();
       const contentTypes = groups.content.map((b) => b.type);
       expect(contentTypes).toContain("text");
       expect(contentTypes).toContain("bullets");
       expect(contentTypes).toContain("quote");
       expect(contentTypes).toContain("divider");
+      expect(contentTypes).toContain("toggle");
+      expect(contentTypes).toContain("nested_card");
     });
 
-    it("media category includes image, chart, table", () => {
+    it("media category includes image, chart, table, embed", () => {
       const groups = getBlocksByCategory();
       const mediaTypes = groups.media.map((b) => b.type);
       expect(mediaTypes).toContain("image");
       expect(mediaTypes).toContain("chart");
       expect(mediaTypes).toContain("table");
+      expect(mediaTypes).toContain("embed");
     });
 
     it("academic category includes math, diagram, code, callout, stat_result, bibliography, timeline", () => {
@@ -120,8 +126,8 @@ describe("block-registry", () => {
     it("all blocks are assigned exactly once", () => {
       const groups = getBlocksByCategory();
       const allTypes = Object.values(groups).flatMap((g) => g.map((b) => b.type));
-      expect(allTypes).toHaveLength(15);
-      expect(new Set(allTypes).size).toBe(15);
+      expect(allTypes).toHaveLength(18);
+      expect(new Set(allTypes).size).toBe(18);
     });
   });
 
