@@ -5,6 +5,7 @@ import { useSlidesStore } from "@/stores/slides-store";
 import type { SaveStatus } from "@/stores/slides-store";
 import { PRESET_THEMES } from "@/types/presentation";
 import { ModeSelector } from "../mode-selector";
+import { ThemeCustomizer } from "./theme-customizer";
 import {
   Play,
   Export,
@@ -12,7 +13,6 @@ import {
   MicrosoftPowerpointLogo,
   CaretDown,
   Palette,
-  Check,
   Sparkle,
 } from "@phosphor-icons/react";
 
@@ -33,64 +33,6 @@ function SaveDot({ status }: { status: SaveStatus }) {
       className={`inline-block w-2 h-2 rounded-full ${color}`}
       title={status === "idle" ? "saved" : status}
     />
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Theme swatch — mini 16:9 card
-// ---------------------------------------------------------------------------
-
-function ThemeSwatch({
-  themeKey,
-  isActive,
-  onClick,
-}: {
-  themeKey: string;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  const theme = PRESET_THEMES[themeKey];
-  return (
-    <button
-      onClick={onClick}
-      title={theme.name}
-      className={`relative rounded-md overflow-hidden border-2 transition-all hover:scale-105 ${
-        isActive ? "border-brand ring-1 ring-brand" : "border-border"
-      }`}
-      style={{ width: 64, height: 36 }}
-    >
-      {/* Background */}
-      <div
-        className="absolute inset-0"
-        style={{ backgroundColor: theme.backgroundColor }}
-      />
-      {/* Primary accent bar at top */}
-      <div
-        className="absolute top-0 left-0 right-0 h-1.5"
-        style={{ backgroundColor: theme.primaryColor }}
-      />
-      {/* Simulated text lines */}
-      <div className="absolute left-2 top-3 flex flex-col gap-1">
-        <div
-          className="h-1 w-8 rounded-full"
-          style={{ backgroundColor: theme.textColor, opacity: 0.6 }}
-        />
-        <div
-          className="h-0.5 w-10 rounded-full"
-          style={{ backgroundColor: theme.textColor, opacity: 0.3 }}
-        />
-        <div
-          className="h-0.5 w-6 rounded-full"
-          style={{ backgroundColor: theme.textColor, opacity: 0.3 }}
-        />
-      </div>
-      {/* Active check */}
-      {isActive && (
-        <div className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-brand flex items-center justify-center">
-          <Check size={8} weight="bold" className="text-white" />
-        </div>
-      )}
-    </button>
   );
 }
 
@@ -144,7 +86,6 @@ export function GammaToolbar() {
   const title = useSlidesStore((s) => s.title);
   const setTitle = useSlidesStore((s) => s.setTitle);
   const themeKey = useSlidesStore((s) => s.themeKey);
-  const setTheme = useSlidesStore((s) => s.setTheme);
   const slides = useSlidesStore((s) => s.slides);
   const saveStatus = useSlidesStore((s) => s.saveStatus);
   const setIsPresenting = useSlidesStore((s) => s.setIsPresenting);
@@ -173,8 +114,6 @@ export function GammaToolbar() {
       setTitle(trimmed);
     }
   }
-
-  const themeKeys = Object.keys(PRESET_THEMES);
 
   return (
     <div className="flex items-center gap-3 px-4 py-2 h-12 border-b border-border bg-surface shrink-0">
@@ -235,22 +174,7 @@ export function GammaToolbar() {
           onClose={() => setThemeOpen(false)}
           className="right-0 p-3 w-[320px]"
         >
-          <p className="text-xs font-medium text-ink-muted mb-2">
-            Choose a theme
-          </p>
-          <div className="grid grid-cols-4 gap-2">
-            {themeKeys.map((key) => (
-              <ThemeSwatch
-                key={key}
-                themeKey={key}
-                isActive={key === themeKey}
-                onClick={() => {
-                  setTheme(key, PRESET_THEMES[key]);
-                  setThemeOpen(false);
-                }}
-              />
-            ))}
-          </div>
+          <ThemeCustomizer />
         </Dropdown>
       </div>
 

@@ -155,6 +155,11 @@ export interface ThemeConfig {
   gradientFrom?: string;
   gradientTo?: string;
   slideTransition?: "none" | "fade" | "slide" | "zoom" | "morph";
+  // V3: Theme customizer properties
+  borderRadius?: "none" | "sm" | "md" | "lg" | "xl";
+  borderStyle?: "none" | "subtle" | "strong";
+  shadowStyle?: "none" | "subtle" | "medium" | "dramatic";
+  cardSpacing?: "compact" | "comfortable" | "spacious";
 }
 
 // V2: Institution/Brand Kit
