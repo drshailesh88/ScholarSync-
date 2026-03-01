@@ -3,7 +3,7 @@
 import { useRef, useCallback } from "react";
 import { Plus, PlusCircle } from "@phosphor-icons/react";
 import { useSlidesStore } from "@/stores/slides-store";
-import { BLOCK_REGISTRY } from "@/components/slides/blocks";
+import { CardEditor } from "./card-editor";
 
 export function CardStack() {
   const slides = useSlidesStore((s) => s.slides);
@@ -54,9 +54,16 @@ export function CardStack() {
           return (
             <div key={slide.id} className="flex flex-col items-center">
               {/* Card */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={() => setActiveSlide(slide.id)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setActiveSlide(slide.id);
+                  }
+                }}
                 className={`
                   w-full text-left rounded-xl shadow-md transition-all duration-150
                   border-2 overflow-hidden cursor-pointer
@@ -74,58 +81,9 @@ export function CardStack() {
                   style={{ backgroundColor: themeConfig.primaryColor }}
                 />
 
-                {/* Card body */}
-                <div className="p-6 md:p-8">
-                  {/* Title */}
-                  {slide.title && (
-                    <h2
-                      className="text-xl md:text-2xl font-bold mb-4 leading-tight"
-                      style={{
-                        color: themeConfig.primaryColor,
-                        fontFamily:
-                          themeConfig.headingFontFamily ??
-                          themeConfig.fontFamily ??
-                          undefined,
-                      }}
-                    >
-                      {slide.title}
-                    </h2>
-                  )}
-
-                  {/* Subtitle */}
-                  {slide.subtitle && (
-                    <p
-                      className="text-sm md:text-base mb-4 opacity-70"
-                      style={{
-                        fontFamily: themeConfig.fontFamily ?? undefined,
-                      }}
-                    >
-                      {slide.subtitle}
-                    </p>
-                  )}
-
-                  {/* Content blocks */}
-                  {slide.contentBlocks.length > 0 && (
-                    <div className="flex flex-col gap-4">
-                      {slide.contentBlocks.map((block, blockIndex) => {
-                        const entry = BLOCK_REGISTRY[block.type];
-                        if (!entry) return null;
-                        const Renderer = entry.render;
-                        return (
-                          <Renderer
-                            key={blockIndex}
-                            data={
-                              block.data as Record<string, unknown>
-                            }
-                            theme={themeConfig}
-                            scale={1}
-                          />
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </button>
+                {/* Card body — delegated to CardEditor for inline editing */}
+                <CardEditor slide={slide} isActive={isActive} />
+              </div>
 
               {/* Insert button between cards */}
               {index < slides.length - 1 && (
