@@ -4,6 +4,7 @@ import { useRef, useCallback } from "react";
 import { Plus, PlusCircle } from "@phosphor-icons/react";
 import { useSlidesStore } from "@/stores/slides-store";
 import { CardEditor } from "./card-editor";
+import { CardSparkleMenu } from "./card-sparkle-menu";
 
 export function CardStack() {
   const slides = useSlidesStore((s) => s.slides);
@@ -65,8 +66,8 @@ export function CardStack() {
                   }
                 }}
                 className={`
-                  w-full text-left rounded-xl shadow-md transition-all duration-150
-                  border-2 overflow-hidden cursor-pointer
+                  relative w-full text-left rounded-xl shadow-md transition-all duration-150
+                  border-2 overflow-visible cursor-pointer
                   ${isActive ? "border-brand ring-1 ring-brand/30" : "border-transparent hover:border-border"}
                 `}
                 style={{
@@ -80,6 +81,13 @@ export function CardStack() {
                   className="h-1 w-full"
                   style={{ backgroundColor: themeConfig.primaryColor }}
                 />
+
+                {/* Per-card AI sparkle menu (active card only) */}
+                {isActive && (
+                  <div className="absolute top-2 right-2 z-10">
+                    <CardSparkleMenu slideId={slide.id} />
+                  </div>
+                )}
 
                 {/* Card body — delegated to CardEditor for inline editing */}
                 <CardEditor slide={slide} isActive={isActive} />
