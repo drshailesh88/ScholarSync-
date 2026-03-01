@@ -12,8 +12,8 @@ import { generateObject } from "ai";
 import { getSmallModel } from "@/lib/ai/models";
 import { getScreeningAgentPrompt } from "@/lib/ai/prompts/systematic-review";
 import { db } from "@/lib/db";
-import { screeningDecisions } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { screeningDecisions, projectPapers } from "@/lib/db/schema";
+import { eq, and, sql } from "drizzle-orm";
 import { z } from "zod";
 
 // ---------------------------------------------------------------------------
@@ -217,7 +217,7 @@ export async function screenPaper(
 
   const consensus = resolveConsensus([agent0, agent1, agent2]);
 
-  // Persist the decision
+  // Persist the decision to screening_decisions table (audit trail)
   if (consensus.finalDecision !== "conflict") {
     await db
       .insert(screeningDecisions)
@@ -243,6 +243,20 @@ export async function screenPaper(
           decidedBy: "ai",
         },
       });
+
+    // Also update the project_papers row so progress tracking works
+    await db
+      .update(projectPapers)
+      .set({
+        screening_decision: consensus.finalDecision as "include" | "exclude",
+        screening_reason: consensus.reason,
+      })
+      .where(
+        and(
+          eq(projectPapers.project_id, projectId),
+          eq(projectPapers.paper_id, paperId)
+        )
+      );
   }
 
   return consensus;

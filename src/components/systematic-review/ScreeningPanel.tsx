@@ -210,10 +210,14 @@ export function ScreeningPanel({ projectId }: ScreeningPanelProps) {
         if (data.criteria?.length > 0) {
           setCriteria(data.criteria);
           setCriteriaLastSaved(new Date());
+        } else {
+          // No saved criteria for this project — reset to default empty row
+          setCriteria([{ type: "inclusion", description: "" }]);
         }
       })
       .catch(() => {
-        // Silently fall back to Zustand state
+        // On error, reset to default to avoid stale cross-project criteria
+        setCriteria([{ type: "inclusion", description: "" }]);
       });
   }, [projectId]); // eslint-disable-line react-hooks/exhaustive-deps
 

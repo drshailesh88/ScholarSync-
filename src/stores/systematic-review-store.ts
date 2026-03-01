@@ -241,7 +241,8 @@ export const useSystematicReviewStore = create<SystematicReviewStore>()(
         activeTab: state.activeTab,
         reviewStage: state.reviewStage,
         pico: state.pico,
-        criteria: state.criteria,
+        // NOTE: criteria intentionally NOT persisted — always loaded from API
+        // to prevent stale criteria from leaking across projects.
       }),
     }
   )
