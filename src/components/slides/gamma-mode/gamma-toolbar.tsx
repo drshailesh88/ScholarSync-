@@ -13,6 +13,7 @@ import {
   CaretDown,
   Palette,
   Check,
+  Sparkle,
 } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -147,6 +148,8 @@ export function GammaToolbar() {
   const slides = useSlidesStore((s) => s.slides);
   const saveStatus = useSlidesStore((s) => s.saveStatus);
   const setIsPresenting = useSlidesStore((s) => s.setIsPresenting);
+  const agentPanelOpen = useSlidesStore((s) => s.agentPanelOpen);
+  const setAgentPanelOpen = useSlidesStore((s) => s.setAgentPanelOpen);
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleDraft, setTitleDraft] = useState(title);
@@ -294,7 +297,20 @@ export function GammaToolbar() {
         </Dropdown>
       </div>
 
-      {/* 6. Present button */}
+      {/* 6. Agent toggle */}
+      <button
+        onClick={() => setAgentPanelOpen(!agentPanelOpen)}
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+          agentPanelOpen
+            ? "bg-brand/10 text-brand border-brand/30"
+            : "text-ink hover:bg-surface-raised border-border"
+        }`}
+      >
+        <Sparkle size={14} weight={agentPanelOpen ? "fill" : "regular"} />
+        Agent
+      </button>
+
+      {/* 7. Present button */}
       <button
         onClick={() => setIsPresenting(true)}
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-brand text-white hover:bg-brand/90 transition-colors"

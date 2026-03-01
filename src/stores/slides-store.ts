@@ -86,6 +86,8 @@ export interface SlidesStore {
   setIsPresenting: (v: boolean) => void;
   showSharePanel: boolean;
   setShowSharePanel: (v: boolean) => void;
+  agentPanelOpen: boolean;
+  setAgentPanelOpen: (v: boolean) => void;
 
   // Save status
   saveStatus: SaveStatus;
@@ -185,6 +187,8 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   setIsPresenting: (isPresenting) => set({ isPresenting }),
   showSharePanel: false,
   setShowSharePanel: (showSharePanel) => set({ showSharePanel }),
+  agentPanelOpen: false,
+  setAgentPanelOpen: (agentPanelOpen) => set({ agentPanelOpen }),
 
   // Save
   saveStatus: "idle",

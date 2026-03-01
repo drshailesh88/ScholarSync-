@@ -3,11 +3,13 @@
 import { CardStack } from "./card-stack";
 import { CardOutlineSidebar } from "./card-outline-sidebar";
 import { GammaToolbar } from "./gamma-toolbar";
+import { GammaAgentPanel } from "./gamma-agent-panel";
 import { OutlineGenerator } from "./outline-generator";
 import { useSlidesStore } from "@/stores/slides-store";
 
 export function GammaModeLayout() {
   const slides = useSlidesStore((s) => s.slides);
+  const agentPanelOpen = useSlidesStore((s) => s.agentPanelOpen);
 
   return (
     <div className="flex flex-col h-full">
@@ -29,8 +31,12 @@ export function GammaModeLayout() {
             <CardStack />
           </div>
 
-          {/* Right panel — AI agent (Phase 2) */}
-          {/* Will be toggled on/off */}
+          {/* Right panel — AI agent */}
+          {agentPanelOpen && (
+            <div className="w-[360px] shrink-0 border-l border-border">
+              <GammaAgentPanel />
+            </div>
+          )}
         </div>
       )}
     </div>
