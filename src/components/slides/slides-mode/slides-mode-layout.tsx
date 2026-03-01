@@ -11,6 +11,8 @@ import { SlidesAgentPanel } from "../agent/slides-agent-panel";
 import { PRESET_THEMES } from "@/types/presentation";
 import type { ContentBlock } from "@/types/presentation";
 
+import { FindReplaceDialog } from "../shared/find-replace-dialog";
+
 // Lazy-loaded panels from existing presentation components
 import { CommentsPanel, useCommentCounts } from "@/components/presentation/comments-panel";
 import { VersionHistoryPanel } from "@/components/presentation/version-history-panel";
@@ -31,6 +33,7 @@ export function SlidesModeLayout() {
   const institutionKit = useSlidesStore((s) => s.institutionKit);
   const setActiveSlide = useSlidesStore((s) => s.setActiveSlide);
   const loadDeck = useSlidesStore((s) => s.loadDeck);
+  const showFindReplace = useSlidesStore((s) => s.showFindReplace);
 
   const { counts: _commentCounts } = useCommentCounts(deckId ?? 0);
 
@@ -179,6 +182,9 @@ export function SlidesModeLayout() {
           </div>
         )}
       </div>
+
+      {/* Find & Replace overlay */}
+      {showFindReplace && <FindReplaceDialog />}
     </div>
   );
 }

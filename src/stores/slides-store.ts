@@ -108,6 +108,10 @@ export interface SlidesStore {
   agentPanelOpen: boolean;
   setAgentPanelOpen: (v: boolean) => void;
 
+  // Find & Replace
+  showFindReplace: boolean;
+  setShowFindReplace: (v: boolean) => void;
+
   // Save status
   saveStatus: SaveStatus;
 
@@ -217,6 +221,10 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   setShowSharePanel: (showSharePanel) => set({ showSharePanel }),
   agentPanelOpen: false,
   setAgentPanelOpen: (agentPanelOpen) => set({ agentPanelOpen }),
+
+  // Find & Replace
+  showFindReplace: false,
+  setShowFindReplace: (showFindReplace) => set({ showFindReplace }),
 
   // Save
   saveStatus: "idle",

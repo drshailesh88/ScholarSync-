@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Export,
   FilePdf,
@@ -19,6 +19,7 @@ import {
   Wrench,
   ArrowUUpLeft,
   ArrowUUpRight,
+  MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore, type RightPanel, type SaveStatus } from "@/stores/slides-store";
@@ -50,7 +51,21 @@ export function SlidesToolbar({
   const redo = useSlidesStore((s) => s.redo);
   const undoAvailable = useSlidesStore((s) => s._undoStack.length > 0 || s._pendingUndoBefore !== null);
   const redoAvailable = useSlidesStore((s) => s._redoStack.length > 0);
+  const showFindReplace = useSlidesStore((s) => s.showFindReplace);
+  const setShowFindReplace = useSlidesStore((s) => s.setShowFindReplace);
   const [showInsertMenu, setShowInsertMenu] = useState(false);
+
+  // Global Ctrl+F / Cmd+F shortcut
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
+        e.preventDefault();
+        setShowFindReplace(!showFindReplace);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showFindReplace, setShowFindReplace]);
 
   function togglePanel(panel: RightPanel) {
     setRightPanel(rightPanel === panel ? null : panel);
@@ -110,7 +125,7 @@ export function SlidesToolbar({
         )}
       </div>
 
-      {/* Undo/Redo */}
+      {/* Undo/Redo + Find */}
       <div className="flex items-center gap-0.5">
         <button
           onClick={undo}
@@ -127,6 +142,18 @@ export function SlidesToolbar({
           title="Redo (Ctrl+Y)"
         >
           <ArrowUUpRight size={14} />
+        </button>
+        <button
+          onClick={() => setShowFindReplace(!showFindReplace)}
+          className={cn(
+            "p-1.5 rounded-lg transition-colors",
+            showFindReplace
+              ? "bg-brand/10 text-brand"
+              : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+          )}
+          title="Find & Replace (Ctrl+F)"
+        >
+          <MagnifyingGlass size={14} />
         </button>
       </div>
 
