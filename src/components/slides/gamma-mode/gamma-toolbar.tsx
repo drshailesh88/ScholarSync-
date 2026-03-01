@@ -15,6 +15,7 @@ import {
   Palette,
   Sparkle,
   CircleNotch,
+  MonitorPlay,
 } from "@phosphor-icons/react";
 import { exportDeck, type ExportFormat } from "./export-deck";
 
@@ -248,6 +249,23 @@ export function GammaToolbar() {
                 <FilePdf size={16} />
               )}
               {exporting === "pdf" ? "Exporting..." : "Export PDF"}
+            </button>
+            <div className="border-t border-border my-1" />
+            <button
+              onClick={() => {
+                setExportOpen(false);
+                if (
+                  window.confirm(
+                    "Switch to Slides view? Your cards will be displayed as fixed-ratio slides.",
+                  )
+                ) {
+                  setMode("slides");
+                }
+              }}
+              className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+            >
+              <MonitorPlay size={16} />
+              Continue in Slides Mode
             </button>
           </div>
         </Dropdown>
