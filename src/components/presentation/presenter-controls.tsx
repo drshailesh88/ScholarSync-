@@ -58,6 +58,7 @@ function useAutoHide(delayMs = 3000) {
     const onMove = () => resetTimer();
     window.addEventListener("mousemove", onMove);
     window.addEventListener("touchstart", onMove);
+    window.addEventListener("keydown", onMove);
 
     // Start initial auto-hide timer
     timeoutRef.current = setTimeout(() => setVisible(false), delayMs);
@@ -65,6 +66,7 @@ function useAutoHide(delayMs = 3000) {
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("touchstart", onMove);
+      window.removeEventListener("keydown", onMove);
       clearTimeout(timeoutRef.current);
     };
   }, [resetTimer, delayMs]);

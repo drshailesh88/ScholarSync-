@@ -56,30 +56,25 @@ export default function NewPresentationPage() {
         ],
       });
 
-      // If user provided a description, try AI generation
-      if (description.trim()) {
-        try {
-          const res = await fetch("/api/slides/generate-stream", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              deckId: deck.id,
-              title: title.trim(),
-              description: description.trim(),
-              audienceType,
-              themeKey,
-            }),
-          });
-          if (!res.ok) {
-            // Generation failed, but deck is created — proceed to editor
-            console.warn("AI generation failed, proceeding with empty deck");
-          }
-        } catch {
-          // AI generation is a nice-to-have, don't block navigation
-        }
-      }
-
+      // Navigate immediately — don't wait for AI generation
       router.push(`/slides/${deck.id}`);
+
+      // Fire-and-forget AI generation (runs in background after navigation)
+      if (description.trim()) {
+        fetch("/api/slides/generate-stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            deckId: deck.id,
+            title: title.trim(),
+            description: description.trim(),
+            audienceType,
+            themeKey,
+          }),
+        }).catch(() => {
+          // AI generation is a nice-to-have, don't block anything
+        });
+      }
     } catch {
       setError("Failed to create presentation. Please try again.");
       setGenerating(false);

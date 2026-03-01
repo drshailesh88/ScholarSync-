@@ -3,7 +3,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { BubbleMenu } from "@tiptap/react/menus";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
@@ -110,7 +109,6 @@ export function EditableTextBlock({
       StarterKit.configure({
         heading: false, // Handled by block style
       }),
-      Underline,
       TextAlign.configure({ types: ["paragraph"] }),
       TextStyle,
       Color,
@@ -319,7 +317,6 @@ export function EditableBulletsBlock({
     immediatelyRender: false,
     extensions: [
       StarterKit,
-      Underline,
       TextStyle,
       Color,
       Superscript,
