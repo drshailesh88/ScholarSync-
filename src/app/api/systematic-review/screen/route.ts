@@ -5,6 +5,9 @@
  * Supports both single paper and batch screening.
  */
 
+// Allow up to 5 minutes for batch screening (50 papers × 3 agents)
+export const maxDuration = 300;
+
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";

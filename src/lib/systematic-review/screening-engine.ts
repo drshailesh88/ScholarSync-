@@ -75,7 +75,13 @@ function formatCriteria(criteria: ScreeningCriterion[]): string {
 }
 
 // ---------------------------------------------------------------------------
-// Run a single screening agent
+// Helpers
+// ---------------------------------------------------------------------------
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+// ---------------------------------------------------------------------------
+// Run a single screening agent (with retry + exponential backoff)
 // ---------------------------------------------------------------------------
 
 async function runScreeningAgent(
@@ -93,20 +99,35 @@ async function runScreeningAgent(
     abstract
   );
 
-  const { object } = await generateObject({
-    model: getSmallModel(),
-    schema: agentDecisionSchema,
-    prompt,
-  });
+  const maxRetries = 3;
+  let lastError: unknown;
 
-  return {
-    agentIndex,
-    decision: object.decision,
-    confidence: Math.max(0, Math.min(1, object.confidence)),
-    reasoning: object.reasoning,
-    matchedInclusion: object.matched_inclusion,
-    matchedExclusion: object.matched_exclusion,
-  };
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const { object } = await generateObject({
+        model: getSmallModel(),
+        schema: agentDecisionSchema,
+        prompt,
+      });
+
+      return {
+        agentIndex,
+        decision: object.decision,
+        confidence: Math.max(0, Math.min(1, object.confidence)),
+        reasoning: object.reasoning,
+        matchedInclusion: object.matched_inclusion,
+        matchedExclusion: object.matched_exclusion,
+      };
+    } catch (err) {
+      lastError = err;
+      if (attempt < maxRetries) {
+        // Exponential backoff: 2s, 4s, 8s
+        await sleep(2000 * Math.pow(2, attempt));
+      }
+    }
+  }
+
+  throw lastError;
 }
 
 // ---------------------------------------------------------------------------
@@ -243,12 +264,16 @@ export async function batchScreenPapers(
 ): Promise<ConsensusResult[]> {
   const results: ConsensusResult[] = [];
 
-  // Process in batches of 5 to avoid rate limits
-  const batchSize = 5;
+  // Process 2 papers at a time (= 6 concurrent AI calls) with a pause
+  // between batches to stay well under Anthropic's rate limits.
+  const batchSize = 2;
+  const delayBetweenBatchesMs = 1500;
+
   for (let i = 0; i < papers.length; i += batchSize) {
     const batch = papers.slice(i, i + batchSize);
 
-    const batchResults = await Promise.all(
+    // Use allSettled so one failed paper doesn't kill the whole batch
+    const settled = await Promise.allSettled(
       batch.map((paper) =>
         screenPaper(
           projectId,
@@ -260,8 +285,20 @@ export async function batchScreenPapers(
       )
     );
 
-    results.push(...batchResults);
+    for (const result of settled) {
+      if (result.status === "fulfilled") {
+        results.push(result.value);
+      }
+      // Failed papers are silently skipped — they remain unscreened
+      // and can be retried on the next "AI Screen All" click.
+    }
+
     onProgress?.(Math.min(i + batchSize, papers.length), papers.length);
+
+    // Pause between batches to respect rate limits
+    if (i + batchSize < papers.length) {
+      await sleep(delayBetweenBatchesMs);
+    }
   }
 
   return results;
