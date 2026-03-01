@@ -207,12 +207,14 @@ export async function screenPaper(
         decision: consensus.finalDecision as "include" | "exclude",
         reason: consensus.reason,
         decidedBy: "ai",
+        reviewerId: null, // AI decisions have null reviewerId
       })
       .onConflictDoUpdate({
         target: [
           screeningDecisions.projectId,
           screeningDecisions.paperId,
           screeningDecisions.stage,
+          screeningDecisions.reviewerId,
         ],
         set: {
           decision: consensus.finalDecision as "include" | "exclude",
