@@ -5,10 +5,13 @@ import { ThemePicker } from "@/components/presentation/theme-picker";
 import { LayoutPicker } from "@/components/presentation/layout-picker";
 import { AiToolsDropdown } from "@/components/presentation/ai-tools-dropdown";
 import { CoachPanel } from "@/components/presentation/coach-panel";
+import { BlockPropertyEditor } from "./block-property-editor";
 import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
 
 export function PropertiesPanel() {
   const activeSlide = useSlidesStore((s) => s.getActiveSlide());
+  const selectedBlockIndex = useSlidesStore((s) => s.selectedBlockIndex);
+  const selectedBlock = useSlidesStore((s) => s.getSelectedBlock());
   const slides = useSlidesStore((s) => s.slides);
   const deckId = useSlidesStore((s) => s.deckId);
   const themeKey = useSlidesStore((s) => s.themeKey);
@@ -17,9 +20,25 @@ export function PropertiesPanel() {
   const updateSlide = useSlidesStore((s) => s.updateSlide);
   const setActiveSlide = useSlidesStore((s) => s.setActiveSlide);
 
+  // Show block-specific editor when a non-text block is selected
+  const showBlockEditor =
+    selectedBlockIndex !== null &&
+    selectedBlock !== null &&
+    !["text", "bullets", "quote"].includes(selectedBlock.type);
+
   return (
     <aside className="w-72 shrink-0 border-l border-border bg-surface flex flex-col overflow-y-auto">
       <div className="p-4 space-y-5">
+        {/* Block Properties — shown when a non-text block is selected */}
+        {showBlockEditor && (
+          <div>
+            <h3 className="text-xs font-semibold text-ink mb-2 uppercase tracking-wider">
+              Block Properties
+            </h3>
+            <BlockPropertyEditor />
+          </div>
+        )}
+
         {/* Theme */}
         <div>
           <h3 className="text-xs font-semibold text-ink mb-2 uppercase tracking-wider">

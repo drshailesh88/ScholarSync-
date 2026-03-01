@@ -1,0 +1,965 @@
+"use client";
+
+import { useState } from "react";
+import { useSlidesStore } from "@/stores/slides-store";
+import type { ContentBlock, ChartData } from "@/types/presentation";
+import { Trash, Plus, Upload } from "@phosphor-icons/react";
+
+// ---------------------------------------------------------------------------
+// BlockPropertyEditor — context-sensitive editor for the selected block.
+// Shows in the properties panel when a non-text block is selected.
+// ---------------------------------------------------------------------------
+
+export function BlockPropertyEditor() {
+  const selectedBlock = useSlidesStore((s) => s.getSelectedBlock());
+  const selectedBlockIndex = useSlidesStore((s) => s.selectedBlockIndex);
+  const updateBlock = useSlidesStore((s) => s.updateBlock);
+
+  if (selectedBlock === null || selectedBlockIndex === null) {
+    return (
+      <div className="px-3 py-4 text-center text-xs text-ink-muted">
+        Select a block on the canvas to edit its properties.
+      </div>
+    );
+  }
+
+  const onUpdate = (updated: ContentBlock) => updateBlock(selectedBlockIndex, updated);
+
+  switch (selectedBlock.type) {
+    case "chart":
+      return <ChartEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "table":
+      return <TableEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "stat_result":
+      return <StatEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "image":
+      return <ImageEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "math":
+      return <MathEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "code":
+      return <CodeEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "callout":
+      return <CalloutEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "citation":
+      return <CitationEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "timeline":
+      return <TimelineEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "diagram":
+      return <DiagramEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "divider":
+      return <DividerEditor block={selectedBlock} onUpdate={onUpdate} />;
+    case "bibliography":
+      return <BibliographyEditor block={selectedBlock} onUpdate={onUpdate} />;
+    default:
+      return (
+        <div className="px-3 py-4 text-xs text-ink-muted">
+          No property editor for {selectedBlock.type} blocks.
+        </div>
+      );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Shared UI helpers
+// ---------------------------------------------------------------------------
+
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <label className="block text-[10px] font-semibold text-ink-muted uppercase tracking-wider mb-1">
+      {children}
+    </label>
+  );
+}
+
+function FieldInput({
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  type?: string;
+}) {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
+    />
+  );
+}
+
+function FieldTextarea({
+  value,
+  onChange,
+  placeholder,
+  rows = 3,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  rows?: number;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={rows}
+      className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand font-mono resize-y"
+    />
+  );
+}
+
+function FieldSelect({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
+    >
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function EditorSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-2">
+      <h4 className="text-xs font-semibold text-ink uppercase tracking-wider">{title}</h4>
+      {children}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Chart Editor
+// ---------------------------------------------------------------------------
+
+type ChartBlock = Extract<ContentBlock, { type: "chart" }>;
+
+function ChartEditor({ block, onUpdate }: { block: ChartBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+
+  const updateData = (partial: Partial<ChartData>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Chart">
+        <div>
+          <FieldLabel>Chart Type</FieldLabel>
+          <FieldSelect
+            value={data.chartType}
+            onChange={(v) => updateData({ chartType: v as ChartData["chartType"] })}
+            options={[
+              { value: "bar", label: "Bar" },
+              { value: "line", label: "Line" },
+              { value: "pie", label: "Pie" },
+              { value: "scatter", label: "Scatter" },
+              { value: "area", label: "Area" },
+              { value: "radar", label: "Radar" },
+            ]}
+          />
+        </div>
+        <div>
+          <FieldLabel>Title</FieldLabel>
+          <FieldInput value={data.title} onChange={(v) => updateData({ title: v })} />
+        </div>
+        <div>
+          <FieldLabel>X-Axis Label</FieldLabel>
+          <FieldInput
+            value={data.xAxisLabel ?? ""}
+            onChange={(v) => updateData({ xAxisLabel: v || undefined })}
+            placeholder="e.g. Year"
+          />
+        </div>
+        <div>
+          <FieldLabel>Y-Axis Label</FieldLabel>
+          <FieldInput
+            value={data.yAxisLabel ?? ""}
+            onChange={(v) => updateData({ yAxisLabel: v || undefined })}
+            placeholder="e.g. Count"
+          />
+        </div>
+        <div>
+          <FieldLabel>Labels (comma-separated)</FieldLabel>
+          <FieldInput
+            value={data.labels.join(", ")}
+            onChange={(v) => updateData({ labels: v.split(",").map((s) => s.trim()) })}
+            placeholder="A, B, C"
+          />
+        </div>
+      </EditorSection>
+
+      <EditorSection title="Datasets">
+        {data.datasets.map((ds, i) => (
+          <div key={i} className="p-2 rounded-md border border-border bg-surface-raised/50 space-y-1.5">
+            <div className="flex items-center gap-2">
+              <FieldInput
+                value={ds.label}
+                onChange={(v) => {
+                  const updated = [...data.datasets];
+                  updated[i] = { ...ds, label: v };
+                  updateData({ datasets: updated });
+                }}
+                placeholder="Dataset label"
+              />
+              {data.datasets.length > 1 && (
+                <button
+                  onClick={() => updateData({ datasets: data.datasets.filter((_, j) => j !== i) })}
+                  className="p-1 text-red-500 hover:bg-red-50 rounded"
+                >
+                  <Trash size={14} />
+                </button>
+              )}
+            </div>
+            <FieldInput
+              value={ds.data.join(", ")}
+              onChange={(v) => {
+                const updated = [...data.datasets];
+                updated[i] = { ...ds, data: v.split(",").map((s) => Number(s.trim()) || 0) };
+                updateData({ datasets: updated });
+              }}
+              placeholder="1, 2, 3"
+            />
+          </div>
+        ))}
+        <button
+          onClick={() =>
+            updateData({
+              datasets: [
+                ...data.datasets,
+                { label: `Series ${data.datasets.length + 1}`, data: data.labels.map(() => 0) },
+              ],
+            })
+          }
+          className="w-full text-xs py-1.5 rounded-md border border-dashed border-border text-ink-muted hover:border-brand hover:text-brand transition-colors flex items-center justify-center gap-1"
+        >
+          <Plus size={12} /> Add Dataset
+        </button>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Table Editor
+// ---------------------------------------------------------------------------
+
+type TableBlock = Extract<ContentBlock, { type: "table" }>;
+
+function TableEditor({ block, onUpdate }: { block: TableBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+
+  const updateCell = (rowIdx: number, colIdx: number, value: string) => {
+    const newRows = data.rows.map((row, ri) =>
+      ri === rowIdx ? row.map((cell, ci) => (ci === colIdx ? value : cell)) : row
+    );
+    onUpdate({ ...block, data: { ...data, rows: newRows } });
+  };
+
+  const updateHeader = (colIdx: number, value: string) => {
+    const newHeaders = data.headers.map((h, i) => (i === colIdx ? value : h));
+    onUpdate({ ...block, data: { ...data, headers: newHeaders } });
+  };
+
+  const addRow = () => {
+    const newRow = data.headers.map(() => "");
+    onUpdate({ ...block, data: { ...data, rows: [...data.rows, newRow] } });
+  };
+
+  const addColumn = () => {
+    onUpdate({
+      ...block,
+      data: {
+        ...data,
+        headers: [...data.headers, `Col ${data.headers.length + 1}`],
+        rows: data.rows.map((row) => [...row, ""]),
+      },
+    });
+  };
+
+  const deleteRow = (idx: number) => {
+    onUpdate({ ...block, data: { ...data, rows: data.rows.filter((_, i) => i !== idx) } });
+  };
+
+  const deleteColumn = (idx: number) => {
+    onUpdate({
+      ...block,
+      data: {
+        ...data,
+        headers: data.headers.filter((_, i) => i !== idx),
+        rows: data.rows.map((row) => row.filter((_, i) => i !== idx)),
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Table">
+        <div className="max-h-64 overflow-auto border border-border rounded-md">
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="bg-surface-raised">
+                {data.headers.map((h, ci) => (
+                  <th key={ci} className="p-0 border-b border-r border-border">
+                    <div className="flex items-center">
+                      <input
+                        value={h}
+                        onChange={(e) => updateHeader(ci, e.target.value)}
+                        className="w-full px-1.5 py-1 text-xs font-semibold bg-transparent focus:outline-none focus:bg-blue-50"
+                      />
+                      {data.headers.length > 1 && (
+                        <button
+                          onClick={() => deleteColumn(ci)}
+                          className="p-0.5 text-red-400 hover:text-red-600 shrink-0"
+                        >
+                          <Trash size={10} />
+                        </button>
+                      )}
+                    </div>
+                  </th>
+                ))}
+                <th className="w-6 border-b border-border" />
+              </tr>
+            </thead>
+            <tbody>
+              {data.rows.map((row, ri) => (
+                <tr key={ri} className="hover:bg-surface-raised/50">
+                  {row.map((cell, ci) => (
+                    <td key={ci} className="p-0 border-b border-r border-border">
+                      <input
+                        value={cell}
+                        onChange={(e) => updateCell(ri, ci, e.target.value)}
+                        className="w-full px-1.5 py-1 text-xs bg-transparent focus:outline-none focus:bg-blue-50"
+                      />
+                    </td>
+                  ))}
+                  <td className="w-6 border-b border-border text-center">
+                    {data.rows.length > 1 && (
+                      <button
+                        onClick={() => deleteRow(ri)}
+                        className="p-0.5 text-red-400 hover:text-red-600"
+                      >
+                        <Trash size={10} />
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={addRow}
+            className="flex-1 text-xs py-1.5 rounded-md border border-dashed border-border text-ink-muted hover:border-brand hover:text-brand transition-colors flex items-center justify-center gap-1"
+          >
+            <Plus size={12} /> Row
+          </button>
+          <button
+            onClick={addColumn}
+            className="flex-1 text-xs py-1.5 rounded-md border border-dashed border-border text-ink-muted hover:border-brand hover:text-brand transition-colors flex items-center justify-center gap-1"
+          >
+            <Plus size={12} /> Column
+          </button>
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Stat Editor
+// ---------------------------------------------------------------------------
+
+type StatBlock = Extract<ContentBlock, { type: "stat_result" }>;
+
+function StatEditor({ block, onUpdate }: { block: StatBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<typeof data>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Statistic">
+        <div>
+          <FieldLabel>Label</FieldLabel>
+          <FieldInput value={data.label} onChange={(v) => update({ label: v })} placeholder="e.g. p-value" />
+        </div>
+        <div>
+          <FieldLabel>Value</FieldLabel>
+          <FieldInput value={data.value} onChange={(v) => update({ value: v })} placeholder="e.g. 0.001" />
+        </div>
+        <div>
+          <FieldLabel>Confidence Interval</FieldLabel>
+          <FieldInput
+            value={data.ci ?? ""}
+            onChange={(v) => update({ ci: v || undefined })}
+            placeholder="e.g. 95% CI [0.5, 1.2]"
+          />
+        </div>
+        <div>
+          <FieldLabel>P-Value</FieldLabel>
+          <FieldInput
+            value={data.pValue ?? ""}
+            onChange={(v) => update({ pValue: v || undefined })}
+            placeholder="e.g. <0.001"
+          />
+        </div>
+        <div>
+          <FieldLabel>Interpretation</FieldLabel>
+          <FieldTextarea
+            value={data.interpretation ?? ""}
+            onChange={(v) => update({ interpretation: v || undefined })}
+            placeholder="Statistical significance interpretation..."
+            rows={2}
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Image Editor
+// ---------------------------------------------------------------------------
+
+type ImageBlock = Extract<ContentBlock, { type: "image" }>;
+
+function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const [uploading, setUploading] = useState(false);
+
+  const update = (partial: Partial<typeof data>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  const handleFileUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/slides/upload-image", { method: "POST", body: formData });
+      if (!res.ok) throw new Error("Upload failed");
+      const { url } = await res.json();
+      update({ url });
+    } catch (err) {
+      console.error("Image upload failed:", err);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Image">
+        {/* Upload area */}
+        <div
+          className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-brand transition-colors cursor-pointer"
+          onClick={() => {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = "image/*";
+            input.onchange = (e) => {
+              const file = (e.target as HTMLInputElement).files?.[0];
+              if (file) handleFileUpload(file);
+            };
+            input.click();
+          }}
+        >
+          {data.url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={data.url} alt={data.alt} className="max-h-32 mx-auto rounded" />
+          ) : (
+            <div className="space-y-1">
+              {uploading ? (
+                <p className="text-xs text-ink-muted">Uploading...</p>
+              ) : (
+                <>
+                  <Upload size={24} className="mx-auto text-ink-muted" />
+                  <p className="text-xs text-ink-muted">Click to upload an image</p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div>
+          <FieldLabel>Image URL</FieldLabel>
+          <FieldInput
+            value={data.url ?? ""}
+            onChange={(v) => update({ url: v || undefined })}
+            placeholder="https://... or upload above"
+          />
+        </div>
+        <div>
+          <FieldLabel>Alt Text</FieldLabel>
+          <FieldInput value={data.alt} onChange={(v) => update({ alt: v })} placeholder="Description of image" />
+        </div>
+        <div>
+          <FieldLabel>Caption</FieldLabel>
+          <FieldInput
+            value={data.caption ?? ""}
+            onChange={(v) => update({ caption: v || undefined })}
+            placeholder="Figure caption"
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Math Editor
+// ---------------------------------------------------------------------------
+
+type MathBlock = Extract<ContentBlock, { type: "math" }>;
+
+function MathEditor({ block, onUpdate }: { block: MathBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<typeof data>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Math Expression">
+        <div>
+          <FieldLabel>LaTeX Expression</FieldLabel>
+          <FieldTextarea
+            value={data.expression}
+            onChange={(v) => update({ expression: v })}
+            placeholder="e.g. E = mc^2"
+            rows={3}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={data.displayMode}
+            onChange={(e) => update({ displayMode: e.target.checked })}
+            className="rounded border-border"
+          />
+          <span className="text-xs text-ink">Display mode (centered, larger)</span>
+        </div>
+        <div>
+          <FieldLabel>Caption</FieldLabel>
+          <FieldInput
+            value={data.caption ?? ""}
+            onChange={(v) => update({ caption: v || undefined })}
+            placeholder="Equation caption"
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Code Editor
+// ---------------------------------------------------------------------------
+
+type CodeBlock = Extract<ContentBlock, { type: "code" }>;
+
+function CodeEditor({ block, onUpdate }: { block: CodeBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<typeof data>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Code Block">
+        <div>
+          <FieldLabel>Language</FieldLabel>
+          <FieldSelect
+            value={data.language}
+            onChange={(v) => update({ language: v })}
+            options={[
+              { value: "python", label: "Python" },
+              { value: "javascript", label: "JavaScript" },
+              { value: "typescript", label: "TypeScript" },
+              { value: "r", label: "R" },
+              { value: "sql", label: "SQL" },
+              { value: "bash", label: "Bash" },
+              { value: "java", label: "Java" },
+              { value: "cpp", label: "C++" },
+              { value: "latex", label: "LaTeX" },
+              { value: "json", label: "JSON" },
+            ]}
+          />
+        </div>
+        <div>
+          <FieldLabel>Code</FieldLabel>
+          <FieldTextarea
+            value={data.code}
+            onChange={(v) => update({ code: v })}
+            placeholder="Enter code..."
+            rows={8}
+          />
+        </div>
+        <div>
+          <FieldLabel>Caption</FieldLabel>
+          <FieldInput
+            value={data.caption ?? ""}
+            onChange={(v) => update({ caption: v || undefined })}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={data.showLineNumbers ?? false}
+            onChange={(e) => update({ showLineNumbers: e.target.checked })}
+            className="rounded border-border"
+          />
+          <span className="text-xs text-ink">Show line numbers</span>
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Callout Editor
+// ---------------------------------------------------------------------------
+
+type CalloutBlock = Extract<ContentBlock, { type: "callout" }>;
+
+function CalloutEditor({ block, onUpdate }: { block: CalloutBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<typeof data>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Callout">
+        <div>
+          <FieldLabel>Type</FieldLabel>
+          <FieldSelect
+            value={data.type}
+            onChange={(v) => update({ type: v as typeof data.type })}
+            options={[
+              { value: "finding", label: "Finding" },
+              { value: "limitation", label: "Limitation" },
+              { value: "methodology", label: "Methodology" },
+              { value: "clinical", label: "Clinical" },
+              { value: "warning", label: "Warning" },
+              { value: "info", label: "Info" },
+              { value: "success", label: "Success" },
+            ]}
+          />
+        </div>
+        <div>
+          <FieldLabel>Title</FieldLabel>
+          <FieldInput
+            value={data.title ?? ""}
+            onChange={(v) => update({ title: v || undefined })}
+            placeholder="Optional title"
+          />
+        </div>
+        <div>
+          <FieldLabel>Text</FieldLabel>
+          <FieldTextarea
+            value={data.text}
+            onChange={(v) => update({ text: v })}
+            placeholder="Callout content..."
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Citation Editor
+// ---------------------------------------------------------------------------
+
+type CitationBlock = Extract<ContentBlock, { type: "citation" }>;
+
+function CitationEditor({ block, onUpdate }: { block: CitationBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<typeof data>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Citation">
+        <div>
+          <FieldLabel>Citation Text</FieldLabel>
+          <FieldTextarea value={data.text} onChange={(v) => update({ text: v })} rows={2} />
+        </div>
+        <div>
+          <FieldLabel>Source</FieldLabel>
+          <FieldInput value={data.source} onChange={(v) => update({ source: v })} placeholder="Author et al., Year" />
+        </div>
+        <div>
+          <FieldLabel>DOI</FieldLabel>
+          <FieldInput value={data.doi ?? ""} onChange={(v) => update({ doi: v || undefined })} placeholder="10.xxxx/xxxxx" />
+        </div>
+        <div>
+          <FieldLabel>Authors (comma-separated)</FieldLabel>
+          <FieldInput
+            value={(data.authors ?? []).join(", ")}
+            onChange={(v) => update({ authors: v ? v.split(",").map((s) => s.trim()) : undefined })}
+            placeholder="Smith, J., Doe, A."
+          />
+        </div>
+        <div>
+          <FieldLabel>Year</FieldLabel>
+          <FieldInput
+            value={data.year ? String(data.year) : ""}
+            onChange={(v) => update({ year: v ? Number(v) : undefined })}
+            placeholder="2024"
+            type="number"
+          />
+        </div>
+        <div>
+          <FieldLabel>Journal</FieldLabel>
+          <FieldInput value={data.journal ?? ""} onChange={(v) => update({ journal: v || undefined })} />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Timeline Editor
+// ---------------------------------------------------------------------------
+
+type TimelineBlock = Extract<ContentBlock, { type: "timeline" }>;
+
+function TimelineEditor({ block, onUpdate }: { block: TimelineBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+
+  const updateEntry = (idx: number, partial: Partial<typeof data.entries[0]>) => {
+    const entries = data.entries.map((e, i) => (i === idx ? { ...e, ...partial } : e));
+    onUpdate({ ...block, data: { ...data, entries } });
+  };
+
+  const addEntry = () => {
+    onUpdate({
+      ...block,
+      data: {
+        ...data,
+        entries: [...data.entries, { label: "New Phase", date: "", description: "", status: "upcoming" as const }],
+      },
+    });
+  };
+
+  const deleteEntry = (idx: number) => {
+    onUpdate({ ...block, data: { ...data, entries: data.entries.filter((_, i) => i !== idx) } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Timeline">
+        {data.entries.map((entry, i) => (
+          <div key={i} className="p-2 rounded-md border border-border bg-surface-raised/50 space-y-1.5">
+            <div className="flex items-center gap-1">
+              <FieldInput value={entry.label} onChange={(v) => updateEntry(i, { label: v })} placeholder="Phase name" />
+              <button onClick={() => deleteEntry(i)} className="p-1 text-red-500 hover:bg-red-50 rounded shrink-0">
+                <Trash size={14} />
+              </button>
+            </div>
+            <div className="flex gap-1">
+              <FieldInput value={entry.date ?? ""} onChange={(v) => updateEntry(i, { date: v })} placeholder="Date" />
+              <FieldSelect
+                value={entry.status ?? "upcoming"}
+                onChange={(v) => updateEntry(i, { status: v as "completed" | "in_progress" | "upcoming" })}
+                options={[
+                  { value: "completed", label: "Done" },
+                  { value: "in_progress", label: "Active" },
+                  { value: "upcoming", label: "Upcoming" },
+                ]}
+              />
+            </div>
+            <FieldInput
+              value={entry.description ?? ""}
+              onChange={(v) => updateEntry(i, { description: v })}
+              placeholder="Description"
+            />
+          </div>
+        ))}
+        <button
+          onClick={addEntry}
+          className="w-full text-xs py-1.5 rounded-md border border-dashed border-border text-ink-muted hover:border-brand hover:text-brand transition-colors flex items-center justify-center gap-1"
+        >
+          <Plus size={12} /> Add Entry
+        </button>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Diagram Editor
+// ---------------------------------------------------------------------------
+
+type DiagramBlock = Extract<ContentBlock, { type: "diagram" }>;
+
+function DiagramEditor({ block, onUpdate }: { block: DiagramBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const update = (partial: Partial<typeof data>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Mermaid Diagram">
+        <div>
+          <FieldLabel>Diagram Type</FieldLabel>
+          <FieldSelect
+            value={data.diagramType}
+            onChange={(v) => update({ diagramType: v as typeof data.diagramType })}
+            options={[
+              { value: "flowchart", label: "Flowchart" },
+              { value: "sequence", label: "Sequence" },
+              { value: "classDiagram", label: "Class Diagram" },
+              { value: "stateDiagram", label: "State Diagram" },
+              { value: "erDiagram", label: "ER Diagram" },
+              { value: "gantt", label: "Gantt" },
+              { value: "pie", label: "Pie" },
+              { value: "mindmap", label: "Mind Map" },
+              { value: "timeline", label: "Timeline" },
+            ]}
+          />
+        </div>
+        <div>
+          <FieldLabel>Mermaid Syntax</FieldLabel>
+          <FieldTextarea
+            value={data.syntax}
+            onChange={(v) => update({ syntax: v })}
+            placeholder="graph TD\n  A-->B"
+            rows={8}
+          />
+        </div>
+        <div>
+          <FieldLabel>Caption</FieldLabel>
+          <FieldInput
+            value={data.caption ?? ""}
+            onChange={(v) => update({ caption: v || undefined })}
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Divider Editor
+// ---------------------------------------------------------------------------
+
+type DividerBlock = Extract<ContentBlock, { type: "divider" }>;
+
+function DividerEditor({ block, onUpdate }: { block: DividerBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Divider">
+        <div>
+          <FieldLabel>Style</FieldLabel>
+          <FieldSelect
+            value={data.style ?? "solid"}
+            onChange={(v) => onUpdate({ ...block, data: { style: v as "solid" | "dashed" | "gradient" } })}
+            options={[
+              { value: "solid", label: "Solid" },
+              { value: "dashed", label: "Dashed" },
+              { value: "gradient", label: "Gradient" },
+            ]}
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Bibliography Editor
+// ---------------------------------------------------------------------------
+
+type BibliographyBlock = Extract<ContentBlock, { type: "bibliography" }>;
+
+function BibliographyEditor({ block, onUpdate }: { block: BibliographyBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+
+  const updateEntry = (idx: number, partial: Partial<typeof data.entries[0]>) => {
+    const entries = data.entries.map((e, i) => (i === idx ? { ...e, ...partial } : e));
+    onUpdate({ ...block, data: { ...data, entries } });
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Bibliography">
+        <div>
+          <FieldLabel>Citation Style</FieldLabel>
+          <FieldSelect
+            value={data.style}
+            onChange={(v) => onUpdate({ ...block, data: { ...data, style: v as typeof data.style } })}
+            options={[
+              { value: "apa", label: "APA" },
+              { value: "mla", label: "MLA" },
+              { value: "chicago", label: "Chicago" },
+              { value: "vancouver", label: "Vancouver" },
+              { value: "harvard", label: "Harvard" },
+            ]}
+          />
+        </div>
+        {data.entries.map((entry, i) => (
+          <div key={i} className="p-2 rounded-md border border-border bg-surface-raised/50 space-y-1.5">
+            <FieldTextarea
+              value={entry.formatted}
+              onChange={(v) => updateEntry(i, { formatted: v })}
+              placeholder="Formatted citation..."
+              rows={2}
+            />
+            <FieldInput
+              value={entry.doi ?? ""}
+              onChange={(v) => updateEntry(i, { doi: v || undefined })}
+              placeholder="DOI"
+            />
+          </div>
+        ))}
+        <button
+          onClick={() =>
+            onUpdate({
+              ...block,
+              data: {
+                ...data,
+                entries: [
+                  ...data.entries,
+                  { id: Date.now(), formatted: "", doi: undefined },
+                ],
+              },
+            })
+          }
+          className="w-full text-xs py-1.5 rounded-md border border-dashed border-border text-ink-muted hover:border-brand hover:text-brand transition-colors flex items-center justify-center gap-1"
+        >
+          <Plus size={12} /> Add Reference
+        </button>
+      </EditorSection>
+    </div>
+  );
+}

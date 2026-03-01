@@ -22,10 +22,13 @@ export function SlideCanvasWYSIWYG() {
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
 
+  // Block selection lives in the store so the properties panel can see it
+  const selectedBlockIndex = useSlidesStore((s) => s.selectedBlockIndex);
+  const setSelectedBlockIndex = useSlidesStore((s) => s.setSelectedBlockIndex);
+
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
 
-  // Block selection & editing state
-  const [selectedBlockIndex, setSelectedBlockIndex] = useState<number | null>(null);
+  // Editing state stays local (only the canvas needs it)
   const [editingBlockIndex, setEditingBlockIndex] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingSubtitle, setEditingSubtitle] = useState(false);
@@ -48,7 +51,7 @@ export function SlideCanvasWYSIWYG() {
     setEditingBlockIndex(null);
     setEditingTitle(false);
     setEditingSubtitle(false);
-  }, []);
+  }, [setSelectedBlockIndex]);
 
   // Update a specific block in the slide
   const updateBlock = useCallback(
@@ -70,7 +73,7 @@ export function SlideCanvasWYSIWYG() {
       setSelectedBlockIndex(null);
       setEditingBlockIndex(null);
     },
-    [activeSlide, updateSlide]
+    [activeSlide, updateSlide, setSelectedBlockIndex]
   );
 
   // Insert a block after a given index
@@ -82,7 +85,7 @@ export function SlideCanvasWYSIWYG() {
       updateSlide(activeSlide.id, { contentBlocks: newBlocks });
       setSelectedBlockIndex(afterIndex + 1);
     },
-    [activeSlide, updateSlide]
+    [activeSlide, updateSlide, setSelectedBlockIndex]
   );
 
   // Insert a block at the end
@@ -93,7 +96,7 @@ export function SlideCanvasWYSIWYG() {
       updateSlide(activeSlide.id, { contentBlocks: newBlocks });
       setSelectedBlockIndex(newBlocks.length - 1);
     },
-    [activeSlide, updateSlide]
+    [activeSlide, updateSlide, setSelectedBlockIndex]
   );
 
   // Keyboard handler for the canvas level
@@ -113,8 +116,17 @@ export function SlideCanvasWYSIWYG() {
         useSlidesStore.getState().duplicateSlide(activeSlide.id);
       }
 
-      // Ctrl+Z — undo (placeholder — store doesn't have undo yet)
-      // Ctrl+Y — redo
+      // Ctrl+Z — undo
+      if (e.ctrlKey && e.key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        useSlidesStore.getState().undo();
+      }
+
+      // Ctrl+Y or Ctrl+Shift+Z — redo
+      if ((e.ctrlKey && e.key === "y") || (e.ctrlKey && e.shiftKey && e.key === "z")) {
+        e.preventDefault();
+        useSlidesStore.getState().redo();
+      }
 
       // Delete selected block
       if (
@@ -135,9 +147,6 @@ export function SlideCanvasWYSIWYG() {
         }
       }
 
-      // Tab — indent bullet (when editing a bullets block)
-      // Handled by TipTap
-
       // Arrow keys — navigate blocks when not editing
       if (editingBlockIndex === null && selectedBlockIndex !== null) {
         if (e.key === "ArrowDown" || e.key === "ArrowRight") {
@@ -152,7 +161,7 @@ export function SlideCanvasWYSIWYG() {
         }
       }
     },
-    [activeSlide, selectedBlockIndex, editingBlockIndex, deleteBlock]
+    [activeSlide, selectedBlockIndex, editingBlockIndex, deleteBlock, setSelectedBlockIndex]
   );
 
   if (!activeSlide) {
@@ -203,7 +212,6 @@ export function SlideCanvasWYSIWYG() {
                     setSelectedBlockIndex(null);
                   }}
                   onUpdate={(html) => {
-                    // Strip HTML tags for title (keep it plain)
                     const text = html.replace(/<[^>]*>/g, "").trim();
                     updateSlide(activeSlide.id, { title: text });
                   }}
@@ -478,7 +486,7 @@ function EditableBlockDispatcher({
   }
 
   // All other block types: render with BlockSelectionWrapper + read-only renderer
-  // Double-click selects for property editing in the right panel
+  // Click to select — properties panel shows block-specific editor
   const entry = BLOCK_REGISTRY[block.type];
   if (!entry) return null;
   const Renderer = entry.render;

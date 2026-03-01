@@ -17,6 +17,8 @@ import {
   CircleNotch,
   Warning,
   Wrench,
+  ArrowUUpLeft,
+  ArrowUUpRight,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore, type RightPanel, type SaveStatus } from "@/stores/slides-store";
@@ -102,6 +104,26 @@ export function SlidesToolbar({
             ))}
           </div>
         )}
+      </div>
+
+      {/* Undo/Redo */}
+      <div className="flex items-center gap-0.5">
+        <button
+          onClick={() => useSlidesStore.getState().undo()}
+          disabled={!useSlidesStore.getState().canUndo()}
+          className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          title="Undo (Ctrl+Z)"
+        >
+          <ArrowUUpLeft size={14} />
+        </button>
+        <button
+          onClick={() => useSlidesStore.getState().redo()}
+          disabled={!useSlidesStore.getState().canRedo()}
+          className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          title="Redo (Ctrl+Y)"
+        >
+          <ArrowUUpRight size={14} />
+        </button>
       </div>
 
       {/* Save status */}

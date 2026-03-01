@@ -39,6 +39,7 @@ function resetStore() {
     themeKey: "modern",
     slides: [],
     activeSlideId: null,
+    selectedBlockIndex: null,
     mode: "slides",
     rightPanel: "properties",
     agentMode: "draft",
@@ -46,6 +47,8 @@ function resetStore() {
     showSharePanel: false,
     saveStatus: "idle",
     _saveTimer: null,
+    _undoStack: [],
+    _redoStack: [],
   });
 }
 
@@ -331,6 +334,146 @@ describe("slides-store", () => {
       expect(slides[1].id).toBe(1);
       expect(slides[0].sortOrder).toBe(0);
       expect(slides[1].sortOrder).toBe(1);
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Block selection
+  // -----------------------------------------------------------------------
+  describe("block selection", () => {
+    beforeEach(() => {
+      useSlidesStore.setState({
+        deckId: 1,
+        slides: [
+          {
+            ...mockSlide,
+            contentBlocks: [
+              { type: "text", data: { text: "Hello", style: "body" } },
+              { type: "chart", data: { chartType: "bar", title: "Chart", labels: ["A"], datasets: [{ label: "S", data: [1] }] } },
+            ],
+          },
+          mockSlide2,
+        ],
+        activeSlideId: 1,
+      });
+    });
+
+    it("selectedBlockIndex starts null", () => {
+      expect(useSlidesStore.getState().selectedBlockIndex).toBeNull();
+    });
+
+    it("setSelectedBlockIndex updates selection", () => {
+      useSlidesStore.getState().setSelectedBlockIndex(0);
+      expect(useSlidesStore.getState().selectedBlockIndex).toBe(0);
+    });
+
+    it("getSelectedBlock returns the correct block", () => {
+      useSlidesStore.getState().setSelectedBlockIndex(1);
+      const block = useSlidesStore.getState().getSelectedBlock();
+      expect(block).not.toBeNull();
+      expect(block!.type).toBe("chart");
+    });
+
+    it("getSelectedBlock returns null when no selection", () => {
+      expect(useSlidesStore.getState().getSelectedBlock()).toBeNull();
+    });
+
+    it("setActiveSlide clears selectedBlockIndex", () => {
+      useSlidesStore.getState().setSelectedBlockIndex(0);
+      useSlidesStore.getState().setActiveSlide(2);
+      expect(useSlidesStore.getState().selectedBlockIndex).toBeNull();
+    });
+
+    it("updateBlock modifies a specific block", () => {
+      useSlidesStore.getState().setSelectedBlockIndex(0);
+      useSlidesStore.getState().updateBlock(0, {
+        type: "text",
+        data: { text: "Updated", style: "body" },
+      });
+      const slide = useSlidesStore.getState().getActiveSlide();
+      expect(slide!.contentBlocks[0]).toEqual({
+        type: "text",
+        data: { text: "Updated", style: "body" },
+      });
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Undo / Redo
+  // -----------------------------------------------------------------------
+  describe("undo / redo", () => {
+    beforeEach(() => {
+      useSlidesStore.setState({
+        deckId: 1,
+        slides: [mockSlide, mockSlide2],
+        activeSlideId: 1,
+        _undoStack: [],
+        _redoStack: [],
+      });
+    });
+
+    it("starts with empty undo/redo stacks", () => {
+      expect(useSlidesStore.getState().canUndo()).toBe(false);
+      expect(useSlidesStore.getState().canRedo()).toBe(false);
+    });
+
+    it("updateSlide pushes to undo stack", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "New Title" });
+      expect(useSlidesStore.getState().canUndo()).toBe(true);
+      expect(useSlidesStore.getState()._undoStack).toHaveLength(1);
+      expect(useSlidesStore.getState()._undoStack[0].before).toEqual({ title: "Test Slide" });
+    });
+
+    it("undo reverts the last change", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "Changed" });
+      expect(useSlidesStore.getState().slides[0].title).toBe("Changed");
+
+      useSlidesStore.getState().undo();
+      expect(useSlidesStore.getState().slides[0].title).toBe("Test Slide");
+      expect(useSlidesStore.getState().canUndo()).toBe(false);
+      expect(useSlidesStore.getState().canRedo()).toBe(true);
+    });
+
+    it("redo re-applies the undone change", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "Changed" });
+      useSlidesStore.getState().undo();
+      useSlidesStore.getState().redo();
+      expect(useSlidesStore.getState().slides[0].title).toBe("Changed");
+      expect(useSlidesStore.getState().canUndo()).toBe(true);
+      expect(useSlidesStore.getState().canRedo()).toBe(false);
+    });
+
+    it("new changes clear the redo stack", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "V1" });
+      useSlidesStore.getState().undo();
+      expect(useSlidesStore.getState().canRedo()).toBe(true);
+
+      useSlidesStore.getState().updateSlide(1, { title: "V2" });
+      expect(useSlidesStore.getState().canRedo()).toBe(false);
+    });
+
+    it("multiple undos work in sequence", () => {
+      useSlidesStore.getState().updateSlide(1, { title: "V1" });
+      useSlidesStore.getState().updateSlide(1, { title: "V2" });
+      useSlidesStore.getState().updateSlide(1, { title: "V3" });
+      expect(useSlidesStore.getState()._undoStack).toHaveLength(3);
+
+      useSlidesStore.getState().undo();
+      expect(useSlidesStore.getState().slides[0].title).toBe("V2");
+      useSlidesStore.getState().undo();
+      expect(useSlidesStore.getState().slides[0].title).toBe("V1");
+      useSlidesStore.getState().undo();
+      expect(useSlidesStore.getState().slides[0].title).toBe("Test Slide");
+    });
+
+    it("undo does nothing when stack is empty", () => {
+      useSlidesStore.getState().undo();
+      expect(useSlidesStore.getState().slides[0].title).toBe("Test Slide");
+    });
+
+    it("redo does nothing when stack is empty", () => {
+      useSlidesStore.getState().redo();
+      expect(useSlidesStore.getState().slides[0].title).toBe("Test Slide");
     });
   });
 });

@@ -41,6 +41,17 @@ export type RightPanel =
 export type AgentMode = "learn" | "draft";
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
+// ---------------------------------------------------------------------------
+// Undo/Redo — snapshot-based history per slide
+// ---------------------------------------------------------------------------
+
+interface UndoEntry {
+  slideId: number;
+  before: Partial<SlideState>;
+}
+
+const MAX_UNDO_HISTORY = 50;
+
 export interface SlidesStore {
   // Deck metadata
   deckId: number | null;
@@ -53,6 +64,10 @@ export interface SlidesStore {
   // Slides
   slides: SlideState[];
   activeSlideId: number | null;
+
+  // Block selection (shared so properties panel can see it)
+  selectedBlockIndex: number | null;
+  setSelectedBlockIndex: (idx: number | null) => void;
 
   // Workspace mode
   mode: WorkspaceMode;
@@ -77,6 +92,7 @@ export interface SlidesStore {
 
   // Computed
   getActiveSlide: () => SlideState | null;
+  getSelectedBlock: () => ContentBlock | null;
 
   // Deck actions
   loadDeck: (deckId: number) => Promise<boolean>;
@@ -92,12 +108,24 @@ export interface SlidesStore {
   duplicateSlide: (id: number) => Promise<void>;
   reorderSlides: (ids: number[]) => Promise<void>;
 
+  // Block-level update (convenience)
+  updateBlock: (blockIndex: number, block: ContentBlock) => void;
+
+  // Undo / Redo
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
+
   // Batch update (for agent/generation)
   replaceAllSlides: (slides: SlideState[]) => void;
 
   // Internal
   _saveTimer: ReturnType<typeof setTimeout> | null;
   _debouncedSave: (slideId: number, data: Partial<SlideState>) => void;
+  _undoStack: UndoEntry[];
+  _redoStack: UndoEntry[];
+  _pushUndo: (slideId: number, before: Partial<SlideState>) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -133,6 +161,10 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   slides: [],
   activeSlideId: null,
 
+  // Block selection
+  selectedBlockIndex: null,
+  setSelectedBlockIndex: (idx) => set({ selectedBlockIndex: idx }),
+
   // Mode
   mode: "slides",
   setMode: (mode) => set({ mode }),
@@ -154,10 +186,30 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Save
   saveStatus: "idle",
 
+  // Undo / Redo stacks
+  _undoStack: [],
+  _redoStack: [],
+  _pushUndo: (slideId, before) => {
+    set((state) => ({
+      _undoStack: [
+        ...state._undoStack.slice(-(MAX_UNDO_HISTORY - 1)),
+        { slideId, before },
+      ],
+      _redoStack: [], // Clear redo on new action
+    }));
+  },
+
   // Computed
   getActiveSlide: () => {
     const { slides, activeSlideId } = get();
     return slides.find((s) => s.id === activeSlideId) ?? null;
+  },
+
+  getSelectedBlock: () => {
+    const slide = get().getActiveSlide();
+    const idx = get().selectedBlockIndex;
+    if (!slide || idx === null || idx < 0 || idx >= slide.contentBlocks.length) return null;
+    return slide.contentBlocks[idx];
   },
 
   // Load deck from server
@@ -209,15 +261,33 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   },
 
   // Slide actions
-  setActiveSlide: (id) => set({ activeSlideId: id }),
+  setActiveSlide: (id) => set({ activeSlideId: id, selectedBlockIndex: null }),
 
   updateSlide: (id, data) => {
+    // Capture before state for undo
+    const slide = get().slides.find((s) => s.id === id);
+    if (slide) {
+      const before: Partial<SlideState> = {};
+      for (const key of Object.keys(data) as (keyof SlideState)[]) {
+        (before as Record<string, unknown>)[key] = slide[key];
+      }
+      get()._pushUndo(id, before);
+    }
+
     set((state) => ({
       slides: state.slides.map((s) =>
         s.id === id ? { ...s, ...data } : s
       ),
     }));
     get()._debouncedSave(id, data);
+  },
+
+  updateBlock: (blockIndex, block) => {
+    const slide = get().getActiveSlide();
+    if (!slide) return;
+    const newBlocks = [...slide.contentBlocks];
+    newBlocks[blockIndex] = block;
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
   },
 
   addSlide: async (afterId) => {
@@ -332,6 +402,57 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
       set({ slides });
     }
   },
+
+  // Undo / Redo
+  undo: () => {
+    const stack = get()._undoStack;
+    if (stack.length === 0) return;
+    const entry = stack[stack.length - 1];
+    const currentSlide = get().slides.find((s) => s.id === entry.slideId);
+    if (!currentSlide) return;
+
+    // Capture current state for redo
+    const redo: Partial<SlideState> = {};
+    for (const key of Object.keys(entry.before) as (keyof SlideState)[]) {
+      (redo as Record<string, unknown>)[key] = currentSlide[key];
+    }
+
+    // Apply undo (without pushing to undo stack again)
+    set((state) => ({
+      slides: state.slides.map((s) =>
+        s.id === entry.slideId ? { ...s, ...entry.before } : s
+      ),
+      _undoStack: state._undoStack.slice(0, -1),
+      _redoStack: [...state._redoStack, { slideId: entry.slideId, before: redo }],
+    }));
+    get()._debouncedSave(entry.slideId, entry.before);
+  },
+
+  redo: () => {
+    const stack = get()._redoStack;
+    if (stack.length === 0) return;
+    const entry = stack[stack.length - 1];
+    const currentSlide = get().slides.find((s) => s.id === entry.slideId);
+    if (!currentSlide) return;
+
+    // Capture current state for undo
+    const undo: Partial<SlideState> = {};
+    for (const key of Object.keys(entry.before) as (keyof SlideState)[]) {
+      (undo as Record<string, unknown>)[key] = currentSlide[key];
+    }
+
+    set((state) => ({
+      slides: state.slides.map((s) =>
+        s.id === entry.slideId ? { ...s, ...entry.before } : s
+      ),
+      _redoStack: state._redoStack.slice(0, -1),
+      _undoStack: [...state._undoStack, { slideId: entry.slideId, before: undo }],
+    }));
+    get()._debouncedSave(entry.slideId, entry.before);
+  },
+
+  canUndo: () => get()._undoStack.length > 0,
+  canRedo: () => get()._redoStack.length > 0,
 
   replaceAllSlides: (slides) => {
     set((state) => ({
