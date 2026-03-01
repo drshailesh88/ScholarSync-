@@ -12,6 +12,7 @@ import { PRESET_THEMES } from "@/types/presentation";
 import type { ContentBlock } from "@/types/presentation";
 
 import { FindReplaceDialog } from "../shared/find-replace-dialog";
+import { SlideSorterView } from "../shared/slide-sorter-view";
 
 // Lazy-loaded panels from existing presentation components
 import { CommentsPanel, useCommentCounts } from "@/components/presentation/comments-panel";
@@ -34,6 +35,8 @@ export function SlidesModeLayout() {
   const setActiveSlide = useSlidesStore((s) => s.setActiveSlide);
   const loadDeck = useSlidesStore((s) => s.loadDeck);
   const showFindReplace = useSlidesStore((s) => s.showFindReplace);
+  const showSlideSorter = useSlidesStore((s) => s.showSlideSorter);
+  const setShowSlideSorter = useSlidesStore((s) => s.setShowSlideSorter);
 
   const { counts: _commentCounts } = useCommentCounts(deckId ?? 0);
 
@@ -185,6 +188,9 @@ export function SlidesModeLayout() {
 
       {/* Find & Replace overlay */}
       {showFindReplace && <FindReplaceDialog />}
+      {showSlideSorter && (
+        <SlideSorterView onClose={() => setShowSlideSorter(false)} />
+      )}
     </div>
   );
 }

@@ -112,6 +112,10 @@ export interface SlidesStore {
   showFindReplace: boolean;
   setShowFindReplace: (v: boolean) => void;
 
+  // Slide Sorter
+  showSlideSorter: boolean;
+  setShowSlideSorter: (v: boolean) => void;
+
   // Save status
   saveStatus: SaveStatus;
 
@@ -230,6 +234,9 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Find & Replace
   showFindReplace: false,
   setShowFindReplace: (showFindReplace) => set({ showFindReplace }),
+
+  showSlideSorter: false,
+  setShowSlideSorter: (showSlideSorter) => set({ showSlideSorter }),
 
   // Clipboard
   clipboardSlide: null,

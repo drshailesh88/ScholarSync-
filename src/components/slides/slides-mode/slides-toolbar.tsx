@@ -20,6 +20,7 @@ import {
   ArrowUUpLeft,
   ArrowUUpRight,
   MagnifyingGlass,
+  GridFour,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore, type RightPanel, type SaveStatus } from "@/stores/slides-store";
@@ -53,6 +54,7 @@ export function SlidesToolbar({
   const redoAvailable = useSlidesStore((s) => s._redoStack.length > 0);
   const showFindReplace = useSlidesStore((s) => s.showFindReplace);
   const setShowFindReplace = useSlidesStore((s) => s.setShowFindReplace);
+  const setShowSlideSorter = useSlidesStore((s) => s.setShowSlideSorter);
   const [showInsertMenu, setShowInsertMenu] = useState(false);
 
   // Global Ctrl+F / Cmd+F shortcut
@@ -154,6 +156,13 @@ export function SlidesToolbar({
           title="Find & Replace (Ctrl+F)"
         >
           <MagnifyingGlass size={14} />
+        </button>
+        <button
+          onClick={() => setShowSlideSorter(true)}
+          className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          title="Slide Sorter View"
+        >
+          <GridFour size={14} />
         </button>
       </div>
 
