@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScholarSync Workspace — Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-canvas: #FAFAF9; --bg-surface: #FFFFFF; --bg-elevated: #F5F5F4;
+    --bg-sunken: #F0EFED; --bg-wash: #E8E6E3;
+    --ink-primary: #1C1917; --ink-secondary: #57534E; --ink-tertiary: #A8A29E;
+    --ink-placeholder: #C4C0BB;
+    --border-default: #E7E5E4; --border-subtle: #F0EFED; --border-strong: #D6D3D1;
+    --app-write: #4F46E5; --app-write-light: #EEF2FF;
+    --app-research: #0284C7; --app-research-light: #E0F2FE;
+    --app-library: #059669; --app-library-light: #ECFDF5;
+    --font-ui: 'Inter', system-ui, sans-serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+    --rail-width: 64px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.08);
+    --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font-ui); background: var(--bg-canvas); color: var(--ink-primary); -webkit-font-smoothing: antialiased; }
+
+  .app-shell { display: flex; height: 100vh; }
+
+  /* Icon Rail */
+  .icon-rail { width: var(--rail-width); background: var(--bg-surface); border-right: 1px solid var(--border-default); display: flex; flex-direction: column; align-items: center; padding: 16px 0; flex-shrink: 0; }
+  .rail-logo { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #4F46E5, #0284C7); display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; font-weight: 700; margin-bottom: 24px; }
+  .rail-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .rail-item { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; color: var(--ink-tertiary); font-size: 20px; position: relative; }
+  .rail-item:hover { background: var(--bg-elevated); color: var(--ink-secondary); }
+  .rail-item.active { background: var(--app-library-light); color: var(--app-library); }
+  .rail-divider { width: 24px; height: 1px; background: var(--border-default); margin: 8px 0; }
+  .rail-bottom { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .rail-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #E8E6E3, #D6D3D1); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--ink-secondary); }
+  .rail-item .tooltip { display: none; position: absolute; left: 56px; background: var(--ink-primary); color: white; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 6px; white-space: nowrap; z-index: 100; }
+  .rail-item:hover .tooltip { display: block; }
+
+  /* ═══ LIBRARY LAYOUT ═══ */
+  .library-layout { flex: 1; display: flex; overflow: hidden; }
+
+  /* Collections Sidebar */
+  .collections-sidebar {
+    width: 220px;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    padding: 20px 12px;
+  }
+
+  .collections-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--ink-tertiary);
+    padding: 0 8px;
+    margin-bottom: 12px;
+  }
+
+  .collection-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.1s;
+    font-size: 13px;
+    color: var(--ink-secondary);
+  }
+
+  .collection-item:hover { background: var(--bg-elevated); color: var(--ink-primary); }
+  .collection-item.active { background: var(--app-library-light); color: var(--app-library); font-weight: 500; }
+
+  .collection-left { display: flex; align-items: center; gap: 8px; }
+  .collection-count { font-size: 11px; color: var(--ink-tertiary); }
+
+  .collection-sep { height: 1px; background: var(--border-subtle); margin: 8px 0; }
+
+  .collection-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--ink-tertiary);
+    margin-top: auto;
+    border: none;
+    background: none;
+    font-family: var(--font-ui);
+    width: 100%;
+    text-align: left;
+    transition: all 0.1s;
+  }
+
+  .collection-add:hover { background: var(--bg-elevated); color: var(--ink-secondary); }
+
+  /* Papers Area */
+  .papers-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px;
+  }
+
+  .papers-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .papers-search {
+    flex: 1;
+    height: 38px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 0 14px;
+    font-size: 13px;
+    font-family: var(--font-ui);
+    outline: none;
+    background: var(--bg-surface);
+    color: var(--ink-primary);
+  }
+
+  .papers-search:focus { border-color: var(--app-library); box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.08); }
+  .papers-search::placeholder { color: var(--ink-placeholder); }
+
+  .filter-btn {
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-family: var(--font-ui);
+    color: var(--ink-secondary);
+    background: var(--bg-surface);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover { background: var(--bg-elevated); }
+
+  .upload-btn {
+    height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--app-library);
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-ui);
+    color: var(--app-library);
+    background: var(--app-library-light);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.15s;
+  }
+
+  .upload-btn:hover { background: #D1FAE5; }
+
+  /* Table-style paper list */
+  .paper-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .paper-table thead th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--ink-tertiary);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  .paper-table tbody tr {
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background 0.1s;
+    cursor: default;
+  }
+
+  .paper-table tbody tr:hover { background: var(--bg-elevated); }
+
+  .paper-table td {
+    padding: 14px 12px;
+    vertical-align: top;
+  }
+
+  .ptitle {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink-primary);
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+
+  .pauthors {
+    font-size: 12px;
+    color: var(--ink-tertiary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+
+  .pjournal { font-size: 12px; color: var(--ink-tertiary); }
+  .pyear { font-size: 13px; color: var(--ink-secondary); }
+  .pcitations { font-size: 13px; color: var(--ink-secondary); }
+
+  .paper-action-cell {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .pa-btn {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    border: none;
+    background: none;
+    color: var(--ink-tertiary);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.1s;
+  }
+
+  .pa-btn:hover { background: var(--bg-elevated); color: var(--ink-secondary); }
+  .pa-btn.favorited { color: #D97706; }
+  .pa-btn.cite:hover { color: var(--app-write); background: var(--app-write-light); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- Icon Rail -->
+  <nav class="icon-rail">
+    <div class="rail-logo">S</div>
+    <div class="rail-nav">
+      <div class="rail-item">&#127968;<span class="tooltip">Home</span></div>
+      <div class="rail-item">&#9998;<span class="tooltip">Studio</span></div>
+      <div class="rail-item">&#128270;<span class="tooltip">Research</span></div>
+      <div class="rail-item active">&#128218;<span class="tooltip">Library</span></div>
+      <div class="rail-item">&#128221;<span class="tooltip">Notebook</span></div>
+      <div class="rail-divider"></div>
+      <div class="rail-item">&#129504;<span class="tooltip">Deep Research</span></div>
+      <div class="rail-item">&#128200;<span class="tooltip">Systematic Review</span></div>
+      <div class="rail-item">&#128737;<span class="tooltip">Integrity</span></div>
+      <div class="rail-item">&#127916;<span class="tooltip">Presentations</span></div>
+    </div>
+    <div class="rail-bottom">
+      <div class="rail-item">&#9881;</div>
+      <div class="rail-avatar">DS</div>
+    </div>
+  </nav>
+
+  <!-- ═══ LIBRARY ═══ -->
+  <div class="library-layout">
+    <!-- Collections -->
+    <aside class="collections-sidebar">
+      <div class="collections-title">Collections</div>
+      <div class="collection-item active">
+        <div class="collection-left">&#128218; All Papers</div>
+        <span class="collection-count">142</span>
+      </div>
+      <div class="collection-item">
+        <div class="collection-left">&#11088; Favorites</div>
+        <span class="collection-count">18</span>
+      </div>
+
+      <div class="collection-sep"></div>
+
+      <div class="collection-item">
+        <div class="collection-left">&#128193; SGLT-2 Review</div>
+        <span class="collection-count">47</span>
+      </div>
+      <div class="collection-item">
+        <div class="collection-left">&#128193; Parkinson's ML</div>
+        <span class="collection-count">31</span>
+      </div>
+      <div class="collection-item">
+        <div class="collection-left">&#128193; COVID Neuro</div>
+        <span class="collection-count">22</span>
+      </div>
+
+      <button class="collection-add">+ New Collection</button>
+    </aside>
+
+    <!-- Papers -->
+    <div class="papers-area">
+      <div class="papers-toolbar">
+        <input class="papers-search" type="text" placeholder="Search your library..." />
+        <button class="filter-btn">&#9776; Filters</button>
+        <select class="filter-btn">
+          <option>Recently Added</option>
+          <option>Title A-Z</option>
+          <option>Citation Count</option>
+          <option>Year</option>
+        </select>
+        <button class="upload-btn">&#11014; Upload PDF</button>
+      </div>
+
+      <table class="paper-table">
+        <thead>
+          <tr>
+            <th style="width: 45%;">Paper</th>
+            <th style="width: 20%;">Journal</th>
+            <th style="width: 8%;">Year</th>
+            <th style="width: 10%;">Citations</th>
+            <th style="width: 17%;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="ptitle">Empagliflozin, Cardiovascular Outcomes, and Mortality in Type 2 Diabetes</div>
+              <div class="pauthors">Zinman B, Wanner C, Lachin JM, et al.</div>
+            </td>
+            <td class="pjournal">N Engl J Med</td>
+            <td class="pyear">2015</td>
+            <td class="pcitations">7,842</td>
+            <td>
+              <div class="paper-action-cell">
+                <button class="pa-btn cite" title="Cite">&#128196;</button>
+                <button class="pa-btn" title="View PDF">&#128065;</button>
+                <button class="pa-btn favorited" title="Favorited">&#11088;</button>
+                <button class="pa-btn" title="Delete">&#128465;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ptitle">Canagliflozin and Cardiovascular and Renal Events in Type 2 Diabetes</div>
+              <div class="pauthors">Neal B, Perkovic V, Mahaffey KW, et al.</div>
+            </td>
+            <td class="pjournal">N Engl J Med</td>
+            <td class="pyear">2017</td>
+            <td class="pcitations">5,214</td>
+            <td>
+              <div class="paper-action-cell">
+                <button class="pa-btn cite" title="Cite">&#128196;</button>
+                <button class="pa-btn" title="View PDF">&#128065;</button>
+                <button class="pa-btn favorited" title="Favorited">&#11088;</button>
+                <button class="pa-btn" title="Delete">&#128465;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ptitle">Dapagliflozin and Cardiovascular Outcomes in Type 2 Diabetes (DECLARE-TIMI 58)</div>
+              <div class="pauthors">Wiviott SD, Raz I, Bonaca MP, et al.</div>
+            </td>
+            <td class="pjournal">N Engl J Med</td>
+            <td class="pyear">2019</td>
+            <td class="pcitations">3,891</td>
+            <td>
+              <div class="paper-action-cell">
+                <button class="pa-btn cite" title="Cite">&#128196;</button>
+                <button class="pa-btn" title="View PDF">&#128065;</button>
+                <button class="pa-btn" title="Favorite">&#9734;</button>
+                <button class="pa-btn" title="Delete">&#128465;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ptitle">SGLT-2 Inhibitors and Cardiovascular Risk: A Systematic Meta-Analysis</div>
+              <div class="pauthors">Zelniker TA, Wiviott SD, Raz I, et al.</div>
+            </td>
+            <td class="pjournal">The Lancet</td>
+            <td class="pyear">2019</td>
+            <td class="pcitations">2,156</td>
+            <td>
+              <div class="paper-action-cell">
+                <button class="pa-btn cite" title="Cite">&#128196;</button>
+                <button class="pa-btn" title="View PDF">&#128065;</button>
+                <button class="pa-btn" title="Favorite">&#9734;</button>
+                <button class="pa-btn" title="Delete">&#128465;</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ptitle">Heart Failure and Kidney Outcomes with SGLT-2 Inhibitors in Type 2 Diabetes</div>
+              <div class="pauthors">McGuire DK, Shih WJ, Cosentino F, et al.</div>
+            </td>
+            <td class="pjournal">Circulation</td>
+            <td class="pyear">2021</td>
+            <td class="pcitations">1,245</td>
+            <td>
+              <div class="paper-action-cell">
+                <button class="pa-btn cite" title="Cite">&#128196;</button>
+                <button class="pa-btn" title="View PDF">&#128065;</button>
+                <button class="pa-btn" title="Favorite">&#9734;</button>
+                <button class="pa-btn" title="Delete">&#128465;</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

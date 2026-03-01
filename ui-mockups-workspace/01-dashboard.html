@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScholarSync Workspace — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-canvas: #FAFAF9; --bg-surface: #FFFFFF; --bg-elevated: #F5F5F4;
+    --bg-sunken: #F0EFED; --bg-wash: #E8E6E3;
+    --ink-primary: #1C1917; --ink-secondary: #57534E; --ink-tertiary: #A8A29E;
+    --ink-placeholder: #C4C0BB;
+    --border-default: #E7E5E4; --border-subtle: #F0EFED; --border-strong: #D6D3D1;
+    --app-write: #4F46E5; --app-write-light: #EEF2FF;
+    --app-research: #0284C7; --app-research-light: #E0F2FE;
+    --app-library: #059669; --app-library-light: #ECFDF5;
+    --app-review: #7C3AED; --app-review-light: #F5F3FF;
+    --app-compliance: #D97706; --app-compliance-light: #FFFBEB;
+    --app-present: #DC2626; --app-present-light: #FEF2F2;
+    --app-notebook: #0891B2; --app-notebook-light: #ECFEFF;
+    --app-deep: #7E22CE; --app-deep-light: #FAF5FF;
+    --font-ui: 'Inter', system-ui, sans-serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+    --rail-width: 64px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.08);
+    --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px; --radius-xl: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font-ui); background: var(--bg-canvas); color: var(--ink-primary); -webkit-font-smoothing: antialiased; }
+
+  /* ═══ APP SHELL ═══ */
+  .app-shell { display: flex; height: 100vh; }
+
+  /* ── Icon Rail (Google Workspace style) ── */
+  .icon-rail {
+    width: var(--rail-width);
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  .rail-logo {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4F46E5, #0284C7);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 16px; font-weight: 700;
+    margin-bottom: 24px;
+    cursor: pointer;
+  }
+
+  .rail-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+
+  .rail-item {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    color: var(--ink-tertiary);
+    font-size: 20px;
+  }
+
+  .rail-item:hover { background: var(--bg-elevated); color: var(--ink-secondary); }
+
+  .rail-item.active {
+    background: var(--app-write-light);
+    color: var(--app-write);
+  }
+
+  .rail-item.active[data-app="research"] { background: var(--app-research-light); color: var(--app-research); }
+  .rail-item.active[data-app="library"] { background: var(--app-library-light); color: var(--app-library); }
+  .rail-item.active[data-app="notebook"] { background: var(--app-notebook-light); color: var(--app-notebook); }
+  .rail-item.active[data-app="deep"] { background: var(--app-deep-light); color: var(--app-deep); }
+  .rail-item.active[data-app="review"] { background: var(--app-review-light); color: var(--app-review); }
+  .rail-item.active[data-app="compliance"] { background: var(--app-compliance-light); color: var(--app-compliance); }
+  .rail-item.active[data-app="present"] { background: var(--app-present-light); color: var(--app-present); }
+
+  .rail-item .tooltip {
+    display: none;
+    position: absolute;
+    left: 56px;
+    background: var(--ink-primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .rail-item:hover .tooltip { display: block; }
+
+  .rail-divider { width: 24px; height: 1px; background: var(--border-default); margin: 8px 0; }
+
+  .rail-bottom {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+
+  .rail-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8E6E3, #D6D3D1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: var(--ink-secondary);
+    cursor: pointer;
+  }
+
+  /* ── Main Content ── */
+  .main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  /* ── Top Bar ── */
+  .top-bar {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  .top-bar-left {
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .top-bar-title {
+    font-size: 15px; font-weight: 600; color: var(--ink-primary);
+  }
+
+  .search-bar {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    padding: 0 14px;
+    height: 36px;
+    width: 360px;
+    transition: all 0.2s;
+  }
+
+  .search-bar:focus-within {
+    border-color: var(--app-write);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+    background: var(--bg-surface);
+  }
+
+  .search-bar input {
+    border: none; background: none; outline: none;
+    font-size: 13px; color: var(--ink-primary);
+    font-family: var(--font-ui);
+    flex: 1;
+  }
+
+  .search-bar input::placeholder { color: var(--ink-placeholder); }
+
+  .search-icon { color: var(--ink-tertiary); font-size: 16px; }
+
+  .search-shortcut {
+    font-size: 10px; font-weight: 500; color: var(--ink-tertiary);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: var(--font-ui);
+  }
+
+  .top-bar-right { display: flex; align-items: center; gap: 8px; }
+
+  .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--ink-tertiary);
+    font-size: 18px;
+    border: none; background: none;
+    transition: all 0.15s;
+  }
+
+  .icon-btn:hover { background: var(--bg-elevated); color: var(--ink-secondary); }
+
+  /* ═══ DASHBOARD ═══ */
+  .dashboard {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .greeting {
+    margin-bottom: 48px;
+  }
+
+  .greeting h1 {
+    font-family: var(--font-body);
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--ink-primary);
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
+
+  .greeting p {
+    font-size: 14px;
+    color: var(--ink-tertiary);
+  }
+
+  /* Quick Actions */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--ink-tertiary);
+    margin-bottom: 16px;
+  }
+
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+
+  .action-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .action-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .action-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .action-card .action-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink-primary);
+  }
+
+  .action-card .action-desc {
+    font-size: 12px;
+    color: var(--ink-tertiary);
+    line-height: 1.5;
+  }
+
+  /* Stats Row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+
+  .stat-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink-primary);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--ink-tertiary);
+  }
+
+  /* Manuscripts List */
+  .manuscripts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .see-all {
+    font-size: 13px;
+    color: var(--app-write);
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .see-all:hover { text-decoration: underline; }
+
+  .manuscript-list {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 48px;
+  }
+
+  .manuscript-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .manuscript-item:last-child { border-bottom: none; }
+
+  .manuscript-item:hover { background: var(--bg-elevated); }
+
+  .manuscript-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+
+  .manuscript-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .manuscript-info { min-width: 0; }
+
+  .manuscript-title {
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 460px;
+  }
+
+  .manuscript-meta {
+    font-size: 12px;
+    color: var(--ink-tertiary);
+    margin-top: 2px;
+  }
+
+  .manuscript-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+  .status-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 100px;
+  }
+
+  .status-drafting { background: var(--app-write-light); color: var(--app-write); }
+  .status-reviewing { background: var(--app-compliance-light); color: var(--app-compliance); }
+  .status-completed { background: var(--app-library-light); color: var(--app-library); }
+
+  .arrow-icon { color: var(--ink-placeholder); font-size: 16px; }
+
+  /* Bottom Grid */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .bottom-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .mini-list {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .mini-list-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background 0.1s;
+    cursor: default;
+  }
+
+  .mini-list-item:last-child { border-bottom: none; }
+  .mini-list-item:hover { background: var(--bg-elevated); }
+
+  .mini-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--bg-elevated);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-tertiary);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .mini-text { font-size: 13px; color: var(--ink-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mini-meta { font-size: 11px; color: var(--ink-tertiary); margin-top: 1px; }
+
+  /* Empty state text */
+  .empty-text {
+    padding: 32px;
+    text-align: center;
+    color: var(--ink-tertiary);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <!-- ═══ ICON RAIL ═══ -->
+  <nav class="icon-rail">
+    <div class="rail-logo">S</div>
+
+    <div class="rail-nav">
+      <div class="rail-item active" data-app="home">
+        <span>&#127968;</span>
+        <span class="tooltip">Home</span>
+      </div>
+      <div class="rail-item" data-app="write">
+        <span>&#9998;</span>
+        <span class="tooltip">Studio</span>
+      </div>
+      <div class="rail-item" data-app="research">
+        <span>&#128270;</span>
+        <span class="tooltip">Research</span>
+      </div>
+      <div class="rail-item" data-app="library">
+        <span>&#128218;</span>
+        <span class="tooltip">Library</span>
+      </div>
+      <div class="rail-item" data-app="notebook">
+        <span>&#128221;</span>
+        <span class="tooltip">Notebook</span>
+      </div>
+
+      <div class="rail-divider"></div>
+
+      <div class="rail-item" data-app="deep">
+        <span>&#129504;</span>
+        <span class="tooltip">Deep Research</span>
+      </div>
+      <div class="rail-item" data-app="review">
+        <span>&#128200;</span>
+        <span class="tooltip">Systematic Review</span>
+      </div>
+      <div class="rail-item" data-app="compliance">
+        <span>&#128737;</span>
+        <span class="tooltip">Integrity</span>
+      </div>
+      <div class="rail-item" data-app="present">
+        <span>&#127916;</span>
+        <span class="tooltip">Presentations</span>
+      </div>
+    </div>
+
+    <div class="rail-bottom">
+      <div class="rail-item">
+        <span>&#9881;</span>
+        <span class="tooltip">Settings</span>
+      </div>
+      <div class="rail-avatar">DS</div>
+    </div>
+  </nav>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <span class="top-bar-title">Home</span>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-icon">&#128270;</span>
+        <input type="text" placeholder="Search papers, projects, or ask a question...">
+        <span class="search-shortcut">&#8984;K</span>
+      </div>
+
+      <div class="top-bar-right">
+        <button class="icon-btn" title="Notifications">&#128276;</button>
+        <button class="icon-btn" title="Theme">&#9789;</button>
+      </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard">
+      <!-- Greeting -->
+      <div class="greeting">
+        <h1>Good morning, Dr. Sharma</h1>
+        <p>Pick up where you left off, or start something new.</p>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="section-label">Start</div>
+      <div class="quick-actions">
+        <a class="action-card" href="#">
+          <div class="action-icon" style="background: var(--app-write-light); color: var(--app-write);">&#9998;</div>
+          <div class="action-title">Write</div>
+          <div class="action-desc">Open the editor. Start drafting with focus.</div>
+        </a>
+        <a class="action-card" href="#">
+          <div class="action-icon" style="background: var(--app-research-light); color: var(--app-research);">&#128270;</div>
+          <div class="action-title">Search Literature</div>
+          <div class="action-desc">Query 200M+ academic papers.</div>
+        </a>
+        <a class="action-card" href="#">
+          <div class="action-icon" style="background: var(--app-deep-light); color: var(--app-deep);">&#129504;</div>
+          <div class="action-title">Deep Research</div>
+          <div class="action-desc">Multi-perspective synthesis across papers.</div>
+        </a>
+        <a class="action-card" href="#">
+          <div class="action-icon" style="background: var(--app-compliance-light); color: var(--app-compliance);">&#128737;</div>
+          <div class="action-title">Check Integrity</div>
+          <div class="action-desc">Run plagiarism and AI-detection audits.</div>
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="section-label">Your research at a glance</div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value">7</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">142</div>
+          <div class="stat-label">Papers saved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">38</div>
+          <div class="stat-label">Searches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">24</div>
+          <div class="stat-label">Conversations</div>
+        </div>
+      </div>
+
+      <!-- Active Manuscripts -->
+      <div class="manuscripts-header">
+        <div class="section-label" style="margin-bottom: 0;">Active manuscripts</div>
+        <a class="see-all" href="#">View archive &rarr;</a>
+      </div>
+      <div class="manuscript-list">
+        <div class="manuscript-item">
+          <div class="manuscript-left">
+            <div class="manuscript-icon" style="background: var(--app-write-light); color: var(--app-write);">&#128196;</div>
+            <div class="manuscript-info">
+              <div class="manuscript-title">Cardiovascular Risk in Type 2 Diabetes: A Systematic Review of SGLT-2 Inhibitor Outcomes</div>
+              <div class="manuscript-meta">3 hours ago &middot; Systematic Review</div>
+            </div>
+          </div>
+          <div class="manuscript-right">
+            <span class="status-badge status-drafting">Drafting</span>
+            <span class="arrow-icon">&rarr;</span>
+          </div>
+        </div>
+        <div class="manuscript-item">
+          <div class="manuscript-left">
+            <div class="manuscript-icon" style="background: var(--app-library-light); color: var(--app-library);">&#128196;</div>
+            <div class="manuscript-info">
+              <div class="manuscript-title">Machine Learning in Early Diagnosis of Parkinson's Disease</div>
+              <div class="manuscript-meta">Yesterday &middot; Original Article</div>
+            </div>
+          </div>
+          <div class="manuscript-right">
+            <span class="status-badge status-reviewing">Reviewing</span>
+            <span class="arrow-icon">&rarr;</span>
+          </div>
+        </div>
+        <div class="manuscript-item">
+          <div class="manuscript-left">
+            <div class="manuscript-icon" style="background: var(--app-review-light); color: var(--app-review);">&#128196;</div>
+            <div class="manuscript-info">
+              <div class="manuscript-title">Post-COVID Neurological Sequelae in Pediatric Populations</div>
+              <div class="manuscript-meta">3 days ago &middot; Case Report</div>
+            </div>
+          </div>
+          <div class="manuscript-right">
+            <span class="status-badge status-completed">Completed</span>
+            <span class="arrow-icon">&rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Grid -->
+      <div class="bottom-grid">
+        <div>
+          <div class="bottom-section-header">
+            <div class="section-label" style="margin-bottom: 0;">Recent searches</div>
+            <a class="see-all" href="#">Search &rarr;</a>
+          </div>
+          <div class="mini-list">
+            <div class="mini-list-item">
+              <div class="mini-icon">&#128270;</div>
+              <div>
+                <div class="mini-text">SGLT-2 inhibitors cardiovascular outcomes meta-analysis</div>
+                <div class="mini-meta">23 results &middot; 2h ago</div>
+              </div>
+            </div>
+            <div class="mini-list-item">
+              <div class="mini-icon">&#128270;</div>
+              <div>
+                <div class="mini-text">Machine learning Parkinson's disease early detection biomarkers</div>
+                <div class="mini-meta">47 results &middot; Yesterday</div>
+              </div>
+            </div>
+            <div class="mini-list-item">
+              <div class="mini-icon">&#128270;</div>
+              <div>
+                <div class="mini-text">Long COVID pediatric neurological symptoms systematic review</div>
+                <div class="mini-meta">12 results &middot; 3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="bottom-section-header">
+            <div class="section-label" style="margin-bottom: 0;">Activity</div>
+          </div>
+          <div class="mini-list">
+            <div class="mini-list-item">
+              <div class="mini-icon">&#9998;</div>
+              <div>
+                <div class="mini-text">Edited &ldquo;Cardiovascular Risk in Type 2...&rdquo;</div>
+                <div class="mini-meta">Document &middot; 2h ago</div>
+              </div>
+            </div>
+            <div class="mini-list-item">
+              <div class="mini-icon">&#128218;</div>
+              <div>
+                <div class="mini-text">Saved 3 papers to Library</div>
+                <div class="mini-meta">Library &middot; 5h ago</div>
+              </div>
+            </div>
+            <div class="mini-list-item">
+              <div class="mini-icon">&#128737;</div>
+              <div>
+                <div class="mini-text">Integrity check passed (94% original)</div>
+                <div class="mini-meta">Compliance &middot; Yesterday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

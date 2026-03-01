@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScholarSync Workspace — Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ── Core Palette ── */
+    --bg-canvas: #FAFAF9;
+    --bg-surface: #FFFFFF;
+    --bg-elevated: #F5F5F4;
+    --bg-sunken: #F0EFED;
+    --bg-wash: #E8E6E3;
+
+    --ink-primary: #1C1917;
+    --ink-secondary: #57534E;
+    --ink-tertiary: #A8A29E;
+    --ink-placeholder: #C4C0BB;
+
+    --border-default: #E7E5E4;
+    --border-subtle: #F0EFED;
+    --border-strong: #D6D3D1;
+
+    /* ── App Colors (like Google Workspace) ── */
+    --app-write: #4F46E5;       /* Indigo — Studio/Write */
+    --app-write-light: #EEF2FF;
+    --app-write-mid: #A5B4FC;
+
+    --app-research: #0284C7;    /* Sky — Literature Search */
+    --app-research-light: #E0F2FE;
+    --app-research-mid: #7DD3FC;
+
+    --app-library: #059669;     /* Emerald — Library */
+    --app-library-light: #ECFDF5;
+    --app-library-mid: #6EE7B7;
+
+    --app-review: #7C3AED;      /* Violet — Systematic Review */
+    --app-review-light: #F5F3FF;
+    --app-review-mid: #C4B5FD;
+
+    --app-compliance: #D97706;  /* Amber — Compliance */
+    --app-compliance-light: #FFFBEB;
+    --app-compliance-mid: #FCD34D;
+
+    --app-present: #DC2626;     /* Red — Presentations */
+    --app-present-light: #FEF2F2;
+    --app-present-mid: #FCA5A5;
+
+    --app-notebook: #0891B2;    /* Cyan — Notebook */
+    --app-notebook-light: #ECFEFF;
+    --app-notebook-mid: #67E8F9;
+
+    --app-deep: #7E22CE;        /* Purple — Deep Research */
+    --app-deep-light: #FAF5FF;
+    --app-deep-mid: #D8B4FE;
+
+    /* ── Typography ── */
+    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+    /* ── Spacing Scale ── */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+
+    /* ── Radii ── */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+
+    /* ── Shadows (Apple-inspired, subtle) ── */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.08), 0 0 1px rgba(0,0,0,0.1);
+    --shadow-xl: 0 8px 48px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.1);
+
+    /* ── Rail width ── */
+    --rail-width: 64px;
+    --sidebar-width: 260px;
+  }
+
+  /* ── Dark Mode ── */
+  .dark {
+    --bg-canvas: #161615;
+    --bg-surface: #1E1E1C;
+    --bg-elevated: #262624;
+    --bg-sunken: #121211;
+    --bg-wash: #2A2A28;
+
+    --ink-primary: #FAFAF9;
+    --ink-secondary: #A8A29E;
+    --ink-tertiary: #78716C;
+    --ink-placeholder: #57534E;
+
+    --border-default: #2A2A28;
+    --border-subtle: #222220;
+    --border-strong: #3A3A37;
+
+    --app-write-light: rgba(79, 70, 229, 0.12);
+    --app-research-light: rgba(2, 132, 199, 0.12);
+    --app-library-light: rgba(5, 150, 105, 0.12);
+    --app-review-light: rgba(124, 58, 237, 0.12);
+    --app-compliance-light: rgba(217, 119, 6, 0.12);
+    --app-present-light: rgba(220, 38, 38, 0.12);
+    --app-notebook-light: rgba(8, 145, 178, 0.12);
+    --app-deep-light: rgba(126, 34, 206, 0.12);
+
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-ui);
+    background: var(--bg-canvas);
+    color: var(--ink-primary);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Design System Page ── */
+  .ds-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--space-16) var(--space-8);
+  }
+
+  .ds-page h1 {
+    font-family: var(--font-body);
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    margin-bottom: var(--space-2);
+    color: var(--ink-primary);
+  }
+
+  .ds-page .subtitle {
+    font-size: 16px;
+    color: var(--ink-secondary);
+    margin-bottom: var(--space-16);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  .ds-section {
+    margin-bottom: var(--space-16);
+  }
+
+  .ds-section h2 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--ink-tertiary);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  /* Color Swatches */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: var(--space-4);
+  }
+
+  .color-swatch {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-default);
+  }
+
+  .color-swatch .swatch-block {
+    height: 72px;
+  }
+
+  .color-swatch .swatch-label {
+    padding: var(--space-3) var(--space-4);
+    background: var(--bg-surface);
+  }
+
+  .color-swatch .swatch-label .name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-primary);
+  }
+
+  .color-swatch .swatch-label .value {
+    font-size: 11px;
+    color: var(--ink-tertiary);
+    font-family: 'SF Mono', Consolas, monospace;
+    margin-top: 2px;
+  }
+
+  /* Typography Samples */
+  .type-sample {
+    margin-bottom: var(--space-8);
+  }
+
+  .type-sample .meta {
+    font-size: 11px;
+    color: var(--ink-tertiary);
+    margin-bottom: var(--space-2);
+    font-family: 'SF Mono', Consolas, monospace;
+  }
+
+  .type-heading-1 {
+    font-family: var(--font-body);
+    font-size: 32px;
+    font-weight: 300;
+    letter-spacing: -0.3px;
+    line-height: 1.2;
+  }
+
+  .type-heading-2 {
+    font-family: var(--font-ui);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    line-height: 1.3;
+  }
+
+  .type-heading-3 {
+    font-family: var(--font-ui);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .type-body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--ink-secondary);
+    max-width: 560px;
+  }
+
+  .type-caption {
+    font-size: 12px;
+    color: var(--ink-tertiary);
+    line-height: 1.5;
+  }
+
+  .type-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--ink-tertiary);
+  }
+
+  /* App Icon Row */
+  .app-icons-row {
+    display: flex;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .app-icon-sample {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    width: 80px;
+  }
+
+  .app-icon-sample .icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .app-icon-sample .icon-name {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    text-align: center;
+  }
+
+  /* Component Samples */
+  .component-row {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-5);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-ui);
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+    height: 38px;
+  }
+
+  .btn-primary {
+    background: var(--app-write);
+    color: white;
+  }
+  .btn-primary:hover { filter: brightness(1.1); }
+
+  .btn-secondary {
+    background: var(--bg-elevated);
+    color: var(--ink-primary);
+    border: 1px solid var(--border-default);
+  }
+  .btn-secondary:hover { background: var(--bg-wash); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink-secondary);
+  }
+  .btn-ghost:hover { background: var(--bg-elevated); color: var(--ink-primary); }
+
+  .btn-sm {
+    height: 32px;
+    font-size: 13px;
+    padding: var(--space-1) var(--space-4);
+  }
+
+  /* Card sample */
+  .card-sample {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+    max-width: 360px;
+  }
+
+  .card-sample h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+  }
+
+  .card-sample p {
+    font-size: 13px;
+    color: var(--ink-secondary);
+    line-height: 1.6;
+  }
+
+  /* Input sample */
+  .input-sample {
+    width: 320px;
+    height: 40px;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-4);
+    font-size: 14px;
+    font-family: var(--font-ui);
+    background: var(--bg-surface);
+    color: var(--ink-primary);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .input-sample:focus {
+    border-color: var(--app-write);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+  }
+
+  .input-sample::placeholder {
+    color: var(--ink-placeholder);
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-write { background: var(--app-write-light); color: var(--app-write); }
+  .badge-research { background: var(--app-research-light); color: var(--app-research); }
+  .badge-library { background: var(--app-library-light); color: var(--app-library); }
+  .badge-review { background: var(--app-review-light); color: var(--app-review); }
+  .badge-compliance { background: var(--app-compliance-light); color: var(--app-compliance); }
+
+  /* Spacing demo */
+  .spacing-row {
+    display: flex;
+    gap: var(--space-4);
+    align-items: flex-end;
+  }
+
+  .spacing-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .spacing-block .bar {
+    background: var(--app-write);
+    border-radius: 3px;
+    width: 24px;
+    opacity: 0.7;
+  }
+
+  .spacing-block .label {
+    font-size: 10px;
+    color: var(--ink-tertiary);
+    font-family: 'SF Mono', Consolas, monospace;
+  }
+
+  /* Design Principle Cards */
+  .principle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  .principle-card {
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-default);
+    background: var(--bg-surface);
+  }
+
+  .principle-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+  }
+
+  .principle-card p {
+    font-size: 13px;
+    color: var(--ink-secondary);
+    line-height: 1.6;
+  }
+
+  .principle-card .emoji {
+    font-size: 28px;
+    margin-bottom: var(--space-3);
+    display: block;
+  }
+
+  /* Theme toggle */
+  .theme-toggle-bar {
+    position: fixed;
+    top: var(--space-4);
+    right: var(--space-4);
+    display: flex;
+    gap: var(--space-2);
+    z-index: 100;
+  }
+
+  .theme-btn {
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-default);
+    background: var(--bg-surface);
+    color: var(--ink-secondary);
+    font-family: var(--font-ui);
+  }
+
+  .theme-btn.active {
+    background: var(--ink-primary);
+    color: var(--bg-canvas);
+    border-color: var(--ink-primary);
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border-default);
+    margin: var(--space-16) 0;
+  }
+</style>
+</head>
+<body>
+<div class="theme-toggle-bar">
+  <button class="theme-btn active" onclick="setTheme('light')">Light</button>
+  <button class="theme-btn" onclick="setTheme('dark')">Dark</button>
+</div>
+
+<div class="ds-page">
+  <h1>ScholarSync Workspace</h1>
+  <p class="subtitle">
+    A redesigned design system inspired by Google Workspace, Microsoft 365, and Apple's
+    productivity suite. Built for deep work, deep thinking, and free-flowing research.
+  </p>
+
+  <!-- Design Principles -->
+  <div class="ds-section">
+    <h2>Design Principles</h2>
+    <div class="principle-grid">
+      <div class="principle-card">
+        <span class="emoji">&#x1F3A8;</span>
+        <h3>Content First</h3>
+        <p>The workspace disappears. Your writing surface, research results, and library command the stage. Chrome is minimal.</p>
+      </div>
+      <div class="principle-card">
+        <span class="emoji">&#x1F9D8;</span>
+        <h3>Calm Workspace</h3>
+        <p>Warm stone tones, generous whitespace, and quiet typography. No glowing neon or SaaS dashboards. A desk, not a cockpit.</p>
+      </div>
+      <div class="principle-card">
+        <span class="emoji">&#x1F3E2;</span>
+        <h3>Workspace, Not Product</h3>
+        <p>Each tool has its own identity color (like Google Docs/Sheets/Slides). Navigation is a thin rail, not a heavy sidebar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Color Palette -->
+  <div class="ds-section">
+    <h2>Canvas &amp; Ink</h2>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="swatch-block" style="background: #FAFAF9;"></div>
+        <div class="swatch-label"><div class="name">Canvas</div><div class="value">#FAFAF9</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background: #FFFFFF;"></div>
+        <div class="swatch-label"><div class="name">Surface</div><div class="value">#FFFFFF</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background: #F5F5F4;"></div>
+        <div class="swatch-label"><div class="name">Elevated</div><div class="value">#F5F5F4</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background: #E7E5E4;"></div>
+        <div class="swatch-label"><div class="name">Border</div><div class="value">#E7E5E4</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background: #1C1917;"></div>
+        <div class="swatch-label"><div class="name">Ink Primary</div><div class="value">#1C1917</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background: #57534E;"></div>
+        <div class="swatch-label"><div class="name">Ink Secondary</div><div class="value">#57534E</div></div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background: #A8A29E;"></div>
+        <div class="swatch-label"><div class="name">Ink Tertiary</div><div class="value">#A8A29E</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-section">
+    <h2>App Colors — Each Tool Gets an Identity</h2>
+    <div class="app-icons-row">
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-write);">&#9998;</div>
+        <span class="icon-name">Studio</span>
+      </div>
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-research);">&#128270;</div>
+        <span class="icon-name">Research</span>
+      </div>
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-library);">&#128218;</div>
+        <span class="icon-name">Library</span>
+      </div>
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-notebook);">&#128221;</div>
+        <span class="icon-name">Notebook</span>
+      </div>
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-deep);">&#129504;</div>
+        <span class="icon-name">Deep Res.</span>
+      </div>
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-review);">&#128200;</div>
+        <span class="icon-name">Review</span>
+      </div>
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-compliance);">&#128737;</div>
+        <span class="icon-name">Integrity</span>
+      </div>
+      <div class="app-icon-sample">
+        <div class="icon-box" style="background: var(--app-present);">&#127916;</div>
+        <span class="icon-name">Present</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Typography -->
+  <div class="ds-section">
+    <h2>Typography</h2>
+
+    <div class="type-sample">
+      <div class="meta">Source Serif 4 / 32px / Light — Page Titles, Document Headings</div>
+      <div class="type-heading-1">Think Clearly. Write Deeply.</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="meta">Inter / 22px / Semibold — Section Headings</div>
+      <div class="type-heading-2">Your Research at a Glance</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="meta">Inter / 16px / Semibold — Card Titles, Labels</div>
+      <div class="type-heading-3">Active Manuscripts</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="meta">Source Serif 4 / 16px / Regular — Body text, editor content</div>
+      <div class="type-body">The deep research mode synthesizes findings across hundreds of papers, identifying consensus and contradiction. It doesn't just search — it thinks alongside you.</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="meta">Inter / 12px — Captions, metadata</div>
+      <div class="type-caption">Updated 2 hours ago &middot; Case Report &middot; Dr. Sharma</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="meta">Inter / 11px / Uppercase — Section labels, nav groups</div>
+      <div class="type-label">Workspace</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Components -->
+  <div class="ds-section">
+    <h2>Components</h2>
+
+    <div style="margin-bottom: var(--space-8);">
+      <div class="type-heading-3" style="margin-bottom: var(--space-4);">Buttons</div>
+      <div class="component-row">
+        <button class="btn btn-primary">Start Writing</button>
+        <button class="btn btn-secondary">Export</button>
+        <button class="btn btn-ghost">Cancel</button>
+        <button class="btn btn-primary btn-sm">Save</button>
+        <button class="btn btn-secondary btn-sm">Filter</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom: var(--space-8);">
+      <div class="type-heading-3" style="margin-bottom: var(--space-4);">Badges</div>
+      <div class="component-row">
+        <span class="badge badge-write">Drafting</span>
+        <span class="badge badge-research">Searching</span>
+        <span class="badge badge-library">In Library</span>
+        <span class="badge badge-review">Reviewing</span>
+        <span class="badge badge-compliance">Checking</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom: var(--space-8);">
+      <div class="type-heading-3" style="margin-bottom: var(--space-4);">Input</div>
+      <input class="input-sample" type="text" placeholder="Search papers, projects, or ask a question...">
+    </div>
+
+    <div style="margin-bottom: var(--space-8);">
+      <div class="type-heading-3" style="margin-bottom: var(--space-4);">Card</div>
+      <div class="card-sample">
+        <h3>Cardiovascular Risk in Type 2 Diabetes</h3>
+        <p>A systematic review examining the long-term cardiovascular outcomes of SGLT-2 inhibitors compared to traditional glucose-lowering agents.</p>
+        <div style="margin-top: var(--space-4); display: flex; gap: var(--space-3); align-items: center;">
+          <span class="badge badge-write">Drafting</span>
+          <span class="type-caption">Updated 3h ago</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Spacing -->
+  <div class="ds-section">
+    <h2>Spacing Scale</h2>
+    <div class="spacing-row">
+      <div class="spacing-block"><div class="bar" style="height: 4px;"></div><div class="label">4</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 8px;"></div><div class="label">8</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 12px;"></div><div class="label">12</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 16px;"></div><div class="label">16</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 20px;"></div><div class="label">20</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 24px;"></div><div class="label">24</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 32px;"></div><div class="label">32</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 40px;"></div><div class="label">40</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 48px;"></div><div class="label">48</div></div>
+      <div class="spacing-block"><div class="bar" style="height: 64px;"></div><div class="label">64</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Key Structural Changes -->
+  <div class="ds-section">
+    <h2>Key Structural Changes from Current Design</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6);">
+      <div class="card-sample" style="max-width: none;">
+        <h3 style="color: var(--app-compliance);">Current (SaaS-style)</h3>
+        <ul style="font-size: 13px; color: var(--ink-secondary); line-height: 2; list-style: none; padding: 0;">
+          <li>&#10060; Dark slate backgrounds (#020617)</li>
+          <li>&#10060; Glass morphism with blur effects</li>
+          <li>&#10060; Neon glow accents</li>
+          <li>&#10060; Heavy 264px sidebar</li>
+          <li>&#10060; Brand indigo (#6366f1) everywhere</li>
+          <li>&#10060; "Luminous" SaaS copy style</li>
+          <li>&#10060; Dense, feature-packed layout</li>
+        </ul>
+      </div>
+      <div class="card-sample" style="max-width: none;">
+        <h3 style="color: var(--app-library);">New (Workspace-style)</h3>
+        <ul style="font-size: 13px; color: var(--ink-secondary); line-height: 2; list-style: none; padding: 0;">
+          <li>&#9989; Warm stone canvas (#FAFAF9)</li>
+          <li>&#9989; Clean surfaces, no blur</li>
+          <li>&#9989; Quiet, purposeful color</li>
+          <li>&#9989; 64px icon rail + contextual sidebar</li>
+          <li>&#9989; Per-app identity colors</li>
+          <li>&#9989; Calm, academic-tone copy</li>
+          <li>&#9989; Generous whitespace, breathing room</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setTheme(theme) {
+  document.body.classList.toggle('dark', theme === 'dark');
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.toLowerCase() === theme);
+  });
+}
+</script>
+</body>
+</html>
