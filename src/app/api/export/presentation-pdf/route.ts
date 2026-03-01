@@ -70,6 +70,7 @@ export async function POST(req: Request) {
     const font = await pdf.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdf.embedFont(StandardFonts.HelveticaBold);
     const fontItalic = await pdf.embedFont(StandardFonts.HelveticaOblique);
+    const fontMono = await pdf.embedFont(StandardFonts.Courier);
 
     const pageWidth = 612; // Letter width
     const pageHeight = 792; // Letter height
@@ -147,59 +148,11 @@ export async function POST(req: Request) {
 
         // Content from blocks
         const blocks = slide.contentBlocks ?? [];
+        const yFloor = j === 0 ? pageHeight / 2 + 20 : margin + 40;
         for (const block of blocks) {
-          if (y < (j === 0 ? pageHeight / 2 + 20 : margin + 40)) break;
+          if (y < yFloor) break;
 
-          switch (block.type) {
-            case "text":
-              const textLines = wrapText(block.data.text, font, 10, contentWidth);
-              for (const line of textLines) {
-                if (y < (j === 0 ? pageHeight / 2 + 20 : margin + 40)) break;
-                page.drawText(line, { x: margin, y, size: 10, font, color: rgb(0.2, 0.2, 0.2) });
-                y -= 14;
-              }
-              y -= 4;
-              break;
-
-            case "bullets":
-              for (const item of block.data.items) {
-                if (y < (j === 0 ? pageHeight / 2 + 20 : margin + 40)) break;
-                const bulletLines = wrapText(`\u2022 ${item}`, font, 10, contentWidth - 15);
-                for (const line of bulletLines) {
-                  page.drawText(line, { x: margin + 15, y, size: 10, font, color: rgb(0.2, 0.2, 0.2) });
-                  y -= 13;
-                }
-              }
-              y -= 4;
-              break;
-
-            case "quote":
-              const quoteLines = wrapText(`"${block.data.text}"`, fontItalic, 10, contentWidth - 20);
-              for (const line of quoteLines) {
-                if (y < (j === 0 ? pageHeight / 2 + 20 : margin + 40)) break;
-                page.drawText(line, { x: margin + 20, y, size: 10, font: fontItalic, color: rgb(0.3, 0.3, 0.3) });
-                y -= 14;
-              }
-              if (block.data.attribution) {
-                page.drawText(`— ${block.data.attribution}`, { x: margin + 20, y, size: 9, font, color: rgb(0.5, 0.5, 0.5) });
-                y -= 14;
-              }
-              y -= 4;
-              break;
-
-            case "citation":
-              const citLines = wrapText(`${block.data.text} (${block.data.source})`, font, 9, contentWidth - 15);
-              for (const line of citLines) {
-                if (y < (j === 0 ? pageHeight / 2 + 20 : margin + 40)) break;
-                page.drawText(line, { x: margin + 10, y, size: 9, font, color: rgb(0.4, 0.4, 0.4) });
-                y -= 12;
-              }
-              y -= 3;
-              break;
-
-            default:
-              break;
-          }
+          y = renderBlock(block, page, font, fontBold, fontItalic, fontMono, margin, contentWidth, y, yFloor);
         }
 
         // Speaker notes
@@ -258,6 +211,321 @@ export async function POST(req: Request) {
     log.error("PDF handout export error", error);
     return NextResponse.json({ error: "Export failed" }, { status: 500 });
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PDFPage = any;
+type PDFFont = { widthOfTextAtSize: (text: string, size: number) => number };
+
+function drawLines(
+  lines: string[],
+  page: PDFPage,
+  x: number,
+  y: number,
+  yFloor: number,
+  size: number,
+  font: PDFFont,
+  color: ReturnType<typeof rgb>,
+  lineHeight: number,
+): number {
+  for (const line of lines) {
+    if (y < yFloor) break;
+    page.drawText(line, { x, y, size, font, color });
+    y -= lineHeight;
+  }
+  return y;
+}
+
+function renderBlock(
+  block: ContentBlock,
+  page: PDFPage,
+  font: PDFFont,
+  fontBold: PDFFont,
+  fontItalic: PDFFont,
+  fontMono: PDFFont,
+  margin: number,
+  contentWidth: number,
+  y: number,
+  yFloor: number,
+): number {
+  const dark = rgb(0.2, 0.2, 0.2);
+  const muted = rgb(0.4, 0.4, 0.4);
+  const subtle = rgb(0.5, 0.5, 0.5);
+  const accent = rgb(0.31, 0.27, 0.9);
+
+  switch (block.type) {
+    case "text": {
+      const lines = wrapText(block.data.text ?? "", font, 10, contentWidth);
+      y = drawLines(lines, page, margin, y, yFloor, 10, font, dark, 14);
+      y -= 4;
+      break;
+    }
+
+    case "bullets": {
+      const items: string[] = block.data.items ?? [];
+      const ordered = block.data.ordered ?? false;
+      for (let i = 0; i < items.length; i++) {
+        if (y < yFloor) break;
+        const prefix = ordered ? `${i + 1}. ` : "\u2022 ";
+        const bulletLines = wrapText(`${prefix}${items[i]}`, font, 10, contentWidth - 15);
+        y = drawLines(bulletLines, page, margin + 15, y, yFloor, 10, font, dark, 13);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "quote": {
+      const quoteLines = wrapText(`\u201C${block.data.text}\u201D`, fontItalic, 10, contentWidth - 20);
+      y = drawLines(quoteLines, page, margin + 20, y, yFloor, 10, fontItalic, rgb(0.3, 0.3, 0.3), 14);
+      if (block.data.attribution) {
+        page.drawText(`\u2014 ${block.data.attribution}`, { x: margin + 20, y, size: 9, font, color: subtle });
+        y -= 14;
+      }
+      y -= 4;
+      break;
+    }
+
+    case "citation": {
+      const d = block.data;
+      let citText = d.text ?? "";
+      if (d.source) citText += ` (${d.source})`;
+      if (d.doi) citText += ` DOI: ${d.doi}`;
+      const citLines = wrapText(citText, font, 9, contentWidth - 15);
+      y = drawLines(citLines, page, margin + 10, y, yFloor, 9, font, muted, 12);
+      y -= 3;
+      break;
+    }
+
+    case "image": {
+      // Can't embed images in pdf-lib without fetching bytes; show caption/alt
+      const alt = block.data.alt ?? "Image";
+      const caption = block.data.caption ?? "";
+      page.drawText(`[Image: ${alt}]`, { x: margin, y, size: 9, font: fontItalic, color: subtle });
+      y -= 13;
+      if (caption) {
+        const capLines = wrapText(caption, fontItalic, 8, contentWidth);
+        y = drawLines(capLines, page, margin, y, yFloor, 8, fontItalic, subtle, 11);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "chart": {
+      const d = block.data;
+      page.drawText(`[Chart: ${d.title || d.chartType}]`, { x: margin, y, size: 9, font: fontBold, color: accent });
+      y -= 13;
+      // Render dataset summary
+      for (const ds of d.datasets ?? []) {
+        if (y < yFloor) break;
+        const summary = `${ds.label}: ${ds.data?.slice(0, 6).join(", ")}${(ds.data?.length ?? 0) > 6 ? "..." : ""}`;
+        const dsLines = wrapText(summary, font, 8, contentWidth - 10);
+        y = drawLines(dsLines, page, margin + 10, y, yFloor, 8, font, muted, 11);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "table": {
+      const d = block.data;
+      const headers = d.headers ?? [];
+      const rows = d.rows ?? [];
+      // Header row
+      if (headers.length > 0) {
+        const headerText = headers.join(" | ");
+        const hLines = wrapText(headerText, fontBold, 9, contentWidth);
+        y = drawLines(hLines, page, margin, y, yFloor, 9, fontBold, dark, 12);
+        // Separator
+        page.drawLine({ start: { x: margin, y: y + 4 }, end: { x: margin + contentWidth, y: y + 4 }, thickness: 0.5, color: rgb(0.7, 0.7, 0.7) });
+        y -= 4;
+      }
+      // Data rows (limit to 10 for handout)
+      for (const row of rows.slice(0, 10)) {
+        if (y < yFloor) break;
+        const rowText = row.join(" | ");
+        const rLines = wrapText(rowText, font, 8, contentWidth);
+        y = drawLines(rLines, page, margin, y, yFloor, 8, font, dark, 11);
+      }
+      if (rows.length > 10) {
+        page.drawText(`... ${rows.length - 10} more rows`, { x: margin, y, size: 7, font: fontItalic, color: subtle });
+        y -= 10;
+      }
+      y -= 4;
+      break;
+    }
+
+    case "math": {
+      const d = block.data;
+      // Can't render KaTeX in pdf-lib; show raw expression
+      const mathLines = wrapText(d.expression ?? "", fontMono, 9, contentWidth - 10);
+      y = drawLines(mathLines, page, margin + 5, y, yFloor, 9, fontMono, dark, 12);
+      if (d.caption) {
+        const capLines = wrapText(d.caption, fontItalic, 8, contentWidth);
+        y = drawLines(capLines, page, margin, y, yFloor, 8, fontItalic, subtle, 11);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "code": {
+      const d = block.data;
+      // Draw code in monospace with light background indicator
+      page.drawText(`[${d.language ?? "code"}]`, { x: margin, y, size: 7, font: fontBold, color: subtle });
+      y -= 10;
+      const codeLines = (d.code ?? "").split("\n").slice(0, 15);
+      for (const codeLine of codeLines) {
+        if (y < yFloor) break;
+        const trimmed = codeLine.slice(0, 80); // truncate long lines
+        page.drawText(trimmed || " ", { x: margin + 5, y, size: 8, font: fontMono, color: dark });
+        y -= 10;
+      }
+      if ((d.code ?? "").split("\n").length > 15) {
+        page.drawText("...", { x: margin + 5, y, size: 8, font: fontMono, color: subtle });
+        y -= 10;
+      }
+      if (d.caption) {
+        const capLines = wrapText(d.caption, fontItalic, 8, contentWidth);
+        y = drawLines(capLines, page, margin, y, yFloor, 8, fontItalic, subtle, 11);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "callout": {
+      const d = block.data;
+      const typeLabel = (d.type ?? "info").toUpperCase();
+      page.drawText(`${typeLabel}: ${d.title ?? ""}`, { x: margin, y, size: 9, font: fontBold, color: accent });
+      y -= 13;
+      const calloutLines = wrapText(d.text ?? "", font, 9, contentWidth - 10);
+      y = drawLines(calloutLines, page, margin + 10, y, yFloor, 9, font, dark, 12);
+      y -= 4;
+      break;
+    }
+
+    case "stat_result": {
+      const d = block.data;
+      let statText = `${d.label}: ${d.value}`;
+      if (d.ci) statText += ` (CI: ${d.ci})`;
+      if (d.pValue) statText += ` p=${d.pValue}`;
+      const statLines = wrapText(statText, fontBold, 10, contentWidth);
+      y = drawLines(statLines, page, margin, y, yFloor, 10, fontBold, dark, 14);
+      if (d.interpretation) {
+        const interpLines = wrapText(d.interpretation, fontItalic, 9, contentWidth - 10);
+        y = drawLines(interpLines, page, margin + 10, y, yFloor, 9, fontItalic, muted, 12);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "bibliography": {
+      const d = block.data;
+      page.drawText("References:", { x: margin, y, size: 9, font: fontBold, color: dark });
+      y -= 13;
+      for (const entry of (d.entries ?? []).slice(0, 15)) {
+        if (y < yFloor) break;
+        const refLines = wrapText(entry.formatted ?? "", font, 8, contentWidth - 15);
+        y = drawLines(refLines, page, margin + 15, y, yFloor, 8, font, muted, 11);
+        y -= 2;
+      }
+      if ((d.entries?.length ?? 0) > 15) {
+        page.drawText(`... ${(d.entries?.length ?? 0) - 15} more references`, { x: margin, y, size: 7, font: fontItalic, color: subtle });
+        y -= 10;
+      }
+      y -= 4;
+      break;
+    }
+
+    case "timeline": {
+      const d = block.data;
+      if (d.title) {
+        page.drawText(d.title, { x: margin, y, size: 9, font: fontBold, color: dark });
+        y -= 13;
+      }
+      for (const entry of (d.entries ?? []).slice(0, 10)) {
+        if (y < yFloor) break;
+        const dateStr = entry.date ? `${entry.date}: ` : "";
+        const entryText = `${dateStr}${entry.label}`;
+        const entryLines = wrapText(entryText, font, 9, contentWidth - 15);
+        y = drawLines(entryLines, page, margin + 15, y, yFloor, 9, font, dark, 12);
+        if (entry.description) {
+          const descLines = wrapText(entry.description, fontItalic, 8, contentWidth - 25);
+          y = drawLines(descLines, page, margin + 25, y, yFloor, 8, fontItalic, muted, 11);
+        }
+        y -= 2;
+      }
+      y -= 4;
+      break;
+    }
+
+    case "diagram": {
+      const d = block.data;
+      page.drawText(`[Diagram: ${d.diagramType ?? "diagram"}]`, { x: margin, y, size: 9, font: fontBold, color: accent });
+      y -= 13;
+      if (d.caption) {
+        const capLines = wrapText(d.caption, fontItalic, 8, contentWidth);
+        y = drawLines(capLines, page, margin, y, yFloor, 8, fontItalic, subtle, 11);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "divider": {
+      y -= 6;
+      page.drawLine({
+        start: { x: margin + 20, y },
+        end: { x: margin + contentWidth - 20, y },
+        thickness: 0.5,
+        color: rgb(0.8, 0.8, 0.8),
+        dashArray: block.data.style === "dashed" ? [4, 3] : undefined,
+      });
+      y -= 10;
+      break;
+    }
+
+    case "toggle": {
+      const d = block.data;
+      page.drawText(`\u25B6 ${d.title ?? ""}`, { x: margin, y, size: 9, font: fontBold, color: dark });
+      y -= 13;
+      if (d.content) {
+        // Strip HTML tags for plain text rendering
+        const plainContent = d.content.replace(/<[^>]*>/g, "");
+        const togLines = wrapText(plainContent, font, 8, contentWidth - 15);
+        y = drawLines(togLines, page, margin + 15, y, yFloor, 8, font, muted, 11);
+      }
+      y -= 4;
+      break;
+    }
+
+    case "embed": {
+      const d = block.data;
+      const embedLabel = d.embedType ? `${d.embedType}: ` : "";
+      page.drawText(`[Embed: ${embedLabel}${d.url ?? "No URL"}]`, { x: margin, y, size: 9, font: fontItalic, color: accent });
+      y -= 13;
+      if (d.title) {
+        page.drawText(d.title, { x: margin, y, size: 8, font, color: muted });
+        y -= 11;
+      }
+      y -= 4;
+      break;
+    }
+
+    case "nested_card": {
+      const d = block.data;
+      page.drawText(d.title ?? "Sub-section", { x: margin, y, size: 10, font: fontBold, color: dark });
+      y -= 14;
+      // Recursively render inner blocks
+      for (const innerBlock of (d.contentBlocks ?? []).slice(0, 5)) {
+        if (y < yFloor) break;
+        y = renderBlock(innerBlock, page, font, fontBold, fontItalic, fontMono, margin + 10, contentWidth - 10, y, yFloor);
+      }
+      y -= 4;
+      break;
+    }
+
+    default:
+      break;
+  }
+
+  return y;
 }
 
 function wrapText(
