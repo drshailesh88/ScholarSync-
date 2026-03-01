@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SlideRenderer } from "./slide-renderer";
+import { SlideRendererV2 as SlideRenderer } from "@/components/slides/shared/slide-renderer-v2";
 import { PresenterControls } from "./presenter-controls";
 import type { ContentBlock, ThemeConfig, SlideLayout } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
