@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlass, SquaresFour } from "@phosphor-icons/react";
 import {
   getBlocksByCategory,
   createDefaultBlock,
 } from "@/components/slides/blocks";
 import type { ContentBlock } from "@/types/presentation";
+import { SmartLayoutPicker } from "./smart-layout-picker";
 
 // ---------------------------------------------------------------------------
 // BlockInserterMenu — Floating dropdown showing all block types by category
@@ -24,6 +25,7 @@ export function BlockInserterMenu({
   onClose,
 }: BlockInserterMenuProps) {
   const [search, setSearch] = useState("");
+  const [showLayoutPicker, setShowLayoutPicker] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -94,6 +96,33 @@ export function BlockInserterMenu({
           />
         </div>
       </div>
+
+      {/* Smart Layouts entry */}
+      {!search && (
+        <div className="px-1.5 pt-1.5">
+          <button
+            onClick={() => setShowLayoutPicker(true)}
+            className="w-full flex items-center gap-2 px-2 py-2 rounded-lg text-left text-xs font-medium hover:bg-brand/10 hover:text-brand transition-colors border border-dashed border-border hover:border-brand"
+          >
+            <SquaresFour size={14} weight="duotone" className="text-brand shrink-0" />
+            <div>
+              <span className="text-ink">Smart Layouts</span>
+              <span className="block text-[10px] text-ink-muted font-normal">
+                Pre-built card templates
+              </span>
+            </div>
+          </button>
+        </div>
+      )}
+
+      {showLayoutPicker && (
+        <SmartLayoutPicker
+          onClose={() => {
+            setShowLayoutPicker(false);
+            onClose();
+          }}
+        />
+      )}
 
       {/* Block list */}
       <div className="p-1.5">
