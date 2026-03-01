@@ -791,5 +791,6 @@ function createDefaultBlock(type: ContentBlock["type"]): ContentBlock {
     case "timeline": return { type: "timeline", data: { entries: [{ label: "Phase 1", date: "Q1 2024", description: "Initial phase", status: "completed" }, { label: "Phase 2", date: "Q2 2024", status: "in_progress" }] } };
     case "divider": return { type: "divider", data: { style: "solid" } };
     case "toggle": return { type: "toggle", data: { title: "Click to expand", content: "Hidden content goes here", defaultOpen: false } };
+    case "embed": return { type: "embed", data: { url: "", embedType: "generic", aspectRatio: "16:9" } };
   }
 }

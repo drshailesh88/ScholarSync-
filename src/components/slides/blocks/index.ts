@@ -15,6 +15,7 @@ import { TimelineBlock } from "./timeline-block";
 import { QuoteBlock } from "./quote-block";
 import { DividerBlock } from "./divider-block";
 import { ToggleBlock } from "../gamma-mode/blocks/toggle-block";
+import { EmbedBlock } from "../gamma-mode/blocks/embed-block";
 
 // ---------------------------------------------------------------------------
 // Block Registry — maps each content block type to its renderer + metadata
@@ -159,6 +160,13 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     iconName: "CaretCircleDown",
     defaultData: () => ({ title: "Click to expand", content: "Hidden content goes here", defaultOpen: false }),
     category: "content",
+  },
+  embed: {
+    render: EmbedBlock as any,
+    label: "Embed",
+    iconName: "Globe",
+    defaultData: () => ({ url: "", embedType: "generic" as const, aspectRatio: "16:9" as const }),
+    category: "media",
   },
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */

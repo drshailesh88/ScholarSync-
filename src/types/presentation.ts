@@ -98,6 +98,14 @@ export interface ToggleData {
   defaultOpen?: boolean;
 }
 
+/** Embed block for embedding external content (YouTube, Figma, Google Sheets, etc.) */
+export interface EmbedData {
+  url: string;
+  embedType?: "youtube" | "vimeo" | "figma" | "google_sheets" | "google_docs" | "twitter" | "generic";
+  title?: string;
+  aspectRatio?: "16:9" | "4:3" | "1:1";
+}
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
   type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
@@ -141,7 +149,8 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "bibliography"; data: BibliographyData })
   | (ContentBlockBase & { type: "timeline"; data: TimelineData })
   | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } })
-  | (ContentBlockBase & { type: "toggle"; data: ToggleData });
+  | (ContentBlockBase & { type: "toggle"; data: ToggleData })
+  | (ContentBlockBase & { type: "embed"; data: EmbedData });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)
