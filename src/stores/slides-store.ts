@@ -156,7 +156,7 @@ function normalizeSlide(raw: Record<string, unknown>): SlideState {
     subtitle: (raw.subtitle as string) ?? "",
     contentBlocks: (raw.contentBlocks as ContentBlock[]) ?? [],
     speakerNotes: (raw.speakerNotes as string) ?? "",
-    cardBackground: (raw.cardBackground as CardBackground | undefined) ?? undefined,
+    cardBackground: raw.cardBackground as CardBackground | undefined,
   };
 }
 

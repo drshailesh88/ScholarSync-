@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import {
   ImageSquare,
   X,
@@ -63,10 +63,9 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
 
   const update = useCallback(
     (changes: Partial<CardBackground>) => {
-      const current = useSlidesStore.getState().slides.find((s) => s.id === slideId)?.cardBackground ?? {};
-      useSlidesStore.getState().updateSlide(slideId, {
-        cardBackground: { ...current, ...changes },
-      });
+      const { slides, updateSlide } = useSlidesStore.getState();
+      const current = slides.find((s) => s.id === slideId)?.cardBackground ?? {};
+      updateSlide(slideId, { cardBackground: { ...current, ...changes } });
     },
     [slideId],
   );
@@ -75,15 +74,15 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
   const currentOverlay = bg.overlayType ?? "none";
   const showOverlayControls = currentOverlay !== "none";
 
-  // Theme-derived preset colors
-  const themePresets = [
-    themeConfig.primaryColor,
-    themeConfig.backgroundColor,
-    themeConfig.surfaceColor,
-    themeConfig.textColor,
-  ].filter(Boolean) as string[];
-
-  const allPresets = [...new Set([...themePresets, ...COLOR_PRESETS])];
+  const allPresets = useMemo(() => {
+    const themePresets = [
+      themeConfig.primaryColor,
+      themeConfig.backgroundColor,
+      themeConfig.surfaceColor,
+      themeConfig.textColor,
+    ].filter(Boolean) as string[];
+    return [...new Set([...themePresets, ...COLOR_PRESETS])];
+  }, [themeConfig]);
 
   return (
     <div
@@ -159,6 +158,7 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
                   key={pos.value}
                   type="button"
                   onClick={() => update({ imagePosition: pos.value })}
+                  aria-pressed={isActive}
                   className={`flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-lg text-[10px] font-medium transition-all flex-1 ${
                     isActive
                       ? "bg-brand/10 text-brand border border-brand/30"
@@ -187,6 +187,7 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
                   key={ov.value}
                   type="button"
                   onClick={() => update({ overlayType: ov.value })}
+                  aria-pressed={isActive}
                   className={`flex-1 py-1.5 text-[10px] font-medium transition-all ${
                     isActive
                       ? "bg-brand text-white"
