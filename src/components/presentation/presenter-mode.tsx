@@ -14,6 +14,7 @@ import {
   Play,
   SpeakerHigh,
 } from "@phosphor-icons/react";
+import { SpotlightBlockWrapper } from "@/components/slides/gamma-mode/spotlight-wrapper";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -178,6 +179,8 @@ export function PresenterMode({
   const [direction, setDirection] = useState(1);
   const [showGrid, setShowGrid] = useState(false);
   const [showNotes, setShowNotes] = useState(showPresenterView);
+  const [spotlightActive, setSpotlightActive] = useState(false);
+  const [spotlightIndex, setSpotlightIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
 
@@ -255,6 +258,12 @@ export function PresenterMode({
           e.preventDefault();
           setShowNotes((v) => !v);
           break;
+        case "s":
+        case "S":
+          e.preventDefault();
+          setSpotlightActive((v) => !v);
+          setSpotlightIndex(0);
+          break;
         case "Home":
           e.preventDefault();
           goToSlide(0);
@@ -322,7 +331,7 @@ export function PresenterMode({
             transition={variant.transition}
             className="w-full h-full flex items-center justify-center p-4"
           >
-            <div className="w-full max-w-[calc(100vh*16/9)] aspect-video rounded-lg overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
+            <div className="relative w-full max-w-[calc(100vh*16/9)] aspect-video rounded-lg overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
               <SlideRenderer
                 title={currentSlide?.title}
                 subtitle={currentSlide?.subtitle}
@@ -334,6 +343,37 @@ export function PresenterMode({
                 slideNumber={currentIndex + 1}
                 scale={1.5}
               />
+              {/* Spotlight overlay — dims blocks based on spotlight index */}
+              {spotlightActive && (currentSlide?.contentBlocks?.length ?? 0) > 0 && (
+                <div className="absolute inset-0 z-10 pointer-events-none">
+                  {/* Semi-transparent overlay with cutout effect */}
+                  <div className="absolute inset-0 bg-black/50 transition-opacity duration-300" />
+                  {/* Spotlight indicator badge */}
+                  <div className="absolute top-2 right-2 pointer-events-auto flex items-center gap-1.5 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full ring-1 ring-amber-400/30">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    <span className="text-[10px] font-medium text-amber-300">
+                      Spotlight {spotlightIndex + 1}/{currentSlide?.contentBlocks?.length ?? 0}
+                    </span>
+                  </div>
+                  {/* Block highlight zones — positioned over the content area */}
+                  <div className="absolute inset-0 flex flex-col pointer-events-auto">
+                    {(currentSlide?.contentBlocks ?? []).map((_, idx) => (
+                      <SpotlightBlockWrapper
+                        key={idx}
+                        blockIndex={idx}
+                        spotlightIndex={spotlightIndex}
+                        isActive={spotlightActive}
+                        onClick={() => setSpotlightIndex(idx)}
+                      >
+                        <div
+                          className="flex-1 min-h-[2rem] cursor-pointer"
+                          style={{ flex: 1 }}
+                        />
+                      </SpotlightBlockWrapper>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -535,12 +575,17 @@ export function PresenterMode({
         elapsedSeconds={timer.elapsed}
         isTimerRunning={timer.running}
         showNotes={showNotes}
+        spotlightActive={spotlightActive}
         onPrevious={goPrev}
         onNext={goNext}
         onToggleTimer={timer.toggle}
         onToggleNotes={() => setShowNotes((v) => !v)}
         onToggleGrid={() => setShowGrid((v) => !v)}
         onToggleFullscreen={toggleFullscreen}
+        onToggleSpotlight={() => {
+          setSpotlightActive((v) => !v);
+          setSpotlightIndex(0);
+        }}
         onExit={() => {
           if (document.fullscreenElement) {
             document.exitFullscreen().catch(() => {});

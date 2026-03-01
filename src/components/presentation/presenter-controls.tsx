@@ -13,6 +13,7 @@ import {
   ArrowsOut,
   SpeakerHigh,
   Clock,
+  Flashlight,
 } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -25,12 +26,14 @@ interface PresenterControlsProps {
   elapsedSeconds: number;
   isTimerRunning: boolean;
   showNotes: boolean;
+  spotlightActive?: boolean;
   onPrevious: () => void;
   onNext: () => void;
   onToggleTimer: () => void;
   onToggleNotes: () => void;
   onToggleGrid: () => void;
   onToggleFullscreen: () => void;
+  onToggleSpotlight?: () => void;
   onExit: () => void;
 }
 
@@ -76,12 +79,14 @@ export function PresenterControls({
   elapsedSeconds,
   isTimerRunning,
   showNotes,
+  spotlightActive = false,
   onPrevious,
   onNext,
   onToggleTimer,
   onToggleNotes,
   onToggleGrid,
   onToggleFullscreen,
+  onToggleSpotlight,
   onExit,
 }: PresenterControlsProps) {
   const visible = useAutoHide(3000);
@@ -169,6 +174,18 @@ export function PresenterControls({
             >
               <SpeakerHigh weight="bold" className="w-4 h-4" />
             </ControlButton>
+
+            {/* Spotlight Toggle */}
+            {onToggleSpotlight && (
+              <ControlButton
+                onClick={onToggleSpotlight}
+                active={spotlightActive}
+                tooltip="Spotlight Mode (S)"
+                aria-label="Toggle spotlight mode"
+              >
+                <Flashlight weight="bold" className="w-4 h-4" />
+              </ControlButton>
+            )}
 
             {/* Grid Toggle */}
             <ControlButton
