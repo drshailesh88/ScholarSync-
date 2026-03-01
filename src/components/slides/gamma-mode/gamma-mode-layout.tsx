@@ -3,6 +3,7 @@
 import { useSlidesStore } from "@/stores/slides-store";
 import { ModeSelector } from "../mode-selector";
 import { CardStack } from "./card-stack";
+import { CardOutlineSidebar } from "./card-outline-sidebar";
 
 export function GammaModeLayout() {
   const mode = useSlidesStore((s) => s.mode);
@@ -29,9 +30,9 @@ export function GammaModeLayout() {
 
       {/* Three-panel layout: Sidebar | Card Stack | Agent Panel */}
       <div className="flex-1 flex min-h-0">
-        {/* Left sidebar — card outline (Task 4) */}
-        <div className="w-56 shrink-0 border-r border-border bg-surface overflow-y-auto p-3">
-          <p className="text-xs text-ink-muted">Card outline (TODO)</p>
+        {/* Left sidebar — card outline */}
+        <div className="w-56 shrink-0 border-r border-border bg-surface overflow-y-auto">
+          <CardOutlineSidebar />
         </div>
 
         {/* Center — scrollable card stack */}
