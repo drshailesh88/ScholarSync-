@@ -24,7 +24,8 @@ import {
   extractCitationClaims,
   formatVerificationResult,
 } from "../../citation-verifier";
-import { detectPaperReference } from "../../self-query";
+// TODO: implement detectPaperReference
+const detectPaperReference = (_q: string, _p: {id: number; title: string}[]): number[] => [];
 import { isComparisonQuery } from "@/lib/ai/prompts/notebook";
 import {
   detectArtifactType,

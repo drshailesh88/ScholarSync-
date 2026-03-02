@@ -1,0 +1,20 @@
+{
+  "id": "ralph-022",
+  "name": "Color-Coded Drug Discovery Pipeline",
+  "category": "styling_layout",
+  "difficulty": "medium",
+  "input": "Create a left-to-right flowchart showing a drug discovery pipeline with color-coded stages. Target Identification (blue): Literature Mining, HTS Screen, Target Validation. Lead Optimization (green): SAR Studies, ADMET Testing, Formulation. Preclinical (orange): In Vitro Studies, Animal Models, Toxicology. Clinical (red): Phase I, Phase II, Phase III. Add decision diamonds between each stage: Go/No-Go Decision. Use classDef for color groups.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 14,
+  "qualityCriteria": [
+    "Left-to-right layout (LR direction)",
+    "At least 4 pipeline stages present",
+    "Decision gate diamonds between stages",
+    "Style directives present (classDef or style)",
+    "At least 3 distinct color groups defined",
+    "Go/No-Go labels on decision paths",
+    "No truncated labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Horizontal pipeline with 4 color-coded phases, 3 decision gates, professional pharma pipeline appearance."
+}

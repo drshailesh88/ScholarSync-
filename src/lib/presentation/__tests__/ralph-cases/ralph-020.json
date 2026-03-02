@@ -1,0 +1,18 @@
+{
+  "id": "ralph-020",
+  "name": "Research Prioritization Quadrant Chart",
+  "category": "advanced_types",
+  "difficulty": "medium",
+  "input": "Create a quadrant chart for research project prioritization. X-axis: Feasibility (low to high). Y-axis: Scientific Impact (low to high). Quadrant labels: top-right 'Priority Projects', top-left 'High Risk High Reward', bottom-right 'Quick Wins', bottom-left 'Deprioritize'. Plot these projects: CRISPR Gene Therapy [0.3, 0.9], Drug Repurposing Screen [0.8, 0.6], Biomarker Validation [0.7, 0.4], Novel Target Discovery [0.2, 0.8], Clinical Data Mining [0.9, 0.3], Protein Structure Prediction [0.5, 0.7], Patient Registry Analysis [0.8, 0.5], Rare Disease Genomics [0.2, 0.5].",
+  "expectedDiagramType": "quadrantChart",
+  "expectedNodeCount": 8,
+  "qualityCriteria": [
+    "Quadrant chart type declared correctly",
+    "Both axes labeled (Feasibility, Scientific Impact)",
+    "All 4 quadrant labels present (Priority Projects, High Risk High Reward, Quick Wins, Deprioritize)",
+    "At least 6 of 8 data points plotted with labels",
+    "Project names preserved (CRISPR Gene Therapy, Drug Repurposing, etc.)",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Quadrant chart with labeled axes, 4 labeled quadrants, 8 data points positioned by coordinates."
+}

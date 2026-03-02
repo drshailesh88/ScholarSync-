@@ -1,0 +1,18 @@
+{
+  "id": "ralph-019",
+  "name": "Clinical Trial Participant Journey",
+  "category": "advanced_types",
+  "difficulty": "medium",
+  "input": "Create a journey diagram showing a clinical trial participant's experience. Sections: Screening (Learn about trial: 5, Initial phone call: 3, Informed consent visit: 4, Blood work and physical: 3), Randomization (Assignment to arm: 4, Receive study drug or placebo: 3), Treatment Phase (Weekly clinic visits: 3, Side effect monitoring: 2, Dose adjustments: 3, Monthly blood draws: 2), Follow-Up (End of treatment assessment: 4, 30-day safety follow-up: 3, Long-term survival tracking: 5). Show the emotional journey from hopeful to anxious to relieved.",
+  "expectedDiagramType": "journey",
+  "expectedNodeCount": 12,
+  "qualityCriteria": [
+    "All 4 sections present (Screening, Randomization, Treatment Phase, Follow-Up)",
+    "At least 10 task entries with satisfaction scores",
+    "Satisfaction scores range from 2 to 5 (showing emotional variation)",
+    "Clinical trial terminology preserved (informed consent, randomization, placebo)",
+    "No truncated labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Journey diagram with 4 sections, 12+ tasks, satisfaction scores showing emotional arc from hopeful to anxious to relieved."
+}

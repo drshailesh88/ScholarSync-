@@ -112,6 +112,8 @@ function validateMermaidSyntax(syntax: string, expectedType: string): {
     pie: /^pie/m,
     mindmap: /^mindmap/m,
     timeline: /^timeline/m,
+    journey: /^journey/m,
+    quadrantChart: /^quadrantChart/m,
   };
 
   const pattern = typePatterns[expectedType];
@@ -186,6 +188,12 @@ function validateMermaidSyntax(syntax: string, expectedType: string): {
   } else if (expectedType === "sequence") {
     const participants = trimmed.match(/participant\s+\w+/gi);
     nodeCount = participants?.length ?? 0;
+  } else if (expectedType === "journey") {
+    const tasks = trimmed.split("\n").filter(l => /:\s*\d+\s*:/.test(l) || /:\s*\d+\s*$/.test(l.trim()));
+    nodeCount = tasks.length;
+  } else if (expectedType === "quadrantChart") {
+    const points = trimmed.match(/\[[\d.]+\s*,\s*[\d.]+\]/g);
+    nodeCount = points?.length ?? 0;
   }
 
   // Check for common syntax errors
@@ -945,6 +953,191 @@ function assessQuality(
       } else {
         criteriaResults[criterion] = true;
       }
+
+    // -----------------------------------------------------------------------
+    // Cycle 7 — Journey diagram heuristics
+    // -----------------------------------------------------------------------
+    } else if (lower.includes("section") && lower.includes("present") && testCase.expectedDiagramType === "journey") {
+      const sectionNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (sectionNames.length > 0) {
+        const found = sectionNames.filter(s =>
+          new RegExp(`section\\s+.*${s.split(/\s+/)[0]}`, "i").test(syntax)
+        );
+        criteriaResults[criterion] = found.length >= sectionNames.length * 0.75;
+      } else {
+        criteriaResults[criterion] = /section\s+\w/m.test(syntax);
+      }
+    } else if (lower.includes("task entries") && lower.includes("satisfaction")) {
+      const taskLines = syntax.split("\n").filter(l => /:\s*\d+\s*:/i.test(l));
+      const minCount = parseInt(criterion.match(/(\d+)/)?.[1] ?? "5");
+      criteriaResults[criterion] = taskLines.length >= minCount;
+    } else if (lower.includes("satisfaction scores range") || (lower.includes("score") && lower.includes("range"))) {
+      const scores = [...syntax.matchAll(/:\s*(\d+)\s*:/g)].map(m => parseInt(m[1]));
+      const uniqueScores = new Set(scores);
+      criteriaResults[criterion] = uniqueScores.size >= 2 && scores.length >= 4;
+    } else if (lower.includes("clinical trial") && lower.includes("terminology")) {
+      const clinicalTerms = ["consent", "randomiz", "placebo", "phase", "trial", "screening", "treatment", "follow"];
+      const found = clinicalTerms.filter(t => new RegExp(t, "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 3;
+
+    // -----------------------------------------------------------------------
+    // Cycle 7 — Quadrant chart heuristics
+    // -----------------------------------------------------------------------
+    } else if (lower.includes("quadrant chart") && lower.includes("declared")) {
+      criteriaResults[criterion] = /^quadrantChart/m.test(syntax);
+    } else if (lower.includes("axes labeled") && (lower.includes("feasibility") || lower.includes("axis"))) {
+      const hasXAxis = /x-axis/i.test(syntax);
+      const hasYAxis = /y-axis/i.test(syntax);
+      criteriaResults[criterion] = hasXAxis && hasYAxis;
+    } else if (lower.includes("quadrant label") && lower.includes("present")) {
+      const quadrantLabels = syntax.match(/quadrant-[1-4]/g);
+      criteriaResults[criterion] = (quadrantLabels?.length ?? 0) >= 4;
+    } else if (lower.includes("data point") && lower.includes("plotted")) {
+      const dataPoints = syntax.match(/\[[\d.]+\s*,\s*[\d.]+\]/g);
+      const minCount = parseInt(criterion.match(/(\d+)/)?.[1] ?? "6");
+      criteriaResults[criterion] = (dataPoints?.length ?? 0) >= minCount;
+    } else if (lower.includes("project name") && lower.includes("preserved")) {
+      const projectNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (projectNames.length > 0) {
+        const found = projectNames.filter(p => {
+          const words = p.split(/\s+/);
+          return words.some(w => w.length > 3 && new RegExp(w, "i").test(syntax));
+        });
+        criteriaResults[criterion] = found.length >= projectNames.length * 0.5;
+      } else {
+        criteriaResults[criterion] = true;
+      }
+
+    // -----------------------------------------------------------------------
+    // Cycle 7 — Nested subgraph heuristics
+    // -----------------------------------------------------------------------
+    } else if (lower.includes("level") && lower.includes("subgraph") && lower.includes("nesting")) {
+      let maxDepth = 0;
+      let currentDepth = 0;
+      for (const line of syntax.split("\n")) {
+        if (/^\s*subgraph\b/i.test(line)) {
+          currentDepth++;
+          maxDepth = Math.max(maxDepth, currentDepth);
+        } else if (/^\s*end\b/i.test(line)) {
+          currentDepth = Math.max(0, currentDepth - 1);
+        }
+      }
+      const requiredDepth = parseInt(criterion.match(/(\d+)/)?.[1] ?? "3");
+      criteriaResults[criterion] = maxDepth >= requiredDepth;
+    } else if (lower.includes("division") && lower.includes("present") && (lower.includes("research") || lower.includes("clinical"))) {
+      const hasDivisions = /research\s*division|clinical\s*division/i.test(syntax);
+      criteriaResults[criterion] = hasDivisions;
+    } else if (lower.includes("lab") && lower.includes("node") && lower.includes("present")) {
+      const labTerms = ["genomics", "proteomics", "bioinformatics"];
+      const found = labTerms.filter(t => new RegExp(t, "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 2;
+    } else if (lower.includes("trial program") && lower.includes("node")) {
+      const trialTerms = ["solid tumor", "hematology", "immunotherapy", "heart failure"];
+      const found = trialTerms.filter(t => new RegExp(t.replace(/\s+/g, "\\s*"), "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 2;
+    } else if (lower.includes("cross-division") && lower.includes("data flow")) {
+      const hasFlow = (syntax.match(/-->/g)?.length ?? 0) >= 5;
+      criteriaResults[criterion] = hasFlow;
+    } else if (lower.includes("biobank") && lower.includes("connection")) {
+      const hasBiobank = /biobank/i.test(syntax);
+      const biobankIdMatch = syntax.match(/(\w+)\s*\[.*?[Bb]iobank.*?\]/);
+      const biobankId = biobankIdMatch ? biobankIdMatch[1] : null;
+      const biobankPattern = biobankId ? new RegExp(`(${biobankId}|biobank)`, "i") : /biobank/i;
+      let connectionCount = 0;
+      for (const line of syntax.split("\n")) {
+        if (biobankPattern.test(line) && /-->|==>|-\.->/i.test(line)) {
+          const ampersandTargets = (line.match(/\s&\s/g) ?? []).length;
+          connectionCount += ampersandTargets + 1;
+        }
+      }
+      criteriaResults[criterion] = hasBiobank && connectionCount >= 3;
+
+    // -----------------------------------------------------------------------
+    // Cycle 8 — Styling & layout heuristics
+    // -----------------------------------------------------------------------
+    } else if (lower.includes("left-to-right") && lower.includes("layout") || lower.includes("lr direction")) {
+      criteriaResults[criterion] = /graph\s+LR|flowchart\s+LR/m.test(syntax);
+    } else if (lower.includes("pipeline stage") && lower.includes("present")) {
+      const stageCount = parseInt(criterion.match(/(\d+)/)?.[1] ?? "4");
+      const subgraphs = syntax.match(/subgraph\b/gi);
+      const nodeGroups = subgraphs?.length ?? 0;
+      criteriaResults[criterion] = nodeGroups >= stageCount || (syntax.match(/-->/g)?.length ?? 0) >= stageCount;
+    } else if (lower.includes("decision") && (lower.includes("gate") || lower.includes("diamond"))) {
+      const diamonds = syntax.match(/\{[^}]+\}/g)?.filter(d => !/classDef|style|fill|stroke/i.test(d));
+      criteriaResults[criterion] = (diamonds?.length ?? 0) >= 1;
+    } else if (lower.includes("style directive") && lower.includes("present") || lower.includes("classdef or style")) {
+      const hasClassDef = /classDef\s+\w+/m.test(syntax);
+      const hasStyle = /style\s+\w+/m.test(syntax);
+      criteriaResults[criterion] = hasClassDef || hasStyle;
+    } else if (lower.includes("distinct color") && lower.includes("group")) {
+      const classDefs = syntax.match(/classDef\s+\w+\s+fill:[^;\n]+/g) ?? [];
+      const styles = syntax.match(/style\s+\w+\s+fill:[^;\n]+/g) ?? [];
+      const uniqueColors = new Set<string>();
+      for (const def of [...classDefs, ...styles]) {
+        const colorMatch = def.match(/fill:(#[0-9a-fA-F]{3,8}|[a-z]+)/i);
+        if (colorMatch) uniqueColors.add(colorMatch[1].toLowerCase());
+      }
+      const minGroups = parseInt(criterion.match(/(\d+)/)?.[1] ?? "3");
+      criteriaResults[criterion] = uniqueColors.size >= minGroups;
+    } else if (lower.includes("go/no-go") || lower.includes("go no go")) {
+      criteriaResults[criterion] = /go|no.go|proceed|stop|halt/i.test(syntax);
+    } else if (lower.includes("parallel") && (lower.includes("platform") || lower.includes("analysis"))) {
+      const platformTerms = ["lc-ms", "gc-ms", "nmr", "hplc", "platform"];
+      const found = platformTerms.filter(t => new RegExp(t.replace(/-/g, ".?"), "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 2;
+    } else if (lower.includes("convergence") && lower.includes("arrow")) {
+      const arrowTargets: Record<string, number> = {};
+      for (const line of syntax.split("\n")) {
+        const match = line.match(/-->\s*(\w+)/);
+        if (match) {
+          arrowTargets[match[1]] = (arrowTargets[match[1]] ?? 0) + 1;
+        }
+      }
+      const hasConvergence = Object.values(arrowTargets).some(count => count >= 2);
+      criteriaResults[criterion] = hasConvergence;
+    } else if (lower.includes("subgraph styling") || (lower.includes("styled subgraph") && lower.includes("present"))) {
+      const hasSubgraphs = /subgraph\b/i.test(syntax);
+      const hasStyles = /classDef|style\s+\w+|fill:/i.test(syntax);
+      criteriaResults[criterion] = hasSubgraphs && hasStyles;
+    } else if (lower.includes("fan-out") || (lower.includes("qc") && lower.includes("platform"))) {
+      let hasFanOut = false;
+      for (const line of syntax.split("\n")) {
+        if (/-->/i.test(line)) {
+          const ampersandTargets = (line.match(/\s&\s/g) ?? []).length;
+          if (ampersandTargets >= 1) { hasFanOut = true; break; }
+        }
+      }
+      if (!hasFanOut) {
+        const sources: Record<string, number> = {};
+        for (const line of syntax.split("\n")) {
+          const match = line.match(/(\w+)\s*-->/);
+          if (match) sources[match[1]] = (sources[match[1]] ?? 0) + 1;
+        }
+        hasFanOut = Object.values(sources).some(c => c >= 2);
+      }
+      criteriaResults[criterion] = hasFanOut;
+
+    // -----------------------------------------------------------------------
+    // Cycle 8 — Sequence diagram (peer review) heuristics
+    // -----------------------------------------------------------------------
+    } else if (lower.includes("participant") && lower.includes("declared")) {
+      const participantCount = parseInt(criterion.match(/(\d+)/)?.[1] ?? "5");
+      const participants = syntax.match(/participant\s+\w+/gi);
+      criteriaResults[criterion] = (participants?.length ?? 0) >= participantCount;
+    } else if (lower.includes("simultaneous") && lower.includes("dispatch")) {
+      const reviewerMessages = syntax.match(/->>\s*Reviewer/gi) ?? [];
+      criteriaResults[criterion] = reviewerMessages.length >= 2;
+    } else if (lower.includes("distinct verdict") || (lower.includes("verdict") && lower.includes("reviewer"))) {
+      const responses = syntax.match(/Reviewer\d?\s*-+>>?\s*\w+\s*:\s*[^\n]+/gi) ?? [];
+      criteriaResults[criterion] = responses.length >= 2;
+    } else if (lower.includes("revision cycle") || lower.includes("revise and resubmit")) {
+      criteriaResults[criterion] = /revis|resubmit/i.test(syntax);
+    } else if (lower.includes("desk review") && lower.includes("note")) {
+      criteriaResults[criterion] = /note\s+(over|left|right)/i.test(syntax) && /desk|review|business/i.test(syntax);
+    } else if (lower.includes("final acceptance") || lower.includes("accepted for publication")) {
+      criteriaResults[criterion] = /accept|publication|final/i.test(syntax);
+    } else if (lower.includes("manuscript") && lower.includes("submission") || lower.includes("first interaction")) {
+      criteriaResults[criterion] = /submit|manuscript/i.test(syntax);
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -982,7 +1175,7 @@ Given the user's description, generate a Mermaid diagram.
 
 Return ONLY valid JSON (no markdown fences):
 {
-  "diagramType": "flowchart|sequence|gantt|pie|mindmap|timeline",
+  "diagramType": "flowchart|sequence|gantt|pie|mindmap|timeline|journey|quadrantChart",
   "syntax": "... valid Mermaid syntax ...",
   "caption": "Brief description"
 }
@@ -1065,6 +1258,176 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
     class A start
     class B,C,D,E,F,G process
     class H end`,
+  },
+
+  // Cycle 7 baselines
+  "ralph-019": {
+    diagramType: "journey",
+    syntax: `journey
+  title Clinical Trial Participant Journey
+  section Screening
+    Learn about trial: 5: Participant
+    Initial phone call: 3: Participant
+    Informed consent visit: 4: Participant
+    Blood work and physical: 3: Participant
+  section Randomization
+    Assignment to arm: 4: Participant
+    Receive study drug or placebo: 3: Participant
+  section Treatment Phase
+    Weekly clinic visits: 3: Participant
+    Side effect monitoring: 2: Participant
+    Dose adjustments: 3: Participant
+    Monthly blood draws: 2: Participant
+  section Follow-Up
+    End of treatment assessment: 4: Participant
+    30-day safety follow-up: 3: Participant
+    Long-term survival tracking: 5: Participant`,
+  },
+
+  "ralph-020": {
+    diagramType: "quadrantChart",
+    syntax: `quadrantChart
+  title Research Project Prioritization
+  x-axis Low Feasibility --> High Feasibility
+  y-axis Low Scientific Impact --> High Scientific Impact
+  quadrant-1 Priority Projects
+  quadrant-2 High Risk High Reward
+  quadrant-3 Deprioritize
+  quadrant-4 Quick Wins
+  CRISPR Gene Therapy: [0.3, 0.9]
+  Drug Repurposing Screen: [0.8, 0.6]
+  Biomarker Validation: [0.7, 0.4]
+  Novel Target Discovery: [0.2, 0.8]
+  Clinical Data Mining: [0.9, 0.3]
+  Protein Structure Prediction: [0.5, 0.7]
+  Patient Registry Analysis: [0.8, 0.5]
+  Rare Disease Genomics: [0.2, 0.5]`,
+  },
+
+  "ralph-021": {
+    diagramType: "flowchart",
+    syntax: `graph TD
+  subgraph UMC["University Medical Center"]
+    subgraph RD["Research Division"]
+      subgraph BSL["Basic Science Labs"]
+        GL[Genomics Lab]
+        PL[Proteomics Lab]
+        BC[Bioinformatics Core]
+      end
+      subgraph TR["Translational Research"]
+        P1[Phase I Unit]
+        BB[Biobank]
+        AF[Animal Facility]
+      end
+    end
+    subgraph CD["Clinical Division"]
+      subgraph OT["Oncology Trials"]
+        ST[Solid Tumors]
+        HM[Hematology]
+        IT[Immunotherapy]
+      end
+      subgraph CT["Cardiology Trials"]
+        HF[Heart Failure]
+        AR[Arrhythmia]
+      end
+      subgraph NT["Neurology Trials"]
+        AD["Alzheimer's"]
+        PD["Parkinson's"]
+        SK[Stroke]
+      end
+    end
+  end
+
+  GL --> P1 --> ST
+  BB --> ST & HM & IT
+  BC -.-> GL & PL
+  BC -.-> OT & CT & NT`,
+  },
+
+  // Cycle 8 baselines
+  "ralph-022": {
+    diagramType: "flowchart",
+    syntax: `graph LR
+  subgraph TI["Target Identification"]
+    LM[Literature Mining] --> HTS[HTS Screen] --> TV[Target Validation]
+  end
+  TV --> D1{Go/No-Go}
+  subgraph LO["Lead Optimization"]
+    D1 -->|Go| SAR[SAR Studies] --> ADMET[ADMET Testing] --> FORM[Formulation]
+  end
+  FORM --> D2{Go/No-Go}
+  subgraph PC["Preclinical"]
+    D2 -->|Go| IVS[In Vitro Studies] --> AM[Animal Models] --> TOX[Toxicology]
+  end
+  TOX --> D3{Go/No-Go}
+  subgraph CL["Clinical"]
+    D3 -->|Go| PH1[Phase I] --> PH2[Phase II] --> PH3[Phase III]
+  end
+
+  classDef blue fill:#3B82F6,stroke:#1E40AF,color:#fff
+  classDef green fill:#10B981,stroke:#047857,color:#fff
+  classDef orange fill:#F59E0B,stroke:#D97706,color:#000
+  classDef red fill:#EF4444,stroke:#B91C1C,color:#fff
+  classDef decision fill:#6B7280,stroke:#4B5563,color:#fff
+
+  class LM,HTS,TV blue
+  class SAR,ADMET,FORM green
+  class IVS,AM,TOX orange
+  class PH1,PH2,PH3 red
+  class D1,D2,D3 decision`,
+  },
+
+  "ralph-023": {
+    diagramType: "flowchart",
+    syntax: `graph TD
+  subgraph SC["Sample Collection"]
+    BD[Blood Draw] --> EX
+    UC[Urine Collection] --> EX
+    TB[Tissue Biopsy] --> EX
+  end
+  subgraph SP["Sample Prep"]
+    EX[Extraction] --> DV[Derivatization] --> QC[Quality Control]
+  end
+  subgraph AP["Analysis Platforms"]
+    QC --> LCMS[LC-MS Platform]
+    QC --> GCMS[GC-MS Platform]
+    QC --> NMR[NMR Platform]
+  end
+  subgraph DI["Data Integration"]
+    LCMS --> FA[Feature Alignment]
+    GCMS --> FA
+    NMR --> FA
+    FA --> SA[Statistical Analysis] --> PM[Pathway Mapping]
+  end
+
+  style SC fill:#DBEAFE,stroke:#3B82F6
+  style SP fill:#D1FAE5,stroke:#10B981
+  style AP fill:#EDE9FE,stroke:#7C3AED
+  style DI fill:#FEF3C7,stroke:#F59E0B`,
+  },
+
+  "ralph-024": {
+    diagramType: "sequence",
+    syntax: `sequenceDiagram
+  participant Author
+  participant Editor
+  participant Reviewer1
+  participant Reviewer2
+  participant Reviewer3
+
+  Author->>Editor: Submit manuscript
+  Note over Editor: Desk Review: 3 business days
+  Editor->>Reviewer1: Review request
+  Editor->>Reviewer2: Review request
+  Editor->>Reviewer3: Review request
+  Reviewer1-->>Editor: Accept with minor revisions
+  Reviewer2-->>Editor: Major revisions required
+  Reviewer3-->>Editor: Accept
+  Editor->>Author: Revise and Resubmit
+  Author->>Editor: Revised manuscript
+  Editor->>Reviewer2: Re-review request
+  Reviewer2-->>Editor: Accept
+  Editor->>Author: Accepted for Publication`,
   },
 };
 

@@ -26,6 +26,7 @@ const requestSchema = z.object({
 const VALID_DIAGRAM_TYPES = [
   "flowchart", "sequence", "classDiagram", "stateDiagram",
   "erDiagram", "gantt", "pie", "mindmap", "timeline",
+  "journey", "quadrantChart",
 ] as const;
 
 const VALID_INFOGRAPHIC_TYPES = [
@@ -130,7 +131,7 @@ Each option is a ContentBlock — either a "diagram" (Mermaid) or "infographic" 
 OPTION TYPES YOU CAN GENERATE:
 
 1. MERMAID DIAGRAMS (type: "diagram"):
-   Valid diagramType values: flowchart, sequence, classDiagram, stateDiagram, erDiagram, gantt, pie, mindmap, timeline
+   Valid diagramType values: flowchart, sequence, classDiagram, stateDiagram, erDiagram, gantt, pie, mindmap, timeline, journey, quadrantChart
 
    CRITICAL: Use VALID Mermaid syntax. Examples:
 
@@ -161,6 +162,24 @@ OPTION TYPES YOU CAN GENERATE:
 
    Gantt:
    { "type": "diagram", "data": { "diagramType": "gantt", "syntax": "gantt\\n  title Schedule\\n  dateFormat YYYY-MM-DD\\n  section Phase 1\\n    Task A :a1, 2024-01-01, 30d\\n    Task B :after a1, 20d", "caption": "Schedule" } }
+
+   Journey (user experience / emotional journey):
+   { "type": "diagram", "data": { "diagramType": "journey", "syntax": "journey\\n  title User Journey\\n  section Onboarding\\n    Sign up: 5: User\\n    Complete profile: 3: User\\n  section Usage\\n    First task: 4: User\\n    Advanced feature: 2: User", "caption": "User experience journey" } }
+
+   JOURNEY RULES:
+   - Each task line format: "    Task name: score: Actor" where score is 1-5
+   - Sections group tasks into phases with "  section SectionName"
+   - Scores represent satisfaction (1=frustrated, 5=happy)
+   - Use for patient journeys, user experiences, emotional arcs
+
+   Quadrant Chart (2x2 matrix with data points):
+   { "type": "diagram", "data": { "diagramType": "quadrantChart", "syntax": "quadrantChart\\n  title Project Prioritization\\n  x-axis Low Effort --> High Effort\\n  y-axis Low Impact --> High Impact\\n  quadrant-1 Do First\\n  quadrant-2 Schedule\\n  quadrant-3 Delegate\\n  quadrant-4 Eliminate\\n  Project A: [0.3, 0.8]\\n  Project B: [0.7, 0.4]", "caption": "Priority matrix" } }
+
+   QUADRANT CHART RULES:
+   - Declare axes with "x-axis Label1 --> Label2" and "y-axis Label1 --> Label2"
+   - Label quadrants with "quadrant-1" through "quadrant-4" (1=top-right, 2=top-left, 3=bottom-left, 4=bottom-right)
+   - Plot data points with "Label: [x, y]" where x and y are 0.0 to 1.0
+   - Use for prioritization matrices, risk assessments, comparison grids
 
 2. INFOGRAPHIC VISUALS (type: "infographic"):
    Valid infographicType values: process_flow, comparison, hierarchy, cycle, funnel, pyramid, venn, matrix, radial, stats_row, checklist, cause_effect
