@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-024",
+  "attempt": 13,
+  "timestamp": "2026-03-02T16:58:04.184Z",
+  "mermaidSyntax": "sequenceDiagram\n  participant Author\n  participant Editor\n  participant Reviewer1\n  participant Reviewer2\n  participant Reviewer3\n\n  Author->>Editor: Submit manuscript\n  Note over Editor: Desk Review: 3 business days\n  Editor->>Reviewer1: Review request\n  Editor->>Reviewer2: Review request\n  Editor->>Reviewer3: Review request\n  Reviewer1-->>Editor: Accept with minor revisions\n  Reviewer2-->>Editor: Major revisions required\n  Reviewer3-->>Editor: Accept\n  Editor->>Author: Revise and Resubmit\n  Author->>Editor: Revised manuscript\n  Editor->>Reviewer2: Re-review request\n  Reviewer2-->>Editor: Accept\n  Editor->>Author: Accepted for Publication",
+  "diagramType": "sequence",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 5 participants declared": true,
+    "Simultaneous dispatch to all 3 reviewers": true,
+    "Distinct verdicts from each reviewer": true,
+    "Revision cycle shown (revise and resubmit)": true,
+    "Desk review note present": true,
+    "Final acceptance message shown": true,
+    "Manuscript submission as first interaction": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

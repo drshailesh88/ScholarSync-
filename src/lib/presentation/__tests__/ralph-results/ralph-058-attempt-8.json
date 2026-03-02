@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-058",
+  "attempt": 8,
+  "timestamp": "2026-03-02T16:58:12.007Z",
+  "mermaidSyntax": "flowchart TD\n  A[IND Application<br>Submitted to FDA] --> B{FDA Safety<br>Review}\n  B -->|30-day hold expires| C[Phase I Trial<br>Safety & Dosing]\n  B -->|Safety concerns| HOLD[Clinical Hold]\n  HOLD --> A\n  C --> D{Phase I<br>Review}\n  D -->|Safety data acceptable| E[Phase II Trial<br>Efficacy & Side Effects]\n  D -->|Unacceptable toxicity| W[Withdrawn]\n  E --> F{Phase II<br>Review}\n  F -->|Efficacy demonstrated| G[Phase III Trial<br>Large-Scale Confirmation]\n  F -->|Insufficient efficacy| W\n  G --> H{Phase III<br>Review}\n  H -->|Statistical significance met| I[NDA Submission]\n  H -->|Failed endpoints| W\n  I --> J{FDA Review<br>Panel Decision}\n  J -->|Approved| K[Drug Approved<br>Post-Market Surveillance]\n  J -->|Complete Response| L[Rejected<br>Requires Additional Data]\n  L --> G",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is flowchart, NOT stateDiagram despite state/transition vocabulary": true,
+    "IND Application as starting process node": true,
+    "Phase I, II, III trial nodes present as sequential steps": true,
+    "NDA Submission node present": true,
+    "FDA Review decision diamond with Approved/Rejected branches": true,
+    "Clinical Hold branch from at least one phase": true,
+    "Withdrawn path accessible from decision points": true,
+    "Linear top-to-bottom or left-to-right flow direction": true,
+    "Decision diamonds at review points (not state transitions)": true,
+    "At least 10 distinct process nodes": true
+  },
+  "overallScore": 10
+}

@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-036",
+  "attempt": 12,
+  "timestamp": "2026-03-02T16:57:54.923Z",
+  "mermaidSyntax": "sequenceDiagram\n  participant SE as Search Engine\n  participant DS as Deduplication Service\n  participant AI as AI Screener\n  participant HR as Human Reviewer\n  participant DB as Database\n\n  SE->>DS: Retrieve batch of records\n  DS->>DS: Remove duplicates\n  DS->>DB: Store unique records\n  Note over AI: Uses fine-tuned BERT model with 94% sensitivity\n  activate AI\n  loop For each record\n    AI->>DB: Fetch record\n    DB->>AI: Return record data\n    AI->>AI: Run title/abstract screening\n    AI->>DB: Store screening decision\n    critical Low confidence escalation\n      AI->>HR: Escalate low-confidence record\n      HR->>HR: Review record\n      HR->>DB: Store final decision\n    end\n  end\n  deactivate AI\n  DB->>DB: Generate screening report\n  DB->>HR: Send summary statistics",
+  "diagramType": "sequence",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Sequence diagram type declared": true,
+    "All 5 participants declared (Search Engine, Dedup, AI Screener, Human Reviewer, Database)": true,
+    "Loop block for iterating over records": true,
+    "Critical or opt block for low-confidence escalation": true,
+    "AI to Human escalation path present": true,
+    "Deduplication step before screening": true,
+    "Database interactions for storage and retrieval": true,
+    "Note element on AI Screener": true,
+    "Screening report generation after loop": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

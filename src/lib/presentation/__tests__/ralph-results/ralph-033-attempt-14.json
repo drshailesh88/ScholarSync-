@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-033",
+  "attempt": 14,
+  "timestamp": "2026-03-02T16:58:11.960Z",
+  "mermaidSyntax": "stateDiagram-v2\n  [*] --> Available\n  Available --> Reserved : Researcher books\n  Reserved --> InUse : Researcher checks in\n  InUse --> Available : Checks out, passes QC\n  InUse --> CalibrationRequired : Usage hours exceed threshold\n  CalibrationRequired --> UnderMaintenance : Technician starts calibration\n  UnderMaintenance --> Available : Calibration complete, passes QC\n  UnderMaintenance --> Decommissioned : Failed calibration, beyond repair\n  Reserved --> Available : Reservation cancelled/expired\n  Available --> UnderMaintenance : Emergency repair\n  Reserved --> UnderMaintenance : Emergency repair\n  InUse --> UnderMaintenance : Emergency repair\n  CalibrationRequired --> UnderMaintenance : Emergency repair\n  Decommissioned --> [*]\n\n  state Available {\n    [*] --> Ready\n  }\n  state InUse {\n    [*] --> Active\n  }",
+  "diagramType": "stateDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "State diagram type declared (stateDiagram-v2)": true,
+    "All 6 states present (Available, Reserved, In Use, Under Maintenance, Calibration Required, Decommissioned)": true,
+    "Available to Reserved transition present": true,
+    "Reserved to In Use transition present": true,
+    "In Use to Available (checkout) transition present": true,
+    "Calibration Required path from In Use": true,
+    "Under Maintenance to Available (calibration complete) path": true,
+    "Decommissioned as terminal state (no outgoing transitions except possibly [*])": true,
+    "Emergency maintenance transitions (multiple states to Under Maintenance)": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

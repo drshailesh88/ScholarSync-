@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-053",
+  "attempt": 12,
+  "timestamp": "2026-03-02T16:57:54.952Z",
+  "mermaidSyntax": "stateDiagram-v2\n  [*] --> Screening\n  state eligibility_check <<choice>>\n  Screening --> eligibility_check\n  eligibility_check --> Enrolled : [eligible]\n  eligibility_check --> ScreenFailure : [ineligible]\n  ScreenFailure --> [*]\n  Enrolled --> Randomized\n  state randomization <<choice>>\n  Randomized --> randomization\n  randomization --> TreatmentArmA : [random assignment]\n  randomization --> TreatmentArmB : [random assignment]\n  TreatmentArmA --> OnTreatment\n  TreatmentArmB --> OnTreatment\n  state response_check <<choice>>\n  OnTreatment --> response_check : Response assessment\n  response_check --> FollowUp : [Complete Response]\n  response_check --> OnTreatment : [Partial Response]\n  response_check --> OffTreatment : [Progressive Disease]\n  state off_treatment_check <<choice>>\n  OffTreatment --> off_treatment_check\n  off_treatment_check --> SafetyFollowUp : [Adverse event]\n  off_treatment_check --> SurvivalFollowUp : [Disease progression]\n  SafetyFollowUp --> StudyComplete\n  SurvivalFollowUp --> StudyComplete\n  FollowUp --> StudyComplete : After 2 years\n  StudyComplete --> [*]",
+  "diagramType": "stateDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "stateDiagram-v2 type declared": true,
+    "Screening as initial transition target": true,
+    "At least 2 choice pseudostates with branching": true,
+    "Guard conditions on transitions (eligible/ineligible or response types)": true,
+    "Treatment Arm A and Treatment Arm B states present": true,
+    "Loop-back from partial response to On Treatment": true,
+    "Terminal states (Screen Failure, Study Complete) present": true,
+    "At least 12 distinct states or nodes": true,
+    "Follow-Up state with transition to Study Complete": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}
