@@ -505,7 +505,7 @@ function assessQuality(
     } else if (lower.includes("randomization")) {
       const hasRandomization = /random/i.test(syntax);
       criteriaResults[criterion] = hasRandomization;
-    } else if (lower.includes("visit") || lower.includes("marker")) {
+    } else if (lower.includes("visit") || (lower.includes("marker") && !lower.includes("milestone"))) {
       const hasVisits = /visit|follow.?up|assessment/i.test(syntax);
       criteriaResults[criterion] = hasVisits;
     } else if (lower.includes("participant") && lower.includes("present")) {
@@ -584,7 +584,7 @@ function assessQuality(
       // Gantt: check for date-like patterns
       const hasDateRanges = /\d{4}-\d{2}-\d{2}|\d+[dw]|after\s+\w+/i.test(syntax);
       criteriaResults[criterion] = hasDateRanges;
-    } else if (lower.includes("milestone")) {
+    } else if (lower.includes("milestone") && !lower.includes("at least") && !lower.includes("critical path")) {
       const hasMilestones = /milestone|DSMB|crit\s|done\s/i.test(syntax);
       criteriaResults[criterion] = hasMilestones;
     } else if (lower.includes("section grouping") || lower.includes("section") && lower.includes("visible")) {
@@ -1587,6 +1587,58 @@ function assessQuality(
       const points = syntax.match(/\[\s*0\.\d+\s*,\s*0\.\d+\s*\]/g) ?? [];
       criteriaResults[criterion] = points.length >= 5;
 
+    // --- Cycle 14: gantt_advanced heuristics ---
+
+    // ralph-040: Multi-year grant Gantt with milestones
+    } else if (lower.includes("axisformat") && lower.includes("directive")) {
+      criteriaResults[criterion] = /axisFormat/i.test(syntax);
+    } else if (lower.includes("at least") && lower.includes("milestone") && lower.includes("marker")) {
+      const minMatch = lower.match(/at least (\d+)/);
+      const minMilestones = minMatch ? parseInt(minMatch[1]) : 3;
+      // Milestones in Mermaid Gantt use: "name :milestone, id, date" or zero-duration tasks
+      const milestoneLines = syntax.split("\n").filter(l => /milestone/i.test(l) && !l.trim().startsWith("%%"));
+      criteriaResults[criterion] = milestoneLines.length >= minMilestones;
+    } else if (lower.includes("task dependencies") && lower.includes("after")) {
+      const afterCount = (syntax.match(/\bafter\b/gi) ?? []).length;
+      criteriaResults[criterion] = afterCount >= 1;
+    } else if (lower.includes("multiple") && lower.includes("after") && lower.includes("dependencies") && lower.includes("at least")) {
+      const minMatch = lower.match(/at least (\d+)/);
+      const minDeps = minMatch ? parseInt(minMatch[1]) : 3;
+      const afterCount = (syntax.match(/\bafter\b/gi) ?? []).length;
+      criteriaResults[criterion] = afterCount >= minDeps;
+
+    // ralph-041: Clinical trial Gantt with regulatory milestones
+    } else if (lower.includes("ind") && lower.includes("related") && lower.includes("task")) {
+      criteriaResults[criterion] = /IND|pre-?IND|IND\s*submission|IND\s*approval/i.test(syntax);
+    } else if (lower.includes("enrollment") && lower.includes("treatment") && lower.includes("task")) {
+      criteriaResults[criterion] = /enrollment|enroll/i.test(syntax) && /treatment|therapy/i.test(syntax);
+    } else if (lower.includes("critical path") && lower.includes("marker") && lower.includes("milestone")) {
+      // Critical path in Mermaid uses "crit" keyword
+      const critCount = (syntax.match(/\bcrit\b/gi) ?? []).length;
+      criteriaResults[criterion] = critCount >= 2;
+    } else if (lower.includes("at least") && lower.includes("task entr") && !lower.includes("milestone")) {
+      const minMatch = lower.match(/at least (\d+)/);
+      const minTasks = minMatch ? parseInt(minMatch[1]) : 10;
+      // Count non-section, non-directive, non-empty lines as tasks
+      const taskLines = syntax.split("\n").filter(l => {
+        const t = l.trim();
+        return t && !t.startsWith("gantt") && !t.startsWith("title") && !t.startsWith("section")
+          && !t.startsWith("dateFormat") && !t.startsWith("axisFormat") && !t.startsWith("%%")
+          && !t.startsWith("todayMarker") && t.length > 3;
+      });
+      criteriaResults[criterion] = taskLines.length >= minTasks;
+
+    // ralph-042: Bioinformatics pipeline Gantt with sprints
+    } else if (lower.includes("all") && lower.includes("sprint") && lower.includes("section")) {
+      const sectionCount = (syntax.match(/\bsection\b/gi) ?? []).length;
+      criteriaResults[criterion] = sectionCount >= 3;
+    } else if (lower.includes("bioinformatics") && lower.includes("term") && lower.includes("present")) {
+      const terms = [/FastQ|FASTQ/i, /alignment|align/i, /variant\s*call/i, /QC|quality\s*control/i];
+      const found = terms.filter(r => r.test(syntax)).length;
+      criteriaResults[criterion] = found >= 2;
+    } else if (lower.includes("v1.0") && lower.includes("release") && lower.includes("final") && lower.includes("milestone")) {
+      criteriaResults[criterion] = /v1\.0|release|v1/i.test(syntax);
+
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -2340,6 +2392,89 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
   "Cross-Sectional Survey": [0.8, 0.4]
   "Case Series": [0.85, 0.25]
   "Expert Opinion": [0.9, 0.15]`,
+  },
+
+  "ralph-040": {
+    diagramType: "gantt",
+    syntax: `gantt
+  title R01 Grant Project Timeline (2024-2027)
+  dateFormat YYYY-MM-DD
+  axisFormat %b %Y
+
+  section Year 1 Aims
+    Hire postdoc               :a1, 2024-01-15, 2024-03-01
+    IRB approval               :milestone, m1, 2024-03-01, 0d
+    Develop protocols          :a2, 2024-03-01, 2024-06-30
+    Pilot study                :a3, 2024-07-01, 2024-12-31
+    Year 1 progress report     :milestone, m2, 2024-12-31, 0d
+
+  section Year 2 Data Collection
+    Patient recruitment        :b1, 2025-01-01, 2025-09-30
+    Sample collection          :b2, after b1, 2025-12-31
+    Data analysis phase 1      :b3, 2025-06-01, 2025-12-31
+    Year 2 progress report     :milestone, m3, 2025-12-31, 0d
+
+  section Year 3 Analysis & Publication
+    Data analysis phase 2      :c1, 2026-01-01, 2026-06-30
+    Manuscript drafting         :c2, 2026-04-01, 2026-09-30
+    Manuscript submission       :milestone, m4, 2026-10-01, 0d
+    Final report               :c3, 2026-10-01, 2026-12-31
+    Grant closeout              :milestone, m5, 2026-12-31, 0d`,
+  },
+
+  "ralph-041": {
+    diagramType: "gantt",
+    syntax: `gantt
+  title Phase II Clinical Trial — Anti-PD-L1 Combination Therapy
+  dateFormat YYYY-MM-DD
+  axisFormat %b %Y
+
+  section Regulatory & Startup
+    Pre-IND meeting            :a1, 2024-01-01, 2024-02-28
+    IND submission             :a2, 2024-03-01, 2024-04-30
+    IND approval               :crit, milestone, m1, 2024-05-01, 0d
+    Site selection             :a3, 2024-03-01, 2024-06-30
+    IRB approvals              :a4, 2024-05-01, 2024-08-31
+
+  section Enrollment & Treatment
+    First patient in           :crit, milestone, m2, 2024-09-01, 0d
+    Enrollment period          :b1, 2024-09-01, 2025-06-30
+    Treatment cycles           :b2, 2024-09-01, 2025-12-31
+    Safety monitoring          :b3, 2024-09-01, 2026-03-31
+
+  section Follow-up & Analysis
+    Follow-up period           :c1, 2025-06-01, 2026-06-30
+    Interim analysis           :crit, milestone, m3, 2025-09-01, 0d
+    Data lock                  :c2, 2026-06-01, 2026-08-31
+    Database lock              :crit, milestone, m4, 2026-08-01, 0d
+    Statistical analysis       :c3, 2026-07-01, 2026-10-31
+    CSR drafting               :c4, 2026-09-01, 2026-12-31`,
+  },
+
+  "ralph-042": {
+    diagramType: "gantt",
+    syntax: `gantt
+  title Bioinformatics Pipeline Development Plan
+  dateFormat YYYY-MM-DD
+  axisFormat %b %d
+
+  section Sprint 1 — Foundation
+    Requirements gathering      :s1a, 2024-01-08, 2024-01-19
+    Data model design           :s1b, 2024-01-22, 2024-02-02
+    FastQ preprocessing module  :s1c, 2024-02-05, 2024-02-23
+    Sprint 1 review             :milestone, m1, 2024-02-23, 0d
+
+  section Sprint 2 — Core Analysis
+    Alignment module            :s2a, after s1c, 21d
+    Variant calling module      :s2b, after s2a, 14d
+    QC metrics dashboard        :s2c, after s2a, 14d
+    Sprint 2 review             :milestone, m2, after s2b, 0d
+
+  section Sprint 3 — Integration
+    Pipeline orchestration      :s3a, after s2b, 21d
+    Benchmarking suite          :s3b, after s3a, 14d
+    Documentation               :s3c, after s3a, 14d
+    v1.0 release                :milestone, m3, after s3b, 0d`,
   },
 };
 

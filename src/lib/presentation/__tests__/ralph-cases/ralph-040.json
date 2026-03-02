@@ -1,0 +1,22 @@
+{
+  "id": "ralph-040",
+  "name": "Multi-Year Research Grant Gantt with Milestones",
+  "category": "gantt_advanced",
+  "difficulty": "hard",
+  "input": "Create a Gantt chart for a 3-year NIH R01 research grant project plan. Title: 'R01 Grant Project Timeline (2024-2027)'. Use dateFormat YYYY-MM-DD and axisFormat %b %Y. Sections: Year 1 Aims (IRB approval milestone on 2024-03-01, Hire postdoc 2024-01-15 to 2024-03-01, Develop protocols 2024-03-01 to 2024-06-30, Pilot study 2024-07-01 to 2024-12-31, Year 1 progress report milestone on 2024-12-31). Year 2 Data Collection (Patient recruitment 2025-01-01 to 2025-09-30, Sample collection 2025-03-01 to 2025-12-31 after Patient recruitment starts, Data analysis phase 1 2025-06-01 to 2025-12-31, Year 2 progress report milestone on 2025-12-31). Year 3 Analysis & Publication (Data analysis phase 2 2026-01-01 to 2026-06-30, Manuscript drafting 2026-04-01 to 2026-09-30, Manuscript submission milestone on 2026-10-01, Final report 2026-10-01 to 2026-12-31, Grant closeout milestone on 2026-12-31). Show milestones as zero-duration events. Use critical path for key deliverables.",
+  "expectedDiagramType": "gantt",
+  "expectedNodeCount": 15,
+  "qualityCriteria": [
+    "Gantt chart type declared",
+    "Title contains R01 or Grant",
+    "dateFormat directive present",
+    "axisFormat directive present",
+    "All 3 year sections present",
+    "At least 4 milestone markers present",
+    "At least 10 task entries",
+    "Task dependencies using 'after' keyword present",
+    "Date range spanning at least 2024-2027",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Gantt with 3 year sections, 4+ milestones, 10+ tasks, after dependencies, 3-year date range."
+}
