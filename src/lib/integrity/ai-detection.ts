@@ -683,7 +683,7 @@ async function runLLMHeuristicDetection(
     // Real academic papers never use **Bold:** formatting.
     // Penalty scales with how many headings the whole document has.
     if (/^\*\*[A-Z]/.test(pTrimmed)) {
-      const penalty = docMarkdownHeadings >= 4 ? 40 : docMarkdownHeadings >= 2 ? 35 : 25;
+      const penalty = docMarkdownHeadings >= 4 ? 45 : docMarkdownHeadings >= 2 ? 40 : 25;
       result.humanProbability = clamp(result.humanProbability - penalty);
       if (!result.flags.includes("markdown-bold-heading")) {
         result.flags.push("markdown-bold-heading");
@@ -717,6 +717,7 @@ async function runLLMHeuristicDetection(
       /^importantly[,\s]/i, /^notably[,\s]/i, /^similarly[,\s]/i,
       /^conversely[,\s]/i, /^parallel\s+to/i,
       /^finally[,\s]/i, /^ultimately[,\s]/i,
+      /^in response to\s/i, /^in light of\s/i,
     ];
     if (formulaicOpeners.some(re => re.test(pTrimmed))) {
       result.humanProbability = clamp(result.humanProbability - 12);
@@ -745,6 +746,38 @@ async function runLLMHeuristicDetection(
 
     // "Despite... However" structure — classic AI-generated problem-solution frame
     if (/^despite\b/i.test(pTrimmed) && /\bhowever\b/i.test(pText)) {
+      result.humanProbability = clamp(result.humanProbability - 8);
+    }
+
+    // AI-typical definition-first opening: "X, defined as Y, represents a Z"
+    // Real papers rarely start body paragraphs with dictionary-style definitions.
+    if (/^[A-Z][^,]+,\s+defined\s+as\b/i.test(pTrimmed)) {
+      result.humanProbability = clamp(result.humanProbability - 15);
+      result.flags.push("definition-first-opening");
+    }
+
+    // "In response to these limitations" / "In light of these challenges" — formulaic AI bridge
+    if (/^in\s+(response|light)\s+(to|of)\s+(these|the)\s+(limitation|challenge|concern|issue)/i.test(pTrimmed)) {
+      result.humanProbability = clamp(result.humanProbability - 12);
+      result.flags.push("formulaic-bridge-phrase");
+    }
+
+    // "Historically, the [clinical/therapeutic] management of..." — AI textbook opener
+    if (/^historically,?\s+the\s+/i.test(pTrimmed)) {
+      result.humanProbability = clamp(result.humanProbability - 10);
+      result.flags.push("textbook-historical-opener");
+    }
+
+    // "X represents a [significant/major/growing] [challenge/burden/concern]" — AI framing
+    if (/\brepresents?\s+a\s+(?:significant|major|growing|substantial|critical|pervasive)\s+(?:challenge|burden|concern|issue|problem|barrier)/i.test(pText)) {
+      result.humanProbability = clamp(result.humanProbability - 10);
+      result.flags.push("ai-significance-framing");
+    }
+
+    // Compound: paragraph opens with transition AND contains "these limitations/findings/challenges"
+    // AI loves the "Despite these X... However... Therefore" bridge structure
+    if (/^(?:despite|given|considering|in light of)\b/i.test(pTrimmed) &&
+        /\bthese\s+(?:limitation|finding|challenge|concern|issue|advance|development|effort)/i.test(pLower)) {
       result.humanProbability = clamp(result.humanProbability - 8);
     }
   }

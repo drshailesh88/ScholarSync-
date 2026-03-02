@@ -1,37 +1,41 @@
 {
-  "lastUpdated": "2026-03-02T16:34:35.805Z",
+  "lastUpdated": "2026-03-02T17:06:13.231Z",
   "totalCycles": 12,
   "completedCycles": 2,
   "cycles": [
     {
       "cycleId": "cycle-2",
       "name": "Baseline Sensitivity — AI-Generated Medical Text",
-      "timestamp": "2026-03-02T16:34:35.805Z",
+      "timestamp": "2026-03-02T17:06:13.231Z",
       "casesRun": 5,
-      "casesPassing": 2,
-      "avgHumanScore": 20.2,
+      "casesPassing": 4,
+      "avgHumanScore": 21,
       "dimensionScore": 8,
       "results": [
         {
           "testId": "ralph-ic-006",
           "name": "AI-generated: clinical case report",
-          "humanScore": 20,
+          "humanScore": 16,
           "overallRisk": "high",
           "paragraphScores": [
-            10,
-            52,
-            55,
-            54,
-            38,
-            88
+            30,
+            35,
+            47,
+            50,
+            40,
+            35,
+            85
           ],
           "flags": [
-            "markdown bold heading format",
+            "Markdown bold heading format",
+            "markdown-bold-heading",
+            "Markdown bold heading format",
             "markdown-bold-heading",
             "markdown-bold-heading",
             "markdown-bold-heading",
+            "Markdown bold heading format",
             "markdown-bold-heading",
-            "Markdown bold heading",
+            "Markdown bold heading format",
             "markdown-bold-heading"
           ],
           "pass": true,
@@ -40,111 +44,116 @@
         {
           "testId": "ralph-ic-007",
           "name": "AI-generated: methods section (RCT)",
-          "humanScore": 9,
+          "humanScore": 6,
           "overallRisk": "high",
           "paragraphScores": [
-            52,
-            55,
+            50,
             53,
             50,
-            50
+            45,
+            47
           ],
           "flags": [
-            "Markdown bold heading format",
             "markdown-bold-heading",
             "markdown-bold-heading",
             "markdown-bold-heading",
             "markdown-bold-heading",
-            "Markdown bold heading present",
             "markdown-bold-heading"
           ],
-          "pass": false,
-          "notes": [
-            "Only 0 paras flagged, need >= 2"
-          ]
+          "pass": true,
+          "notes": []
         },
         {
           "testId": "ralph-ic-008",
           "name": "AI-generated: systematic review introduction",
-          "humanScore": 31,
+          "humanScore": 29,
           "overallRisk": "high",
           "paragraphScores": [
-            58,
+            45,
             25,
-            53,
-            75
+            58,
+            55
           ],
           "flags": [
-            "Standardized introduction structure with definition-first opening",
-            "Encyclopedic overview style",
-            "Transition cascade detected (However... Furthermore... Consequently...) within single paragraph",
-            "Formulaic phrase: 'urgent imperative'",
-            "Problem-solution framing with evenly weighted perspectives",
+            "Polished encyclopedic introduction structure",
+            "Definition-plus-epidemiology formula",
+            "definition-first-opening",
+            "Transition cascade: 'However... Furthermore... Consequently'",
+            "Stock phrase: 'imperative demand'",
+            "Balanced perspective presentation without authorial stance",
             "transition-cascade-in-paragraph",
-            "Stock phrase: 'have emerged as promising therapeutic modalities'",
-            "Standard hedging: 'While preliminary evidence supports...'",
-            "Highly formulaic objectives section structure"
+            "Formulaic objective statement",
+            "Standard systematic review template language"
           ],
-          "pass": false,
-          "notes": [
-            "humanScore 31% > max 30% — AI text not detected",
-            "Only 1 paras flagged, need >= 2"
-          ]
+          "pass": true,
+          "notes": []
         },
         {
           "testId": "ralph-ic-009",
           "name": "AI-generated: pharmacology review",
-          "humanScore": 38,
-          "overallRisk": "high",
+          "humanScore": 48,
+          "overallRisk": "medium",
           "paragraphScores": [
             25,
             85,
-            88,
-            80,
-            47
+            85,
+            90,
+            65
           ],
           "flags": [
             "Markdown bold heading in academic prose",
             "markdown-bold-heading",
-            "Sequential transition words (However, Additionally, Consequently) in single paragraph",
-            "transition-cascade-in-paragraph"
+            "Structured topic-sentence opening",
+            "Efficient multi-topic coverage in single paragraph",
+            "multi-transition-paragraph"
           ],
           "pass": false,
           "notes": [
-            "humanScore 38% > max 30% — AI text not detected"
+            "humanScore 48% > max 30% — AI text not detected",
+            "Risk \"medium\" should be \"high\"",
+            "Only 1 paras flagged, need >= 2"
           ]
         },
         {
           "testId": "ralph-ic-010",
           "name": "AI-generated: ethics discussion",
-          "humanScore": 3,
+          "humanScore": 6,
           "overallRisk": "high",
           "paragraphScores": [
-            0,
+            3,
+            20,
+            13,
             8,
-            25,
-            0
+            13
           ],
           "flags": [
-            "Stock phrase: 'paradigm shift'",
-            "Encyclopedic overview without specific examples or citations",
-            "Formulaic transition: 'However' followed by 'Consequently'",
-            "Generic academic hedging: 'necessitate rigorous scrutiny'",
-            "No real-world cases of algorithmic bias cited",
-            "multi-transition-paragraph",
-            "Formulaic transition cascade: 'Furthermore' opening",
-            "Generic 'black box' discussion without specific AI systems named",
-            "No specific clinical scenarios or case examples",
-            "Sophisticated vocabulary ('epistemic gap') but lacks concrete application",
+            "Stock phrase: 'paradigm shift' - common AI-generated text marker",
+            "Generic hedging: 'necessitate rigorous scrutiny' without specific framework",
+            "Encyclopedic opening without specific clinical context or data",
+            "Uniform sentence rhythm (23, 16, 20 words)",
+            "Balanced presentation without genuine analytical stance",
+            "Formulaic paragraph opening: 'Foremost among these concerns'",
+            "Transition cascade: 'consequently' following semicolon",
+            "Generic coverage of algorithmic bias without citing specific studies or datasets",
+            "Hypothetical scenario ('If an algorithm is trained...') rather than real examples",
+            "No specific demographic data, trial names, or documented bias incidents",
+            "Formulaic paragraph opening: 'Parallel to the issue of bias'",
+            "Mid-paragraph 'However' transition typical of AI structure",
+            "'Black box' explanation is generic coverage without specific algorithm types",
+            "Stock phrase: 'is therefore a prerequisite for ethical implementation'",
+            "Abstract discussion without regulatory specifics (FDA, GDPR provisions)",
             "formulaic-paragraph-opener",
-            "Generic liability discussion without legal precedents",
-            "No specific regulations cited (FDA, GDPR, HIPAA)",
-            "'Responsibility gap' as stock phrase",
-            "Abstract recommendations without actionable specifics",
-            "Stock phrase variant: 'adjunct to, rather than a replacement for' (matches 'augment rather than supplant')",
-            "Formulaic conclusion structure: 'Ultimately' leading to 'Therefore'",
-            "Buzzword cluster: 'synergistic partnership', 'human-in-the-loop', 'human agency'",
-            "Abstract prescription without implementation specifics",
+            "Formulaic paragraph opening: 'Furthermore' beginning third topic",
+            "Abstract liability discussion without specific legal cases or statutes",
+            "No mention of actual litigation, malpractice precedents, or regulatory guidance",
+            "Generic prescription: 'Establishing clear legal precedents is essential'",
+            "List-like structure completing topic coverage (bias → consent → liability)",
+            "formulaic-paragraph-opener",
+            "Formulaic conclusion structure ('Ultimately... In conclusion...')",
+            "Stock AI ethics phrases ('human in the loop', 'decision support mechanism')",
+            "Generic value triad ('equity, transparency, and accountability')",
+            "Elevated but abstract phrasing without clinical specificity",
+            "Presents standard position without genuine analytical depth or stance",
             "formulaic-paragraph-opener"
           ],
           "pass": true,
@@ -155,21 +164,21 @@
     {
       "cycleId": "cycle-1",
       "name": "Baseline Specificity — Human Medical Text",
-      "timestamp": "2026-03-02T16:26:09.398Z",
+      "timestamp": "2026-03-02T16:57:49.980Z",
       "casesRun": 5,
       "casesPassing": 5,
-      "avgHumanScore": 92,
+      "avgHumanScore": 89.8,
       "dimensionScore": 10,
       "results": [
         {
           "testId": "ralph-ic-001",
           "name": "Clinical case report (PE presentation)",
-          "humanScore": 95,
+          "humanScore": 97,
           "overallRisk": "low",
           "paragraphScores": [
             95,
-            95,
-            95
+            98,
+            97
           ],
           "flags": [],
           "pass": true,
@@ -178,15 +187,17 @@
         {
           "testId": "ralph-ic-002",
           "name": "Methods section (RCT, formal register)",
-          "humanScore": 92,
+          "humanScore": 89,
           "overallRisk": "low",
           "paragraphScores": [
             98,
-            97,
+            82,
             98,
-            95
+            97
           ],
-          "flags": [],
+          "flags": [
+            "definition-first-opening"
+          ],
           "pass": true,
           "notes": []
         },
@@ -208,26 +219,28 @@
         {
           "testId": "ralph-ic-004",
           "name": "Literature review (gut microbiome)",
-          "humanScore": 93,
+          "humanScore": 84,
           "overallRisk": "low",
           "paragraphScores": [
-            95,
-            95,
-            90
+            90,
+            88,
+            74
           ],
-          "flags": [],
+          "flags": [
+            "Slightly list-like structure in first sentence"
+          ],
           "pass": true,
           "notes": []
         },
         {
           "testId": "ralph-ic-005",
           "name": "Clinical protocol / guideline excerpt",
-          "humanScore": 89,
+          "humanScore": 88,
           "overallRisk": "low",
           "paragraphScores": [
-            92,
-            97,
-            96,
+            90,
+            95,
+            95,
             90
           ],
           "flags": [],
