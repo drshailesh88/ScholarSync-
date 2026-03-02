@@ -616,7 +616,7 @@ function assessQuality(
           suggestedFix: "Ensure all pie chart percentages sum to approximately 100%",
         });
       }
-    } else if (lower.includes("largest") && lower.includes("slice")) {
+    } else if (lower.includes("largest") && lower.includes("slice") && !lower.includes("nci") && !lower.includes("niaid") && !lower.includes("original research")) {
       // Pie: check that the largest slice matches expected
       const sliceMatches = [...syntax.matchAll(/"([^"]+)"\s*:\s*([\d.]+)/g)];
       if (sliceMatches.length > 0) {
@@ -1498,6 +1498,95 @@ function assessQuality(
     } else if (lower.includes("screening report") && lower.includes("generation") && lower.includes("after")) {
       criteriaResults[criterion] = /report|summary|statistic/i.test(syntax);
 
+    // --- Cycle 13: pie_and_quadrant_stress heuristics ---
+
+    // ralph-037: Pie chart with 10+ slices
+    } else if (lower.includes("at least") && lower.includes("distinct slice")) {
+      const minMatch = lower.match(/at least (\d+)/);
+      const minSlices = minMatch ? parseInt(minMatch[1]) : 5;
+      // Count quoted label lines in pie syntax (e.g., "Label" : value)
+      const sliceLines = syntax.split("\n").filter(l => /^\s*"[^"]+"\s*:\s*[\d.]+/.test(l.trim()));
+      criteriaResults[criterion] = sliceLines.length >= minSlices;
+    } else if (lower.includes("nci") && lower.includes("slice") && lower.includes("largest")) {
+      // Check NCI has the highest value among individual institutes (excluding "Other/Combined")
+      const slices = [...syntax.matchAll(/"([^"]+)"\s*:\s*([\d.]+)/g)];
+      const nciSlice = slices.find(m => /NCI|National Cancer/i.test(m[1]));
+      const individualSlices = slices.filter(m => !/other|combined|remaining/i.test(m[1]));
+      if (nciSlice && individualSlices.length > 0) {
+        const nciVal = parseFloat(nciSlice[2]);
+        const maxVal = Math.max(...individualSlices.map(m => parseFloat(m[2])));
+        criteriaResults[criterion] = nciVal >= maxVal - 0.1;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("niaid") && lower.includes("slice") && lower.includes("second")) {
+      const slices = [...syntax.matchAll(/"([^"]+)"\s*:\s*([\d.]+)/g)];
+      const niaidSlice = slices.find(m => /NIAID|Allergy/i.test(m[1]));
+      criteriaResults[criterion] = !!niaidSlice;
+    } else if (lower.includes("other") && lower.includes("institutes") && lower.includes("combined") && lower.includes("slice")) {
+      criteriaResults[criterion] = /Other|Combined|Remaining/i.test(syntax);
+    } else if (lower.includes("percentage") && lower.includes("sum") && lower.includes("100")) {
+      const values = [...syntax.matchAll(/"[^"]+"\s*:\s*([\d.]+)/g)].map(m => parseFloat(m[1]));
+      const sum = values.reduce((a, b) => a + b, 0);
+      criteriaResults[criterion] = sum >= 95 && sum <= 105;
+    } else if (lower.includes("truncated") && lower.includes("institute") && lower.includes("name")) {
+      // Check that at least some full institute names are preserved
+      const hasFullNames = /National Cancer|NIAID|NHLBI|NIGMS|NINDS/i.test(syntax);
+      criteriaResults[criterion] = hasFullNames;
+    } else if (lower.includes("percentage") && lower.includes("values") && lower.includes("numeric")) {
+      const values = [...syntax.matchAll(/"[^"]+"\s*:\s*([\d.]+)/g)];
+      criteriaResults[criterion] = values.length >= 3;
+
+    // ralph-038: Pie chart from raw numbers
+    } else if (lower.includes("all") && lower.includes("publication type") && lower.includes("present") && lower.includes("slice")) {
+      const types = [/original|research article/i, /review/i, /meta.?analy/i, /case report/i, /editorial|commentary/i, /book chapter/i, /technical report/i];
+      const found = types.filter(r => r.test(syntax)).length;
+      criteriaResults[criterion] = found >= 5;
+    } else if (lower.includes("original research") && lower.includes("largest")) {
+      const slices = [...syntax.matchAll(/"([^"]+)"\s*:\s*([\d.]+)/g)];
+      const origSlice = slices.find(m => /original|research article/i.test(m[1]));
+      if (origSlice && slices.length > 0) {
+        const origVal = parseFloat(origSlice[2]);
+        const maxVal = Math.max(...slices.map(m => parseFloat(m[2])));
+        criteriaResults[criterion] = origVal >= maxVal - 0.1;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("review article") && lower.includes("present") && !lower.includes("systematic") && !lower.includes("peer")) {
+      criteriaResults[criterion] = /review/i.test(syntax);
+    } else if (lower.includes("meta-analy") && lower.includes("present")) {
+      criteriaResults[criterion] = /meta.?analy/i.test(syntax);
+    } else if (lower.includes("numeric value") && lower.includes("present") && lower.includes("each slice")) {
+      const values = [...syntax.matchAll(/"[^"]+"\s*:\s*([\d.]+)/g)];
+      criteriaResults[criterion] = values.length >= 5;
+
+    // ralph-039: Dense quadrant chart
+    } else if (lower.includes("at least") && lower.includes("data point") && lower.includes("plotted")) {
+      const minMatch = lower.match(/at least (\d+)/);
+      const minPoints = minMatch ? parseInt(minMatch[1]) : 5;
+      const points = syntax.match(/\[[\d.]+\s*,\s*[\d.]+\]/g) ?? [];
+      criteriaResults[criterion] = points.length >= minPoints;
+    } else if (lower.includes("rct") && lower.includes("data point") && lower.includes("high")) {
+      // RCT should be in high-power region (y > 0.7)
+      const rctLine = syntax.split("\n").find(l => /RCT|Randomized Controlled/i.test(l));
+      if (rctLine) {
+        const coords = rctLine.match(/\[\s*([\d.]+)\s*,\s*([\d.]+)\s*\]/);
+        criteriaResults[criterion] = coords ? parseFloat(coords[2]) > 0.7 : false;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("expert opinion") && lower.includes("low")) {
+      const eoLine = syntax.split("\n").find(l => /Expert Opinion/i.test(l));
+      if (eoLine) {
+        const coords = eoLine.match(/\[\s*([\d.]+)\s*,\s*([\d.]+)\s*\]/);
+        criteriaResults[criterion] = coords ? parseFloat(coords[2]) < 0.3 : false;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("data point") && lower.includes("coordinate") && lower.includes("decimal")) {
+      const points = syntax.match(/\[\s*0\.\d+\s*,\s*0\.\d+\s*\]/g) ?? [];
+      criteriaResults[criterion] = points.length >= 5;
+
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -2201,6 +2290,56 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
   deactivate AI
   DB->>DB: Generate screening report
   DB->>HR: Send summary statistics`,
+  },
+
+  "ralph-037": {
+    diagramType: "pie",
+    syntax: `pie title NIH Funding Distribution by Institute (FY2024)
+  "NCI (National Cancer Institute)" : 18.2
+  "NIAID (Allergy & Infectious Diseases)" : 14.8
+  "NHLBI (Heart Lung Blood)" : 9.1
+  "NIGMS (General Medical Sciences)" : 7.8
+  "NINDS (Neurological Disorders)" : 6.5
+  "NIDDK (Diabetes & Kidney)" : 5.9
+  "NIMH (Mental Health)" : 5.2
+  "NIA (Aging)" : 4.7
+  "NICHD (Child Health)" : 4.1
+  "NEI (Eye Institute)" : 2.3
+  "Other Institutes Combined" : 21.4`,
+  },
+
+  "ralph-038": {
+    diagramType: "pie",
+    syntax: `pie title Department Publication Output by Type (2024)
+  "Original Research Articles" : 42
+  "Review Articles" : 15
+  "Case Reports" : 12
+  "Meta-Analyses" : 8
+  "Editorials/Commentaries" : 5
+  "Book Chapters" : 3
+  "Technical Reports" : 2`,
+  },
+
+  "ralph-039": {
+    diagramType: "quadrantChart",
+    syntax: `quadrantChart
+  title Research Methodology Evaluation Matrix
+  x-axis "Difficult to Implement" --> "Easy to Implement"
+  y-axis "Low Statistical Power" --> "High Statistical Power"
+  quadrant-1 "Ideal Methods"
+  quadrant-2 "Gold Standard but Complex"
+  quadrant-3 "Avoid if Possible"
+  quadrant-4 "Quick but Weak"
+  "Meta-Analysis": [0.2, 0.95]
+  "Randomized Controlled Trial": [0.25, 0.9]
+  "Systematic Review": [0.35, 0.85]
+  "Cohort Study": [0.5, 0.7]
+  "Case-Control Study": [0.6, 0.6]
+  "Quasi-Experimental": [0.55, 0.55]
+  "N-of-1 Trial": [0.7, 0.5]
+  "Cross-Sectional Survey": [0.8, 0.4]
+  "Case Series": [0.85, 0.25]
+  "Expert Opinion": [0.9, 0.15]`,
   },
 };
 
