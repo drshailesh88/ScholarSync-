@@ -321,8 +321,8 @@ function VisualOptionCard({
     >
       {/* Preview */}
       <div
-        className="relative aspect-[16/10] overflow-hidden p-2"
-        style={{ backgroundColor: fallbackTheme.backgroundColor, fontSize: "8px" }}
+        className="relative aspect-video overflow-hidden p-2"
+        style={{ backgroundColor: fallbackTheme.backgroundColor, fontSize: "12px" }}
       >
         <Renderer
           data={option.block.data as Record<string, unknown>}

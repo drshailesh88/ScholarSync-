@@ -231,15 +231,15 @@ function Cycle({ items, colors, theme }: { items: InfographicItem[]; colors: str
               fill="none" stroke={theme.textColor + "30"} strokeWidth={1.5}
               markerEnd="url(#cycle-arrow)"
             />
-            <circle cx={x} cy={y} r={28} fill={color} />
-            <text x={x} y={y - 3} textAnchor="middle" fill="white" fontSize={14}>
+            <circle cx={x} cy={y} r={30} fill={color} />
+            <text x={x} y={y - 2} textAnchor="middle" fill="white" fontSize={15}>
               {getItemIcon(item, `${i + 1}`)}
             </text>
             {labelLines.map((line, li) => (
               <text
                 key={li}
-                x={x} y={y + 9 + li * 10}
-                textAnchor="middle" fill="white" fontSize={7} fontWeight="600"
+                x={x} y={y + 10 + li * 11}
+                textAnchor="middle" fill="white" fontSize={9} fontWeight="600"
               >
                 {line}
               </text>
