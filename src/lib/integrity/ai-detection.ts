@@ -10,8 +10,8 @@
  * For paid users, both run in parallel and scores are combined (60% Binoculars, 40% LLM).
  */
 
-import { generateObject } from "ai";
-import { getSmallModel } from "@/lib/ai/models";
+import { generateObject, generateText } from "ai";
+import { getSmallModel, AI_PROVIDER } from "@/lib/ai/models";
 import { z } from "zod";
 import Replicate from "replicate";
 
@@ -370,6 +370,51 @@ export function computeTextStatistics(text: string): TextStatistics {
     }
   }
 
+  // 7. Formulaic transition density (per 100 words)
+  const formulaicTransitions = [
+    "furthermore", "moreover", "additionally", "consequently",
+    "nevertheless", "nonetheless", "subsequently", "accordingly",
+    "in addition", "as a result", "on the other hand", "in contrast",
+    "it is worth noting", "it should be noted", "importantly",
+    "notably", "significantly", "interestingly", "remarkably",
+  ];
+  let formulaicCount = 0;
+  for (const transition of formulaicTransitions) {
+    let idx = 0;
+    while (true) {
+      const found = lowerText.indexOf(transition, idx);
+      if (found === -1) break;
+      formulaicCount++;
+      idx = found + transition.length;
+    }
+  }
+  const formulaicTransitionDensity = (formulaicCount / totalWords) * 100;
+
+  // 8. Paragraph length uniformity (std dev of paragraph word counts)
+  const paragraphs = text.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 20);
+  const paraLengths = paragraphs.map(p => p.split(/\s+/).filter(w => w.length > 0).length);
+  let paragraphLengthStdDev = 0;
+  if (paraLengths.length > 1) {
+    const avgParaLen = paraLengths.reduce((a, b) => a + b, 0) / paraLengths.length;
+    const paraVariance = paraLengths.reduce((sum, len) => sum + Math.pow(len - avgParaLen, 2), 0) / paraLengths.length;
+    paragraphLengthStdDev = Math.sqrt(paraVariance);
+  }
+
+  // 9. Repetitive sentence openings (ratio of sentences sharing an opening bigram)
+  const openingBigrams = sentences.map(s => {
+    const words = s.split(/\s+/).slice(0, 2).map(w => w.toLowerCase().replace(/[^a-z]/g, ""));
+    return words.join(" ");
+  }).filter(b => b.length > 0);
+  const bigramCounts = new Map<string, number>();
+  for (const bg of openingBigrams) {
+    bigramCounts.set(bg, (bigramCounts.get(bg) || 0) + 1);
+  }
+  const repeatedOpenings = Array.from(bigramCounts.values()).filter(c => c > 1).reduce((s, c) => s + c, 0);
+  const repetitiveSentenceOpeningRatio = openingBigrams.length > 0 ? repeatedOpenings / openingBigrams.length : 0;
+
+  // 10. Markdown-style bold headings (e.g. **Section:** or **Title**)
+  const markdownHeadingCount = (text.match(/\*\*[A-Z][^*]+\*\*/g) || []).length;
+
   return {
     avgSentenceLength: Math.round(avgSentenceLength * 100) / 100,
     sentenceLengthStdDev: Math.round(sentenceLengthStdDev * 100) / 100,
@@ -377,6 +422,10 @@ export function computeTextStatistics(text: string): TextStatistics {
     passiveVoicePercent: Math.round(passiveVoicePercent * 100) / 100,
     readabilityGrade: Math.round(readabilityGrade * 100) / 100,
     hedgingPhraseCount,
+    formulaicTransitionDensity: Math.round(formulaicTransitionDensity * 1000) / 1000,
+    paragraphLengthStdDev: Math.round(paragraphLengthStdDev * 100) / 100,
+    repetitiveSentenceOpeningRatio: Math.round(repetitiveSentenceOpeningRatio * 1000) / 1000,
+    markdownHeadingCount,
   };
 }
 
@@ -410,6 +459,7 @@ const paragraphAssessmentSchema = z.object({
 /**
  * Analyses a batch of paragraphs using an LLM to assess the probability
  * of AI-generated content.
+ * Uses generateObject (Anthropic) or generateText+JSON (ZhiPu).
  */
 async function analyseParagraphBatch(
   paragraphs: string[],
@@ -420,7 +470,76 @@ async function analyseParagraphBatch(
     .map((p, i) => `[Paragraph ${i}]\n${p}`)
     .join("\n\n");
 
-  const systemPrompt = `You are an expert AI content detection analyst specializing in academic writing.
+  const systemPrompt = buildDetectionSystemPrompt(stats);
+  const userPrompt = `Assess the following ${paragraphs.length} paragraph(s) for AI-generated content:\n\n${numberedParagraphs}`;
+
+  let parsedParagraphs: Array<{
+    paragraphIndex: number;
+    humanProbability: number;
+    flags: string[];
+    suggestion?: string;
+  }>;
+
+  if (AI_PROVIDER === "anthropic") {
+    const { object } = await generateObject({
+      model: getSmallModel(),
+      schema: paragraphAssessmentSchema,
+      system: systemPrompt,
+      prompt: userPrompt,
+    });
+    parsedParagraphs = object.paragraphs;
+  } else {
+    // ZhiPu GLM-5: generateText with JSON instruction + manual parsing
+    const jsonInstruction = `\n\nRespond ONLY with a JSON object matching this schema:
+{
+  "paragraphs": [
+    {
+      "paragraphIndex": <number, 0-based>,
+      "humanProbability": <number, 0-100>,
+      "flags": [<string array of AI signals detected>],
+      "suggestion": <string, optional actionable suggestion>
+    }
+  ]
+}
+Do not include any text outside the JSON object. No markdown fences.`;
+
+    const { text } = await generateText({
+      model: getSmallModel(),
+      system: systemPrompt,
+      prompt: userPrompt + jsonInstruction,
+    });
+
+    // Extract and parse JSON from response
+    const cleaned = text.replace(/```(?:json)?\s*/g, "").replace(/```\s*/g, "").trim();
+    const jsonMatch = cleaned.match(/\{[\s\S]*"paragraphs"[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("ZhiPu response did not contain valid JSON with paragraphs key");
+    }
+
+    const raw = JSON.parse(jsonMatch[0]) as {
+      paragraphs: Array<Record<string, unknown>>;
+    };
+
+    parsedParagraphs = raw.paragraphs.map((p) => ({
+      paragraphIndex: typeof p.paragraphIndex === "number" ? p.paragraphIndex : 0,
+      humanProbability: typeof p.humanProbability === "number" ? p.humanProbability : 50,
+      flags: Array.isArray(p.flags) ? p.flags.map(String) : [],
+      suggestion: typeof p.suggestion === "string" ? p.suggestion : undefined,
+    }));
+  }
+
+  return parsedParagraphs.map((p, i) => ({
+    paragraphIndex: globalIndex + (p.paragraphIndex ?? i),
+    excerpt: paragraphs[p.paragraphIndex ?? i]?.slice(0, 80) ?? "",
+    humanProbability: Math.round(p.humanProbability),
+    flags: p.flags,
+    suggestion: p.suggestion,
+  }));
+}
+
+/** Build the system prompt for AI detection — shared by both providers. */
+function buildDetectionSystemPrompt(stats: TextStatistics): string {
+  return `You are an expert AI content detection analyst specializing in academic writing.
 Your task is to assess whether each paragraph was written by a human or generated by an AI.
 
 STATISTICAL CONTEXT for the full document:
@@ -430,6 +549,10 @@ STATISTICAL CONTEXT for the full document:
 - Passive voice: ${stats.passiveVoicePercent}%
 - Readability grade: ${stats.readabilityGrade} (Flesch-Kincaid)
 - Hedging phrases detected: ${stats.hedgingPhraseCount}
+- Formulaic transitions per 100 words: ${stats.formulaicTransitionDensity}
+- Paragraph length std dev: ${stats.paragraphLengthStdDev} words
+- Repetitive sentence opening ratio: ${stats.repetitiveSentenceOpeningRatio}
+- Markdown bold headings: ${stats.markdownHeadingCount}
 
 DETECTION GUIDELINES:
 - AI text tends to have uniform sentence lengths, generic hedging, and formulaic transitions.
@@ -438,22 +561,22 @@ DETECTION GUIDELINES:
 - Low sentence-length std dev (< 3) combined with high hedging is a strong AI signal.
 - Look for "list-like" structures, excessive qualification, and repetitive connective phrases.
 
-Be calibrated: not all polished writing is AI-generated. Academic writing naturally uses some passive voice and hedging.`;
+AI-SPECIFIC TELLS (penalize these when present together, not individually):
+- Markdown bold headings (**Section:**) in text claiming to be academic prose
+- Formulaic transition cascades: "Furthermore... However... Consequently..." in a single paragraph
+- Encyclopedic coverage without genuine depth or personal interpretation
+- Stock phrases: "paradigm shift", "augment rather than supplant", "it is imperative"
+- Every perspective presented equally without taking a genuine stance
 
-  const { object } = await generateObject({
-    model: getSmallModel(),
-    schema: paragraphAssessmentSchema,
-    system: systemPrompt,
-    prompt: `Assess the following ${paragraphs.length} paragraph(s) for AI-generated content:\n\n${numberedParagraphs}`,
-  });
+IMPORTANT — DO NOT FALSE-POSITIVE ON THESE HUMAN PATTERNS:
+- Medical case reports naturally use structured, formulaic prose. "The patient was initiated on..." is human convention, NOT an AI tell.
+- Methods sections are deliberately formulaic. Passive voice, structured inclusion criteria, and endpoint descriptions are EXPECTED.
+- Clinical guidelines use imperative/prescriptive tone. "Patients should receive..." is normal.
+- Discussion sections with "However" or "Furthermore" used once or twice is normal human writing.
+- Specific clinical data (exact lab values, drug doses, trial registration numbers) strongly indicate human authorship.
+- Named trials, specific cohorts, and real-world hospital protocols indicate human expertise.
 
-  return object.paragraphs.map((p, i) => ({
-    paragraphIndex: globalIndex + (p.paragraphIndex ?? i),
-    excerpt: paragraphs[p.paragraphIndex ?? i]?.slice(0, 80) ?? "",
-    humanProbability: Math.round(p.humanProbability),
-    flags: p.flags,
-    suggestion: p.suggestion,
-  }));
+Be calibrated: academic medical writing is inherently structured. Err toward "human" when you see genuine domain expertise, specific data, and real-world clinical detail.`;
 }
 
 // ── Sentence splitting for compliance highlighting ───────────────────
@@ -547,25 +670,155 @@ async function runLLMHeuristicDetection(
     }
   }
 
+  // ── Paragraph-level heuristic adjustments ──
+  // Apply HIGH-CONFIDENCE structural signals directly to paragraph scores
+  // before averaging, so they flow through to the final humanScore.
+  const docMarkdownHeadings = stats.markdownHeadingCount;
+
+  for (const result of allParagraphResults) {
+    const pText = paragraphs[result.paragraphIndex] ?? "";
+    const pTrimmed = pText.trim();
+
+    // Markdown bold heading at start of paragraph — near-definitive AI signal.
+    // Real academic papers never use **Bold:** formatting.
+    // Penalty scales with how many headings the whole document has.
+    if (/^\*\*[A-Z]/.test(pTrimmed)) {
+      const penalty = docMarkdownHeadings >= 4 ? 40 : docMarkdownHeadings >= 2 ? 35 : 25;
+      result.humanProbability = clamp(result.humanProbability - penalty);
+      if (!result.flags.includes("markdown-bold-heading")) {
+        result.flags.push("markdown-bold-heading");
+      }
+    }
+
+    // Stock AI phrases within this paragraph
+    const stockPhrases = [
+      "paradigm shift", "represents a significant",
+      "it is imperative", "augment rather than supplant",
+      "remains to be seen whether", "critical to note",
+      "a promising therapeutic avenue", "a growing body of evidence",
+      "it is worth noting", "in recent years",
+      "have emerged as", "has garnered significant",
+      "a comprehensive review", "underscores the need",
+      "pivotal role", "a nuanced understanding",
+    ];
+    const pLower = pText.toLowerCase();
+    const stockHits = stockPhrases.filter(sp => pLower.includes(sp)).length;
+    if (stockHits >= 2) {
+      result.humanProbability = clamp(result.humanProbability - 25);
+      result.flags.push(`stock-ai-phrases:${stockHits}`);
+    } else if (stockHits === 1) {
+      result.humanProbability = clamp(result.humanProbability - 12);
+    }
+
+    // Formulaic transition at paragraph start
+    const formulaicOpeners = [
+      /^furthermore[,\s]/i, /^moreover[,\s]/i, /^additionally[,\s]/i,
+      /^consequently[,\s]/i, /^nevertheless[,\s]/i, /^in addition[,\s]/i,
+      /^importantly[,\s]/i, /^notably[,\s]/i, /^similarly[,\s]/i,
+      /^conversely[,\s]/i, /^parallel\s+to/i,
+      /^finally[,\s]/i, /^ultimately[,\s]/i,
+    ];
+    if (formulaicOpeners.some(re => re.test(pTrimmed))) {
+      result.humanProbability = clamp(result.humanProbability - 12);
+      result.flags.push("formulaic-paragraph-opener");
+    }
+
+    // Transition cascade within a single paragraph (However... Additionally... Consequently)
+    // This is a strong AI tell — real writers rarely chain 3+ formal transitions in one paragraph.
+    const transitionWords = [
+      "however", "furthermore", "moreover", "additionally", "consequently",
+      "nevertheless", "nonetheless", "accordingly", "subsequently",
+      "conversely", "similarly", "importantly", "notably",
+    ];
+    const pSentences = pText.split(/[.!?]+/).filter(s => s.trim().length > 10);
+    const transitionsInPara = pSentences.filter(s => {
+      const trimmedS = s.trim().toLowerCase();
+      return transitionWords.some(tw => trimmedS.startsWith(tw));
+    }).length;
+    if (transitionsInPara >= 3) {
+      result.humanProbability = clamp(result.humanProbability - 20);
+      result.flags.push("transition-cascade-in-paragraph");
+    } else if (transitionsInPara >= 2) {
+      result.humanProbability = clamp(result.humanProbability - 10);
+      result.flags.push("multi-transition-paragraph");
+    }
+
+    // "Despite... However" structure — classic AI-generated problem-solution frame
+    if (/^despite\b/i.test(pTrimmed) && /\bhowever\b/i.test(pText)) {
+      result.humanProbability = clamp(result.humanProbability - 8);
+    }
+  }
+
   const avgHumanProbability =
     allParagraphResults.reduce((sum, p) => sum + p.humanProbability, 0) /
     (allParagraphResults.length || 1);
 
   let humanScore = Math.round(avgHumanProbability);
 
-  // Heuristic adjustments from statistical features
+  // ── Heuristic adjustments from statistical features ──
+  // These only fire on HIGH-CONFIDENCE signals to avoid false positives on human text.
+  const totalWords = text.split(/\s+/).filter((w) => w.length > 0).length;
+
+  // 1. Very low sentence-length variation (uniform rhythm = AI)
   if (stats.sentenceLengthStdDev < 3.0) {
     humanScore -= 10;
   }
 
-  const totalWords = text.split(/\s+/).filter((w) => w.length > 0).length;
+  // 2. Low vocabulary richness in long text
   if (stats.typeTokenRatio < 0.35 && totalWords > 500) {
     humanScore -= 5;
   }
 
+  // 3. Excessive hedging (AI overuses "it is important to note")
   const hedgingDensity = (stats.hedgingPhraseCount / totalWords) * 500;
   if (hedgingDensity > 2) {
     humanScore -= 10;
+  }
+
+  // 4. Markdown formatting artifacts (bold headings in "academic" text)
+  // This is the highest-confidence AI signal — real academic papers NEVER use **Bold:**
+  // When present, it strongly indicates AI-generated text regardless of content quality.
+  if (stats.markdownHeadingCount >= 5) {
+    humanScore -= 30; // Very strong: 5+ bold headings = almost certainly AI
+  } else if (stats.markdownHeadingCount >= 3) {
+    humanScore -= 22;
+  } else if (stats.markdownHeadingCount >= 1) {
+    humanScore -= 12;
+  }
+
+  // 5. Formulaic transition cascades — only penalize at high density
+  if (stats.formulaicTransitionDensity > 1.5) {
+    humanScore -= 10;
+  } else if (stats.formulaicTransitionDensity > 1.0) {
+    humanScore -= 5;
+  }
+
+  // 6. Repetitive sentence openings — only penalize when very high
+  if (stats.repetitiveSentenceOpeningRatio > 0.4) {
+    humanScore -= 8;
+  }
+
+  // 7. Combined signal boost: markdown headings + other AI signals compound
+  // When multiple independent signals fire together, confidence increases
+  const aiSignalCount =
+    (stats.markdownHeadingCount >= 1 ? 1 : 0) +
+    (stats.formulaicTransitionDensity > 0.5 ? 1 : 0) +
+    (stats.repetitiveSentenceOpeningRatio > 0.25 ? 1 : 0) +
+    (stats.paragraphLengthStdDev < 20 && paragraphs.length >= 3 ? 1 : 0) +
+    (stats.passiveVoicePercent > 40 ? 1 : 0); // AI methods sections tend to be heavily passive
+
+  if (aiSignalCount >= 4) {
+    humanScore -= 15; // Quad+ signal convergence — very high confidence AI
+  } else if (aiSignalCount >= 3) {
+    humanScore -= 10;
+  } else if (aiSignalCount >= 2) {
+    humanScore -= 5;
+  }
+
+  // 8. High passive voice + markdown headings = AI-generated methods section
+  // Real methods sections ARE passive, but they don't use **Bold:** markdown headings
+  if (stats.passiveVoicePercent > 40 && stats.markdownHeadingCount >= 2) {
+    humanScore -= 8;
   }
 
   humanScore = clamp(humanScore);

@@ -1,0 +1,7 @@
+{
+  "id": "ralph-ic-005",
+  "name": "Clinical protocol / guideline excerpt",
+  "input": { "mode": "detect", "textKey": "clinicalProtocol" },
+  "expectedResult": { "humanScore_min": 70, "overallRisk": "low", "flaggedParagraphs_max": 1 },
+  "qualityCriteria": ["Handles prescriptive tone common in guidelines", "Does not flag structured dosing as formulaic AI"]
+}

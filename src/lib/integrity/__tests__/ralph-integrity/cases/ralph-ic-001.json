@@ -1,0 +1,7 @@
+{
+  "id": "ralph-ic-001",
+  "name": "Clinical case report (PE presentation)",
+  "input": { "mode": "detect", "textKey": "caseReport" },
+  "expectedResult": { "humanScore_min": 70, "overallRisk": "low", "flaggedParagraphs_max": 1 },
+  "qualityCriteria": ["Recognises clinical narrative voice", "Does not penalise medical jargon", "Paragraph scores consistently >= 65%"]
+}

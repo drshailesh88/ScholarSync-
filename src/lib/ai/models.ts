@@ -121,8 +121,8 @@ export function getSmallModel() {
   if (AI_PROVIDER === "anthropic") {
     return getAnthropic()("claude-haiku-4-5-20251001");
   }
-  // GLM-4-flash is Z.AI's cost-efficient model
-  return getZhipu()("glm-4-flash");
+  // GLM-4-Flash retired; use GLM-5
+  return getZhipu()("glm-5");
 }
 
 /** High-quality model for complex reasoning (deep research, analysis). */
