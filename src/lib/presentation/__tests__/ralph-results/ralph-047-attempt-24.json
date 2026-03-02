@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-047",
+  "attempt": 24,
+  "timestamp": "2026-03-02T17:14:28.928Z",
+  "mermaidSyntax": "flowchart TD\n  A[Diagnose hypertension<br>BP >= 140/90 on 3 occasions] --> B[Start ACE inhibitor<br>Lisinopril 10mg]\n  B --> C[Wait 4 weeks]\n  C --> D{BP at goal<br>< 130/80?}\n  D -->|Yes| E[Continue current therapy<br>Annual follow-up]\n  D -->|No| F[Increase ACE inhibitor<br>to max dose 40mg]\n  F --> G[Wait 4 weeks]\n  G --> H{BP at goal?}\n  H -->|Yes| E\n  H -->|No| I[Add thiazide diuretic<br>HCTZ 25mg]\n  I --> J[Wait 4 weeks]\n  J --> K{BP at goal?}\n  K -->|Yes| L[Continue dual therapy]\n  K -->|No| M{Side effects present?}\n  M -->|Yes| N[Switch to ARB<br>Losartan]\n  M -->|No| O[Add calcium channel blocker<br>Amlodipine 5mg<br>Triple therapy]\n  O --> P{BP at goal after<br>triple therapy?}\n  P -->|Yes| Q[Continue triple therapy]\n  P -->|No| R[Refer to hypertension specialist]",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Flowchart type declared with TD direction": true,
+    "Hypertension diagnosis as starting node": true,
+    "ACE inhibitor as first-line treatment": true,
+    "At least 3 BP goal decision diamonds": true,
+    "Dose escalation step present (10mg to 40mg)": true,
+    "Addition of second drug (thiazide/diuretic)": true,
+    "Side effects decision branch": true,
+    "Specialist referral as final escalation": true,
+    "At least 12 distinct nodes": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-069",
+  "attempt": 4,
+  "timestamp": "2026-03-02T17:14:02.010Z",
+  "mermaidSyntax": "sequenceDiagram\n  participant PI as Principal Investigator\n  participant CRC as Clinical Research Coordinator\n  participant EDC as Electronic Data Capture\n  participant Lab as Central Lab\n  participant DSMB as Data Safety Monitoring Board\n  participant Sponsor as Sponsor\n  PI->>CRC: Enroll patient\n  CRC->>EDC: Enter patient demographics\n  EDC->>EDC: Validate data\n  EDC->>CRC: Send confirmation\n  CRC->>Lab: Order laboratory tests\n  Lab->>Lab: Process samples\n  Lab->>EDC: Return lab results\n  PI->>EDC: Review lab results\n  PI->>EDC: Enter adverse events if any\n  par Parallel Data Entry\n    CRC->>EDC: Enter patient vitals\n    PI->>EDC: Enter clinical assessments\n  end\n  alt SAE Detected\n    PI->>Sponsor: Notify SAE immediately\n    Sponsor->>DSMB: Report SAE for review\n    DSMB->>DSMB: Review safety data\n    DSMB->>Sponsor: Recommendation: continue/hold/terminate\n  else Routine Path\n    CRC->>EDC: Continue routine data entry\n  end\n  EDC->>CRC: Generate query for missing data\n  CRC->>EDC: Resolve data query\n  Sponsor->>Sponsor: Run interim analysis\n  Sponsor->>DSMB: Share blinded interim report\n  DSMB->>Sponsor: Send final recommendation\n  PI->>EDC: Complete case report form\n  EDC->>Sponsor: Submit completed data",
+  "diagramType": "sequence",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is sequence with at least 6 participants": true,
+    "PI, CRC, EDC, Central Lab, DSMB, and Sponsor as participants": true,
+    "Patient enrollment and demographics entry messages": true,
+    "Lab order and results exchange between CRC, Central Lab, EDC": true,
+    "Adverse event reporting message from PI": true,
+    "Parallel block (par) for simultaneous vitals and assessments": true,
+    "Alt block for SAE vs routine path": true,
+    "SAE notification chain: PI to Sponsor to DSMB": true,
+    "DSMB recommendation message (continue/hold/terminate)": true,
+    "At least 20 distinct messages between participants": true
+  },
+  "overallScore": 10
+}

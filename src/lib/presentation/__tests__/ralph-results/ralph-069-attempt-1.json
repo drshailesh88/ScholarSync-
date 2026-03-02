@@ -1,0 +1,28 @@
+{
+  "testId": "ralph-069",
+  "attempt": 1,
+  "timestamp": "2026-03-02T17:11:15.064Z",
+  "syntaxValid": false,
+  "renderSuccess": false,
+  "failures": [
+    {
+      "type": "bad-syntax",
+      "description": "No Mermaid syntax generated",
+      "severity": "critical",
+      "suggestedFix": "Check AI prompt and generation pipeline"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Diagram type is sequence with at least 6 participants": false,
+    "PI, CRC, EDC, Central Lab, DSMB, and Sponsor as participants": false,
+    "Patient enrollment and demographics entry messages": false,
+    "Lab order and results exchange between CRC, Central Lab, EDC": false,
+    "Adverse event reporting message from PI": false,
+    "Parallel block (par) for simultaneous vitals and assessments": false,
+    "Alt block for SAE vs routine path": false,
+    "SAE notification chain: PI to Sponsor to DSMB": false,
+    "DSMB recommendation message (continue/hold/terminate)": false,
+    "At least 20 distinct messages between participants": false
+  },
+  "overallScore": 0
+}

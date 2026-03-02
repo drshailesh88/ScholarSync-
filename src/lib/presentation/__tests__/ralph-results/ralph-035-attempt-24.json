@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-035",
+  "attempt": 24,
+  "timestamp": "2026-03-02T17:14:36.076Z",
+  "mermaidSyntax": "sequenceDiagram\n  participant PI as Principal Investigator\n  participant Chair as Department Chair\n  participant IC as IRB Coordinator\n  participant Panel as IRB Review Panel\n  participant EC as Ethics Consultant\n\n  Note over PI,Chair: Pre-submission review typically takes 1-2 weeks\n  PI->>Chair: Submit protocol for pre-review\n  alt Chair Approves\n    Chair->>IC: Forward approved protocol\n  else Chair Returns\n    Chair->>PI: Return with comments\n    PI->>Chair: Revise and resubmit\n    Chair->>IC: Forward approved protocol\n  end\n  IC->>IC: Check completeness\n  alt Incomplete\n    IC->>PI: Return for missing items\n    PI->>IC: Resubmit complete package\n  else Complete\n    IC->>Panel: Assign for review\n  end\n  Panel->>Panel: Review protocol\n  alt Approved\n    Panel->>IC: Approve protocol\n    IC->>PI: Notify approval\n  else Approved with Modifications\n    Panel->>IC: Approve with modification list\n    IC->>PI: Send modification requirements\n    PI->>IC: Submit revised protocol\n    IC->>Panel: Confirm modifications\n  else Referred to Full Board\n    Panel->>EC: Request ethics consultation\n    EC->>Panel: Provide ethics opinion\n    Panel->>IC: Final decision\n    IC->>PI: Notify final decision\n  end",
+  "diagramType": "sequence",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Sequence diagram type declared": true,
+    "All 5 participants declared (PI, Chair, Coordinator, Panel, Ethics Consultant)": true,
+    "Alt block for Chair approval/rejection branching": true,
+    "Alt block for Panel three-outcome decision (approved/modifications/full board)": true,
+    "Ethics Consultant interaction within full board referral path": true,
+    "Note element present (over PI or Chair)": true,
+    "PI resubmission flow for modifications path": true,
+    "Completeness check by Coordinator with conditional return": true,
+    "At least 10 messages between participants": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

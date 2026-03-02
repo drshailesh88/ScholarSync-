@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-043",
+  "attempt": 22,
+  "timestamp": "2026-03-02T17:14:16.800Z",
+  "mermaidSyntax": "erDiagram\n  Researcher {\n    int researcher_id PK\n    string name\n    string orcid\n    int h_index\n    string institution\n  }\n  Publication {\n    int pub_id PK\n    string title\n    string doi\n    string journal\n    int year\n    float impact_factor\n  }\n  Grant {\n    int grant_id PK\n    string title\n    string agency\n    float amount\n    date start_date\n    date end_date\n  }\n  Institution {\n    int inst_id PK\n    string name\n    string country\n    string type\n  }\n  Researcher }o--o{ Publication : \"writes (author_order)\"\n  Researcher }o--o{ Grant : \"receives (role: PI/Co-PI)\"\n  Researcher }o--|| Institution : \"belongs to\"\n  Researcher ||--o{ Researcher : \"mentors\"\n  Publication }o--o{ Publication : \"cites\"\n  Grant ||--o{ Publication : \"funds\"",
+  "diagramType": "erDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "ER diagram type declared": true,
+    "All 4 entities present (Researcher, Publication, Grant, Institution)": true,
+    "Researcher entity has at least 3 attributes (name, orcid, h_index)": true,
+    "Self-referential relationship on Researcher (mentors)": true,
+    "Self-referential relationship on Publication (cites)": true,
+    "Many-to-many between Researcher and Publication": true,
+    "Cardinality notation present on relationships": true,
+    "At least 5 relationships defined": true,
+    "Grant entity with funding-related attributes": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

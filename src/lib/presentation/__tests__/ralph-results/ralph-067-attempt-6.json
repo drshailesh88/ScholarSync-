@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-067",
+  "attempt": 6,
+  "timestamp": "2026-03-02T17:14:16.856Z",
+  "mermaidSyntax": "flowchart TD\n  subgraph Design[\"Design Phase\"]\n    A1[Select Target Gene] --> A2[Design gRNA using CRISPOR]\n    A2 --> A3[Off-target Analysis with Cas-OFFinder]\n    A3 --> A4[Vector Construction with pX459 Backbone]\n    A4 --> A5[Sequence Verification by Sanger]\n  end\n  subgraph CellCulture[\"Cell Culture\"]\n    B1[Thaw HEK293T Cells] --> B2[Passage to P3]\n    B2 --> B3[Seed in 6-well Plates at 2x10^5 cells/well]\n    B3 --> B4[Grow to 70% Confluence]\n  end\n  subgraph Transfection[\"Transfection\"]\n    C1[Prepare Lipofectamine-DNA Complex] --> C2[Add to Cells]\n    C2 --> C3[Incubate 48h]\n    C3 --> C4[Check GFP Reporter]\n  end\n  subgraph Selection[\"Selection & Screening\"]\n    D1[Add Puromycin 2μg/mL for 72h] --> D2[Expand Surviving Clones]\n    D2 --> D3[Extract Genomic DNA]\n    D3 --> D4[PCR Amplify Target Region]\n    D4 --> D5[T7 Endonuclease Assay]\n    D5 --> D6{Editing Detected?}\n    D6 -->|Yes| D7[Sanger Sequencing of Clones]\n    D6 -->|No| D1\n    D7 --> D8[Identify Positive Clones]\n  end\n  subgraph Validation[\"Validation\"]\n    E1[Western Blot for Protein Knockout] --> E2{Knockout Confirmed?}\n    E2 -->|Yes| E3[RT-qPCR for mRNA Levels]\n    E2 -->|No| D1\n    E3 --> E4[Functional Assay]\n    E4 --> E5[Off-target Sequencing]\n    E5 --> E6[Final Report]\n  end\n  A5 --> B1\n  B4 --> C1\n  C4 --> D1\n  D8 --> E1",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is flowchart with at least 30 nodes": true,
+    "5 subgraphs present (Design, Cell Culture, Transfection, Selection, Validation)": true,
+    "gRNA design and off-target analysis nodes in Design subgraph": true,
+    "HEK293T cell culture nodes with passage and seeding details": true,
+    "Lipofectamine transfection and GFP check nodes present": true,
+    "Puromycin selection at 2μg/mL node present": true,
+    "T7 endonuclease assay with decision diamond": true,
+    "Western blot with knockout confirmed decision diamond": true,
+    "RT-qPCR and functional assay validation nodes": true,
+    "At least 30 distinct nodes rendered without syntax errors": true
+  },
+  "overallScore": 10
+}

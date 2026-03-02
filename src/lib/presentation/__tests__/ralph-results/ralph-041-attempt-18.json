@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-041",
+  "attempt": 18,
+  "timestamp": "2026-03-02T17:11:23.918Z",
+  "mermaidSyntax": "gantt\n  title Phase II Clinical Trial — Anti-PD-L1 Combination Therapy\n  dateFormat YYYY-MM-DD\n  axisFormat %b %Y\n\n  section Regulatory & Startup\n    Pre-IND meeting            :a1, 2024-01-01, 2024-02-28\n    IND submission             :a2, 2024-03-01, 2024-04-30\n    IND approval               :crit, milestone, m1, 2024-05-01, 0d\n    Site selection             :a3, 2024-03-01, 2024-06-30\n    IRB approvals              :a4, 2024-05-01, 2024-08-31\n\n  section Enrollment & Treatment\n    First patient in           :crit, milestone, m2, 2024-09-01, 0d\n    Enrollment period          :b1, 2024-09-01, 2025-06-30\n    Treatment cycles           :b2, 2024-09-01, 2025-12-31\n    Safety monitoring          :b3, 2024-09-01, 2026-03-31\n\n  section Follow-up & Analysis\n    Follow-up period           :c1, 2025-06-01, 2026-06-30\n    Interim analysis           :crit, milestone, m3, 2025-09-01, 0d\n    Data lock                  :c2, 2026-06-01, 2026-08-31\n    Database lock              :crit, milestone, m4, 2026-08-01, 0d\n    Statistical analysis       :c3, 2026-07-01, 2026-10-31\n    CSR drafting               :c4, 2026-09-01, 2026-12-31",
+  "diagramType": "gantt",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Gantt chart type declared": true,
+    "Title contains Clinical Trial or Phase II": true,
+    "All 3 sections present (Regulatory, Enrollment, Follow-up)": true,
+    "At least 4 milestone events present": true,
+    "IND-related tasks present (submission, approval)": true,
+    "Enrollment and treatment tasks present": true,
+    "Critical path markers on key milestones": true,
+    "At least 14 task entries": true,
+    "Date range spanning 2024-2026": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

@@ -4,7 +4,7 @@
   "input": "Diagram the OAuth2 authorization code flow showing the timeline of interactions between the User Agent (browser), Authorization Server, Resource Server, and Client Application. Show the milestones: initial redirect, authorization code grant, token exchange, and resource access. Each phase involves back-and-forth messages: the user agent redirects to the auth server, auth server returns authorization code, client exchanges code for access token, then client uses token to access resources. Show the chronological sequence of HTTP requests and responses with status codes (302, 200, 401). This is a MESSAGE EXCHANGE PROTOCOL between multiple actors, not a timeline of events.",
   "expectedDiagramType": "sequence",
   "difficulty": "hard",
-  "expectedMinNodes": 12,
+  "expectedNodeCount": 12,
   "qualityCriteria": [
     "Diagram type is sequence, NOT timeline despite timeline/milestone vocabulary",
     "At least 4 participants: User Agent, Authorization Server, Resource Server, Client",

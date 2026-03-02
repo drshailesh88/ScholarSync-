@@ -1,0 +1,30 @@
+{
+  "testId": "ralph-031",
+  "attempt": 25,
+  "timestamp": "2026-03-02T17:14:44.082Z",
+  "mermaidSyntax": "flowchart TD\n  A[\"Literature Mining<br/>(PubMed, DrugBank)\"] --> B[\"Target Identification\"]\n  B --> C[\"Network Pharmacology Analysis\"]\n  B --> D[\"Molecular Docking Screening\"]\n  C --> E[\"Hit Validation\"]\n  D --> E\n  E --> F{\"Decision Gate:<br/>Proceed or Loop Back?\"}\n  F -->|\"Hits confirmed\"| G[\"Cell Viability Assays<br/>(MTT, WST-1)\"]\n  F -->|\"No viable hits\"| A\n  G --> H[\"Dose-Response Curves<br/>(IC50 Determination)\"]\n  H --> I[\"Mechanism Studies<br/>(Western Blot, qPCR)\"]\n  I -->|\"Results don't match\"| B\n  I -->|\"Hits confirmed\"| J[\"Animal Studies\"]\n  J --> K[\"Pharmacokinetic Profiling\"]\n  K --> L[\"Efficacy Studies\"]\n  L --> M[\"Safety / Toxicology\"]\n  M --> N[\"IND Filing\"]",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "ugly",
+      "description": "No section/subgraph grouping — diagram is flat",
+      "severity": "minor",
+      "suggestedFix": "Use Mermaid subgraphs to group related nodes into phases"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Flowchart type declared with TD direction": true,
+    "Literature mining and target identification nodes present": true,
+    "Network pharmacology and molecular docking as sub-steps or linked nodes": true,
+    "Hit validation with decision gate (proceed or loop back)": true,
+    "Wet lab section with at least 3 assay types": false,
+    "Animal studies pipeline (PK, efficacy, safety, IND)": false,
+    "Feedback loop from mechanism studies to target identification": true,
+    "Decision gate after hit validation": true,
+    "At least 12 distinct nodes": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 8
+}

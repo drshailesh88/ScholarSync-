@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-046",
+  "attempt": 18,
+  "timestamp": "2026-03-02T17:11:15.019Z",
+  "mermaidSyntax": "flowchart TD\n  A[Patient presents with suspected infection] --> B{SIRS criteria met?<br>Temp >38C or <36C, HR>90,<br>RR>20, WBC>12K or <4K<br>Need 2 of 4}\n  B -->|No| C[Monitor and reassess in 4 hours]\n  C --> A\n  B -->|Yes| D{qSOFA >= 2?<br>Altered mentation,<br>SBP<=100, RR>=22}\n  D -->|No| E[Low risk - Floor admission<br>with monitoring]\n  D -->|Yes| F{Lactate level?}\n  F -->|< 2 mmol/L| G[Sepsis<br>Start antibiotics within 1 hour]\n  F -->|2-4 mmol/L| H[Severe sepsis<br>IV fluids 30mL/kg +<br>antibiotics + ICU consult]\n  F -->|> 4 mmol/L| I[Septic shock<br>Immediate ICU transfer +<br>vasopressors + central line]\n  G --> J[Reassess at 6 hours]\n  H --> J\n  I --> J",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Flowchart type declared with TD direction": true,
+    "Patient presentation as starting node": true,
+    "SIRS criteria decision diamond present": true,
+    "qSOFA decision diamond present": true,
+    "Lactate level decision with 3-way branching": true,
+    "Loop-back from monitoring to reassessment": true,
+    "At least 3 diamond-shaped decision nodes": true,
+    "Treatment paths include antibiotics and IV fluids": true,
+    "Convergence point at reassessment": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

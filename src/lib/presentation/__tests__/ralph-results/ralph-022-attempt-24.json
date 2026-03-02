@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-022",
+  "attempt": 24,
+  "timestamp": "2026-03-02T17:14:36.046Z",
+  "mermaidSyntax": "graph LR\n  subgraph TI[\"Target Identification\"]\n    LM[Literature Mining] --> HTS[HTS Screen] --> TV[Target Validation]\n  end\n  TV --> D1{Go/No-Go}\n  subgraph LO[\"Lead Optimization\"]\n    D1 -->|Go| SAR[SAR Studies] --> ADMET[ADMET Testing] --> FORM[Formulation]\n  end\n  FORM --> D2{Go/No-Go}\n  subgraph PC[\"Preclinical\"]\n    D2 -->|Go| IVS[In Vitro Studies] --> AM[Animal Models] --> TOX[Toxicology]\n  end\n  TOX --> D3{Go/No-Go}\n  subgraph CL[\"Clinical\"]\n    D3 -->|Go| PH1[Phase I] --> PH2[Phase II] --> PH3[Phase III]\n  end\n\n  classDef blue fill:#3B82F6,stroke:#1E40AF,color:#fff\n  classDef green fill:#10B981,stroke:#047857,color:#fff\n  classDef orange fill:#F59E0B,stroke:#D97706,color:#000\n  classDef red fill:#EF4444,stroke:#B91C1C,color:#fff\n  classDef decision fill:#6B7280,stroke:#4B5563,color:#fff\n\n  class LM,HTS,TV blue\n  class SAR,ADMET,FORM green\n  class IVS,AM,TOX orange\n  class PH1,PH2,PH3 red\n  class D1,D2,D3 decision",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Left-to-right layout (LR direction)": true,
+    "At least 4 pipeline stages present": true,
+    "Decision gate diamonds between stages": true,
+    "Style directives present (classDef or style)": true,
+    "At least 3 distinct color groups defined": true,
+    "Go/No-Go labels on decision paths": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ralph-069",
+  "category": "large_scale_density",
+  "name": "Large Scale — 35+ Message Clinical Data Exchange Sequence Diagram",
+  "input": "Create a sequence diagram for a clinical trial data exchange between 6 actors: Principal Investigator (PI), Clinical Research Coordinator (CRC), Electronic Data Capture (EDC) system, Central Lab, Data Safety Monitoring Board (DSMB), and Sponsor. Flow: PI enrolls patient, CRC enters demographics into EDC, EDC validates and sends confirmation. CRC orders labs, Central Lab processes samples, returns results to EDC. PI reviews lab results, enters adverse events if any. Use a par block for parallel: CRC enters vitals AND PI enters clinical assessments simultaneously. Use an alt block: if SAE detected, PI notifies Sponsor immediately, Sponsor notifies DSMB, DSMB reviews and responds with continue/hold/terminate; else routine data entry continues. EDC generates query for missing data, CRC resolves query. Sponsor runs interim analysis, shares blinded report with DSMB. DSMB sends recommendation to Sponsor. At least 20 distinct messages between participants.",
+  "expectedDiagramType": "sequence",
+  "difficulty": "hard",
+  "expectedNodeCount": 20,
+  "qualityCriteria": [
+    "Diagram type is sequence with at least 6 participants",
+    "PI, CRC, EDC, Central Lab, DSMB, and Sponsor as participants",
+    "Patient enrollment and demographics entry messages",
+    "Lab order and results exchange between CRC, Central Lab, EDC",
+    "Adverse event reporting message from PI",
+    "Parallel block (par) for simultaneous vitals and assessments",
+    "Alt block for SAE vs routine path",
+    "SAE notification chain: PI to Sponsor to DSMB",
+    "DSMB recommendation message (continue/hold/terminate)",
+    "At least 20 distinct messages between participants"
+  ]
+}
