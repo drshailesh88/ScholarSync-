@@ -1,0 +1,22 @@
+{
+  "id": "ralph-043",
+  "name": "Research Collaboration Network ER with Self-Referential Relationships",
+  "category": "er_and_class_advanced",
+  "difficulty": "hard",
+  "input": "Create an ER diagram for a research collaboration tracking database. Entities: Researcher (researcher_id PK, name, orcid, h_index, institution), Publication (pub_id PK, title, doi, journal, year, impact_factor), Grant (grant_id PK, title, agency, amount, start_date, end_date), Institution (inst_id PK, name, country, type). Relationships: Researcher writes Publication (many-to-many, with author_order attribute). Researcher receives Grant (many-to-many, with role: PI/Co-PI/Consultant). Researcher belongs to Institution (many-to-one). Researcher mentors Researcher (self-referential, one-to-many: mentor to mentees). Publication cites Publication (self-referential many-to-many). Grant funds Publication (one-to-many). Show all cardinalities.",
+  "expectedDiagramType": "erDiagram",
+  "expectedNodeCount": 4,
+  "qualityCriteria": [
+    "ER diagram type declared",
+    "All 4 entities present (Researcher, Publication, Grant, Institution)",
+    "Researcher entity has at least 3 attributes (name, orcid, h_index)",
+    "Self-referential relationship on Researcher (mentors)",
+    "Self-referential relationship on Publication (cites)",
+    "Many-to-many between Researcher and Publication",
+    "Cardinality notation present on relationships",
+    "At least 5 relationships defined",
+    "Grant entity with funding-related attributes",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "ER diagram with 4 entities, 2 self-referential relationships, many-to-many with attributes, full cardinalities."
+}

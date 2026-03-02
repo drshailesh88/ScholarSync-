@@ -873,7 +873,7 @@ function assessQuality(
       // Check for QC-related content (diamond shapes, QC labels, checkpoints)
       const hasQC = /QC|quality|check|validate|verify|\{.*\?.*\}|pass|fail/i.test(syntax);
       criteriaResults[criterion] = hasQC;
-    } else if (lower.includes("chemical") || lower.includes("temperature") || lower.includes("annotation")) {
+    } else if (lower.includes("chemical") || lower.includes("temperature") || (lower.includes("annotation") && !lower.includes("interface") && !lower.includes("abstract"))) {
       // Check for chemical/temperature annotations from input
       const hasChem = /\d+°C|buffer|RIPA|DTT|IAA|trypsin|mL|μ[LMg]/i.test(syntax);
       criteriaResults[criterion] = hasChem;
@@ -1228,7 +1228,7 @@ function assessQuality(
         if (match2) entityConnections[match2[1]] = (entityConnections[match2[1]] ?? 0) + 1;
       }
       criteriaResults[criterion] = /PATIENT/i.test(syntax) && Object.keys(entityConnections).length >= 3;
-    } else if (lower.includes("junction table") || lower.includes("many-to-many")) {
+    } else if ((lower.includes("junction table") || lower.includes("many-to-many")) && !lower.includes("researcher")) {
       criteriaResults[criterion] = /CONSENT|junction|bridge|link|mapping/i.test(syntax);
 
     // -----------------------------------------------------------------------
@@ -1638,6 +1638,74 @@ function assessQuality(
       criteriaResults[criterion] = found >= 2;
     } else if (lower.includes("v1.0") && lower.includes("release") && lower.includes("final") && lower.includes("milestone")) {
       criteriaResults[criterion] = /v1\.0|release|v1/i.test(syntax);
+
+    // --- Cycle 15: er_and_class_advanced heuristics ---
+
+    // ralph-043: ER with self-referential relationships
+    } else if (lower.includes("self-referential") && lower.includes("researcher") && lower.includes("mentor")) {
+      // Check for Researcher ||--o{ Researcher or similar self-ref pattern
+      const lines = syntax.split("\n");
+      const selfRef = lines.some(l => {
+        const parts = l.match(/(\w+)\s*[|{}o]+--[|{}o]+\s*(\w+)/);
+        return parts && parts[1] === parts[2] && /researcher/i.test(parts[1]);
+      });
+      // Also accept "mentors" label on a self-referential line
+      const hasMentorLabel = lines.some(l => /researcher.*mentor.*researcher|researcher.*researcher.*mentor/i.test(l));
+      criteriaResults[criterion] = selfRef || hasMentorLabel;
+    } else if (lower.includes("self-referential") && lower.includes("publication") && lower.includes("cites")) {
+      const lines = syntax.split("\n");
+      const selfRef = lines.some(l => {
+        const parts = l.match(/(\w+)\s*[|{}o]+--[|{}o]+\s*(\w+)/);
+        return parts && parts[1] === parts[2] && /publication/i.test(parts[1]);
+      });
+      const hasCiteLabel = lines.some(l => /publication.*cit.*publication|publication.*publication.*cit/i.test(l));
+      criteriaResults[criterion] = selfRef || hasCiteLabel;
+    } else if (lower.includes("many-to-many") && lower.includes("researcher") && lower.includes("publication")) {
+      criteriaResults[criterion] = /researcher/i.test(syntax) && /publication/i.test(syntax) && /\}[|o]*--[|o]*\{/.test(syntax);
+    } else if (lower.includes("grant") && lower.includes("entity") && lower.includes("funding") && lower.includes("attribute")) {
+      criteriaResults[criterion] = /Grant/i.test(syntax) && /amount|funding|agency/i.test(syntax);
+
+    // ralph-044: Class diagram with abstract classes and interfaces
+    } else if (lower.includes("abstract") && lower.includes("datasource") && lower.includes("annotation")) {
+      criteriaResults[criterion] = /<<abstract>>|<<Abstract>>/.test(syntax) && /DataSource/i.test(syntax);
+    } else if (lower.includes("concrete subclass") && lower.includes("datasource")) {
+      const subclasses = [/PubMedSource/i, /ClinicalTrialsSource|ClinicalTrials/i, /GenBankSource|GenBank/i];
+      const found = subclasses.filter(r => r.test(syntax)).length;
+      criteriaResults[criterion] = found >= 3;
+    } else if (lower.includes("interface") && lower.includes("transformable") && lower.includes("annotation")) {
+      criteriaResults[criterion] = /<<interface>>|<<Interface>>/.test(syntax) && /Transformable/i.test(syntax);
+    } else if (lower.includes("datacleaner") && lower.includes("featureextractor") && lower.includes("implement")) {
+      criteriaResults[criterion] = /DataCleaner/i.test(syntax) && /FeatureExtractor/i.test(syntax);
+    } else if (lower.includes("inheritance") && lower.includes("arrow") && lower.includes("extending")) {
+      // Check for <|-- inheritance arrows in Mermaid classDiagram
+      const inheritanceArrows = (syntax.match(/<\|--|\.\.\>/gi) ?? []).length;
+      criteriaResults[criterion] = inheritanceArrows >= 2;
+    } else if (lower.includes("pipeline") && lower.includes("class") && lower.includes("orchestration")) {
+      criteriaResults[criterion] = /Pipeline/i.test(syntax) && /run|validate|getStatus/i.test(syntax);
+    } else if (lower.includes("composition") && lower.includes("aggregation") && lower.includes("relationship")) {
+      // Composition: *-- , Aggregation: o--
+      const hasComposition = /\*--/.test(syntax);
+      const hasAggregation = /o--/.test(syntax);
+      criteriaResults[criterion] = hasComposition || hasAggregation;
+    } else if (lower.includes("at least") && lower.includes("classes") && lower.includes("interface") && lower.includes("defined")) {
+      const minMatch = lower.match(/at least (\d+)/);
+      const minClasses = minMatch ? parseInt(minMatch[1]) : 8;
+      const classDecls = syntax.match(/\bclass\s+\w+/gi) ?? [];
+      criteriaResults[criterion] = classDecls.length >= minClasses;
+
+    // ralph-045: Biorepository ER with junction tables
+    } else if (lower.includes("junction") && lower.includes("studysample")) {
+      criteriaResults[criterion] = /StudySample|Study_Sample|study_sample/i.test(syntax);
+    } else if (lower.includes("junction") && lower.includes("patientstudy")) {
+      criteriaResults[criterion] = /PatientStudy|Patient_Study|patient_study|PatientEnrollment/i.test(syntax);
+    } else if (lower.includes("patient") && lower.includes("sample") && lower.includes("one-to-many")) {
+      criteriaResults[criterion] = /Patient/i.test(syntax) && /Sample/i.test(syntax);
+    } else if (lower.includes("sample") && lower.includes("aliquot") && lower.includes("one-to-many")) {
+      criteriaResults[criterion] = /Sample/i.test(syntax) && /Aliquot/i.test(syntax);
+    } else if (lower.includes("at least") && lower.includes("attribute") && lower.includes("per") && lower.includes("entity")) {
+      // Check that major entities have >= 3 attributes each
+      const entityBlocks = syntax.split("\n").filter(l => /^\s+\w+\s+\w+/.test(l) && !/--|[{}|o]/.test(l));
+      criteriaResults[criterion] = entityBlocks.length >= 9; // 3 entities x 3 attributes each
 
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
@@ -2475,6 +2543,175 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
     Benchmarking suite          :s3b, after s3a, 14d
     Documentation               :s3c, after s3a, 14d
     v1.0 release                :milestone, m3, after s3b, 0d`,
+  },
+
+  "ralph-043": {
+    diagramType: "erDiagram",
+    syntax: `erDiagram
+  Researcher {
+    int researcher_id PK
+    string name
+    string orcid
+    int h_index
+    string institution
+  }
+  Publication {
+    int pub_id PK
+    string title
+    string doi
+    string journal
+    int year
+    float impact_factor
+  }
+  Grant {
+    int grant_id PK
+    string title
+    string agency
+    float amount
+    date start_date
+    date end_date
+  }
+  Institution {
+    int inst_id PK
+    string name
+    string country
+    string type
+  }
+  Researcher }o--o{ Publication : "writes (author_order)"
+  Researcher }o--o{ Grant : "receives (role: PI/Co-PI)"
+  Researcher }o--|| Institution : "belongs to"
+  Researcher ||--o{ Researcher : "mentors"
+  Publication }o--o{ Publication : "cites"
+  Grant ||--o{ Publication : "funds"`,
+  },
+
+  "ralph-044": {
+    diagramType: "classDiagram",
+    syntax: `classDiagram
+  class DataSource {
+    <<abstract>>
+    +connect()
+    +fetchData()
+  }
+  class PubMedSource {
+    +connect()
+    +fetchData()
+  }
+  class ClinicalTrialsSource {
+    +connect()
+    +fetchData()
+  }
+  class GenBankSource {
+    +connect()
+    +fetchData()
+  }
+  class Transformable {
+    <<interface>>
+    +transform(data)
+  }
+  class DataCleaner {
+    +transform(data)
+    +removeNulls()
+    +normalizeFields()
+    +deduplicate()
+  }
+  class FeatureExtractor {
+    +transform(data)
+    +extractKeywords()
+    +computeMetrics()
+  }
+  class DataSink {
+    <<abstract>>
+    +persist(data)
+  }
+  class PostgresSink {
+    +persist(data)
+  }
+  class S3Sink {
+    +persist(data)
+  }
+  class Pipeline {
+    +DataSource[] sources
+    +Transformable[] transformers
+    +DataSink sink
+    +run()
+    +validate()
+    +getStatus()
+  }
+  DataSource <|-- PubMedSource
+  DataSource <|-- ClinicalTrialsSource
+  DataSource <|-- GenBankSource
+  Transformable <|.. DataCleaner
+  Transformable <|.. FeatureExtractor
+  DataSink <|-- PostgresSink
+  DataSink <|-- S3Sink
+  Pipeline *-- DataSource
+  Pipeline o-- Transformable
+  Pipeline *-- DataSink`,
+  },
+
+  "ralph-045": {
+    diagramType: "erDiagram",
+    syntax: `erDiagram
+  Patient {
+    int patient_id PK
+    string mrn
+    string name
+    date dob
+    string sex
+    string consent_status
+  }
+  Sample {
+    int sample_id PK
+    int patient_id FK
+    string type
+    date collection_date
+    float volume_ml
+    string storage_location
+    int freeze_thaw_count
+  }
+  Study {
+    int study_id PK
+    string title
+    string pi_name
+    string irb_number
+    string status
+  }
+  Aliquot {
+    int aliquot_id PK
+    int parent_sample_id FK
+    float volume_ml
+    float concentration
+    date created_date
+  }
+  StorageUnit {
+    int unit_id PK
+    string type
+    float temperature
+    string building
+    string room
+    string shelf
+    string position
+  }
+  StudySample {
+    int study_id FK
+    int sample_id FK
+    date date_assigned
+    string purpose
+  }
+  PatientStudy {
+    int patient_id FK
+    int study_id FK
+    date enrollment_date
+    string consent_form_id
+  }
+  Patient ||--o{ Sample : "provides"
+  Sample ||--o{ Aliquot : "has"
+  Aliquot }o--|| StorageUnit : "stored in"
+  Study ||--o{ StudySample : "includes"
+  Sample ||--o{ StudySample : "used in"
+  Patient ||--o{ PatientStudy : "enrolled"
+  Study ||--o{ PatientStudy : "enrolls"`,
   },
 };
 
