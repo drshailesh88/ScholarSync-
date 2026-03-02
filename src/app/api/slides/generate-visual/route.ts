@@ -19,6 +19,81 @@ const requestSchema = z.object({
   audienceType: z.string().nullish(),
 });
 
+// ---------------------------------------------------------------------------
+// Response validation — filter out malformed LLM outputs instead of crashing
+// ---------------------------------------------------------------------------
+
+const VALID_DIAGRAM_TYPES = [
+  "flowchart", "sequence", "classDiagram", "stateDiagram",
+  "erDiagram", "gantt", "pie", "mindmap", "timeline",
+] as const;
+
+const VALID_INFOGRAPHIC_TYPES = [
+  "process_flow", "comparison", "hierarchy", "cycle", "funnel",
+  "pyramid", "venn", "matrix", "radial", "stats_row", "checklist", "cause_effect",
+] as const;
+
+const diagramBlockSchema = z.object({
+  type: z.literal("diagram"),
+  data: z.object({
+    diagramType: z.enum(VALID_DIAGRAM_TYPES),
+    syntax: z.string().min(1),
+    caption: z.string().optional(),
+  }),
+});
+
+const infographicItemSchema = z.object({
+  label: z.string().min(1),
+  description: z.string().optional(),
+  value: z.string().optional(),
+  icon: z.string().optional(),
+  status: z.enum(["done", "active", "pending"]).optional(),
+});
+
+const infographicBlockSchema = z.object({
+  type: z.literal("infographic"),
+  data: z.object({
+    infographicType: z.enum(VALID_INFOGRAPHIC_TYPES),
+    title: z.string().optional(),
+    items: z.array(infographicItemSchema).min(1),
+    colorScheme: z.string().optional(),
+    caption: z.string().optional(),
+  }),
+});
+
+const visualOptionSchema = z.object({
+  label: z.string().min(1),
+  description: z.string().min(1),
+  block: z.union([diagramBlockSchema, infographicBlockSchema]),
+});
+
+const responseSchema = z.object({
+  options: z.array(visualOptionSchema),
+});
+
+/** Parse and validate LLM response, returning only valid options */
+function validateVisualResponse(raw: unknown): { options: z.infer<typeof visualOptionSchema>[] } {
+  // Try full schema parse first
+  const fullParse = responseSchema.safeParse(raw);
+  if (fullParse.success) return fullParse.data;
+
+  // Fallback: validate options individually and keep valid ones
+  if (raw && typeof raw === "object" && "options" in raw && Array.isArray((raw as Record<string, unknown>).options)) {
+    const validOptions: z.infer<typeof visualOptionSchema>[] = [];
+    for (const opt of (raw as Record<string, unknown>).options as unknown[]) {
+      const parsed = visualOptionSchema.safeParse(opt);
+      if (parsed.success) {
+        validOptions.push(parsed.data);
+      }
+    }
+    if (validOptions.length > 0) {
+      return { options: validOptions };
+    }
+  }
+
+  throw new Error("No valid visual options in LLM response");
+}
+
 function getVisualGenerationPrompt(preferredType?: string): string {
   const typeHint = preferredType
     ? `\nThe user specifically wants a "${preferredType}" visual. Generate MOST options as that type with variations, but also include 1-2 alternatives.`
@@ -151,7 +226,18 @@ export async function POST(req: Request) {
       .replace(/```\n?/g, "")
       .trim();
 
-    const result = JSON.parse(cleanText);
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(cleanText);
+    } catch {
+      log.error("LLM returned invalid JSON", { text: cleanText.slice(0, 500) });
+      return NextResponse.json(
+        { error: "AI returned malformed response. Please try again." },
+        { status: 502 }
+      );
+    }
+
+    const result = validateVisualResponse(parsed);
 
     return NextResponse.json(result);
   } catch (error) {

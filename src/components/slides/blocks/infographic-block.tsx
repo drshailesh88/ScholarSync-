@@ -63,8 +63,27 @@ function wrapText(text: string, maxChars: number): string[] {
 
 function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const n = Math.max(items.length, 1);
-  const cardW = 120;
-  const gap = 24;
+  // Dynamic sizing: shrink cards and gaps when items exceed available width
+  const maxTotalW = 780;
+  const baseCardW = 120;
+  const baseGap = 24;
+  const baseR = 30;
+  const baseFontIcon = 22;
+  const baseFontLabel = 13;
+  const baseFontDesc = 10;
+  const baseDescLen = 20;
+
+  const neededW = n * baseCardW + (n - 1) * baseGap;
+  const scale = neededW > maxTotalW ? maxTotalW / neededW : 1;
+
+  const cardW = baseCardW * scale;
+  const gap = baseGap * scale;
+  const r = Math.max(baseR * scale, 18);
+  const fontIcon = Math.max(baseFontIcon * scale, 14);
+  const fontLabel = Math.max(baseFontLabel * scale, 9);
+  const fontDesc = Math.max(baseFontDesc * scale, 7);
+  const descLen = Math.max(Math.floor(baseDescLen * scale), 12);
+
   const totalW = n * cardW + (n - 1) * gap;
   const offsetX = (800 - totalW) / 2;
 
@@ -83,17 +102,17 @@ function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; color
                 markerEnd="url(#pf-arrow)"
               />
             )}
-            <circle cx={cx} cy={70} r={36} fill={color} opacity={0.12} />
-            <circle cx={cx} cy={70} r={30} fill={color} />
-            <text x={cx} y={77} textAnchor="middle" fill="white" fontSize={22} fontWeight="bold">
+            <circle cx={cx} cy={70} r={r + 6} fill={color} opacity={0.12} />
+            <circle cx={cx} cy={70} r={r} fill={color} />
+            <text x={cx} y={77} textAnchor="middle" fill="white" fontSize={fontIcon} fontWeight="bold">
               {getItemIcon(item, `${i + 1}`)}
             </text>
-            <text x={cx} y={128} textAnchor="middle" fill={theme.textColor} fontSize={13} fontWeight="700">
-              {item.label}
+            <text x={cx} y={128} textAnchor="middle" fill={theme.textColor} fontSize={fontLabel} fontWeight="700">
+              {item.label.length > descLen + 5 ? item.label.slice(0, descLen + 5) + "…" : item.label}
             </text>
             {item.description && (
-              <text x={cx} y={145} textAnchor="middle" fill={theme.textColor} fontSize={10} opacity={0.6}>
-                {item.description.length > 20 ? item.description.slice(0, 20) + "…" : item.description}
+              <text x={cx} y={145} textAnchor="middle" fill={theme.textColor} fontSize={fontDesc} opacity={0.6}>
+                {item.description.length > descLen ? item.description.slice(0, descLen) + "…" : item.description}
               </text>
             )}
           </g>
