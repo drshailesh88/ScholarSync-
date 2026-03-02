@@ -1,0 +1,22 @@
+{
+  "id": "ralph-033",
+  "name": "Ambiguous Multi-Type Input — Lab Equipment Booking System",
+  "category": "real_world_stress",
+  "difficulty": "hard",
+  "input": "I need a diagram for our lab equipment booking system. There are several states an equipment reservation can be in: Available, Reserved, In Use, Under Maintenance, Calibration Required, Decommissioned. Transitions: Available -> Reserved (researcher books). Reserved -> In Use (researcher checks in). In Use -> Available (researcher checks out, equipment passes QC). In Use -> Calibration Required (usage hours exceed threshold). Calibration Required -> Under Maintenance (technician starts calibration). Under Maintenance -> Available (calibration complete, passes QC). Under Maintenance -> Decommissioned (failed calibration, beyond repair). Reserved -> Available (reservation cancelled or expired). Any state except Decommissioned can go to Under Maintenance for emergency repairs. Decommissioned is a terminal state. Use stateDiagram-v2.",
+  "expectedDiagramType": "stateDiagram",
+  "expectedNodeCount": 6,
+  "qualityCriteria": [
+    "State diagram type declared (stateDiagram-v2)",
+    "All 6 states present (Available, Reserved, In Use, Under Maintenance, Calibration Required, Decommissioned)",
+    "Available to Reserved transition present",
+    "Reserved to In Use transition present",
+    "In Use to Available (checkout) transition present",
+    "Calibration Required path from In Use",
+    "Under Maintenance to Available (calibration complete) path",
+    "Decommissioned as terminal state (no outgoing transitions except possibly [*])",
+    "Emergency maintenance transitions (multiple states to Under Maintenance)",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "State diagram with 6 states, emergency maintenance from multiple states, decommissioned terminal, calibration cycle."
+}
