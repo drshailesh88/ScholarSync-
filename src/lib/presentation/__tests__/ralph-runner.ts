@@ -158,8 +158,9 @@ function validateMermaidSyntax(syntax: string, expectedType: string): {
     errors.push(`Unbalanced parentheses (diff: ${unclosedParens})`);
   }
 
-  // Check for special characters that break Mermaid
-  if (/[""'']/.test(trimmed)) {
+  // Check for special characters that break Mermaid (smart/curly quotes)
+  // Must use Unicode escapes — source file may normalize visual smart quotes to ASCII
+  if (/[\u201C\u201D\u2018\u2019]/.test(trimmed)) {
     errors.push("Contains smart quotes (curly quotes) — Mermaid requires straight quotes");
   }
 
