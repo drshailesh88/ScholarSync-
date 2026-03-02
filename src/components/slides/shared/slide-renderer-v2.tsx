@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useLayoutEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import type { ContentBlock, SlideLayout, ThemeConfig, BlockAnimation } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
@@ -79,18 +80,22 @@ export function SlideRendererV2({
         {/* Built-in title layouts (title_slide, section_header, quote_slide) */}
         {layout === "title_slide" && (
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-[0.5em]">
-            <h1
-              className="text-[2em] font-bold leading-tight"
-              style={{
-                color: theme.primaryColor,
-                fontFamily: theme.headingFontFamily ?? theme.fontFamily,
-              }}
-            >
-              {title}
-            </h1>
-            {subtitle && (
-              <p className="text-[1em] opacity-70">{subtitle}</p>
-            )}
+            <AutoFitRegion>
+              <div className="flex flex-col items-center gap-[0.5em]">
+                <h1
+                  className="text-[2em] font-bold leading-tight"
+                  style={{
+                    color: theme.primaryColor,
+                    fontFamily: theme.headingFontFamily ?? theme.fontFamily,
+                  }}
+                >
+                  {title}
+                </h1>
+                {subtitle && (
+                  <p className="text-[1em] opacity-70">{subtitle}</p>
+                )}
+              </div>
+            </AutoFitRegion>
           </div>
         )}
 
@@ -120,29 +125,31 @@ export function SlideRendererV2({
           <div className="flex-1 relative min-h-0">
             {layoutResult.regions.map((region) => (
               <div key={region.id} style={regionToCSS(region)}>
-                {region.blocks.map((block, i) => {
-                  const entry = BLOCK_REGISTRY[block.type];
-                  if (!entry) return null;
-                  const Renderer = entry.render;
-                  const rendered = (
-                    <Renderer
-                      key={`${block.type}-${i}`}
-                      data={block.data as Record<string, unknown>}
-                      theme={theme}
-                      scale={scale}
-                    />
-                  );
-
-                  if (animateBlocks && block.animation && block.animation.type !== "none") {
-                    return (
-                      <AnimatedBlockWrapper key={`${block.type}-${i}`} animation={block.animation}>
-                        {rendered}
-                      </AnimatedBlockWrapper>
+                <AutoFitRegion>
+                  {region.blocks.map((block, i) => {
+                    const entry = BLOCK_REGISTRY[block.type];
+                    if (!entry) return null;
+                    const Renderer = entry.render;
+                    const rendered = (
+                      <Renderer
+                        key={`${block.type}-${i}`}
+                        data={block.data as Record<string, unknown>}
+                        theme={theme}
+                        scale={scale}
+                      />
                     );
-                  }
 
-                  return rendered;
-                })}
+                    if (animateBlocks && block.animation && block.animation.type !== "none") {
+                      return (
+                        <AnimatedBlockWrapper key={`${block.type}-${i}`} animation={block.animation}>
+                          {rendered}
+                        </AnimatedBlockWrapper>
+                      );
+                    }
+
+                    return rendered;
+                  })}
+                </AutoFitRegion>
               </div>
             ))}
           </div>
@@ -159,6 +166,67 @@ export function SlideRendererV2({
         </div>
       )}
     </ThemeProvider>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// AutoFitRegion — scales down content when it overflows the region container
+// ---------------------------------------------------------------------------
+
+const MIN_FIT_SCALE = 0.45;
+
+function AutoFitRegion({ children }: { children: ReactNode }) {
+  const outerRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [fitScale, setFitScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const outer = outerRef.current;
+    const inner = innerRef.current;
+    if (!outer || !inner) return;
+
+    // Reset scale to measure natural size
+    inner.style.transform = "none";
+    inner.style.width = "100%";
+
+    // Allow a frame for block renderers to settle
+    requestAnimationFrame(() => {
+      if (!outer.isConnected || !inner.isConnected) return;
+
+      const containerH = outer.clientHeight;
+      const contentH = inner.scrollHeight;
+
+      if (containerH <= 0 || contentH <= containerH + 2) {
+        setFitScale(1);
+        return;
+      }
+
+      const ratio = Math.max(MIN_FIT_SCALE, containerH / contentH);
+      setFitScale(ratio);
+    });
+  }, [children]);
+
+  return (
+    <div
+      ref={outerRef}
+      style={{
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      <div
+        ref={innerRef}
+        style={{
+          transformOrigin: "top left",
+          transform: fitScale < 1 ? `scale(${fitScale})` : "none",
+          width: fitScale < 1 ? `${100 / fitScale}%` : "100%",
+        }}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 
