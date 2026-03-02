@@ -71,8 +71,30 @@ const responseSchema = z.object({
   options: z.array(visualOptionSchema),
 });
 
+/** Sanitize Mermaid syntax: fix smart quotes and other LLM artifacts */
+function sanitizeMermaidSyntax(syntax: string): string {
+  return syntax
+    .replace(/[\u201C\u201D]/g, '"') // Smart double quotes → straight
+    .replace(/[\u2018\u2019]/g, "'"); // Smart single quotes → straight
+}
+
 /** Parse and validate LLM response, returning only valid options */
 function validateVisualResponse(raw: unknown): { options: z.infer<typeof visualOptionSchema>[] } {
+  // Pre-process: sanitize Mermaid syntax in all diagram options
+  if (raw && typeof raw === "object" && "options" in raw && Array.isArray((raw as Record<string, unknown>).options)) {
+    for (const opt of (raw as Record<string, unknown>).options as Record<string, unknown>[]) {
+      if (opt?.block && typeof opt.block === "object") {
+        const block = opt.block as Record<string, unknown>;
+        if (block.type === "diagram" && block.data && typeof block.data === "object") {
+          const data = block.data as Record<string, unknown>;
+          if (typeof data.syntax === "string") {
+            data.syntax = sanitizeMermaidSyntax(data.syntax);
+          }
+        }
+      }
+    }
+  }
+
   // Try full schema parse first
   const fullParse = responseSchema.safeParse(raw);
   if (fullParse.success) return fullParse.data;
@@ -121,8 +143,18 @@ OPTION TYPES YOU CAN GENERATE:
    Sequence:
    { "type": "diagram", "data": { "diagramType": "sequence", "syntax": "sequenceDiagram\\n  participant A as Researcher\\n  participant B as Database\\n  A->>B: Query\\n  B-->>A: Results", "caption": "Interaction flow" } }
 
-   Timeline:
+   Timeline (simple linear):
    { "type": "diagram", "data": { "diagramType": "timeline", "syntax": "timeline\\n  title Project Timeline\\n  2024-Q1 : Planning\\n  2024-Q2 : Data Collection\\n  2024-Q3 : Analysis\\n  2024-Q4 : Publication", "caption": "Project timeline" } }
+
+   Timeline (complex with branching — USE FLOWCHART LR):
+   When a timeline involves branching (e.g., clinical trial randomization into Treatment vs Control arms),
+   use a flowchart LR instead of Mermaid's linear timeline type. Mermaid timeline does NOT support branching.
+   { "type": "diagram", "data": { "diagramType": "flowchart", "syntax": "graph LR\\n  subgraph Screening[\\"Screening Period\\"]\\n    A[Informed Consent<br/>Week -4] --> B[Eligibility<br/>Assessment]\\n    B --> C[Baseline<br/>Measurements]\\n  end\\n  subgraph Treatment[\\"Treatment Period\\"]\\n    C --> D{Randomization<br/>Week 0}\\n    D -->|Treatment Arm| E[Drug X 10mg<br/>Weeks 0-52]\\n    D -->|Control Arm| F[Placebo<br/>Weeks 0-52]\\n    E --> G[Primary Endpoint<br/>Week 52]\\n    F --> G\\n  end\\n  subgraph Extension[\\"Extension Period\\"]\\n    G --> H[Open-Label Extension<br/>Weeks 52-104]\\n  end\\n  style D fill:#f59e0b,stroke:#d97706,color:#000\\n  style E fill:#3b82f6,stroke:#1e40af,color:#fff\\n  style F fill:#ef4444,stroke:#b91c1c,color:#fff\\n  style H fill:#6b7280,stroke:#4b5563,color:#fff,stroke-dasharray: 5 5", "caption": "Phase III Clinical Trial Design" } }
+
+   TIMELINE SELECTION RULE:
+   - Simple chronological events (no branching) → use "timeline" diagramType
+   - Timelines with branching/forks/parallel paths → use "flowchart" diagramType with graph LR
+   - Clinical trials, study designs with arms → ALWAYS use flowchart LR with subgraphs for periods
 
    Pie:
    { "type": "diagram", "data": { "diagramType": "pie", "syntax": "pie title Distribution\\n  \\"Category A\\" : 40\\n  \\"Category B\\" : 30\\n  \\"Category C\\" : 20\\n  \\"Other\\" : 10", "caption": "Distribution" } }
@@ -172,7 +204,13 @@ RULES:
 - Infographic items should have 3-8 entries
 - Choose visual types that genuinely fit the content (don't force a pie chart on a process)
 - Use descriptive labels and captions
-- Include at least one Mermaid diagram AND one infographic in every response`;
+- Include at least one Mermaid diagram AND one infographic in every response
+- For timelines with branching (clinical trials, study designs with multiple arms): use flowchart LR with subgraphs, NOT the Mermaid timeline type
+- Use subgraphs to group related nodes into phases/periods
+- Add classDef or style directives for visual distinction between categories (treatment vs control, phases, etc.)
+- Include ALL numeric data from the input in node labels (week numbers, sample sizes, counts)
+- Use <br/> for multi-line labels in Mermaid nodes
+- Diamond shapes {Decision} for branch/decision points like randomization`;
 }
 
 export async function POST(req: Request) {
@@ -224,6 +262,8 @@ export async function POST(req: Request) {
     const cleanText = text
       .replace(/```json\n?/g, "")
       .replace(/```\n?/g, "")
+      .replace(/[\u201C\u201D]/g, '"') // Smart double quotes → straight
+      .replace(/[\u2018\u2019]/g, "'") // Smart single quotes → straight
       .trim();
 
     let parsed: unknown;

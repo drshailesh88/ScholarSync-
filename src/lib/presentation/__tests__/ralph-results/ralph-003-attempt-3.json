@@ -1,0 +1,28 @@
+{
+  "testId": "ralph-003",
+  "attempt": 3,
+  "timestamp": "2026-03-02T09:54:32.189Z",
+  "mermaidSyntax": "graph LR\n  subgraph Screening[\"📋 Screening Period<br/>Weeks -4 to 0\"]\n    A[Informed Consent<br/>Week -4] --> B[Eligibility Assessment<br/>Weeks -3 to -1]\n    B --> C[Baseline Measurements<br/>Week -1 to 0]\n  end\n  subgraph Treatment[\"💊 Treatment Period<br/>Weeks 0-52\"]\n    C --> D{Randomization<br/>Week 0}\n    D -->|Treatment Arm| E[Drug X 10mg Daily<br/>Weeks 0-52]\n    D -->|Control Arm| F[Placebo Daily<br/>Weeks 0-52]\n    E --> G[Follow-up Visits<br/>Weeks 4, 12, 26, 52]\n    F --> G\n    G --> H[Primary Endpoint<br/>Assessment Week 52]\n  end\n  subgraph Extension[\"🔄 Extension Period<br/>Weeks 52-104\"]\n    H --> I[Optional Open-Label<br/>Drug X for All<br/>Weeks 52-104]\n  end\n  subgraph Safety[\"🛡️ Safety Follow-up\"]\n    H --> J[Safety Assessment<br/>Week 56]\n  end\n  style D fill:#f59e0b,stroke:#d97706,color:#000\n  style E fill:#3b82f6,stroke:#1e40af,color:#fff\n  style F fill:#ef4444,stroke:#b91c1c,color:#fff\n  style H fill:#10b981,stroke:#047857,color:#fff\n  style I fill:#6b7280,stroke:#4b5563,color:#fff,stroke-dasharray: 5 5\n  style J fill:#f97316,stroke:#ea580c,color:#fff",
+  "diagramType": "flowchart",
+  "syntaxValid": false,
+  "renderSuccess": false,
+  "failures": [
+    {
+      "type": "bad-syntax",
+      "description": "Syntax errors: Expected timeline but got flowchart; Contains smart quotes (curly quotes) — Mermaid requires straight quotes",
+      "severity": "critical",
+      "suggestedFix": "Fix Mermaid syntax — check bracket matching and type declarations"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Chronological sequence is clear (left-to-right or top-to-bottom)": true,
+    "Week numbers are visible at each stage": true,
+    "Randomization branch point shows two arms clearly": true,
+    "Follow-up visit timepoints are marked": true,
+    "Treatment vs Control arms are distinguishable": true,
+    "Extension period shown as optional/different styling": true,
+    "No overlapping text or labels": true,
+    "Valid Mermaid syntax": false
+  },
+  "overallScore": 6
+}

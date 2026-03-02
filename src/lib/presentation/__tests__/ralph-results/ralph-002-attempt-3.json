@@ -1,0 +1,28 @@
+{
+  "testId": "ralph-002",
+  "attempt": 3,
+  "timestamp": "2026-03-02T09:54:05.862Z",
+  "mermaidSyntax": "graph TD\n  subgraph Identification[\"Identification\"]\n    A[Records identified from databases<br/>n = 5,226]\n    B[PubMed: 2,847<br/>Embase: 1,923<br/>Cochrane: 456]\n  end\n  \n  subgraph Screening[\"Screening\"]\n    C[Records after duplicates removed<br/>n = 4,070]\n    D[Records screened<br/>n = 4,070]\n    E[Records excluded<br/>n = 3,891]\n  end\n  \n  subgraph Eligibility[\"Eligibility\"]\n    F[Full-text articles assessed<br/>for eligibility<br/>n = 179]\n    G[Full-text articles excluded<br/>n = 142<br/>• Wrong outcome: 67<br/>• Wrong population: 38<br/>• Wrong intervention: 22<br/>• Conference abstracts only: 15]\n  end\n  \n  subgraph Included[\"Included\"]\n    H[Studies included in<br/>qualitative synthesis<br/>n = 37]\n    I[Studies included in<br/>meta-analysis<br/>n = 28]\n  end\n  \n  A --> B\n  B --> C\n  C --> D\n  D --> E\n  D --> F\n  F --> G\n  F --> H\n  H --> I\n  \n  style A fill:#e1f5fe,stroke:#0277bd\n  style C fill:#f3e5f5,stroke:#7b1fa2\n  style F fill:#fff3e0,stroke:#f57c00\n  style H fill:#e8f5e8,stroke:#388e3c\n  style I fill:#e8f5e8,stroke:#388e3c\n  style E fill:#ffebee,stroke:#d32f2f\n  style G fill:#ffebee,stroke:#d32f2f",
+  "diagramType": "flowchart",
+  "syntaxValid": false,
+  "renderSuccess": false,
+  "failures": [
+    {
+      "type": "bad-syntax",
+      "description": "Syntax errors: Contains smart quotes (curly quotes) — Mermaid requires straight quotes",
+      "severity": "critical",
+      "suggestedFix": "Fix Mermaid syntax — check bracket matching and type declarations"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Four clear phases: Identification, Screening, Eligibility, Included": true,
+    "All numeric values present and correct": true,
+    "Exclusion reasons shown as side branches with counts": true,
+    "Database sources listed separately": true,
+    "Duplicate removal step clearly shown": true,
+    "Color coding distinguishes phases (blue, yellow, orange, green)": true,
+    "Long text like 'SGLT2 inhibitors' not truncated": true,
+    "Valid Mermaid syntax": false
+  },
+  "overallScore": 6
+}

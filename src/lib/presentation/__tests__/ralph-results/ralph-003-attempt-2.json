@@ -1,0 +1,40 @@
+{
+  "testId": "ralph-003",
+  "attempt": 2,
+  "timestamp": "2026-03-02T09:49:13.676Z",
+  "mermaidSyntax": "timeline\n  title Phase III Clinical Trial Timeline\n  section Screening\n    Week -4 : Informed Consent\n    Week -2 : Eligibility Assessment\n    Week 0  : Baseline Measurements : Randomization\n  section Treatment Period\n    Week 4  : Follow-up Visit\n    Week 12 : Follow-up Visit\n    Week 26 : Follow-up Visit\n    Week 52 : Primary Endpoint : Follow-up Visit\n  section Extension\n    Week 56 : Safety Follow-up\n    Week 104: Extension Complete",
+  "diagramType": "timeline",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "missing-node",
+      "description": "No branching pattern detected — no node has 2+ outgoing arrows",
+      "severity": "major",
+      "suggestedFix": "Ensure the AI generates branch points where the input describes parallel paths"
+    },
+    {
+      "type": "missing-data",
+      "description": "Treatment and/or control arm not represented",
+      "severity": "major",
+      "suggestedFix": "Ensure both arms are shown as parallel branches after randomization"
+    },
+    {
+      "type": "ugly",
+      "description": "No color or styling definitions in Mermaid syntax",
+      "severity": "minor",
+      "suggestedFix": "Add classDef or style directives for visual distinction"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Chronological sequence is clear (left-to-right or top-to-bottom)": true,
+    "Week numbers are visible at each stage": true,
+    "Randomization branch point shows two arms clearly": false,
+    "Follow-up visit timepoints are marked": true,
+    "Treatment vs Control arms are distinguishable": false,
+    "Extension period shown as optional/different styling": false,
+    "No overlapping text or labels": true,
+    "Valid Mermaid syntax": true
+  },
+  "overallScore": 4
+}
