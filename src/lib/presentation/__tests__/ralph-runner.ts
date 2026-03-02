@@ -427,7 +427,7 @@ function assessQuality(
           suggestedFix: "Add side branches showing exclusion reasons",
         });
       }
-    } else if ((lower.includes("branch") || lower.includes("parallel") || lower.includes("converge")) && testCase.expectedDiagramType !== "gantt") {
+    } else if ((lower.includes("branch") || lower.includes("parallel") || lower.includes("converge")) && testCase.expectedDiagramType !== "gantt" && testCase.expectedDiagramType !== "sequence") {
       // Flowchart: check for branching patterns (multiple arrows from one node)
       const lines = syntax.split("\n");
       const sourceCounts: Record<string, number> = {};
@@ -485,7 +485,7 @@ function assessQuality(
     } else if (lower.includes("overlap")) {
       // Generic check — mark as untestable without rendering
       criteriaResults[criterion] = true; // Assume ok if syntax validates
-    } else if (lower.includes("database") || lower.includes("source")) {
+    } else if ((lower.includes("database") || lower.includes("source")) && testCase.expectedDiagramType !== "sequence") {
       const hasMultipleSources = (syntax.match(/PubMed|Embase|Cochrane|database|register|source/gi) ?? []).length >= 2;
       criteriaResults[criterion] = hasMultipleSources;
       if (!hasMultipleSources) {
@@ -1444,6 +1444,60 @@ function assessQuality(
       const maintenanceArrows = syntax.match(/-->\s*Under.?Maintenance|-->\s*Maintenance/gi) ?? [];
       criteriaResults[criterion] = maintenanceArrows.length >= 2;
 
+    // --- Cycle 12: sequence_advanced heuristics ---
+
+    // ralph-034: Multi-actor lab protocol with lifelines and parallel processing
+    } else if (lower.includes("activate") && lower.includes("deactivate") && lower.includes("participant")) {
+      criteriaResults[criterion] = /activate\s/i.test(syntax) && /deactivate\s/i.test(syntax);
+    } else if (lower.includes("parallel") && lower.includes("block") && (lower.includes("par") || lower.includes("simultaneous"))) {
+      criteriaResults[criterion] = /\bpar\b/i.test(syntax);
+    } else if (lower.includes("parallel processing") && lower.includes("aliquot")) {
+      const steps = [/aliquot/i, /DNA\s*extract/i, /plasma/i];
+      const found = steps.filter(r => r.test(syntax)).length;
+      criteriaResults[criterion] = found >= 2;
+    } else if (lower.includes("alt") && lower.includes("opt") && lower.includes("qc") && lower.includes("pass")) {
+      criteriaResults[criterion] = /\balt\b/i.test(syntax) || /\bopt\b/i.test(syntax);
+    } else if (lower.includes("loop") && lower.includes("construct") && lower.includes("reprocess")) {
+      criteriaResults[criterion] = /\bloop\b/i.test(syntax);
+    } else if (lower.includes("lims") && lower.includes("database") && lower.includes("interaction")) {
+      criteriaResults[criterion] = /LIMS/i.test(syntax);
+
+    // ralph-035: IRB review sequence with conditional paths
+    } else if (lower.includes("alt") && lower.includes("block") && lower.includes("chair") && lower.includes("approval")) {
+      criteriaResults[criterion] = /\balt\b/i.test(syntax);
+    } else if (lower.includes("alt") && lower.includes("block") && lower.includes("panel") && lower.includes("three")) {
+      // Three-outcome alt block: approved, modifications, full board
+      const hasAlt = /\balt\b/i.test(syntax);
+      const outcomes = [/approved|approve/i, /modif/i, /full\s*board|referred/i];
+      const found = outcomes.filter(r => r.test(syntax)).length;
+      criteriaResults[criterion] = hasAlt && found >= 2;
+    } else if (lower.includes("ethics consultant") && lower.includes("interaction") && lower.includes("full board")) {
+      criteriaResults[criterion] = /ethics|consultant/i.test(syntax);
+    } else if (lower.includes("note") && lower.includes("element") && lower.includes("present")) {
+      criteriaResults[criterion] = /\bnote\s+(over|left of|right of)\b/i.test(syntax) || /\bNote\s+(over|left of|right of)\b/.test(syntax);
+    } else if (lower.includes("resubmission") && lower.includes("flow") && lower.includes("modification")) {
+      criteriaResults[criterion] = /resubmit|revise|re-?submit/i.test(syntax) || (/modif/i.test(syntax) && /PI|Investigator/i.test(syntax));
+    } else if (lower.includes("completeness") && lower.includes("check") && lower.includes("coordinator") && lower.includes("conditional")) {
+      criteriaResults[criterion] = /complet|incomplete/i.test(syntax) || (/check/i.test(syntax) && /Coordinator/i.test(syntax));
+
+    // ralph-036: Automated screening pipeline with loop and critical blocks
+    } else if (lower.includes("loop") && lower.includes("block") && lower.includes("iterating")) {
+      criteriaResults[criterion] = /\bloop\b/i.test(syntax);
+    } else if (lower.includes("critical") && (lower.includes("opt") || lower.includes("block")) && lower.includes("escalation")) {
+      criteriaResults[criterion] = /\bcritical\b/i.test(syntax) || /\bopt\b/i.test(syntax) || /\balt\b/i.test(syntax);
+    } else if (lower.includes("ai") && lower.includes("human") && lower.includes("escalation")) {
+      const hasAI = /AI\s*Screen|screener/i.test(syntax);
+      const hasHuman = /Human\s*Review/i.test(syntax);
+      criteriaResults[criterion] = hasAI && hasHuman;
+    } else if (lower.includes("deduplication") && lower.includes("step") && lower.includes("before")) {
+      criteriaResults[criterion] = /[Dd]edup|[Dd]e-?dup/i.test(syntax);
+    } else if (lower.includes("database") && lower.includes("interaction") && lower.includes("storage") && lower.includes("retrieval")) {
+      criteriaResults[criterion] = /Database/i.test(syntax);
+    } else if (lower.includes("note") && lower.includes("element") && lower.includes("ai screener")) {
+      criteriaResults[criterion] = /\bnote\s+(over|left of|right of)\b/i.test(syntax) || /\bNote\s+(over|left of|right of)\b/.test(syntax);
+    } else if (lower.includes("screening report") && lower.includes("generation") && lower.includes("after")) {
+      criteriaResults[criterion] = /report|summary|statistic/i.test(syntax);
+
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -2037,6 +2091,116 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
   state InUse {
     [*] --> Active
   }`,
+  },
+
+  "ralph-034": {
+    diagramType: "sequence",
+    syntax: `sequenceDiagram
+  participant C as Clinician
+  participant BC as Biobank Coordinator
+  participant SPL as Sample Processing Lab
+  participant QC as Quality Control
+  participant LIMS as LIMS Database
+
+  C->>BC: Collect and send sample
+  BC->>LIMS: Log sample receipt
+  BC->>SPL: Send sample for processing
+  activate SPL
+  par Parallel Processing
+    SPL->>SPL: Aliquoting
+  and
+    SPL->>SPL: DNA Extraction
+  and
+    SPL->>SPL: Plasma Separation
+  end
+  SPL->>QC: Send processed samples
+  deactivate SPL
+  activate QC
+  QC->>QC: Run integrity checks
+  alt QC Passes
+    QC->>LIMS: Update sample status (available)
+    QC->>BC: Notify sample availability
+  else QC Fails
+    loop Up to 3 reprocessing attempts
+      QC->>SPL: Return for reprocessing
+      SPL->>QC: Reprocessed samples
+      QC->>QC: Re-run integrity checks
+    end
+  end
+  deactivate QC
+  BC->>C: Notify sample availability`,
+  },
+
+  "ralph-035": {
+    diagramType: "sequence",
+    syntax: `sequenceDiagram
+  participant PI as Principal Investigator
+  participant Chair as Department Chair
+  participant IC as IRB Coordinator
+  participant Panel as IRB Review Panel
+  participant EC as Ethics Consultant
+
+  Note over PI,Chair: Pre-submission review typically takes 1-2 weeks
+  PI->>Chair: Submit protocol for pre-review
+  alt Chair Approves
+    Chair->>IC: Forward approved protocol
+  else Chair Returns
+    Chair->>PI: Return with comments
+    PI->>Chair: Revise and resubmit
+    Chair->>IC: Forward approved protocol
+  end
+  IC->>IC: Check completeness
+  alt Incomplete
+    IC->>PI: Return for missing items
+    PI->>IC: Resubmit complete package
+  else Complete
+    IC->>Panel: Assign for review
+  end
+  Panel->>Panel: Review protocol
+  alt Approved
+    Panel->>IC: Approve protocol
+    IC->>PI: Notify approval
+  else Approved with Modifications
+    Panel->>IC: Approve with modification list
+    IC->>PI: Send modification requirements
+    PI->>IC: Submit revised protocol
+    IC->>Panel: Confirm modifications
+  else Referred to Full Board
+    Panel->>EC: Request ethics consultation
+    EC->>Panel: Provide ethics opinion
+    Panel->>IC: Final decision
+    IC->>PI: Notify final decision
+  end`,
+  },
+
+  "ralph-036": {
+    diagramType: "sequence",
+    syntax: `sequenceDiagram
+  participant SE as Search Engine
+  participant DS as Deduplication Service
+  participant AI as AI Screener
+  participant HR as Human Reviewer
+  participant DB as Database
+
+  SE->>DS: Retrieve batch of records
+  DS->>DS: Remove duplicates
+  DS->>DB: Store unique records
+  Note over AI: Uses fine-tuned BERT model with 94% sensitivity
+  activate AI
+  loop For each record
+    AI->>DB: Fetch record
+    DB->>AI: Return record data
+    AI->>AI: Run title/abstract screening
+    AI->>DB: Store screening decision
+    critical Low confidence escalation
+      AI->>HR: Escalate low-confidence record
+      HR->>HR: Review record
+      HR->>DB: Store final decision
+    end
+  end
+  deactivate AI
+  DB->>DB: Generate screening report
+  DB->>HR: Send summary statistics`,
   },
 };
 
