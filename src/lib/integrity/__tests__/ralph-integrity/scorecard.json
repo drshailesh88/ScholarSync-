@@ -1,7 +1,7 @@
 {
-  "lastUpdated": "2026-03-02T17:50:36.598Z",
+  "lastUpdated": "2026-03-02T17:56:51.289Z",
   "totalCycles": 12,
-  "completedCycles": 2,
+  "completedCycles": 3,
   "cycles": [
     {
       "cycleId": "cycle-2",
@@ -235,6 +235,115 @@
           "flags": [],
           "pass": true,
           "notes": []
+        }
+      ]
+    },
+    {
+      "cycleId": "cycle-5",
+      "name": "Mixed Text — Human + AI Paragraphs Interleaved",
+      "timestamp": "2026-03-02T17:56:51.289Z",
+      "casesRun": 5,
+      "casesPassing": 3,
+      "avgHumanScore": 85.4,
+      "dimensionScore": 6,
+      "results": [
+        {
+          "testId": "ralph-ic-011",
+          "name": "Mixed: human intro + AI body paragraphs",
+          "humanScore": 94,
+          "overallRisk": "low",
+          "paragraphScores": [
+            95,
+            95,
+            92,
+            93
+          ],
+          "flags": [],
+          "pass": false,
+          "notes": [
+            "3 AI paras scored above 45%"
+          ]
+        },
+        {
+          "testId": "ralph-ic-012",
+          "name": "Mixed: AI intro + human body paragraphs",
+          "humanScore": 86,
+          "overallRisk": "low",
+          "paragraphScores": [
+            65,
+            95,
+            92,
+            90
+          ],
+          "flags": [
+            "Generic academic opening phrases",
+            "Formulaic concern framing ('pressing public health concern')",
+            "Stock transition ('Consequently, this study aims to')"
+          ],
+          "pass": true,
+          "notes": [
+            "1 AI paras scored above 45%"
+          ]
+        },
+        {
+          "testId": "ralph-ic-013",
+          "name": "Mixed: alternating human-AI-human-AI",
+          "humanScore": 85,
+          "overallRisk": "low",
+          "paragraphScores": [
+            92,
+            88,
+            85,
+            75
+          ],
+          "flags": [
+            "Potential redundancy with Paragraph 1 in describing randomization methodology",
+            "definition-first-opening"
+          ],
+          "pass": true,
+          "notes": [
+            "2 AI paras scored above 50%"
+          ]
+        },
+        {
+          "testId": "ralph-ic-014",
+          "name": "Mixed: mostly human with one AI paragraph",
+          "humanScore": 78,
+          "overallRisk": "low",
+          "paragraphScores": [
+            92,
+            90,
+            77,
+            53
+          ],
+          "flags": [
+            "Conclusion paragraph with stock academic phrasing",
+            "Multiple transition words (Consequently, Ultimately) in single paragraph",
+            "Generic forward-looking statements without specific references"
+          ],
+          "pass": true,
+          "notes": [
+            "1 AI paras scored above 50%"
+          ]
+        },
+        {
+          "testId": "ralph-ic-015",
+          "name": "Mixed: mostly AI with one human paragraph",
+          "humanScore": 84,
+          "overallRisk": "low",
+          "paragraphScores": [
+            90,
+            88,
+            96,
+            82
+          ],
+          "flags": [
+            "formulaic_transitions_furthermore_finally"
+          ],
+          "pass": false,
+          "notes": [
+            "3 AI paras scored above 45%"
+          ]
         }
       ]
     }
