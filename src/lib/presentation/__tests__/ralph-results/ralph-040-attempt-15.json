@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-040",
+  "attempt": 15,
+  "timestamp": "2026-03-02T17:02:13.796Z",
+  "mermaidSyntax": "gantt\n  title R01 Grant Project Timeline (2024-2027)\n  dateFormat YYYY-MM-DD\n  axisFormat %b %Y\n\n  section Year 1 Aims\n    Hire postdoc               :a1, 2024-01-15, 2024-03-01\n    IRB approval               :milestone, m1, 2024-03-01, 0d\n    Develop protocols          :a2, 2024-03-01, 2024-06-30\n    Pilot study                :a3, 2024-07-01, 2024-12-31\n    Year 1 progress report     :milestone, m2, 2024-12-31, 0d\n\n  section Year 2 Data Collection\n    Patient recruitment        :b1, 2025-01-01, 2025-09-30\n    Sample collection          :b2, after b1, 2025-12-31\n    Data analysis phase 1      :b3, 2025-06-01, 2025-12-31\n    Year 2 progress report     :milestone, m3, 2025-12-31, 0d\n\n  section Year 3 Analysis & Publication\n    Data analysis phase 2      :c1, 2026-01-01, 2026-06-30\n    Manuscript drafting         :c2, 2026-04-01, 2026-09-30\n    Manuscript submission       :milestone, m4, 2026-10-01, 0d\n    Final report               :c3, 2026-10-01, 2026-12-31\n    Grant closeout              :milestone, m5, 2026-12-31, 0d",
+  "diagramType": "gantt",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Gantt chart type declared": true,
+    "Title contains R01 or Grant": true,
+    "dateFormat directive present": true,
+    "axisFormat directive present": true,
+    "All 3 year sections present": true,
+    "At least 4 milestone markers present": true,
+    "At least 10 task entries": true,
+    "Task dependencies using 'after' keyword present": true,
+    "Date range spanning at least 2024-2027": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

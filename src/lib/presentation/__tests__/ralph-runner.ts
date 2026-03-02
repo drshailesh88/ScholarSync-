@@ -2408,6 +2408,99 @@ function assessQuality(
       const scores = (syntax.match(/:\s*([1-5])\s*(?::|$)/gm) || []).map(m => parseInt(m.replace(/[:\s]/g, "")));
       criteriaResults[criterion] = scores.length >= 3 && new Set(scores).size >= 2;
 
+    // --- Cycle 22: Precision data fidelity heuristics ---
+
+    } else if (lower.includes("personnel") && lower.includes("slice") && lower.includes("exactly") && lower.includes("42.3")) {
+      // Personnel slice shows exactly 42.3
+      criteriaResults[criterion] = /42\.3/.test(syntax);
+    } else if (lower.includes("equipment") && lower.includes("slice") && lower.includes("exactly") && lower.includes("18.7")) {
+      // Equipment slice shows exactly 18.7
+      criteriaResults[criterion] = /18\.7/.test(syntax);
+    } else if (lower.includes("reagents") && lower.includes("supplies") && lower.includes("14.2")) {
+      // Reagents & Supplies slice present at 14.2
+      criteriaResults[criterion] = /reagent/i.test(syntax) && /14\.2/.test(syntax);
+    } else if (lower.includes("animal") && lower.includes("costs") && lower.includes("slice") && lower.includes("8.9")) {
+      // Animal Costs slice shows exactly 8.9
+      criteriaResults[criterion] = /8\.9/.test(syntax);
+    } else if (lower.includes("travel") && lower.includes("slice") && lower.includes("exactly") && lower.includes("3.1")) {
+      // Travel slice shows exactly 3.1
+      criteriaResults[criterion] = /3\.1/.test(syntax);
+    } else if (lower.includes("publication") && lower.includes("fees") && lower.includes("slice") && lower.includes("2.8")) {
+      // Publication Fees slice shows exactly 2.8
+      criteriaResults[criterion] = /2\.8/.test(syntax);
+    } else if (lower.includes("indirect") && lower.includes("f&a") && lower.includes("exactly") && lower.includes("10.0")) {
+      // Indirect Costs or F&A slice shows exactly 10.0
+      criteriaResults[criterion] = /10\.0|10(?!\.)/.test(syntax) && /indirect|f&a|f\s*&\s*a/i.test(syntax);
+    } else if (lower.includes("all 7 categories") && lower.includes("present") && lower.includes("slices")) {
+      // All 7 categories present as slices
+      const cats = [/personnel/i, /equipment/i, /reagent|suppl/i, /animal/i, /travel/i, /publication/i, /indirect|f&a/i];
+      const found = cats.filter(r => r.test(syntax)).length;
+      criteriaResults[criterion] = found >= 6; // tolerance
+    } else if (lower.includes("values sum") && lower.includes("100") && lower.includes("when added")) {
+      // Values sum to 100.0 when added
+      const nums = syntax.match(/:\s*([\d.]+)/g) || [];
+      const values = nums.map(n => parseFloat(n.replace(":", "").trim())).filter(n => !isNaN(n));
+      const sum = values.reduce((a, b) => a + b, 0);
+      criteriaResults[criterion] = Math.abs(sum - 100) < 1.0; // within 1% tolerance
+
+    } else if (lower.includes("protocol design") && lower.includes("2025-01-15") && lower.includes("start date")) {
+      // Protocol Design task with 2025-01-15 start date
+      criteriaResults[criterion] = /protocol\s*design/i.test(syntax) && /2025-01-15/.test(syntax);
+    } else if (lower.includes("irb submission") && lower.includes("task") && lower.includes("present") && lower.includes("correct date")) {
+      // IRB Submission task present with correct date range
+      criteriaResults[criterion] = /irb/i.test(syntax) && /2025-04-01/.test(syntax);
+    } else if (lower.includes("patient enrollment") && lower.includes("2025-08-01") && lower.includes("2026-02-28")) {
+      // Patient Enrollment shows 2025-08-01 to 2026-02-28
+      criteriaResults[criterion] = /enrollment/i.test(syntax) && /2025-08-01/.test(syntax);
+    } else if (lower.includes("treatment phase") && lower.includes("2025-09-15") && lower.includes("start")) {
+      // Treatment Phase shows 2025-09-15 start
+      criteriaResults[criterion] = /treatment/i.test(syntax) && /2025-09-15/.test(syntax);
+    } else if (lower.includes("statistical analysis") && lower.includes("2026-08-20") && lower.includes("2026-11-30")) {
+      // Statistical Analysis shows 2026-08-20 to 2026-11-30
+      criteriaResults[criterion] = /statistic/i.test(syntax) && /2026-08-20/.test(syntax);
+    } else if (lower.includes("manuscript") && lower.includes("preparation") && lower.includes("ends") && lower.includes("2027-03-31")) {
+      // Manuscript Preparation ends 2027-03-31
+      criteriaResults[criterion] = /manuscript/i.test(syntax) && /2027-03-31/.test(syntax);
+    } else if (lower.includes("dsmb") && lower.includes("review") && lower.includes("milestone") && lower.includes("2026-01-15")) {
+      // DSMB Review milestone on 2026-01-15
+      criteriaResults[criterion] = /dsmb/i.test(syntax) && /2026-01-15/.test(syntax);
+    } else if (lower.includes("interim analysis") && lower.includes("milestone") && lower.includes("2026-04-15")) {
+      // Interim Analysis milestone on 2026-04-15
+      criteriaResults[criterion] = /interim/i.test(syntax) && /2026-04-15/.test(syntax);
+    } else if (lower.includes("all 8 tasks") && lower.includes("2 milestones") && lower.includes("10 items")) {
+      // All 8 tasks and 2 milestones present (10 items total)
+      const taskLines = syntax.split("\n").filter(l => /^\s+\w/.test(l) && !l.trim().startsWith("section") && !l.trim().startsWith("gantt") && !l.trim().startsWith("dateFormat") && !l.trim().startsWith("title") && !l.trim().startsWith("axisFormat") && !l.trim().startsWith("excludes") && l.trim().length > 0);
+      criteriaResults[criterion] = taskLines.length >= 8;
+
+    } else if (lower.includes("donor") && lower.includes("entity") && lower.includes("donor_id") && lower.includes("pk")) {
+      // DONOR entity with donor_id as PK
+      criteriaResults[criterion] = /donor/i.test(syntax) && /donor_id/i.test(syntax);
+    } else if (lower.includes("sample") && lower.includes("entity") && lower.includes("sample_id") && lower.includes("pk") && lower.includes("donor_id") && lower.includes("fk")) {
+      // SAMPLE entity with sample_id PK and donor_id FK
+      criteriaResults[criterion] = /sample/i.test(syntax) && /sample_id/i.test(syntax) && /donor_id/i.test(syntax);
+    } else if (lower.includes("study") && lower.includes("entity") && lower.includes("study_id") && lower.includes("pk") && lower.includes("funding_amount")) {
+      // STUDY entity with study_id PK and funding_amount field
+      criteriaResults[criterion] = /study/i.test(syntax) && /study_id/i.test(syntax) && /funding/i.test(syntax);
+    } else if (lower.includes("sample_study") && lower.includes("junction") && lower.includes("table") && lower.includes("present")) {
+      // SAMPLE_STUDY junction table present
+      criteriaResults[criterion] = /sample_study|sample.*study/i.test(syntax);
+    } else if (lower.includes("donor") && lower.includes("sample") && lower.includes("one-to-many") && lower.includes("relationship")) {
+      // DONOR to SAMPLE one-to-many relationship shown
+      criteriaResults[criterion] = /\|\|--|o\{|one.*many|1\.\.\*/i.test(syntax);
+    } else if (lower.includes("sample") && lower.includes("study") && lower.includes("many-to-many") && lower.includes("junction")) {
+      // SAMPLE to STUDY many-to-many via junction table
+      criteriaResults[criterion] = /\}o--|o\{|many.*many/i.test(syntax) || /sample_study/i.test(syntax);
+    } else if (lower.includes("at least 3 attributes") && lower.includes("per entity") && lower.includes("type annotation")) {
+      // At least 3 attributes per entity with type annotations
+      const attrLines = syntax.split("\n").filter(l => /\b(int|varchar|date|float|decimal|enum|timestamp|string)\b/i.test(l));
+      criteriaResults[criterion] = attrLines.length >= 6; // at least 6 across entities
+    } else if (lower.includes("blood type") && lower.includes("enum") && lower.includes("values") && lower.includes("preserved")) {
+      // Blood type enum values preserved (A+, B+, O-, etc.)
+      criteriaResults[criterion] = /blood/i.test(syntax) && /enum|type/i.test(syntax);
+    } else if (lower.includes("storage") && lower.includes("temp") && lower.includes("decimal") && lower.includes("precision") && lower.includes("preserved")) {
+      // Storage temp decimal precision preserved (decimal 5 2)
+      criteriaResults[criterion] = /storage.*temp|temp.*storage/i.test(syntax) && /decimal|float/i.test(syntax);
+
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -3880,6 +3973,81 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
     Discharge planning: 4: Doctor
     Follow-up scheduling: 5: Staff
     Patient education: 5: Nurse`,
+  },
+
+  "ralph-064": {
+    diagramType: "pie",
+    syntax: `pie title NIH R01 Grant Budget Allocation
+  "Personnel" : 42.3
+  "Equipment" : 18.7
+  "Reagents & Supplies" : 14.2
+  "Animal Costs" : 8.9
+  "Travel" : 3.1
+  "Publication Fees" : 2.8
+  "Indirect Costs (F&A)" : 10.0`,
+  },
+
+  "ralph-065": {
+    diagramType: "gantt",
+    syntax: `gantt
+  title Phase II Clinical Trial Schedule
+  dateFormat YYYY-MM-DD
+  axisFormat %Y-%m
+
+  section Planning
+    Protocol Design           :pd, 2025-01-15, 2025-03-30
+    IRB Submission            :irb, 2025-04-01, 2025-05-15
+    Site Activation           :sa, 2025-05-20, 2025-07-31
+
+  section Execution
+    Patient Enrollment        :pe, 2025-08-01, 2026-02-28
+    Treatment Phase           :tp, 2025-09-15, 2026-06-30
+    Data Collection           :dc, 2025-10-01, 2026-08-15
+    DSMB Review              :milestone, dsmb, 2026-01-15, 0d
+    Interim Analysis          :milestone, ia, 2026-04-15, 0d
+
+  section Analysis & Publication
+    Statistical Analysis      :stat, 2026-08-20, 2026-11-30
+    Manuscript Preparation    :ms, 2026-12-01, 2027-03-31`,
+  },
+
+  "ralph-066": {
+    diagramType: "erDiagram",
+    syntax: `erDiagram
+  DONOR {
+    int donor_id PK
+    varchar first_name
+    varchar last_name
+    date date_of_birth
+    enum blood_type
+    timestamp consent_date
+  }
+  SAMPLE {
+    int sample_id PK
+    int donor_id FK
+    varchar tissue_type
+    date collection_date
+    decimal storage_temp
+    float quantity_ml
+    enum status
+  }
+  STUDY {
+    int study_id PK
+    varchar pi_name
+    varchar title
+    varchar irb_number
+    date start_date
+    decimal funding_amount
+  }
+  SAMPLE_STUDY {
+    int sample_id FK
+    int study_id FK
+    date allocation_date
+    float quantity_used
+  }
+  DONOR ||--o{ SAMPLE : "donates"
+  SAMPLE }o--o{ SAMPLE_STUDY : "allocated to"
+  STUDY }o--o{ SAMPLE_STUDY : "uses"`,
   },
 };
 

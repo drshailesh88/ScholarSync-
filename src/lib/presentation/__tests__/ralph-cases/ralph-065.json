@@ -1,0 +1,20 @@
+{
+  "id": "ralph-065",
+  "name": "Precision Data — Gantt Chart with Exact ISO Dates",
+  "input": "Create a Gantt chart for our Phase II clinical trial. Use these exact dates: Protocol Design 2025-01-15 to 2025-03-30, IRB Submission 2025-04-01 to 2025-05-15, Site Activation 2025-05-20 to 2025-07-31, Patient Enrollment 2025-08-01 to 2026-02-28, Treatment Phase 2025-09-15 to 2026-06-30, Data Collection 2025-10-01 to 2026-08-15, Statistical Analysis 2026-08-20 to 2026-11-30, Manuscript Preparation 2026-12-01 to 2027-03-31. Milestone: DSMB Review on 2026-01-15. Milestone: Interim Analysis on 2026-04-15.",
+  "expectedDiagramType": "gantt",
+  "difficulty": "hard",
+  "expectedMinNodes": 10,
+  "qualityCriteria": [
+    "Diagram type is gantt",
+    "Protocol Design task with 2025-01-15 start date",
+    "IRB Submission task present with correct date range",
+    "Patient Enrollment shows 2025-08-01 to 2026-02-28",
+    "Treatment Phase shows 2025-09-15 start",
+    "Statistical Analysis shows 2026-08-20 to 2026-11-30",
+    "Manuscript Preparation ends 2027-03-31",
+    "DSMB Review milestone on 2026-01-15",
+    "Interim Analysis milestone on 2026-04-15",
+    "All 8 tasks and 2 milestones present (10 items total)"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-025",
+  "attempt": 16,
+  "timestamp": "2026-03-02T17:02:22.797Z",
+  "mermaidSyntax": "graph TD\n  ASSESS[Assessed for eligibility<br/>n=2847] --> EXCL[Excluded n=1203]\n  EXCL --> EXCL1[Not meeting criteria n=412]\n  EXCL --> EXCL2[Declined to participate n=298]\n  EXCL --> EXCL3[Lost contact n=189]\n  EXCL --> EXCL4[Other reasons n=304]\n  ASSESS --> RAND{Randomized<br/>n=1644}\n  RAND -->|Arm A| AA[Drug X 10mg<br/>Allocated n=548]\n  RAND -->|Arm B| AB[Drug X 20mg<br/>Allocated n=548]\n  RAND -->|Arm C| AC[Placebo<br/>Allocated n=548]\n  AA --> FUA[Follow-up Arm A]\n  FUA --> LA1[Adverse events n=23]\n  FUA --> LA2[Withdrew consent n=15]\n  FUA --> LA3[Lost to follow-up n=8]\n  AB --> FUB[Follow-up Arm B]\n  FUB --> LB1[Adverse events n=31]\n  FUB --> LB2[Withdrew consent n=12]\n  FUB --> LB3[Lost to follow-up n=11]\n  AC --> FUC[Follow-up Arm C]\n  FUC --> LC1[Adverse events n=9]\n  FUC --> LC2[Withdrew consent n=18]\n  FUC --> LC3[Lost to follow-up n=14]\n  FUA --> ANA[Analyzed n=502<br/>46 excluded]\n  FUB --> ANB[Analyzed n=494<br/>54 excluded]\n  FUC --> ANC[Analyzed n=507<br/>41 excluded]\n\n  classDef enroll fill:#3B82F6,stroke:#1E40AF,color:#fff\n  classDef exclude fill:#EF4444,stroke:#B91C1C,color:#fff\n  classDef arm fill:#10B981,stroke:#047857,color:#fff\n  classDef loss fill:#F59E0B,stroke:#D97706,color:#000\n  classDef analysis fill:#8B5CF6,stroke:#6D28D9,color:#fff\n\n  class ASSESS,RAND enroll\n  class EXCL,EXCL1,EXCL2,EXCL3,EXCL4 exclude\n  class AA,AB,AC arm\n  class FUA,FUB,FUC,LA1,LA2,LA3,LB1,LB2,LB3,LC1,LC2,LC3 loss\n  class ANA,ANB,ANC analysis",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Top-down layout (TD direction)": true,
+    "Enrollment numbers present (2847 assessed, 1203 excluded)": true,
+    "All 3 arms shown with sample sizes": true,
+    "Exclusion reasons itemized (not meeting criteria, declined, lost contact)": true,
+    "Follow-up losses per arm with reasons": true,
+    "Final analysis numbers per arm": true,
+    "At least 20 distinct nodes": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}
