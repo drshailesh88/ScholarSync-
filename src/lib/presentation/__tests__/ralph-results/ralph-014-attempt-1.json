@@ -1,0 +1,27 @@
+{
+  "testId": "ralph-014",
+  "attempt": 1,
+  "timestamp": "2026-03-02T12:32:05.009Z",
+  "mermaidSyntax": "graph TD\n  A[PI Writes Grant Application<br/>R01 or R21] --> B[Institution Grants Office<br/>Compliance Checks]\n  B --> C[NIH Center for Scientific Review<br/>Receives Application]\n  C --> D[Assign to Study Section]\n  C --> E[Program Officer Assigned<br/>NIMH, NCI, etc.]\n  D --> F[Study Section Review<br/>External Scientists]\n  E -.-> F\n  F --> G[Scoring: 1-9 Scale<br/>Significance • Innovation • Approach<br/>Investigators • Environment]\n  G --> H[Study Section Meeting<br/>Top 50% Discussed<br/>Primary/Secondary/Tertiary Reviewers]\n  H --> I[Percentile Scores Calculated]\n  I --> J{Advisory Council<br/>Funding Decision}\n  J -->|Funded| K[Grants Management Specialist<br/>Budget Negotiation]\n  J -->|Not Funded| L[PI May Revise &<br/>Resubmit Once]\n  L --> B\n  K --> M[Award Made<br/>~9 Months Total]\n  style J fill:#f59e0b,stroke:#d97706,color:#000\n  style K fill:#10b981,stroke:#059669,color:#fff\n  style L fill:#ef4444,stroke:#b91c1c,color:#fff\n  style M fill:#3b82f6,stroke:#1e40af,color:#fff",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "missing-data",
+      "description": "Decision outcomes (accept/reject/revise) not shown in alt/opt blocks",
+      "severity": "major",
+      "suggestedFix": "Use alt blocks to show editor decision outcomes"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Extracted coherent process from rambling input": true,
+    "At least 10 key steps present (submission, compliance, CSR, study section, review, scoring, council, funding decision, budget negotiation, resubmission)": true,
+    "Sequential flow is logical (submission -> review -> decision -> outcome)": false,
+    "Resubmission loop represented": true,
+    "Branch at funding decision (funded vs not funded)": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 8
+}

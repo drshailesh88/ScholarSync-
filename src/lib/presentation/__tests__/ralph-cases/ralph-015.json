@@ -1,0 +1,19 @@
+{
+  "id": "ralph-015",
+  "name": "Mixed Technical Jargon — Proteomics Workflow",
+  "category": "prompt_robustness",
+  "difficulty": "hard",
+  "input": "Create a workflow diagram for a quantitative proteomics experiment using TMT labeling. Steps: Sample preparation (cell lysis in RIPA buffer, BCA protein assay, reduction with DTT, alkylation with IAA), Enzymatic digestion (trypsin/Lys-C, 37°C overnight, C18 cleanup), TMT labeling (TMT-10plex, label check by LC-MS/MS), Fractionation (high-pH reversed-phase chromatography, 12 fractions), LC-MS/MS analysis (nanoLC-MS/MS on Orbitrap Exploris 480, 120min gradient, DDA mode top20), Data analysis (MaxQuant/Proteome Discoverer, FDR < 1%, log2 fold change > 1.5, adjusted p-value < 0.05), Validation (Western blot for top 5 candidates, PRM targeted assay). Include quality control checkpoints after each major step.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 8,
+  "qualityCriteria": [
+    "All 7 major steps present (Sample prep, Digestion, TMT labeling, Fractionation, LC-MS/MS, Data analysis, Validation)",
+    "Technical abbreviations preserved (TMT, LC-MS/MS, DTT, IAA, BCA, DDA, FDR, PRM)",
+    "Quality control checkpoints shown between major steps",
+    "Sequential workflow is clear (top-down or left-right)",
+    "No truncated technical terms (Orbitrap Exploris 480 fully spelled)",
+    "Chemical/temperature annotations present (37°C, RIPA buffer)",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Linear workflow with 7 major blocks, QC diamonds between steps, technical detail preserved in node labels, professional proteomics workflow appearance."
+}

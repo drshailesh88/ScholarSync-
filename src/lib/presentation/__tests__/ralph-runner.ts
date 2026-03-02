@@ -493,7 +493,7 @@ function assessQuality(
           suggestedFix: "Use Mermaid par blocks for parallel reviewer assignments",
         });
       }
-    } else if (lower.includes("decision") && lower.includes("outcome")) {
+    } else if (lower.includes("decision") && lower.includes("outcome") && testCase.expectedDiagramType === "sequence") {
       // Sequence: check for alt/opt blocks showing decisions
       const hasDecision = /alt\s|opt\s|note\s/i.test(syntax) && /accept|reject|revis/i.test(syntax);
       criteriaResults[criterion] = hasDecision;
@@ -508,7 +508,7 @@ function assessQuality(
     } else if (lower.includes("revision loop") || lower.includes("resubmit")) {
       const hasLoop = /loop\s|resubmit|revision/i.test(syntax);
       criteriaResults[criterion] = hasLoop;
-    } else if (lower.includes("temporal") || lower.includes("annotation") || lower.includes("weeks")) {
+    } else if (lower.includes("temporal") || (lower.includes("annotation") && !lower.includes("chemical") && !lower.includes("temperature")) || lower.includes("weeks")) {
       const hasTime = /week|month|day|\d+\s*(wk|mo|d)\b|2-4|time/i.test(syntax);
       criteriaResults[criterion] = hasTime;
     } else if (lower.includes("post-acceptance") || lower.includes("production")) {
@@ -750,6 +750,99 @@ function assessQuality(
       const inInput = drugs.filter(d => testCase.input.toLowerCase().includes(d));
       const found = inInput.filter(d => syntax.toLowerCase().includes(d));
       criteriaResults[criterion] = found.length >= inInput.length * 0.7;
+    // --- Prompt robustness heuristics ---
+    } else if (lower.includes("meaningful") && lower.includes("minimal")) {
+      // Check that a real diagram was generated (not empty/trivial) despite minimal input
+      const lines = syntax.split("\n").filter(l => l.trim() && !l.trim().startsWith("graph") && !l.trim().startsWith("flowchart"));
+      criteriaResults[criterion] = lines.length >= 4; // At least 4 substantive lines
+    } else if (lower.includes("biologically plausible") || lower.includes("signaling")) {
+      // Check for biology terms suggesting a real signaling pathway
+      const bioTerms = ["receptor", "kinase", "signal", "transcription", "gene", "protein", "phospho", "cell", "ligand", "express", "pathway", "cascade", "activ"];
+      const found = bioTerms.filter(t => new RegExp(t, "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 3;
+    } else if (lower.includes("placeholder") || lower.includes("lorem ipsum")) {
+      // Negative check: ensure no placeholder text
+      const hasPlaceholder = /lorem|ipsum|placeholder|todo|example text|sample/i.test(syntax);
+      criteriaResults[criterion] = !hasPlaceholder;
+    } else if (lower.includes("extracted") && lower.includes("coherent")) {
+      // Check that verbose input was parsed into a structured diagram with enough nodes
+      const arrowCount = (syntax.match(/-->|==>|-\.->/g) ?? []).length;
+      criteriaResults[criterion] = arrowCount >= 6; // At least 6 connections = coherent extraction
+    } else if (lower.includes("key step") && lower.includes("present")) {
+      // Check for listed key steps by extracting parenthesized list from criterion
+      const stepNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (stepNames.length > 0) {
+        const found = stepNames.filter(name => {
+          const words = name.split(/\s+/);
+          return words.some(w => w.length > 3 && new RegExp(w, "i").test(syntax));
+        });
+        const met = found.length >= stepNames.length * 0.6;
+        criteriaResults[criterion] = met;
+        if (!met) {
+          failures.push({
+            type: "missing-node",
+            description: `Only ${found.length}/${stepNames.length} key steps found`,
+            severity: "major",
+            suggestedFix: "Ensure all major process steps from the input are represented",
+          });
+        }
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("sequential flow") && lower.includes("logical")) {
+      // Check for a clear sequential chain (at least 5 connected arrows)
+      const arrowCount = (syntax.match(/-->|==>|-\.->/g) ?? []).length;
+      criteriaResults[criterion] = arrowCount >= 5;
+    } else if (lower.includes("resubmission loop") || lower.includes("resubmi")) {
+      const hasResubmit = /resubmi|revise|re-submit|loop/i.test(syntax);
+      criteriaResults[criterion] = hasResubmit;
+    } else if (lower.includes("major step") && lower.includes("present")) {
+      // Check for listed major steps by extracting parenthesized list
+      const stepNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (stepNames.length > 0) {
+        const found = stepNames.filter(name => {
+          const words = name.split(/\s+/);
+          return words.some(w => w.length > 2 && new RegExp(w, "i").test(syntax));
+        });
+        const met = found.length >= stepNames.length * 0.6;
+        criteriaResults[criterion] = met;
+        if (!met) {
+          failures.push({
+            type: "missing-node",
+            description: `Only ${found.length}/${stepNames.length} major steps found`,
+            severity: "major",
+            suggestedFix: "Ensure all workflow steps from the input are in the diagram",
+          });
+        }
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("technical abbreviat") && lower.includes("preserved")) {
+      // Check for specific abbreviations listed in criterion
+      const abbrevs = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (abbrevs.length > 0) {
+        const found = abbrevs.filter(a => syntax.includes(a) || syntax.toLowerCase().includes(a.toLowerCase()));
+        criteriaResults[criterion] = found.length >= abbrevs.length * 0.5;
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("quality control") || lower.includes("checkpoint")) {
+      // Check for QC-related content (diamond shapes, QC labels, checkpoints)
+      const hasQC = /QC|quality|check|validate|verify|\{.*\?.*\}|pass|fail/i.test(syntax);
+      criteriaResults[criterion] = hasQC;
+    } else if (lower.includes("chemical") || lower.includes("temperature") || lower.includes("annotation")) {
+      // Check for chemical/temperature annotations from input
+      const hasChem = /\d+°C|buffer|RIPA|DTT|IAA|trypsin|mL|μ[LMg]/i.test(syntax);
+      criteriaResults[criterion] = hasChem;
+    } else if (lower.includes("sequential workflow") || (lower.includes("workflow") && lower.includes("clear"))) {
+      const hasDirection = /^(graph|flowchart)\s+(TD|TB|LR)/m.test(syntax);
+      const arrowCount = (syntax.match(/-->|==>|-\.->/g) ?? []).length;
+      criteriaResults[criterion] = hasDirection && arrowCount >= 4;
+    } else if (lower.includes("signal") && lower.includes("reception") && lower.includes("response")) {
+      // Check for signaling pathway flow direction
+      const hasReception = /recept|ligand|signal|bind/i.test(syntax);
+      const hasResponse = /response|express|transcript|output|effect/i.test(syntax);
+      criteriaResults[criterion] = hasReception && hasResponse;
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
