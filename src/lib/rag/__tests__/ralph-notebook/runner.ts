@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck — modules not yet implemented; will be enabled when RAG pipeline is complete
 /**
  * RALPH Notebook Test Runner
  *
