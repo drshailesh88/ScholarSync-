@@ -145,6 +145,37 @@ function validateMermaidSyntax(syntax: string, expectedType: string): {
   } else if (expectedType === "mindmap") {
     const entries = trimmed.split("\n").filter(l => l.trim() && !l.trim().startsWith("mindmap"));
     nodeCount = entries.length;
+  } else if (expectedType === "pie") {
+    // Count pie slices (lines with "label" : value)
+    const slices = trimmed.match(/"[^"]+"\s*:\s*[\d.]+/g);
+    nodeCount = slices?.length ?? 0;
+  } else if (expectedType === "erDiagram") {
+    // Count entity names (lines with ENTITY_NAME {)
+    const entities = new Set(trimmed.match(/^\s*(\w+)\s*\{/gm)?.map(m => m.trim().replace(/\s*\{/, "")) ?? []);
+    // Also count entities in relationship lines (A ||--o{ B)
+    const relEntities = trimmed.match(/(\w+)\s*\|/g)?.map(m => m.replace(/\s*\|/, "")) ?? [];
+    for (const e of relEntities) entities.add(e);
+    nodeCount = entities.size;
+  } else if (expectedType === "stateDiagram") {
+    // Count unique states
+    const stateMatches = trimmed.match(/(?:state\s+"[^"]*"\s+as\s+(\w+))|(\w+)\s*-->/g) ?? [];
+    const states = new Set<string>();
+    for (const m of stateMatches) {
+      const asMatch = m.match(/state\s+"[^"]*"\s+as\s+(\w+)/);
+      if (asMatch) states.add(asMatch[1]);
+      const arrowMatch = m.match(/(\w+)\s*-->/);
+      if (arrowMatch) states.add(arrowMatch[1]);
+    }
+    nodeCount = states.size;
+  } else if (expectedType === "gantt") {
+    // Count task lines in gantt
+    const taskLines = trimmed.split("\n").filter(l =>
+      /:\s*\w+,/.test(l) || /:\s*\d{4}/.test(l) || /:\s*crit/.test(l) || /:\s*done/.test(l) || /:\s*active/.test(l)
+    );
+    nodeCount = taskLines.length;
+  } else if (expectedType === "sequence") {
+    const participants = trimmed.match(/participant\s+\w+/gi);
+    nodeCount = participants?.length ?? 0;
   }
 
   // Check for common syntax errors
@@ -227,7 +258,8 @@ function assessQuality(
       }
     } else if (lower.includes("truncat")) {
       // Check for truncated labels (labels shorter than 3 chars or ending in ...)
-      const labels = syntax.match(/\[([^\]]+)\]/g)?.map(m => m.slice(1, -1)) ?? [];
+      // Filter out Mermaid special markers like [*] (state diagram start/end)
+      const labels = syntax.match(/\[([^\]]+)\]/g)?.map(m => m.slice(1, -1)).filter(l => l !== "*") ?? [];
       const truncated = labels.filter(l => l.endsWith("...") || l.length < 3);
       const met = truncated.length === 0;
       criteriaResults[criterion] = met;
@@ -328,6 +360,18 @@ function assessQuality(
       // Also check if multiple "Site" tasks exist (parallel enrollment)
       const hasSites = (syntax.match(/site\s*\d/gi) ?? []).length >= 2;
       criteriaResults[criterion] = taskLines.length >= 5 || hasSites;
+    } else if (lower.includes("exclusion") || lower.includes("side branch")) {
+      // For PRISMA-style: check for exclusion side branches
+      const hasExclusion = /exclu/i.test(syntax);
+      criteriaResults[criterion] = hasExclusion;
+      if (!hasExclusion) {
+        failures.push({
+          type: "missing-data",
+          description: "No exclusion branches found in diagram",
+          severity: "major",
+          suggestedFix: "Add side branches showing exclusion reasons",
+        });
+      }
     } else if ((lower.includes("branch") || lower.includes("parallel") || lower.includes("converge")) && testCase.expectedDiagramType !== "gantt") {
       // Flowchart: check for branching patterns (multiple arrows from one node)
       const lines = syntax.split("\n");
@@ -347,18 +391,6 @@ function assessQuality(
           description: "No branching pattern detected — no node has 2+ outgoing arrows",
           severity: "major",
           suggestedFix: "Ensure the AI generates branch points where the input describes parallel paths",
-        });
-      }
-    } else if (lower.includes("exclusion") || lower.includes("side branch")) {
-      // For PRISMA-style: check for exclusion side branches
-      const hasExclusion = /exclu/i.test(syntax);
-      criteriaResults[criterion] = hasExclusion;
-      if (!hasExclusion) {
-        failures.push({
-          type: "missing-data",
-          description: "No exclusion branches found in diagram",
-          severity: "major",
-          suggestedFix: "Add side branches showing exclusion reasons",
         });
       }
     } else if (lower.includes("phase") || lower.includes("period") || lower.includes("section")) {
@@ -503,6 +535,134 @@ function assessQuality(
     } else if (lower.includes("section grouping") || lower.includes("section") && lower.includes("visible")) {
       const hasSections = /section\s+/i.test(syntax);
       criteriaResults[criterion] = hasSections;
+    // --- Pie chart heuristics ---
+    } else if (lower.includes("budget") || (lower.includes("categor") && lower.includes("present"))) {
+      // Pie: check for category labels in slices
+      const categoryNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (categoryNames.length > 0) {
+        const found = categoryNames.filter(name => {
+          const words = name.split(/\s+/);
+          return words.some(w => new RegExp(w, "i").test(syntax));
+        });
+        criteriaResults[criterion] = found.length >= categoryNames.length * 0.7;
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("percentage") && lower.includes("correct")) {
+      // Pie: check that percentages are present and sum correctly
+      const percentages = syntax.match(/:\s*([\d.]+)/g)?.map(m => parseFloat(m.replace(":", "").trim())) ?? [];
+      const sum = percentages.reduce((a, b) => a + b, 0);
+      criteriaResults[criterion] = Math.abs(sum - 100) < 2 && percentages.length >= 3;
+      if (!criteriaResults[criterion]) {
+        failures.push({
+          type: "missing-data",
+          description: `Percentages sum to ${sum}% (expected ~100%), found ${percentages.length} slices`,
+          severity: "major",
+          suggestedFix: "Ensure all pie chart percentages sum to approximately 100%",
+        });
+      }
+    } else if (lower.includes("largest") && lower.includes("slice")) {
+      // Pie: check that the largest slice matches expected
+      const sliceMatches = [...syntax.matchAll(/"([^"]+)"\s*:\s*([\d.]+)/g)];
+      if (sliceMatches.length > 0) {
+        const largest = sliceMatches.reduce((max, m) => parseFloat(m[2]) > parseFloat(max[2]) ? m : max);
+        // Check if the criterion mentions the expected label
+        const expectedLabel = criterion.match(/is\s+(\w+)/i)?.[1] ?? "";
+        criteriaResults[criterion] = expectedLabel ? new RegExp(expectedLabel, "i").test(largest[1]) : parseFloat(largest[2]) >= 40;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    // --- ER diagram heuristics ---
+    } else if (lower.includes("entit") && lower.includes("present")) {
+      // ER: check for entity names listed in criterion
+      const entityNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (entityNames.length > 0) {
+        const found = entityNames.filter(name => new RegExp(name.replace(/\s+/g, "\\s*"), "i").test(syntax));
+        const met = found.length >= entityNames.length * 0.7;
+        criteriaResults[criterion] = met;
+        if (!met) {
+          failures.push({
+            type: "missing-node",
+            description: `Only ${found.length}/${entityNames.length} entities found: missing ${entityNames.filter(n => !found.includes(n)).join(", ")}`,
+            severity: "major",
+            suggestedFix: "Ensure all entities from the input are included in the ER diagram",
+          });
+        }
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("primary key") || lower.includes("pk")) {
+      // ER: check for PK annotations
+      const hasPK = /PK|primary|pk\b/i.test(syntax) || /\w+_id\b/i.test(syntax);
+      criteriaResults[criterion] = hasPK;
+    } else if (lower.includes("foreign key") && lower.includes("relationship")) {
+      // ER: check for relationship lines with FK pattern
+      const hasRelationships = /\|[|o{]--|--[|o{]\|/g.test(syntax) || /FK|foreign/i.test(syntax);
+      criteriaResults[criterion] = hasRelationships;
+    } else if (lower.includes("cardinality")) {
+      // ER: check for cardinality notation (||, o{, |{, etc.)
+      const hasCardinality = /\|\||\|o|o\{|\|\{|o\||\}o|\}|/g.test(syntax);
+      criteriaResults[criterion] = hasCardinality;
+    } else if (lower.includes("attribute") && lower.includes("name")) {
+      // ER: check for attributes inside entity blocks
+      const attributeBlocks = syntax.match(/\{[^}]+\}/g) ?? [];
+      const hasAttributes = attributeBlocks.some(block => block.split("\n").filter(l => l.trim()).length >= 3);
+      criteriaResults[criterion] = hasAttributes;
+    // --- State diagram heuristics ---
+    } else if (lower.includes("state") && lower.includes("present")) {
+      // State: check for state declarations or transitions
+      const stateCount = criterion.match(/(\d+)\s+state/i);
+      const expected = stateCount ? parseInt(stateCount[1]) : 5;
+      // Count unique state names from transitions and declarations
+      const stateNames = new Set<string>();
+      for (const m of syntax.matchAll(/(?:state\s+"([^"]+)")|(\w+)\s*-->/g)) {
+        if (m[1]) stateNames.add(m[1]);
+        if (m[2] && m[2] !== "state") stateNames.add(m[2]);
+      }
+      for (const m of syntax.matchAll(/-->\s*(\w+)/g)) {
+        stateNames.add(m[1]);
+      }
+      const met = stateNames.size >= expected * 0.6;
+      criteriaResults[criterion] = met;
+      if (!met) {
+        failures.push({
+          type: "missing-node",
+          description: `Expected ~${expected} states, found ${stateNames.size}`,
+          severity: "major",
+          suggestedFix: "Ensure all states from the input are declared in the state diagram",
+        });
+      }
+    } else if (lower.includes("bidirectional") || lower.includes("<->")) {
+      // State: check for bidirectional transitions (A --> B and B --> A)
+      const transitions = [...syntax.matchAll(/(\w+)\s*-->\s*(\w+)/g)];
+      let hasBidirectional = false;
+      for (const t of transitions) {
+        const reverse = transitions.find(r => r[1] === t[2] && r[2] === t[1]);
+        if (reverse) { hasBidirectional = true; break; }
+      }
+      criteriaResults[criterion] = hasBidirectional;
+    } else if (lower.includes("multiple outgoing") || lower.includes("multiple transition")) {
+      // State: check for a state with 3+ outgoing transitions
+      const transitions = [...syntax.matchAll(/(\w+)\s*-->\s*(\w+)/g)];
+      const outCount: Record<string, number> = {};
+      for (const t of transitions) {
+        outCount[t[1]] = (outCount[t[1]] ?? 0) + 1;
+      }
+      const hasMultiple = Object.values(outCount).some(c => c >= 3);
+      criteriaResults[criterion] = hasMultiple;
+    } else if (lower.includes("resubmission loop") || lower.includes("revision") && lower.includes("loop")) {
+      // State: check for revision cycle (A -> B -> C -> A pattern)
+      const hasLoop = /resubmit|revision|revise/i.test(syntax);
+      const transitions = [...syntax.matchAll(/(\w+)\s*-->\s*(\w+)/g)];
+      // Check for cycle: any state that is both source and target in different transitions
+      const sources = new Set(transitions.map(t => t[1]));
+      const targets = new Set(transitions.map(t => t[2]));
+      const cycleNodes = [...sources].filter(s => targets.has(s));
+      criteriaResults[criterion] = hasLoop || cycleNodes.length >= 2;
+    } else if (lower.includes("terminal") && lower.includes("state")) {
+      // State: check for terminal states (states with no outgoing transitions, or [*] end)
+      const hasEnd = /\[\*\]|\[end\]|published|rejected|withdrawn/i.test(syntax);
+      criteriaResults[criterion] = hasEnd;
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -564,7 +724,7 @@ RULES:
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt: testCase.input,
-        preferredType: testCase.expectedDiagramType === "flowchart" ? "flowchart" : undefined,
+        preferredType: testCase.expectedDiagramType,
       }),
     });
 

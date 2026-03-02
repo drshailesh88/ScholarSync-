@@ -1,0 +1,19 @@
+{
+  "id": "ralph-009",
+  "name": "Manuscript Submission State Diagram",
+  "category": "data_heavy",
+  "difficulty": "medium",
+  "input": "Create a state diagram for a research manuscript lifecycle. States: Draft, Internal Review, Submitted, Under Review, Revisions Requested, Resubmitted, Accepted, In Production, Published, Rejected, Withdrawn. Transitions: Draft -> Internal Review (submit for co-author review). Internal Review -> Draft (revisions needed) or Internal Review -> Submitted (approved by all co-authors). Submitted -> Under Review (editor assigns reviewers). Under Review -> Revisions Requested (minor or major revisions) or Under Review -> Accepted (no revisions needed) or Under Review -> Rejected. Revisions Requested -> Resubmitted (author submits revised version). Resubmitted -> Under Review (re-review). Accepted -> In Production (copyediting and typesetting). In Production -> Published. Any state except Published can transition to Withdrawn.",
+  "expectedDiagramType": "stateDiagram",
+  "expectedNodeCount": 11,
+  "qualityCriteria": [
+    "All 11 states present",
+    "Bidirectional transitions shown (Draft <-> Internal Review)",
+    "Multiple outgoing transitions from Under Review (Revisions, Accepted, Rejected)",
+    "Resubmission loop visible (Revisions -> Resubmitted -> Under Review)",
+    "Terminal states clear (Published, Rejected, Withdrawn)",
+    "No truncated state names",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Clean state diagram with rounded rectangles for states, labeled transitions, start/end markers, decision branching from Under Review, loop for revision cycle."
+}

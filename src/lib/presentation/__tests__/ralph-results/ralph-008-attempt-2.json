@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-008",
+  "attempt": 2,
+  "timestamp": "2026-03-02T11:33:05.060Z",
+  "mermaidSyntax": "erDiagram\n    PATIENT ||--o{ ENROLLMENT : \"enrolls in\"\n    STUDY ||--o{ ENROLLMENT : \"includes\"\n    ENROLLMENT ||--o{ VISIT : \"schedules\"\n    VISIT ||--o{ LAB_RESULT : \"produces\"\n    ENROLLMENT ||--o{ ADVERSE_EVENT : \"records\"\n\n    PATIENT {\n        int patient_id PK\n        string name\n        date dob\n        string sex\n        string ethnicity\n    }\n\n    STUDY {\n        int study_id PK\n        string title\n        string phase\n        date start_date\n        date end_date\n        string PI_name\n    }\n\n    ENROLLMENT {\n        int enrollment_id PK\n        int patient_id FK\n        int study_id FK\n        date consent_date\n        string status\n        string arm\n    }\n\n    VISIT {\n        int visit_id PK\n        int enrollment_id FK\n        date visit_date\n        string visit_type\n        string location\n    }\n\n    LAB_RESULT {\n        int result_id PK\n        int visit_id FK\n        string test_name\n        string value\n        string unit\n        string reference_range\n        string flag\n    }\n\n    ADVERSE_EVENT {\n        int ae_id PK\n        int enrollment_id FK\n        string description\n        string severity\n        date onset_date\n        date resolution_date\n        boolean related_to_study\n    }",
+  "diagramType": "erDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 6 entities present (Patient, Study, Enrollment, Visit, LabResult, AdverseEvent)": true,
+    "Primary keys marked for each entity": true,
+    "Foreign key relationships shown correctly": true,
+    "Cardinality notation visible (one-to-many relationships)": true,
+    "Attribute names included in entities": true,
+    "No truncated entity or attribute names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

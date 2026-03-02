@@ -1,0 +1,28 @@
+{
+  "testId": "ralph-002",
+  "attempt": 11,
+  "timestamp": "2026-03-02T11:11:28.935Z",
+  "mermaidSyntax": "graph TD\n  subgraph ID[\"IDENTIFICATION\"]\n    A[\"Records identified from databases<br/>(n = 5,226)\"]\n    B[\"PubMed: 2,847\"]\n    C[\"Embase: 1,923\"]\n    D[\"Cochrane: 456\"]\n    E[\"Duplicate records removed<br/>(n = 1,156)\"]\n  end\n  \n  subgraph SC[\"SCREENING\"]\n    F[\"Records screened<br/>(n = 4,070)\"]\n    G[\"Records excluded by title/abstract<br/>(n = 3,891)\"]\n  end\n  \n  subgraph EL[\"ELIGIBILITY\"]\n    H[\"Full-text articles assessed<br/>(n = 179)\"]\n    I[\"Full-text excluded (n = 142)<br/>• Wrong outcome: 67<br/>• Wrong population: 38<br/>• Wrong intervention: 22<br/>• Conference abstracts: 15\"]\n  end\n  \n  subgraph IN[\"INCLUDED\"]\n    J[\"Studies in qualitative synthesis<br/>(n = 37)\"]\n    K[\"Studies in meta-analysis<br/>(n = 28)\"]\n  end\n  \n  A --> F\n  E -.-> F\n  F --> H\n  G -.-> F\n  H --> J\n  I -.-> H\n  J --> K\n  \n  style A fill:#3b82f6,stroke:#1e40af,color:#fff\n  style F fill:#3b82f6,stroke:#1e40af,color:#fff\n  style H fill:#3b82f6,stroke:#1e40af,color:#fff\n  style J fill:#10b981,stroke:#047857,color:#fff\n  style K fill:#10b981,stroke:#047857,color:#fff\n  style G fill:#ef4444,stroke:#b91c1c,color:#fff\n  style I fill:#ef4444,stroke:#b91c1c,color:#fff\n  style E fill:#f59e0b,stroke:#d97706,color:#000",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "missing-node",
+      "description": "No branching pattern detected — no node has 2+ outgoing arrows",
+      "severity": "major",
+      "suggestedFix": "Ensure the AI generates branch points where the input describes parallel paths"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Four clear phases: Identification, Screening, Eligibility, Included": true,
+    "All numeric values present and correct": true,
+    "Exclusion reasons shown as side branches with counts": false,
+    "Database sources listed separately": true,
+    "Duplicate removal step clearly shown": true,
+    "Color coding distinguishes phases (blue, yellow, orange, green)": true,
+    "Long text like 'SGLT2 inhibitors' not truncated": true,
+    "Valid Mermaid syntax": true
+  },
+  "overallScore": 8
+}

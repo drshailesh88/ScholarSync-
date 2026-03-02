@@ -1,0 +1,27 @@
+{
+  "testId": "ralph-009",
+  "attempt": 1,
+  "timestamp": "2026-03-02T11:18:49.557Z",
+  "mermaidSyntax": "stateDiagram-v2\n  [*] --> Draft\n  \n  Draft --> InternalReview: Submit for co-author review\n  InternalReview --> Draft: Revisions needed\n  InternalReview --> Submitted: Approved by all co-authors\n  \n  Submitted --> UnderReview: Editor assigns reviewers\n  \n  UnderReview --> RevisionsRequested: Minor/major revisions\n  UnderReview --> Accepted: No revisions needed\n  UnderReview --> Rejected: Manuscript declined\n  \n  RevisionsRequested --> Resubmitted: Submit revised version\n  Resubmitted --> UnderReview: Re-review begins\n  \n  Accepted --> InProduction: Copyediting & typesetting\n  InProduction --> Published: Final publication\n  \n  Draft --> Withdrawn\n  InternalReview --> Withdrawn\n  Submitted --> Withdrawn\n  UnderReview --> Withdrawn\n  RevisionsRequested --> Withdrawn\n  Resubmitted --> Withdrawn\n  Accepted --> Withdrawn\n  InProduction --> Withdrawn\n  Rejected --> Withdrawn\n  \n  Published --> [*]\n  Withdrawn --> [*]\n  Rejected --> [*]",
+  "diagramType": "stateDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "truncation",
+      "description": "4 labels appear truncated: *, *, *",
+      "severity": "major",
+      "suggestedFix": "Increase node width or use multi-line labels with <br/> tags"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "All 11 states present": true,
+    "Bidirectional transitions shown (Draft <-> Internal Review)": true,
+    "Multiple outgoing transitions from Under Review (Revisions, Accepted, Rejected)": true,
+    "Resubmission loop visible (Revisions -> Resubmitted -> Under Review)": true,
+    "Terminal states clear (Published, Rejected, Withdrawn)": true,
+    "No truncated state names": false,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 8
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ralph-008",
+  "name": "Clinical Research Database ER Diagram",
+  "category": "data_heavy",
+  "difficulty": "hard",
+  "input": "Create an ER diagram for a clinical research database. Entities: Patient (patient_id PK, name, dob, sex, ethnicity), Study (study_id PK, title, phase, start_date, end_date, PI_name), Enrollment (enrollment_id PK, patient_id FK, study_id FK, consent_date, status, arm), Visit (visit_id PK, enrollment_id FK, visit_date, visit_type, location), LabResult (result_id PK, visit_id FK, test_name, value, unit, reference_range, flag), AdverseEvent (ae_id PK, enrollment_id FK, description, severity, onset_date, resolution_date, related_to_study). Relationships: Patient has many Enrollments. Study has many Enrollments. Enrollment has many Visits. Visit has many LabResults. Enrollment has many AdverseEvents.",
+  "expectedDiagramType": "erDiagram",
+  "expectedNodeCount": 6,
+  "qualityCriteria": [
+    "All 6 entities present (Patient, Study, Enrollment, Visit, LabResult, AdverseEvent)",
+    "Primary keys marked for each entity",
+    "Foreign key relationships shown correctly",
+    "Cardinality notation visible (one-to-many relationships)",
+    "Attribute names included in entities",
+    "No truncated entity or attribute names",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Standard crow's foot ER diagram with 6 entities, PK/FK annotations, cardinality markers on relationship lines, clean layout with no crossing lines."
+}
