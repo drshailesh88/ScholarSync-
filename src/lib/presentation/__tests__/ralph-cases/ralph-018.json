@@ -1,0 +1,20 @@
+{
+  "id": "ralph-018",
+  "name": "Multi-Omics Integration Workflow with Crosslinks",
+  "category": "class_diagrams",
+  "difficulty": "hard",
+  "input": "Create a flowchart showing a multi-omics data integration study. Three parallel data streams: Genomics (WGS sequencing → Variant calling → SNP/Indel annotation), Transcriptomics (RNA-seq → Differential expression → Pathway enrichment), Proteomics (Mass spec → Protein quantification → Post-translational modifications). All three streams converge at Integration Hub which performs: multi-omics factor analysis (MOFA), network analysis, and causal inference. From Integration Hub, branch to: Biomarker Discovery (candidate selection → validation cohort → clinical utility), Mechanism Insight (pathway modeling → drug target identification), and Publication (manuscript → peer review → journal). Cross-links: Genomics variants inform Transcriptomics DE analysis. Proteomics PTMs validate Transcriptomics findings. Biomarker Discovery feeds back to all three omics streams for targeted validation.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 15,
+  "qualityCriteria": [
+    "Three parallel omics streams visible (Genomics, Transcriptomics, Proteomics)",
+    "All three streams converge at Integration Hub",
+    "Post-integration branches present (Biomarker, Mechanism, Publication)",
+    "Cross-links between streams shown (Genomics->Transcriptomics, Proteomics->Transcriptomics)",
+    "Feedback loop from Biomarker Discovery back to omics streams",
+    "Technical terms preserved (MOFA, WGS, RNA-seq, PTMs, SNP/Indel)",
+    "No truncated labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Complex flowchart with 3 parallel columns converging, cross-links as dashed arrows, subgraphs for each omics stream, professional bioinformatics workflow appearance."
+}

@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-018",
+  "attempt": 7,
+  "timestamp": "2026-03-02T13:32:32.131Z",
+  "mermaidSyntax": "graph TB\n  subgraph GEN[\"Genomics Stream\"]\n    G1[WGS Sequencing] --> G2[Variant Calling]\n    G2 --> G3[SNP/Indel Annotation]\n  end\n  subgraph TRA[\"Transcriptomics Stream\"]\n    T1[RNA-seq] --> T2[Differential Expression]\n    T2 --> T3[Pathway Enrichment]\n  end\n  subgraph PRO[\"Proteomics Stream\"]\n    P1[Mass Spec] --> P2[Protein Quantification]\n    P2 --> P3[Post-translational Modifications]\n  end\n  G3 --> INT[Integration Hub]\n  T3 --> INT\n  P3 --> INT\n  G2 -.->|Variants inform DE| T2\n  P3 -.->|Validates findings| T3\n  subgraph HUB[\"Integration Hub Functions\"]\n    INT --> MOFA[Multi-omics Factor Analysis]\n    INT --> NET[Network Analysis]\n    INT --> CAU[Causal Inference]\n  end\n  MOFA & NET & CAU --> OUT\n  OUT[Integrated Results]\n  OUT --> BIO\n  OUT --> MEC\n  OUT --> PUB\n  subgraph DISC[\"Biomarker Discovery\"]\n    BIO[Candidate Selection] --> VAL[Validation Cohort]\n    VAL --> CLN[Clinical Utility]\n  end\n  subgraph MECH[\"Mechanism Insight\"]\n    MEC[Pathway Modeling] --> DRG[Drug Target ID]\n  end\n  subgraph PUBL[\"Publication\"]\n    PUB[Manuscript] --> REV[Peer Review]\n    REV --> JRN[Journal]\n  end\n  CLN -.->|Feedback| G1\n  CLN -.->|Feedback| T1\n  CLN -.->|Feedback| P1\n  style INT fill:#6366f1,stroke:#4338ca,color:#fff\n  style OUT fill:#8b5cf6,stroke:#6d28d9,color:#fff\n  style CLN fill:#10b981,stroke:#059669,color:#fff",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Three parallel omics streams visible (Genomics, Transcriptomics, Proteomics)": true,
+    "All three streams converge at Integration Hub": true,
+    "Post-integration branches present (Biomarker, Mechanism, Publication)": true,
+    "Cross-links between streams shown (Genomics->Transcriptomics, Proteomics->Transcriptomics)": true,
+    "Feedback loop from Biomarker Discovery back to omics streams": false,
+    "Technical terms preserved (MOFA, WGS, RNA-seq, PTMs, SNP/Indel)": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 9
+}

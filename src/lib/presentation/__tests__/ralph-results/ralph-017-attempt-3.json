@@ -1,0 +1,19 @@
+{
+  "testId": "ralph-017",
+  "attempt": 3,
+  "timestamp": "2026-03-02T13:16:34.945Z",
+  "mermaidSyntax": "classDiagram\n    class EthicalPrinciple {\n        +name: String\n        +description: String\n        +evaluate()\n        +report_violation()\n    }\n    \n    class Beneficence {\n        +risk_benefit_ratio: Float\n        +assess_harm()\n        +assess_benefit()\n    }\n    \n    class NonMaleficence {\n        +harm_threshold: Float\n        +identify_risks()\n    }\n    \n    class Autonomy {\n        +consent_type: String\n        +verify_informed_consent()\n        +assess_capacity()\n    }\n    \n    class Justice {\n        +selection_criteria: List\n        +evaluate_fair_selection()\n        +assess_burden_distribution()\n    }\n    \n    class IRBReview {\n        +protocol_id: String\n        +review_type: String\n        +committee_members: List\n        +full_board_review()\n        +expedited_review()\n        +exempt_determination()\n    }\n    \n    EthicalPrinciple <|-- Beneficence\n    EthicalPrinciple <|-- NonMaleficence\n    EthicalPrinciple <|-- Autonomy\n    EthicalPrinciple <|-- Justice\n    \n    IRBReview --> Beneficence : uses\n    IRBReview --> NonMaleficence : uses\n    IRBReview --> Autonomy : uses\n    IRBReview --> Justice : uses",
+  "diagramType": "classDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 6 classes present (EthicalPrinciple, Beneficence, NonMaleficence, Autonomy, Justice, IRBReview)": true,
+    "Inheritance relationships shown (4 subclasses extend EthicalPrinciple)": true,
+    "IRBReview association with subclasses shown": true,
+    "Attributes and methods present in each class": true,
+    "No truncated class names (NonMaleficence fully spelled)": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

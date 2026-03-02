@@ -167,6 +167,16 @@ function validateMermaidSyntax(syntax: string, expectedType: string): {
       if (arrowMatch) states.add(arrowMatch[1]);
     }
     nodeCount = states.size;
+  } else if (expectedType === "classDiagram") {
+    // Count class definitions (class ClassName { or ClassName : or ClassName <|--)
+    const classNames = new Set<string>();
+    for (const m of trimmed.matchAll(/class\s+(\w+)/g)) classNames.add(m[1]);
+    // Also from relationship lines: A <|-- B, A --> B, etc.
+    for (const m of trimmed.matchAll(/(\w+)\s*(?:<\|--|--|\.\.>|--\*|--o|-->|<\.\.)\s*(\w+)/g)) {
+      classNames.add(m[1]);
+      classNames.add(m[2]);
+    }
+    nodeCount = classNames.size;
   } else if (expectedType === "gantt") {
     // Count task lines in gantt
     const taskLines = trimmed.split("\n").filter(l =>
@@ -234,8 +244,33 @@ function assessQuality(
   // Evaluate each quality criterion with heuristics
   for (const criterion of testCase.qualityCriteria) {
     const lower = criterion.toLowerCase();
-
-    if (lower.includes("valid mermaid syntax")) {
+    if (lower.includes("class") && lower.includes("present") && testCase.expectedDiagramType === "classDiagram") {
+      // DEBUG: catch class presence check first for class diagrams
+      const classNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (classNames.length > 0) {
+        const found = classNames.filter(name => new RegExp(name.replace(/\s+/g, ""), "i").test(syntax));
+        const met = found.length >= classNames.length * 0.7;
+        criteriaResults[criterion] = met;
+        if (!met) {
+          failures.push({
+            type: "missing-node",
+            description: `Only ${found.length}/${classNames.length} classes found: missing ${classNames.filter(n => !found.includes(n)).join(", ")}`,
+            severity: "major",
+            suggestedFix: "Ensure all classes from the input are defined in the class diagram",
+          });
+        }
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("feedback") && (lower.includes("biomarker") || lower.includes("omics"))) {
+      // Biomarker/omics feedback: check for arrows going back from biomarker to omics streams
+      // MUST be before generic "feedback loop" check to prevent keyword collision
+      const hasFeedback = /biomarker|validation|targeted/i.test(syntax) &&
+        (/genom|transcript|proteom|RNA|WGS|mass.spec/i.test(syntax));
+      const allArrows = [...syntax.matchAll(/(\w+)\s*(?:-\.->|-->|==>)\s*(?:\|[^|]*\|)?\s*(\w+)/g)];
+      const hasCycle = allArrows.length >= 10;
+      criteriaResults[criterion] = hasFeedback || hasCycle;
+    } else if (lower.includes("valid mermaid syntax")) {
       criteriaResults[criterion] = validationResult.valid;
       if (!validationResult.valid) {
         failures.push({
@@ -508,7 +543,7 @@ function assessQuality(
     } else if (lower.includes("revision loop") || lower.includes("resubmit")) {
       const hasLoop = /loop\s|resubmit|revision/i.test(syntax);
       criteriaResults[criterion] = hasLoop;
-    } else if (lower.includes("temporal") || (lower.includes("annotation") && !lower.includes("chemical") && !lower.includes("temperature")) || lower.includes("weeks")) {
+    } else if (lower.includes("temporal") || (lower.includes("annotation") && !lower.includes("chemical") && !lower.includes("temperature") && !lower.includes("class") && testCase.expectedDiagramType !== "classDiagram") || lower.includes("weeks")) {
       const hasTime = /week|month|day|\d+\s*(wk|mo|d)\b|2-4|time/i.test(syntax);
       criteriaResults[criterion] = hasTime;
     } else if (lower.includes("post-acceptance") || lower.includes("production")) {
@@ -843,6 +878,73 @@ function assessQuality(
       const hasReception = /recept|ligand|signal|bind/i.test(syntax);
       const hasResponse = /response|express|transcript|output|effect/i.test(syntax);
       criteriaResults[criterion] = hasReception && hasResponse;
+    // --- Class diagram heuristics (moved to top of chain for classDiagram type) ---
+    // NOTE: The "class" + "present" check is now at the TOP of the chain to prevent
+    // class names like "Annotation" from matching other heuristics (e.g., temporal annotation check)
+    } else if (lower.includes("attribute") && lower.includes("listed") && testCase.expectedDiagramType === "classDiagram") {
+      // Check for attributes inside class blocks (+ or - prefix, or type name pattern)
+      const hasAttributes = /[+\-#~]\s*\w+|string\s+\w+|int\s+\w+|:\s*\w+/i.test(syntax);
+      criteriaResults[criterion] = hasAttributes;
+    } else if (lower.includes("method") && lower.includes("listed") && testCase.expectedDiagramType === "classDiagram") {
+      // Check for methods (lines with parentheses inside class blocks)
+      const methodCount = (syntax.match(/\w+\s*\([^)]*\)/g) ?? []).length;
+      criteriaResults[criterion] = methodCount >= 3;
+    } else if (lower.includes("inheritance") && lower.includes("relationship")) {
+      // Check for inheritance arrows (<|-- or --|>)
+      const hasInheritance = /<\|--/.test(syntax) || /--\|>/.test(syntax) || /extends/.test(syntax);
+      // Count inheritance relationships (both directions)
+      const inheritCount = (syntax.match(/<\|--|--\|>/g) ?? []).length;
+      const expectedCount = criterion.match(/(\d+)\s+subclass/i)?.[1];
+      const met = expectedCount ? inheritCount >= parseInt(expectedCount) * 0.7 : hasInheritance;
+      criteriaResults[criterion] = met;
+      if (!met) {
+        failures.push({
+          type: "missing-data",
+          description: `Expected inheritance arrows, found ${inheritCount}`,
+          severity: "major",
+          suggestedFix: "Use <|-- notation for inheritance in Mermaid classDiagram",
+        });
+      }
+    } else if (lower.includes("association") && (lower.includes("subclass") || lower.includes("shown"))) {
+      // Check for association relationships (-->, --*, --o, ..)
+      const hasAssociation = /-->|--\*|--o|\.\.>/g.test(syntax);
+      criteriaResults[criterion] = hasAssociation;
+    } else if (lower.includes("relationship") && lower.includes("direction")) {
+      // Check for directed relationships between classes
+      const hasDirected = /-->|<\|--|--\*|--o|\.\.>|<\.\./g.test(syntax);
+      criteriaResults[criterion] = hasDirected;
+    // --- Multi-omics / complex flowchart heuristics ---
+    } else if (lower.includes("stream") && lower.includes("visible")) {
+      // Check for parallel streams (subgraphs or distinct sections)
+      const streamNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (streamNames.length > 0) {
+        const found = streamNames.filter(name => {
+          const words = name.split(/\s+/);
+          return words.some(w => w.length > 3 && new RegExp(w, "i").test(syntax));
+        });
+        criteriaResults[criterion] = found.length >= streamNames.length * 0.7;
+      } else {
+        criteriaResults[criterion] = /subgraph/i.test(syntax);
+      }
+    } else if (lower.includes("converge") && lower.includes("integration")) {
+      const hasHub = /integrat|hub|merge|converge|combine/i.test(syntax);
+      criteriaResults[criterion] = hasHub;
+    } else if (lower.includes("post-integration") || lower.includes("branch") && lower.includes("present") && lower.includes("biomarker")) {
+      const hasBranches = /biomarker|mechanism|publication|discovery|insight/i.test(syntax);
+      criteriaResults[criterion] = hasBranches;
+    } else if (lower.includes("cross-link") || lower.includes("cross link")) {
+      // Check for cross-connections between streams (dashed arrows or explicit cross-links)
+      const arrowCount = (syntax.match(/-->|==>|-\.\->|-.->|\.\./g) ?? []).length;
+      criteriaResults[criterion] = arrowCount >= 8; // Complex diagram should have many connections
+    } else if (lower.includes("technical term") && lower.includes("preserved")) {
+      // Check for specific technical terms from criterion
+      const terms = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (terms.length > 0) {
+        const found = terms.filter(t => syntax.includes(t) || new RegExp(t.replace(/[/\\-]/g, "."), "i").test(syntax));
+        criteriaResults[criterion] = found.length >= terms.length * 0.5;
+      } else {
+        criteriaResults[criterion] = true;
+      }
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;

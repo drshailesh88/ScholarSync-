@@ -1,0 +1,18 @@
+{
+  "id": "ralph-017",
+  "name": "Research Ethics Taxonomy Class Hierarchy",
+  "category": "class_diagrams",
+  "difficulty": "medium",
+  "input": "Create a class diagram showing the taxonomy of research ethics concepts. Base class: EthicalPrinciple (attributes: name, description; methods: evaluate(), report_violation()). Subclasses: Beneficence (attributes: risk_benefit_ratio; methods: assess_harm(), assess_benefit()), NonMaleficence (attributes: harm_threshold; methods: identify_risks()), Autonomy (attributes: consent_type; methods: verify_informed_consent(), assess_capacity()), Justice (attributes: selection_criteria; methods: evaluate_fair_selection(), assess_burden_distribution()). Additional class: IRBReview (attributes: protocol_id, review_type, committee_members; methods: full_board_review(), expedited_review(), exempt_determination()). IRBReview uses all EthicalPrinciple subclasses for evaluation. Show inheritance from EthicalPrinciple to its 4 subclasses.",
+  "expectedDiagramType": "classDiagram",
+  "expectedNodeCount": 6,
+  "qualityCriteria": [
+    "All 6 classes present (EthicalPrinciple, Beneficence, NonMaleficence, Autonomy, Justice, IRBReview)",
+    "Inheritance relationships shown (4 subclasses extend EthicalPrinciple)",
+    "IRBReview association with subclasses shown",
+    "Attributes and methods present in each class",
+    "No truncated class names (NonMaleficence fully spelled)",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "UML class hierarchy with inheritance arrows pointing from subclasses to base class, IRBReview connected via association, all compartments visible."
+}
