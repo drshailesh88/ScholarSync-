@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-002",
+  "attempt": 10,
+  "timestamp": "2026-03-02T10:59:40.185Z",
+  "mermaidSyntax": "graph TB\n  subgraph IDENTIFICATION[IDENTIFICATION]\n    A[Records identified from databases:<br/>PubMed (n=2,847)<br/>Embase (n=1,923)<br/>Cochrane (n=456)]\n    B[Total records identified<br/>n=5,226]\n  end\n\n  subgraph SCREENING[SCREENING]\n    C[Duplicate records removed<br/>n=1,156]\n    D[Records screened<br/>n=4,070]\n    E[Records excluded by title/abstract<br/>n=3,891]\n  end\n\n  subgraph ELIGIBILITY[ELIGIBILITY]\n    F[Full-text articles assessed<br/>n=179]\n    G[Full-text excluded (n=142)<br/>• Wrong outcome: 67<br/>• Wrong population: 38<br/>• Wrong intervention: 22<br/>• Conference abstracts: 15]\n  end\n\n  subgraph INCLUDED[INCLUDED]\n    H[Studies in qualitative synthesis<br/>n=37]\n    I[Studies in meta-analysis<br/>n=28]\n  end\n\n  A --> B\n  B --> C\n  C --> D\n  D --> E\n  D --> F\n  F --> G\n  F --> H\n  H --> I\n\n  style A fill:#dbeafe,stroke:#3b82f6\n  style B fill:#bfdbfe,stroke:#3b82f6\n  style C fill:#fef3c7,stroke:#f59e0b\n  style D fill:#bfdbfe,stroke:#3b82f6\n  style E fill:#fee2e2,stroke:#ef4444\n  style F fill:#bfdbfe,stroke:#3b82f6\n  style G fill:#fee2e2,stroke:#ef4444\n  style H fill:#dcfce7,stroke:#22c55e\n  style I fill:#bbf7d0,stroke:#22c55e",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Four clear phases: Identification, Screening, Eligibility, Included": true,
+    "All numeric values present and correct": true,
+    "Exclusion reasons shown as side branches with counts": true,
+    "Database sources listed separately": true,
+    "Duplicate removal step clearly shown": true,
+    "Color coding distinguishes phases (blue, yellow, orange, green)": true,
+    "Long text like 'SGLT2 inhibitors' not truncated": true,
+    "Valid Mermaid syntax": true
+  },
+  "overallScore": 10
+}

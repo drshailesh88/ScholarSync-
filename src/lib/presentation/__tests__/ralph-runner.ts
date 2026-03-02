@@ -320,7 +320,15 @@ function assessQuality(
           suggestedFix: "Ensure mind map has root -> branch -> sub-branch depth",
         });
       }
-    } else if (lower.includes("branch") || lower.includes("parallel") || lower.includes("converge")) {
+    } else if (lower.includes("overlapping") && lower.includes("task") && testCase.expectedDiagramType === "gantt") {
+      // Gantt: parallel tasks — check for multiple tasks in enrollment section or overlapping date ranges
+      const taskLines = syntax.split("\n").filter(l =>
+        /:\s*\w+,/.test(l) || /:\s*\d{4}/.test(l) || /after\s+\w+/.test(l)
+      );
+      // Also check if multiple "Site" tasks exist (parallel enrollment)
+      const hasSites = (syntax.match(/site\s*\d/gi) ?? []).length >= 2;
+      criteriaResults[criterion] = taskLines.length >= 5 || hasSites;
+    } else if ((lower.includes("branch") || lower.includes("parallel") || lower.includes("converge")) && testCase.expectedDiagramType !== "gantt") {
       // Flowchart: check for branching patterns (multiple arrows from one node)
       const lines = syntax.split("\n");
       const sourceCounts: Record<string, number> = {};
@@ -489,14 +497,6 @@ function assessQuality(
       // Gantt: check for date-like patterns
       const hasDateRanges = /\d{4}-\d{2}-\d{2}|\d+[dw]|after\s+\w+/i.test(syntax);
       criteriaResults[criterion] = hasDateRanges;
-    } else if (lower.includes("overlapping") && lower.includes("task")) {
-      // Gantt: parallel tasks — check for multiple tasks in enrollment section or overlapping date ranges
-      const taskLines = syntax.split("\n").filter(l =>
-        /:\s*\w+,/.test(l) || /:\s*\d{4}/.test(l) || /after\s+\w+/.test(l)
-      );
-      // Also check if multiple "Site" tasks exist (parallel enrollment)
-      const hasSites = (syntax.match(/site\s*\d/gi) ?? []).length >= 2;
-      criteriaResults[criterion] = taskLines.length >= 5 || hasSites;
     } else if (lower.includes("milestone")) {
       const hasMilestones = /milestone|DSMB|crit\s|done\s/i.test(syntax);
       criteriaResults[criterion] = hasMilestones;

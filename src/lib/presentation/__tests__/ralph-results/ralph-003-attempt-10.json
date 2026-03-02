@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-003",
+  "attempt": 10,
+  "timestamp": "2026-03-02T11:01:22.639Z",
+  "mermaidSyntax": "graph LR\n  subgraph Screening[\"Screening Period<br/>Weeks -4 to 0\"]\n    A[Informed Consent<br/>Week -4] --> B[Eligibility Assessment]\n    B --> C[Baseline Measurements]\n  end\n  subgraph Treatment[\"Treatment Period<br/>Weeks 0-52\"]\n    C --> D{Randomization<br/>Week 0}\n    D -->|Treatment Arm| E[Drug X 10mg Daily]\n    D -->|Control Arm| F[Placebo]\n    E --> G[Follow-up Visits<br/>Weeks 4, 12, 26]\n    F --> G\n    G --> H[Primary Endpoint<br/>Week 52]\n  end\n  subgraph Extension[\"Extension Period<br/>Weeks 52-104\"]\n    H --> I[Optional Open-Label]\n    I --> J[Safety Follow-up<br/>Week 56]\n  end\n  style D fill:#f59e0b,stroke:#d97706,color:#000\n  style E fill:#3b82f6,stroke:#1e40af,color:#fff\n  style F fill:#ef4444,stroke:#b91c1c,color:#fff\n  style I fill:#6b7280,stroke:#4b5563,color:#fff,stroke-dasharray: 5 5",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Chronological sequence is clear (left-to-right or top-to-bottom)": true,
+    "Week numbers are visible at each stage": true,
+    "Randomization branch point shows two arms clearly": true,
+    "Follow-up visit timepoints are marked": true,
+    "Treatment vs Control arms are distinguishable": true,
+    "Extension period shown as optional/different styling": true,
+    "No overlapping text or labels": true,
+    "Valid Mermaid syntax": true
+  },
+  "overallScore": 10
+}
