@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, InfographicData, InfographicType, InfographicItem } from "@/types/presentation";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -72,6 +72,9 @@ export function BlockPropertyEditor() {
       break;
     case "nested_card":
       editor = <NestedCardEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
+    case "infographic":
+      editor = <InfographicEditor block={selectedBlock} onUpdate={onUpdate} />;
       break;
     default:
       editor = (
@@ -1240,6 +1243,159 @@ function AnimationSection({
             </div>
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// InfographicEditor — edit infographic type, items, colors
+// ---------------------------------------------------------------------------
+
+const INFOGRAPHIC_TYPE_OPTIONS: { value: InfographicType; label: string }[] = [
+  { value: "process_flow", label: "Process Flow" },
+  { value: "comparison", label: "Comparison" },
+  { value: "hierarchy", label: "Hierarchy" },
+  { value: "cycle", label: "Cycle" },
+  { value: "funnel", label: "Funnel" },
+  { value: "pyramid", label: "Pyramid" },
+  { value: "venn", label: "Venn Diagram" },
+  { value: "matrix", label: "2×2 Matrix" },
+  { value: "radial", label: "Radial / Hub" },
+  { value: "stats_row", label: "Stats Row" },
+  { value: "checklist", label: "Checklist" },
+  { value: "cause_effect", label: "Cause & Effect" },
+];
+
+const COLOR_SCHEME_OPTIONS = [
+  { value: "theme", label: "Theme" },
+  { value: "blue", label: "Blue" },
+  { value: "green", label: "Green" },
+  { value: "purple", label: "Purple" },
+  { value: "orange", label: "Orange" },
+  { value: "rainbow", label: "Rainbow" },
+];
+
+function InfographicEditor({
+  block,
+  onUpdate,
+}: {
+  block: ContentBlock & { type: "infographic" };
+  onUpdate: (b: ContentBlock) => void;
+}) {
+  const data = block.data as InfographicData;
+
+  function updateData(partial: Partial<InfographicData>) {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  }
+
+  function updateItem(index: number, partial: Partial<InfographicItem>) {
+    const items = [...data.items];
+    items[index] = { ...items[index], ...partial };
+    updateData({ items });
+  }
+
+  function addItem() {
+    updateData({
+      items: [...data.items, { label: `Item ${data.items.length + 1}`, description: "" }],
+    });
+  }
+
+  function removeItem(index: number) {
+    updateData({ items: data.items.filter((_, i) => i !== index) });
+  }
+
+  return (
+    <div className="space-y-3 px-3 py-3">
+      <FieldLabel>Infographic</FieldLabel>
+
+      {/* Type selector */}
+      <div>
+        <FieldLabel>Visual Type</FieldLabel>
+        <FieldSelect
+          value={data.infographicType}
+          onChange={(v) => updateData({ infographicType: v as InfographicType })}
+          options={INFOGRAPHIC_TYPE_OPTIONS}
+        />
+      </div>
+
+      {/* Title */}
+      <div>
+        <FieldLabel>Title</FieldLabel>
+        <FieldInput
+          value={data.title ?? ""}
+          onChange={(v) => updateData({ title: v })}
+          placeholder="Visual title"
+        />
+      </div>
+
+      {/* Color scheme */}
+      <div>
+        <FieldLabel>Color Scheme</FieldLabel>
+        <FieldSelect
+          value={data.colorScheme ?? "theme"}
+          onChange={(v) => updateData({ colorScheme: v as InfographicData["colorScheme"] })}
+          options={COLOR_SCHEME_OPTIONS}
+        />
+      </div>
+
+      {/* Items */}
+      <div>
+        <div className="flex items-center justify-between mb-1">
+          <FieldLabel>Items</FieldLabel>
+          <button
+            onClick={addItem}
+            className="flex items-center gap-0.5 text-[10px] text-brand hover:underline"
+          >
+            <Plus size={10} /> Add
+          </button>
+        </div>
+        <div className="space-y-2">
+          {data.items.map((item, i) => (
+            <div key={i} className="p-2 rounded-lg bg-surface-raised border border-border space-y-1.5">
+              <div className="flex gap-1">
+                <FieldInput
+                  value={item.label}
+                  onChange={(v) => updateItem(i, { label: v })}
+                  placeholder="Label"
+                />
+                <button
+                  onClick={() => removeItem(i)}
+                  className="p-1 text-red-400 hover:text-red-500"
+                >
+                  <Trash size={10} />
+                </button>
+              </div>
+              <FieldInput
+                value={item.description ?? ""}
+                onChange={(v) => updateItem(i, { description: v })}
+                placeholder="Description"
+              />
+              <div className="flex gap-1">
+                <FieldInput
+                  value={item.value ?? ""}
+                  onChange={(v) => updateItem(i, { value: v })}
+                  placeholder="Value"
+                />
+                <FieldInput
+                  value={item.icon ?? ""}
+                  onChange={(v) => updateItem(i, { icon: v })}
+                  placeholder="Icon (emoji)"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Caption */}
+      <div>
+        <FieldLabel>Caption</FieldLabel>
+        <FieldInput
+          value={data.caption ?? ""}
+          onChange={(v) => updateData({ caption: v })}
+          placeholder="Optional caption"
+        />
       </div>
     </div>
   );

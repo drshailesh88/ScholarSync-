@@ -59,6 +59,14 @@ VALID BLOCK TYPES AND THEIR DATA SHAPES:
 - stat_result: { "label": "...", "value": "...", "ci": "95% CI [x, y]", "pValue": "p < 0.05", "interpretation": "..." }
 - timeline: { "entries": [{"label": "Phase 1", "description": "...", "date": "2024", "status": "completed"}] }
 - quote: { "text": "...", "attribution": "Author Name" }
+- diagram: { "syntax": "graph TD\\n  A-->B", "diagramType": "flowchart|sequence|mindmap|pie|gantt|timeline|erDiagram|stateDiagram|classDiagram", "caption": "..." }
+- infographic: { "infographicType": "process_flow|comparison|hierarchy|cycle|funnel|pyramid|venn|matrix|radial|stats_row|checklist|cause_effect", "title": "...", "items": [{"label": "...", "description": "...", "value": "...", "icon": "emoji"}], "colorScheme": "theme|blue|green|purple|orange|rainbow" }
+
+WHEN TO USE VISUAL BLOCKS:
+- Use "diagram" for processes, flows, sequences, relationships, structures (Mermaid syntax)
+- Use "infographic" for comparisons, metrics, hierarchies, cycles, checklists
+- Proactively generate visuals when the user describes a process, comparison, or structure
+- For methodology or pipeline requests, always include a diagram or infographic
 
 RESPONSE FORMAT — Return valid JSON only, no markdown fences:
 {

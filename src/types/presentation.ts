@@ -113,6 +113,38 @@ export interface NestedCardData {
   collapsed?: boolean;
 }
 
+/** SVG infographic block — Napkin-style visual generation */
+export type InfographicType =
+  | "process_flow"      // sequential steps with arrows
+  | "comparison"        // side-by-side columns with icons
+  | "hierarchy"         // tree structure top-down
+  | "cycle"             // circular/loop process
+  | "funnel"            // narrowing stages
+  | "pyramid"           // layered triangle
+  | "venn"              // overlapping circles (2-3)
+  | "matrix"            // 2x2 quadrant grid
+  | "radial"            // central node with spokes
+  | "stats_row"         // horizontal stat cards with icons
+  | "checklist"         // visual checklist with status
+  | "cause_effect";     // fishbone/Ishikawa style
+
+export interface InfographicItem {
+  label: string;
+  description?: string;
+  value?: string;
+  icon?: string;          // emoji or icon keyword
+  color?: string;         // hex color override
+  status?: "done" | "active" | "pending";
+}
+
+export interface InfographicData {
+  infographicType: InfographicType;
+  title?: string;
+  items: InfographicItem[];
+  caption?: string;
+  colorScheme?: "theme" | "blue" | "green" | "purple" | "orange" | "rainbow";
+}
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
   type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
@@ -158,7 +190,9 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } })
   | (ContentBlockBase & { type: "toggle"; data: ToggleData })
   | (ContentBlockBase & { type: "embed"; data: EmbedData })
-  | (ContentBlockBase & { type: "nested_card"; data: NestedCardData });
+  | (ContentBlockBase & { type: "nested_card"; data: NestedCardData })
+  // V3: Visual generation blocks
+  | (ContentBlockBase & { type: "infographic"; data: InfographicData; figureLabel?: string });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)

@@ -17,6 +17,7 @@ import { DividerBlock } from "./divider-block";
 import { ToggleBlock } from "../gamma-mode/blocks/toggle-block";
 import { EmbedBlock } from "../gamma-mode/blocks/embed-block";
 import { NestedCardBlock } from "../gamma-mode/blocks/nested-card-block";
+import { InfographicBlock } from "./infographic-block";
 
 // ---------------------------------------------------------------------------
 // Block Registry — maps each content block type to its renderer + metadata
@@ -179,6 +180,22 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
       collapsed: true,
     }),
     category: "content",
+  },
+  infographic: {
+    render: InfographicBlock as any,
+    label: "Infographic",
+    iconName: "PaintBrush",
+    defaultData: () => ({
+      infographicType: "process_flow",
+      title: "Process Overview",
+      items: [
+        { label: "Step 1", description: "First step" },
+        { label: "Step 2", description: "Second step" },
+        { label: "Step 3", description: "Third step" },
+      ],
+      colorScheme: "theme",
+    }),
+    category: "media",
   },
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */

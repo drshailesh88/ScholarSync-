@@ -793,5 +793,6 @@ function createDefaultBlock(type: ContentBlock["type"]): ContentBlock {
     case "toggle": return { type: "toggle", data: { title: "Click to expand", content: "Hidden content goes here", defaultOpen: false } };
     case "embed": return { type: "embed", data: { url: "", embedType: "generic", aspectRatio: "16:9" } };
     case "nested_card": return { type: "nested_card", data: { title: "Sub-section", contentBlocks: [{ type: "text", data: { text: "Nested content", style: "body" } }], collapsed: true } };
+    case "infographic": return { type: "infographic", data: { infographicType: "process_flow", title: "Infographic", items: [{ label: "Step 1", description: "Description" }], colorScheme: "theme" } };
   }
 }

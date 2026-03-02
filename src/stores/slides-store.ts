@@ -49,7 +49,7 @@ export type RightPanel =
   | "analytics"
   | "defense"
   | null;
-export type AgentMode = "learn" | "draft";
+export type AgentMode = "learn" | "draft" | "visual";
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 // ---------------------------------------------------------------------------
