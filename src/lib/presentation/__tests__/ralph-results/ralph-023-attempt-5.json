@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-023",
+  "attempt": 5,
+  "timestamp": "2026-03-02T16:42:31.194Z",
+  "mermaidSyntax": "graph TD\n  subgraph SC[\"Sample Collection\"]\n    BD[Blood Draw] --> EX\n    UC[Urine Collection] --> EX\n    TB[Tissue Biopsy] --> EX\n  end\n  subgraph SP[\"Sample Prep\"]\n    EX[Extraction] --> DV[Derivatization] --> QC[Quality Control]\n  end\n  subgraph AP[\"Analysis Platforms\"]\n    QC --> LCMS[LC-MS Platform]\n    QC --> GCMS[GC-MS Platform]\n    QC --> NMR[NMR Platform]\n  end\n  subgraph DI[\"Data Integration\"]\n    LCMS --> FA[Feature Alignment]\n    GCMS --> FA\n    NMR --> FA\n    FA --> SA[Statistical Analysis] --> PM[Pathway Mapping]\n  end\n\n  style SC fill:#DBEAFE,stroke:#3B82F6\n  style SP fill:#D1FAE5,stroke:#10B981\n  style AP fill:#EDE9FE,stroke:#7C3AED\n  style DI fill:#FEF3C7,stroke:#F59E0B",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "At least 4 styled subgraphs present": true,
+    "Parallel analysis platforms shown (LC-MS, GC-MS, NMR)": true,
+    "Convergence arrows from platforms to integration": true,
+    "Subgraph styling with fill colors applied": true,
+    "Fan-out from QC to multiple platforms": true,
+    "No truncated labels": true,
+    "All major workflow steps present": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

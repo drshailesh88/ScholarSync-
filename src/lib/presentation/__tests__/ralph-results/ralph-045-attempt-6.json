@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-045",
+  "attempt": 6,
+  "timestamp": "2026-03-02T16:42:40.095Z",
+  "mermaidSyntax": "erDiagram\n  Patient {\n    int patient_id PK\n    string mrn\n    string name\n    date dob\n    string sex\n    string consent_status\n  }\n  Sample {\n    int sample_id PK\n    int patient_id FK\n    string type\n    date collection_date\n    float volume_ml\n    string storage_location\n    int freeze_thaw_count\n  }\n  Study {\n    int study_id PK\n    string title\n    string pi_name\n    string irb_number\n    string status\n  }\n  Aliquot {\n    int aliquot_id PK\n    int parent_sample_id FK\n    float volume_ml\n    float concentration\n    date created_date\n  }\n  StorageUnit {\n    int unit_id PK\n    string type\n    float temperature\n    string building\n    string room\n    string shelf\n    string position\n  }\n  StudySample {\n    int study_id FK\n    int sample_id FK\n    date date_assigned\n    string purpose\n  }\n  PatientStudy {\n    int patient_id FK\n    int study_id FK\n    date enrollment_date\n    string consent_form_id\n  }\n  Patient ||--o{ Sample : \"provides\"\n  Sample ||--o{ Aliquot : \"has\"\n  Aliquot }o--|| StorageUnit : \"stored in\"\n  Study ||--o{ StudySample : \"includes\"\n  Sample ||--o{ StudySample : \"used in\"\n  Patient ||--o{ PatientStudy : \"enrolled\"\n  Study ||--o{ PatientStudy : \"enrolls\"",
+  "diagramType": "erDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "ER diagram type declared": true,
+    "All 5 core entities present (Patient, Sample, Study, Aliquot, StorageUnit)": true,
+    "Junction table StudySample or equivalent present": true,
+    "Junction table PatientStudy or equivalent present": true,
+    "Patient to Sample one-to-many relationship": true,
+    "Sample to Aliquot one-to-many relationship": true,
+    "At least 3 attributes per major entity": true,
+    "Cardinality notation on all relationships": true,
+    "At least 6 relationships defined": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}
