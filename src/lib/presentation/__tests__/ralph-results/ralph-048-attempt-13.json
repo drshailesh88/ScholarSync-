@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-048",
+  "attempt": 13,
+  "timestamp": "2026-03-02T16:53:57.452Z",
+  "mermaidSyntax": "flowchart TD\n  A[New research project proposed] --> B{Does it involve<br>human subjects?}\n  B -->|No| C[No IRB review needed<br>Terminal: Exempt]\n  B -->|Yes| D{Is it minimal risk?<br>Survey, interview,<br>observation, existing<br>de-identified data}\n  D -->|Yes| E{Involves vulnerable<br>populations?<br>Children, prisoners,<br>pregnant women,<br>cognitively impaired}\n  E -->|Yes| F[Full board IRB review<br>Terminal: Full Review]\n  E -->|No| G[Expedited review pathway<br>Terminal: Expedited]\n  D -->|No| H{Is it a clinical trial?}\n  H -->|No| I[Full board review<br>Terminal: Full Review]\n  H -->|Yes| J{Phase I/II or<br>Phase III/IV?}\n  J -->|Phase I/II| K[Full board review +<br>DSMB required<br>Terminal: Full Review + DSMB]\n  J -->|Phase III/IV| L[Full board review +<br>DSMB + FDA IND required<br>Terminal: Full Review + DSMB + FDA]",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Flowchart type declared with TD direction": true,
+    "Human subjects decision as first branch": true,
+    "Minimal risk assessment decision present": true,
+    "Vulnerable populations decision present": true,
+    "Clinical trial decision branch": true,
+    "At least 4 decision diamond nodes": true,
+    "At least 3 distinct terminal states (Exempt, Expedited, Full Review)": true,
+    "DSMB mentioned in clinical trial paths": true,
+    "FDA/IND mentioned for Phase III/IV path": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

@@ -1,0 +1,20 @@
+{
+  "id": "ralph-058",
+  "name": "Cross-Type Adversarial — State Vocabulary but Flowchart (Drug Approval Pathway)",
+  "input": "Create a diagram showing the FDA drug approval regulatory pathway. Show the states a drug goes through: IND Application state, Phase I Trial state, Phase II Trial state, Phase III Trial state, NDA Submission state, FDA Review state, and Approved/Rejected terminal states. Include transitions between each state with events like 'safety data acceptable', 'efficacy demonstrated', 'statistical significance met'. Show decision points where the drug can transition to a 'Clinical Hold' state or 'Withdrawn' state. This is a step-by-step regulatory PROCESS FLOW, not a state machine — each step leads to the next in a linear decision pathway with yes/no branches at each review point.",
+  "expectedDiagramType": "flowchart",
+  "difficulty": "hard",
+  "expectedMinNodes": 10,
+  "qualityCriteria": [
+    "Diagram type is flowchart, NOT stateDiagram despite state/transition vocabulary",
+    "IND Application as starting process node",
+    "Phase I, II, III trial nodes present as sequential steps",
+    "NDA Submission node present",
+    "FDA Review decision diamond with Approved/Rejected branches",
+    "Clinical Hold branch from at least one phase",
+    "Withdrawn path accessible from decision points",
+    "Linear top-to-bottom or left-to-right flow direction",
+    "Decision diamonds at review points (not state transitions)",
+    "At least 10 distinct process nodes"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-028",
+  "attempt": 9,
+  "timestamp": "2026-03-02T16:53:28.727Z",
+  "mermaidSyntax": "stateDiagram-v2\n  [*] --> Draft\n  Draft --> InternalReview : Submit for co-author review\n  InternalReview --> Draft : Revisions needed\n  InternalReview --> Submitted : Approved\n  Submitted --> UnderReview : Editor assigns reviewers\n  UnderReview --> RevisionRequested : Reviewers request changes\n  UnderReview --> Accepted : Accepted as-is\n  UnderReview --> Rejected : Rejected\n  RevisionRequested --> Revised : Author revises\n  Revised --> UnderReview : Re-review\n  Accepted --> InProduction : Copyediting\n  InProduction --> Published : Final\n  Rejected --> Draft : Rewrite for another journal\n  Published --> [*]\n\n  state Draft {\n    [*] --> Writing\n  }",
+  "diagramType": "stateDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "State diagram type declared (stateDiagram-v2)": true,
+    "All 10 states present (Draft, Internal Review, Submitted, Under Review, Revision Requested, Revised, Accepted, In Production, Published, Rejected)": true,
+    "Bidirectional transitions shown (Draft <-> Internal Review)": true,
+    "Rejection path to Draft present": true,
+    "Revision cycle loop (Under Review -> Revision Requested -> Revised -> Under Review)": true,
+    "Terminal state Published reached from In Production": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}
