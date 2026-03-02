@@ -1,0 +1,22 @@
+{
+  "id": "ralph-046",
+  "name": "Sepsis Diagnostic Algorithm with Nested Decision Diamonds",
+  "category": "flowchart_decision_logic",
+  "difficulty": "hard",
+  "input": "Create a flowchart for a clinical sepsis diagnostic algorithm. Start with Patient presents with suspected infection. First decision: SIRS criteria met? (Temperature >38C or <36C, HR>90, RR>20, WBC>12K or <4K — need 2 of 4). If No -> Monitor and reassess in 4 hours (loop back to start). If Yes -> Check qSOFA score. Second decision: qSOFA >= 2? (Altered mentation, SBP<=100, RR>=22). If No -> Low risk, floor admission with monitoring. If Yes -> Third decision: Lactate level? Three paths: Lactate < 2 mmol/L -> Sepsis, start antibiotics within 1 hour. Lactate 2-4 mmol/L -> Severe sepsis, IV fluids 30mL/kg + antibiotics + ICU consult. Lactate > 4 mmol/L -> Septic shock, immediate ICU transfer + vasopressors + central line. All treatment paths converge to Reassess at 6 hours. Make it top-down with diamond shapes for decisions.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 12,
+  "qualityCriteria": [
+    "Flowchart type declared with TD direction",
+    "Patient presentation as starting node",
+    "SIRS criteria decision diamond present",
+    "qSOFA decision diamond present",
+    "Lactate level decision with 3-way branching",
+    "Loop-back from monitoring to reassessment",
+    "At least 3 diamond-shaped decision nodes",
+    "Treatment paths include antibiotics and IV fluids",
+    "Convergence point at reassessment",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart TD with 12+ nodes, 3 nested decision diamonds, 3-way lactate branching, loop-back, treatment convergence."
+}
