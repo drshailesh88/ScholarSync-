@@ -1230,6 +1230,136 @@ function assessQuality(
       criteriaResults[criterion] = /PATIENT/i.test(syntax) && Object.keys(entityConnections).length >= 3;
     } else if (lower.includes("junction table") || lower.includes("many-to-many")) {
       criteriaResults[criterion] = /CONSENT|junction|bridge|link|mapping/i.test(syntax);
+
+    // -----------------------------------------------------------------------
+    // Cycle 10 — Cross-type conversion heuristics
+    // -----------------------------------------------------------------------
+    } else if (lower.includes("state diagram") && lower.includes("type") && lower.includes("declared")) {
+      criteriaResults[criterion] = /^stateDiagram/m.test(syntax);
+    } else if (lower.includes("state") && lower.includes("present") && (lower.includes("all") || lower.includes("10"))) {
+      const stateNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (stateNames.length > 0) {
+        const found = stateNames.filter(s => {
+          const words = s.split(/\s+/);
+          return words.some(w => w.length > 3 && new RegExp(w, "i").test(syntax));
+        });
+        criteriaResults[criterion] = found.length >= stateNames.length * 0.7;
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("bidirectional") && lower.includes("transition")) {
+      // Check for transitions going both directions between same states
+      const forwardArrows = syntax.match(/\w+\s*-->\s*\w+/g) ?? [];
+      const states = new Set<string>();
+      for (const a of forwardArrows) {
+        const parts = a.split(/\s*-->\s*/);
+        if (parts.length === 2) {
+          states.add(`${parts[0].trim()}-${parts[1].trim()}`);
+          states.add(`${parts[1].trim()}-${parts[0].trim()}`);
+        }
+      }
+      // Check if any pair exists in both directions
+      let hasBidi = false;
+      for (const a of forwardArrows) {
+        const parts = a.split(/\s*-->\s*/);
+        if (parts.length === 2) {
+          const reverse = `${parts[1].trim()}-${parts[0].trim()}`;
+          const forward = `${parts[0].trim()}-${parts[1].trim()}`;
+          if (states.has(forward) && forwardArrows.some(b => {
+            const bp = b.split(/\s*-->\s*/);
+            return bp.length === 2 && bp[0].trim() === parts[1].trim() && bp[1].trim() === parts[0].trim();
+          })) {
+            hasBidi = true;
+            break;
+          }
+        }
+      }
+      criteriaResults[criterion] = hasBidi;
+    } else if (lower.includes("rejection path") || lower.includes("rejected") && lower.includes("draft")) {
+      criteriaResults[criterion] = /reject/i.test(syntax) && /draft/i.test(syntax);
+    } else if (lower.includes("revision cycle") && lower.includes("loop")) {
+      const hasRevision = /revis/i.test(syntax);
+      const hasReview = /review/i.test(syntax);
+      criteriaResults[criterion] = hasRevision && hasReview;
+    } else if (lower.includes("terminal state") && lower.includes("published")) {
+      criteriaResults[criterion] = /publish/i.test(syntax);
+
+    // Mindmap heuristics
+    } else if (lower.includes("mindmap") && lower.includes("type") && lower.includes("declared")) {
+      criteriaResults[criterion] = /^mindmap/m.test(syntax);
+    } else if (lower.includes("root node")) {
+      // Check for mindmap root: root((text)) or first indented item
+      criteriaResults[criterion] = /root\s*\(\(|root\s*\[|^mindmap\s*\n\s+\S/m.test(syntax);
+    } else if (lower.includes("level 1") && lower.includes("branch")) {
+      const branchNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (branchNames.length > 0) {
+        const found = branchNames.filter(b => {
+          const words = b.split(/\s+/);
+          return words.some(w => w.length > 3 && new RegExp(w, "i").test(syntax));
+        });
+        criteriaResults[criterion] = found.length >= branchNames.length * 0.6;
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("specific aims") && lower.includes("sub-item")) {
+      const aimTerms = ["background", "hypothesis", "aim 1", "aim 2", "aim 3", "objective", "rationale"];
+      const found = aimTerms.filter(t => new RegExp(t.replace(/\s+/g, "\\s*"), "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 3;
+    } else if (lower.includes("research strategy") && lower.includes("sub-item")) {
+      const stratTerms = ["significance", "innovation", "approach"];
+      const found = stratTerms.filter(t => new RegExp(t, "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 2;
+    } else if (lower.includes("hierarchy") && lower.includes("depth") && lower.includes("level")) {
+      // Count indentation depth in mindmap
+      let maxDepth = 0;
+      for (const line of syntax.split("\n")) {
+        const indent = line.match(/^(\s*)/)?.[1]?.length ?? 0;
+        const depth = Math.floor(indent / 2);
+        maxDepth = Math.max(maxDepth, depth);
+      }
+      const minDepth = parseInt(criterion.match(/(\d+)/)?.[1] ?? "3");
+      criteriaResults[criterion] = maxDepth >= minDepth;
+
+    // Timeline heuristics
+    } else if (lower.includes("timeline") && lower.includes("type") && lower.includes("declared")) {
+      criteriaResults[criterion] = /^timeline/m.test(syntax);
+    } else if (lower.includes("section") && lower.includes("present") && !lower.includes("journey") && testCase.expectedDiagramType === "timeline") {
+      const sectionNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (sectionNames.length > 0) {
+        const found = sectionNames.filter(s => {
+          const words = s.split(/\s+/);
+          return words.some(w => w.length > 3 && new RegExp(w, "i").test(syntax));
+        });
+        criteriaResults[criterion] = found.length >= sectionNames.length * 0.6;
+      } else {
+        const sections = syntax.match(/section\s+/gi) ?? [];
+        criteriaResults[criterion] = sections.length >= 2;
+      }
+    } else if (lower.includes("milestone") && lower.includes("event") && lower.includes("at least")) {
+      const minEvents = parseInt(criterion.match(/(\d+)/)?.[1] ?? "10");
+      // Count non-section, non-title, non-empty lines as events
+      const eventLines = syntax.split("\n").filter(l => {
+        const t = l.trim();
+        return t && !t.startsWith("timeline") && !t.startsWith("title") && !t.startsWith("section") && t.length > 3;
+      });
+      criteriaResults[criterion] = eventLines.length >= minEvents;
+    } else if (lower.includes("year label") && lower.includes("present")) {
+      const years = syntax.match(/\b(19|20)\d{2}\b/g) ?? [];
+      criteriaResults[criterion] = years.length >= 3;
+    } else if (lower.includes("genomics") && lower.includes("milestone") && lower.includes("include")) {
+      const hasGenome = /genome|CRISPR|Human Genome/i.test(syntax);
+      criteriaResults[criterion] = hasGenome;
+    } else if (lower.includes("neuroscience") && lower.includes("milestone") && lower.includes("include")) {
+      criteriaResults[criterion] = /BRAIN|brain.?initiative|neurosci/i.test(syntax);
+    } else if (lower.includes("date range") && lower.includes("spanning") && !lower.includes("gantt")) {
+      const years = [...syntax.matchAll(/(19|20)\d{2}/g)].map(m => parseInt(m[0]));
+      if (years.length >= 2) {
+        const minYear = Math.min(...years);
+        const maxYear = Math.max(...years);
+        criteriaResults[criterion] = (maxYear - minYear) >= 10;
+      } else {
+        criteriaResults[criterion] = false;
+      }
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -1677,6 +1807,89 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
   STUDY ||--o{ ADVERSE_EVENT : "records"
   PATIENT ||--o{ MEDICATION : "takes"
   STUDY }o--o{ SITE : "conducted at"`,
+  },
+
+  // Cycle 10 baselines
+  "ralph-028": {
+    diagramType: "stateDiagram",
+    syntax: `stateDiagram-v2
+  [*] --> Draft
+  Draft --> InternalReview : Submit for co-author review
+  InternalReview --> Draft : Revisions needed
+  InternalReview --> Submitted : Approved
+  Submitted --> UnderReview : Editor assigns reviewers
+  UnderReview --> RevisionRequested : Reviewers request changes
+  UnderReview --> Accepted : Accepted as-is
+  UnderReview --> Rejected : Rejected
+  RevisionRequested --> Revised : Author revises
+  Revised --> UnderReview : Re-review
+  Accepted --> InProduction : Copyediting
+  InProduction --> Published : Final
+  Rejected --> Draft : Rewrite for another journal
+  Published --> [*]
+
+  state Draft {
+    [*] --> Writing
+  }`,
+  },
+
+  "ralph-029": {
+    diagramType: "mindmap",
+    syntax: `mindmap
+  root((NIH R01 Grant))
+    Specific Aims
+      Background and Rationale
+      Overall Objective
+      Central Hypothesis
+      Specific Aim 1
+        Sub-aim 1a
+        Sub-aim 1b
+      Specific Aim 2
+      Specific Aim 3
+      Expected Outcomes
+      Impact Statement
+    Research Strategy
+      Significance
+        Innovation Gap
+        Preliminary Data
+      Innovation
+        Novel Methods
+        New Paradigm
+      Approach
+        Study Design
+        Data Analysis
+        Timeline
+        Potential Problems and Solutions
+        Rigor and Reproducibility
+    Budget
+      Personnel
+      Equipment
+      Supplies
+      Travel
+      Indirect Costs
+    Biographical Sketches
+    Protection of Human Subjects`,
+  },
+
+  "ralph-030": {
+    diagramType: "timeline",
+    syntax: `timeline
+  title Major Research Milestones Across Scientific Domains
+  section Genomics
+    2003 : Human Genome Project completed
+    2012 : ENCODE Project results published
+    2015 : CRISPR first human embryo editing
+    2020 : COVID-19 genome sequenced in 10 days
+  section Neuroscience
+    2005 : Deep brain stimulation FDA approved
+    2013 : BRAIN Initiative launched
+    2018 : First complete connectome of C. elegans
+    2023 : Brain-computer interface clinical trials
+  section Immunology
+    2010 : First CAR-T therapy trial
+    2016 : First checkpoint inhibitor combo approved
+    2020 : mRNA COVID vaccines in record time
+    2024 : Universal flu vaccine Phase III`,
   },
 };
 
