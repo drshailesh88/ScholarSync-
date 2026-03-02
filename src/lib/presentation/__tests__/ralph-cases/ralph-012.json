@@ -1,0 +1,19 @@
+{
+  "id": "ralph-012",
+  "name": "Ambiguous Input — Could Be Multiple Diagram Types",
+  "category": "edge_cases",
+  "difficulty": "medium",
+  "input": "Show the relationship between research methodology concepts. Quantitative methods include surveys, experiments, and statistical analysis. Qualitative methods include interviews, focus groups, and thematic analysis. Mixed methods combine both approaches. Surveys connect to statistical analysis. Interviews connect to thematic analysis. Both statistical analysis and thematic analysis feed into results synthesis. Results synthesis leads to publication. There are feedback loops from publication back to methodology selection.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "Chose an appropriate diagram type (flowchart or mindmap acceptable)",
+    "All 10 concepts present (Quantitative, Qualitative, Mixed, Surveys, Experiments, Statistical Analysis, Interviews, Focus Groups, Thematic Analysis, Results Synthesis)",
+    "Connections between concepts shown (surveys -> statistical analysis, etc.)",
+    "Grouping of quantitative vs qualitative methods visible",
+    "Feedback loop from publication back to methodology shown",
+    "No truncated concept names",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Concept map or flowchart showing all relationships, with grouping subgraphs for quantitative/qualitative, feedback loop visible, clean layout."
+}

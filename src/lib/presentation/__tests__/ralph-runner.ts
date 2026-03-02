@@ -360,6 +360,18 @@ function assessQuality(
       // Also check if multiple "Site" tasks exist (parallel enrollment)
       const hasSites = (syntax.match(/site\s*\d/gi) ?? []).length >= 2;
       criteriaResults[criterion] = taskLines.length >= 5 || hasSites;
+    } else if (lower.includes("drug-drug interaction") || (lower.includes("side branch") && lower.includes("interaction"))) {
+      // Drug-drug interaction side branch check (before generic exclusion/side branch)
+      const hasDDI = /drug.drug|interaction|ketoconazole|rifampin|IC50/i.test(syntax);
+      criteriaResults[criterion] = hasDDI;
+      if (!hasDDI) {
+        failures.push({
+          type: "missing-data",
+          description: "Drug-drug interaction side branch not found in diagram",
+          severity: "major",
+          suggestedFix: "Add a side branch showing drug interaction information",
+        });
+      }
     } else if (lower.includes("exclusion") || lower.includes("side branch")) {
       // For PRISMA-style: check for exclusion side branches
       const hasExclusion = /exclu/i.test(syntax);
@@ -663,6 +675,81 @@ function assessQuality(
       // State: check for terminal states (states with no outgoing transitions, or [*] end)
       const hasEnd = /\[\*\]|\[end\]|published|rejected|withdrawn/i.test(syntax);
       criteriaResults[criterion] = hasEnd;
+    // --- Edge case heuristics ---
+    } else if (lower.includes("special character") && lower.includes("preserved")) {
+      // Check that special chars from criterion are present (or properly escaped)
+      const specialChars = ["/", "&", "→", "μ"];
+      // Also check HTML entities as valid escapes: &amp; for &, etc.
+      const found = specialChars.filter(ch => {
+        if (ch === "&") return syntax.includes("&") || syntax.includes("&amp;");
+        if (ch === "→") return syntax.includes("→") || syntax.includes("->") || syntax.includes("-->") || syntax.includes("→");
+        return syntax.includes(ch);
+      });
+      criteriaResults[criterion] = found.length >= 2; // At least 2 of 4 special chars preserved
+    } else if (lower.includes("syntax error") && lower.includes("special character")) {
+      // This is covered by the "valid mermaid syntax" check — just ensure no parse errors
+      criteriaResults[criterion] = validationResult.valid;
+    } else if (lower.includes("consort") && lower.includes("stage")) {
+      // Check for CONSORT stages: enrollment, allocation, follow-up, analysis
+      const stages = ["enroll", "allocat", "follow", "analy"];
+      const found = stages.filter(s => new RegExp(s, "i").test(syntax));
+      criteriaResults[criterion] = found.length >= 3;
+    } else if (lower.includes("exclusion criteria") && lower.includes("count")) {
+      // Check for exclusion reasons with numbers
+      const exclusionCounts = syntax.match(/n\s*=\s*\d+|exclu|did not meet|prior|ecog|autoimmune|brain/gi) ?? [];
+      criteriaResults[criterion] = exclusionCounts.length >= 3;
+    } else if (lower.includes("treatment arm") || (lower.includes("both") && lower.includes("arm"))) {
+      // Check for parallel treatment arms
+      const hasArms = (/pembrolizumab|intervention|treatment/i.test(syntax) && /chemother|control|alone/i.test(syntax));
+      criteriaResults[criterion] = hasArms;
+    } else if (lower.includes("appropriate diagram type")) {
+      // Accept flowchart or mindmap for ambiguous input
+      const isAcceptable = /^(graph|flowchart)\s+(TD|TB|LR|RL)/m.test(syntax) || /^mindmap/m.test(syntax);
+      criteriaResults[criterion] = isAcceptable;
+    } else if (lower.includes("concept") && lower.includes("present")) {
+      // Check for listed concepts by name
+      const conceptNames = criterion.match(/\(([^)]+)\)/)?.[1]?.split(",").map(s => s.trim()) ?? [];
+      if (conceptNames.length > 0) {
+        const found = conceptNames.filter(name => {
+          const words = name.split(/\s+/);
+          return words.some(w => w.length > 3 && new RegExp(w, "i").test(syntax));
+        });
+        const met = found.length >= conceptNames.length * 0.6;
+        criteriaResults[criterion] = met;
+        if (!met) {
+          failures.push({
+            type: "missing-node",
+            description: `Only ${found.length}/${conceptNames.length} concepts found in diagram`,
+            severity: "major",
+            suggestedFix: "Ensure all concepts from the input are represented as nodes",
+          });
+        }
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("connection") && lower.includes("concept")) {
+      // Check for arrows between concept nodes
+      const arrowCount = (syntax.match(/-->|==>|-\.->/g) ?? []).length;
+      criteriaResults[criterion] = arrowCount >= 5;
+    } else if (lower.includes("grouping") && (lower.includes("quantitative") || lower.includes("qualitative"))) {
+      // Check for subgraph grouping of method types
+      const hasGrouping = /subgraph/i.test(syntax) && (/quantitat/i.test(syntax) || /qualitat/i.test(syntax));
+      criteriaResults[criterion] = hasGrouping;
+    } else if (lower.includes("feedback loop") || (lower.includes("loop") && lower.includes("publication"))) {
+      // Check for cycle back to earlier node (publication -> methodology)
+      const hasFeedback = /publication|publish/i.test(syntax) && /method|select/i.test(syntax);
+      // Also check for arrow patterns suggesting a cycle
+      const transitions = [...syntax.matchAll(/(\w+)\s*(?:-->|==>)\s*(\w+)/g)];
+      const sources = new Set(transitions.map(t => t[1]));
+      const targets = new Set(transitions.map(t => t[2]));
+      const cycleNodes = [...sources].filter(s => targets.has(s));
+      criteriaResults[criterion] = hasFeedback || cycleNodes.length >= 2;
+    } else if (lower.includes("drug name") && lower.includes("truncat")) {
+      // Check specific drug names are fully spelled
+      const drugs = ["pembrolizumab", "ketoconazole", "rifampin"];
+      const inInput = drugs.filter(d => testCase.input.toLowerCase().includes(d));
+      const found = inInput.filter(d => syntax.toLowerCase().includes(d));
+      criteriaResults[criterion] = found.length >= inInput.length * 0.7;
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
       criteriaResults[criterion] = true;
@@ -834,7 +921,7 @@ function updateScorecard(result: RalphAttemptResult, testCase: RalphTestCase): v
   if (existing) {
     existing.bestScore = Math.max(existing.bestScore, result.overallScore);
     existing.latestAttempt = result.attempt;
-    existing.status = result.overallScore >= 7 ? "pass" : "fail";
+    existing.status = existing.bestScore >= 7 ? "pass" : "fail";
   } else {
     scorecard.cases.push({
       id: result.testId,

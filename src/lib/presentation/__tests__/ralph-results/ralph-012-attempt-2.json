@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-012",
+  "attempt": 2,
+  "timestamp": "2026-03-02T12:14:38.904Z",
+  "mermaidSyntax": "graph TD\n  M[Methodology Selection] --> Q{Method Type}\n  Q -->|Quantitative| QM[Quantitative Methods]\n  Q -->|Qualitative| QL[Qualitative Methods]\n  Q -->|Mixed| MM[Mixed Methods]\n  \n  QM --> S[Surveys]\n  QM --> E[Experiments]\n  QM --> SA[Statistical Analysis]\n  \n  QL --> I[Interviews]\n  QL --> FG[Focus Groups]\n  QL --> TA[Thematic Analysis]\n  \n  MM --> QM\n  MM --> QL\n  \n  S --> SA\n  I --> TA\n  \n  SA --> RS[Results Synthesis]\n  TA --> RS\n  \n  RS --> P[Publication]\n  P -->|Feedback Loop| M\n  \n  style M fill:#6366f1,stroke:#4f46e5,color:#fff\n  style Q fill:#8b5cf6,stroke:#7c3aed,color:#fff\n  style RS fill:#f59e0b,stroke:#d97706,color:#000\n  style P fill:#10b981,stroke:#059669,color:#fff",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Chose an appropriate diagram type (flowchart or mindmap acceptable)": true,
+    "All 10 concepts present (Quantitative, Qualitative, Mixed, Surveys, Experiments, Statistical Analysis, Interviews, Focus Groups, Thematic Analysis, Results Synthesis)": true,
+    "Connections between concepts shown (surveys -> statistical analysis, etc.)": true,
+    "Grouping of quantitative vs qualitative methods visible": false,
+    "Feedback loop from publication back to methodology shown": true,
+    "No truncated concept names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 9
+}

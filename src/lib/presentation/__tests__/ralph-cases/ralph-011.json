@@ -1,0 +1,19 @@
+{
+  "id": "ralph-011",
+  "name": "Dense 20-Node Systematic Review with Long Labels",
+  "category": "edge_cases",
+  "difficulty": "hard",
+  "input": "Create a comprehensive CONSORT flow diagram for a large multi-center randomized controlled trial of pembrolizumab plus chemotherapy vs chemotherapy alone in non-small cell lung cancer. Assessed for eligibility: 4,832 patients from 28 centers across 12 countries. Excluded (n=3,207): Did not meet PD-L1 TPS ≥ 50% criteria (n=1,845), Had prior immunotherapy treatment within 12 months (n=523), ECOG performance status > 2 (n=412), Active autoimmune disease requiring systemic treatment (n=198), Brain metastases not adequately treated per protocol (n=229). Randomized (n=1,625): Allocated to pembrolizumab + chemotherapy arm (n=814): Received allocated intervention (n=798), Did not receive (n=16, reasons: withdrew consent n=9, adverse event before first dose n=5, death n=2). Allocated to chemotherapy alone arm (n=811): Received allocated intervention (n=803), Did not receive (n=8, reasons: withdrew consent n=5, protocol deviation n=3). Follow-up at 24 months: Pembrolizumab arm lost to follow-up (n=47, reasons: relocated n=21, non-compliance n=18, unknown n=8), Chemotherapy arm lost to follow-up (n=52, reasons: relocated n=24, non-compliance n=20, unknown n=8). Analyzed: Pembrolizumab arm ITT analysis (n=814), per-protocol (n=767). Chemotherapy arm ITT analysis (n=811), per-protocol (n=759).",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 15,
+  "qualityCriteria": [
+    "All major CONSORT stages present (Enrollment, Allocation, Follow-up, Analysis)",
+    "Exclusion criteria listed with individual counts",
+    "Both treatment arms shown as parallel branches after randomization",
+    "Numeric values preserved accurately (4832, 3207, 1625, 814, 811)",
+    "Long drug names not truncated (pembrolizumab fully spelled)",
+    "No overlapping text or labels despite high node count",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Professional CONSORT diagram with 15+ nodes, clearly separated arms, all numbers visible, no text overflow, multi-line labels where needed."
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ralph-010",
+  "name": "Special Characters in Biomedical Labels",
+  "category": "edge_cases",
+  "difficulty": "hard",
+  "input": "Create a flowchart showing a drug interaction pathway. Start with 'CYP3A4/CYP2D6 Metabolism'. Branch to 'P-glycoprotein (P-gp) Efflux' and 'Phase II Conjugation (UGT1A1 & UGT2B7)'. P-gp leads to 'Blood-Brain Barrier (BBB) Transport'. Phase II leads to 'Glucuronidation → Sulfation → Acetylation'. Both converge at 'Renal Excretion (GFR > 90 mL/min)'. Add a side branch from CYP3A4 to 'Drug-Drug Interaction Risk (↑ with ketoconazole, ↓ with rifampin)'. Include IC50 = 2.5 μM annotation.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 7,
+  "qualityCriteria": [
+    "Special characters preserved: slashes (CYP3A4/CYP2D6), parentheses, ampersands (&), arrows (→), Greek letters (μ)",
+    "All 7 nodes present with correct labels",
+    "Branch from CYP3A4 shows two parallel paths",
+    "Convergence at Renal Excretion is clear",
+    "Drug-drug interaction side branch present",
+    "No syntax errors from special characters",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart with properly escaped special characters, clean branching, no Mermaid parse errors from slashes, ampersands, or Unicode symbols."
+}
