@@ -1,0 +1,27 @@
+{
+  "testId": "ralph-006",
+  "attempt": 2,
+  "timestamp": "2026-03-02T10:51:51.602Z",
+  "mermaidSyntax": "gantt\n  title 24-Month Multi-Site Clinical Study Timeline\n  dateFormat YYYY-MM\n  axisFormat %b\n\n  section Phase 1 - Preparation\n    IRB Approval                    :irb, 2024-01, 2M\n    Site Selection & Training       :site, 2024-02, 2M\n    Database Setup                  :db, 2024-03, 2M\n\n  section Phase 2 - Enrollment\n    Site 1 Enrollment (M4-M8)       :s1, 2024-04, 4M\n    Site 2 Enrollment (M5-M10)      :s2, 2024-05, 5M\n    Site 3 Enrollment (M6-M12)      :s3, 2024-06, 6M\n\n  section Phase 3 - Treatment\n    Treatment Period (M8-M16)       :treat, 2024-08, 8M\n    3-Month Follow-up (M16-M20)     :follow, 2025-04, 4M\n\n  section Phase 4 - Analysis\n    Data Lock (M18)                 :lock, 2025-06, 1M\n    Statistical Analysis (M18-M21)  :stats, 2025-06, 3M\n    Manuscript Prep (M21-M23)       :ms, 2025-09, 3M\n\n  section Milestones\n    DSMB Review M8                  :milestone, 2024-08, 0d\n    DSMB Review M12                 :milestone, 2024-12, 0d\n    DSMB Review M16                 :milestone, 2025-04, 0d\n    Final Submission M24            :milestone, 2025-12, 0d",
+  "diagramType": "gantt",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "missing-node",
+      "description": "No branching pattern detected — no node has 2+ outgoing arrows",
+      "severity": "major",
+      "suggestedFix": "Ensure the AI generates branch points where the input describes parallel paths"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "All 4 phases present as sections": true,
+    "Correct date ranges for each task": true,
+    "Overlapping tasks shown (parallel enrollment across sites)": false,
+    "Milestones marked (DSMB reviews)": true,
+    "Section grouping visible (Preparation, Enrollment, Treatment, Analysis)": true,
+    "No truncated task names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 8
+}
