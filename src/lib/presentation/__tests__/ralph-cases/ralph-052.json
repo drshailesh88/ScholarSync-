@@ -1,0 +1,21 @@
+{
+  "id": "ralph-052",
+  "name": "Cell Cycle State Diagram with Nested Composite States",
+  "category": "stateDiagram_advanced",
+  "difficulty": "hard",
+  "input": "Create a state diagram for the eukaryotic cell cycle. Top-level states: Interphase and M Phase (Mitosis). Interphase is a composite state containing: G1 (Gap 1 — cell growth), S (DNA Synthesis), G2 (Gap 2 — preparation for mitosis). Transition from G1 to S requires passing the G1/S checkpoint (Restriction Point). M Phase is a composite state containing: Prophase, Prometaphase, Metaphase, Anaphase, Telophase. Transition from G2 to M Phase requires passing the G2/M checkpoint. After Telophase -> Cytokinesis -> back to G1 (completing the cycle). Add a branch from G1: if cell receives quiescence signal -> G0 (quiescent state). From G0 -> can re-enter G1 with growth factor stimulation. Show the nested composite states clearly with the checkpoints as guard conditions on transitions.",
+  "expectedDiagramType": "stateDiagram",
+  "expectedNodeCount": 12,
+  "qualityCriteria": [
+    "stateDiagram-v2 type declared",
+    "Interphase as composite state containing G1, S, G2",
+    "M Phase as composite state containing Prophase through Telophase",
+    "G1/S checkpoint guard condition on G1 to S transition",
+    "G2/M checkpoint guard condition on transition to M Phase",
+    "G0 quiescent state with bidirectional transitions to G1",
+    "Cytokinesis state connecting back to G1 (cycle completion)",
+    "At least 10 distinct states",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "stateDiagram-v2 with 2 composite states (Interphase, M Phase), nested sub-states, checkpoint guards, G0 branch, cyclic flow."
+}

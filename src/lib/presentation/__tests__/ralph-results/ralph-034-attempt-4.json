@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-034",
+  "attempt": 4,
+  "timestamp": "2026-03-02T16:33:23.884Z",
+  "mermaidSyntax": "sequenceDiagram\n  participant C as Clinician\n  participant BC as Biobank Coordinator\n  participant SPL as Sample Processing Lab\n  participant QC as Quality Control\n  participant LIMS as LIMS Database\n\n  C->>BC: Collect and send sample\n  BC->>LIMS: Log sample receipt\n  BC->>SPL: Send sample for processing\n  activate SPL\n  par Parallel Processing\n    SPL->>SPL: Aliquoting\n  and\n    SPL->>SPL: DNA Extraction\n  and\n    SPL->>SPL: Plasma Separation\n  end\n  SPL->>QC: Send processed samples\n  deactivate SPL\n  activate QC\n  QC->>QC: Run integrity checks\n  alt QC Passes\n    QC->>LIMS: Update sample status (available)\n    QC->>BC: Notify sample availability\n  else QC Fails\n    loop Up to 3 reprocessing attempts\n      QC->>SPL: Return for reprocessing\n      SPL->>QC: Reprocessed samples\n      QC->>QC: Re-run integrity checks\n    end\n  end\n  deactivate QC\n  BC->>C: Notify sample availability",
+  "diagramType": "sequence",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Sequence diagram type declared": true,
+    "All 5 participants declared (Clinician, Coordinator, Lab, QC, LIMS)": true,
+    "Activate/deactivate used on at least one participant": true,
+    "Parallel block (par) for simultaneous sample processing": true,
+    "At least 3 parallel processing steps mentioned (aliquoting, DNA extraction, plasma)": true,
+    "Alt or opt block for QC pass/fail branching": true,
+    "Loop construct for reprocessing (up to 3 times)": true,
+    "LIMS Database interactions present (log and update)": true,
+    "At least 10 messages between participants": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

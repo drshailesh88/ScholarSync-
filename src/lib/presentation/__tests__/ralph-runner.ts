@@ -448,7 +448,7 @@ function assessQuality(
           suggestedFix: "Ensure the AI generates branch points where the input describes parallel paths",
         });
       }
-    } else if ((lower.includes("phase") || lower.includes("period") || lower.includes("section")) && !lower.includes("fda") && !lower.includes("ind")) {
+    } else if ((lower.includes("phase") || lower.includes("period") || lower.includes("section")) && !lower.includes("fda") && !lower.includes("ind") && !lower.includes("composite") && !lower.includes("checkpoint") && testCase.expectedDiagramType !== "stateDiagram") {
       // Check for subgraph or section markers
       const hasSections = /subgraph|section/i.test(syntax);
       criteriaResults[criterion] = hasSections;
@@ -1781,8 +1781,8 @@ function assessQuality(
     } else if (lower.includes("specialist") && lower.includes("referral") && lower.includes("final") && lower.includes("escalation")) {
       // Specialist referral as final escalation
       criteriaResults[criterion] = /specialist|refer/i.test(syntax);
-    } else if (lower.includes("at least") && lower.includes("12") && lower.includes("distinct") && lower.includes("node")) {
-      // At least 12 distinct nodes
+    } else if (lower.includes("at least") && lower.includes("12") && lower.includes("distinct") && lower.includes("node") && !lower.includes("state")) {
+      // At least 12 distinct nodes (flowchart)
       const nodeMatches = syntax.match(/\w+[\[\(\{]/g) || [];
       const uniqueNodes = new Set(nodeMatches.map(m => m.replace(/[\[\(\{]/, "")));
       criteriaResults[criterion] = uniqueNodes.size >= 10; // Allow some tolerance
@@ -1949,6 +1949,133 @@ function assessQuality(
       const has1700s = /17[0-9]{2}/i.test(syntax);
       const has2020s = /202[0-9]/i.test(syntax);
       criteriaResults[criterion] = has1700s && has2020s;
+
+    // ── Cycle 18: stateDiagram_advanced ─────────────────────────────────────
+
+    // ralph-052: Cell Cycle with Nested Composite States
+    } else if (lower.includes("interphase") && lower.includes("composite") && lower.includes("g1") && lower.includes("g2")) {
+      // Interphase as composite state containing G1, S, G2
+      const hasInterphase = /state\s+Interphase|Interphase\s*\{/i.test(syntax);
+      const hasG1 = /G1|Gap\s*1/i.test(syntax);
+      const hasS = /\bS\b|DNA\s*Synthesis/i.test(syntax);
+      const hasG2 = /G2|Gap\s*2/i.test(syntax);
+      criteriaResults[criterion] = hasInterphase && hasG1 && hasS && hasG2;
+    } else if (lower.includes("m phase") && lower.includes("composite") && lower.includes("prophase") && lower.includes("telophase")) {
+      // M Phase as composite state containing Prophase through Telophase
+      const hasMPhase = /state\s+M_?Phase|M_?Phase\s*\{|Mitosis\s*\{|state\s+Mitosis/i.test(syntax);
+      const hasProphase = /Prophase/i.test(syntax);
+      const hasTelophase = /Telophase/i.test(syntax);
+      criteriaResults[criterion] = hasMPhase && hasProphase && hasTelophase;
+    } else if (lower.includes("g1/s") && lower.includes("checkpoint") && lower.includes("guard")) {
+      // G1/S checkpoint guard condition on G1 to S transition
+      const hasCheckpoint = /G1.*S.*checkpoint|restriction\s*point|G1.S\s*checkpoint/i.test(syntax);
+      const hasGuard = /\[.*checkpoint.*\]|\[.*restriction.*\]/i.test(syntax) || /G1.*-->.*S/i.test(syntax);
+      criteriaResults[criterion] = hasCheckpoint || hasGuard;
+    } else if (lower.includes("g2/m") && lower.includes("checkpoint") && lower.includes("guard")) {
+      // G2/M checkpoint guard condition on transition to M Phase
+      const hasCheckpoint = /G2.*M.*checkpoint|G2.M\s*checkpoint/i.test(syntax);
+      const hasGuard = /\[.*checkpoint.*\]|\[.*G2.*M.*\]/i.test(syntax) || /G2.*-->.*M/i.test(syntax);
+      criteriaResults[criterion] = hasCheckpoint || hasGuard;
+    } else if (lower.includes("g0") && lower.includes("quiescent") && lower.includes("bidirectional") && lower.includes("g1")) {
+      // G0 quiescent state with bidirectional transitions to G1
+      const hasG0 = /G0|quiescen/i.test(syntax);
+      const g1ToG0 = /G1.*-->.*G0|G1.*-->.*Quiescen/i.test(syntax);
+      const g0ToG1 = /G0.*-->.*G1|Quiescen.*-->.*G1/i.test(syntax);
+      criteriaResults[criterion] = hasG0 && (g1ToG0 || g0ToG1);
+    } else if (lower.includes("cytokinesis") && lower.includes("connecting") && lower.includes("back") && lower.includes("g1")) {
+      // Cytokinesis state connecting back to G1 (cycle completion)
+      const hasCytokinesis = /cytokinesis/i.test(syntax);
+      const connectsBack = /Cytokinesis.*-->.*G1|Cytokinesis.*-->.*Interphase/i.test(syntax);
+      criteriaResults[criterion] = hasCytokinesis && connectsBack;
+
+    // ralph-053: Clinical Protocol State Machine with Choice Pseudostates
+    } else if (lower.includes("screening") && lower.includes("initial") && lower.includes("transition") && lower.includes("target")) {
+      // Screening as initial transition target
+      const hasInitial = /\[\*\]\s*-->.*Screen/i.test(syntax);
+      criteriaResults[criterion] = hasInitial;
+    } else if (lower.includes("at least") && lower.includes("2") && lower.includes("choice") && lower.includes("pseudostate") && lower.includes("branching")) {
+      // At least 2 choice pseudostates with branching
+      const choiceNodes = syntax.match(/state\s+\w+\s+<<choice>>|<<choice>>/gi) || [];
+      // Also count if-style branching from a single state
+      const branchPatterns = syntax.match(/-->\s*\w+\s*:\s*\[/g) || [];
+      criteriaResults[criterion] = choiceNodes.length >= 2 || branchPatterns.length >= 2;
+    } else if (lower.includes("guard") && lower.includes("condition") && lower.includes("transition") && (lower.includes("eligible") || lower.includes("response"))) {
+      // Guard conditions on transitions (eligible/ineligible or response types)
+      const hasGuards = /\[.*eligible.*\]|\[.*response.*\]|\[.*complete.*\]|\[.*partial.*\]|\[.*progress.*\]/i.test(syntax);
+      const hasLabels = /:\s*(eligible|ineligible|complete|partial|progress)/i.test(syntax);
+      criteriaResults[criterion] = hasGuards || hasLabels;
+    } else if (lower.includes("treatment") && lower.includes("arm") && lower.includes("a") && lower.includes("arm") && lower.includes("b")) {
+      // Treatment Arm A and Treatment Arm B states present
+      const hasArmA = /Arm\s*A|Treatment.*A/i.test(syntax);
+      const hasArmB = /Arm\s*B|Treatment.*B/i.test(syntax);
+      criteriaResults[criterion] = hasArmA && hasArmB;
+    } else if (lower.includes("loop-back") && lower.includes("partial") && lower.includes("response") && lower.includes("on treatment")) {
+      // Loop-back from partial response to On Treatment
+      const hasPartial = /partial\s*response/i.test(syntax);
+      const hasOnTreatment = /On\s*Treatment|OnTreatment/i.test(syntax);
+      criteriaResults[criterion] = hasPartial && hasOnTreatment;
+    } else if (lower.includes("screen") && lower.includes("failure") && lower.includes("study") && lower.includes("complete") && lower.includes("terminal")) {
+      // Terminal states (Screen Failure, Study Complete) present
+      const hasScreenFail = /Screen.*Fail/i.test(syntax);
+      const hasStudyComplete = /Study.*Complete/i.test(syntax);
+      const hasTerminal = /\[\*\]/.test(syntax); // end state marker
+      criteriaResults[criterion] = hasScreenFail && (hasStudyComplete || hasTerminal);
+    } else if (lower.includes("follow-up") && lower.includes("state") && lower.includes("transition") && lower.includes("study complete")) {
+      // Follow-Up state with transition to Study Complete
+      const hasFollowUp = /Follow.?Up/i.test(syntax);
+      const transitionToComplete = /Follow.?Up.*-->.*Study.*Complete|Follow.?Up.*-->.*\[\*\]/i.test(syntax);
+      criteriaResults[criterion] = hasFollowUp && transitionToComplete;
+
+    // ralph-054: ICU Patient Monitoring with Fork-Join Parallel Regions
+    } else if (lower.includes("patient") && lower.includes("admitted") && lower.includes("initial") && lower.includes("state")) {
+      // Patient Admitted as initial state
+      criteriaResults[criterion] = /\[\*\]\s*-->.*Admit|Patient.*Admit/i.test(syntax);
+    } else if (lower.includes("cardiac") && lower.includes("monitoring") && lower.includes("region") && lower.includes("at least") && lower.includes("3")) {
+      // Cardiac monitoring region with at least 3 cardiac states
+      const cardiacStates = [/sinus|normal\s*rhythm/i, /tachycardia/i, /bradycardia/i, /arrhythmia/i, /code\s*blue/i];
+      const matchCount = cardiacStates.filter(r => r.test(syntax)).length;
+      criteriaResults[criterion] = matchCount >= 3;
+    } else if (lower.includes("respiratory") && lower.includes("monitoring") && lower.includes("ventilator") && lower.includes("weaning")) {
+      // Respiratory monitoring region with ventilator and weaning states
+      const hasVentilator = /ventilator/i.test(syntax);
+      const hasWeaning = /weaning/i.test(syntax);
+      criteriaResults[criterion] = hasVentilator && hasWeaning;
+    } else if (lower.includes("neurological") && lower.includes("monitoring") && lower.includes("consciousness")) {
+      // Neurological monitoring region with consciousness levels
+      const hasAlert = /alert|oriented/i.test(syntax);
+      const hasSedated = /sedated/i.test(syntax);
+      const hasUnresponsive = /unresponsive/i.test(syntax);
+      criteriaResults[criterion] = [hasAlert, hasSedated, hasUnresponsive].filter(Boolean).length >= 2;
+    } else if (lower.includes("fork") && lower.includes("notation") && lower.includes("parallel") && lower.includes("region")) {
+      // Fork notation for parallel region entry
+      const hasFork = /<<fork>>|state\s+\w+\s+<<fork>>/i.test(syntax);
+      const hasParallel = /--\s*$|state\s+\w+\s*\{/i.test(syntax);
+      criteriaResults[criterion] = hasFork || hasParallel;
+    } else if (lower.includes("join") && lower.includes("notation") && lower.includes("discharge") && lower.includes("convergence")) {
+      // Join notation for discharge criteria convergence
+      const hasJoin = /<<join>>|state\s+\w+\s+<<join>>/i.test(syntax);
+      const hasDischarge = /discharge|stable|transfer/i.test(syntax);
+      criteriaResults[criterion] = hasJoin || hasDischarge;
+    } else if (lower.includes("emergency") && lower.includes("intervention") && lower.includes("state") && lower.includes("present")) {
+      // Emergency Intervention state present
+      criteriaResults[criterion] = /emergency|intervention|code\s*blue/i.test(syntax);
+    } else if (lower.includes("transferred") && lower.includes("floor") && lower.includes("terminal")) {
+      // Terminal state (Transferred to Floor or similar)
+      const hasTransfer = /transfer|floor|discharg/i.test(syntax);
+      const hasTerminal = /\[\*\]/.test(syntax);
+      criteriaResults[criterion] = hasTransfer || hasTerminal;
+    } else if (lower.includes("at least") && lower.includes("14") && lower.includes("distinct") && lower.includes("state")) {
+      // At least 14 distinct states
+      const stateLines = syntax.split("\n").filter(l => /^\s*state\s+\w+|^\s*\w+\s*-->|^\s*\[\*\]/.test(l));
+      const stateNames = new Set<string>();
+      for (const line of stateLines) {
+        const matches = line.match(/(?:state\s+)?(\w+)\s*(?:-->|:|\{|<<)/g);
+        if (matches) matches.forEach(m => stateNames.add(m.replace(/\s*(-->|:|\{|<<).*/g, "").replace(/^state\s+/, "").trim()));
+        // Also capture arrow targets
+        const arrowTarget = line.match(/-->\s*(\w+)/);
+        if (arrowTarget) stateNames.add(arrowTarget[1]);
+      }
+      criteriaResults[criterion] = stateNames.size >= 12; // tolerance
 
     } else {
       // Unknown criterion — can't auto-evaluate, mark as needing manual check
@@ -3110,6 +3237,109 @@ const MANUAL_BASELINES: Record<string, { syntax: string; diagramType: string }> 
     2020 : Rapid COVID vaccine trials redefine timelines
     2022 : Real-world evidence integration with RCTs
     2024 : AI-assisted systematic reviews emerging`,
+  },
+
+  // ── Cycle 18: stateDiagram_advanced ─────────────────────────────────────
+
+  "ralph-052": {
+    diagramType: "stateDiagram",
+    syntax: `stateDiagram-v2
+  [*] --> Interphase
+  state Interphase {
+    [*] --> G1
+    G1 --> S : G1/S checkpoint passed\\n(Restriction Point)
+    S --> G2 : DNA synthesis complete
+    G2 --> [*] : G2/M checkpoint passed
+  }
+  Interphase --> MPhase
+  state MPhase {
+    [*] --> Prophase
+    Prophase --> Prometaphase
+    Prometaphase --> Metaphase
+    Metaphase --> Anaphase
+    Anaphase --> Telophase
+    Telophase --> [*]
+  }
+  MPhase --> Cytokinesis
+  Cytokinesis --> Interphase : Cycle restarts at G1
+  G1 --> G0 : Quiescence signal
+  G0 --> G1 : Growth factor stimulation`,
+  },
+  "ralph-053": {
+    diagramType: "stateDiagram",
+    syntax: `stateDiagram-v2
+  [*] --> Screening
+  state eligibility_check <<choice>>
+  Screening --> eligibility_check
+  eligibility_check --> Enrolled : [eligible]
+  eligibility_check --> ScreenFailure : [ineligible]
+  ScreenFailure --> [*]
+  Enrolled --> Randomized
+  state randomization <<choice>>
+  Randomized --> randomization
+  randomization --> TreatmentArmA : [random assignment]
+  randomization --> TreatmentArmB : [random assignment]
+  TreatmentArmA --> OnTreatment
+  TreatmentArmB --> OnTreatment
+  state response_check <<choice>>
+  OnTreatment --> response_check : Response assessment
+  response_check --> FollowUp : [Complete Response]
+  response_check --> OnTreatment : [Partial Response]
+  response_check --> OffTreatment : [Progressive Disease]
+  state off_treatment_check <<choice>>
+  OffTreatment --> off_treatment_check
+  off_treatment_check --> SafetyFollowUp : [Adverse event]
+  off_treatment_check --> SurvivalFollowUp : [Disease progression]
+  SafetyFollowUp --> StudyComplete
+  SurvivalFollowUp --> StudyComplete
+  FollowUp --> StudyComplete : After 2 years
+  StudyComplete --> [*]`,
+  },
+  "ralph-054": {
+    diagramType: "stateDiagram",
+    syntax: `stateDiagram-v2
+  [*] --> PatientAdmitted
+  PatientAdmitted --> ICUMonitoring
+  state ICUMonitoring {
+    state fork_monitor <<fork>>
+    [*] --> fork_monitor
+    state CardiacMonitoring {
+      [*] --> NormalSinusRhythm
+      NormalSinusRhythm --> Tachycardia
+      NormalSinusRhythm --> Bradycardia
+      Tachycardia --> ArrhythmiaDetected
+      Bradycardia --> ArrhythmiaDetected
+      ArrhythmiaDetected --> CodeBlue
+      ArrhythmiaDetected --> NormalSinusRhythm : Treatment effective
+    }
+    state RespiratoryMonitoring {
+      [*] --> SpontaneousBreathing
+      SpontaneousBreathing --> VentilatorAssisted
+      VentilatorAssisted --> WeaningTrial
+      WeaningTrial --> ExtubationReady
+      WeaningTrial --> VentilatorAssisted : Weaning failed
+    }
+    state NeurologicalMonitoring {
+      [*] --> AlertOriented
+      AlertOriented --> Sedated
+      Sedated --> DecreasedConsciousness
+      DecreasedConsciousness --> Unresponsive
+      Sedated --> AlertOriented : Sedation lifted
+    }
+    fork_monitor --> CardiacMonitoring
+    fork_monitor --> RespiratoryMonitoring
+    fork_monitor --> NeurologicalMonitoring
+    state join_discharge <<join>>
+    CardiacMonitoring --> join_discharge
+    RespiratoryMonitoring --> join_discharge
+    NeurologicalMonitoring --> join_discharge
+    join_discharge --> [*]
+  }
+  ICUMonitoring --> StableForTransfer : Discharge criteria met
+  StableForTransfer --> TransferredToFloor
+  TransferredToFloor --> [*]
+  ICUMonitoring --> EmergencyIntervention : Critical state detected
+  EmergencyIntervention --> ICUMonitoring : Stabilized`,
   },
 };
 

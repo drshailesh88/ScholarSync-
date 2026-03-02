@@ -1,0 +1,23 @@
+{
+  "id": "ralph-054",
+  "name": "ICU Patient Monitoring State Diagram with Fork-Join Parallel Regions",
+  "category": "stateDiagram_advanced",
+  "difficulty": "hard",
+  "input": "Create a state diagram for ICU patient monitoring with parallel state regions. Initial state: Patient Admitted to ICU. Then a fork into 3 parallel monitoring regions that run concurrently: Region 1 — Cardiac Monitoring: Normal Sinus Rhythm, Tachycardia, Bradycardia, Arrhythmia Detected, Code Blue. Region 2 — Respiratory Monitoring: Spontaneous Breathing, Ventilator Assisted, Weaning Trial, Extubation Ready. Region 3 — Neurological Monitoring: Alert and Oriented, Sedated, Decreased Consciousness, Unresponsive. All 3 regions join when patient meets discharge criteria -> Stable for Transfer -> Transferred to Floor (terminal). If any region enters critical state (Code Blue, Unresponsive) -> Emergency Intervention state that overrides all regions. Show the parallel/concurrent regions using fork and join notation.",
+  "expectedDiagramType": "stateDiagram",
+  "expectedNodeCount": 16,
+  "qualityCriteria": [
+    "stateDiagram-v2 type declared",
+    "Patient Admitted as initial state",
+    "Cardiac monitoring region with at least 3 cardiac states",
+    "Respiratory monitoring region with ventilator and weaning states",
+    "Neurological monitoring region with consciousness levels",
+    "Fork notation for parallel region entry",
+    "Join notation for discharge criteria convergence",
+    "Emergency Intervention state present",
+    "Terminal state (Transferred to Floor or similar)",
+    "At least 14 distinct states",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "stateDiagram-v2 with fork/join, 3 parallel monitoring regions (cardiac, respiratory, neuro), emergency override, 16+ states."
+}

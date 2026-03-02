@@ -1,0 +1,22 @@
+{
+  "id": "ralph-053",
+  "name": "Clinical Protocol State Machine with Choice Pseudostates and Guards",
+  "category": "stateDiagram_advanced",
+  "difficulty": "hard",
+  "input": "Create a state diagram for a clinical trial patient state machine. Initial state -> Screening. From Screening, choice node: if eligible -> Enrolled, if ineligible -> Screen Failure (terminal). From Enrolled -> Randomized. From Randomized, choice node: Treatment Arm A or Treatment Arm B (random assignment). Both treatment arms -> On Treatment. From On Treatment, choice node based on response assessment: Complete Response -> Follow-Up, Partial Response -> Continue Treatment (loop back to On Treatment), Progressive Disease -> Off Treatment. From Off Treatment -> choice: if adverse event -> Safety Follow-Up -> Study Complete, if disease progression -> Survival Follow-Up -> Study Complete. From Follow-Up after 2 years -> Study Complete (terminal). Show choice pseudostates as diamond/choice nodes with guard conditions on transitions.",
+  "expectedDiagramType": "stateDiagram",
+  "expectedNodeCount": 14,
+  "qualityCriteria": [
+    "stateDiagram-v2 type declared",
+    "Screening as initial transition target",
+    "At least 2 choice pseudostates with branching",
+    "Guard conditions on transitions (eligible/ineligible or response types)",
+    "Treatment Arm A and Treatment Arm B states present",
+    "Loop-back from partial response to On Treatment",
+    "Terminal states (Screen Failure, Study Complete) present",
+    "At least 12 distinct states or nodes",
+    "Follow-Up state with transition to Study Complete",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "stateDiagram-v2 with 14+ states, choice pseudostates, guard conditions, treatment arms, response branching, terminal states."
+}
