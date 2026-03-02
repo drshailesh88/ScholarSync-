@@ -1,0 +1,20 @@
+{
+  "id": "ralph-025",
+  "name": "Large CONSORT Flow Diagram — 30+ Nodes",
+  "category": "scale_complexity",
+  "difficulty": "hard",
+  "input": "Create a CONSORT flow diagram for a multi-arm clinical trial. Enrollment: 2,847 assessed for eligibility, 1,203 excluded (412 not meeting criteria, 298 declined, 189 lost contact, 304 other). 1,644 randomized. Allocation: Arm A (Drug X 10mg) n=548, Arm B (Drug X 20mg) n=548, Arm C (Placebo) n=548. Follow-up losses per arm: Arm A (23 adverse events, 15 withdrew consent, 8 lost), Arm B (31 adverse events, 12 withdrew, 11 lost), Arm C (9 adverse events, 18 withdrew, 14 lost). Analysis: Arm A 502 analyzed (46 excluded), Arm B 494 analyzed (54 excluded), Arm C 507 analyzed (41 excluded). Use TD direction. Include all numeric data in labels.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 25,
+  "qualityCriteria": [
+    "Top-down layout (TD direction)",
+    "Enrollment numbers present (2847 assessed, 1203 excluded)",
+    "All 3 arms shown with sample sizes",
+    "Exclusion reasons itemized (not meeting criteria, declined, lost contact)",
+    "Follow-up losses per arm with reasons",
+    "Final analysis numbers per arm",
+    "At least 20 distinct nodes",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "CONSORT flow with 30+ nodes, 3 arms, full enrollment-allocation-followup-analysis cascade with all numbers."
+}
