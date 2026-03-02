@@ -111,10 +111,18 @@ export function VisualMode() {
 
   async function handleInsertNewSlide() {
     if (selectedIndex == null) return;
-    const block = options[selectedIndex].block;
+    const opt = options[selectedIndex];
+    const block = opt.block;
+    // Derive a meaningful title from the infographic/diagram data or the option label
+    const blockData = block.data as Record<string, unknown>;
+    const slideTitle =
+      (blockData.title as string) ||
+      (blockData.caption as string) ||
+      opt.label ||
+      "Visual Slide";
     const newSlide = await addSlide(activeSlide?.id);
     if (newSlide) {
-      updateSlide(newSlide.id, { contentBlocks: [block] });
+      updateSlide(newSlide.id, { title: slideTitle, contentBlocks: [block] });
     }
   }
 

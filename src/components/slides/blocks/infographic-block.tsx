@@ -14,11 +14,11 @@ interface InfographicBlockProps {
 }
 
 const COLOR_SCHEMES: Record<string, string[]> = {
-  blue:    ["#3B82F6", "#60A5FA", "#93C5FD", "#BFDBFE", "#2563EB", "#1D4ED8"],
-  green:   ["#10B981", "#34D399", "#6EE7B7", "#A7F3D0", "#059669", "#047857"],
-  purple:  ["#8B5CF6", "#A78BFA", "#C4B5FD", "#DDD6FE", "#7C3AED", "#6D28D9"],
-  orange:  ["#F59E0B", "#FBBF24", "#FCD34D", "#FDE68A", "#D97706", "#B45309"],
-  rainbow: ["#EF4444", "#F59E0B", "#10B981", "#3B82F6", "#8B5CF6", "#EC4899"],
+  blue:    ["#2563EB", "#3B82F6", "#60A5FA", "#93C5FD", "#1D4ED8", "#1E40AF"],
+  green:   ["#059669", "#10B981", "#34D399", "#6EE7B7", "#047857", "#065F46"],
+  purple:  ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#6D28D9", "#5B21B6"],
+  orange:  ["#D97706", "#F59E0B", "#FBBF24", "#FCD34D", "#B45309", "#92400E"],
+  rainbow: ["#DC2626", "#D97706", "#059669", "#2563EB", "#7C3AED", "#DB2777"],
 };
 
 function getColors(scheme: string | undefined, theme: ThemeConfig): string[] {
@@ -29,9 +29,9 @@ function getColors(scheme: string | undefined, theme: ThemeConfig): string[] {
     theme.primaryColor,
     theme.accentColor,
     theme.secondaryColor,
-    theme.primaryColor + "99",
-    theme.accentColor + "99",
-    theme.secondaryColor + "99",
+    theme.primaryColor + "CC",
+    theme.accentColor + "CC",
+    theme.secondaryColor + "CC",
   ];
 }
 
@@ -39,49 +39,69 @@ function getItemIcon(item: InfographicItem, fallback: string): string {
   return item.icon || fallback;
 }
 
+/** Wrap long text into multiple tspan lines */
+function wrapText(text: string, maxChars: number): string[] {
+  if (text.length <= maxChars) return [text];
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    if (current.length + word.length + 1 > maxChars && current) {
+      lines.push(current);
+      current = word;
+    } else {
+      current = current ? `${current} ${word}` : word;
+    }
+  }
+  if (current) lines.push(current);
+  return lines.slice(0, 3); // max 3 lines
+}
+
 // ---------------------------------------------------------------------------
 // Sub-renderers for each infographic type
 // ---------------------------------------------------------------------------
 
 function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
-  const stepW = 100 / Math.max(items.length, 1);
+  const n = Math.max(items.length, 1);
+  const cardW = 120;
+  const gap = 24;
+  const totalW = n * cardW + (n - 1) * gap;
+  const offsetX = (800 - totalW) / 2;
+
   return (
-    <svg viewBox="0 0 800 200" className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox="0 0 800 170" className="w-full">
       {items.map((item, i) => {
-        const cx = stepW * i * 8 + stepW * 4;
+        const cx = offsetX + i * (cardW + gap) + cardW / 2;
         const color = colors[i % colors.length];
         return (
           <g key={i}>
-            {/* Arrow connector */}
             {i > 0 && (
               <line
-                x1={cx - stepW * 4 - 10} y1={80}
-                x2={cx - stepW * 2} y2={80}
-                stroke={theme.textColor + "40"} strokeWidth={2}
-                markerEnd="url(#arrowhead)"
+                x1={cx - cardW / 2 - gap + 5} y1={70}
+                x2={cx - cardW / 2 - 5} y2={70}
+                stroke={theme.textColor + "50"} strokeWidth={2.5}
+                markerEnd="url(#pf-arrow)"
               />
             )}
-            {/* Step circle */}
-            <circle cx={cx} cy={80} r={35} fill={color} opacity={0.15} />
-            <circle cx={cx} cy={80} r={30} fill={color} opacity={0.9} />
-            <text x={cx} y={86} textAnchor="middle" fill="white" fontSize={20} fontWeight="bold">
+            <circle cx={cx} cy={70} r={36} fill={color} opacity={0.12} />
+            <circle cx={cx} cy={70} r={30} fill={color} />
+            <text x={cx} y={77} textAnchor="middle" fill="white" fontSize={22} fontWeight="bold">
               {getItemIcon(item, `${i + 1}`)}
             </text>
-            {/* Label */}
-            <text x={cx} y={135} textAnchor="middle" fill={theme.textColor} fontSize={12} fontWeight="600">
+            <text x={cx} y={128} textAnchor="middle" fill={theme.textColor} fontSize={13} fontWeight="700">
               {item.label}
             </text>
             {item.description && (
-              <text x={cx} y={152} textAnchor="middle" fill={theme.textColor} fontSize={9} opacity={0.6}>
-                {item.description.length > 25 ? item.description.slice(0, 25) + "…" : item.description}
+              <text x={cx} y={145} textAnchor="middle" fill={theme.textColor} fontSize={10} opacity={0.6}>
+                {item.description.length > 20 ? item.description.slice(0, 20) + "…" : item.description}
               </text>
             )}
           </g>
         );
       })}
       <defs>
-        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-          <polygon points="0 0, 8 3, 0 6" fill={theme.textColor + "60"} />
+        <marker id="pf-arrow" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto">
+          <polygon points="0 0, 10 4, 0 8" fill={theme.textColor + "70"} />
         </marker>
       </defs>
     </svg>
@@ -89,33 +109,31 @@ function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; color
 }
 
 function Comparison({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
-  const colW = 100 / Math.max(items.length, 1);
+  const n = Math.max(items.length, 1);
+  const colW = (760 - (n - 1) * 16) / n;
+
   return (
-    <svg viewBox="0 0 800 240" className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox="0 0 800 180" className="w-full">
       {items.map((item, i) => {
-        const x = colW * i * 8 + 10;
-        const w = colW * 8 - 20;
+        const x = 20 + i * (colW + 16);
         const color = colors[i % colors.length];
         return (
           <g key={i}>
-            <rect x={x} y={10} width={w} height={220} rx={12} fill={color} opacity={0.08} />
-            <rect x={x} y={10} width={w} height={50} rx={12} fill={color} opacity={0.2} />
-            {/* Clip bottom corners of header */}
-            <rect x={x} y={35} width={w} height={25} fill={color} opacity={0.2} />
-            <text x={x + w / 2} y={42} textAnchor="middle" fill={theme.textColor} fontSize={14} fontWeight="700">
+            <rect x={x} y={5} width={colW} height={170} rx={10} fill={color} opacity={0.06} />
+            <rect x={x} y={5} width={colW} height={38} rx={10} fill={color} opacity={0.2} />
+            <rect x={x} y={28} width={colW} height={15} fill={color} opacity={0.2} />
+            <text x={x + colW / 2} y={30} textAnchor="middle" fill={theme.textColor} fontSize={13} fontWeight="700">
               {getItemIcon(item, "📌")} {item.label}
             </text>
             {item.description && (
-              <foreignObject x={x + 10} y={70} width={w - 20} height={140}>
-                <div
-                  style={{ color: theme.textColor, fontSize: 11, lineHeight: 1.4, opacity: 0.75 }}
-                >
+              <foreignObject x={x + 8} y={48} width={colW - 16} height={80}>
+                <div style={{ color: theme.textColor, fontSize: 10, lineHeight: 1.3, opacity: 0.75 }}>
                   {item.description}
                 </div>
               </foreignObject>
             )}
             {item.value && (
-              <text x={x + w / 2} y={220} textAnchor="middle" fill={color} fontSize={18} fontWeight="800">
+              <text x={x + colW / 2} y={160} textAnchor="middle" fill={color} fontSize={18} fontWeight="800">
                 {item.value}
               </text>
             )}
@@ -127,39 +145,35 @@ function Comparison({ items, colors, theme }: { items: InfographicItem[]; colors
 }
 
 function Hierarchy({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
-  // Root at top, children below in a tree
   const root = items[0];
   const children = items.slice(1);
-  const childW = 800 / Math.max(children.length, 1);
+  const n = Math.max(children.length, 1);
+  const childW = 760 / n;
 
   return (
-    <svg viewBox="0 0 800 220" className="w-full" style={{ maxHeight: "100%" }}>
-      {/* Root node */}
+    <svg viewBox="0 0 800 170" className="w-full">
       {root && (
         <g>
-          <rect x={300} y={10} width={200} height={50} rx={10} fill={colors[0]} opacity={0.9} />
-          <text x={400} y={42} textAnchor="middle" fill="white" fontSize={14} fontWeight="700">
+          <rect x={280} y={8} width={240} height={42} rx={8} fill={colors[0]} />
+          <text x={400} y={35} textAnchor="middle" fill="white" fontSize={14} fontWeight="700">
             {root.label}
           </text>
         </g>
       )}
-      {/* Children */}
       {children.map((child, i) => {
-        const cx = childW * i + childW / 2;
+        const cx = 20 + childW * i + childW / 2;
         const color = colors[(i + 1) % colors.length];
         return (
           <g key={i}>
-            {/* Connector line */}
-            <line x1={400} y1={60} x2={cx} y2={100} stroke={theme.textColor + "30"} strokeWidth={1.5} />
-            {/* Child node */}
-            <rect x={cx - 70} y={100} width={140} height={45} rx={8} fill={color} opacity={0.15} />
-            <rect x={cx - 70} y={100} width={4} height={45} rx={2} fill={color} />
-            <text x={cx - 55} y={125} fill={theme.textColor} fontSize={11} fontWeight="600">
+            <line x1={400} y1={50} x2={cx} y2={75} stroke={theme.textColor + "30"} strokeWidth={2} />
+            <rect x={cx - 80} y={75} width={160} height={45} rx={6} fill={color} opacity={0.12} />
+            <rect x={cx - 80} y={75} width={4} height={45} rx={2} fill={color} />
+            <text x={cx - 64} y={96} fill={theme.textColor} fontSize={12} fontWeight="600">
               {child.label}
             </text>
             {child.description && (
-              <text x={cx - 55} y={140} fill={theme.textColor} fontSize={9} opacity={0.6}>
-                {child.description.length > 20 ? child.description.slice(0, 20) + "…" : child.description}
+              <text x={cx - 64} y={112} fill={theme.textColor} fontSize={9} opacity={0.6}>
+                {child.description.length > 28 ? child.description.slice(0, 28) + "…" : child.description}
               </text>
             )}
           </g>
@@ -171,43 +185,52 @@ function Hierarchy({ items, colors, theme }: { items: InfographicItem[]; colors:
 
 function Cycle({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const n = items.length;
-  const cx = 400, cy = 110, r = 85;
+  // Ultra-wide ellipse to fit widescreen 16:10 slides
+  const cxc = 400, cyc = 85;
+  const rxc = 300, ryc = 55;
 
   return (
-    <svg viewBox="0 0 800 230" className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox="0 0 800 175" className="w-full">
       {items.map((item, i) => {
         const angle = (2 * Math.PI * i) / n - Math.PI / 2;
-        const x = cx + r * 1.8 * Math.cos(angle);
-        const y = cy + r * Math.sin(angle) + 10;
+        const x = cxc + rxc * Math.cos(angle);
+        const y = cyc + ryc * Math.sin(angle);
         const color = colors[i % colors.length];
 
-        // Arrow to next node
         const nextAngle = (2 * Math.PI * ((i + 1) % n)) / n - Math.PI / 2;
-        const nx = cx + r * 1.8 * Math.cos(nextAngle);
-        const ny = cy + r * Math.sin(nextAngle) + 10;
-        const mx = (x + nx) / 2 + (cy - (y + ny) / 2) * 0.3;
-        const my = (y + ny) / 2 + ((x + nx) / 2 - cx) * 0.3;
+        const nx = cxc + rxc * Math.cos(nextAngle);
+        const ny = cyc + ryc * Math.sin(nextAngle);
+        const mx = (x + nx) / 2 + (cyc - (y + ny) / 2) * 0.2;
+        const my = (y + ny) / 2 + ((x + nx) / 2 - cxc) * 0.2;
+
+        const labelLines = wrapText(item.label, 12);
 
         return (
           <g key={i}>
             <path
               d={`M ${x} ${y} Q ${mx} ${my} ${nx} ${ny}`}
-              fill="none" stroke={theme.textColor + "25"} strokeWidth={1.5}
-              markerEnd="url(#arrowhead-cycle)"
+              fill="none" stroke={theme.textColor + "30"} strokeWidth={1.5}
+              markerEnd="url(#cycle-arrow)"
             />
-            <circle cx={x} cy={y} r={32} fill={color} opacity={0.9} />
-            <text x={x} y={y - 5} textAnchor="middle" fill="white" fontSize={16}>
+            <circle cx={x} cy={y} r={28} fill={color} />
+            <text x={x} y={y - 3} textAnchor="middle" fill="white" fontSize={14}>
               {getItemIcon(item, `${i + 1}`)}
             </text>
-            <text x={x} y={y + 12} textAnchor="middle" fill="white" fontSize={8} fontWeight="600">
-              {item.label.length > 10 ? item.label.slice(0, 10) + "…" : item.label}
-            </text>
+            {labelLines.map((line, li) => (
+              <text
+                key={li}
+                x={x} y={y + 9 + li * 10}
+                textAnchor="middle" fill="white" fontSize={7} fontWeight="600"
+              >
+                {line}
+              </text>
+            ))}
           </g>
         );
       })}
       <defs>
-        <marker id="arrowhead-cycle" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto">
-          <polygon points="0 0, 6 2.5, 0 5" fill={theme.textColor + "50"} />
+        <marker id="cycle-arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill={theme.textColor + "60"} />
         </marker>
       </defs>
     </svg>
@@ -216,15 +239,15 @@ function Cycle({ items, colors, theme }: { items: InfographicItem[]; colors: str
 
 function Funnel({ items, colors, theme: _theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const n = items.length;
-  const totalH = 200;
+  const totalH = 155;
   const stepH = totalH / n;
 
   return (
-    <svg viewBox="0 0 800 240" className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox="0 0 800 170" className="w-full">
       {items.map((item, i) => {
-        const topW = 700 - (i * 500) / n;
-        const botW = 700 - ((i + 1) * 500) / n;
-        const y = i * stepH + 15;
+        const topW = 720 - (i * 520) / n;
+        const botW = 720 - ((i + 1) * 520) / n;
+        const y = i * stepH + 6;
         const color = colors[i % colors.length];
         const topX = (800 - topW) / 2;
         const botX = (800 - botW) / 2;
@@ -233,7 +256,7 @@ function Funnel({ items, colors, theme: _theme }: { items: InfographicItem[]; co
           <g key={i}>
             <polygon
               points={`${topX},${y} ${topX + topW},${y} ${botX + botW},${y + stepH - 2} ${botX},${y + stepH - 2}`}
-              fill={color} opacity={0.8}
+              fill={color} opacity={0.85}
             />
             <text x={400} y={y + stepH / 2 + 4} textAnchor="middle" fill="white" fontSize={13} fontWeight="600">
               {item.label}
@@ -248,17 +271,17 @@ function Funnel({ items, colors, theme: _theme }: { items: InfographicItem[]; co
 
 function Pyramid({ items, colors, theme: _theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const n = items.length;
-  const totalH = 200;
+  const totalH = 155;
   const stepH = totalH / n;
+  const minW = 120;
+  const maxW = 720;
 
   return (
-    <svg viewBox="0 0 800 240" className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox="0 0 800 170" className="w-full">
       {items.map((item, i) => {
-        // Pyramid: top is narrowest, bottom is widest (reversed from funnel)
-        const ri = n - 1 - i; // reverse index
-        const topW = 700 - (ri * 600) / n;
-        const botW = 700 - ((ri + 1) * 600) / n;
-        const y = ri * stepH + 15;
+        const topW = minW + (i * (maxW - minW)) / n;
+        const botW = minW + ((i + 1) * (maxW - minW)) / n;
+        const y = i * stepH + 6;
         const color = colors[i % colors.length];
         const topX = (800 - topW) / 2;
         const botX = (800 - botW) / 2;
@@ -267,9 +290,9 @@ function Pyramid({ items, colors, theme: _theme }: { items: InfographicItem[]; c
           <g key={i}>
             <polygon
               points={`${topX},${y} ${topX + topW},${y} ${botX + botW},${y + stepH - 2} ${botX},${y + stepH - 2}`}
-              fill={color} opacity={0.8}
+              fill={color} opacity={0.85}
             />
-            <text x={400} y={y + stepH / 2 + 5} textAnchor="middle" fill="white" fontSize={12} fontWeight="600">
+            <text x={400} y={y + stepH / 2 + 4} textAnchor="middle" fill="white" fontSize={12} fontWeight="600">
               {item.label}
             </text>
           </g>
@@ -282,22 +305,27 @@ function Pyramid({ items, colors, theme: _theme }: { items: InfographicItem[]; c
 function VennDiagram({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const circles = items.slice(0, 3);
   const positions = [
-    { cx: 330, cy: 100 },
-    { cx: 470, cy: 100 },
-    { cx: 400, cy: 160 },
+    { cx: 340, cy: 80 },
+    { cx: 460, cy: 80 },
+    { cx: 400, cy: 140 },
   ];
 
   return (
-    <svg viewBox="0 0 800 240" className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox="0 0 800 180" className="w-full">
       {circles.map((item, i) => {
         const pos = positions[i] || positions[0];
         const color = colors[i % colors.length];
         return (
           <g key={i}>
-            <circle cx={pos.cx} cy={pos.cy} r={80} fill={color} opacity={0.25} stroke={color} strokeWidth={2} />
-            <text x={pos.cx} y={pos.cy + 5} textAnchor="middle" fill={theme.textColor} fontSize={12} fontWeight="600">
+            <circle cx={pos.cx} cy={pos.cy} r={70} fill={color} opacity={0.2} stroke={color} strokeWidth={2} />
+            <text x={pos.cx} y={pos.cy + 4} textAnchor="middle" fill={theme.textColor} fontSize={12} fontWeight="600">
               {item.label}
             </text>
+            {item.description && (
+              <text x={pos.cx} y={pos.cy + 18} textAnchor="middle" fill={theme.textColor} fontSize={9} opacity={0.6}>
+                {item.description.length > 22 ? item.description.slice(0, 22) + "…" : item.description}
+              </text>
+            )}
           </g>
         );
       })}
@@ -308,31 +336,32 @@ function VennDiagram({ items, colors, theme }: { items: InfographicItem[]; color
 function Matrix({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const quadrants = items.slice(0, 4);
   const positions = [
-    { x: 50, y: 20 },   // top-left
-    { x: 410, y: 20 },  // top-right
-    { x: 50, y: 125 },  // bottom-left
-    { x: 410, y: 125 }, // bottom-right
+    { x: 20, y: 5 },
+    { x: 410, y: 5 },
+    { x: 20, y: 92 },
+    { x: 410, y: 92 },
   ];
 
   return (
-    <svg viewBox="0 0 800 240" className="w-full" style={{ maxHeight: "100%" }}>
-      {/* Grid lines */}
-      <line x1={400} y1={10} x2={400} y2={230} stroke={theme.textColor + "20"} strokeWidth={2} />
-      <line x1={40} y1={120} x2={760} y2={120} stroke={theme.textColor + "20"} strokeWidth={2} />
+    <svg viewBox="0 0 800 180" className="w-full">
+      <line x1={400} y1={2} x2={400} y2={178} stroke={theme.textColor + "20"} strokeWidth={2} />
+      <line x1={15} y1={90} x2={785} y2={90} stroke={theme.textColor + "20"} strokeWidth={2} />
 
       {quadrants.map((item, i) => {
         const pos = positions[i];
         const color = colors[i % colors.length];
         return (
           <g key={i}>
-            <rect x={pos.x} y={pos.y} width={340} height={95} rx={8} fill={color} opacity={0.08} />
-            <text x={pos.x + 15} y={pos.y + 28} fill={color} fontSize={14} fontWeight="700">
+            <rect x={pos.x} y={pos.y} width={370} height={82} rx={6} fill={color} opacity={0.06} />
+            <text x={pos.x + 10} y={pos.y + 22} fill={color} fontSize={13} fontWeight="700">
               {getItemIcon(item, "●")} {item.label}
             </text>
             {item.description && (
-              <text x={pos.x + 15} y={pos.y + 50} fill={theme.textColor} fontSize={10} opacity={0.65}>
-                {item.description.length > 45 ? item.description.slice(0, 45) + "…" : item.description}
-              </text>
+              <foreignObject x={pos.x + 10} y={pos.y + 28} width={340} height={48}>
+                <div style={{ color: theme.textColor, fontSize: 10, lineHeight: 1.3, opacity: 0.65 }}>
+                  {item.description}
+                </div>
+              </foreignObject>
             )}
           </g>
         );
@@ -345,32 +374,30 @@ function Radial({ items, colors, theme }: { items: InfographicItem[]; colors: st
   const center = items[0];
   const spokes = items.slice(1);
   const n = spokes.length;
-  const cx = 400, cy = 115;
+  const cxr = 400, cyr = 85;
 
   return (
-    <svg viewBox="0 0 800 240" className="w-full" style={{ maxHeight: "100%" }}>
-      {/* Central node */}
+    <svg viewBox="0 0 800 175" className="w-full">
       {center && (
         <g>
-          <circle cx={cx} cy={cy} r={40} fill={colors[0]} opacity={0.9} />
-          <text x={cx} y={cy + 5} textAnchor="middle" fill="white" fontSize={11} fontWeight="700">
-            {center.label.length > 12 ? center.label.slice(0, 12) + "…" : center.label}
+          <circle cx={cxr} cy={cyr} r={38} fill={colors[0]} />
+          <text x={cxr} y={cyr + 4} textAnchor="middle" fill="white" fontSize={11} fontWeight="700">
+            {center.label.length > 14 ? center.label.slice(0, 14) + "…" : center.label}
           </text>
         </g>
       )}
-      {/* Spokes */}
       {spokes.map((item, i) => {
         const angle = (2 * Math.PI * i) / n - Math.PI / 2;
-        const x = cx + 150 * Math.cos(angle);
-        const y = cy + 85 * Math.sin(angle);
+        const x = cxr + 220 * Math.cos(angle);
+        const y = cyr + 60 * Math.sin(angle);
         const color = colors[(i + 1) % colors.length];
         return (
           <g key={i}>
-            <line x1={cx} y1={cy} x2={x} y2={y} stroke={theme.textColor + "20"} strokeWidth={1.5} />
-            <circle cx={x} cy={y} r={28} fill={color} opacity={0.15} />
-            <circle cx={x} cy={y} r={24} fill={color} opacity={0.9} />
+            <line x1={cxr} y1={cyr} x2={x} y2={y} stroke={theme.textColor + "20"} strokeWidth={1.5} />
+            <circle cx={x} cy={y} r={24} fill={color} opacity={0.12} />
+            <circle cx={x} cy={y} r={21} fill={color} />
             <text x={x} y={y + 4} textAnchor="middle" fill="white" fontSize={9} fontWeight="600">
-              {item.label.length > 8 ? item.label.slice(0, 8) + "…" : item.label}
+              {item.label.length > 12 ? item.label.slice(0, 12) + "…" : item.label}
             </text>
           </g>
         );
@@ -381,27 +408,36 @@ function Radial({ items, colors, theme }: { items: InfographicItem[]; colors: st
 
 function StatsRow({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const n = items.length;
-  const cardW = 800 / Math.max(n, 1) - 15;
+  const cardW = (760 - (n - 1) * 14) / Math.max(n, 1);
 
   return (
-    <svg viewBox="0 0 800 140" className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox="0 0 800 160" className="w-full">
       {items.map((item, i) => {
-        const x = i * (cardW + 15) + 5;
+        const x = 20 + i * (cardW + 14);
         const color = colors[i % colors.length];
         return (
           <g key={i}>
-            <rect x={x} y={10} width={cardW} height={120} rx={10} fill={color} opacity={0.08} />
-            <rect x={x} y={10} width={cardW} height={4} rx={2} fill={color} />
-            <text x={x + cardW / 2} y={55} textAnchor="middle" fill={color} fontSize={28} fontWeight="800">
+            <rect x={x} y={8} width={cardW} height={145} rx={10} fill={color} opacity={0.06} />
+            <rect x={x} y={8} width={cardW} height={4} rx={2} fill={color} />
+            <text x={x + cardW / 2} y={65} textAnchor="middle" fill={color} fontSize={30} fontWeight="800">
               {item.value || "—"}
             </text>
-            <text x={x + cardW / 2} y={80} textAnchor="middle" fill={theme.textColor} fontSize={11} fontWeight="600">
+            <text x={x + cardW / 2} y={88} textAnchor="middle" fill={theme.textColor} fontSize={12} fontWeight="600">
               {item.label}
             </text>
             {item.description && (
-              <text x={x + cardW / 2} y={100} textAnchor="middle" fill={theme.textColor} fontSize={9} opacity={0.5}>
-                {item.description.length > 25 ? item.description.slice(0, 25) + "…" : item.description}
-              </text>
+              <foreignObject x={x + 6} y={96} width={cardW - 12} height={48}>
+                <div style={{
+                  color: theme.textColor,
+                  fontSize: 9,
+                  textAlign: "center",
+                  opacity: 0.5,
+                  lineHeight: 1.3,
+                  overflow: "hidden",
+                }}>
+                  {item.description}
+                </div>
+              </foreignObject>
             )}
           </g>
         );
@@ -411,26 +447,31 @@ function StatsRow({ items, colors, theme }: { items: InfographicItem[]; colors: 
 }
 
 function Checklist({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
-  const rowH = 35;
+  const rowH = 28;
+  const totalH = Math.min(items.length * rowH + 16, 175);
   return (
-    <svg viewBox={`0 0 800 ${items.length * rowH + 20}`} className="w-full" style={{ maxHeight: "100%" }}>
+    <svg viewBox={`0 0 800 ${totalH}`} className="w-full">
       {items.map((item, i) => {
-        const y = i * rowH + 15;
+        const y = i * rowH + 12;
         const isDone = item.status === "done";
         const isActive = item.status === "active";
         const color = isDone ? colors[0] : isActive ? colors[1] : theme.textColor + "40";
         return (
           <g key={i}>
-            {/* Check circle */}
-            <circle cx={30} cy={y + 10} r={10} fill={color} opacity={isDone ? 0.9 : 0.15} stroke={color} strokeWidth={1.5} />
-            {isDone && (
-              <text x={30} y={y + 15} textAnchor="middle" fill="white" fontSize={12}>✓</text>
+            {i % 2 === 0 && (
+              <rect x={10} y={y - 3} width={780} height={rowH} rx={4} fill={theme.textColor} opacity={0.03} />
             )}
-            {/* Label */}
+            <circle cx={35} cy={y + 10} r={10} fill={color} opacity={isDone ? 0.9 : 0.12} stroke={color} strokeWidth={1.5} />
+            {isDone && (
+              <text x={35} y={y + 15} textAnchor="middle" fill="white" fontSize={11} fontWeight="bold">✓</text>
+            )}
+            {isActive && (
+              <circle cx={35} cy={y + 10} r={4} fill={color} />
+            )}
             <text
-              x={55} y={y + 15}
+              x={58} y={y + 15}
               fill={theme.textColor}
-              fontSize={13}
+              fontSize={12}
               fontWeight={isActive ? "600" : "400"}
               opacity={isDone ? 0.5 : 1}
               textDecoration={isDone ? "line-through" : "none"}
@@ -438,7 +479,7 @@ function Checklist({ items, colors, theme }: { items: InfographicItem[]; colors:
               {item.label}
             </text>
             {item.value && (
-              <text x={750} y={y + 15} textAnchor="end" fill={color} fontSize={12} fontWeight="600">
+              <text x={760} y={y + 15} textAnchor="end" fill={color} fontSize={11} fontWeight="600">
                 {item.value}
               </text>
             )}
@@ -450,35 +491,32 @@ function Checklist({ items, colors, theme }: { items: InfographicItem[]; colors:
 }
 
 function CauseEffect({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
-  // Fishbone/Ishikawa: effect on right, causes branching from spine
   const effect = items[0];
   const causes = items.slice(1);
   const n = causes.length;
 
   return (
-    <svg viewBox="0 0 800 220" className="w-full" style={{ maxHeight: "100%" }}>
-      {/* Spine */}
-      <line x1={50} y1={110} x2={680} y2={110} stroke={theme.textColor + "40"} strokeWidth={3} />
-      {/* Effect box */}
+    <svg viewBox="0 0 800 160" className="w-full">
+      <line x1={60} y1={80} x2={660} y2={80} stroke={theme.textColor + "40"} strokeWidth={2.5} />
       {effect && (
         <g>
-          <rect x={680} y={80} width={110} height={60} rx={8} fill={colors[0]} opacity={0.9} />
-          <text x={735} y={115} textAnchor="middle" fill="white" fontSize={11} fontWeight="700">
+          <rect x={660} y={58} width={125} height={44} rx={8} fill={colors[0]} />
+          <text x={722} y={85} textAnchor="middle" fill="white" fontSize={12} fontWeight="700">
             {effect.label}
           </text>
         </g>
       )}
-      {/* Cause branches */}
       {causes.map((cause, i) => {
-        const x = 100 + (i * 550) / Math.max(n, 1);
+        const x = 80 + (i * 560) / Math.max(n, 1);
         const isTop = i % 2 === 0;
-        const y = isTop ? 30 : 190;
+        const y = isTop ? 12 : 130;
         const color = colors[(i + 1) % colors.length];
         return (
           <g key={i}>
-            <line x1={x} y1={110} x2={x + 30} y2={y + (isTop ? 20 : -20)} stroke={color} strokeWidth={2} opacity={0.6} />
-            <rect x={x - 10} y={isTop ? y - 5 : y - 25} width={120} height={35} rx={6} fill={color} opacity={0.15} />
-            <text x={x + 50} y={isTop ? y + 15 : y - 5} textAnchor="middle" fill={theme.textColor} fontSize={10} fontWeight="600">
+            <line x1={x + 40} y1={80} x2={x + 50} y2={isTop ? y + 28 : y - 6} stroke={color} strokeWidth={1.5} opacity={0.6} />
+            <rect x={x - 5} y={isTop ? y : y - 24} width={120} height={30} rx={5} fill={color} opacity={0.12} />
+            <rect x={x - 5} y={isTop ? y : y - 24} width={3} height={30} rx={2} fill={color} />
+            <text x={x + 55} y={isTop ? y + 20 : y - 5} textAnchor="middle" fill={theme.textColor} fontSize={10} fontWeight="600">
               {cause.label}
             </text>
           </g>
@@ -512,17 +550,17 @@ export function InfographicBlock({ data, theme }: InfographicBlockProps) {
   const Renderer = RENDERERS[data.infographicType] || ProcessFlow;
 
   return (
-    <div className="flex flex-col items-center gap-[0.2em] w-full">
+    <div className="flex flex-col items-center w-full">
       {data.title && (
-        <div className="text-[0.65em] font-semibold" style={{ color: theme.textColor }}>
+        <div className="text-[0.7em] font-semibold tracking-tight leading-none mb-[0.15em]" style={{ color: theme.textColor }}>
           {data.title}
         </div>
       )}
-      <div className="w-full flex items-center justify-center">
+      <div className="w-full">
         <Renderer items={data.items} colors={colors} theme={theme} />
       </div>
       {data.caption && (
-        <div className="text-[0.5em] opacity-50 italic" style={{ color: theme.textColor }}>
+        <div className="text-[0.5em] opacity-50 italic leading-none" style={{ color: theme.textColor }}>
           {data.caption}
         </div>
       )}
