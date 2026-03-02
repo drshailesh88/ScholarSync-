@@ -14,9 +14,9 @@ import { logger } from "@/lib/logger";
 
 const requestSchema = z.object({
   prompt: z.string().min(1).max(4000),
-  slideContent: z.string().optional(),
-  preferredType: z.string().optional(), // "flowchart", "comparison", etc.
-  audienceType: z.string().optional(),
+  slideContent: z.string().nullish(),
+  preferredType: z.string().nullish(), // "flowchart", "comparison", etc.
+  audienceType: z.string().nullish(),
 });
 
 function getVisualGenerationPrompt(preferredType?: string): string {
@@ -123,7 +123,7 @@ export async function POST(req: Request) {
     }
     const { prompt, slideContent, preferredType, audienceType } = parseResult.data;
 
-    const systemPrompt = getVisualGenerationPrompt(preferredType);
+    const systemPrompt = getVisualGenerationPrompt(preferredType ?? undefined);
     let userPrompt = prompt;
     if (slideContent) {
       userPrompt += `\n\nCurrent slide content for context:\n${slideContent}`;
