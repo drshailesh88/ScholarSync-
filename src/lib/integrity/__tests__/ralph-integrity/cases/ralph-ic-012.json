@@ -1,0 +1,18 @@
+{
+  "id": "ralph-ic-012",
+  "name": "Mixed: AI intro + human body paragraphs",
+  "input": {
+    "mode": "mixed",
+    "humanParagraphs": [1, 2, 3],
+    "aiParagraphs": [0],
+    "humanTextKey": "discussionEpi",
+    "humanParagraphIndices": [0, 1, 2],
+    "generatePrompt": "Write one introductory paragraph for a research paper about air pollution and cognitive decline in older adults. Include a definition of the problem, its public health significance, and the study objective. Formal academic style, approximately 100 words."
+  },
+  "expectedResult": {
+    "humanParas_humanProb_min": 65,
+    "aiParas_humanProb_max": 45,
+    "overallRisk": "medium"
+  },
+  "qualityCriteria": ["Correctly identifies AI intro paragraph", "Preserves human body paragraphs", "Handles mixed document context"]
+}

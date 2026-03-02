@@ -198,6 +198,10 @@ function printSummary(cycleId: string, name: string, results: CycleResult[], dim
   if (dimension === "specificity") {
     // Higher humanScore = better specificity
     dimScore = avgHuman >= 85 ? 10 : avgHuman >= 75 ? 8 : avgHuman >= 65 ? 6 : avgHuman >= 50 ? 4 : 2;
+  } else if (dimension === "granularity") {
+    // Pass rate determines granularity score
+    const passRate = passing / results.length;
+    dimScore = passRate >= 0.9 ? 10 : passRate >= 0.8 ? 8 : passRate >= 0.6 ? 6 : passRate >= 0.4 ? 4 : 2;
   } else {
     // Lower humanScore = better sensitivity
     dimScore = avgHuman <= 15 ? 10 : avgHuman <= 25 ? 8 : avgHuman <= 35 ? 6 : avgHuman <= 50 ? 4 : 2;
@@ -243,6 +247,146 @@ function printSummary(cycleId: string, name: string, results: CycleResult[], dim
   console.log(`\n  Scorecard saved.`);
 }
 
+// ── Cycle 5: Mixed Text (Human + AI Interleaved) ────────────────────
+
+interface MixedTestInput {
+  mode: string;
+  humanParagraphs: number[];
+  aiParagraphs: number[];
+  humanTextKey: string;
+  humanParagraphIndices: number[];
+  generatePrompt: string;
+}
+
+interface MixedCycleResult {
+  testId: string;
+  name: string;
+  humanParaScores: { index: number; humanProbability: number; isHuman: boolean }[];
+  aiParaScores: { index: number; humanProbability: number; isHuman: boolean }[];
+  overallHumanScore: number;
+  overallRisk: string;
+  pass: boolean;
+  notes: string[];
+}
+
+async function runCycle5(): Promise<void> {
+  header("RALPH Cycle 5: Mixed Text — Human + AI Paragraphs Interleaved");
+  console.log("Testing: Can the detector distinguish human and AI paragraphs in a single document?\n");
+
+  const { generateText } = await import("ai");
+  const { getModel } = await import("@/lib/ai/models");
+  const { computeTextStatistics, runAIDetection } = await import("../../ai-detection");
+  const { HUMAN_TEXTS } = await import("./test-texts/human-texts");
+
+  const cases = loadCases(11, 15);
+  const results: CycleResult[] = [];
+  const mixedResults: MixedCycleResult[] = [];
+
+  for (const tc of cases) {
+    sub(`${tc.id}: ${tc.name}`);
+    const input = tc.input as unknown as MixedTestInput;
+
+    // Get human paragraphs from test text
+    const humanTextFull = HUMAN_TEXTS[input.humanTextKey];
+    if (!humanTextFull) { console.error("  Missing human text"); continue; }
+    const humanParas = humanTextFull.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 20);
+    const selectedHumanParas = input.humanParagraphIndices.map(i => humanParas[i]).filter(Boolean);
+
+    // Generate AI paragraphs
+    console.log("  Generating AI paragraphs with GLM-5...");
+    const { text: aiText } = await generateText({
+      model: getModel(),
+      prompt: input.generatePrompt,
+    });
+    const aiParas = aiText.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 20);
+    console.log(`  Generated ${aiParas.length} AI paragraphs`);
+
+    // Assemble mixed document
+    const totalParas = input.humanParagraphs.length + input.aiParagraphs.length;
+    const assembled: { text: string; isHuman: boolean; origIndex: number }[] = [];
+    let humanIdx = 0, aiIdx = 0;
+
+    for (let i = 0; i < totalParas; i++) {
+      if (input.humanParagraphs.includes(i)) {
+        assembled.push({ text: selectedHumanParas[humanIdx] || "", isHuman: true, origIndex: i });
+        humanIdx++;
+      } else {
+        assembled.push({ text: aiParas[aiIdx] || "", isHuman: false, origIndex: i });
+        aiIdx++;
+      }
+    }
+
+    const mixedText = assembled.map(a => a.text).filter(t => t.length > 0).join("\n\n");
+    const wordCount = mixedText.split(/\s+/).length;
+    console.log(`  Mixed document: ${wordCount} words, ${assembled.length} paragraphs (${input.humanParagraphs.length} human, ${input.aiParagraphs.length} AI)`);
+
+    // Run detection
+    console.log("  Running AI detection...");
+    const ai = await runAIDetection(mixedText, false);
+
+    // Analyze results per paragraph
+    const expected = tc.expectedResult as Record<string, unknown>;
+    const humanMinProb = (expected.humanParas_humanProb_min as number) || 60;
+    const aiMaxProb = (expected.aiParas_humanProb_max as number) || 50;
+
+    const humanParaResults: { index: number; humanProbability: number; isHuman: boolean }[] = [];
+    const aiParaResults: { index: number; humanProbability: number; isHuman: boolean }[] = [];
+
+    let correctClassifications = 0;
+    const totalClassifiable = Math.min(ai.paragraphs.length, assembled.length);
+
+    for (let i = 0; i < totalClassifiable; i++) {
+      const pResult = ai.paragraphs[i];
+      const source = assembled[i];
+      if (!pResult || !source) continue;
+
+      const icon = source.isHuman
+        ? (pResult.humanProbability >= humanMinProb ? "✓" : "✗")
+        : (pResult.humanProbability <= aiMaxProb ? "✓" : "✗");
+      const label = source.isHuman ? "HUMAN" : "AI";
+      console.log(`    [${icon}] P${i} (${label}): ${pResult.humanProbability}% — "${pResult.excerpt.slice(0, 40)}..."`);
+
+      if (source.isHuman) {
+        humanParaResults.push({ index: i, humanProbability: pResult.humanProbability, isHuman: true });
+        if (pResult.humanProbability >= humanMinProb) correctClassifications++;
+      } else {
+        aiParaResults.push({ index: i, humanProbability: pResult.humanProbability, isHuman: false });
+        if (pResult.humanProbability <= aiMaxProb) correctClassifications++;
+      }
+    }
+
+    const accuracy = totalClassifiable > 0 ? correctClassifications / totalClassifiable : 0;
+    const pass = accuracy >= 0.5; // At least half the paragraphs correctly classified
+
+    console.log(`  Overall: ${ai.humanScore}% human | Risk: ${ai.overallRisk} | Accuracy: ${(accuracy * 100).toFixed(0)}%`);
+    console.log(`  ${pass ? "\x1b[32m✓ PASS\x1b[0m" : "\x1b[31m✗ FAIL\x1b[0m"}`);
+
+    const notes: string[] = [];
+    const failedHuman = humanParaResults.filter(p => p.humanProbability < humanMinProb);
+    const failedAI = aiParaResults.filter(p => p.humanProbability > aiMaxProb);
+    if (failedHuman.length > 0) notes.push(`${failedHuman.length} human paras scored below ${humanMinProb}%`);
+    if (failedAI.length > 0) notes.push(`${failedAI.length} AI paras scored above ${aiMaxProb}%`);
+
+    results.push({
+      testId: tc.id, name: tc.name,
+      humanScore: ai.humanScore, overallRisk: ai.overallRisk,
+      paragraphScores: ai.paragraphs.map(p => p.humanProbability),
+      flags: ai.paragraphs.flatMap(p => p.flags), pass, notes,
+    });
+
+    mixedResults.push({
+      testId: tc.id, name: tc.name,
+      humanParaScores: humanParaResults,
+      aiParaScores: aiParaResults,
+      overallHumanScore: ai.humanScore,
+      overallRisk: ai.overallRisk,
+      pass, notes,
+    });
+  }
+
+  printSummary("cycle-5", "Mixed Text — Human + AI Paragraphs Interleaved", results, "granularity");
+}
+
 // ── Show Scorecard ───────────────────────────────────────────────────
 
 function showScorecard(): void {
@@ -268,6 +412,7 @@ async function main(): Promise<void> {
   switch (cycle) {
     case 1: await runCycle1(); break;
     case 2: await runCycle2(); break;
+    case 5: await runCycle5(); break;
     default: console.error(`Cycle ${cycle} not yet implemented.`); process.exit(1);
   }
 }

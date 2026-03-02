@@ -683,7 +683,7 @@ async function runLLMHeuristicDetection(
     // Real academic papers never use **Bold:** formatting.
     // Penalty scales with how many headings the whole document has.
     if (/^\*\*[A-Z]/.test(pTrimmed)) {
-      const penalty = docMarkdownHeadings >= 4 ? 45 : docMarkdownHeadings >= 2 ? 40 : 25;
+      const penalty = docMarkdownHeadings >= 4 ? 48 : docMarkdownHeadings >= 2 ? 42 : 25;
       result.humanProbability = clamp(result.humanProbability - penalty);
       if (!result.flags.includes("markdown-bold-heading")) {
         result.flags.push("markdown-bold-heading");
@@ -700,6 +700,12 @@ async function runLLMHeuristicDetection(
       "have emerged as", "has garnered significant",
       "a comprehensive review", "underscores the need",
       "pivotal role", "a nuanced understanding",
+      "have demonstrated efficacy", "have shown promising results",
+      "warrants further investigation", "remains an area of active",
+      "have revolutionized", "have transformed the landscape",
+      "a transformative class", "a novel class",
+      "a cornerstone of", "the cornerstone of",
+      "a hallmark of", "constitutes a significant",
     ];
     const pLower = pText.toLowerCase();
     const stockHits = stockPhrases.filter(sp => pLower.includes(sp)).length;
@@ -768,17 +774,77 @@ async function runLLMHeuristicDetection(
       result.flags.push("textbook-historical-opener");
     }
 
-    // "X represents a [significant/major/growing] [challenge/burden/concern]" — AI framing
-    if (/\brepresents?\s+a\s+(?:significant|major|growing|substantial|critical|pervasive)\s+(?:challenge|burden|concern|issue|problem|barrier)/i.test(pText)) {
+    // "X represents/constitutes/poses a [significant/major/growing] [challenge/burden/concern]" — AI framing
+    if (/\b(?:represents?|constitutes?|poses?|remains?)\s+a\s+(?:significant|major|growing|substantial|critical|pervasive|leading|global|profound)\s+(?:challenge|burden|concern|issue|problem|barrier|threat|cause)/i.test(pText)) {
       result.humanProbability = clamp(result.humanProbability - 10);
       result.flags.push("ai-significance-framing");
     }
 
-    // Compound: paragraph opens with transition AND contains "these limitations/findings/challenges"
-    // AI loves the "Despite these X... However... Therefore" bridge structure
+    // Compound: paragraph opens with "Despite" or similar + sweeping summary phrase
+    // AI loves the "Despite X... However... Therefore" bridge structure
     if (/^(?:despite|given|considering|in light of)\b/i.test(pTrimmed) &&
-        /\bthese\s+(?:limitation|finding|challenge|concern|issue|advance|development|effort)/i.test(pLower)) {
+        /\b(?:these\s+(?:limitation|finding|challenge|concern|issue|advance|development|effort)|growing\s+body\s+of|proliferation\s+of|variability\s+in)/i.test(pLower)) {
       result.humanProbability = clamp(result.humanProbability - 8);
+    }
+
+    // "Safety considerations" / "Safety profile" paragraph opener — textbook review structure
+    if (/^(?:safety\s+(?:considerations?|concerns?|data)|the\s+safety\s+profile|adverse\s+(?:event|effect)s?\s+(?:of\s+|associated|include))/i.test(pTrimmed)) {
+      result.humanProbability = clamp(result.humanProbability - 8);
+      result.flags.push("textbook-safety-section");
+    }
+
+    // Encyclopedic adverbial opener: "Pharmacokinetically,..." / "Mechanistically,..." / "Clinically,..."
+    // These are textbook-style openers rarely used in real research papers.
+    if (/^(?:pharmacokinetically|mechanistically|clinically|therapeutically|physiologically|pharmacologically|pathophysiologically)[,\s]/i.test(pTrimmed)) {
+      result.humanProbability = clamp(result.humanProbability - 10);
+      result.flags.push("encyclopedic-adverbial-opener");
+    }
+
+    // Textbook pharmacology / mechanism opener:
+    // "X inhibitors exert their effects by..." or "These agents work by..."
+    // Real papers discuss mechanisms with more nuance and hedging.
+    if (/\b(?:inhibitors?|agonists?|antagonists?|agents?|compounds?)\s+(?:exert|work|function|act|operate|represent|constitute)\s+(?:their|by|through|via|a\s+)\b/i.test(pTrimmed.slice(0, 200))) {
+      result.humanProbability = clamp(result.humanProbability - 10);
+      result.flags.push("textbook-mechanism-opener");
+    }
+
+    // Exhaustive trial enumeration: 3+ ALL-CAPS trial acronyms in one paragraph
+    // AI loves listing every major trial: (EMPA-REG, DAPA-CKD, CREDENCE)
+    // Real authors discuss one or two trials in depth rather than listing all of them.
+    const trialNames = pText.match(/\b[A-Z]{2,}(?:-[A-Z0-9]+)*\b/g) || [];
+    const uniqueTrials = new Set(trialNames.filter(t =>
+      t.length >= 4 && !/^(?:AND|THE|FOR|BUT|NOT|NOR|YET|RNA|DNA|USA|WHO|FDA|BMI|ICU|RCT|DOI|SGLT|ACE|ARB|GFR|HBA|DKA|LDL|HDL|CKD|AKI|MACE|STEMI|NSTEMI|CTPA|LMWH|DOAC|NSAID|SSRI|SNRI|MAOI|COPD|GERD|NAFLD|NASH|ESRD|HAM|NRX|BNP)$/i.test(t)
+    ));
+    if (uniqueTrials.size >= 4) {
+      result.humanProbability = clamp(result.humanProbability - 12);
+      result.flags.push(`exhaustive-trial-enumeration:${uniqueTrials.size}`);
+    } else if (uniqueTrials.size >= 3) {
+      result.humanProbability = clamp(result.humanProbability - 8);
+      result.flags.push(`trial-listing:${uniqueTrials.size}`);
+    }
+
+    // "The [pharmacokinetic/safety/efficacy] profile of X" — AI textbook framing
+    if (/\bthe\s+(?:pharmacokinetic|safety|efficacy|tolerability|adverse\s+event)\s+profile\s+of\b/i.test(pText)) {
+      result.humanProbability = clamp(result.humanProbability - 8);
+      result.flags.push("textbook-profile-framing");
+    }
+
+    // Comprehensive single-paragraph coverage: paragraph has multiple distinct medical subtopics
+    // AI packs mechanism + kinetics + trials + safety into a single dense paragraph
+    const subtopicSignals = [
+      /\bmechanism\s+of\s+action\b/i,
+      /\bpharmacokinetic/i,
+      /\bhalf[- ]life\b/i,
+      /\bclinical\s+(?:trial|efficac)/i,
+      /\badverse\s+(?:event|effect|reaction)/i,
+      /\bsafety\s+(?:profile|concern|data|consideration)/i,
+      /\bdosing\s+(?:regimen|schedule|recommendation)/i,
+      /\bbioavailability\b/i,
+    ];
+    const subtopicHits = subtopicSignals.filter(re => re.test(pText)).length;
+    if (subtopicHits >= 3) {
+      result.humanProbability = clamp(result.humanProbability - 12);
+      result.flags.push(`multi-subtopic-paragraph:${subtopicHits}`);
     }
   }
 
@@ -837,7 +903,7 @@ async function runLLMHeuristicDetection(
     (stats.markdownHeadingCount >= 1 ? 1 : 0) +
     (stats.formulaicTransitionDensity > 0.5 ? 1 : 0) +
     (stats.repetitiveSentenceOpeningRatio > 0.25 ? 1 : 0) +
-    (stats.paragraphLengthStdDev < 20 && paragraphs.length >= 3 ? 1 : 0) +
+    (stats.paragraphLengthStdDev < 10 && paragraphs.length >= 3 ? 1 : 0) +
     (stats.passiveVoicePercent > 40 ? 1 : 0); // AI methods sections tend to be heavily passive
 
   if (aiSignalCount >= 4) {
@@ -851,6 +917,20 @@ async function runLLMHeuristicDetection(
   // 8. High passive voice + markdown headings = AI-generated methods section
   // Real methods sections ARE passive, but they don't use **Bold:** markdown headings
   if (stats.passiveVoicePercent > 40 && stats.markdownHeadingCount >= 2) {
+    humanScore -= 8;
+  }
+
+  // 9. "LLM-fooled" correction: When the LLM gave most paragraphs 70%+ (thinks it's human)
+  // but STRONG document-level AI signals fire, the LLM is likely being fooled by
+  // domain-specific content. Requires at least one high-confidence signal (markdown
+  // headings or high hedging) plus other signals — passive voice alone is not enough
+  // since human methods sections are naturally highly passive.
+  const highScoringParas = allParagraphResults.filter(p => p.humanProbability >= 70).length;
+  const highScoringRatio = highScoringParas / (allParagraphResults.length || 1);
+  const hasHighConfidenceSignal = stats.markdownHeadingCount >= 1 ||
+    (stats.hedgingPhraseCount / (text.split(/\s+/).length || 1)) * 500 > 2 ||
+    stats.formulaicTransitionDensity > 1.0;
+  if (highScoringRatio >= 0.6 && aiSignalCount >= 3 && hasHighConfidenceSignal) {
     humanScore -= 8;
   }
 

@@ -1,0 +1,18 @@
+{
+  "id": "ralph-ic-011",
+  "name": "Mixed: human intro + AI body paragraphs",
+  "input": {
+    "mode": "mixed",
+    "humanParagraphs": [0],
+    "aiParagraphs": [1, 2, 3],
+    "humanTextKey": "caseReport",
+    "humanParagraphIndices": [0],
+    "generatePrompt": "Write three body paragraphs for a medical case report about pulmonary embolism. Cover: (1) laboratory findings and imaging results, (2) treatment decisions and rationale, (3) hospital course and outcomes. Formal academic style, approximately 100 words per paragraph."
+  },
+  "expectedResult": {
+    "humanParas_humanProb_min": 65,
+    "aiParas_humanProb_max": 45,
+    "overallRisk": "medium"
+  },
+  "qualityCriteria": ["Correctly identifies human intro paragraph", "Flags AI body paragraphs", "Does not over-penalize human paragraph in AI context"]
+}
