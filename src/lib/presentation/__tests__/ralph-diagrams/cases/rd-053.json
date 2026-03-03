@@ -1,0 +1,45 @@
+{
+  "id": "rd-053",
+  "name": "Process Flow — Grant Application Pipeline (10 steps)",
+  "category": "comprehensive_coverage",
+  "difficulty": "hard",
+  "napkinFeature": "process_flow",
+  "input": "Create a process flow for grant application: Identify Funding → Review Guidelines → Develop Aims → Write Budget → Institutional Review → Submit LOI → Full Proposal → External Review → Award Notification → Post-Award Setup.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "process_flow",
+  "expectedItemCount": 10,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (process_flow)",
+    "Valid schema structure",
+    "Title is present",
+    "Item count at least 10",
+    "All labels are meaningful",
+    "Arrows between steps implied by process flow",
+    "Icons are present on items",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "10-step process flow showing complete grant application lifecycle.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "process_flow",
+      "title": "Grant Application Pipeline",
+      "items": [
+        { "label": "Identify Funding", "description": "Search NIH Reporter, NSF, foundations for opportunities", "icon": "🔍" },
+        { "label": "Review Guidelines", "description": "Analyze RFA/RFP requirements and eligibility", "icon": "📋" },
+        { "label": "Develop Aims", "description": "Draft specific aims with hypothesis and significance", "icon": "🎯" },
+        { "label": "Write Budget", "description": "Prepare detailed budget with justification", "icon": "💰" },
+        { "label": "Institutional Review", "description": "Internal review by grants office and department", "icon": "🏫" },
+        { "label": "Submit LOI", "description": "Letter of intent if required by funder", "icon": "✉️" },
+        { "label": "Full Proposal", "description": "Complete research plan with all required sections", "icon": "📝" },
+        { "label": "External Review", "description": "Peer review by study section or review panel", "icon": "👥" },
+        { "label": "Award Notification", "description": "Receive funding decision and award terms", "icon": "🏆" },
+        { "label": "Post-Award Setup", "description": "Establish accounts, hire staff, begin research", "icon": "🚀" }
+      ],
+      "colorScheme": "blue",
+      "caption": "End-to-end grant application process from funding identification to project launch"
+    }
+  }
+}

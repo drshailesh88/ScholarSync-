@@ -1,0 +1,41 @@
+{
+  "id": "rd-052",
+  "name": "Stats Row — COVID-19 Vaccine Efficacy Dashboard",
+  "category": "comprehensive_coverage",
+  "difficulty": "medium",
+  "napkinFeature": "stats_cards",
+  "input": "Create a stats dashboard showing COVID-19 vaccine efficacy: Overall Efficacy 95%, Severe Disease Prevention 100%, Infection After Dose 1 52%, Hospitalization Reduction 89%, Duration of Protection 6+ months, Booster Efficacy 94%.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "stats_row",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (stats_row)",
+    "Valid schema structure",
+    "Title is present",
+    "Item count at least 6",
+    "All labels are meaningful",
+    "Value set on each item",
+    "Stats card display with metrics",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "Stats cards with percentage values and clear metric labeling.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "stats_row",
+      "title": "COVID-19 Vaccine Efficacy Metrics",
+      "items": [
+        { "label": "Overall Efficacy", "value": "95%", "icon": "💉" },
+        { "label": "Severe Disease Prevention", "value": "100%", "icon": "🛡️" },
+        { "label": "After Dose 1", "value": "52%", "icon": "1️⃣" },
+        { "label": "Hospitalization Reduction", "value": "89%", "icon": "🏥" },
+        { "label": "Duration of Protection", "value": "6+ months", "icon": "📅" },
+        { "label": "Booster Efficacy", "value": "94%", "icon": "🔄" }
+      ],
+      "colorScheme": "green",
+      "caption": "Key efficacy metrics from COVID-19 mRNA vaccine Phase III trials"
+    }
+  }
+}

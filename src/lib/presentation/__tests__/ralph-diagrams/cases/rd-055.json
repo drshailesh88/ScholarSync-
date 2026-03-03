@@ -1,0 +1,30 @@
+{
+  "id": "rd-055",
+  "name": "Mermaid Flowchart — Styled with classDef",
+  "category": "comprehensive_coverage",
+  "difficulty": "hard",
+  "napkinFeature": "smart_connectors",
+  "input": "Create a styled flowchart showing data pipeline: Raw Data → Clean → Transform → Validate → Load → Analytics. Apply green styling to completed steps and orange to in-progress steps.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "flowchart",
+  "expectedNodeCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (flowchart)",
+    "Valid Mermaid syntax",
+    "Node count at least 6",
+    "Styling is applied",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Flowchart with custom classDef styling distinguishing completed and in-progress steps.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "flowchart",
+      "syntax": "flowchart LR\n    A[Raw Data] --> B[Clean]\n    B --> C[Transform]\n    C --> D[Validate]\n    D --> E[Load]\n    E --> F[Analytics]\n    classDef done fill:#4CAF50,color:#fff\n    classDef inProgress fill:#FF9800,color:#fff\n    class A,B,C done\n    class D,E,F inProgress",
+      "caption": "Data pipeline flowchart with styling for completion status"
+    }
+  }
+}
