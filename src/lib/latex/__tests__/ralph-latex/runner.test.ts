@@ -703,3 +703,122 @@ describe("Cycle 2: latexToHtml environment rendering", () => {
     expect(html).toContain("Results plot");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// Cycle 3: Additional formatting + more environments
+// ═══════════════════════════════════════════════════════════════
+
+describe("Cycle 3: Additional text formatting", () => {
+  it("converts textsuperscript", () => {
+    const html = latexToHtml("x\\textsuperscript{2}");
+    expect(html).toContain("<sup>2</sup>");
+  });
+
+  it("converts textsubscript", () => {
+    const html = latexToHtml("H\\textsubscript{2}O");
+    expect(html).toContain("<sub>2</sub>");
+  });
+
+  it("converts LaTeX logo", () => {
+    const html = latexToHtml("Written in \\LaTeX");
+    expect(html).toContain("latex-logo");
+    expect(html).toContain("L<sup>A</sup>T<sub>E</sub>X");
+  });
+
+  it("converts TeX logo", () => {
+    const html = latexToHtml("Powered by \\TeX");
+    expect(html).toContain("latex-logo");
+    expect(html).toContain("T<sub>E</sub>X");
+  });
+
+  it("strips centering command", () => {
+    const html = latexToHtml("\\centering Some text");
+    expect(html).not.toContain("centering");
+    expect(html).toContain("Some text");
+  });
+});
+
+describe("Cycle 3: Additional environments", () => {
+  it("converts lstlisting to code block", () => {
+    const html = latexToHtml("\\begin{lstlisting}\ndef hello():\n    print('hi')\n\\end{lstlisting}");
+    expect(html).toContain("latex-listing");
+    expect(html).toContain("<code>");
+    expect(html).toContain("def hello()");
+  });
+
+  it("converts lstlisting with options", () => {
+    const html = latexToHtml("\\begin{lstlisting}[language=Python]\nprint('hello')\n\\end{lstlisting}");
+    expect(html).toContain("latex-listing");
+    expect(html).toContain("print");
+  });
+
+  it("converts flushleft environment", () => {
+    const html = latexToHtml("\\begin{flushleft}\nLeft-aligned text\n\\end{flushleft}");
+    expect(html).toContain("latex-flushleft");
+    expect(html).toContain("text-align:left");
+  });
+
+  it("converts flushright environment", () => {
+    const html = latexToHtml("\\begin{flushright}\nRight-aligned text\n\\end{flushright}");
+    expect(html).toContain("latex-flushright");
+    expect(html).toContain("text-align:right");
+  });
+
+  it("converts minipage environment", () => {
+    const html = latexToHtml("\\begin{minipage}{0.5\\textwidth}\nMinipage content\n\\end{minipage}");
+    expect(html).toContain("latex-minipage");
+    expect(html).toContain("Minipage content");
+  });
+
+  it("converts description list", () => {
+    const html = latexToHtml("\\begin{description}\n\\item[Term] Definition here\n\\end{description}");
+    expect(html).toContain("latex-description");
+    expect(html).toContain("<dt>Term</dt>");
+    expect(html).toContain("<dd>");
+  });
+
+  it("handles multiple description items", () => {
+    const html = latexToHtml("\\begin{description}\n\\item[Alpha] First\n\\item[Beta] Second\n\\end{description}");
+    expect(html).toContain("<dt>Alpha</dt>");
+    expect(html).toContain("<dt>Beta</dt>");
+  });
+});
+
+describe("Cycle 3: Edge cases", () => {
+  it("handles empty verbatim", () => {
+    const html = latexToHtml("\\begin{verbatim}\n\\end{verbatim}");
+    expect(html).toContain("latex-verbatim");
+  });
+
+  it("handles table without tabular", () => {
+    const html = latexToHtml("\\begin{table}[h]\n\\caption{Empty table}\n\\end{table}");
+    expect(html).toContain("latex-table");
+    expect(html).toContain("Empty table");
+  });
+
+  it("handles multiple figures", () => {
+    const tex = "\\begin{figure}\n\\caption{Fig 1}\n\\end{figure}\n\\begin{figure}\n\\caption{Fig 2}\n\\end{figure}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("Fig 1");
+    expect(html).toContain("Fig 2");
+  });
+
+  it("handles nested bold in section", () => {
+    const html = latexToHtml("\\section{Introduction to \\textbf{LaTeX}}");
+    expect(html).toContain("latex-section");
+  });
+
+  it("handles deeply nested formatting", () => {
+    const html = latexToHtml("\\textbf{bold \\textit{and italic}}");
+    expect(html).toContain("<strong>");
+    expect(html).toContain("<em>");
+  });
+
+  it("preserves content between environments", () => {
+    const tex = "Before\n\\begin{quote}\nQuoted\n\\end{quote}\nAfter";
+    const html = latexToHtml(tex);
+    expect(html).toContain("Before");
+    expect(html).toContain("Quoted");
+    expect(html).toContain("After");
+  });
+});

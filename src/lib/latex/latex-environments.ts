@@ -1,6 +1,7 @@
 /**
  * LaTeX environment converters for live preview.
- * Handles figure, table, tabular, verbatim, quote, and center environments.
+ * Handles figure, table, tabular, verbatim, quote, center,
+ * description, minipage, flushleft/right, and lstlisting.
  */
 
 import { escapeHtml } from "./latex-to-html";
@@ -62,7 +63,6 @@ export function convertTable(inner: string): string {
 
 /**
  * Process all environment conversions on an HTML string.
- * Call this from latexToHtml to handle figure, table, verbatim, quote, center.
  */
 export function convertEnvironments(html: string): string {
   // Figure environments
@@ -89,6 +89,12 @@ export function convertEnvironments(html: string): string {
     '<pre class="latex-verbatim">$1</pre>',
   );
 
+  // lstlisting (code listing) environments
+  html = html.replace(
+    /\\begin\{lstlisting\}(?:\[[^\]]*\])?([\s\S]*?)\\end\{lstlisting\}/g,
+    '<pre class="latex-listing"><code>$1</code></pre>',
+  );
+
   // Quote / quotation environments
   html = html.replace(
     /\\begin\{(?:quote|quotation)\}([\s\S]*?)\\end\{(?:quote|quotation)\}/g,
@@ -99,6 +105,32 @@ export function convertEnvironments(html: string): string {
   html = html.replace(
     /\\begin\{center\}([\s\S]*?)\\end\{center\}/g,
     '<div class="latex-center" style="text-align:center">$1</div>',
+  );
+
+  // Flushleft environment
+  html = html.replace(
+    /\\begin\{flushleft\}([\s\S]*?)\\end\{flushleft\}/g,
+    '<div class="latex-flushleft" style="text-align:left">$1</div>',
+  );
+
+  // Flushright environment
+  html = html.replace(
+    /\\begin\{flushright\}([\s\S]*?)\\end\{flushright\}/g,
+    '<div class="latex-flushright" style="text-align:right">$1</div>',
+  );
+
+  // Minipage environment (render as inline-block div)
+  html = html.replace(
+    /\\begin\{minipage\}(?:\[[^\]]*\])?\{[^}]*\}([\s\S]*?)\\end\{minipage\}/g,
+    '<div class="latex-minipage">$1</div>',
+  );
+
+  // Description list
+  html = html.replace(/\\begin\{description\}/g, '<dl class="latex-description">');
+  html = html.replace(/\\end\{description\}/g, "</dl>");
+  html = html.replace(
+    /\\item\[([^\]]*)\]\s*/g,
+    "<dt>$1</dt><dd>",
   );
 
   return html;

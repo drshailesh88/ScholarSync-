@@ -67,6 +67,14 @@ export function latexToHtml(tex: string): string {
   html = html.replace(/\\emph\{([^}]*)\}/g, "<em>$1</em>");
 
   // Typewriter
+
+  // Superscript and subscript
+  html = html.replace(/\\textsuperscript\{([^}]*)\}/g, "<sup>$1</sup>");
+  html = html.replace(/\\textsubscript\{([^}]*)\}/g, "<sub>$1</sub>");
+
+  // LaTeX logo
+  html = html.replace(/\\LaTeX\b/g, '<span class="latex-logo">L<sup>A</sup>T<sub>E</sub>X</span>');
+  html = html.replace(/\\TeX\b/g, '<span class="latex-logo">T<sub>E</sub>X</span>');
   html = html.replace(/\\texttt\{([^}]*)\}/g, "<code>$1</code>");
 
   // Lists
@@ -74,6 +82,10 @@ export function latexToHtml(tex: string): string {
   html = html.replace(/\\end\{itemize\}/g, "</ul>");
   html = html.replace(/\\begin\{enumerate\}/g, "<ol>");
   html = html.replace(/\\end\{enumerate\}/g, "</ol>");
+  // Description list (must come before generic \\item)
+  html = html.replace(/\\begin\{description\}/g, '<dl class="latex-description">');
+  html = html.replace(/\\end\{description\}/g, "</dl>");
+  html = html.replace(/\\item\[([^\]]*)\]\s*/g, "<dt>$1</dt><dd>");
   html = html.replace(/\\item\s*/g, "<li>");
 
   // Horizontal rule
@@ -114,6 +126,9 @@ export function latexToHtml(tex: string): string {
 
   // \noindent — just remove
   html = html.replace(/\\noindent\s*/g, "");
+
+  // \centering — just remove (handled by parent environment)
+  html = html.replace(/\\centering\s*/g, "");
 
   // Line breaks
   html = html.replace(/\\\\/g, "<br />");
