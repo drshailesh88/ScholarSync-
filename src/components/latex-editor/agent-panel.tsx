@@ -45,6 +45,58 @@ function DraftTab() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Listen for "Draft this section" events from the file tree outline
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { sectionTitle: string };
+      if (!detail?.sectionTitle) return;
+      const prompt = `Write the "${detail.sectionTitle}" section for this paper. Use the document outline and existing content as context. Output LaTeX code only.`;
+      setInput(prompt);
+      // Auto-send after a tick so the input state is updated
+      setTimeout(() => {
+        const fakeInput = prompt;
+        setInput("");
+        // Trigger send manually with the prompt
+        setMessages((prev) => [...prev, { id: `msg_${Date.now()}`, role: "user" as const, content: fakeInput }]);
+        setIsLoading(true);
+        // The actual API call needs to happen inline
+        (async () => {
+          try {
+            const outline = extractOutline(documentContent);
+            const currentSection = extractCurrentSection(documentContent);
+            const msgs = [...messages, { role: "user" as const, content: fakeInput }];
+            const res = await fetch("/api/latex/draft-chat", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                messages: msgs.map((m) => ({ role: m.role, content: m.content })),
+                currentSection,
+                documentOutline: outline,
+                intensity: "accelerate",
+              }),
+            });
+            if (!res.ok) { setIsLoading(false); return; }
+            const reader = res.body?.getReader();
+            if (!reader) { setIsLoading(false); return; }
+            const assistantMsg = { id: `msg_${Date.now() + 1}`, role: "assistant" as const, content: "" };
+            setMessages((prev) => [...prev, assistantMsg]);
+            const decoder = new TextDecoder();
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              assistantMsg.content += decoder.decode(value, { stream: true });
+              setMessages((prev) =>
+                prev.map((m) => (m.id === assistantMsg.id ? { ...m, content: assistantMsg.content } : m))
+              );
+            }
+          } catch { /* silent */ } finally { setIsLoading(false); }
+        })();
+      }, 50);
+    };
+    window.addEventListener("latex:draft-section", handler);
+    return () => window.removeEventListener("latex:draft-section", handler);
+  }, [documentContent, messages]);
+
   const sendMessage = useCallback(async () => {
     if (!input.trim() || isLoading) return;
 

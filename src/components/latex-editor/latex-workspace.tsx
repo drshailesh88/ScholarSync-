@@ -474,6 +474,14 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
               onFilesChange={setFiles}
               onJumpToLine={handleJumpToLine}
               onFileSelect={(file) => editorRef.current?.setContent(file.content ?? "")}
+              onDraftSection={(title) => {
+                useLatexEditorStore.getState().setAgentPanelOpen(true);
+                useLatexEditorStore.getState().setAgentTab("draft");
+                // Dispatch event for the Draft tab to pick up the section prompt
+                window.dispatchEvent(
+                  new CustomEvent("latex:draft-section", { detail: { sectionTitle: title } })
+                );
+              }}
             />
           </aside>
         )}
