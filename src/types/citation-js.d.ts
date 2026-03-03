@@ -1,9 +1,39 @@
 declare module '@citation-js/core' {
-  export class Cite {
-    constructor(data: unknown | unknown[]);
-    static async(data: unknown): Promise<Cite>;
-    format(type: string, options?: Record<string, unknown>): string;
-    data: unknown[];
+  export interface CSLData {
+    type?: string;
+    title?: string;
+    author?: Array<{ family?: string; given?: string; literal?: string }>;
+    'container-title'?: string;
+    'container-title-short'?: string;
+    issued?: { 'date-parts': Array<Array<number | string>> };
+    DOI?: string;
+    PMID?: string;
+    abstract?: string;
+    volume?: string;
+    issue?: string;
+    page?: string;
+    publisher?: string;
+    keywords?: string[];
+  }
+
+  export interface CiteOptions {
+    format?: string;
+    template?: string;
+    lang?: string;
+  }
+
+  export interface CiteGetOptions {
+    format?: string;
+    type?: string;
+    style?: string;
+  }
+
+  export interface Cite {
+    constructor(data: CSLData | CSLData[] | string);
+    static async(data: CSLData | CSLData[] | string): Promise<Cite>;
+    format(type: string, options?: CiteOptions): string;
+    get(options: CiteGetOptions): unknown;
+    data: CSLData[];
   }
 
   export const plugins: {
