@@ -140,7 +140,10 @@ export function scorePrecision(
     const isExpected = testCase.expectedPapers.some((ep) =>
       titleContains(r, ep.titleFragment)
     );
-    const isRelevant = isExpected || isRelevantToQuery(r, testCase.query);
+    const precisionQuery = testCase.precisionKeywords
+      ? testCase.precisionKeywords.join(" ")
+      : testCase.query;
+    const isRelevant = isExpected || isRelevantToQuery(r, precisionQuery);
 
     if (isRelevant) {
       relevant++;

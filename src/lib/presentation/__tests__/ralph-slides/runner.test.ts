@@ -36,9 +36,15 @@ import {
   generatePrismaMermaid,
   extractPrismaFromText,
 } from "../../prisma-diagram";
-import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
+import type {
+  ContentBlock,
+  SlideLayout,
+  ThemeConfig,
+  BlockAnimation,
+} from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 import type { VersionSnapshot } from "@/lib/actions/versions";
+import type { PrismaFlowData } from "../../prisma-diagram";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -1521,5 +1527,449 @@ describe("Cycle 20: Text Diff Edge Cases", () => {
     const elapsed = performance.now() - start;
     expect(result).toEqual([{ type: "same", text: longText }]);
     expect(elapsed).toBeLessThan(100); // should short-circuit
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 21: Deep Coverage — Block-Level Diffs, PRISMA Exclusions,
+//           extractTextFromBlocks, Animation+Content Interaction,
+//           Cross-Reference Robustness
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 21: extractTextFromBlocks", () => {
+  test("extracts text from text blocks", () => {
+    const blocks = [makeTextBlock("hello"), makeTextBlock("world")];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("hello\nworld");
+  });
+
+  test("extracts items from bullets blocks", () => {
+    const blocks = [makeBulletsBlock(["alpha", "beta", "gamma"])];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("alpha\nbeta\ngamma");
+  });
+
+  test("handles mixed block types", () => {
+    const blocks = [makeTextBlock("intro"), makeBulletsBlock(["a", "b"]), makeChartBlock()];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("intro\na\nb");
+  });
+
+  test("returns empty for non-array input", () => {
+    expect(extractTextFromBlocks(null)).toBe("");
+    expect(extractTextFromBlocks(undefined)).toBe("");
+    expect(extractTextFromBlocks("string")).toBe("");
+    expect(extractTextFromBlocks(42)).toBe("");
+  });
+
+  test("returns empty for empty array", () => {
+    expect(extractTextFromBlocks([])).toBe("");
+  });
+
+  test("skips blocks without data", () => {
+    const blocks = [{ type: "text" }, makeTextBlock("has data")];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("has data");
+  });
+
+  test("handles stat_result blocks (no text/items)", () => {
+    const blocks = [makeStatBlock("Mean", "4.5", "0.01")];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("");
+  });
+
+  test("handles quote blocks with text field", () => {
+    const blocks = [makeQuoteBlock("To be or not to be", "Shakespeare")];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("To be or not to be");
+  });
+});
+
+describe("Cycle 21: Version Diff — Block-Level Change Details", () => {
+  function makeVersion(
+    slides: { id: number; title: string; contentBlocks: ContentBlock[] }[]
+  ): VersionSnapshot {
+    return {
+      deck: {
+        id: 1,
+        title: "Test",
+        theme: "modern",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      slides: slides.map((s, i) => ({
+        id: s.id,
+        title: s.title,
+        subtitle: null,
+        layout: "title_content" as SlideLayout,
+        sortOrder: i,
+        speakerNotes: null,
+        contentBlocks: s.contentBlocks,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })),
+    } as unknown as VersionSnapshot;
+  }
+
+  test("detects block text content modification with field changes", () => {
+    const v1 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [makeTextBlock("old text")] },
+    ]);
+    const v2 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [makeTextBlock("new text")] },
+    ]);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.stats.modified).toBe(1);
+    const slideDiff = diff.slideDiffs.find((d) => d.slideId === 1);
+    expect(slideDiff?.contentBlockChanges).toHaveLength(1);
+    expect(slideDiff?.contentBlockChanges[0].status).toBe("modified");
+    expect(slideDiff?.contentBlockChanges[0].fieldChanges).toBeDefined();
+    const dataChange = slideDiff?.contentBlockChanges[0].fieldChanges?.find(
+      (f) => f.field === "data"
+    );
+    expect(dataChange).toBeDefined();
+  });
+
+  test("detects block type change (text→bullets)", () => {
+    const v1 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [makeTextBlock("hello")] },
+    ]);
+    const v2 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [makeBulletsBlock(["a", "b"])] },
+    ]);
+    const diff = computeDeckDiff(v1, v2);
+    const slideDiff = diff.slideDiffs.find((d) => d.slideId === 1);
+    expect(slideDiff?.contentBlockChanges[0].status).toBe("modified");
+    const typeChange = slideDiff?.contentBlockChanges[0].fieldChanges?.find(
+      (f) => f.field === "type"
+    );
+    expect(typeChange?.oldValue).toBe("text");
+    expect(typeChange?.newValue).toBe("bullets");
+  });
+
+  test("detects block addition (empty→1 block)", () => {
+    const v1 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [] },
+    ]);
+    const v2 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [makeTextBlock("added")] },
+    ]);
+    const diff = computeDeckDiff(v1, v2);
+    const slideDiff = diff.slideDiffs.find((d) => d.slideId === 1);
+    expect(slideDiff?.contentBlockChanges).toHaveLength(1);
+    expect(slideDiff?.contentBlockChanges[0].status).toBe("added");
+  });
+
+  test("detects block removal (1 block→empty)", () => {
+    const v1 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [makeTextBlock("removed")] },
+    ]);
+    const v2 = makeVersion([
+      { id: 1, title: "S1", contentBlocks: [] },
+    ]);
+    const diff = computeDeckDiff(v1, v2);
+    const slideDiff = diff.slideDiffs.find((d) => d.slideId === 1);
+    expect(slideDiff?.contentBlockChanges).toHaveLength(1);
+    expect(slideDiff?.contentBlockChanges[0].status).toBe("removed");
+  });
+
+  test("handles multiple block changes on one slide", () => {
+    const v1 = makeVersion([{
+      id: 1,
+      title: "S1",
+      contentBlocks: [
+        makeTextBlock("unchanged"),
+        makeTextBlock("old"),
+        makeChartBlock(),
+      ],
+    }]);
+    const v2 = makeVersion([{
+      id: 1,
+      title: "S1",
+      contentBlocks: [
+        makeTextBlock("unchanged"),
+        makeTextBlock("new"),
+        makeChartBlock(),
+        makeTableBlock(),
+      ],
+    }]);
+    const diff = computeDeckDiff(v1, v2);
+    const slideDiff = diff.slideDiffs.find((d) => d.slideId === 1);
+    expect(slideDiff?.contentBlockChanges).toHaveLength(4);
+    expect(slideDiff?.contentBlockChanges[0].status).toBe("unchanged");
+    expect(slideDiff?.contentBlockChanges[1].status).toBe("modified");
+    expect(slideDiff?.contentBlockChanges[2].status).toBe("unchanged");
+    expect(slideDiff?.contentBlockChanges[3].status).toBe("added");
+  });
+
+  test("unchanged blocks have no fieldChanges", () => {
+    const block = makeTextBlock("same");
+    const v1 = makeVersion([{ id: 1, title: "S1", contentBlocks: [block] }]);
+    const v2 = makeVersion([{ id: 1, title: "S1", contentBlocks: [block] }]);
+    const diff = computeDeckDiff(v1, v2);
+    const slideDiff = diff.slideDiffs.find((d) => d.slideId === 1);
+    expect(slideDiff?.contentBlockChanges[0].status).toBe("unchanged");
+    expect(slideDiff?.contentBlockChanges[0].fieldChanges).toBeUndefined();
+  });
+});
+
+describe("Cycle 21: PRISMA Exclusion Reasons Rendering", () => {
+  test("renders single exclusion reason in diagram", () => {
+    const data: PrismaFlowData = {
+      ...createEmptyPrismaData(),
+      fullTextExcluded: 30,
+      fullTextExclusionReasons: [{ reason: "Not relevant", count: 30 }],
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("Not relevant (n = 30)");
+  });
+
+  test("renders multiple exclusion reasons", () => {
+    const data: PrismaFlowData = {
+      ...createEmptyPrismaData(),
+      fullTextExcluded: 55,
+      fullTextExclusionReasons: [
+        { reason: "Wrong population", count: 20 },
+        { reason: "Wrong outcome", count: 15 },
+        { reason: "Wrong study design", count: 20 },
+      ],
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("Wrong population (n = 20)");
+    expect(mermaid).toContain("Wrong outcome (n = 15)");
+    expect(mermaid).toContain("Wrong study design (n = 20)");
+  });
+
+  test("exclusion reasons separated by <br/>", () => {
+    const data: PrismaFlowData = {
+      ...createEmptyPrismaData(),
+      fullTextExcluded: 40,
+      fullTextExclusionReasons: [
+        { reason: "R1", count: 10 },
+        { reason: "R2", count: 30 },
+      ],
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("R1 (n = 10)<br/>R2 (n = 30)");
+  });
+
+  test("PRISMA diagram computes afterDuplicates correctly", () => {
+    const data: PrismaFlowData = {
+      ...createEmptyPrismaData(),
+      databaseRecords: 1000,
+      registerRecords: 200,
+      otherSourceRecords: 50,
+      duplicatesRemoved: 150,
+    };
+    const mermaid = generatePrismaMermaid(data);
+    // total = 1000+200+50 = 1250, afterDuplicates = 1250-150 = 1100
+    expect(mermaid).toContain("n = 1100");
+  });
+
+  test("PRISMA diagram combines register and other source records", () => {
+    const data: PrismaFlowData = {
+      ...createEmptyPrismaData(),
+      registerRecords: 100,
+      otherSourceRecords: 50,
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("n = 150"); // 100+50
+  });
+});
+
+describe("Cycle 21: Animation Preset + Content Block Integration", () => {
+  test("applyAnimationPreset on text blocks attaches animation", () => {
+    const blocks = [makeTextBlock("a"), makeTextBlock("b"), makeTextBlock("c")];
+    const animated = applyAnimationPreset(blocks, "sequential_build");
+    for (const block of animated) {
+      const anim = (block as ContentBlock & { animation?: BlockAnimation }).animation;
+      expect(anim).toBeDefined();
+      expect(anim?.type).toBe("fadeIn");
+    }
+  });
+
+  test("applyAnimationPreset on chart blocks preserves chart data", () => {
+    const blocks = [makeChartBlock(), makeTableBlock()];
+    const animated = applyAnimationPreset(blocks, "stagger");
+    expect((animated[0] as Record<string, unknown>).type).toBe("chart");
+    expect((animated[1] as Record<string, unknown>).type).toBe("table");
+    const d0 = (animated[0] as Record<string, unknown>).data as Record<string, unknown>;
+    expect(d0.chartType).toBe("bar");
+  });
+
+  test("countRevealSteps counts correctly for results_reveal", () => {
+    const blocks = [makeTextBlock("title"), makeChartBlock(), makeStatBlock("p", "0.05")];
+    const animated = applyAnimationPreset(blocks, "results_reveal");
+    const steps = countRevealSteps(animated);
+    // results_reveal: first block order=1, rest get incrementing orders
+    expect(steps).toBeGreaterThanOrEqual(2);
+  });
+
+  test("countRevealSteps is 0 for 'none' preset", () => {
+    const blocks = [makeTextBlock("a"), makeTextBlock("b")];
+    const animated = applyAnimationPreset(blocks, "none");
+    expect(countRevealSteps(animated)).toBe(0);
+  });
+
+  test("fade_all: all blocks same reveal step", () => {
+    const blocks = [makeTextBlock("a"), makeChartBlock(), makeBulletsBlock(["x"])];
+    const animated = applyAnimationPreset(blocks, "fade_all");
+    const steps = countRevealSteps(animated);
+    expect(steps).toBe(1); // all appear at once
+  });
+});
+
+describe("Cycle 21: Cross-Reference Robustness", () => {
+  test("handles {fig:0} gracefully", () => {
+    const segments = resolveCrossReferences("See {fig:0}");
+    // fig:0 is unusual but should still resolve
+    expect(segments.length).toBeGreaterThan(0);
+  });
+
+  test("handles large figure number {fig:999}", () => {
+    const segments = resolveCrossReferences("See {fig:999}");
+    const refSeg = segments.find((s) => s.type === "figure_ref" || s.type === "table_ref");
+    // If it resolves, the ref segment should have number 999
+    if (refSeg) {
+      expect(refSeg.number).toBe(999);
+    }
+  });
+
+  test("plain resolution passes through unknown tokens", () => {
+    const result = resolveCrossReferencesPlain("See {unknown:5} and {other:2}");
+    // Unknown tokens should remain as-is
+    expect(result).toContain("{unknown:5}");
+    expect(result).toContain("{other:2}");
+  });
+
+  test("handles multiple {fig:N} refs in sequence", () => {
+    const segments = resolveCrossReferences("{fig:1}, {fig:2}, and {fig:3}");
+    const figRefs = segments.filter((s) => s.type === "figure_ref");
+    expect(figRefs).toHaveLength(3);
+    expect(figRefs[0].number).toBe(1);
+    expect(figRefs[1].number).toBe(2);
+    expect(figRefs[2].number).toBe(3);
+  });
+
+  test("handles mixed {fig:N} and {tbl:N} refs", () => {
+    const segments = resolveCrossReferences("See {fig:1} and {tbl:2}");
+    const figRefs = segments.filter((s) => s.type === "figure_ref");
+    const tblRefs = segments.filter((s) => s.type === "table_ref");
+    expect(figRefs).toHaveLength(1);
+    expect(tblRefs).toHaveLength(1);
+  });
+
+  test("plain resolution with mixed refs", () => {
+    const result = resolveCrossReferencesPlain(
+      "Compare {fig:1} with {tbl:3} and {fig:2}"
+    );
+    expect(result).toContain("Figure 1");
+    expect(result).toContain("Table 3");
+    expect(result).toContain("Figure 2");
+  });
+});
+
+describe("Cycle 21: Auto-Numbering Edge Cases", () => {
+  test("numbering resets properly across separate calls", () => {
+    const slides1 = [{ contentBlocks: [makeChartBlock()] }];
+    const result1 = autoNumberFiguresAndTables(
+      slides1 as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result1[0].contentBlocks[0])).toBe("Figure 1");
+
+    // Second call should also start at Figure 1
+    const slides2 = [{ contentBlocks: [makeChartBlock()] }];
+    const result2 = autoNumberFiguresAndTables(
+      slides2 as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result2[0].contentBlocks[0])).toBe("Figure 1");
+  });
+
+  test("numbering across 3 slides with mixed content", () => {
+    const slides = [
+      { contentBlocks: [makeChartBlock(), makeTextBlock("intro")] },
+      { contentBlocks: [makeImageBlock("photo"), makeTableBlock()] },
+      { contentBlocks: [makeDiagramBlock(), makeChartBlock()] },
+    ];
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result[0].contentBlocks[0])).toBe("Figure 1");
+    expect(figureLabel(result[0].contentBlocks[1])).toBeUndefined();
+    expect(figureLabel(result[1].contentBlocks[0])).toBe("Figure 2");
+    expect(figureLabel(result[1].contentBlocks[1])).toBe("Table 1");
+    expect(figureLabel(result[2].contentBlocks[0])).toBe("Figure 3");
+    expect(figureLabel(result[2].contentBlocks[1])).toBe("Figure 4");
+  });
+
+  test("slides with only text blocks produce no numbering", () => {
+    const slides = [
+      { contentBlocks: [makeTextBlock("a"), makeTextBlock("b")] },
+      { contentBlocks: [makeBulletsBlock(["x", "y"])] },
+    ];
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    for (const slide of result) {
+      for (const block of slide.contentBlocks) {
+        expect(figureLabel(block)).toBeUndefined();
+      }
+    }
+  });
+
+  test("single table numbered correctly", () => {
+    const slides = [{ contentBlocks: [makeTableBlock()] }];
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result[0].contentBlocks[0])).toBe("Table 1");
+  });
+});
+
+describe("Cycle 21: Social Format Validation", () => {
+  test("all social formats have positive dimensions", () => {
+    for (const [, format] of Object.entries(SOCIAL_FORMATS)) {
+      const dims = format as unknown as SocialFormatDims;
+      if (dims.width !== undefined) {
+        expect(dims.width).toBeGreaterThan(0);
+      }
+      if (dims.height !== undefined) {
+        expect(dims.height).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  test("twitter thread handles slides with no content", () => {
+    const slides = [
+      { title: "Title Only", subtitle: null, contentBlocks: [] },
+    ];
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread).toHaveLength(1);
+    expect(thread[0]).toContain("Title Only");
+  });
+
+  test("twitter thread handles 20 slides", () => {
+    const slides = Array.from({ length: 20 }, (_, i) => ({
+      title: `Slide ${i + 1}`,
+      subtitle: null,
+      contentBlocks: [makeTextBlock(`Content for slide ${i + 1}`)],
+    }));
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread).toHaveLength(20);
+    // First tweet should have 1/20 indicator
+    expect(thread[0]).toContain("1/20");
+    expect(thread[19]).toContain("20/20");
+  });
+
+  test("twitter thread with quote block includes attribution", () => {
+    const slides = [
+      {
+        title: "Quotes",
+        subtitle: null,
+        contentBlocks: [makeQuoteBlock("Be the change", "Gandhi")],
+      },
+    ];
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread[0]).toContain("Gandhi");
   });
 });

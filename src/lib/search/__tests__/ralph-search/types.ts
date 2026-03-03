@@ -66,6 +66,8 @@ export interface SearchTestCase {
   metadataChecks: MetadataCheck[];
   dedupChecks: DedupCheck[];
   redTeam?: RedTeamVariant[];
+  /** Optional broader keywords for precision evaluation (sparse/narrow queries) */
+  precisionKeywords?: string[];
 }
 
 // ── Scoring ─────────────────────────────────────────────────────────
