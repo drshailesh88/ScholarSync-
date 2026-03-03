@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-03-03T02:21:19.987Z",
+  "lastUpdated": "2026-03-03T02:35:34.506Z",
   "totalCycles": 12,
-  "completedCycles": 1,
+  "completedCycles": 2,
   "phaseAverages": {
-    "phase1": 7.3,
+    "phase1": 6.6,
     "phase2": 0,
     "phase3": 0
   },
@@ -12,28 +12,28 @@
       "cycleId": "cycle-1",
       "name": "Baseline Specificity — Human Medical Text",
       "phase": 1,
-      "timestamp": "2026-03-03T02:21:19.987Z",
+      "timestamp": "2026-03-03T02:34:32.489Z",
       "casesRun": 5,
       "casesPassing": 5,
-      "avgHumanScore": 87.4,
+      "avgHumanScore": 85.8,
       "dimensionScores": {
         "sensitivity": 5,
-        "specificity": 10,
+        "specificity": 9.4,
         "actionability": 10,
         "citationAccuracy": 5,
         "robustness": 5
       },
-      "weightedScore": 7.3,
+      "weightedScore": 7.1,
       "results": [
         {
           "testId": "ralph-ic-001",
           "name": "Human case report — specificity baseline",
-          "humanScore": 92,
+          "humanScore": 95,
           "overallRisk": "low",
           "paragraphScores": [
+            90,
             95,
-            92,
-            90
+            85
           ],
           "flags": [],
           "pass": true,
@@ -50,7 +50,7 @@
             {
               "dimension": "specificity",
               "metric": "humanScore",
-              "value": 92,
+              "value": 95,
               "target": "≥ 70%",
               "pass": true
             },
@@ -80,13 +80,13 @@
         {
           "testId": "ralph-ic-002",
           "name": "Human methods section — CONSORT-style rigidity",
-          "humanScore": 87,
+          "humanScore": 91,
           "overallRisk": "low",
           "paragraphScores": [
-            85,
             90,
-            88,
-            83
+            85,
+            80,
+            70
           ],
           "flags": [],
           "pass": true,
@@ -103,7 +103,7 @@
             {
               "dimension": "specificity",
               "metric": "humanScore",
-              "value": 87,
+              "value": 91,
               "target": "≥ 65%",
               "pass": true
             },
@@ -133,29 +133,33 @@
         {
           "testId": "ralph-ic-003",
           "name": "Human discussion — hedging in context",
-          "humanScore": 85,
+          "humanScore": 73,
           "overallRisk": "low",
           "paragraphScores": [
-            85,
-            90,
-            80
+            75,
+            80,
+            60
           ],
-          "flags": [],
+          "flags": [
+            "generic limitations section",
+            "formulaic hedging",
+            "passive voice"
+          ],
           "pass": true,
           "notes": [],
           "dimensions": {
-            "specificity": 10,
+            "specificity": 7,
             "actionability": 10,
             "sensitivity": 5,
             "citationAccuracy": 5,
             "robustness": 5
           },
-          "weighted": 7.25,
+          "weighted": 6.35,
           "details": [
             {
               "dimension": "specificity",
               "metric": "humanScore",
-              "value": 85,
+              "value": 73,
               "target": "≥ 70%",
               "pass": true
             },
@@ -189,10 +193,15 @@
           "overallRisk": "low",
           "paragraphScores": [
             85,
-            90,
+            75,
             80
           ],
-          "flags": [],
+          "flags": [
+            "specific data",
+            "named studies",
+            "specific data",
+            "cost details"
+          ],
           "pass": true,
           "notes": [],
           "dimensions": {
@@ -237,16 +246,27 @@
         {
           "testId": "ralph-ic-005",
           "name": "Human clinical protocol — paediatric sepsis",
-          "humanScore": 88,
+          "humanScore": 85,
           "overallRisk": "low",
           "paragraphScores": [
-            95,
+            70,
             90,
             85,
-            80
+            75
           ],
           "flags": [
-            "formulaic hedging"
+            "well-structured",
+            "informative",
+            "lack of specific data",
+            "specific dosing",
+            "clinical details",
+            "directed instructions",
+            "specific dosing",
+            "emergency protocols",
+            "clinical details",
+            "practical advice",
+            "specific equipment",
+            "clinical guidelines"
           ],
           "pass": true,
           "notes": [],
@@ -262,8 +282,8 @@
             {
               "dimension": "specificity",
               "metric": "humanScore",
-              "value": 88,
-              "target": "≥ 65%",
+              "value": 85,
+              "target": "≥ 60%",
               "pass": true
             },
             {
@@ -285,6 +305,439 @@
               "metric": "misleadingFlags",
               "value": 0,
               "target": "0 (no false AI flags on human text)",
+              "pass": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cycleId": "cycle-2",
+      "name": "Baseline Sensitivity — AI-Generated Medical Text",
+      "phase": 1,
+      "timestamp": "2026-03-03T02:35:34.506Z",
+      "casesRun": 5,
+      "casesPassing": 4,
+      "avgHumanScore": 29.6,
+      "dimensionScores": {
+        "sensitivity": 6.2,
+        "specificity": 5,
+        "actionability": 10,
+        "citationAccuracy": 5,
+        "robustness": 5
+      },
+      "weightedScore": 6.1,
+      "results": [
+        {
+          "testId": "ralph-ic-006",
+          "name": "AI case report — sensitivity baseline",
+          "humanScore": 34,
+          "overallRisk": "high",
+          "paragraphScores": [
+            40,
+            30,
+            50,
+            40,
+            40,
+            35,
+            45,
+            50,
+            40
+          ],
+          "flags": [
+            "uniform sentence length",
+            "competent prose",
+            "generic presentation",
+            "generic description",
+            "formulaic structure",
+            "no specific citations",
+            "competent prose",
+            "limited contextual detail",
+            "history presented generically",
+            "uniform sentence length",
+            "formulaic presentation",
+            "generic vital signs",
+            "uniform sentence length",
+            "competent prose without awkward phrasing",
+            "generic clinical findings",
+            "surface-level citations",
+            "formulaic reporting",
+            "standardized presentation of lab results",
+            "uniform sentence length",
+            "competent medical terminology",
+            "lacks unique case detail",
+            "balanced discussion without strong position",
+            "formulaic transition phrases",
+            "generic recommendations",
+            "uniform sentence length",
+            "formulaic hedging"
+          ],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "sensitivity": 5,
+            "actionability": 10,
+            "specificity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 5.75,
+          "details": [
+            {
+              "dimension": "sensitivity",
+              "metric": "humanScore",
+              "value": 34,
+              "target": "≤ 40%",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "overallRisk",
+              "value": "high",
+              "target": "high",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "flaggedParagraphs",
+              "value": 7,
+              "target": "≥ 2",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithReasons",
+              "value": "7/7",
+              "target": "100% coverage",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithSuggestions",
+              "value": "7/7",
+              "target": "≥80% coverage",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-007",
+          "name": "AI methods section — sensitivity baseline",
+          "humanScore": 23,
+          "overallRisk": "high",
+          "paragraphScores": [
+            20,
+            25,
+            30,
+            35,
+            40
+          ],
+          "flags": [
+            "uniform sentence length",
+            "formulaic structure",
+            "uniform sentence length",
+            "formulaic structure",
+            "generic criteria description",
+            "uniform sentence length",
+            "formulaic structure",
+            "lacks specific guiding details",
+            "uniform sentence length",
+            "surface-level endpoints",
+            "uniform sentence length",
+            "balanced discussion",
+            "formulaic hedging",
+            "surface-level citations"
+          ],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "sensitivity": 7,
+            "actionability": 10,
+            "specificity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 6.35,
+          "details": [
+            {
+              "dimension": "sensitivity",
+              "metric": "humanScore",
+              "value": 23,
+              "target": "≤ 40%",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "overallRisk",
+              "value": "high",
+              "target": "high",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "flaggedParagraphs",
+              "value": 5,
+              "target": "≥ 2",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithReasons",
+              "value": "5/5",
+              "target": "100% coverage",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithSuggestions",
+              "value": "5/5",
+              "target": "≥80% coverage",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-008",
+          "name": "AI discussion — sensitivity baseline",
+          "humanScore": 24,
+          "overallRisk": "high",
+          "paragraphScores": [
+            40,
+            45,
+            35,
+            50,
+            40,
+            35
+          ],
+          "flags": [
+            "surface-level citations",
+            "balanced discussion",
+            "generic limitations section",
+            "surface-level citations",
+            "formulaic hedging",
+            "generic phrasing",
+            "balanced discussion",
+            "uniform sentence structure",
+            "lacks specificity",
+            "generic limitations section",
+            "balanced discussion",
+            "uniform sentence length",
+            "formulaic hedging",
+            "balanced discussion",
+            "generic limitations"
+          ],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "sensitivity": 7,
+            "actionability": 10,
+            "specificity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 6.35,
+          "details": [
+            {
+              "dimension": "sensitivity",
+              "metric": "humanScore",
+              "value": 24,
+              "target": "≤ 40%",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "overallRisk",
+              "value": "high",
+              "target": "high",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "flaggedParagraphs",
+              "value": 5,
+              "target": "≥ 2",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithReasons",
+              "value": "5/5",
+              "target": "100% coverage",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithSuggestions",
+              "value": "5/5",
+              "target": "≥80% coverage",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-009",
+          "name": "AI literature review — sensitivity baseline",
+          "humanScore": 48,
+          "overallRisk": "medium",
+          "paragraphScores": [
+            50,
+            40,
+            65,
+            60,
+            45,
+            40
+          ],
+          "flags": [
+            "generic title",
+            "no specific data or citations",
+            "uniform sentence length",
+            "formulaic introductions",
+            "no specific data or citations",
+            "competent prose",
+            "balanced discussion",
+            "surface-level citations",
+            "competent prose",
+            "balanced discussion",
+            "surface-level citations",
+            "uniform sentence length",
+            "generic measures listed",
+            "surface-level citations",
+            "formulaic hedging",
+            "generic statement",
+            "surface-level citations"
+          ],
+          "pass": false,
+          "notes": [
+            "humanScore 48% > max 40% — AI text not detected",
+            "Risk \"medium\" should be \"high\""
+          ],
+          "dimensions": {
+            "sensitivity": 4,
+            "actionability": 10,
+            "specificity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 5.45,
+          "details": [
+            {
+              "dimension": "sensitivity",
+              "metric": "humanScore",
+              "value": 48,
+              "target": "≤ 40%",
+              "pass": false
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "overallRisk",
+              "value": "medium",
+              "target": "high",
+              "pass": false
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "flaggedParagraphs",
+              "value": 3,
+              "target": "≥ 2",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithReasons",
+              "value": "3/3",
+              "target": "100% coverage",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithSuggestions",
+              "value": "3/3",
+              "target": "≥80% coverage",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-010",
+          "name": "AI clinical protocol — sensitivity baseline",
+          "humanScore": 19,
+          "overallRisk": "high",
+          "paragraphScores": [
+            15,
+            25,
+            25,
+            30,
+            25,
+            30,
+            20
+          ],
+          "flags": [
+            "uniformly competent prose",
+            "no awkward phrasing",
+            "formulaic structure",
+            "formulaic structure",
+            "balanced discussion",
+            "surface-level detail",
+            "uniformly competent prose",
+            "generic recommendations",
+            "no specific case context",
+            "generic protocols",
+            "surface-level recommendations",
+            "formulaic structure",
+            "uniform sentence length",
+            "formulaic structure",
+            "generic recommendations",
+            "uniform sentence length",
+            "formulaic structure",
+            "generic recommendations",
+            "generic advice",
+            "lacks specificity",
+            "no personal insight"
+          ],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "sensitivity": 8,
+            "actionability": 10,
+            "specificity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 6.65,
+          "details": [
+            {
+              "dimension": "sensitivity",
+              "metric": "humanScore",
+              "value": 19,
+              "target": "≤ 50%",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "overallRisk",
+              "value": "high",
+              "target": "high",
+              "pass": true
+            },
+            {
+              "dimension": "sensitivity",
+              "metric": "flaggedParagraphs",
+              "value": 7,
+              "target": "≥ 2",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithReasons",
+              "value": "7/7",
+              "target": "100% coverage",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "flagsWithSuggestions",
+              "value": "7/7",
+              "target": "≥80% coverage",
               "pass": true
             }
           ]

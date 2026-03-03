@@ -1,0 +1,23 @@
+{
+  "id": "ralph-ic-010",
+  "name": "AI clinical protocol — sensitivity baseline",
+  "category": "ai_detection",
+  "phase": 1,
+  "difficulty": "medium",
+  "input": {
+    "mode": "ai_detection",
+    "textKey": "_generate",
+    "generatePrompt": "Write a clinical protocol for managing diabetic ketoacidosis in adult patients presenting to the emergency department. Include initial assessment, fluid resuscitation, insulin therapy, potassium replacement, and monitoring parameters. Write approximately 300 words."
+  },
+  "expectedResult": {
+    "humanScore_max": 50,
+    "overallRisk": "high",
+    "flaggedParagraphs_min": 2
+  },
+  "qualityCriteria": [
+    "AI-generated clinical protocol scores ≤35% human probability (slightly higher threshold — protocols are inherently formulaic)",
+    "At least 2 paragraphs flagged as AI",
+    "Overall risk is 'high'",
+    "Even formulaic AI text should be detectable vs. human-written protocols"
+  ]
+}

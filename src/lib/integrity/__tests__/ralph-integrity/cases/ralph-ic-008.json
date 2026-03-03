@@ -1,0 +1,23 @@
+{
+  "id": "ralph-ic-008",
+  "name": "AI discussion — sensitivity baseline",
+  "category": "ai_detection",
+  "phase": 1,
+  "difficulty": "easy",
+  "input": {
+    "mode": "ai_detection",
+    "textKey": "_generate",
+    "generatePrompt": "Write the discussion section of a research paper about the efficacy of metformin versus SGLT2 inhibitors for type 2 diabetes management in South Asian populations. Discuss the findings in context of existing literature, explain potential mechanisms, address limitations, and suggest future research directions. Write approximately 300 words."
+  },
+  "expectedResult": {
+    "humanScore_max": 40,
+    "overallRisk": "high",
+    "flaggedParagraphs_min": 2
+  },
+  "qualityCriteria": [
+    "AI-generated discussion scores ≤30% human probability",
+    "At least 2 paragraphs flagged as AI",
+    "Overall risk is 'high'",
+    "Discussion sections are where AI hedging is most prominent"
+  ]
+}

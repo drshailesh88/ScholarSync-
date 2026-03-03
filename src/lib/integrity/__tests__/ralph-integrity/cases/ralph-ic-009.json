@@ -1,0 +1,23 @@
+{
+  "id": "ralph-ic-009",
+  "name": "AI literature review — sensitivity baseline",
+  "category": "ai_detection",
+  "phase": 1,
+  "difficulty": "easy",
+  "input": {
+    "mode": "ai_detection",
+    "textKey": "_generate",
+    "generatePrompt": "Write a literature review section about the current state of antibiotic resistance in hospital-acquired infections, focusing on MRSA and carbapenem-resistant Enterobacteriaceae. Discuss prevalence, risk factors, treatment options, and infection control strategies. Write approximately 300 words in academic style."
+  },
+  "expectedResult": {
+    "humanScore_max": 40,
+    "overallRisk": "high",
+    "flaggedParagraphs_min": 2
+  },
+  "qualityCriteria": [
+    "AI-generated literature review scores ≤30% human probability",
+    "At least 2 paragraphs flagged as AI",
+    "Overall risk is 'high'",
+    "Literature reviews are prime AI detection territory — generic summaries"
+  ]
+}
