@@ -204,43 +204,83 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     setCompileError(null);
     setDiagnostics([]);
     editorRef.current?.clearDiagnostics();
-    try {
-      const res = await fetch("/api/latex/compile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ projectId: project.id }),
-      });
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({ error: "Compilation failed" }));
-        setCompileStatus("error");
-        setCompileError(data.error || "Compilation failed");
-        if (data.errors) {
-          const errors = data.errors as CompilationDiagnostic[];
-          setDiagnostics(errors);
-          // Push diagnostics as inline error markers in the editor
-          editorRef.current?.setDiagnostics(
-            errors
-              .filter((e) => e.line != null)
-              .map((e) => ({
-                line: e.line!,
-                message: e.message,
-                severity: e.severity,
-              }))
-          );
+    const MAX_RETRIES = 2;
+    let lastError = "";
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const res = await fetch("/api/latex/compile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ projectId: project.id }),
+        });
+
+        // Rate-limited — wait and retry
+        if (res.status === 429 && attempt < MAX_RETRIES) {
+          const retryAfter = parseInt(res.headers.get("Retry-After") || "3", 10);
+          setCompileError(`Compiler busy — retrying in ${retryAfter}s (attempt ${attempt + 1}/${MAX_RETRIES})…`);
+          await new Promise((r) => setTimeout(r, retryAfter * 1000));
+          continue;
         }
-        return;
-      }
 
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      setCompiledPdfUrl(url);
-      setCompileStatus("success");
-      setPreviewMode("pdf");
-    } catch {
-      setCompileStatus("error");
-      setCompileError("Network error — could not reach server");
+        // Service unavailable — clear message
+        if (res.status === 502 || res.status === 503 || res.status === 504) {
+          if (attempt < MAX_RETRIES) {
+            setCompileError(`Compiler service unavailable — retrying (attempt ${attempt + 1}/${MAX_RETRIES})…`);
+            await new Promise((r) => setTimeout(r, 2000));
+            continue;
+          }
+          setCompileStatus("error");
+          setCompileError(
+            "The LaTeX compiler service is currently unavailable. Your document is saved — " +
+            "you can use the live preview or try compiling again in a moment."
+          );
+          return;
+        }
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({ error: "Compilation failed" }));
+          setCompileStatus("error");
+          setCompileError(data.error || "Compilation failed");
+          if (data.errors) {
+            const errors = data.errors as CompilationDiagnostic[];
+            setDiagnostics(errors);
+            editorRef.current?.setDiagnostics(
+              errors
+                .filter((e) => e.line != null)
+                .map((e) => ({
+                  line: e.line!,
+                  message: e.message,
+                  severity: e.severity,
+                }))
+            );
+          }
+          return;
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        setCompiledPdfUrl(url);
+        setCompileStatus("success");
+        setPreviewMode("pdf");
+        return; // success — exit retry loop
+      } catch {
+        lastError = "Network error — could not reach the compilation server";
+        if (attempt < MAX_RETRIES) {
+          setCompileError(`Connection failed — retrying (attempt ${attempt + 1}/${MAX_RETRIES})…`);
+          await new Promise((r) => setTimeout(r, 2000));
+          continue;
+        }
+      }
     }
+
+    // All retries exhausted
+    setCompileStatus("error");
+    setCompileError(
+      lastError ||
+      "Unable to compile after multiple attempts. Check your connection and try again."
+    );
   }, [project.id, setCompileStatus, setCompileError, setCompiledPdfUrl, setPreviewMode]);
 
   // Export handlers
