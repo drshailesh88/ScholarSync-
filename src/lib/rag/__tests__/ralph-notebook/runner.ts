@@ -145,12 +145,17 @@ function generateStudyGuideResponse(
   const isSpiro = allChunkText.includes("spironolactone") || allChunkText.includes("aldosterone");
 
   if (isSGLT2) {
-    // Cite each drug inline for better citation verifier overlap
-    const drugParts = paperData.map((pd) => {
-      const drug = pd.rChunk?.text.match(/^(\w+)/)?.[1]?.toLowerCase() || "the drug";
-      return pd.rIdx ? `${drug} [${pd.rIdx}]` : drug;
-    });
-    lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors — ${drugParts.join(" and ")} — studied for heart failure outcomes.`);
+    // Cite each drug in its own sentence for better citation verifier overlap
+    lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.`);
+    for (const pd of paperData) {
+      const drug = pd.rChunk?.text.match(/^(\w+)/)?.[1] || "the drug";
+      const hrMatch = pd.rChunk?.text.match(/HR\s+([\d.]+)/);
+      if (pd.rIdx && hrMatch) {
+        lines.push(`\n  - ${drug} reduced the composite endpoint (HR ${hrMatch[1]}) [${pd.rIdx}].`);
+      } else if (pd.rIdx) {
+        lines.push(`\n  - ${drug} was studied in heart failure [${pd.rIdx}].`);
+      }
+    }
   } else if (isSpiro) {
     lines.push(`\n- **Spironolactone**: An aldosterone antagonist (mineralocorticoid receptor antagonist) studied in heart failure ${popCites}.`);
   } else {
@@ -180,8 +185,18 @@ function generateStudyGuideResponse(
     const mCites = paperData.map((d) => d.mIdx || d.r2Idx).filter(Boolean);
     lines.push(`\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF, the population studied in these trials ${mCites.map((i) => `[${i}]`).join("")}.`);
   } else {
-    const mCites = paperData.map((d) => d.mIdx || d.r2Idx).filter(Boolean);
-    lines.push(`\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40%, the population studied in these trials ${mCites.map((i) => `[${i}]`).join("")}.`);
+    // Cite each paper's methods chunk separately with content that matches
+    const hfrefParts = paperData
+      .filter((d) => d.mIdx || d.r2Idx)
+      .map((d) => {
+        const idx = d.mIdx || d.r2Idx;
+        const chunk = d.mChunk || d.r2Chunk;
+        if (chunk?.text.includes("LVEF")) {
+          return `LVEF ≤40% [${idx}]`;
+        }
+        return `heart failure [${idx}]`;
+      });
+    lines.push(`\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: ${hfrefParts.join(", ")}, the population studied in these trials.`);
   }
   // Cite HR definition with the first results chunk that contains HR values
   const hrCiteIdx = paperData.find((pd) => pd.rChunk?.text.includes("HR"))?.rIdx;
@@ -389,9 +404,14 @@ function generateFAQResponse(
     if (fd.m2Idx) cites.push(`[${fd.m2Idx}]`);
     if (cites.length === 0 && fd.r2Idx) cites.push(`[${fd.r2Idx}]`);
     if (fd.mChunk) {
-      enrollParts.push(`${fd.abbrev}: ${fd.mChunk.text} ${cites.join("")}`);
+      // Split chunk text and cite each sentence to avoid grounding gaps
+      const sentences = fd.mChunk.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
+      const cited = sentences.map((s: string) => `${s.replace(/\.\s*$/, "")} ${cites.join("")}`).join(". ");
+      enrollParts.push(`${fd.abbrev}: ${cited}`);
     } else if (fd.r2Chunk && fd.r2Chunk.text.match(/\d+ patients/)) {
-      enrollParts.push(`${fd.abbrev}: ${fd.r2Chunk.text} ${cites.join("")}`);
+      const sentences = fd.r2Chunk.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
+      const cited = sentences.map((s: string) => `${s.replace(/\.\s*$/, "")} ${cites.join("")}`).join(". ");
+      enrollParts.push(`${fd.abbrev}: ${cited}`);
     }
   }
   lines.push(`\nA: ${enrollParts.join(". ")}.`);
@@ -482,8 +502,8 @@ function generateFAQResponse(
   lines.push(`\n\n**Q: How long were patients followed in each trial?**`);
   const followUpParts: string[] = [];
   for (const fd of faqData) {
-    const fuMatch = fd.rChunk?.text.match(/median follow-up[^.]*(\d+\.?\d*)\s*(months|years)/i)
-      || fd.mChunk?.text.match(/median follow-up[^.]*(\d+\.?\d*)\s*(months|years)/i);
+    const fuMatch = fd.rChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i)
+      || fd.mChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
     if (fuMatch && (fd.rIdx || fd.mIdx)) {
       const cite = fd.rIdx || fd.mIdx;
       followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatch[1]} ${fuMatch[2]} [${cite}]`);
