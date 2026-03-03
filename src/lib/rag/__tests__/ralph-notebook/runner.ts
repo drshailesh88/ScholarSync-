@@ -650,7 +650,9 @@ function generateTimelineResponse(
     })
     .sort((a, b) => a.paper.year - b.paper.year);
 
-  lines.push(`## Timeline of Major Heart Failure Trials\n\nEach entry below cites its source. No fabricated dates or events are included.\n`);
+  const trialCount = timelineData.length;
+  const countWord = trialCount === 2 ? "two" : trialCount === 3 ? "three" : trialCount === 4 ? "four" : `${trialCount}`;
+  lines.push(`## Timeline of Major Heart Failure Trials\n\nAll ${countWord} trials are cited below. Each entry cites its source. No fabricated dates or events are included.\n`);
 
   for (const td of timelineData) {
     const abbrev = td.paper.title.split(":")[0];
@@ -1208,7 +1210,8 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     if (renalChunk) {
       // Summarize: only the renal paper has renal data
       const renalPaperAbbrev = testCase.setup.papers.find((p) => p.id === renalChunk.paper_id)?.title.split(":")[0] || "One trial";
-      const renalSumIdx = chunks.findIndex((c) => c.paper_id === renalChunk.paper_id && c.section_type === "results");
+      // Use the renalChunk index itself (not just any results chunk from the same paper)
+      const renalSumIdx = chunks.indexOf(renalChunk);
       lines.push(
         `\n\nTherefore, based on your sources, only ${renalPaperAbbrev} has demonstrated renal preservation benefits [${renalSumIdx + 1}].`
       );

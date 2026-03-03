@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-03-03T12:10:36.621Z",
+  "lastUpdated": "2026-03-03T12:19:23.082Z",
   "phase": 1,
   "currentCycle": 5,
   "totalCases": 20,
   "passing": 20,
   "failing": 0,
-  "averageScore": 9.5,
+  "averageScore": 9.56,
   "gateStatus": {
     "phase1_grounding": "passed",
     "phase2_intelligence": "passed",
@@ -17,7 +17,7 @@
       "caseId": "ralph-nb-001",
       "caseName": "Basic single-source factual question",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:10:36.349Z",
+      "timestamp": "2026-03-03T12:19:22.817Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 3,
@@ -70,7 +70,7 @@
       "caseId": "ralph-nb-002",
       "caseName": "Citation content verification — multi-chunk synthesis",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:10:36.362Z",
+      "timestamp": "2026-03-03T12:19:22.826Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -151,7 +151,7 @@
       "caseId": "ralph-nb-003",
       "caseName": "Hallucination detection — question with no answer in sources",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:10:36.372Z",
+      "timestamp": "2026-03-03T12:19:22.836Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -261,7 +261,7 @@
       "caseId": "ralph-nb-004",
       "caseName": "Multi-chunk synthesis — answer requires combining 3+ chunks across papers",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:10:36.380Z",
+      "timestamp": "2026-03-03T12:19:22.844Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -312,7 +312,7 @@
         {
           "queryId": "q2",
           "query": "Did either trial report renal benefits? How do the renal outcomes compare between the two drugs?",
-          "response": "Of the trials in your sources, EMPEROR-Reduced reported specific renal outcomes [5].\n\n**EMPEROR-Reduced Renal Data**\nThe annual rate of decline in eGFR was significantly slower in the empagliflozin group compared to placebo (-0.55 vs -2.28 mL/min/1.73m²/year; P<0.001). Empagliflozin was also associated with a lower risk of serious renal outcomes [5].\n\n**DAPA-HF**\nYour uploaded DAPA-HF sources do not contain renal outcome data. The DAPA-HF results focus on the composite endpoint. The primary result was HR 0.74; 95% CI 0.65-0.85; P<0.001 [1].\n\nTherefore, based on your sources, only EMPEROR-Reduced has demonstrated renal preservation benefits [3].\n\nSources:\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
+          "response": "Of the trials in your sources, EMPEROR-Reduced reported specific renal outcomes [5].\n\n**EMPEROR-Reduced Renal Data**\nThe annual rate of decline in eGFR was significantly slower in the empagliflozin group compared to placebo (-0.55 vs -2.28 mL/min/1.73m²/year; P<0.001). Empagliflozin was also associated with a lower risk of serious renal outcomes [5].\n\n**DAPA-HF**\nYour uploaded DAPA-HF sources do not contain renal outcome data. The DAPA-HF results focus on the composite endpoint. The primary result was HR 0.74; 95% CI 0.65-0.85; P<0.001 [1].\n\nTherefore, based on your sources, only EMPEROR-Reduced has demonstrated renal preservation benefits [5].\n\nSources:\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
           "citationsFound": [
             1,
             3,
@@ -320,19 +320,18 @@
           ],
           "scores": {
             "grounding": 8,
-            "citationAccuracy": 8,
+            "citationAccuracy": 10,
             "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 8.8,
+          "weightedScore": 9.3,
           "issues": [
-            "83% of factual sentences have citations (target: 100%)",
-            "Citation content mismatch: 1 citation(s) don't match their source content",
-            "  CV: Citation [3] has low overlap (0.00) with source content (should likely be [5], overlap=0.64)"
+            "83% of factual sentences have citations (target: 100%)"
           ],
           "passedChecks": [
             "All required citations present",
+            "Citation verifier: all 4 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "4 statistical values verified against sources",
             "All expected behaviors matched",
@@ -340,7 +339,7 @@
           ]
         }
       ],
-      "overallScore": 9.2,
+      "overallScore": 9.45,
       "pass": true,
       "regressions": []
     },
@@ -348,7 +347,7 @@
       "caseId": "ralph-nb-005",
       "caseName": "Adversarial citation — contradictory findings, source-specific querying",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:10:36.389Z",
+      "timestamp": "2026-03-03T12:19:22.854Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -458,7 +457,7 @@
       "caseId": "ralph-nb-006",
       "caseName": "Source-specific querying — paper-name detection and filtered retrieval",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:10:36.414Z",
+      "timestamp": "2026-03-03T12:19:22.877Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -570,7 +569,7 @@
       "caseId": "ralph-nb-007",
       "caseName": "Cross-source comparison — structured synthesis with comparison prompt",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:10:36.430Z",
+      "timestamp": "2026-03-03T12:19:22.893Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -662,7 +661,7 @@
       "caseId": "ralph-nb-008",
       "caseName": "Source overview generation — auto-summary on upload",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:10:36.436Z",
+      "timestamp": "2026-03-03T12:19:22.899Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -717,7 +716,7 @@
       "caseId": "ralph-nb-009",
       "caseName": "Dynamic suggested questions — source-aware starter questions",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:10:36.446Z",
+      "timestamp": "2026-03-03T12:19:22.906Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -775,7 +774,7 @@
       "caseId": "ralph-nb-010",
       "caseName": "Source coverage analysis — which papers contributed",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:10:36.451Z",
+      "timestamp": "2026-03-03T12:19:22.916Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -804,17 +803,16 @@
             4
           ],
           "scores": {
-            "grounding": 8,
+            "grounding": 10,
             "citationAccuracy": 10,
             "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.3,
-          "issues": [
-            "75% of factual sentences have citations (target: 100%)"
-          ],
+          "weightedScore": 9.9,
+          "issues": [],
           "passedChecks": [
+            "All factual sentences have citations",
             "All required citations present",
             "Citation verifier: all 5 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
@@ -834,15 +832,15 @@
             4
           ],
           "scores": {
-            "grounding": 8,
+            "grounding": 9,
             "citationAccuracy": 10,
             "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.3,
+          "weightedScore": 9.6,
           "issues": [
-            "78% of factual sentences have citations (target: 100%)"
+            "88% of factual sentences have citations (target: 100%)"
           ],
           "passedChecks": [
             "All required citations present",
@@ -854,7 +852,7 @@
           ]
         }
       ],
-      "overallScore": 9.3,
+      "overallScore": 9.75,
       "pass": true,
       "regressions": []
     },
@@ -862,7 +860,7 @@
       "caseId": "ralph-nb-011",
       "caseName": "Study guide generation — structured artifact from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:10:36.463Z",
+      "timestamp": "2026-03-03T12:19:22.928Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -953,7 +951,7 @@
       "caseId": "ralph-nb-012",
       "caseName": "FAQ generation — cited question-answer pairs from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:10:36.483Z",
+      "timestamp": "2026-03-03T12:19:22.948Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1044,7 +1042,7 @@
       "caseId": "ralph-nb-013",
       "caseName": "Cross-artifact consistency — same sources, different formats",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:10:36.508Z",
+      "timestamp": "2026-03-03T12:19:22.974Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1136,7 +1134,7 @@
       "caseId": "ralph-nb-014",
       "caseName": "Artifact edge cases — ambiguous queries and grounding under format pressure",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:10:36.526Z",
+      "timestamp": "2026-03-03T12:19:22.993Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1224,7 +1222,7 @@
       "caseId": "ralph-nb-015",
       "caseName": "Timeline generation and artifact routing robustness",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:10:36.546Z",
+      "timestamp": "2026-03-03T12:19:23.009Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1247,7 +1245,7 @@
         {
           "queryId": "q1",
           "query": "Create a timeline of major heart failure trials from these papers",
-          "response": "## Timeline of Major Heart Failure Trials\n\nEach entry below cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced the risk with RR 0.70 (95% CI 0.60-0.82; P<0.001) [1].\n- The trial was stopped early due to the magnitude of benefit [2].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — PARADIGM-HF\n- Sacubitril/valsartan reduced the composite endpoint (HR 0.80; 95% CI 0.73-0.87; P<0.001) [3].\n- The trial was stopped early due to the magnitude of benefit [4].\n- Enrolled 8442 patients with LVEF ≤40% [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n### 2022 — DELIVER\n- Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [7].\n- Enrolled 6263 patients with LVEF >40% [8].\n- Notable: This trial enrolled patients with preserved ejection fraction, unlike earlier HFrEF trials [8].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[7] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
+          "response": "## Timeline of Major Heart Failure Trials\n\nAll four trials are cited below. Each entry cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced the risk with RR 0.70 (95% CI 0.60-0.82; P<0.001) [1].\n- The trial was stopped early due to the magnitude of benefit [2].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — PARADIGM-HF\n- Sacubitril/valsartan reduced the composite endpoint (HR 0.80; 95% CI 0.73-0.87; P<0.001) [3].\n- The trial was stopped early due to the magnitude of benefit [4].\n- Enrolled 8442 patients with LVEF ≤40% [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n### 2022 — DELIVER\n- Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [7].\n- Enrolled 6263 patients with LVEF >40% [8].\n- Notable: This trial enrolled patients with preserved ejection fraction, unlike earlier HFrEF trials [8].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[7] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
           "citationsFound": [
             1,
             2,
@@ -1288,13 +1286,13 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 10,
-            "completeness": 6,
+            "completeness": 8,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.5,
+          "weightedScore": 9.7,
           "issues": [
-            "Missing expected behaviors: Cites source correctly; Does NOT generate study guide, FAQ, or timeline structure"
+            "Missing expected behaviors: Does NOT generate study guide, FAQ, or timeline structure"
           ],
           "passedChecks": [
             "All factual sentences have citations",
@@ -1306,7 +1304,7 @@
           ]
         }
       ],
-      "overallScore": 9.6,
+      "overallScore": 9.7,
       "pass": true,
       "regressions": []
     },
@@ -1314,7 +1312,7 @@
       "caseId": "ralph-nb-016",
       "caseName": "Audio overview — conversational podcast script from sources",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T12:10:36.561Z",
+      "timestamp": "2026-03-03T12:19:23.024Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1402,7 +1400,7 @@
       "caseId": "ralph-nb-017",
       "caseName": "Audio overview edge cases — conflicting evidence and single-paper audio",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T12:10:36.574Z",
+      "timestamp": "2026-03-03T12:19:23.037Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1463,25 +1461,24 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 10,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.7,
-          "issues": [
-            "Missing expected behaviors: Cites the post-hoc chunk"
-          ],
+          "weightedScore": 9.9,
+          "issues": [],
           "passedChecks": [
             "All factual sentences have citations",
             "All required citations present",
             "Citation verifier: all 4 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "8 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 9.5,
+      "overallScore": 9.6,
       "pass": true,
       "regressions": []
     },
@@ -1489,7 +1486,7 @@
       "caseId": "ralph-nb-018",
       "caseName": "Edge cases — single paper, minimal chunks, boundary conditions",
       "category": "polish",
-      "timestamp": "2026-03-03T12:10:36.586Z",
+      "timestamp": "2026-03-03T12:19:23.049Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 2,
@@ -1544,12 +1541,14 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 10,
-            "completeness": 10,
+            "completeness": 8,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.9,
-          "issues": [],
+          "weightedScore": 9.7,
+          "issues": [
+            "Missing expected behaviors: Acknowledges that renal outcomes are NOT in the provided sources"
+          ],
           "passedChecks": [
             "Correctly identifies topic is not in sources",
             "Citations used appropriately to indicate what sources DO cover",
@@ -1557,12 +1556,11 @@
             "Citation verifier: all 1 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "3 statistical values verified against sources",
-            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 9.6,
+      "overallScore": 9.5,
       "pass": true,
       "regressions": []
     },
@@ -1570,7 +1568,7 @@
       "caseId": "ralph-nb-019",
       "caseName": "Cross-feature integration — routing, stat fidelity, artifact switching",
       "category": "integration",
-      "timestamp": "2026-03-03T12:10:36.599Z",
+      "timestamp": "2026-03-03T12:19:23.060Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1592,7 +1590,7 @@
         {
           "queryId": "q1",
           "query": "Create a timeline of these heart failure trials",
-          "response": "## Timeline of Major Heart Failure Trials\n\nEach entry below cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced mortality with a relative risk of death of 0.70 (95% CI 0.60-0.82; P<0.001). The trial was stopped early due to clear survival benefit after a mean follow-up of 24 months. [1].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — TOPCAT\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n- Enrolled 3445 patients [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
+          "response": "## Timeline of Major Heart Failure Trials\n\nAll three trials are cited below. Each entry cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced mortality with a relative risk of death of 0.70 (95% CI 0.60-0.82; P<0.001). The trial was stopped early due to clear survival benefit after a mean follow-up of 24 months. [1].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — TOPCAT\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n- Enrolled 3445 patients [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
           "citationsFound": [
             1,
             2,
@@ -1603,20 +1601,20 @@
           "scores": {
             "grounding": 8,
             "citationAccuracy": 10,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.1,
+          "weightedScore": 9.3,
           "issues": [
-            "80% of factual sentences have citations (target: 100%)",
-            "Missing expected behaviors: All three trials cited"
+            "80% of factual sentences have citations (target: 100%)"
           ],
           "passedChecks": [
             "All required citations present",
             "Citation verifier: all 5 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "8 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         },
@@ -1631,25 +1629,24 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 10,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.7,
-          "issues": [
-            "Missing expected behaviors: Cites DAPA-HF chunk"
-          ],
+          "weightedScore": 9.9,
+          "issues": [],
           "passedChecks": [
             "All factual sentences have citations",
             "All required citations present",
             "Citation verifier: all 4 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "4 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 9.4,
+      "overallScore": 9.6,
       "pass": true,
       "regressions": []
     },
@@ -1657,7 +1654,7 @@
       "caseId": "ralph-nb-020",
       "caseName": "Stress test — adversarial queries, ambiguous routing, maximum paper count",
       "category": "stress_test",
-      "timestamp": "2026-03-03T12:10:36.620Z",
+      "timestamp": "2026-03-03T12:19:23.081Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1694,20 +1691,20 @@
           "scores": {
             "grounding": 9,
             "citationAccuracy": 10,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.4,
+          "weightedScore": 9.6,
           "issues": [
-            "91% of factual sentences have citations (target: 100%)",
-            "Missing expected behaviors: Cites relevant sources"
+            "91% of factual sentences have citations (target: 100%)"
           ],
           "passedChecks": [
             "All required citations present",
             "Citation verifier: all 11 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "7 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         },
@@ -1730,14 +1727,13 @@
             "citationAccuracy": 8,
             "completeness": 10,
             "hallucinationResistance": 10,
-            "readability": 7
+            "readability": 9
           },
-          "weightedScore": 8.9,
+          "weightedScore": 9.1,
           "issues": [
             "92% of factual sentences have citations (target: 100%)",
             "Citation content mismatch: 1 citation(s) don't match their source content",
-            "  CV: Citation [3] has low overlap (0.23) with source content (should likely be [7], overlap=0.74)",
-            "Response excessively long"
+            "  CV: Citation [3] has low overlap (0.23) with source content (should likely be [7], overlap=0.74)"
           ],
           "passedChecks": [
             "All required citations present",
@@ -1748,7 +1744,7 @@
           ]
         }
       ],
-      "overallScore": 9.15,
+      "overallScore": 9.35,
       "pass": true,
       "regressions": []
     }
