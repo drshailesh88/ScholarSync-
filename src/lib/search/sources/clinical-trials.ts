@@ -113,6 +113,25 @@ function mapStudy(study: CTStudy): UnifiedSearchResult | null {
   };
 }
 
+/** Strip question words, stop words, and punctuation to extract search keywords for CT.gov */
+function extractKeywords(query: string): string {
+  const stopWords = new Set([
+    "what", "are", "is", "the", "of", "on", "in", "a", "an", "to", "for",
+    "and", "or", "how", "does", "do", "can", "will", "with", "by", "from",
+    "has", "have", "been", "being", "their", "its", "that", "this", "these",
+    "those", "which", "who", "whom", "where", "when", "why", "about",
+    "between", "through", "during", "before", "after", "above", "below",
+    "effects", "effect", "impact", "role", "outcomes", "outcome",
+  ]);
+
+  return query
+    .replace(/[?.,!;:'"()[\]{}]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length > 1 && !stopWords.has(w.toLowerCase()))
+    .join(" ")
+    .trim();
+}
+
 export async function searchClinicalTrials(
   query: string,
   options: ClinicalTrialsSearchOptions = {}
@@ -123,9 +142,10 @@ export async function searchClinicalTrials(
   }
 
   const limit = options.limit || 20;
+  const keywords = extractKeywords(query);
 
   const params = new URLSearchParams();
-  params.set("query.term", query);
+  params.set("query.term", keywords || query);
   params.set("pageSize", String(limit));
   params.set("sort", "@relevance");
   params.set("format", "json");

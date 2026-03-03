@@ -1,0 +1,20 @@
+{
+  "id": "ralph-023",
+  "name": "Styled Subgraph Metabolomics Workflow",
+  "category": "styling_layout",
+  "difficulty": "hard",
+  "input": "Create a top-down flowchart showing a multi-omics metabolomics workflow with styled subgraphs. Sample Collection (styled with light blue background): Blood Draw, Urine Collection, Tissue Biopsy. Sample Prep (styled with light green background): Extraction, Derivatization, Quality Control. Analysis Platforms (styled with light purple background, running in parallel): LC-MS Platform, GC-MS Platform, NMR Platform. Data Integration (styled with light orange background): Feature Alignment, Statistical Analysis, Pathway Mapping. All three platforms converge into Feature Alignment. Use subgraph styling with fill colors.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 15,
+  "qualityCriteria": [
+    "At least 4 styled subgraphs present",
+    "Parallel analysis platforms shown (LC-MS, GC-MS, NMR)",
+    "Convergence arrows from platforms to integration",
+    "Subgraph styling with fill colors applied",
+    "Fan-out from QC to multiple platforms",
+    "No truncated labels",
+    "All major workflow steps present",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Multi-omics workflow with 4 styled subgraphs, parallel platforms converging into integration, professional lab appearance."
+}
