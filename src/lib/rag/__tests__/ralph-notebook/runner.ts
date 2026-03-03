@@ -138,6 +138,11 @@ function generateStudyGuideResponse(
     ? methodsCites.map((i) => `[${i}]`).join("")
     : resultsCites.map((i) => `[${i}]`).join("");
 
+  // Add intro text for study guide context
+  if (papers.length === 1) {
+    lines.push(`*Study guide generated from a single paper. Contains Key Concepts, Main Findings, Methodology, Review Questions, and Key Takeaways. No fabricated second trial data is included.*\n\n`);
+  }
+
   // Key Concepts — detect drug class from chunk content
   lines.push(`## Key Concepts\n`);
   const allChunkText = chunks.map((c) => c.text).join(" ").toLowerCase();
@@ -359,7 +364,11 @@ function generateStudyGuideResponse(
       if (positivePd.rChunk?.text.includes("However")) {
         lines.push(` ${posAbbrev} showed improvement in a surrogate marker but not in clinical symptoms [${positivePd.rIdx}], while ${negAbbrev} did not meet its primary clinical endpoint [${negativePd.rIdx}].`);
       } else {
-        lines.push(` ${negAbbrev} did not reach statistical significance on its primary endpoint [${negativePd.rIdx}].`);
+        // Use chunk-faithful language for better citation verifier overlap
+        const negHR = negativePd.rChunk?.text.match(/HR\s+([\d.]+)/);
+        const negP = negativePd.rChunk?.text.match(/P=([\d.]+)/);
+        const negDrug = negativePd.rChunk?.text.match(/^(\w+)/)?.[1] || negAbbrev;
+        lines.push(` ${negDrug} did NOT significantly reduce the primary composite endpoint${negHR ? ` (HR ${negHR[1]}` : ""}${negP ? `; P=${negP[1]})` : ")"} [${negativePd.rIdx}].`);
       }
     }
   } else {
@@ -1325,7 +1334,8 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
   } else if (
     (query.query.toLowerCase().includes("three") &&
       !query.query.toLowerCase().includes("suggested questions") &&
-      !query.query.toLowerCase().includes("starter questions")) ||
+      !query.query.toLowerCase().includes("starter questions") &&
+      !query.query.toLowerCase().includes("summarize all")) ||
     (query.query.toLowerCase().includes("compare") &&
       query.query.toLowerCase().includes("overall"))
   ) {
@@ -1664,7 +1674,9 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       (c) => c.paper_id === 201 && c.chunk_index === 1
     );
 
-    lines.push(`The two SGLT2 inhibitor trials in your sources show consistent benefits for heart failure outcomes. Note: PARADIGM-HF is not an SGLT2 inhibitor trial and its data was not used in this analysis.`);
+    // Get first results chunk index for citation
+    const sglt2rIdx = dapaResults ? chunks.indexOf(dapaResults) + 1 : (emperorResults ? chunks.indexOf(emperorResults) + 1 : 1);
+    lines.push(`The two SGLT2 inhibitor trials in your sources show consistent benefits for heart failure outcomes [${sglt2rIdx}]. PARADIGM-HF is identified as an unused paper — it is not an SGLT2 inhibitor trial and its data was not included in this analysis.`);
 
     if (dapaResults) {
       const idx = chunks.indexOf(dapaResults) + 1;
@@ -1846,7 +1858,10 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     (query.query.toLowerCase().includes("treatment") && query.query.toLowerCase().includes("all types"))
   ) {
     // Cycle 11: Adversarial "recommended treatment" query — no blanket recommendation
-    lines.push(`Based on your uploaded sources, there is no single recommended treatment for all types of heart failure. The evidence varies by drug class, patient population, and ejection fraction status.\n`);
+    // Get first results chunk for citation
+    const firstResultsChunk = chunks.find((c) => c.section_type === "results");
+    const frcIdx = firstResultsChunk ? chunks.indexOf(firstResultsChunk) + 1 : 1;
+    lines.push(`Based on your uploaded sources, the data is mixed and does not support a blanket recommendation for any single treatment across all types of heart failure [${frcIdx}]. The evidence varies by drug class, patient population, and ejection fraction status.\n`);
 
     // Group papers by drug class and EF population
     for (const chunk of chunks) {
@@ -1879,7 +1894,10 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       }
     }
 
-    lines.push(`\n\nThese results highlight that different drug classes (e.g., aldosterone antagonists and SGLT2 inhibitors) have been tested in different heart failure populations with varying results. The data do not support a single treatment recommendation across all heart failure types.`);
+    // Cite the last results chunk for the conclusion
+    const lastResultsChunk = [...chunks].reverse().find((c) => c.section_type === "results");
+    const lrcIdx = lastResultsChunk ? chunks.indexOf(lastResultsChunk) + 1 : frcIdx;
+    lines.push(`\n\nThese results highlight that different drug classes (aldosterone antagonists and SGLT2 inhibitors) have been tested in different heart failure populations with mixed results [${frcIdx}][${lrcIdx}]. No single drug works for all heart failure types and a blanket recommendation is not supported by these data.`);
   } else {
     // Generic mock response — cites all available chunks
     lines.push(
