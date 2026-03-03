@@ -2760,3 +2760,187 @@ describe("Cycle 24: Auto-Numbering Stress & Ordering", () => {
     expect(figureLabel(result[2].contentBlocks[0])).toBe("Figure 3");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 25: extractTextFromBlocks Deep, Social Format Keys, Animation Duration
+//           Bounds, PRISMA Data Defaults, Version Diff Sort Order
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 25: extractTextFromBlocks — Deep Coverage", () => {
+  test("callout block text is extracted via text field", () => {
+    const blocks = [makeCalloutBlock("Warning", "Be careful")];
+    const text = extractTextFromBlocks(blocks);
+    // callout data has { title, text, type } - extractTextFromBlocks looks for data.text
+    expect(text).toContain("Be careful");
+  });
+
+  test("diagram block has no text field", () => {
+    const blocks = [makeDiagramBlock()];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("");
+  });
+
+  test("image block has no text field", () => {
+    const blocks = [makeImageBlock("photo")];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("");
+  });
+
+  test("table block has no text field", () => {
+    const blocks = [makeTableBlock()];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("");
+  });
+
+  test("chart block has no text field", () => {
+    const blocks = [makeChartBlock()];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("");
+  });
+
+  test("many blocks concatenated with newlines", () => {
+    const blocks = [
+      makeTextBlock("line1"),
+      makeTextBlock("line2"),
+      makeTextBlock("line3"),
+    ];
+    const text = extractTextFromBlocks(blocks);
+    expect(text).toBe("line1\nline2\nline3");
+  });
+});
+
+describe("Cycle 25: Social Format Type Keys", () => {
+  test("exactly 5 social formats exist", () => {
+    expect(Object.keys(SOCIAL_FORMATS)).toHaveLength(5);
+  });
+
+  test("format keys match expected set", () => {
+    const keys = Object.keys(SOCIAL_FORMATS);
+    expect(keys).toContain("linkedin_carousel");
+    expect(keys).toContain("twitter_thread");
+    expect(keys).toContain("twitter_images");
+    expect(keys).toContain("instagram_story");
+    expect(keys).toContain("instagram_carousel");
+  });
+
+  test("image formats all use png", () => {
+    const imageFormats = ["twitter_images", "instagram_story", "instagram_carousel"] as const;
+    for (const key of imageFormats) {
+      expect(SOCIAL_FORMATS[key].fileFormat).toBe("png");
+    }
+  });
+});
+
+describe("Cycle 25: Animation Duration Bounds", () => {
+  test("all presets produce non-negative delays", () => {
+    for (const preset of ANIMATION_PRESETS) {
+      const anims = preset.generate(10);
+      for (const a of anims) {
+        expect(a.delay).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
+  test("all presets produce non-negative durations", () => {
+    for (const preset of ANIMATION_PRESETS) {
+      const anims = preset.generate(10);
+      for (const a of anims) {
+        expect(a.duration).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
+  test("all presets produce non-negative orders", () => {
+    for (const preset of ANIMATION_PRESETS) {
+      const anims = preset.generate(10);
+      for (const a of anims) {
+        expect(a.order).toBeGreaterThanOrEqual(0);
+      }
+    }
+  });
+
+  test("sequential_build total reveal time scales with count", () => {
+    const anims5 = ANIMATION_PRESETS_MAP.sequential_build.generate(5);
+    const anims10 = ANIMATION_PRESETS_MAP.sequential_build.generate(10);
+    const last5 = anims5[4].delay + anims5[4].duration;
+    const last10 = anims10[9].delay + anims10[9].duration;
+    expect(last10).toBeGreaterThan(last5);
+  });
+});
+
+describe("Cycle 25: PRISMA Data Defaults", () => {
+  test("createEmptyPrismaData all numeric fields are 0", () => {
+    const data = createEmptyPrismaData();
+    expect(data.databaseRecords).toBe(0);
+    expect(data.registerRecords).toBe(0);
+    expect(data.otherSourceRecords).toBe(0);
+    expect(data.duplicatesRemoved).toBe(0);
+    expect(data.recordsScreened).toBe(0);
+    expect(data.recordsExcluded).toBe(0);
+    expect(data.fullTextAssessed).toBe(0);
+    expect(data.fullTextExcluded).toBe(0);
+    expect(data.studiesIncluded).toBe(0);
+    expect(data.reportsIncluded).toBe(0);
+  });
+
+  test("createEmptyPrismaData exclusion reasons is empty array", () => {
+    const data = createEmptyPrismaData();
+    expect(data.fullTextExclusionReasons).toEqual([]);
+  });
+
+  test("generatePrismaMermaid with empty data produces valid output", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid.length).toBeGreaterThan(100);
+    expect(mermaid).toContain("graph TD");
+    expect(mermaid.split("\n").length).toBeGreaterThan(10);
+  });
+});
+
+describe("Cycle 25: Version Diff Sort Order", () => {
+  function makeV(slides: { id: number; title: string }[]): VersionSnapshot {
+    return {
+      deck: { id: 1, title: "D", theme: "modern", createdAt: new Date(), updatedAt: new Date() },
+      slides: slides.map((s, i) => ({
+        id: s.id, title: s.title, subtitle: null,
+        layout: "title_content" as SlideLayout,
+        sortOrder: i, speakerNotes: null, contentBlocks: [],
+        createdAt: new Date(), updatedAt: new Date(),
+      })),
+    } as unknown as VersionSnapshot;
+  }
+
+  test("slideDiffs sorted: removed first, then modified, then unchanged, then added", () => {
+    const v1 = makeV([{ id: 1, title: "Keep" }, { id: 2, title: "Old" }, { id: 3, title: "Remove" }]);
+    const v2 = makeV([{ id: 1, title: "Keep" }, { id: 2, title: "New" }, { id: 4, title: "Added" }]);
+    const diff = computeDeckDiff(v1, v2);
+
+    const statuses = diff.slideDiffs.map((d) => d.status);
+    const order = { removed: 0, modified: 1, unchanged: 2, added: 3 };
+    for (let i = 1; i < statuses.length; i++) {
+      expect(order[statuses[i]]).toBeGreaterThanOrEqual(order[statuses[i - 1]]);
+    }
+  });
+
+  test("each slideDiff has correct slideIndex", () => {
+    const v1 = makeV([{ id: 1, title: "A" }]);
+    const v2 = makeV([{ id: 1, title: "A" }]);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.slideDiffs[0].slideIndex).toBe(0);
+  });
+
+  test("added slides have newTitle set", () => {
+    const v1 = makeV([]);
+    const v2 = makeV([{ id: 1, title: "New Slide" }]);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.slideDiffs[0].status).toBe("added");
+    expect(diff.slideDiffs[0].newTitle).toBe("New Slide");
+  });
+
+  test("removed slides have oldTitle set", () => {
+    const v1 = makeV([{ id: 1, title: "Old Slide" }]);
+    const v2 = makeV([]);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.slideDiffs[0].status).toBe("removed");
+    expect(diff.slideDiffs[0].oldTitle).toBe("Old Slide");
+  });
+});

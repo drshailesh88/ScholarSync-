@@ -830,6 +830,106 @@ export function trimAndFill(
 }
 
 // ---------------------------------------------------------------------------
+// Begg's rank correlation test for publication bias
+// ---------------------------------------------------------------------------
+
+/**
+ * Begg & Mazumdar (1994) rank correlation test.
+ *
+ * Tests the correlation between effect sizes and their variances
+ * using Kendall's tau. Significant correlation suggests publication bias.
+ */
+export function beggTest(
+  studies: StudyEffect[]
+): { tau: number; zValue: number; pValue: number } | null {
+  if (studies.length < 3) return null;
+
+  const n = studies.length;
+
+  // Compute variance-standardized effects (Begg uses variance, not SE)
+  const variances = studies.map((s) => s.se * s.se);
+
+  // Sort by variance and get ranks
+  const indexed = studies
+    .map((s, i) => ({ effect: s.effect, variance: variances[i], index: i }))
+    .sort((a, b) => a.variance - b.variance);
+
+  // Compute Kendall's tau between effect and variance ranks
+  let concordant = 0;
+  let discordant = 0;
+
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const effectDiff = indexed[j].effect - indexed[i].effect;
+      // variance is already sorted ascending, so variance diff is always positive
+      if (effectDiff > 0) concordant++;
+      else if (effectDiff < 0) discordant++;
+      // ties are ignored
+    }
+  }
+
+  const tau = (concordant - discordant) / (n * (n - 1) / 2);
+
+  // SE of tau under null (continuity-corrected Kendall)
+  const seTau = Math.sqrt((2 * (2 * n + 5)) / (9 * n * (n - 1)));
+
+  const zValue = tau / seTau;
+  const pValue = zToPValue(zValue);
+
+  return { tau, zValue, pValue };
+}
+
+// ---------------------------------------------------------------------------
+// Harbord's modified test for small-study effects (binary outcomes)
+// ---------------------------------------------------------------------------
+
+/**
+ * Harbord et al. (2006) test for small-study effects in meta-analyses
+ * of binary outcomes. Modified from Egger's test to reduce false positives
+ * when treatment effects are heterogeneous.
+ *
+ * Uses (Z/√V, 1/√V) regression where Z = log(OR)/SE, V = variance.
+ */
+export function harbordTest(
+  studies: StudyEffect[]
+): { bias: number; se: number; pValue: number } | null {
+  if (studies.length < 3) return null;
+
+  const n = studies.length;
+
+  // Harbord uses Z_i = effect_i / SE_i and V_i = SE_i^2
+  const data = studies.map((s) => ({
+    z: s.effect / s.se,
+    sqrtInvV: 1 / s.se, // 1/√V = 1/SE
+  }));
+
+  const x = data.map((d) => d.sqrtInvV);
+  const y = data.map((d) => d.z);
+
+  const xMean = x.reduce((a, b) => a + b, 0) / n;
+  const yMean = y.reduce((a, b) => a + b, 0) / n;
+
+  const ssxx = x.reduce((s, xi) => s + (xi - xMean) ** 2, 0);
+  const ssxy = x.reduce((s, xi, i) => s + (xi - xMean) * (y[i] - yMean), 0);
+
+  if (ssxx === 0) return null;
+
+  const slope = ssxy / ssxx;
+  const intercept = yMean - slope * xMean;
+
+  // SE of intercept
+  const residuals = y.map((yi, i) => yi - (intercept + slope * x[i]));
+  const residualSS = residuals.reduce((s, r) => s + r * r, 0);
+  const mse = residualSS / (n - 2);
+  const seIntercept = Math.sqrt(mse * (1 / n + (xMean * xMean) / ssxx));
+
+  const tValue = intercept / seIntercept;
+  const pValue = zToPValue(tValue);
+
+  return { bias: intercept, se: seIntercept, pValue };
+}
+
+// ---------------------------------------------------------------------------
 // Run full meta-analysis and persist results
 // ---------------------------------------------------------------------------
 

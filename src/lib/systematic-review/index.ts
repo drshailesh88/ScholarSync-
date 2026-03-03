@@ -96,6 +96,8 @@ export {
   computeFixedEffectsMeta,
   computeRandomEffectsMeta,
   eggerTest,
+  beggTest,
+  harbordTest,
   trimAndFill,
   runMetaAnalysis,
   getMetaAnalysisResults,
