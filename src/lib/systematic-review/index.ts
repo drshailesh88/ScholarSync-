@@ -345,3 +345,24 @@ export {
   type NOSItemResult,
   type NOSAssessment,
 } from "./newcastle-ottawa";
+
+// ---------------------------------------------------------------------------
+// CERQual — Confidence in qualitative evidence synthesis
+// ---------------------------------------------------------------------------
+
+export {
+  assessCERQualFinding,
+  computeCERQualConfidence,
+  inferDowngradeLevels,
+  exportCERQualSoQFTable,
+  generateConfidenceIndicator,
+  CERQUAL_COMPONENT_LABELS,
+  CERQUAL_CONCERN_LABELS,
+  CERQUAL_CONFIDENCE_LABELS,
+  type CERQualConfidence,
+  type CERQualConcern,
+  type CERQualComponent,
+  type CERQualComponentAssessment,
+  type CERQualFindingAssessment,
+  type CERQualSummary,
+} from "./cerqual-assessment";
