@@ -1,0 +1,139 @@
+{
+  "id": "ralph-nb-012",
+  "name": "FAQ generation — cited question-answer pairs from sources",
+  "category": "artifacts",
+  "difficulty": "medium",
+  "phase": 3,
+  "cycle": 12,
+  "setup": {
+    "description": "Two papers (DAPA-HF, EMPEROR-Reduced) with 6 chunks including demographics and CV death data. Tests that the FAQ artifact generates Q&A pairs where every answer includes at least one citation [N], covers both trials, includes correct hazard ratios, and does not hallucinate content about absent topics.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 1003,
+        "paper_id": 101,
+        "chunk_index": 2,
+        "text": "A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.65
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22). 3730 patients were randomized with a median follow-up of 16 months.",
+        "section_type": "results",
+        "page_number": 6,
+        "score": 0.85
+      },
+      {
+        "id": 2003,
+        "paper_id": 201,
+        "chunk_index": 2,
+        "text": "Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy. The median follow-up was 16 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.70
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Generate a FAQ from these papers on SGLT2 inhibitors in heart failure",
+      "expectedBehavior": [
+        "Contains Q&A pairs with cited answers",
+        "5-6 Q&A pairs generated",
+        "Every answer includes at least one citation [N]",
+        "Covers DAPA-HF and EMPEROR-Reduced results",
+        "Includes HR 0.74 and HR 0.75",
+        "Addresses CV death non-significance (HR 0.92)"
+      ],
+      "failurePatterns": [
+        "Answers without citations",
+        "Fabricates renal or cancer data",
+        "Missing one of the two trials"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "stroke"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Create a list of common questions and answers about these heart failure trials",
+      "expectedBehavior": [
+        "Contains Q&A pairs with cited answers",
+        "Hazard ratios correctly cited",
+        "Both trials represented",
+        "Does NOT include forbidden content"
+      ],
+      "failurePatterns": [
+        "Generic answers without source citations",
+        "Fabricates renal outcome data",
+        "Missing required citations"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "stroke"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "FAQ has 5-6 Q&A pairs in **Q:** / A: format",
+    "Every answer block contains at least one [N] citation",
+    "Both DAPA-HF and EMPEROR-Reduced are covered",
+    "HR 0.74 and HR 0.75 present with correct citations",
+    "CV death non-significance (HR 0.92; P=0.23) addressed",
+    "No fabricated renal, kidney, cancer, or stroke content"
+  ]
+}

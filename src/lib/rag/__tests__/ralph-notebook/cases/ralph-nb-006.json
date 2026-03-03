@@ -1,0 +1,164 @@
+{
+  "id": "ralph-nb-006",
+  "name": "Source-specific querying — paper-name detection and filtered retrieval",
+  "category": "intelligence",
+  "difficulty": "hard",
+  "phase": 2,
+  "cycle": 6,
+  "setup": {
+    "description": "Three papers (DAPA-HF, EMPEROR-Reduced, PARADIGM-HF) with 6 chunks. Tests that paper-name detection correctly routes queries to specific papers: DAPA-HF query uses only [1]-[2], PARADIGM-HF query uses only [5]-[6], and cross-trial comparison uses all six chunks.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      },
+      {
+        "id": 401,
+        "title": "PARADIGM-HF: Angiotensin–Neprilysin Inhibition versus Enalapril in Heart Failure",
+        "authors": ["McMurray JJV", "Packer M", "Desai AS"],
+        "year": 2014
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo. A total of 4744 patients were enrolled.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "A total of 3730 patients with class II-IV heart failure and ejection fraction ≤40% were randomized to empagliflozin 10mg or placebo, with a median follow-up of 16 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 4001,
+        "paper_id": 401,
+        "chunk_index": 0,
+        "text": "Sacubitril/valsartan reduced the composite of cardiovascular death or heart failure hospitalization by 20% compared with enalapril (HR 0.80; 95% CI 0.73-0.87; P<0.001). All-cause mortality was also significantly reduced (HR 0.84; P=0.001).",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.88
+      },
+      {
+        "id": 4002,
+        "paper_id": 401,
+        "chunk_index": 1,
+        "text": "8442 patients with NYHA class II-IV heart failure and LVEF ≤40% were enrolled, randomized to sacubitril/valsartan 200mg twice daily or enalapril 10mg twice daily. The median follow-up was 27 months. The trial was stopped early due to overwhelming benefit.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.72
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "What does the DAPA-HF trial say about mortality and heart failure outcomes?",
+      "expectedBehavior": [
+        "Uses [1] and [2] citations (DAPA-HF chunks)",
+        "Mentions HR 0.74 and NNT 21",
+        "Does NOT mention empagliflozin or sacubitril/valsartan findings"
+      ],
+      "failurePatterns": [
+        "Cites PARADIGM-HF or EMPEROR-Reduced data",
+        "Uses [3]-[6] citations for DAPA-HF question"
+      ],
+      "requiredCitations": [1, 2],
+      "forbiddenContent": [
+        "sacubitril",
+        "enalapril",
+        "HR 0.80",
+        "HR 0.75",
+        "8442 patients",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Summarize the PARADIGM-HF trial results and study design.",
+      "expectedBehavior": [
+        "Uses [5] and [6] citations (PARADIGM-HF chunks)",
+        "Mentions HR 0.80 and sacubitril/valsartan",
+        "Mentions stopped early",
+        "Does NOT cite DAPA-HF or EMPEROR-Reduced data"
+      ],
+      "failurePatterns": [
+        "Cites DAPA-HF or EMPEROR-Reduced data",
+        "Confuses PARADIGM-HF with SGLT2 inhibitor trials"
+      ],
+      "requiredCitations": [5, 6],
+      "forbiddenContent": [
+        "dapagliflozin",
+        "empagliflozin",
+        "HR 0.74",
+        "HR 0.75",
+        "SGLT2",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q3",
+      "query": "How do the outcomes of these three heart failure trials compare overall?",
+      "expectedBehavior": [
+        "Uses citations from all papers [1], [3], [5] at minimum",
+        "Mentions all three HRs (0.74, 0.75, 0.80)",
+        "Notes these are separate trials with different comparators",
+        "Does NOT fabricate a pooled analysis"
+      ],
+      "failurePatterns": [
+        "Missing one of the three trials",
+        "Fabricates a network meta-analysis",
+        "Uses [1] for all data"
+      ],
+      "requiredCitations": [1, 3, 5],
+      "forbiddenContent": [
+        "network meta-analysis",
+        "pooled analysis",
+        "indirect comparison P",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Paper-specific queries use only that paper's chunks",
+    "DAPA-HF query does NOT mention PARADIGM-HF or EMPEROR-Reduced data",
+    "PARADIGM-HF query does NOT mention SGLT2 inhibitors",
+    "Cross-trial comparison uses all three papers",
+    "No fabricated pooled or meta-analytic results",
+    "Statistics exactly match source chunks"
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "id": "ralph-nb-011",
+  "name": "Study guide generation — structured artifact from sources",
+  "category": "artifacts",
+  "difficulty": "medium",
+  "phase": 3,
+  "cycle": 11,
+  "setup": {
+    "description": "Two papers (DAPA-HF, EMPEROR-Reduced) with 6 chunks including demographics and CV death data. Tests that the study guide artifact has all five required sections (Key Concepts, Main Findings, Methodology Overview, Review Questions, Key Takeaways) and the briefing document has its three sections (Bottom Line, Evidence Summary, Implications). Both must cite sources and avoid hallucinating content not in chunks.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 1003,
+        "paper_id": 101,
+        "chunk_index": 2,
+        "text": "A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.65
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22). 3730 patients were randomized with a median follow-up of 16 months.",
+        "section_type": "results",
+        "page_number": 6,
+        "score": 0.85
+      },
+      {
+        "id": 2003,
+        "paper_id": 201,
+        "chunk_index": 2,
+        "text": "Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy. The median follow-up was 16 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.70
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Create a study guide from these papers on SGLT2 inhibitors in heart failure",
+      "expectedBehavior": [
+        "Has ## Key Concepts section",
+        "Has ## Main Findings section",
+        "Has ## Methodology Overview section",
+        "Has ## Review Questions section",
+        "Has ## Key Takeaways section",
+        "Cites [1] for DAPA-HF results and [4] for EMPEROR-Reduced results",
+        "Mentions HR 0.74 and HR 0.75",
+        "Does NOT include renal outcome or eGFR data"
+      ],
+      "failurePatterns": [
+        "Missing one or more required sections",
+        "Fabricates renal or kidney data",
+        "Statistics not matching source chunks"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "stroke"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Generate a briefing document summarizing the key evidence",
+      "expectedBehavior": [
+        "Has ## Bottom Line section",
+        "Has ## Evidence Summary section",
+        "Has ## Implications section",
+        "Concise format suitable for decision-makers",
+        "Cites both papers with correct HRs",
+        "Mentions CV death discrepancy (HR 0.92; P=0.23)"
+      ],
+      "failurePatterns": [
+        "Missing briefing structure",
+        "Fabricates renal or cancer data",
+        "No citations"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "stroke"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Study guide has all 5 required sections with correct headings",
+    "Briefing doc has Bottom Line, Evidence Summary, and Implications",
+    "Both artifacts cite DAPA-HF [1] and EMPEROR-Reduced [4] results",
+    "HR 0.74 and HR 0.75 present in both artifacts",
+    "CV death non-significance (HR 0.92) mentioned where appropriate",
+    "No fabricated renal, kidney, cancer, or stroke content"
+  ]
+}

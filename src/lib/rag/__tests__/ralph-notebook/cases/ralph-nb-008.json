@@ -1,0 +1,113 @@
+{
+  "id": "ralph-nb-008",
+  "name": "Source overview generation — auto-summary on upload",
+  "category": "intelligence",
+  "difficulty": "medium",
+  "phase": 2,
+  "cycle": 8,
+  "setup": {
+    "description": "Single paper (DAPA-HF) with 6 chunks including introduction, methods, and results. Tests that the source overview generator produces a grounded 3-4 sentence summary, relevant key topics, and answerable suggested questions — all without hallucinating content not in the chunks.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 1003,
+        "paper_id": 101,
+        "chunk_index": 2,
+        "text": "A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.65
+      },
+      {
+        "id": 1004,
+        "paper_id": 101,
+        "chunk_index": 3,
+        "text": "SGLT2 inhibitors have emerged as a potential therapy for heart failure beyond their glucose-lowering effects. Dapagliflozin is a selective SGLT2 inhibitor that has shown cardiovascular benefits in diabetes trials.",
+        "section_type": "introduction",
+        "page_number": 1,
+        "score": 0.55
+      },
+      {
+        "id": 1005,
+        "paper_id": 101,
+        "chunk_index": 4,
+        "text": "The primary outcome was a composite of worsening heart failure (hospitalization or an urgent visit resulting in intravenous therapy) or cardiovascular death.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.60
+      },
+      {
+        "id": 1006,
+        "paper_id": 101,
+        "chunk_index": 5,
+        "text": "The benefits of dapagliflozin were consistent across subgroups defined by age, sex, diabetes status, ejection fraction, and region.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.58
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Generate a source overview for this uploaded paper",
+      "expectedBehavior": [
+        "3-4 sentence summary grounded in chunk content",
+        "Mentions heart failure and dapagliflozin",
+        "Mentions primary result (HR 0.74 or 'reduced')",
+        "Key topics derived from chunks",
+        "Suggested questions answerable from chunks"
+      ],
+      "failurePatterns": [
+        "Summary mentions content not in chunks",
+        "Key topics include unrelated medical areas",
+        "Suggested questions about absent topics"
+      ],
+      "requiredCitations": [1],
+      "forbiddenContent": [
+        "empagliflozin",
+        "EMPEROR",
+        "DELIVER",
+        "PARADIGM",
+        "renal outcome",
+        "eGFR",
+        "kidney",
+        "cancer",
+        "stroke"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Summary is 3-4 sentences and grounded in chunk content",
+    "Mentions dapagliflozin and heart failure",
+    "Primary result (HR 0.74) is mentioned",
+    "Key topics are derived from actual chunk text",
+    "Suggested questions are answerable from the chunks",
+    "No hallucinated content about other trials or outcomes"
+  ]
+}

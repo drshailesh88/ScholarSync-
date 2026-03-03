@@ -1,0 +1,149 @@
+{
+  "id": "ralph-nb-005",
+  "name": "Adversarial citation — contradictory findings, source-specific querying",
+  "category": "grounding",
+  "difficulty": "hard",
+  "phase": 1,
+  "cycle": 5,
+  "setup": {
+    "description": "Two papers with CONFLICTING results: TOPCAT (negative, P=0.14) and Aldo-DHF (positive on diastolic function, negative on symptoms). Tests that the system correctly presents the conflict without fabricating consensus, and that source-specific queries do not cross-cite data.",
+    "papers": [
+      {
+        "id": 501,
+        "title": "TOPCAT: Spironolactone for Heart Failure with Preserved Ejection Fraction",
+        "authors": ["Pitt B", "Pfeffer MA", "Assmann SF"],
+        "year": 2014
+      },
+      {
+        "id": 601,
+        "title": "Aldo-DHF: Spironolactone in Diastolic Heart Failure",
+        "authors": ["Edelmann F", "Wachter R", "Schmidt AG"],
+        "year": 2013
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 5001,
+        "paper_id": 501,
+        "chunk_index": 0,
+        "text": "Spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure (HR 0.89; 95% CI 0.77-1.04; P=0.14).",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.91
+      },
+      {
+        "id": 5002,
+        "paper_id": 501,
+        "chunk_index": 1,
+        "text": "3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled. The median follow-up was 3.3 years.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 5003,
+        "paper_id": 501,
+        "chunk_index": 2,
+        "text": "A post-hoc regional analysis revealed significant heterogeneity: patients in the Americas (excluding Russia/Georgia) showed a significant benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46).",
+        "section_type": "results",
+        "page_number": 7,
+        "score": 0.80
+      },
+      {
+        "id": 6001,
+        "paper_id": 601,
+        "chunk_index": 0,
+        "text": "Spironolactone significantly improved diastolic function as measured by E/e' ratio (change: -1.5 vs -0.1; P<0.001). However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.88
+      },
+      {
+        "id": 6002,
+        "paper_id": 601,
+        "chunk_index": 1,
+        "text": "422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled. Patients received spironolactone 25mg daily for 12 months.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.72
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "What did the TOPCAT trial find about spironolactone in heart failure? Was it effective?",
+      "expectedBehavior": [
+        "Cites [1] for TOPCAT negative result (HR 0.89, P=0.14)",
+        "Cites [2] for TOPCAT methods (3445 patients)",
+        "Mentions P=0.14 (not significant)",
+        "Does NOT cite Aldo-DHF data"
+      ],
+      "failurePatterns": [
+        "Claims TOPCAT was positive",
+        "Cites E/e' ratio data as TOPCAT findings",
+        "Omits the negative P=0.14"
+      ],
+      "requiredCitations": [1, 2],
+      "forbiddenContent": [
+        "E/e' ratio",
+        "P<0.001",
+        "diastolic function",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Do these two trials agree on whether spironolactone works in HFpEF? Summarize the conflict.",
+      "expectedBehavior": [
+        "Cites [1] for TOPCAT findings",
+        "Cites [4] for Aldo-DHF findings",
+        "Clearly states they disagree/conflict",
+        "Does NOT fabricate a reconciliation or pooled result"
+      ],
+      "failurePatterns": [
+        "Claims both trials support spironolactone",
+        "Fabricates a meta-analysis or pooled result",
+        "Missing either TOPCAT or Aldo-DHF"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "meta-analysis",
+        "pooled data",
+        "consensus",
+        "recommended for all",
+        "consistent benefit",
+        "moderate benefit",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q3",
+      "query": "Based on the Aldo-DHF trial specifically, should clinicians prescribe spironolactone for symptom relief in HFpEF?",
+      "expectedBehavior": [
+        "Cites [4] for Aldo-DHF results",
+        "States symptoms did NOT improve",
+        "Does NOT cite TOPCAT data to answer this question"
+      ],
+      "failurePatterns": [
+        "Claims symptoms improved",
+        "Cites TOPCAT data for Aldo-DHF question",
+        "Recommends spironolactone for symptom relief"
+      ],
+      "requiredCitations": [4, 5],
+      "forbiddenContent": [
+        "TOPCAT showed",
+        "TOPCAT found",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "TOPCAT negative result (P=0.14) is clearly stated",
+    "Aldo-DHF dissociation (function vs symptoms) is explained",
+    "Conflict between trials is honestly presented",
+    "No fabricated consensus or reconciliation",
+    "Source-specific queries use only the relevant trial's data",
+    "Post-hoc regional analysis is appropriately caveated"
+  ]
+}

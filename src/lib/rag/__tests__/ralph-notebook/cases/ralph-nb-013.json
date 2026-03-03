@@ -1,0 +1,145 @@
+{
+  "id": "ralph-nb-013",
+  "name": "Cross-artifact consistency — same sources, different formats",
+  "category": "artifacts",
+  "difficulty": "hard",
+  "phase": 3,
+  "cycle": 13,
+  "setup": {
+    "description": "Three papers (DAPA-HF, EMPEROR-Reduced, DELIVER) with 6 chunks. Tests cross-artifact consistency: a study guide and a FAQ generated from the same sources must contain the same HR values (0.74, 0.75, 0.79), cite the same papers, and identify DELIVER as a preserved EF population. Neither artifact may fabricate renal or kidney data.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      },
+      {
+        "id": 301,
+        "title": "DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction",
+        "authors": ["Anker SD", "Butler J", "Filippatos G"],
+        "year": 2022
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22). 3730 patients were randomized with a median follow-up of 16 months.",
+        "section_type": "results",
+        "page_number": 6,
+        "score": 0.85
+      },
+      {
+        "id": 3001,
+        "paper_id": 301,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure in patients with heart failure and a preserved ejection fraction (HR 0.79; 95% CI 0.69-0.90; P<0.001).",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.88
+      },
+      {
+        "id": 3002,
+        "paper_id": 301,
+        "chunk_index": 1,
+        "text": "6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled. The median follow-up was 2.2 years. Unlike HFrEF trials, DELIVER enrolled patients with preserved ejection fraction.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Create a study guide covering all three heart failure trials",
+      "expectedBehavior": [
+        "Has all five study guide sections",
+        "Contains HR 0.74 (DAPA-HF), HR 0.75 (EMPEROR-Reduced), HR 0.79 (DELIVER)",
+        "Cites [1] for DAPA-HF, [3] for EMPEROR-Reduced, [5] for DELIVER",
+        "Identifies DELIVER as preserved EF (LVEF >40%)",
+        "Distinguishes HFrEF from HFpEF populations"
+      ],
+      "failurePatterns": [
+        "Missing one of the three HR values",
+        "Fabricates renal or kidney data",
+        "Fails to note DELIVER population difference"
+      ],
+      "requiredCitations": [1, 3, 5],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "stroke"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Generate a FAQ about these three SGLT2 inhibitor trials",
+      "expectedBehavior": [
+        "Contains Q&A pairs with cited answers",
+        "Hazard ratios correctly cited",
+        "All three trials represented",
+        "DELIVER preserved EF difference addressed",
+        "CV death non-significance for EMPEROR-Reduced mentioned"
+      ],
+      "failurePatterns": [
+        "Missing one of the three trials",
+        "Fabricates renal outcome data",
+        "Does not address DELIVER population difference"
+      ],
+      "requiredCitations": [1, 3, 5],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "stroke"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Study guide has all 5 sections and covers all 3 trials",
+    "FAQ has Q&A pairs covering all 3 trials",
+    "HR values (0.74, 0.75, 0.79) are consistent between study guide and FAQ",
+    "DELIVER identified as preserved EF in both artifacts",
+    "Both artifacts cite all three papers' results chunks",
+    "No fabricated renal, kidney, cancer, or stroke content"
+  ]
+}

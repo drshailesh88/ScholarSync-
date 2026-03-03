@@ -1,0 +1,120 @@
+{
+  "id": "ralph-nb-009",
+  "name": "Dynamic suggested questions — source-aware starter questions",
+  "category": "intelligence",
+  "difficulty": "medium",
+  "phase": 2,
+  "cycle": 9,
+  "setup": {
+    "description": "Three papers (DAPA-HF, EMPEROR-Reduced, PARADIGM-HF) with 6 chunks. Tests that the dynamic question generator produces questions that (1) reference specific drug names from the papers, (2) are answerable from chunk content, (3) cover multiple question types, and (4) do NOT ask about absent topics.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      },
+      {
+        "id": 401,
+        "title": "PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure",
+        "authors": ["McMurray JJV", "Packer M", "Desai AS"],
+        "year": 2014
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "A total of 3730 patients with class II-IV heart failure and ejection fraction ≤40% were randomized to empagliflozin 10mg or placebo, with a median follow-up of 16 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 4001,
+        "paper_id": 401,
+        "chunk_index": 0,
+        "text": "Sacubitril/valsartan reduced the composite of cardiovascular death or heart failure hospitalization by 20% compared with enalapril (HR 0.80; 95% CI 0.73-0.87; P<0.001). All-cause mortality was also significantly reduced (HR 0.84; P=0.001).",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.88
+      },
+      {
+        "id": 4002,
+        "paper_id": 401,
+        "chunk_index": 1,
+        "text": "8442 patients with NYHA class II-IV heart failure and LVEF ≤40% were enrolled, randomized to sacubitril/valsartan 200mg twice daily or enalapril 10mg twice daily. The median follow-up was 27 months. The trial was stopped early due to overwhelming benefit.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.72
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Generate dynamic suggested questions for these three heart failure papers",
+      "expectedBehavior": [
+        "5-6 questions generated",
+        "Questions reference specific drug names from the papers",
+        "Questions mention heart failure or cardiovascular outcomes",
+        "Multiple question types are represented",
+        "No questions about topics absent from papers"
+      ],
+      "failurePatterns": [
+        "Questions about cancer, diabetes management, obesity",
+        "Questions not answerable from chunks",
+        "Fewer than 5 questions"
+      ],
+      "requiredCitations": [1],
+      "forbiddenContent": [
+        "cancer",
+        "diabetes management",
+        "obesity",
+        "stroke prevention",
+        "kidney disease"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "5-6 questions generated from paper overviews",
+    "Questions reference specific drug names (dapagliflozin, empagliflozin, sacubitril)",
+    "Questions are answerable from chunk content",
+    "At least 3 of 4 question types (factual, comparative, analytical, exploratory)",
+    "No questions about absent topics"
+  ]
+}

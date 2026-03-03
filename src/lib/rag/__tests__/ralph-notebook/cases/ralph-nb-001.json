@@ -1,0 +1,77 @@
+{
+  "id": "ralph-nb-001",
+  "name": "Basic single-source factual question",
+  "category": "grounding",
+  "difficulty": "easy",
+  "phase": 1,
+  "cycle": 1,
+  "setup": {
+    "description": "Single paper (DAPA-HF) with 3 chunks covering results and methods. Tests basic prompt construction, citation format, and scoring logic with a direct factual question.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 1003,
+        "paper_id": 101,
+        "chunk_index": 2,
+        "text": "A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.65
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "What was the primary result of the DAPA-HF trial?",
+      "expectedBehavior": [
+        "Mentions hazard ratio of 0.74",
+        "Uses [1] citation pointing to chunk 1001 (results section)",
+        "Does NOT hallucinate outcomes not in the chunks"
+      ],
+      "failurePatterns": [
+        "No citation provided",
+        "Wrong hazard ratio",
+        "Mentions renal outcomes (not in sources)"
+      ],
+      "requiredCitations": [1],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Response mentions HR 0.74 with a [1] citation",
+    "Methods data (enrollment) cited as [2]",
+    "No hallucinated statistics or outcomes",
+    "Sources section present at end of response"
+  ]
+}

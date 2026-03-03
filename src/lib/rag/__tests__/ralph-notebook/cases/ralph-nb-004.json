@@ -1,0 +1,127 @@
+{
+  "id": "ralph-nb-004",
+  "name": "Multi-chunk synthesis — answer requires combining 3+ chunks across papers",
+  "category": "grounding",
+  "difficulty": "hard",
+  "phase": 1,
+  "cycle": 4,
+  "setup": {
+    "description": "Two papers (DAPA-HF and EMPEROR-Reduced) with 5 chunks. Tests cross-paper comparison and renal data attribution. The system must correctly attribute DAPA-HF data to [1]-[2] and EMPEROR-Reduced data to [3]-[5], and handle renal data that only exists in EMPEROR-Reduced.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo. A total of 4744 patients were enrolled.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "A total of 3730 patients with class II-IV heart failure and ejection fraction ≤40% were randomized to empagliflozin 10mg or placebo, with a median follow-up of 16 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 2003,
+        "paper_id": 201,
+        "chunk_index": 2,
+        "text": "The annual rate of decline in the estimated glomerular filtration rate was slower in the empagliflozin group than in the placebo group (-0.55 vs -2.28 mL/min/1.73m²/year; P<0.001). Empagliflozin was also associated with a lower risk of serious renal outcomes.",
+        "section_type": "results",
+        "page_number": 7,
+        "score": 0.82
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Compare the efficacy of dapagliflozin (DAPA-HF) and empagliflozin (EMPEROR-Reduced) in heart failure with reduced ejection fraction. Which trial showed a greater benefit?",
+      "expectedBehavior": [
+        "Cites [1] for DAPA-HF results (HR 0.74)",
+        "Cites [2] for DAPA-HF methods (4744 patients)",
+        "Cites [3] for EMPEROR-Reduced results (HR 0.75)",
+        "Cites [4] for EMPEROR-Reduced methods (3730 patients)",
+        "Mentions study populations: 4744 (DAPA-HF) and 3730 (EMPEROR-Reduced)",
+        "Does NOT claim one is definitively superior without caveats"
+      ],
+      "failurePatterns": [
+        "Uses [1] for both papers",
+        "Claims one drug is definitively superior",
+        "Fabricates a head-to-head comparison or meta-analysis"
+      ],
+      "requiredCitations": [1, 2, 3, 4],
+      "forbiddenContent": [
+        "network meta-analysis",
+        "pooled analysis",
+        "indirect comparison P",
+        "definitively superior",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Did either trial report renal benefits? How do the renal outcomes compare between the two drugs?",
+      "expectedBehavior": [
+        "Cites [5] for EMPEROR-Reduced renal data (eGFR)",
+        "Acknowledges DAPA-HF sources do NOT contain renal data",
+        "Does NOT fabricate renal data for DAPA-HF"
+      ],
+      "failurePatterns": [
+        "Fabricates renal data for DAPA-HF",
+        "Fails to mention renal data from EMPEROR-Reduced",
+        "Claims both trials reported renal outcomes"
+      ],
+      "requiredCitations": [5],
+      "forbiddenContent": [
+        "DAPA-HF renal",
+        "dapagliflozin renal outcome",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Cross-paper comparison correctly attributes each fact to its source",
+    "Hazard ratios cited separately for each trial",
+    "No single-citation lumping (both trials cited as [1])",
+    "Renal data attributed only to EMPEROR-Reduced",
+    "DAPA-HF explicitly noted as lacking renal data in sources",
+    "No fabricated head-to-head or meta-analytic comparisons"
+  ]
+}

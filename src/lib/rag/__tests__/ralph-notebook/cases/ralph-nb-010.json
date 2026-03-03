@@ -1,0 +1,122 @@
+{
+  "id": "ralph-nb-010",
+  "name": "Source coverage analysis — which papers contributed",
+  "category": "intelligence",
+  "difficulty": "medium",
+  "phase": 2,
+  "cycle": 10,
+  "setup": {
+    "description": "Three papers (DAPA-HF, EMPEROR-Reduced, PARADIGM-HF) but only DAPA-HF and EMPEROR-Reduced have mockChunks (4 total). PARADIGM-HF intentionally has NO chunks to test coverage gap detection. The system should report that only 2 of 3 papers contributed and flag the missing paper.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      },
+      {
+        "id": 401,
+        "title": "PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure",
+        "authors": ["McMurray JJV", "Packer M", "Desai AS"],
+        "year": 2014
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo. A total of 4744 patients were enrolled.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22). 3730 patients were randomized with a median follow-up of 16 months.",
+        "section_type": "results",
+        "page_number": 6,
+        "score": 0.85
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "What do the SGLT2 inhibitor trials show about heart failure outcomes?",
+      "expectedBehavior": [
+        "Uses only DAPA-HF and EMPEROR-Reduced data",
+        "Mentions HR 0.74 (DAPA-HF) and HR 0.75 (EMPEROR-Reduced)",
+        "Reports source coverage (2 of 3 papers used)",
+        "Identifies PARADIGM-HF as unused",
+        "Does NOT fabricate PARADIGM-HF SGLT2 data"
+      ],
+      "failurePatterns": [
+        "Claims PARADIGM-HF is an SGLT2 inhibitor trial",
+        "Fabricates PARADIGM-HF SGLT2 data",
+        "Ignores the coverage gap"
+      ],
+      "requiredCitations": [1, 3],
+      "forbiddenContent": [
+        "three SGLT2 inhibitor trials",
+        "PARADIGM-HF demonstrated SGLT2",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Summarize all three papers for me",
+      "expectedBehavior": [
+        "Summarizes DAPA-HF and EMPEROR-Reduced from chunks",
+        "Reports that only 2 of 3 papers had relevant chunks retrieved",
+        "Flags PARADIGM-HF as missing from retrieved data",
+        "Does NOT fabricate PARADIGM-HF summary from non-existent chunks"
+      ],
+      "failurePatterns": [
+        "Fabricates PARADIGM-HF data",
+        "Claims to summarize all three without noting missing data",
+        "Uses sacubitril/valsartan data despite no chunks"
+      ],
+      "requiredCitations": [1],
+      "forbiddenContent": [
+        "sacubitril reduced",
+        "PARADIGM-HF showed",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Coverage ratio correctly computed as ~0.67",
+    "PARADIGM-HF flagged as unused paper (0 chunks)",
+    "DAPA-HF identified with 2 chunks (results + methods)",
+    "EMPEROR-Reduced identified with 2 chunks (both results)",
+    "Coverage footer appended to SGLT2-specific response",
+    "No fabricated PARADIGM-HF data in either response"
+  ]
+}

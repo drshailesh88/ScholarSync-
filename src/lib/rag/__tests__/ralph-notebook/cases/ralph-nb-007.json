@@ -1,0 +1,143 @@
+{
+  "id": "ralph-nb-007",
+  "name": "Cross-source comparison — structured synthesis with comparison prompt",
+  "category": "intelligence",
+  "difficulty": "hard",
+  "phase": 2,
+  "cycle": 7,
+  "setup": {
+    "description": "Three SGLT2 inhibitor trials (DAPA-HF, EMPEROR-Reduced, DELIVER) with 6 chunks including CV death data. Tests structured comparison: agreement on composite endpoints, disagreement on CV death (DAPA-HF positive, EMPEROR-Reduced negative), and population differences (DELIVER = preserved EF).",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      },
+      {
+        "id": 301,
+        "title": "DELIVER: Empagliflozin in Heart Failure with Preserved Ejection Fraction",
+        "authors": ["Solomon SD", "McMurray JJV", "Claggett B"],
+        "year": 2022
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Dapagliflozin also significantly reduced cardiovascular death alone (HR 0.82; P=0.029) and all-cause mortality (HR 0.83; P=0.022). 4744 patients were enrolled.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.88
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22). 3730 patients were randomized with a median follow-up of 16 months.",
+        "section_type": "results",
+        "page_number": 6,
+        "score": 0.85
+      },
+      {
+        "id": 3001,
+        "paper_id": 301,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure in patients with heart failure and a preserved ejection fraction (HR 0.79; 95% CI 0.69-0.90; P<0.001).",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.88
+      },
+      {
+        "id": 3002,
+        "paper_id": 301,
+        "chunk_index": 1,
+        "text": "6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled. The median follow-up was 2.2 years. Unlike HFrEF trials, DELIVER enrolled patients with preserved ejection fraction.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "How do these papers compare on cardiovascular outcomes? Do the SGLT2 inhibitor trials agree?",
+      "expectedBehavior": [
+        "Per-paper findings with citations for each",
+        "Points of agreement (composite endpoints)",
+        "Points of disagreement (CV death: DAPA-HF positive vs EMPEROR-Reduced negative)",
+        "DELIVER noted as different population (preserved EF)",
+        "Does NOT fabricate a pooled or meta-analytic result"
+      ],
+      "failurePatterns": [
+        "Claims no disagreement exists",
+        "Fabricates a meta-analysis",
+        "Omits the CV death discrepancy"
+      ],
+      "requiredCitations": [1, 2, 3, 4, 5, 6],
+      "forbiddenContent": [
+        "meta-analysis",
+        "pooled analysis",
+        "indirect comparison",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Where do these studies disagree? What are the key differences in their findings?",
+      "expectedBehavior": [
+        "Cites [2] for DAPA-HF CV death (positive)",
+        "Cites [4] for EMPEROR-Reduced CV death (negative)",
+        "Mentions population difference (DELIVER = preserved EF)",
+        "Mentions sample size differences",
+        "Does NOT minimize the CV death disagreement"
+      ],
+      "failurePatterns": [
+        "Claims trials show no significant differences",
+        "Claims results are consistent across all three",
+        "Omits CV death discrepancy"
+      ],
+      "requiredCitations": [2, 4],
+      "forbiddenContent": [
+        "no significant differences",
+        "consistent across all",
+        "meta-analysis",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Structured comparison with per-paper findings",
+    "CV death disagreement explicitly identified",
+    "DELIVER population difference noted",
+    "No fabricated meta-analysis or pooled results",
+    "All statistics match source chunks",
+    "Disagreement query does not downplay the CV death discrepancy"
+  ]
+}

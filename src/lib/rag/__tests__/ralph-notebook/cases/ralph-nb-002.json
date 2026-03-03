@@ -1,0 +1,108 @@
+{
+  "id": "ralph-nb-002",
+  "name": "Citation content verification — multi-chunk synthesis",
+  "category": "grounding",
+  "difficulty": "medium",
+  "phase": 1,
+  "cycle": 2,
+  "setup": {
+    "description": "Single paper (EMPEROR-Reduced) with 4 chunks covering cardiac results, methods, renal outcomes, and safety data. Tests that the system correctly attributes cardiac data to [1], methods to [2], renal to [3], and safety to [4] without cross-citation.",
+    "papers": [
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "A total of 3730 patients with class II-IV heart failure and ejection fraction ≤40% were randomized to empagliflozin 10mg or placebo, with a median follow-up of 16 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 2003,
+        "paper_id": 201,
+        "chunk_index": 2,
+        "text": "The annual rate of decline in the estimated glomerular filtration rate was slower in the empagliflozin group than in the placebo group (-0.55 vs -2.28 mL/min/1.73m²/year; P<0.001). Empagliflozin was also associated with a lower risk of serious renal outcomes.",
+        "section_type": "results",
+        "page_number": 7,
+        "score": 0.82
+      },
+      {
+        "id": 2004,
+        "paper_id": 201,
+        "chunk_index": 3,
+        "text": "Serious adverse events were reported in 39.3% of patients in the empagliflozin group and 39.1% in the placebo group. Uncomplicated genital tract infections were more common with empagliflozin.",
+        "section_type": "results",
+        "page_number": 8,
+        "score": 0.68
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "What were the main findings of the EMPEROR-Reduced trial, including both cardiac and renal outcomes?",
+      "expectedBehavior": [
+        "Uses [1] for the cardiac results",
+        "Mentions the study population from [2] (3730 patients)",
+        "Uses [3] for renal outcomes (eGFR data)",
+        "Does NOT cross-cite renal data as [1]"
+      ],
+      "failurePatterns": [
+        "Renal data cited as [1] instead of [3]",
+        "Missing renal outcomes entirely",
+        "Fabricated statistics"
+      ],
+      "requiredCitations": [1, 2, 3],
+      "forbiddenContent": [
+        "dapagliflozin",
+        "DAPA-HF",
+        "cancer",
+        "stroke"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Was empagliflozin safe in EMPEROR-Reduced? What were the side effects?",
+      "expectedBehavior": [
+        "Cites [4] for safety data (adverse events)",
+        "Mentions 39.3% vs 39.1% serious adverse events",
+        "Mentions genital tract infections"
+      ],
+      "failurePatterns": [
+        "Safety data cited as [1]",
+        "Fabricates safety data not in chunks"
+      ],
+      "requiredCitations": [4],
+      "forbiddenContent": [
+        "dapagliflozin",
+        "DAPA-HF",
+        "cancer",
+        "stroke"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Cardiac data (HR 0.75) correctly cited as [1]",
+    "Renal data (eGFR) correctly cited as [3]",
+    "Safety data correctly cited as [4]",
+    "No cross-citation errors between different data types",
+    "Sources section present at end"
+  ]
+}
