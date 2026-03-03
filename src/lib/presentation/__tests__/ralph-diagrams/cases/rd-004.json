@@ -1,0 +1,65 @@
+{
+  "id": "rd-004",
+  "name": "Pyramid — Evidence-Based Medicine Hierarchy",
+  "category": "pyramid",
+  "difficulty": "easy",
+  "napkinFeature": "pyramid_diagram",
+  "input": "Show the evidence hierarchy pyramid for evidence-based medicine. Bottom to top: Expert Opinion, Case Reports, Case-Control Studies, Cohort Studies, Randomized Controlled Trials, Systematic Reviews and Meta-Analyses.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "pyramid",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (pyramid)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 6",
+    "Items present (Expert Opinion, Case Reports, Case-Control, Cohort, RCT, Systematic Reviews)",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Pyramid layers from base to apex"
+  ],
+  "napkinBenchmark": "Stacked triangle shape with 6 horizontal layers, widest at bottom (Expert Opinion) to narrowest at top (Systematic Reviews). Color gradient warm to cool.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "pyramid",
+      "title": "Evidence-Based Medicine Hierarchy",
+      "items": [
+        {
+          "label": "Systematic Reviews & Meta-Analyses",
+          "description": "Highest quality evidence synthesizing multiple studies",
+          "icon": "⭐"
+        },
+        {
+          "label": "Randomized Controlled Trials",
+          "description": "Gold standard for establishing causation with random assignment",
+          "icon": "🎯"
+        },
+        {
+          "label": "Cohort Studies",
+          "description": "Prospective observation of exposed vs unexposed groups",
+          "icon": "👥"
+        },
+        {
+          "label": "Case-Control Studies",
+          "description": "Retrospective comparison of cases with matched controls",
+          "icon": "🔄"
+        },
+        {
+          "label": "Case Reports",
+          "description": "Detailed reports of individual patient cases",
+          "icon": "📋"
+        },
+        {
+          "label": "Expert Opinion",
+          "description": "Professional judgment based on clinical experience",
+          "icon": "💬"
+        }
+      ],
+      "colorScheme": "rainbow",
+      "caption": "Levels of evidence from weakest (base) to strongest (apex)"
+    }
+  }
+}

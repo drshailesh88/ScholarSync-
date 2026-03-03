@@ -1,0 +1,66 @@
+{
+  "id": "rd-003",
+  "name": "Funnel — Clinical Trial Recruitment Pipeline",
+  "category": "funnel",
+  "difficulty": "easy",
+  "napkinFeature": "funnel_diagram",
+  "input": "Show the clinical trial recruitment funnel: 5,000 Screened, 2,800 Eligible, 1,500 Consented, 1,200 Randomized, 980 Completed.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "funnel",
+  "expectedItemCount": 5,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (funnel)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 5",
+    "Items present (Screened, Eligible, Consented, Randomized, Completed)",
+    "Numeric values preserved in items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Narrowing stages from 5000 to 980"
+  ],
+  "napkinBenchmark": "Trapezoid funnel narrowing from top to bottom, each stage labeled with count. Color gradient from light blue (top) to dark blue (bottom).",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "funnel",
+      "title": "Clinical Trial Recruitment Funnel",
+      "items": [
+        {
+          "label": "Screened",
+          "description": "Initial population screened for eligibility criteria",
+          "value": "5,000",
+          "icon": "🔬"
+        },
+        {
+          "label": "Eligible",
+          "description": "Met inclusion/exclusion criteria after review",
+          "value": "2,800",
+          "icon": "✓"
+        },
+        {
+          "label": "Consented",
+          "description": "Provided informed consent to participate",
+          "value": "1,500",
+          "icon": "📝"
+        },
+        {
+          "label": "Randomized",
+          "description": "Randomly assigned to treatment or control arm",
+          "value": "1,200",
+          "icon": "🎲"
+        },
+        {
+          "label": "Completed",
+          "description": "Finished all study visits and assessments",
+          "value": "980",
+          "icon": "🏁"
+        }
+      ],
+      "colorScheme": "blue",
+      "caption": "Participant flow from screening to study completion"
+    }
+  }
+}

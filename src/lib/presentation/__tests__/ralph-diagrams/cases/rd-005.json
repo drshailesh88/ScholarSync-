@@ -1,0 +1,51 @@
+{
+  "id": "rd-005",
+  "name": "Venn Diagram — Translational Research Overlap",
+  "category": "venn",
+  "difficulty": "easy",
+  "napkinFeature": "venn_diagram",
+  "input": "Create a Venn diagram showing the overlap between three research domains in translational medicine: Basic Science (molecular biology, genomics), Clinical Research (patient studies, trials), and Public Health (epidemiology, policy). The intersection of all three is Translational Medicine.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "venn",
+  "expectedItemCount": 3,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (venn)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 3",
+    "Items present (Basic Science, Clinical Research, Public Health)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Overlapping circles for 3 domains"
+  ],
+  "napkinBenchmark": "Three overlapping circles, each labeled with domain name and key topics. Center intersection labeled 'Translational Medicine'. Semi-transparent fills.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "venn",
+      "title": "Translational Research Domains",
+      "items": [
+        {
+          "label": "Basic Science",
+          "description": "Molecular biology, genomics, biochemistry, and laboratory research",
+          "icon": "🧬"
+        },
+        {
+          "label": "Clinical Research",
+          "description": "Patient studies, clinical trials, therapeutic interventions",
+          "icon": "🏥"
+        },
+        {
+          "label": "Public Health",
+          "description": "Epidemiology, health policy, population-level interventions",
+          "icon": "🌍"
+        }
+      ],
+      "colorScheme": "rainbow",
+      "caption": "Intersection of basic science, clinical research, and public health defines translational medicine"
+    }
+  }
+}

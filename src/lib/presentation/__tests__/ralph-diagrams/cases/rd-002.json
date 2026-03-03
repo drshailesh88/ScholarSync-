@@ -1,0 +1,61 @@
+{
+  "id": "rd-002",
+  "name": "Cycle Diagram — Scientific Method Iterative Process",
+  "category": "cycle",
+  "difficulty": "easy",
+  "napkinFeature": "cycle_diagram",
+  "input": "Show the iterative cycle of the scientific method: Observation leads to Hypothesis, which leads to Experiment, then Data Analysis, then Conclusion, and back to Observation for the next cycle.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "cycle",
+  "expectedItemCount": 5,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (cycle)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 5",
+    "Items present (Observation, Hypothesis, Experiment, Analysis, Conclusion)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Circular flow pattern with 5 stages"
+  ],
+  "napkinBenchmark": "Circular diagram with 5 nodes arranged in a ring, arrows connecting each to the next, final arrow loops back to first. Each node has an icon and short description.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "cycle",
+      "title": "The Scientific Method Cycle",
+      "items": [
+        {
+          "label": "Observation",
+          "description": "Identify a phenomenon or pattern in the natural world that requires explanation",
+          "icon": "👁️"
+        },
+        {
+          "label": "Hypothesis",
+          "description": "Formulate a testable prediction based on observations and existing knowledge",
+          "icon": "💡"
+        },
+        {
+          "label": "Experiment",
+          "description": "Design and conduct controlled experiments to test the hypothesis",
+          "icon": "🧪"
+        },
+        {
+          "label": "Data Analysis",
+          "description": "Collect, organize, and statistically analyze experimental results",
+          "icon": "📈"
+        },
+        {
+          "label": "Conclusion",
+          "description": "Interpret results, accept or reject hypothesis, and identify new questions",
+          "icon": "✅"
+        }
+      ],
+      "colorScheme": "blue",
+      "caption": "The iterative cycle of scientific inquiry"
+    }
+  }
+}

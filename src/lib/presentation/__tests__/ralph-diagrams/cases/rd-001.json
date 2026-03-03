@@ -1,0 +1,48 @@
+{
+  "id": "rd-001",
+  "name": "Comparison — Qualitative vs Quantitative Research Methods",
+  "category": "comparison",
+  "difficulty": "easy",
+  "napkinFeature": "comparison_chart",
+  "input": "Compare qualitative and quantitative research methods. Qualitative: exploratory, small sample sizes (10-50), interviews and focus groups, thematic analysis. Quantitative: confirmatory, large sample sizes (100-10000), surveys and experiments, statistical analysis.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "comparison",
+  "expectedItemCount": 2,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (comparison)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 2",
+    "Items present (Qualitative, Quantitative)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Side-by-side columns for comparison"
+  ],
+  "napkinBenchmark": "Two-column comparison with clear headers, each listing 4 bullet points. Color-coded (blue vs green). Icons for each attribute.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "comparison",
+      "title": "Qualitative vs Quantitative Research",
+      "items": [
+        {
+          "label": "Qualitative",
+          "description": "Exploratory approach using interviews, focus groups, and thematic analysis with small samples (10-50 participants)",
+          "value": "10-50 participants",
+          "icon": "🔍"
+        },
+        {
+          "label": "Quantitative",
+          "description": "Confirmatory approach using surveys, experiments, and statistical analysis with large samples (100-10,000 participants)",
+          "value": "100-10,000 participants",
+          "icon": "📊"
+        }
+      ],
+      "colorScheme": "purple",
+      "caption": "Key differences between qualitative and quantitative research methodologies"
+    }
+  }
+}
