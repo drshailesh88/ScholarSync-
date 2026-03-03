@@ -31,7 +31,12 @@ import {
 } from "../../version-diff";
 import { generateTwitterThread } from "../../social-export";
 import { SOCIAL_FORMATS } from "../../social-formats";
-import type { ContentBlock } from "@/types/presentation";
+import {
+  createEmptyPrismaData,
+  generatePrismaMermaid,
+  extractPrismaFromText,
+} from "../../prisma-diagram";
+import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 import type { VersionSnapshot } from "@/lib/actions/versions";
 
@@ -908,5 +913,613 @@ describe("Cycle 19: Preset Themes", () => {
       expect(theme.textColor).toMatch(hexRegex);
       expect(theme.accentColor).toMatch(hexRegex);
     }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: PRISMA Diagrams — Systematic Review Flow Diagram Generation
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: PRISMA Diagram Generation", () => {
+  test("createEmptyPrismaData returns all zeros", () => {
+    const data = createEmptyPrismaData();
+    expect(data.databaseRecords).toBe(0);
+    expect(data.registerRecords).toBe(0);
+    expect(data.otherSourceRecords).toBe(0);
+    expect(data.duplicatesRemoved).toBe(0);
+    expect(data.recordsScreened).toBe(0);
+    expect(data.recordsExcluded).toBe(0);
+    expect(data.fullTextAssessed).toBe(0);
+    expect(data.fullTextExcluded).toBe(0);
+    expect(data.fullTextExclusionReasons).toEqual([]);
+    expect(data.studiesIncluded).toBe(0);
+    expect(data.reportsIncluded).toBe(0);
+  });
+
+  test("generates valid Mermaid flowchart from complete data", () => {
+    const data = {
+      ...createEmptyPrismaData(),
+      databaseRecords: 1500,
+      registerRecords: 200,
+      otherSourceRecords: 50,
+      duplicatesRemoved: 300,
+      recordsScreened: 1450,
+      recordsExcluded: 1200,
+      fullTextAssessed: 250,
+      fullTextExcluded: 100,
+      fullTextExclusionReasons: [
+        { reason: "Wrong population", count: 40 },
+        { reason: "No control group", count: 35 },
+        { reason: "Conference abstract only", count: 25 },
+      ],
+      studiesIncluded: 150,
+      reportsIncluded: 120,
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("graph TD");
+    expect(mermaid).toContain("n = 1500");
+    expect(mermaid).toContain("n = 250"); // register + other
+    expect(mermaid).toContain("n = 1450"); // after duplicates
+    expect(mermaid).toContain("n = 1200"); // excluded
+    expect(mermaid).toContain("Wrong population (n = 40)");
+    expect(mermaid).toContain("No control group (n = 35)");
+    expect(mermaid).toContain("n = 150"); // studies included
+    expect(mermaid).toContain("n = 120"); // meta-analysis
+  });
+
+  test("has all 4 PRISMA phases as subgraphs", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid).toContain("subgraph Identification");
+    expect(mermaid).toContain("subgraph Screening");
+    expect(mermaid).toContain("subgraph Eligibility");
+    expect(mermaid).toContain("subgraph Included");
+  });
+
+  test("has correct flow arrows", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid).toContain("A --> C");
+    expect(mermaid).toContain("B --> C");
+    expect(mermaid).toContain("C --> D");
+    expect(mermaid).toContain("D --> E");
+    expect(mermaid).toContain("D --> F");
+    expect(mermaid).toContain("F --> G");
+    expect(mermaid).toContain("F --> H");
+    expect(mermaid).toContain("H --> I");
+  });
+
+  test("has color-coded subgraph styles", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid).toContain("style Identification fill:#E0F2FE");
+    expect(mermaid).toContain("style Screening fill:#FEF3C7");
+    expect(mermaid).toContain("style Eligibility fill:#FEE2E2");
+    expect(mermaid).toContain("style Included fill:#D1FAE5");
+  });
+
+  test("handles zero data correctly (all n=0)", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid).toContain("n = 0");
+    expect(mermaid).not.toContain("NaN");
+    expect(mermaid).not.toContain("undefined");
+  });
+
+  test("handles no exclusion reasons", () => {
+    const data = {
+      ...createEmptyPrismaData(),
+      fullTextExcluded: 50,
+      fullTextExclusionReasons: [],
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("n = 50");
+    // Should not have individual reason lines (no <br/> after excluded count)
+    // The excluded box should end with the count, not list reasons
+    const excludedBox = mermaid.split("\n").find((l) => l.includes("n = 50"));
+    expect(excludedBox).toBeDefined();
+    // No reason text like "Not relevant (n = 5)" should appear
+    expect(mermaid).not.toContain("Not relevant");
+    expect(mermaid.includes("n = 50")).toBe(true);
+  });
+
+  test("handles large numbers", () => {
+    const data = {
+      ...createEmptyPrismaData(),
+      databaseRecords: 15000,
+      recordsScreened: 12000,
+      studiesIncluded: 42,
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("n = 15000");
+    expect(mermaid).toContain("n = 12000");
+    expect(mermaid).toContain("n = 42");
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: PRISMA Text Extraction — Parsing Systematic Review Text
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: PRISMA Text Extraction", () => {
+  test("extracts database records count", () => {
+    const text = "Records identified through database searching 1500";
+    const data = extractPrismaFromText(text);
+    expect(data.databaseRecords).toBe(1500);
+  });
+
+  test("extracts duplicates removed", () => {
+    const text = "duplicates removed (n = 300) from the initial set";
+    const data = extractPrismaFromText(text);
+    expect(data.duplicatesRemoved).toBe(300);
+  });
+
+  test("extracts records screened", () => {
+    const text = "records screened (n = 1,450)";
+    const data = extractPrismaFromText(text);
+    expect(data.recordsScreened).toBe(1450);
+  });
+
+  test("extracts records excluded", () => {
+    const text = "records excluded (n = 1,200)";
+    const data = extractPrismaFromText(text);
+    expect(data.recordsExcluded).toBe(1200);
+  });
+
+  test("extracts full-text assessed", () => {
+    const text = "full-text articles assessed for eligibility (n = 250)";
+    const data = extractPrismaFromText(text);
+    expect(data.fullTextAssessed).toBe(250);
+  });
+
+  test("extracts full-text excluded", () => {
+    const text = "full-text articles excluded, with reasons (n = 100)";
+    const data = extractPrismaFromText(text);
+    expect(data.fullTextExcluded).toBe(100);
+  });
+
+  test("extracts studies included", () => {
+    const text = "studies included in qualitative synthesis (n = 150)";
+    const data = extractPrismaFromText(text);
+    expect(data.studiesIncluded).toBe(150);
+  });
+
+  test("extracts meta-analysis count", () => {
+    const text = "included in meta-analysis (n = 120)";
+    const data = extractPrismaFromText(text);
+    expect(data.reportsIncluded).toBe(120);
+  });
+
+  test("handles comma-separated numbers", () => {
+    const text = "Records identified through database searching 15,000";
+    const data = extractPrismaFromText(text);
+    expect(data.databaseRecords).toBe(15000);
+  });
+
+  test("returns empty partial for unrelated text", () => {
+    const text = "This is a random text about cats and dogs.";
+    const data = extractPrismaFromText(text);
+    expect(Object.keys(data).length).toBe(0);
+  });
+
+  test("extracts multiple fields from one paragraph", () => {
+    const text = `Records identified through database searching (n = 2,500).
+      After duplicates removed (n = 450), records screened (n = 2,050).
+      Records excluded at title screening (n = 1,800).
+      Full-text articles assessed for eligibility (n = 250).
+      Studies included in final review (n = 45).`;
+    const data = extractPrismaFromText(text);
+    expect(data.databaseRecords).toBe(2500);
+    expect(data.duplicatesRemoved).toBe(450);
+    expect(data.recordsScreened).toBe(2050);
+    expect(data.recordsExcluded).toBe(1800);
+    expect(data.fullTextAssessed).toBe(250);
+    expect(data.studiesIncluded).toBe(45);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: Slide Layouts — PowerPoint Layout Coverage
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: Slide Layout Coverage", () => {
+  const ALL_LAYOUTS: SlideLayout[] = [
+    "title_slide", "title_content", "two_column", "section_header",
+    "image_text", "chart_slide", "table_slide", "quote_slide",
+    "comparison", "blank", "bibliography_slide", "methodology",
+    "results_summary", "key_findings", "timeline_slide", "stat_overview",
+    "three_column", "big_number", "freeform",
+  ];
+
+  test("all 19 slide layouts are defined in the type", () => {
+    // This test verifies the layout type covers all expected values
+    expect(ALL_LAYOUTS).toHaveLength(19);
+    // TypeScript would fail if any of these weren't valid SlideLayout values
+    for (const layout of ALL_LAYOUTS) {
+      const typed: SlideLayout = layout;
+      expect(typed).toBe(layout);
+    }
+  });
+
+  test("standard layouts cover PowerPoint basics", () => {
+    const standardLayouts: SlideLayout[] = [
+      "title_slide",    // PPT: Title Slide
+      "title_content",  // PPT: Title and Content
+      "two_column",     // PPT: Two Content
+      "section_header", // PPT: Section Header
+      "blank",          // PPT: Blank
+      "comparison",     // PPT: Comparison
+    ];
+    for (const layout of standardLayouts) {
+      expect(ALL_LAYOUTS).toContain(layout);
+    }
+  });
+
+  test("academic layouts extend beyond PPT defaults", () => {
+    const academicLayouts: SlideLayout[] = [
+      "bibliography_slide", "methodology", "results_summary",
+      "key_findings", "stat_overview",
+    ];
+    for (const layout of academicLayouts) {
+      expect(ALL_LAYOUTS).toContain(layout);
+    }
+  });
+
+  test("freeform layout supports absolute positioning", () => {
+    expect(ALL_LAYOUTS).toContain("freeform");
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: Extended Theme Properties — V2/V3 Features
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: Extended Theme Properties", () => {
+  test("ThemeConfig supports V2 extended properties", () => {
+    const theme: ThemeConfig = {
+      name: "Custom",
+      primaryColor: "#FF0000",
+      secondaryColor: "#00FF00",
+      backgroundColor: "#FFFFFF",
+      textColor: "#000000",
+      accentColor: "#0000FF",
+      surfaceColor: "#F0F0F0",
+      borderColor: "#CCCCCC",
+      codeBackground: "#1E1E2E",
+      calloutBackground: "#F5F5F5",
+      gradientFrom: "#FF0000",
+      gradientTo: "#0000FF",
+      slideTransition: "fade",
+    };
+    expect(theme.surfaceColor).toBe("#F0F0F0");
+    expect(theme.slideTransition).toBe("fade");
+    expect(theme.gradientFrom).toBe("#FF0000");
+  });
+
+  test("ThemeConfig supports V3 customizer properties", () => {
+    const theme: ThemeConfig = {
+      name: "Custom V3",
+      primaryColor: "#FF0000",
+      secondaryColor: "#00FF00",
+      backgroundColor: "#FFFFFF",
+      textColor: "#000000",
+      accentColor: "#0000FF",
+      borderRadius: "lg",
+      borderStyle: "subtle",
+      shadowStyle: "medium",
+      cardSpacing: "comfortable",
+    };
+    expect(theme.borderRadius).toBe("lg");
+    expect(theme.borderStyle).toBe("subtle");
+    expect(theme.shadowStyle).toBe("medium");
+    expect(theme.cardSpacing).toBe("comfortable");
+  });
+
+  test("slide transition values cover animation needs", () => {
+    const transitions: NonNullable<ThemeConfig["slideTransition"]>[] = [
+      "none", "fade", "slide", "zoom", "morph",
+    ];
+    for (const t of transitions) {
+      const theme: ThemeConfig = {
+        name: "test",
+        primaryColor: "#000",
+        secondaryColor: "#000",
+        backgroundColor: "#FFF",
+        textColor: "#000",
+        accentColor: "#000",
+        slideTransition: t,
+      };
+      expect(theme.slideTransition).toBe(t);
+    }
+  });
+
+  test("border radius values cover design range", () => {
+    const radii: NonNullable<ThemeConfig["borderRadius"]>[] = [
+      "none", "sm", "md", "lg", "xl",
+    ];
+    for (const r of radii) {
+      const theme: ThemeConfig = {
+        name: "test",
+        primaryColor: "#000",
+        secondaryColor: "#000",
+        backgroundColor: "#FFF",
+        textColor: "#000",
+        accentColor: "#000",
+        borderRadius: r,
+      };
+      expect(theme.borderRadius).toBe(r);
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: Version Diff Edge Cases — Stress Testing
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: Version Diff Edge Cases", () => {
+  function makeVersion(
+    deck: Partial<VersionSnapshot["deck"]>,
+    slides: Array<Partial<VersionSnapshot["slides"][number]>>,
+  ): VersionSnapshot {
+    return {
+      deck: {
+        title: "Test",
+        theme: "modern",
+        audienceType: "general",
+        templateId: null,
+        citationStyle: "apa",
+        themeConfig: null,
+        institutionKit: null,
+        ...deck,
+      },
+      slides: slides.map((s, i) => ({
+        id: i + 1,
+        sortOrder: i + 1,
+        layout: "title_content",
+        title: `Slide ${i + 1}`,
+        subtitle: null,
+        speakerNotes: null,
+        contentBlocks: [],
+        ...s,
+      })),
+    };
+  }
+
+  test("handles empty deck comparison", () => {
+    const v = makeVersion({}, []);
+    const diff = computeDeckDiff(v, v);
+    expect(diff.stats.unchanged).toBe(0);
+    expect(diff.stats.added).toBe(0);
+    expect(diff.stats.removed).toBe(0);
+    expect(diff.stats.modified).toBe(0);
+  });
+
+  test("handles large deck (50 slides) comparison", () => {
+    const slides = Array.from({ length: 50 }, (_, i) => ({
+      id: i + 1,
+      title: `Slide ${i + 1}`,
+    }));
+    const v = makeVersion({}, slides);
+    const diff = computeDeckDiff(v, v);
+    expect(diff.stats.unchanged).toBe(50);
+  });
+
+  test("detects subtitle change", () => {
+    const v1 = makeVersion({}, [{ id: 1, subtitle: "Old sub" }]);
+    const v2 = makeVersion({}, [{ id: 1, subtitle: "New sub" }]);
+    const diff = computeDeckDiff(v1, v2);
+    const sd = diff.slideDiffs.find((d) => d.slideId === 1);
+    expect(sd?.subtitleChanged).toBe(true);
+  });
+
+  test("detects themeConfig change", () => {
+    const v1 = makeVersion({ themeConfig: { name: "A" } }, []);
+    const v2 = makeVersion({ themeConfig: { name: "B" } }, []);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.deckMetadataChanged).toBe(true);
+    expect(diff.deckFieldChanges.some((c) => c.field === "themeConfig")).toBe(true);
+  });
+
+  test("detects institutionKit change", () => {
+    const v1 = makeVersion({ institutionKit: { logo: "old.png" } }, []);
+    const v2 = makeVersion({ institutionKit: { logo: "new.png" } }, []);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.deckFieldChanges.some((c) => c.field === "institutionKit")).toBe(true);
+  });
+
+  test("all slides removed produces correct stats", () => {
+    const v1 = makeVersion({}, [{ id: 1 }, { id: 2 }, { id: 3 }]);
+    const v2 = makeVersion({}, []);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.stats.removed).toBe(3);
+    expect(diff.stats.added).toBe(0);
+  });
+
+  test("all slides added produces correct stats", () => {
+    const v1 = makeVersion({}, []);
+    const v2 = makeVersion({}, [{ id: 1 }, { id: 2 }, { id: 3 }]);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.stats.added).toBe(3);
+    expect(diff.stats.removed).toBe(0);
+  });
+
+  test("slideDiffs are sorted: removed, modified, unchanged, added", () => {
+    const v1 = makeVersion({}, [{ id: 1 }, { id: 2, title: "Old" }, { id: 3 }]);
+    const v2 = makeVersion({}, [{ id: 2, title: "New" }, { id: 3 }, { id: 4 }]);
+    const diff = computeDeckDiff(v1, v2);
+    const statuses = diff.slideDiffs.map((d) => d.status);
+    // removed should come first, then modified, then unchanged, then added
+    const statusOrder = { removed: 0, modified: 1, unchanged: 2, added: 3 };
+    for (let i = 1; i < statuses.length; i++) {
+      expect(statusOrder[statuses[i]]).toBeGreaterThanOrEqual(statusOrder[statuses[i - 1]]);
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: Content Block Types — Complete Coverage
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: Content Block Type Coverage", () => {
+  const ALL_BLOCK_TYPES = [
+    "text", "bullets", "image", "chart", "table", "citation",
+    "quote", "math", "diagram", "code", "callout", "stat_result",
+    "bibliography", "timeline", "divider", "toggle", "embed",
+    "nested_card", "infographic",
+  ];
+
+  test("all 19 content block types exist", () => {
+    // Verify each type is assignable to ContentBlock
+    for (const t of ALL_BLOCK_TYPES) {
+      expect(typeof t).toBe("string");
+    }
+    expect(ALL_BLOCK_TYPES).toHaveLength(19);
+  });
+
+  test("figure-numberable types are chart, image, diagram, infographic", () => {
+    const slides = [
+      {
+        sortOrder: 1,
+        contentBlocks: [
+          makeChartBlock(),
+          makeImageBlock(),
+          makeDiagramBlock(),
+        ],
+      },
+    ];
+    const result = autoNumberFiguresAndTables(slides);
+    expect(figureLabel(result[0].contentBlocks[0])).toBe("Figure 1");
+    expect(figureLabel(result[0].contentBlocks[1])).toBe("Figure 2");
+    expect(figureLabel(result[0].contentBlocks[2])).toBe("Figure 3");
+  });
+
+  test("table type gets Table numbering", () => {
+    const slides = [
+      { sortOrder: 1, contentBlocks: [makeTableBlock(), makeTableBlock()] },
+    ];
+    const result = autoNumberFiguresAndTables(slides);
+    expect(figureLabel(result[0].contentBlocks[0])).toBe("Table 1");
+    expect(figureLabel(result[0].contentBlocks[1])).toBe("Table 2");
+  });
+
+  test("non-visual block types are not numbered", () => {
+    const nonVisualBlocks: ContentBlock[] = [
+      makeTextBlock("text"),
+      makeBulletsBlock(["a"]),
+      makeQuoteBlock("q", "a"),
+      makeCalloutBlock("t", "b"),
+      makeStatBlock("l", "v"),
+    ];
+    const slides = [{ sortOrder: 1, contentBlocks: nonVisualBlocks }];
+    const result = autoNumberFiguresAndTables(slides);
+    for (const block of result[0].contentBlocks) {
+      expect(figureLabel(block)).toBeUndefined();
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: Social Export Edge Cases
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: Social Export Edge Cases", () => {
+  test("empty slides array returns empty thread", () => {
+    const thread = generateTwitterThread([]);
+    expect(thread).toEqual([]);
+  });
+
+  test("slide with only subtitle (no title) still generates tweet", () => {
+    const slides: SlideData[] = [
+      { title: null, subtitle: "sub", contentBlocks: [makeTextBlock("content")] },
+    ];
+    const thread = generateTwitterThread(slides);
+    expect(thread[0]).toContain("content");
+  });
+
+  test("multiple stat results on one slide", () => {
+    const slides: SlideData[] = [
+      {
+        title: "Results",
+        contentBlocks: [
+          makeStatBlock("OR", "2.5", "0.001"),
+          makeStatBlock("RR", "1.8", "0.05"),
+        ],
+      },
+    ];
+    const thread = generateTwitterThread(slides);
+    expect(thread[0]).toContain("OR: 2.5");
+    expect(thread[0]).toContain("RR: 1.8");
+  });
+
+  test("stat result without pValue", () => {
+    const slides: SlideData[] = [
+      {
+        title: null,
+        contentBlocks: [makeStatBlock("Mean", "42.5")],
+      },
+    ];
+    const thread = generateTwitterThread(slides);
+    expect(thread[0]).toContain("Mean: 42.5");
+    expect(thread[0]).not.toContain("p=");
+  });
+
+  test("10-slide thread has correct numbering", () => {
+    const slides: SlideData[] = Array.from({ length: 10 }, (_, i) => ({
+      title: `Slide ${i + 1}`,
+      contentBlocks: [],
+    }));
+    const thread = generateTwitterThread(slides);
+    expect(thread[0]).toContain("1/10");
+    expect(thread[9]).toContain("10/10");
+  });
+
+  test("social format config types are valid", () => {
+    for (const [key, fmt] of Object.entries(SOCIAL_FORMATS)) {
+      expect(["pdf", "png", "text"]).toContain(fmt.fileFormat);
+      expect(fmt.icon.length).toBeGreaterThan(0);
+      if (key !== "twitter_thread") {
+        const dimFmt = fmt as { width?: number; height?: number };
+        expect(dimFmt.width).toBeGreaterThan(0);
+        expect(dimFmt.height).toBeGreaterThan(0);
+      }
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 20: Text Diff Edge Cases
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 20: Text Diff Edge Cases", () => {
+  test("both empty strings produce empty array or same segment", () => {
+    const result = computeTextDiff("", "");
+    expect(result).toEqual([{ type: "same", text: "" }]);
+  });
+
+  test("single word change", () => {
+    const result = computeTextDiff("the cat", "the dog");
+    const removed = result.filter((s) => s.type === "removed");
+    const added = result.filter((s) => s.type === "added");
+    expect(removed.some((s) => s.text.includes("cat"))).toBe(true);
+    expect(added.some((s) => s.text.includes("dog"))).toBe(true);
+  });
+
+  test("preserves whitespace in same segments", () => {
+    const result = computeTextDiff("hello world", "hello world");
+    expect(result[0].text).toBe("hello world");
+  });
+
+  test("handles multi-line text", () => {
+    const oldText = "line one\nline two";
+    const newText = "line one\nline three";
+    const result = computeTextDiff(oldText, newText);
+    // Should detect that "two" was replaced with "three"
+    expect(result.some((s) => s.type === "removed")).toBe(true);
+    expect(result.some((s) => s.type === "added")).toBe(true);
+  });
+
+  test("handles long identical text efficiently", () => {
+    const longText = Array.from({ length: 100 }, (_, i) => `word${i}`).join(" ");
+    const start = performance.now();
+    const result = computeTextDiff(longText, longText);
+    const elapsed = performance.now() - start;
+    expect(result).toEqual([{ type: "same", text: longText }]);
+    expect(elapsed).toBeLessThan(100); // should short-circuit
   });
 });

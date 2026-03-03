@@ -116,8 +116,13 @@ export {
   type CumulativeMetaAnalysisResult,
   generateFunnelPlotSVG,
   generateForestPlotSVG,
+  generateLabbePlotSVG,
+  generateGalbraithPlotSVG,
   type FunnelPlotOptions,
   type ForestPlotOptions,
+  type LabbePlotStudy,
+  type LabbePlotOptions,
+  type GalbraithPlotOptions,
 } from "./meta-analysis";
 
 export {

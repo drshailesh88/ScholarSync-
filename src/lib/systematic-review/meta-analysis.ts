@@ -1672,3 +1672,240 @@ export function generateForestPlotSVG(
   <text x="${xScale(nullVal) + 30}" y="${xAxisY + 35}" text-anchor="start" class="axis-label" font-size="10">Favours control →</text>
 </svg>`;
 }
+
+// ---------------------------------------------------------------------------
+// L'Abbé Plot SVG Generator
+// ---------------------------------------------------------------------------
+
+export interface LabbePlotStudy {
+  studyLabel: string;
+  controlRate: number; // event rate in control group (0-1)
+  treatmentRate: number; // event rate in treatment group (0-1)
+  n: number; // total sample size
+}
+
+export interface LabbePlotOptions {
+  width?: number;
+  height?: number;
+  /** Scale circle radius proportional to sample size */
+  sizeByN?: boolean;
+}
+
+/**
+ * Generates a L'Abbé plot SVG for binary outcomes.
+ *
+ * X-axis: Event rate in control group
+ * Y-axis: Event rate in treatment group
+ * Diagonal: line of no effect (treatment = control)
+ *
+ * Studies below the diagonal favour treatment.
+ *
+ * Reference: L'Abbé et al., BMJ 1987;295:1025
+ */
+export function generateLabbePlotSVG(
+  studies: LabbePlotStudy[],
+  options: LabbePlotOptions = {}
+): string {
+  const W = options.width ?? 700;
+  const H = options.height ?? 700;
+  const pad = { top: 40, right: 40, bottom: 60, left: 70 };
+
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  // Scale functions (both axes 0-1 for event rates)
+  const xScale = (val: number) => pad.left + val * plotW;
+  const yScale = (val: number) => pad.top + plotH - val * plotH; // invert Y
+
+  // Max sample size for sizing
+  const maxN = Math.max(...studies.map((s) => s.n));
+
+  // Study circles
+  const dots = studies.map((s) => {
+    const cx = xScale(s.controlRate);
+    const cy = yScale(s.treatmentRate);
+    const r = options.sizeByN
+      ? Math.max(4, Math.sqrt(s.n / maxN) * 16)
+      : 6;
+    return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}"
+      fill="#3b82f6" fill-opacity="0.7" stroke="#1e40af" stroke-width="1"
+      data-study="${s.studyLabel}" data-control="${s.controlRate.toFixed(3)}" data-treatment="${s.treatmentRate.toFixed(3)}" data-n="${s.n}"/>`;
+  });
+
+  // X-axis ticks (0, 0.2, 0.4, 0.6, 0.8, 1.0)
+  const tickValues = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
+  const xTicks = tickValues.map((val) => {
+    const x = xScale(val);
+    return `<line x1="${x.toFixed(1)}" y1="${pad.top + plotH}" x2="${x.toFixed(1)}" y2="${pad.top + plotH + 5}" stroke="#64748b"/>
+      <text x="${x.toFixed(1)}" y="${pad.top + plotH + 20}" text-anchor="middle" class="tick">${val.toFixed(1)}</text>`;
+  });
+
+  const yTicks = tickValues.map((val) => {
+    const y = yScale(val);
+    return `<line x1="${pad.left - 5}" y1="${y.toFixed(1)}" x2="${pad.left}" y2="${y.toFixed(1)}" stroke="#64748b"/>
+      <text x="${pad.left - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="tick">${val.toFixed(1)}</text>`;
+  });
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="sans-serif" font-size="11">
+  <style>
+    .tick { fill: #64748b; font-size: 10px; }
+    .axis-label { fill: #1e293b; font-size: 12px; font-weight: 600; }
+    .title { fill: #1e293b; font-size: 14px; font-weight: 700; }
+  </style>
+
+  <!-- Title -->
+  <text x="${W / 2}" y="20" text-anchor="middle" class="title">L'Abbé Plot</text>
+
+  <!-- Plot area background -->
+  <rect x="${pad.left}" y="${pad.top}" width="${plotW}" height="${plotH}" fill="#fafafa" stroke="#e2e8f0"/>
+
+  <!-- Diagonal line of no-effect -->
+  <line x1="${xScale(0).toFixed(1)}" y1="${yScale(0).toFixed(1)}" x2="${xScale(1).toFixed(1)}" y2="${yScale(1).toFixed(1)}"
+    stroke="#94a3b8" stroke-width="1" stroke-dasharray="6,3" class="no-effect"/>
+
+  <!-- Study circles -->
+  ${dots.join("\n  ")}
+
+  <!-- X-axis -->
+  <line x1="${pad.left}" y1="${pad.top + plotH}" x2="${pad.left + plotW}" y2="${pad.top + plotH}" stroke="#334155" stroke-width="1"/>
+  ${xTicks.join("\n  ")}
+  <text x="${pad.left + plotW / 2}" y="${H - 10}" text-anchor="middle" class="axis-label">Control Event Rate</text>
+
+  <!-- Y-axis -->
+  <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + plotH}" stroke="#334155" stroke-width="1"/>
+  ${yTicks.join("\n  ")}
+  <text x="15" y="${pad.top + plotH / 2}" text-anchor="middle" class="axis-label" transform="rotate(-90, 15, ${pad.top + plotH / 2})">Treatment Event Rate</text>
+</svg>`;
+}
+
+// ---------------------------------------------------------------------------
+// Galbraith (Radial) Plot SVG Generator
+// ---------------------------------------------------------------------------
+
+export interface GalbraithPlotOptions {
+  width?: number;
+  height?: number;
+}
+
+/**
+ * Generates a Galbraith (radial) plot SVG.
+ *
+ * X-axis: Precision (1/SE)
+ * Y-axis: Standardized effect (z-score = effect / SE)
+ *
+ * The regression line passes through the origin with slope = pooled effect.
+ * ±2 confidence bands help identify outliers.
+ *
+ * Reference: Galbraith, Stat Med 1988;7:889-894
+ */
+export function generateGalbraithPlotSVG(
+  studies: StudyEffect[],
+  pooledEffect: number,
+  options: GalbraithPlotOptions = {}
+): string {
+  const W = options.width ?? 700;
+  const H = options.height ?? 500;
+  const pad = { top: 40, right: 40, bottom: 60, left: 70 };
+
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  // Compute Galbraith coordinates
+  const points = studies.map((s) => ({
+    label: s.studyLabel,
+    precision: 1 / s.se, // x = 1/SE
+    zScore: s.effect / s.se, // y = effect/SE (standardized)
+  }));
+
+  // Data range
+  const precisions = points.map((p) => p.precision);
+  const zScores = points.map((p) => p.zScore);
+  const maxPrecision = Math.max(...precisions) * 1.15;
+  const minZ = Math.min(Math.min(...zScores), -3) - 0.5;
+  const maxZ = Math.max(Math.max(...zScores), 3) + 0.5;
+  const zRange = maxZ - minZ;
+
+  // Scale functions
+  const xScale = (val: number) => pad.left + (val / maxPrecision) * plotW;
+  const yScale = (val: number) => pad.top + plotH - ((val - minZ) / zRange) * plotH;
+
+  // Regression line: y = pooledEffect * x (through origin)
+  const regLineX1 = 0;
+  const regLineX2 = maxPrecision;
+  const regLineY1 = pooledEffect * regLineX1;
+  const regLineY2 = pooledEffect * regLineX2;
+
+  // ±2 confidence bands: y = pooledEffect * x ± 2
+  const bandUpperY1 = regLineY1 + 2;
+  const bandUpperY2 = regLineY2 + 2;
+  const bandLowerY1 = regLineY1 - 2;
+  const bandLowerY2 = regLineY2 - 2;
+
+  // Study dots
+  const dots = points.map((p) => {
+    const cx = xScale(p.precision);
+    const cy = yScale(p.zScore);
+    return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5"
+      fill="#3b82f6" fill-opacity="0.8" stroke="#1e40af" stroke-width="1"
+      data-study="${p.label}" data-precision="${p.precision.toFixed(2)}" data-z="${p.zScore.toFixed(3)}"/>`;
+  });
+
+  // X-axis ticks
+  const xTickCount = 6;
+  const xTicks: string[] = [];
+  for (let i = 0; i <= xTickCount; i++) {
+    const val = (i / xTickCount) * maxPrecision;
+    const x = xScale(val);
+    xTicks.push(`<line x1="${x.toFixed(1)}" y1="${pad.top + plotH}" x2="${x.toFixed(1)}" y2="${pad.top + plotH + 5}" stroke="#64748b"/>
+      <text x="${x.toFixed(1)}" y="${pad.top + plotH + 20}" text-anchor="middle" class="tick">${val.toFixed(1)}</text>`);
+  }
+
+  // Y-axis ticks
+  const yTickStep = Math.max(1, Math.ceil(zRange / 6));
+  const yTicks: string[] = [];
+  for (let val = Math.ceil(minZ); val <= Math.floor(maxZ); val += yTickStep) {
+    const y = yScale(val);
+    yTicks.push(`<line x1="${pad.left - 5}" y1="${y.toFixed(1)}" x2="${pad.left}" y2="${y.toFixed(1)}" stroke="#64748b"/>
+      <text x="${pad.left - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="tick">${val}</text>`);
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="sans-serif" font-size="11">
+  <style>
+    .tick { fill: #64748b; font-size: 10px; }
+    .axis-label { fill: #1e293b; font-size: 12px; font-weight: 600; }
+    .title { fill: #1e293b; font-size: 14px; font-weight: 700; }
+  </style>
+
+  <!-- Title -->
+  <text x="${W / 2}" y="20" text-anchor="middle" class="title">Galbraith (Radial) Plot</text>
+
+  <!-- Plot area background -->
+  <rect x="${pad.left}" y="${pad.top}" width="${plotW}" height="${plotH}" fill="#fafafa" stroke="#e2e8f0"/>
+
+  <!-- Regression line (slope = pooled effect, through origin) -->
+  <line x1="${xScale(regLineX1).toFixed(1)}" y1="${yScale(regLineY1).toFixed(1)}"
+    x2="${xScale(regLineX2).toFixed(1)}" y2="${yScale(regLineY2).toFixed(1)}"
+    stroke="#334155" stroke-width="1.5" class="regression"/>
+
+  <!-- ±2 SE confidence band -->
+  <line x1="${xScale(regLineX1).toFixed(1)}" y1="${yScale(bandUpperY1).toFixed(1)}"
+    x2="${xScale(regLineX2).toFixed(1)}" y2="${yScale(bandUpperY2).toFixed(1)}"
+    stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3" class="confidence-band"/>
+  <line x1="${xScale(regLineX1).toFixed(1)}" y1="${yScale(bandLowerY1).toFixed(1)}"
+    x2="${xScale(regLineX2).toFixed(1)}" y2="${yScale(bandLowerY2).toFixed(1)}"
+    stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3" class="confidence-band"/>
+
+  <!-- Study dots -->
+  ${dots.join("\n  ")}
+
+  <!-- X-axis -->
+  <line x1="${pad.left}" y1="${pad.top + plotH}" x2="${pad.left + plotW}" y2="${pad.top + plotH}" stroke="#334155" stroke-width="1"/>
+  ${xTicks.join("\n  ")}
+  <text x="${pad.left + plotW / 2}" y="${H - 10}" text-anchor="middle" class="axis-label">1/SE (Precision)</text>
+
+  <!-- Y-axis -->
+  <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + plotH}" stroke="#334155" stroke-width="1"/>
+  ${yTicks.join("\n  ")}
+  <text x="15" y="${pad.top + plotH / 2}" text-anchor="middle" class="axis-label" transform="rotate(-90, 15, ${pad.top + plotH / 2})">z-score (Effect / SE)</text>
+</svg>`;
+}
