@@ -1,0 +1,19 @@
+{
+  "id": "ralph-014",
+  "name": "Verbose Rambling Input — Grant Review Process",
+  "category": "prompt_robustness",
+  "difficulty": "hard",
+  "input": "So I need to show my students how the NIH grant review process works, it's kind of complicated but basically what happens is first the PI writes the grant application, usually an R01 or R21, and they submit it through their institution's grants office which does all the compliance checks and stuff, then it goes to NIH where the Center for Scientific Review receives it and assigns it to a study section, oh and also a program officer at the relevant institute like NIMH or NCI gets assigned too, then the study section members who are external scientists review it and score it on a scale of 1-9 for significance innovation approach investigators and environment, they meet in person or virtually and discuss the top half of applications, each application gets a primary secondary and tertiary reviewer, after the meeting they calculate percentile scores and the advisory council at the institute makes funding decisions, if funded the grants management specialist negotiates the budget, if not funded the PI can revise and resubmit once, the whole cycle takes about 9 months from submission to funding decision. Can you make that into a nice diagram?",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "Extracted coherent process from rambling input",
+    "At least 10 key steps present (submission, compliance, CSR, study section, review, scoring, council, funding decision, budget negotiation, resubmission)",
+    "Sequential flow is logical (submission -> review -> decision -> outcome)",
+    "Resubmission loop represented",
+    "Branch at funding decision (funded vs not funded)",
+    "No truncated labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Clean flowchart extracting ~12 steps from verbose prose, with decision diamond at funding, resubmit loop, clear sequential flow."
+}

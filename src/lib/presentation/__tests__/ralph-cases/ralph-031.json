@@ -1,0 +1,22 @@
+{
+  "id": "ralph-031",
+  "name": "Chaotic Mixed-Format Input — Drug Repurposing Workflow",
+  "category": "real_world_stress",
+  "difficulty": "hard",
+  "input": "ok so basically we need a diagram for our drug repurposing pipeline, here's what happens:\n\n1. Literature mining (PubMed, DrugBank)\n2. Target identification\n  - network pharmacology analysis\n  - molecular docking screening\n3. Hit validation\n\nThen after that there's the WET LAB part:\n* Cell viability assays (MTT, WST-1)\n* Dose-response curves (IC50 determination)\n* Mechanism studies (Western blot, qPCR)\n\nAnd finally -> Animal studies (if hits confirmed) -> Pharmacokinetic profiling -> Efficacy studies -> Safety/toxicology -> IND filing\n\nOh also there should be a feedback loop from mechanism studies back to target identification if results don't match predictions. And a decision gate after hit validation where you either proceed to wet lab or go back to literature mining.\n\nMake it a flowchart please, top to bottom.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 14,
+  "qualityCriteria": [
+    "Flowchart type declared with TD direction",
+    "Literature mining and target identification nodes present",
+    "Network pharmacology and molecular docking as sub-steps or linked nodes",
+    "Hit validation with decision gate (proceed or loop back)",
+    "Wet lab section with at least 3 assay types",
+    "Animal studies pipeline (PK, efficacy, safety, IND)",
+    "Feedback loop from mechanism studies to target identification",
+    "Decision gate after hit validation",
+    "At least 12 distinct nodes",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart TD with 14+ nodes, decision gate, feedback loop, drug repurposing pipeline from literature mining to IND filing."
+}

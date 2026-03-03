@@ -1,0 +1,21 @@
+{
+  "id": "ralph-067",
+  "category": "large_scale_density",
+  "name": "Large Scale — 30+ Node CRISPR Protocol Flowchart with Subgraphs",
+  "input": "Create a comprehensive flowchart for a CRISPR-Cas9 gene editing experiment. Group into 5 subgraphs: (1) Design Phase: target gene selection, gRNA design using CRISPOR, off-target analysis with Cas-OFFinder, vector construction with pX459 backbone, sequence verification by Sanger. (2) Cell Culture: thaw HEK293T cells, passage to P3, seed in 6-well plates at 2x10^5 cells/well, grow to 70% confluence. (3) Transfection: prepare lipofectamine-DNA complex, add to cells, incubate 48h, check GFP reporter. (4) Selection & Screening: add puromycin 2μg/mL for 72h, expand surviving clones, extract genomic DNA, PCR amplify target region, T7 endonuclease assay, Sanger sequencing of clones, identify positive clones. (5) Validation: Western blot for protein knockout, RT-qPCR for mRNA levels, functional assay, off-target sequencing, final report. Include decision diamonds after T7 assay (editing detected?) and Western blot (knockout confirmed?). This should have at least 30 distinct nodes.",
+  "expectedDiagramType": "flowchart",
+  "difficulty": "hard",
+  "expectedNodeCount": 30,
+  "qualityCriteria": [
+    "Diagram type is flowchart with at least 30 nodes",
+    "5 subgraphs present (Design, Cell Culture, Transfection, Selection, Validation)",
+    "gRNA design and off-target analysis nodes in Design subgraph",
+    "HEK293T cell culture nodes with passage and seeding details",
+    "Lipofectamine transfection and GFP check nodes present",
+    "Puromycin selection at 2μg/mL node present",
+    "T7 endonuclease assay with decision diamond",
+    "Western blot with knockout confirmed decision diamond",
+    "RT-qPCR and functional assay validation nodes",
+    "At least 30 distinct nodes rendered without syntax errors"
+  ]
+}

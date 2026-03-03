@@ -1,0 +1,21 @@
+{
+  "id": "ralph-042",
+  "name": "Bioinformatics Pipeline Development Gantt with Sprints",
+  "category": "gantt_advanced",
+  "difficulty": "medium",
+  "input": "Create a Gantt chart for developing a bioinformatics analysis pipeline. Title: 'Bioinformatics Pipeline Development Plan'. Sections: Sprint 1 — Foundation (Requirements gathering 2024-01-08 to 2024-01-19, Data model design 2024-01-22 to 2024-02-02, FastQ preprocessing module 2024-02-05 to 2024-02-23, Sprint 1 review milestone 2024-02-23). Sprint 2 — Core Analysis (Alignment module after FastQ preprocessing, 3 weeks. Variant calling module after Alignment module, 2 weeks. QC metrics dashboard after Alignment module, 2 weeks. Sprint 2 review milestone after Variant calling). Sprint 3 — Integration (Pipeline orchestration after Variant calling module and QC metrics dashboard, 3 weeks. Benchmarking suite after Pipeline orchestration, 2 weeks. Documentation after Pipeline orchestration, 2 weeks. v1.0 release milestone after Benchmarking suite and Documentation). Use 'after' dependencies extensively.",
+  "expectedDiagramType": "gantt",
+  "expectedNodeCount": 12,
+  "qualityCriteria": [
+    "Gantt chart type declared",
+    "Title contains Bioinformatics or Pipeline",
+    "All 3 sprint sections present",
+    "At least 3 milestone markers present (sprint reviews, release)",
+    "At least 10 task entries",
+    "Multiple 'after' dependencies present (at least 3)",
+    "Bioinformatics terms present (FastQ, alignment, variant calling)",
+    "v1.0 release as final milestone",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Gantt with 3 sprints, 3+ milestones, 10+ tasks, extensive 'after' dependencies, bioinformatics pipeline."
+}

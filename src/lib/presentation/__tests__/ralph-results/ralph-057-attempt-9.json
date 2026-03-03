@@ -1,0 +1,22 @@
+{
+  "testId": "ralph-057",
+  "attempt": 9,
+  "timestamp": "2026-03-02T16:54:06.035Z",
+  "mermaidSyntax": "flowchart TD\n  A[Raw sequencing reads<br>FASTQ files] --> B[Quality control<br>FastQC + Trimmomatic]\n  B --> C[Genome assembly<br>SPAdes / MEGAHIT]\n  C --> D[Gene prediction<br>Prodigal / Augustus]\n  D --> E[Functional annotation<br>InterProScan + eggNOG]\n  E --> F[Quality validation<br>BUSCO completeness check]\n  F --> G{Passes QC?}\n  G -->|Yes| H[Submit to NCBI GenBank]\n  G -->|No| I[Review and rerun<br>failed steps]\n  I --> B",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Selected a single diagram type (flowchart most likely)": true,
+    "Pipeline steps present: QC, Assembly, Gene Prediction, Annotation, Submission": true,
+    "Raw reads as starting point": true,
+    "Sequential flow is clear from input to output": true,
+    "NCBI or submission as endpoint": true,
+    "Did not mix multiple diagram types in one diagram": true,
+    "At least 6 distinct nodes representing pipeline stages": true,
+    "Tool names or technical terms preserved where relevant": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

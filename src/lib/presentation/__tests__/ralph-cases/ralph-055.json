@@ -1,0 +1,23 @@
+{
+  "id": "ralph-055",
+  "name": "Verbose Noisy Input — Extract Systematic Review Workflow from Rambling Email",
+  "category": "edge_case_robustness",
+  "difficulty": "hard",
+  "input": "Hey so I was talking to my PI yesterday over coffee — great latte by the way, the new place on 5th street — and she mentioned we need some kind of diagram for our upcoming paper submission. It's a systematic review, if that matters. Basically the process goes like: first we search PubMed and Embase and Web of Science and also CINAHL I think, then we remove duplicates using Covidence (love that tool, way better than doing it manually in Excel like we used to), then two reviewers independently screen titles and abstracts, and if they disagree there's a third reviewer who breaks the tie. After title/abstract screening we do full-text review of whatever's left, and again two independent reviewers, and disagreements go to the senior author. Oh and we also hand-search reference lists of included papers, that's important. Then we extract data into a standardized form — I think Sarah made the template in REDCap — and do quality assessment using the Newcastle-Ottawa Scale. Finally we synthesize everything, either meta-analysis if the studies are homogeneous enough (I2 < 50%), or narrative synthesis if they're too heterogeneous. We should also show the PRISMA flow with the numbers but I don't have exact numbers yet, so just use placeholder boxes. Make it a flowchart, top to bottom.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "Flowchart type declared with TD direction",
+    "Database search step present (PubMed, Embase, or similar)",
+    "Duplicate removal step present",
+    "Title/abstract screening with two independent reviewers",
+    "Full-text review step present",
+    "Hand-search or reference list checking step mentioned",
+    "Data extraction step present",
+    "Quality assessment step (Newcastle-Ottawa or similar)",
+    "Synthesis decision branch (meta-analysis vs narrative)",
+    "Irrelevant details filtered out (coffee, latte, Excel, 5th street not in diagram)",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart TD with 10+ nodes extracting systematic review workflow from noisy verbose input, filtering irrelevant chatter."
+}

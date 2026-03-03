@@ -1,0 +1,22 @@
+{
+  "id": "ralph-039",
+  "name": "Research Impact Quadrant — Dense Data Points with Custom Axes",
+  "category": "pie_and_quadrant_stress",
+  "difficulty": "hard",
+  "input": "Create a quadrant chart evaluating research methodologies by two dimensions. X-axis: 'Ease of Implementation' (left: Difficult, right: Easy). Y-axis: 'Statistical Power' (bottom: Low, top: High). Quadrant labels: top-left 'Gold Standard but Complex', top-right 'Ideal Methods', bottom-left 'Avoid if Possible', bottom-right 'Quick but Weak'. Data points: Randomized Controlled Trial [0.25, 0.9], Systematic Review [0.35, 0.85], Cohort Study [0.5, 0.7], Case-Control Study [0.6, 0.6], Cross-Sectional Survey [0.8, 0.4], Case Series [0.85, 0.25], Expert Opinion [0.9, 0.15], Meta-Analysis [0.2, 0.95], Quasi-Experimental [0.55, 0.55], N-of-1 Trial [0.7, 0.5]. Title: 'Research Methodology Evaluation Matrix'.",
+  "expectedDiagramType": "quadrantChart",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "Quadrant chart type declared",
+    "Title present containing Research or Methodology",
+    "X-axis label present (Ease of Implementation or similar)",
+    "Y-axis label present (Statistical Power or similar)",
+    "All 4 quadrant labels present",
+    "At least 8 data points plotted",
+    "RCT data point present in high-power region",
+    "Expert Opinion in low-power region",
+    "Data point coordinates use decimal format (0.0-1.0)",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Quadrant chart with custom axes, 4 quadrant labels, 10 data points with coordinates, research methodology evaluation."
+}

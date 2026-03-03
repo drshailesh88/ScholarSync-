@@ -763,9 +763,10 @@ function ContentBlockItem({
   theme: ThemeConfig;
 }) {
   switch (block.type) {
-    case "text":
+    case "text": {
+      const hasHtml = /<[a-z][\s\S]*>/i.test(block.data.text);
       return (
-        <p
+        <div
           className={cn(
             "leading-relaxed",
             block.data.style === "title" && "text-[1.2em] font-bold",
@@ -774,10 +775,12 @@ function ContentBlockItem({
             (!block.data.style || block.data.style === "body") &&
               "text-[0.75em]",
           )}
-        >
-          {block.data.text}
-        </p>
+          {...(hasHtml
+            ? { dangerouslySetInnerHTML: { __html: block.data.text } }
+            : { children: block.data.text })}
+        />
       );
+    }
 
     case "bullets": {
       const Tag = block.data.ordered ? "ol" : "ul";

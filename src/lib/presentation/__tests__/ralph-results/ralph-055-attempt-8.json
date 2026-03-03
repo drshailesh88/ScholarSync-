@@ -1,0 +1,24 @@
+{
+  "testId": "ralph-055",
+  "attempt": 8,
+  "timestamp": "2026-03-02T16:54:06.031Z",
+  "mermaidSyntax": "flowchart TD\n  A[Search databases<br>PubMed, Embase,<br>Web of Science, CINAHL] --> B[Remove duplicates<br>using Covidence]\n  B --> C[Title/Abstract screening<br>Two independent reviewers]\n  C --> D{Disagreements?}\n  D -->|Yes| E[Third reviewer<br>resolves conflict]\n  D -->|No| F[Full-text review<br>Two independent reviewers]\n  E --> F\n  F --> G{Disagreements?}\n  G -->|Yes| H[Senior author decides]\n  G -->|No| I[Hand-search reference lists<br>of included papers]\n  H --> I\n  I --> J[Data extraction<br>Standardized REDCap form]\n  J --> K[Quality assessment<br>Newcastle-Ottawa Scale]\n  K --> L{Studies homogeneous?<br>I² < 50%}\n  L -->|Yes| M[Meta-analysis]\n  L -->|No| N[Narrative synthesis]",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Flowchart type declared with TD direction": true,
+    "Database search step present (PubMed, Embase, or similar)": true,
+    "Duplicate removal step present": true,
+    "Title/abstract screening with two independent reviewers": true,
+    "Full-text review step present": true,
+    "Hand-search or reference list checking step mentioned": true,
+    "Data extraction step present": true,
+    "Quality assessment step (Newcastle-Ottawa or similar)": true,
+    "Synthesis decision branch (meta-analysis vs narrative)": true,
+    "Irrelevant details filtered out (coffee, latte, Excel, 5th street not in diagram)": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

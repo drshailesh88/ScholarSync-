@@ -1,0 +1,142 @@
+{
+  "id": "ralph-nb-016",
+  "name": "Audio overview — conversational podcast script from sources",
+  "category": "audio_overview",
+  "difficulty": "hard",
+  "phase": 4,
+  "cycle": 16,
+  "setup": {
+    "description": "Two well-known HFrEF trials (DAPA-HF and EMPEROR-Reduced). User asks for a podcast-style audio overview. The AI must generate a Host/Expert conversation where every Expert claim is cited, all papers are covered, and no data is fabricated. Also tests that a plain comparison question is NOT routed to audio format.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 201,
+        "title": "EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction",
+        "authors": ["Packer M", "Anker SD", "Butler J"],
+        "year": 2020
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 1003,
+        "paper_id": 101,
+        "chunk_index": 2,
+        "text": "A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.65
+      },
+      {
+        "id": 2001,
+        "paper_id": 201,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001). The effect was consistent across prespecified subgroups.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 2002,
+        "paper_id": 201,
+        "chunk_index": 1,
+        "text": "3730 patients with class II-IV heart failure and LVEF ≤40% were randomized. Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22).",
+        "section_type": "results",
+        "page_number": 6,
+        "score": 0.85
+      },
+      {
+        "id": 2003,
+        "paper_id": 201,
+        "chunk_index": 2,
+        "text": "Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy. The median follow-up was 16 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.70
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Generate an audio overview of these heart failure papers as a deep dive podcast",
+      "expectedBehavior": [
+        "Contains Host and Expert dialogue markers",
+        "Expert cites sources with [N] in claims",
+        "Both DAPA-HF and EMPEROR-Reduced are discussed",
+        "HR values correctly cited (0.74 and 0.75)",
+        "EMPEROR-Reduced CV death non-significance mentioned",
+        "Conversational but scientifically accurate tone"
+      ],
+      "failurePatterns": [
+        "No dialogue structure (missing Host/Expert markers)",
+        "Expert makes unsourced claims",
+        "Fabricates trial data",
+        "Skips one of the trials"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "stroke",
+        "DELIVER"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "How do the primary endpoints compare between DAPA-HF and EMPEROR-Reduced?",
+      "expectedBehavior": [
+        "NOT routed as audio overview — plain comparison question",
+        "Compares HR 0.74 vs HR 0.75",
+        "Notes EMPEROR-Reduced CV death non-significance",
+        "Both trials cited",
+        "No podcast/dialogue structure"
+      ],
+      "failurePatterns": [
+        "Generates audio script for a comparison question",
+        "Missing one trial's data",
+        "Fabricates data"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Audio overview has clear Host/Expert dialogue structure",
+    "Every Expert claim has a citation [N]",
+    "Host only asks questions or summarizes — no unsupported claims",
+    "Both trials are covered in the conversation",
+    "Statistics exactly match source text",
+    "Plain comparison question (q2) is NOT routed as audio overview",
+    "No fabricated data or outcomes"
+  ]
+}

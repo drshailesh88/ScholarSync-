@@ -1,0 +1,20 @@
+{
+  "id": "ralph-059",
+  "name": "Cross-Type Adversarial — Timeline Vocabulary but Sequence Diagram (OAuth2 Token Exchange)",
+  "input": "Diagram the OAuth2 authorization code flow showing the timeline of interactions between the User Agent (browser), Authorization Server, Resource Server, and Client Application. Show the milestones: initial redirect, authorization code grant, token exchange, and resource access. Each phase involves back-and-forth messages: the user agent redirects to the auth server, auth server returns authorization code, client exchanges code for access token, then client uses token to access resources. Show the chronological sequence of HTTP requests and responses with status codes (302, 200, 401). This is a MESSAGE EXCHANGE PROTOCOL between multiple actors, not a timeline of events.",
+  "expectedDiagramType": "sequence",
+  "difficulty": "hard",
+  "expectedNodeCount": 12,
+  "qualityCriteria": [
+    "Diagram type is sequence, NOT timeline despite timeline/milestone vocabulary",
+    "At least 4 participants: User Agent, Authorization Server, Resource Server, Client",
+    "Authorization redirect message (302) shown",
+    "Authorization code return message present",
+    "Token exchange request and response shown",
+    "Resource access with bearer token shown",
+    "HTTP status codes present (302, 200, or 401)",
+    "Messages flow chronologically top to bottom",
+    "At least 8 distinct messages between participants",
+    "Proper sequence diagram arrow notation (->>, -->>)"
+  ]
+}

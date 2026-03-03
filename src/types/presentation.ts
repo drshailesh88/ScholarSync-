@@ -91,6 +91,60 @@ export interface TimelineData {
   title?: string;
 }
 
+/** Toggle/accordion block for expandable content sections */
+export interface ToggleData {
+  title: string;
+  content: string; // HTML content inside the toggle
+  defaultOpen?: boolean;
+}
+
+/** Embed block for embedding external content (YouTube, Figma, Google Sheets, etc.) */
+export interface EmbedData {
+  url: string;
+  embedType?: "youtube" | "vimeo" | "figma" | "google_sheets" | "google_docs" | "twitter" | "generic";
+  title?: string;
+  aspectRatio?: "16:9" | "4:3" | "1:1";
+}
+
+/** Nested card block for drill-down sub-sections within a parent card */
+export interface NestedCardData {
+  title: string;
+  contentBlocks: ContentBlock[];
+  collapsed?: boolean;
+}
+
+/** SVG infographic block — Napkin-style visual generation */
+export type InfographicType =
+  | "process_flow"      // sequential steps with arrows
+  | "comparison"        // side-by-side columns with icons
+  | "hierarchy"         // tree structure top-down
+  | "cycle"             // circular/loop process
+  | "funnel"            // narrowing stages
+  | "pyramid"           // layered triangle
+  | "venn"              // overlapping circles (2-3)
+  | "matrix"            // 2x2 quadrant grid
+  | "radial"            // central node with spokes
+  | "stats_row"         // horizontal stat cards with icons
+  | "checklist"         // visual checklist with status
+  | "cause_effect";     // fishbone/Ishikawa style
+
+export interface InfographicItem {
+  label: string;
+  description?: string;
+  value?: string;
+  icon?: string;          // emoji or icon keyword
+  color?: string;         // hex color override
+  status?: "done" | "active" | "pending";
+}
+
+export interface InfographicData {
+  infographicType: InfographicType;
+  title?: string;
+  items: InfographicItem[];
+  caption?: string;
+  colorScheme?: "theme" | "blue" | "green" | "purple" | "orange" | "rainbow";
+}
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
   type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
@@ -101,8 +155,20 @@ export interface BlockAnimation {
 
 export type AnimationPresetKey = "sequential_build" | "fade_all" | "stagger" | "results_reveal" | "none";
 
+/** Positioning data for freeform layout blocks */
+export interface BlockPosition {
+  x: number;      // percentage of slide width (0-100)
+  y: number;      // percentage of slide height (0-100)
+  width: number;  // percentage of slide width
+  height: number; // percentage of slide height
+}
+
 type ContentBlockBase = {
   animation?: BlockAnimation;
+  /** Optional positioning for freeform layout */
+  position?: BlockPosition;
+  /** Z-index for layering in freeform layout */
+  zIndex?: number;
 };
 
 export type ContentBlock =
@@ -121,7 +187,12 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "stat_result"; data: StatResultData })
   | (ContentBlockBase & { type: "bibliography"; data: BibliographyData })
   | (ContentBlockBase & { type: "timeline"; data: TimelineData })
-  | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } });
+  | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } })
+  | (ContentBlockBase & { type: "toggle"; data: ToggleData })
+  | (ContentBlockBase & { type: "embed"; data: EmbedData })
+  | (ContentBlockBase & { type: "nested_card"; data: NestedCardData })
+  // V3: Visual generation blocks
+  | (ContentBlockBase & { type: "infographic"; data: InfographicData; figureLabel?: string });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)
@@ -143,6 +214,11 @@ export interface ThemeConfig {
   gradientFrom?: string;
   gradientTo?: string;
   slideTransition?: "none" | "fade" | "slide" | "zoom" | "morph";
+  // V3: Theme customizer properties
+  borderRadius?: "none" | "sm" | "md" | "lg" | "xl";
+  borderStyle?: "none" | "subtle" | "strong";
+  shadowStyle?: "none" | "subtle" | "medium" | "dramatic";
+  cardSpacing?: "compact" | "comfortable" | "spacious";
 }
 
 // V2: Institution/Brand Kit
@@ -374,7 +450,9 @@ export type SlideLayout =
   | "timeline_slide"
   | "stat_overview"
   | "three_column"
-  | "big_number";
+  | "big_number"
+  // V3: Freeform layout — blocks use their position field
+  | "freeform";
 
 // V2: Extended audience types
 export type AudienceType =

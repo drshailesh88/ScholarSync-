@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-066",
+  "attempt": 4,
+  "timestamp": "2026-03-02T17:11:23.975Z",
+  "mermaidSyntax": "erDiagram\n  DONOR {\n    int donor_id PK\n    varchar first_name\n    varchar last_name\n    date date_of_birth\n    enum blood_type\n    timestamp consent_date\n  }\n  SAMPLE {\n    int sample_id PK\n    int donor_id FK\n    varchar tissue_type\n    date collection_date\n    decimal storage_temp\n    float quantity_ml\n    enum status\n  }\n  STUDY {\n    int study_id PK\n    varchar pi_name\n    varchar title\n    varchar irb_number\n    date start_date\n    decimal funding_amount\n  }\n  SAMPLE_STUDY {\n    int sample_id FK\n    int study_id FK\n    date allocation_date\n    float quantity_used\n  }\n  DONOR ||--o{ SAMPLE : \"donates\"\n  SAMPLE }o--o{ SAMPLE_STUDY : \"allocated to\"\n  STUDY }o--o{ SAMPLE_STUDY : \"uses\"",
+  "diagramType": "erDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is erDiagram": true,
+    "DONOR entity with donor_id as PK": true,
+    "SAMPLE entity with sample_id PK and donor_id FK": true,
+    "STUDY entity with study_id PK and funding_amount field": true,
+    "SAMPLE_STUDY junction table present": true,
+    "DONOR to SAMPLE one-to-many relationship shown": true,
+    "SAMPLE to STUDY many-to-many via junction table": true,
+    "At least 3 attributes per entity with type annotations": true,
+    "Blood type enum values preserved (A+, B+, O-, etc.)": true,
+    "Storage temp decimal precision preserved (decimal 5 2)": true
+  },
+  "overallScore": 10
+}

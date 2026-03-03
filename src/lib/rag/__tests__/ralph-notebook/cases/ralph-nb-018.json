@@ -1,0 +1,95 @@
+{
+  "id": "ralph-nb-018",
+  "name": "Edge cases — single paper, minimal chunks, boundary conditions",
+  "category": "polish",
+  "difficulty": "medium",
+  "phase": 4,
+  "cycle": 18,
+  "setup": {
+    "description": "Tests behavior with minimal input: a single paper with only 2 chunks. Verifies that artifact generators handle 1-paper cases gracefully, the system doesn't crash on sparse data, and scoring still works correctly. Also tests an unanswerable question with this limited context.",
+    "papers": [
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Create a study guide from this paper",
+      "expectedBehavior": [
+        "Study guide generated from a single paper",
+        "Contains Key Concepts, Main Findings, Methodology, Review Questions, Key Takeaways",
+        "HR 0.74 correctly cited",
+        "No fabricated second trial data",
+        "Works gracefully with 1 paper"
+      ],
+      "failurePatterns": [
+        "Crashes or produces empty output",
+        "Fabricates a second trial",
+        "Missing required sections"
+      ],
+      "requiredCitations": [1],
+      "forbiddenContent": [
+        "EMPEROR-Reduced",
+        "empagliflozin",
+        "DELIVER",
+        "PARADIGM",
+        "renal outcome",
+        "eGFR"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "What were the renal outcomes in this trial?",
+      "expectedBehavior": [
+        "Acknowledges that renal outcomes are NOT in the provided sources",
+        "Does NOT fabricate renal data",
+        "May reference what IS available (cardiac outcomes)",
+        "Cites available sources if referencing them"
+      ],
+      "failurePatterns": [
+        "Fabricates renal outcome data",
+        "Claims eGFR data exists",
+        "Ignores the question entirely"
+      ],
+      "requiredCitations": [],
+      "forbiddenContent": [
+        "eGFR",
+        "renal outcome",
+        "kidney function",
+        "glomerular"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Single-paper study guide is complete and well-formed",
+    "No fabricated data from other trials",
+    "Unanswerable question handled gracefully",
+    "No renal outcomes fabricated",
+    "System works correctly with minimal chunk set"
+  ]
+}

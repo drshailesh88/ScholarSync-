@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-010",
+  "attempt": 2,
+  "timestamp": "2026-03-02T12:10:03.141Z",
+  "mermaidSyntax": "graph TD\n  A[CYP3A4/CYP2D6<br/>Metabolism] --> B[P-glycoprotein<br/>P-gp Efflux]\n  A --> C[Phase II Conjugation<br/>UGT1A1 & UGT2B7]\n  A -.->|IC50 = 2.5 μM| D[Drug-Drug Interaction Risk<br/>↑ with ketoconazole<br/>↓ with rifampin]\n  B --> E[Blood-Brain Barrier<br/>BBB Transport]\n  C --> F[Glucuronidation]\n  F --> G[Sulfation]\n  G --> H[Acetylation]\n  E --> I[Renal Excretion<br/>GFR > 90 mL/min]\n  H --> I\n  style A fill:#3b82f6,stroke:#1e40af,color:#fff\n  style D fill:#ef4444,stroke:#b91c1c,color:#fff\n  style I fill:#10b981,stroke:#047857,color:#fff",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Special characters preserved: slashes (CYP3A4/CYP2D6), parentheses, ampersands (&), arrows (→), Greek letters (μ)": true,
+    "All 7 nodes present with correct labels": true,
+    "Branch from CYP3A4 shows two parallel paths": true,
+    "Convergence at Renal Excretion is clear": true,
+    "Drug-drug interaction side branch present": true,
+    "No syntax errors from special characters": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

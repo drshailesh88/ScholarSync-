@@ -1,0 +1,27 @@
+{
+  "testId": "ralph-006",
+  "attempt": 1,
+  "timestamp": "2026-03-02T10:40:12.478Z",
+  "mermaidSyntax": "gantt\n  title 24-Month Multi-Site Clinical Study Timeline\n  dateFormat YYYY-MM-DD\n  axisFormat %b %Y\n\n  section Phase 1 - Preparation\n    IRB Approval               :p1, 2024-01-01, 60d\n    Site Selection & Training  :p2, 2024-02-01, 30d\n    Database Setup             :p3, 2024-03-01, 30d\n\n  section Phase 2 - Enrollment\n    Site 1 Enrollment (M4-M8)  :e1, 2024-04-01, 120d\n    Site 2 Enrollment (M5-M10) :e2, 2024-05-01, 180d\n    Site 3 Enrollment (M6-M12) :e3, 2024-06-01, 210d\n\n  section Phase 3 - Treatment\n    Treatment Period (M8-M16)  :t1, 2024-08-01, 240d\n    3-Month Follow-up (M16-M20):t2, 2025-04-01, 120d\n\n  section Phase 4 - Analysis\n    Data Lock (M18)            :milestone, d1, 2025-06-01, 1d\n    Statistical Analysis       :d2, 2025-06-01, 90d\n    Manuscript Preparation     :d3, 2025-09-01, 60d\n    Final Submission (M24)     :milestone, d4, 2025-12-01, 1d\n\n  section Milestones\n    DSMB Review 1 (M8)         :milestone, m1, 2024-08-01, 1d\n    DSMB Review 2 (M12)        :milestone, m2, 2024-12-01, 1d\n    DSMB Review 3 (M16)        :milestone, m3, 2025-04-01, 1d",
+  "diagramType": "gantt",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "missing-node",
+      "description": "No branching pattern detected — no node has 2+ outgoing arrows",
+      "severity": "major",
+      "suggestedFix": "Ensure the AI generates branch points where the input describes parallel paths"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "All 4 phases present as sections": true,
+    "Correct date ranges for each task": true,
+    "Overlapping tasks shown (parallel enrollment across sites)": false,
+    "Milestones marked (DSMB reviews)": true,
+    "Section grouping visible (Preparation, Enrollment, Treatment, Analysis)": true,
+    "No truncated task names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 8
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ralph-006",
+  "name": "Multi-Site Clinical Study Gantt Chart",
+  "category": "academic_essentials",
+  "difficulty": "hard",
+  "input": "Create a Gantt chart for a 24-month multi-site clinical study. Phase 1 - Preparation (Months 1-4): IRB approval (M1-M2), Site selection and training (M2-M3), Database setup (M3-M4). Phase 2 - Enrollment (Months 4-12): Site 1 enrollment (M4-M8), Site 2 enrollment (M5-M10), Site 3 enrollment (M6-M12). Phase 3 - Treatment & Follow-up (Months 8-20): Treatment period (M8-M16), 3-month follow-up (M16-M20). Phase 4 - Analysis & Reporting (Months 18-24): Data lock (M18), Statistical analysis (M18-M21), Manuscript preparation (M21-M23), Submission (M24). Key milestones: DSMB reviews at M8, M12, M16.",
+  "expectedDiagramType": "gantt",
+  "expectedNodeCount": 14,
+  "qualityCriteria": [
+    "All 4 phases present as sections",
+    "Correct date ranges for each task",
+    "Overlapping tasks shown (parallel enrollment across sites)",
+    "Milestones marked (DSMB reviews)",
+    "Section grouping visible (Preparation, Enrollment, Treatment, Analysis)",
+    "No truncated task names",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Professional Gantt with color-coded phases, milestone diamonds, overlapping bars for parallel enrollment, clean time axis with month labels."
+}

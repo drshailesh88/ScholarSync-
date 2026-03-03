@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-014",
+  "attempt": 2,
+  "timestamp": "2026-03-02T12:37:41.036Z",
+  "mermaidSyntax": "graph TD\n  A[PI Writes Grant Application<br/>R01 or R21] --> B[Institution Grants Office<br/>Compliance Checks]\n  B --> C[NIH Center for Scientific Review<br/>Receives Application]\n  C --> D[Study Section Assignment]\n  C --> E[Program Officer Assigned<br/>NIMH/NCI/etc.]\n  D --> F[Study Section Review<br/>External Scientists]\n  F --> G[Scoring: 1-9 Scale<br/>Significance, Innovation, Approach,<br/>Investigators, Environment]\n  G --> H[Study Section Meeting<br/>Top 50% Discussed<br/>Primary/Secondary/Tertiary Reviewers]\n  H --> I[Percentile Scores Calculated]\n  I --> J[Advisory Council Review<br/>Funding Decision]\n  J --> K{Funded?}\n  K -->|Yes| L[Grants Management Specialist<br/>Budget Negotiation]\n  K -->|No| M[PI May Revise &<br/>Resubmit Once]\n  M --> B\n  style K fill:#f59e0b,stroke:#d97706,color:#000\n  style L fill:#10b981,stroke:#059669,color:#fff\n  style M fill:#ef4444,stroke:#b91c1c,color:#fff",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Extracted coherent process from rambling input": true,
+    "At least 10 key steps present (submission, compliance, CSR, study section, review, scoring, council, funding decision, budget negotiation, resubmission)": true,
+    "Sequential flow is logical (submission -> review -> decision -> outcome)": true,
+    "Resubmission loop represented": true,
+    "Branch at funding decision (funded vs not funded)": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

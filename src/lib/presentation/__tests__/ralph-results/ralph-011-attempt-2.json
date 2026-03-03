@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-011",
+  "attempt": 2,
+  "timestamp": "2026-03-02T12:12:55.361Z",
+  "mermaidSyntax": "graph TB\n  subgraph Enrollment[\"ENROLLMENT\"]\n    A[\"Assessed for eligibility<br/>(n=4,832)<br/>28 centers, 12 countries\"]\n    B[\"Excluded (n=3,207)\"]\n    C[\"• PD-L1 TPS < 50% (n=1,845)<br/>• Prior immunotherapy <12 mo (n=523)<br/>• ECOG PS > 2 (n=412)<br/>• Active autoimmune disease (n=198)<br/>• Untreated brain mets (n=229)\"]\n    D[\"Randomized (n=1,625)\"]\n  end\n\n  subgraph Allocation[\"ALLOCATION\"]\n    E[\"Allocated to<br/>Pembrolizumab + Chemo<br/>(n=814)\"]\n    F[\"Allocated to<br/>Chemotherapy Alone<br/>(n=811)\"]\n  end\n\n  subgraph Intervention[\"INTERVENTION\"]\n    G[\"Received intervention<br/>(n=798)\"]\n    H[\"Did not receive (n=16)<br/>• Withdrew consent (9)<br/>• AE before dose (5)<br/>• Death (2)\"]\n    I[\"Received intervention<br/>(n=803)\"]\n    J[\"Did not receive (n=8)<br/>• Withdrew consent (5)<br/>• Protocol deviation (3)\"]\n  end\n\n  subgraph FollowUp[\"FOLLOW-UP (24 months)\"]\n    K[\"Lost to follow-up (n=47)<br/>• Relocated (21)<br/>• Non-compliance (18)<br/>• Unknown (8)\"]\n    L[\"Lost to follow-up (n=52)<br/>• Relocated (24)<br/>• Non-compliance (20)<br/>• Unknown (8)\"]\n  end\n\n  subgraph Analysis[\"ANALYSIS\"]\n    M[\"ITT Analysis (n=814)<br/>Per-protocol (n=767)\"]\n    N[\"ITT Analysis (n=811)<br/>Per-protocol (n=759)\"]\n  end\n\n  A --> B\n  B --> C\n  A --> D\n  D --> E\n  D --> F\n  E --> G\n  E --> H\n  F --> I\n  F --> J\n  G --> K\n  I --> L\n  K --> M\n  L --> N\n\n  style A fill:#3b82f6,stroke:#1e40af,color:#fff\n  style D fill:#10b981,stroke:#047857,color:#fff\n  style E fill:#8b5cf6,stroke:#6d28d9,color:#fff\n  style F fill:#f59e0b,stroke:#d97706,color:#000\n  style M fill:#8b5cf6,stroke:#6d28d9,color:#fff\n  style N fill:#f59e0b,stroke:#d97706,color:#000",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All major CONSORT stages present (Enrollment, Allocation, Follow-up, Analysis)": true,
+    "Exclusion criteria listed with individual counts": true,
+    "Both treatment arms shown as parallel branches after randomization": true,
+    "Numeric values preserved accurately (4832, 3207, 1625, 814, 811)": true,
+    "Long drug names not truncated (pembrolizumab fully spelled)": true,
+    "No overlapping text or labels despite high node count": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

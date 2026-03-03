@@ -1,0 +1,22 @@
+{
+  "id": "ralph-056",
+  "name": "Contradictory Requirements — Simple Yet Comprehensive Lab Safety Protocol",
+  "category": "edge_case_robustness",
+  "difficulty": "hard",
+  "input": "Make a simple flowchart — keep it really minimal, like 5 nodes max — showing our complete BSL-3 laboratory safety protocol. It needs to cover: entry procedure (health screening, PPE donning sequence — N95 respirator fit check, Tyvek suit, double gloves, shoe covers, face shield), decontamination shower requirements, airlock entry with negative pressure verification, work procedures (pathogen handling, centrifuge protocols, spill response — small spill vs large spill with different procedures, sharps disposal, waste autoclave cycle times), emergency procedures (exposure incident, fire, power failure, ventilation failure), exit procedure (doffing sequence, hand washing, shower, health log), and annual recertification requirements. Show all of these but keep it simple.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 12,
+  "qualityCriteria": [
+    "Flowchart type declared with TD direction",
+    "Entry procedure node or section present",
+    "PPE or donning mentioned in the diagram",
+    "Work procedures section with pathogen handling",
+    "Emergency procedures branch present",
+    "Exit procedure or doffing step present",
+    "Spill response included (small or large spill)",
+    "More than 5 nodes despite the contradictory 5-node limit request",
+    "Diagram is organized and readable despite comprehensive content",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart TD with 12+ nodes balancing contradictory simple/comprehensive requirements, BSL-3 safety protocol."
+}

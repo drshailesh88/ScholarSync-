@@ -1,0 +1,18 @@
+{
+  "id": "ralph-013",
+  "name": "Minimal Vague Input — Cell Signaling",
+  "category": "prompt_robustness",
+  "difficulty": "hard",
+  "input": "cell signaling pathway diagram",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "Generated a meaningful diagram despite minimal input",
+    "At least 5 nodes present representing signaling steps",
+    "Flow direction is clear (signal reception to cellular response)",
+    "Contains biologically plausible terms (receptor, kinase, transcription, etc.)",
+    "No placeholder or lorem ipsum content",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "The AI should infer a generic cell signaling cascade (ligand -> receptor -> signal transduction -> transcription factor -> gene expression) from minimal input."
+}

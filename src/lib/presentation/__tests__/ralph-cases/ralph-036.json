@@ -1,0 +1,22 @@
+{
+  "id": "ralph-036",
+  "name": "Automated Screening Pipeline with Loop and Critical Blocks",
+  "category": "sequence_advanced",
+  "difficulty": "hard",
+  "input": "Create a sequence diagram for an automated systematic review screening pipeline. Participants: Search Engine, Deduplication Service, AI Screener, Human Reviewer, Database. Flow: Search Engine retrieves batch of records and sends to Deduplication Service. Dedup removes duplicates and sends unique records to Database for storage. Then loop for each record: AI Screener fetches record from Database, runs title/abstract screening, and stores decision. Critical section: if AI confidence is low (below threshold), AI Screener escalates to Human Reviewer. Human Reviewer reviews and sends final decision back to Database. End critical. After loop completes, Database generates screening report and sends summary statistics to Human Reviewer. Include a note on AI Screener saying 'Uses fine-tuned BERT model with 94% sensitivity'. Show activate on AI Screener during the screening loop.",
+  "expectedDiagramType": "sequence",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "Sequence diagram type declared",
+    "All 5 participants declared (Search Engine, Dedup, AI Screener, Human Reviewer, Database)",
+    "Loop block for iterating over records",
+    "Critical or opt block for low-confidence escalation",
+    "AI to Human escalation path present",
+    "Deduplication step before screening",
+    "Database interactions for storage and retrieval",
+    "Note element on AI Screener",
+    "Screening report generation after loop",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Sequence diagram with 5 actors, loop block, critical/opt block for escalation, note element, activate on AI Screener."
+}

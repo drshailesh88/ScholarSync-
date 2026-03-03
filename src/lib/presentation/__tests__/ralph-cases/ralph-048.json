@@ -1,0 +1,22 @@
+{
+  "id": "ralph-048",
+  "name": "Research Ethics Review Decision Flowchart with Multiple Terminals",
+  "category": "flowchart_decision_logic",
+  "difficulty": "medium",
+  "input": "Create a flowchart for deciding the level of ethics review needed for a research project. Start: New research project proposed. Decision 1: Does it involve human subjects? If No -> No IRB review needed (Terminal: Exempt). If Yes -> Decision 2: Is it minimal risk? (survey, interview, observation of public behavior, existing de-identified data). If Yes -> Decision 3: Does it involve vulnerable populations? (children, prisoners, pregnant women, cognitively impaired). If Yes -> Full board IRB review required (Terminal: Full Review). If No -> Expedited review pathway (Terminal: Expedited). If not minimal risk (from Decision 2) -> Decision 4: Is it a clinical trial? If Yes -> Decision 5: Phase I/II or Phase III/IV? Phase I/II -> Full board review + DSMB required (Terminal: Full Review + DSMB). Phase III/IV -> Full board review + DSMB + FDA IND required (Terminal: Full Review + DSMB + FDA). If not clinical trial -> Full board review (Terminal: Full Review). Show 5 decision diamonds and 5 terminal states.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 12,
+  "qualityCriteria": [
+    "Flowchart type declared with TD direction",
+    "Human subjects decision as first branch",
+    "Minimal risk assessment decision present",
+    "Vulnerable populations decision present",
+    "Clinical trial decision branch",
+    "At least 4 decision diamond nodes",
+    "At least 3 distinct terminal states (Exempt, Expedited, Full Review)",
+    "DSMB mentioned in clinical trial paths",
+    "FDA/IND mentioned for Phase III/IV path",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart TD with 12+ nodes, 5 decision diamonds, 5 terminal states, ethics review decision tree."
+}

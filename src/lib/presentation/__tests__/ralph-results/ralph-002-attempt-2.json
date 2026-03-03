@@ -1,0 +1,28 @@
+{
+  "testId": "ralph-002",
+  "attempt": 2,
+  "timestamp": "2026-03-02T09:48:51.463Z",
+  "mermaidSyntax": "flowchart TD\n    A[Records identified from databases<br/>n = 5,226] --> B[Records after duplicates removed<br/>n = 4,070]\n    A1[PubMed: 2,847] --> A\n    A2[Embase: 1,923] --> A\n    A3[Cochrane: 456] --> A\n    D[Duplicates removed<br/>n = 1,156] -.-> B\n    B --> C[Records screened<br/>n = 4,070]\n    C --> E[Records excluded by title/abstract<br/>n = 3,891]\n    C --> F[Full-text articles assessed<br/>n = 179]\n    F --> G[Articles excluded<br/>n = 142]\n    G1[Wrong outcome: 67] --> G\n    G2[Wrong population: 38] --> G\n    G3[Wrong intervention: 22] --> G\n    G4[Conference abstracts only: 15] --> G\n    F --> H[Studies included in qualitative synthesis<br/>n = 37]\n    H --> I[Studies included in meta-analysis<br/>n = 28]\n    \n    style A fill:#e1f5fe\n    style B fill:#f3e5f5\n    style C fill:#f3e5f5\n    style F fill:#f3e5f5\n    style H fill:#e8f5e8\n    style I fill:#e8f5e8",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "ugly",
+      "description": "No section/subgraph grouping — diagram is flat",
+      "severity": "minor",
+      "suggestedFix": "Use Mermaid subgraphs to group related nodes into phases"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Four clear phases: Identification, Screening, Eligibility, Included": false,
+    "All numeric values present and correct": true,
+    "Exclusion reasons shown as side branches with counts": true,
+    "Database sources listed separately": true,
+    "Duplicate removal step clearly shown": true,
+    "Color coding distinguishes phases (blue, yellow, orange, green)": true,
+    "Long text like 'SGLT2 inhibitors' not truncated": true,
+    "Valid Mermaid syntax": true
+  },
+  "overallScore": 9
+}

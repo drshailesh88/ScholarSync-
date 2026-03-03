@@ -1,0 +1,22 @@
+{
+  "id": "ralph-045",
+  "name": "Biorepository ER with Junction Tables and Many-to-Many",
+  "category": "er_and_class_advanced",
+  "difficulty": "hard",
+  "input": "Create an ER diagram for a biorepository management system. Entities: Patient (patient_id, mrn, name, dob, sex, consent_status), Sample (sample_id, type, collection_date, volume_ml, storage_location, freeze_thaw_count), Study (study_id, title, pi_name, irb_number, status), Aliquot (aliquot_id, parent_sample_id FK, volume_ml, concentration, created_date), StorageUnit (unit_id, type, temperature, building, room, shelf, position). Relationships: Patient provides Sample (one-to-many). Sample has Aliquot (one-to-many). Study uses Sample (many-to-many — needs junction table StudySample with date_assigned and purpose). Aliquot stored in StorageUnit (many-to-one). Patient enrolled in Study (many-to-many — needs junction table PatientStudy with enrollment_date and consent_form_id). Show all PKs, FKs, and cardinalities. At least 7 entities including junction tables.",
+  "expectedDiagramType": "erDiagram",
+  "expectedNodeCount": 7,
+  "qualityCriteria": [
+    "ER diagram type declared",
+    "All 5 core entities present (Patient, Sample, Study, Aliquot, StorageUnit)",
+    "Junction table StudySample or equivalent present",
+    "Junction table PatientStudy or equivalent present",
+    "Patient to Sample one-to-many relationship",
+    "Sample to Aliquot one-to-many relationship",
+    "At least 3 attributes per major entity",
+    "Cardinality notation on all relationships",
+    "At least 6 relationships defined",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "ER diagram with 7 entities (5 core + 2 junction), many-to-many via junction tables, full PKs/FKs, cardinalities."
+}

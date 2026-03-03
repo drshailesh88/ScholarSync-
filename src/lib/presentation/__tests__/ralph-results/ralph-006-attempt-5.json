@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-006",
+  "attempt": 5,
+  "timestamp": "2026-03-02T11:31:06.603Z",
+  "mermaidSyntax": "gantt\n    title 24-Month Multi-Site Clinical Study Timeline\n    dateFormat YYYY-MM\n    axisFormat %b\n    \n    section Phase 1 - Preparation\n    IRB Approval              :p1, 2024-01, 2M\n    Site Selection & Training :p2, 2024-02, 2M\n    Database Setup            :p3, 2024-03, 2M\n    \n    section Phase 2 - Enrollment\n    Site 1 Enrollment         :e1, 2024-04, 4M\n    Site 2 Enrollment         :e2, 2024-05, 5M\n    Site 3 Enrollment         :e3, 2024-06, 6M\n    \n    section Phase 3 - Treatment\n    Treatment Period          :t1, 2024-08, 8M\n    3-Month Follow-up         :f1, 2025-04, 4M\n    \n    section Phase 4 - Analysis\n    Data Lock                 :milestone, d1, 2025-06, 0d\n    Statistical Analysis      :a1, 2025-06, 3M\n    Manuscript Preparation    :a2, 2025-09, 2M\n    Submission                :milestone, sub, 2025-12, 0d\n    \n    section Milestones\n    DSMB Review 1 (M8)        :milestone, m1, 2024-08, 0d\n    DSMB Review 2 (M12)       :milestone, m2, 2024-12, 0d\n    DSMB Review 3 (M16)       :milestone, m3, 2025-04, 0d",
+  "diagramType": "gantt",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 4 phases present as sections": true,
+    "Correct date ranges for each task": true,
+    "Overlapping tasks shown (parallel enrollment across sites)": true,
+    "Milestones marked (DSMB reviews)": true,
+    "Section grouping visible (Preparation, Enrollment, Treatment, Analysis)": true,
+    "No truncated task names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

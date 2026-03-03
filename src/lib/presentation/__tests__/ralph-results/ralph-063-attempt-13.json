@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-063",
+  "attempt": 13,
+  "timestamp": "2026-03-02T17:14:36.146Z",
+  "mermaidSyntax": "journey\n  title Patient Hospital Journey\n  section ER Triage\n    Arrival and registration: 3: Patient\n    Initial assessment: 3: Nurse\n    Triage scoring: 2: Nurse\n  section Admission\n    Bed assignment: 3: Staff\n    Medical history review: 4: Doctor\n    Pre-op assessment: 3: Doctor\n  section Surgery\n    Anesthesia induction: 2: Anesthesiologist\n    Surgical procedure: 1: Surgeon\n    Post-op monitoring: 2: Nurse\n  section Recovery\n    Pain management: 3: Nurse\n    Physical therapy: 4: Therapist\n    Progress evaluation: 4: Doctor\n  section Discharge\n    Discharge planning: 4: Doctor\n    Follow-up scheduling: 5: Staff\n    Patient education: 5: Nurse",
+  "diagramType": "journey",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is journey for a patient experience path": true,
+    "ER Triage as first section or task": true,
+    "Admission step present": true,
+    "Surgery step present": true,
+    "Recovery step present": true,
+    "Discharge as final step": true,
+    "Satisfaction scores present (1-5 range) for each task": true,
+    "At least 5 distinct tasks in the journey": true,
+    "Proper journey syntax with section headers": true,
+    "Logical score progression (triage lower, recovery improving)": true
+  },
+  "overallScore": 10
+}

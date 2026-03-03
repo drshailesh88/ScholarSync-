@@ -1,0 +1,20 @@
+{
+  "id": "ralph-026",
+  "name": "Dense Multi-Phase Gantt — 20+ Tasks",
+  "category": "scale_complexity",
+  "difficulty": "hard",
+  "input": "Create a Gantt chart for a 3-year NIH R01 grant project. Year 1 - Foundation: IRB Protocol Development (2024-01-01, 90d), Site Recruitment (after IRB, 60d), Staff Training (after Site Recruitment, 30d), Pilot Study (after Staff Training, 120d), Pilot Data Analysis (after Pilot Study, 45d). Year 2 - Main Study: Participant Enrollment (2025-01-01, 180d), Baseline Assessments (after Enrollment start, 150d), Intervention Delivery (after Baseline, 240d), 6-Month Follow-Up (after Intervention, 90d), 12-Month Follow-Up (after 6-Month, 90d). Year 3 - Analysis & Dissemination: Data Cleaning (2026-01-01, 60d), Statistical Analysis (after Data Cleaning, 90d), Manuscript Preparation (after Statistical Analysis, 120d), Conference Presentations (after Manuscript, 60d), Final Report (after Conference, 45d). Cross-cutting: DSMB Reviews (quarterly, mark as milestones), Progress Reports (annual). Mark critical path tasks.",
+  "expectedDiagramType": "gantt",
+  "expectedNodeCount": 18,
+  "qualityCriteria": [
+    "Gantt chart with dateFormat declared",
+    "At least 3 sections (Year 1, Year 2, Year 3)",
+    "At least 15 task entries",
+    "Task dependencies shown (after keywords)",
+    "Critical path tasks marked (crit tag)",
+    "Date range spanning 2024-2026",
+    "No truncated task names",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "3-year Gantt with 20+ tasks across 3 phases, dependencies, critical path markers, professional grant timeline."
+}

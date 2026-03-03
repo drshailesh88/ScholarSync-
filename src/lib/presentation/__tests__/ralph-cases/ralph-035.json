@@ -1,0 +1,22 @@
+{
+  "id": "ralph-035",
+  "name": "IRB Review Sequence with Conditional Paths",
+  "category": "sequence_advanced",
+  "difficulty": "hard",
+  "input": "Create a sequence diagram showing the IRB (Institutional Review Board) protocol review process. Participants: Principal Investigator (PI), Department Chair, IRB Coordinator, IRB Review Panel, Ethics Consultant. Flow: PI submits protocol to Department Chair for pre-review. Chair reviews and either approves (forwards to IRB Coordinator) or returns to PI with comments. IRB Coordinator checks completeness. If incomplete, returns to PI. If complete, assigns to IRB Review Panel. Panel reviews protocol. Three possible outcomes: (1) Approved — Coordinator notifies PI, (2) Approved with modifications — Coordinator sends modification list to PI, PI revises and resubmits to Coordinator, (3) Referred to full board — Panel consults Ethics Consultant, Consultant provides opinion back to Panel, Panel makes final decision. Use alt blocks for the branching decisions. Add a note over PI and Chair saying 'Pre-submission review typically takes 1-2 weeks'.",
+  "expectedDiagramType": "sequence",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "Sequence diagram type declared",
+    "All 5 participants declared (PI, Chair, Coordinator, Panel, Ethics Consultant)",
+    "Alt block for Chair approval/rejection branching",
+    "Alt block for Panel three-outcome decision (approved/modifications/full board)",
+    "Ethics Consultant interaction within full board referral path",
+    "Note element present (over PI or Chair)",
+    "PI resubmission flow for modifications path",
+    "Completeness check by Coordinator with conditional return",
+    "At least 10 messages between participants",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Sequence diagram with 5 actors, nested alt blocks for 3-way IRB decision, note element, ethics consultation sub-flow."
+}

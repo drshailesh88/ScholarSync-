@@ -1,0 +1,22 @@
+{
+  "id": "ralph-044",
+  "name": "Research Data Pipeline Class Diagram with Abstract Classes and Interfaces",
+  "category": "er_and_class_advanced",
+  "difficulty": "hard",
+  "input": "Create a class diagram for a research data processing pipeline using design patterns. Classes: abstract class DataSource with methods connect() and fetchData(), concrete subclasses PubMedSource, ClinicalTrialsSource, and GenBankSource extending DataSource. Interface Transformable with method transform(data). Class DataCleaner implements Transformable with methods: removeNulls(), normalizeFields(), deduplicate(). Class FeatureExtractor implements Transformable with methods: extractKeywords(), computeMetrics(). Abstract class DataSink with method persist(data), concrete subclasses PostgresSink and S3Sink extending DataSink. Class Pipeline orchestrates everything with fields: sources DataSource[], transformers Transformable[], sink DataSink, and methods: run(), validate(), getStatus(). Pipeline has composition relationship with DataSource (1 to many), aggregation with Transformable (1 to many), and composition with DataSink (1 to 1). Show inheritance arrows, interface implementation, and composition/aggregation.",
+  "expectedDiagramType": "classDiagram",
+  "expectedNodeCount": 9,
+  "qualityCriteria": [
+    "Class diagram type declared",
+    "Abstract class DataSource present with <<abstract>> annotation",
+    "At least 3 concrete subclasses of DataSource",
+    "Interface Transformable present with <<interface>> annotation",
+    "DataCleaner and FeatureExtractor implement Transformable",
+    "Inheritance arrows present (extending DataSource, DataSink)",
+    "Pipeline class with orchestration fields and methods",
+    "Composition or aggregation relationships shown",
+    "At least 8 classes/interfaces defined",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Class diagram with 9+ classes, abstract classes, interface, inheritance, composition/aggregation, design pattern."
+}

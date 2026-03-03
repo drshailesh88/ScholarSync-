@@ -1,0 +1,17 @@
+{
+  "id": "ralph-007",
+  "name": "Research Funding Allocation Pie Chart",
+  "category": "data_heavy",
+  "difficulty": "easy",
+  "input": "Create a pie chart showing the allocation of a $2.5M NIH R01 grant. Personnel (PI, Co-I, Postdoc, 2 Grad Students, Lab Tech): 55%. Equipment (Flow cytometer, Sequencer access fees): 15%. Supplies (Reagents, Cell cultures, Animal models): 18%. Travel (2 conferences/year): 4%. Indirect costs (F&A): 8%.",
+  "expectedDiagramType": "pie",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "All 5 budget categories present (Personnel, Equipment, Supplies, Travel, Indirect)",
+    "Percentage values are correct and sum to 100%",
+    "Largest slice is Personnel at 55%",
+    "No truncated category labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Clean pie chart with 5 colored slices, percentage labels on each slice, legend with category names, professional color palette."
+}

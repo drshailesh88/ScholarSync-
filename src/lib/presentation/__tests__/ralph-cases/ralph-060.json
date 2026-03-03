@@ -1,0 +1,20 @@
+{
+  "id": "ralph-060",
+  "name": "Cross-Type Adversarial — Graph/ER Vocabulary but Mindmap (ML Algorithm Taxonomy)",
+  "input": "Create a diagram showing the taxonomy of machine learning algorithms. The root node connects to Supervised Learning, Unsupervised Learning, and Reinforcement Learning. Each of these nodes has edges connecting to specific algorithm types. Supervised has relationships to Classification (which connects to entities like SVM, Random Forest, Neural Networks, KNN) and Regression (connecting to Linear Regression, Ridge, Lasso, Elastic Net). Unsupervised connects to Clustering (K-Means, DBSCAN, Hierarchical) and Dimensionality Reduction (PCA, t-SNE, UMAP). Reinforcement connects to Model-Based (Dynamic Programming, Monte Carlo) and Model-Free (Q-Learning, Policy Gradient, Actor-Critic). This is a HIERARCHICAL CATEGORIZATION, not a relational database — it's a taxonomy tree for organizing knowledge.",
+  "expectedDiagramType": "mindmap",
+  "difficulty": "hard",
+  "expectedNodeCount": 20,
+  "qualityCriteria": [
+    "Diagram type is mindmap, NOT erDiagram or classDiagram despite node/edge/entity vocabulary",
+    "Root node is Machine Learning or ML Algorithms",
+    "3 main branches: Supervised, Unsupervised, Reinforcement",
+    "Classification sub-branch with SVM, Random Forest, Neural Networks",
+    "Regression sub-branch with Linear Regression, Ridge, Lasso",
+    "Clustering sub-branch with K-Means, DBSCAN, Hierarchical",
+    "Dimensionality Reduction sub-branch with PCA, t-SNE",
+    "At least 3 levels of depth in the hierarchy",
+    "At least 20 total nodes in the mindmap",
+    "Proper mindmap indentation syntax (not arrows or relationships)"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "ralph-066",
+  "name": "Precision Data — ER Diagram with Exact Types and Cardinalities",
+  "input": "Create an ER diagram for a biobank database. Entities: DONOR (donor_id PK int, first_name varchar(50), last_name varchar(50), date_of_birth date, blood_type enum(A+,A-,B+,B-,AB+,AB-,O+,O-), consent_date timestamp). SAMPLE (sample_id PK int, donor_id FK int, tissue_type varchar(100), collection_date date, storage_temp decimal(5,2), quantity_ml float, status enum(available,reserved,consumed,destroyed)). STUDY (study_id PK int, pi_name varchar(100), title varchar(255), irb_number varchar(20), start_date date, funding_amount decimal(12,2)). SAMPLE_STUDY (sample_id FK int, study_id FK int, allocation_date date, quantity_used float). Relationships: DONOR ||--o{ SAMPLE (one donor has many samples), SAMPLE }o--o{ STUDY through SAMPLE_STUDY (many-to-many).",
+  "expectedDiagramType": "erDiagram",
+  "difficulty": "hard",
+  "expectedNodeCount": 4,
+  "qualityCriteria": [
+    "Diagram type is erDiagram",
+    "DONOR entity with donor_id as PK",
+    "SAMPLE entity with sample_id PK and donor_id FK",
+    "STUDY entity with study_id PK and funding_amount field",
+    "SAMPLE_STUDY junction table present",
+    "DONOR to SAMPLE one-to-many relationship shown",
+    "SAMPLE to STUDY many-to-many via junction table",
+    "At least 3 attributes per entity with type annotations",
+    "Blood type enum values preserved (A+, B+, O-, etc.)",
+    "Storage temp decimal precision preserved (decimal 5 2)"
+  ]
+}

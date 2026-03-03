@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SlideRenderer } from "./slide-renderer";
+import { SlideRendererV2 as SlideRenderer } from "@/components/slides/shared/slide-renderer-v2";
 import { PresenterControls } from "./presenter-controls";
 import type { ContentBlock, ThemeConfig, SlideLayout } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
@@ -13,7 +13,9 @@ import {
   Pause,
   Play,
   SpeakerHigh,
+  Check,
 } from "@phosphor-icons/react";
+import { SpotlightBlockWrapper } from "@/components/slides/gamma-mode/spotlight-wrapper";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -36,6 +38,14 @@ interface PresenterModeProps {
   transition?: "none" | "fade" | "slide" | "zoom";
   showPresenterView?: boolean;
   onExit: () => void;
+  onSlideUpdate?: (
+    slideId: number,
+    changes: {
+      title?: string;
+      subtitle?: string;
+      contentBlocks?: ContentBlock[];
+    }
+  ) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -167,6 +177,7 @@ export function PresenterMode({
   transition = "fade",
   showPresenterView = false,
   onExit,
+  onSlideUpdate,
 }: PresenterModeProps) {
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
   const totalSlides = slides.length;
@@ -178,10 +189,71 @@ export function PresenterMode({
   const [direction, setDirection] = useState(1);
   const [showGrid, setShowGrid] = useState(false);
   const [showNotes, setShowNotes] = useState(showPresenterView);
+  const [spotlightActive, setSpotlightActive] = useState(false);
+  const [spotlightIndex, setSpotlightIndex] = useState(0);
+  const [editMode, setEditMode] = useState(false);
+  const [editTitle, setEditTitle] = useState("");
+  const [editSubtitle, setEditSubtitle] = useState("");
+  const [editContent, setEditContent] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
+  const slideContentRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [hasOverflow, setHasOverflow] = useState(false);
 
   const timer = useTimer();
+
+  // Quick-edit helpers
+  const enterEditMode = useCallback(() => {
+    const slide = slides[currentIndex];
+    if (!slide) return;
+    setEditTitle(slide.title ?? "");
+    setEditSubtitle(slide.subtitle ?? "");
+    // Find the first text or bullets block for inline editing
+    const firstTextBlock = slide.contentBlocks.find(
+      (b) => b.type === "text" || b.type === "bullets"
+    );
+    if (firstTextBlock) {
+      if (firstTextBlock.type === "text") {
+        setEditContent(firstTextBlock.data.text);
+      } else if (firstTextBlock.type === "bullets") {
+        setEditContent(firstTextBlock.data.items.join("\n"));
+      }
+    } else {
+      setEditContent("");
+    }
+    setEditMode(true);
+  }, [slides, currentIndex]);
+
+  const commitEdit = useCallback(() => {
+    const slide = slides[currentIndex];
+    if (!slide || !onSlideUpdate) {
+      setEditMode(false);
+      return;
+    }
+    const updatedBlocks = slide.contentBlocks.map((block) => {
+      // Update the first text/bullets block we find
+      if (block.type === "text") {
+        return { ...block, data: { ...block.data, text: editContent } };
+      }
+      if (block.type === "bullets") {
+        return {
+          ...block,
+          data: {
+            ...block.data,
+            items: editContent.split("\n").filter((l) => l.length > 0),
+          },
+        };
+      }
+      return block;
+    });
+    onSlideUpdate(slide.id, {
+      title: editTitle || undefined,
+      subtitle: editSubtitle || undefined,
+      contentBlocks: updatedBlocks as ContentBlock[],
+    });
+    setEditMode(false);
+  }, [slides, currentIndex, editTitle, editSubtitle, editContent, onSlideUpdate]);
 
   // Navigation
   const goToSlide = useCallback(
@@ -208,9 +280,92 @@ export function PresenterMode({
     }
   }, [currentIndex]);
 
+  // BroadcastChannel: sync slide index to audience windows
+  const channelRef = useRef<BroadcastChannel | null>(null);
+  useEffect(() => {
+    const channel = new BroadcastChannel("presenter-slide-sync");
+    channelRef.current = channel;
+
+    // When audience window connects, send it all slide data
+    channel.onmessage = (e) => {
+      if (e.data?.type === "audience-ready") {
+        channel.postMessage({
+          type: "init",
+          slides: slides.map((s) => ({
+            title: s.title ?? "",
+            subtitle: s.subtitle ?? "",
+            layout: s.layout,
+            contentBlocks: s.contentBlocks,
+          })),
+          themeKey,
+          themeConfig: theme,
+        });
+        // Also send current slide index
+        channel.postMessage({ type: "slide", index: currentIndex });
+      }
+    };
+
+    return () => {
+      channel.close();
+    };
+  }, [slides, themeKey, theme, currentIndex]);
+
+  // Broadcast current slide whenever it changes
+  useEffect(() => {
+    channelRef.current?.postMessage({ type: "slide", index: currentIndex });
+  }, [currentIndex]);
+
+  const openAudienceWindow = useCallback(() => {
+    const url = new URL(window.location.href);
+    url.pathname = "/presentation/audience";
+    window.open(
+      url.toString(),
+      "audience-view",
+      "width=1280,height=720,menubar=no,toolbar=no"
+    );
+  }, []);
+
   // Auto-scroll speaker notes when slide changes
   useEffect(() => {
     notesRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentIndex]);
+
+  // Track scroll position and overflow state for the slide content
+  useEffect(() => {
+    const el = slideContentRef.current;
+    if (!el) return;
+
+    const checkOverflow = () => {
+      const isOverflowing = el.scrollHeight > el.clientHeight + 2;
+      setHasOverflow(isOverflowing);
+      if (isOverflowing) {
+        const maxScroll = el.scrollHeight - el.clientHeight;
+        setScrollProgress(maxScroll > 0 ? el.scrollTop / maxScroll : 0);
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
+    const onScroll = () => {
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      setScrollProgress(maxScroll > 0 ? el.scrollTop / maxScroll : 0);
+    };
+
+    checkOverflow();
+    el.addEventListener("scroll", onScroll, { passive: true });
+
+    const observer = new ResizeObserver(checkOverflow);
+    observer.observe(el);
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      observer.disconnect();
+    };
+  }, [currentIndex]);
+
+  // Reset slide content scroll on slide change
+  useEffect(() => {
+    slideContentRef.current?.scrollTo({ top: 0 });
   }, [currentIndex]);
 
   // Keyboard navigation
@@ -233,9 +388,19 @@ export function PresenterMode({
           e.preventDefault();
           goPrev();
           break;
+        case "ArrowUp":
+          e.preventDefault();
+          slideContentRef.current?.scrollBy({ top: -200, behavior: "smooth" });
+          break;
+        case "ArrowDown":
+          e.preventDefault();
+          slideContentRef.current?.scrollBy({ top: 200, behavior: "smooth" });
+          break;
         case "Escape":
           e.preventDefault();
-          if (showGrid) {
+          if (editMode) {
+            setEditMode(false);
+          } else if (showGrid) {
             setShowGrid(false);
           } else {
             // Exit fullscreen first, then exit presenter mode
@@ -243,6 +408,13 @@ export function PresenterMode({
               document.exitFullscreen().catch(() => {});
             }
             onExit();
+          }
+          break;
+        case "e":
+        case "E":
+          if (!spotlightActive && !editMode) {
+            e.preventDefault();
+            enterEditMode();
           }
           break;
         case "g":
@@ -255,6 +427,12 @@ export function PresenterMode({
           e.preventDefault();
           setShowNotes((v) => !v);
           break;
+        case "s":
+        case "S":
+          e.preventDefault();
+          setSpotlightActive((v) => !v);
+          setSpotlightIndex(0);
+          break;
         case "Home":
           e.preventDefault();
           goToSlide(0);
@@ -263,12 +441,17 @@ export function PresenterMode({
           e.preventDefault();
           goToSlide(totalSlides - 1);
           break;
+        case "d":
+        case "D":
+          e.preventDefault();
+          openAudienceWindow();
+          break;
       }
     };
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [goNext, goPrev, goToSlide, onExit, showGrid, totalSlides]);
+  }, [goNext, goPrev, goToSlide, onExit, showGrid, editMode, spotlightActive, enterEditMode, totalSlides, openAudienceWindow]);
 
   // Touch support
   const swipeHandlers = useSwipe(goNext, goPrev);
@@ -322,20 +505,155 @@ export function PresenterMode({
             transition={variant.transition}
             className="w-full h-full flex items-center justify-center p-4"
           >
-            <div className="w-full max-w-[calc(100vh*16/9)] aspect-video rounded-lg overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
-              <SlideRenderer
-                title={currentSlide?.title}
-                subtitle={currentSlide?.subtitle}
-                layout={currentSlide?.layout as SlideLayout}
-                contentBlocks={currentSlide?.contentBlocks ?? []}
-                themeKey={themeKey}
-                themeConfig={themeConfig}
-                showSlideNumber
-                slideNumber={currentIndex + 1}
-                scale={1.5}
-              />
+            <div className="relative w-full max-w-[calc(100vh*16/9)] aspect-video rounded-lg overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/5">
+              <div
+                ref={slideContentRef}
+                className="absolute inset-0 overflow-y-auto scrollbar-none"
+              >
+                <SlideRenderer
+                  title={currentSlide?.title}
+                  subtitle={currentSlide?.subtitle}
+                  layout={currentSlide?.layout as SlideLayout}
+                  contentBlocks={currentSlide?.contentBlocks ?? []}
+                  themeKey={themeKey}
+                  themeConfig={themeConfig}
+                  showSlideNumber
+                  slideNumber={currentIndex + 1}
+                  scale={1.5}
+                  animateBlocks
+                />
+              </div>
+              {/* Scroll indicator — visible when content overflows */}
+              {hasOverflow && (
+                <div className="absolute right-1 top-2 bottom-2 w-1 z-20 pointer-events-none">
+                  <div className="relative h-full w-full rounded-full bg-white/10">
+                    <motion.div
+                      className="absolute w-full rounded-full bg-white/40"
+                      style={{ height: "20%" }}
+                      initial={false}
+                      animate={{ top: `${scrollProgress * 80}%` }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  </div>
+                </div>
+              )}
+              {/* Spotlight overlay — dims blocks based on spotlight index */}
+              {spotlightActive && (currentSlide?.contentBlocks?.length ?? 0) > 0 && (
+                <div className="absolute inset-0 z-10 pointer-events-none">
+                  {/* Semi-transparent overlay with cutout effect */}
+                  <div className="absolute inset-0 bg-black/50 transition-opacity duration-300" />
+                  {/* Spotlight indicator badge */}
+                  <div className="absolute top-2 right-2 pointer-events-auto flex items-center gap-1.5 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full ring-1 ring-amber-400/30">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    <span className="text-[10px] font-medium text-amber-300">
+                      Spotlight {spotlightIndex + 1}/{currentSlide?.contentBlocks?.length ?? 0}
+                    </span>
+                  </div>
+                  {/* Block highlight zones — positioned over the content area */}
+                  <div className="absolute inset-0 flex flex-col pointer-events-auto">
+                    {(currentSlide?.contentBlocks ?? []).map((_, idx) => (
+                      <SpotlightBlockWrapper
+                        key={idx}
+                        blockIndex={idx}
+                        spotlightIndex={spotlightIndex}
+                        isActive={spotlightActive}
+                        onClick={() => setSpotlightIndex(idx)}
+                      >
+                        <div
+                          className="flex-1 min-h-[2rem] cursor-pointer"
+                          style={{ flex: 1 }}
+                        />
+                      </SpotlightBlockWrapper>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
+        </AnimatePresence>
+
+        {/* Quick-edit overlay */}
+        <AnimatePresence>
+          {editMode && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              className="absolute inset-x-0 bottom-0 z-50 p-4"
+            >
+              <div className="mx-auto max-w-2xl rounded-2xl bg-black/80 backdrop-blur-xl ring-1 ring-white/15 p-5 shadow-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">
+                    Quick Edit &mdash; Slide {currentIndex + 1}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setEditMode(false)}
+                      className="px-3 py-1.5 text-xs rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={commitEdit}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-500 text-white hover:bg-blue-400 transition-colors"
+                    >
+                      <Check weight="bold" className="w-3.5 h-3.5" />
+                      Done
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {/* Title */}
+                  <div>
+                    <label className="block text-[10px] font-medium text-white/40 uppercase tracking-wider mb-1">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
+                      placeholder="Slide title..."
+                    />
+                  </div>
+
+                  {/* Subtitle */}
+                  <div>
+                    <label className="block text-[10px] font-medium text-white/40 uppercase tracking-wider mb-1">
+                      Subtitle
+                    </label>
+                    <input
+                      type="text"
+                      value={editSubtitle}
+                      onChange={(e) => setEditSubtitle(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50"
+                      placeholder="Slide subtitle..."
+                    />
+                  </div>
+
+                  {/* Content (first text/bullets block) */}
+                  {slides[currentIndex]?.contentBlocks.some(
+                    (b) => b.type === "text" || b.type === "bullets"
+                  ) && (
+                    <div>
+                      <label className="block text-[10px] font-medium text-white/40 uppercase tracking-wider mb-1">
+                        Content
+                      </label>
+                      <textarea
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        rows={4}
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none"
+                        placeholder="Content text (one bullet per line for bullet lists)..."
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 
@@ -439,20 +757,31 @@ export function PresenterMode({
       </AnimatePresence>
 
       {/* ------------------------------------------------------------------ */}
-      {/* Progress bar                                                       */}
+      {/* Card progress bar                                                  */}
       {/* ------------------------------------------------------------------ */}
-      <div className="h-1 bg-white/5 shrink-0">
-        <motion.div
-          className="h-full rounded-r-full"
-          style={{
-            background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
-          }}
-          initial={false}
-          animate={{
-            width: `${((currentIndex + 1) / totalSlides) * 100}%`,
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        />
+      <div className="relative shrink-0">
+        {/* Card position label */}
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-t-md bg-black/60 backdrop-blur-sm">
+          <span className="text-[10px] font-medium text-white/60 tabular-nums">
+            Card{" "}
+            <span className="text-white/90 font-semibold">{currentIndex + 1}</span>
+            {" of "}
+            <span className="text-white/90">{totalSlides}</span>
+          </span>
+        </div>
+        <div className="h-[3px] bg-white/5">
+          <motion.div
+            className="h-full rounded-r-full"
+            style={{
+              background: `linear-gradient(90deg, ${theme.primaryColor}, ${theme.accentColor})`,
+            }}
+            initial={false}
+            animate={{
+              width: `${((currentIndex + 1) / totalSlides) * 100}%`,
+            }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          />
+        </div>
       </div>
 
       {/* ------------------------------------------------------------------ */}
@@ -535,12 +864,26 @@ export function PresenterMode({
         elapsedSeconds={timer.elapsed}
         isTimerRunning={timer.running}
         showNotes={showNotes}
+        spotlightActive={spotlightActive}
+        editActive={editMode}
         onPrevious={goPrev}
         onNext={goNext}
         onToggleTimer={timer.toggle}
         onToggleNotes={() => setShowNotes((v) => !v)}
         onToggleGrid={() => setShowGrid((v) => !v)}
         onToggleFullscreen={toggleFullscreen}
+        onToggleEdit={() => {
+          if (editMode) {
+            commitEdit();
+          } else {
+            enterEditMode();
+          }
+        }}
+        onToggleSpotlight={() => {
+          setSpotlightActive((v) => !v);
+          setSpotlightIndex(0);
+        }}
+        onOpenAudienceWindow={openAudienceWindow}
         onExit={() => {
           if (document.fullscreenElement) {
             document.exitFullscreen().catch(() => {});

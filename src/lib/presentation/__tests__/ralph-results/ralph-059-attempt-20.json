@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-059",
+  "attempt": 20,
+  "timestamp": "2026-03-02T17:14:51.084Z",
+  "mermaidSyntax": "sequenceDiagram\n  participant UA as User Agent<br>(Browser)\n  participant Client as Client Application\n  participant AS as Authorization Server\n  participant RS as Resource Server\n\n  UA->>Client: Click \"Login with OAuth\"\n  Client->>UA: 302 Redirect to Authorization Server\n  UA->>AS: GET /authorize?response_type=code&client_id=xxx\n  AS->>UA: Display login/consent page\n  UA->>AS: Submit credentials & consent\n  AS->>UA: 302 Redirect with authorization code\n  UA->>Client: GET /callback?code=AUTH_CODE\n  Client->>AS: POST /token (code + client_secret)\n  AS->>Client: 200 OK {access_token, refresh_token}\n  Client->>RS: GET /api/resource (Bearer token)\n  RS->>RS: Validate token\n  RS->>Client: 200 OK {resource data}\n  Client->>UA: Display resource to user\n  Note over UA,RS: Token expired flow\n  Client->>RS: GET /api/resource (expired token)\n  RS->>Client: 401 Unauthorized\n  Client->>AS: POST /token (refresh_token)\n  AS->>Client: 200 OK {new access_token}",
+  "diagramType": "sequence",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is sequence, NOT timeline despite timeline/milestone vocabulary": true,
+    "At least 4 participants: User Agent, Authorization Server, Resource Server, Client": true,
+    "Authorization redirect message (302) shown": true,
+    "Authorization code return message present": true,
+    "Token exchange request and response shown": true,
+    "Resource access with bearer token shown": true,
+    "HTTP status codes present (302, 200, or 401)": true,
+    "Messages flow chronologically top to bottom": true,
+    "At least 8 distinct messages between participants": true,
+    "Proper sequence diagram arrow notation (->>, -->>)": true
+  },
+  "overallScore": 10
+}

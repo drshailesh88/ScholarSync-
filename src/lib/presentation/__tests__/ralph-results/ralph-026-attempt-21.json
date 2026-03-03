@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-026",
+  "attempt": 21,
+  "timestamp": "2026-03-02T17:14:08.727Z",
+  "mermaidSyntax": "gantt\n  title NIH R01 Grant Project Timeline\n  dateFormat YYYY-MM-DD\n\n  section Year 1 - Foundation\n    IRB Protocol Development :crit, irb, 2024-01-01, 90d\n    Site Recruitment :site, after irb, 60d\n    Staff Training :train, after site, 30d\n    Pilot Study :crit, pilot, after train, 120d\n    Pilot Data Analysis :pdata, after pilot, 45d\n\n  section Year 2 - Main Study\n    Participant Enrollment :crit, enroll, 2025-01-01, 180d\n    Baseline Assessments :base, 2025-02-01, 150d\n    Intervention Delivery :crit, interv, after base, 240d\n    6-Month Follow-Up :fu6, after interv, 90d\n    12-Month Follow-Up :fu12, after fu6, 90d\n\n  section Year 3 - Analysis & Dissemination\n    Data Cleaning :clean, 2026-01-01, 60d\n    Statistical Analysis :crit, stats, after clean, 90d\n    Manuscript Preparation :ms, after stats, 120d\n    Conference Presentations :conf, after ms, 60d\n    Final Report :crit, final, after conf, 45d\n\n  section Cross-cutting\n    DSMB Review Q1 :milestone, 2024-04-01, 0d\n    DSMB Review Q2 :milestone, 2024-07-01, 0d\n    DSMB Review Q3 :milestone, 2024-10-01, 0d\n    Annual Progress Report :milestone, 2024-12-31, 0d",
+  "diagramType": "gantt",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Gantt chart with dateFormat declared": true,
+    "At least 3 sections (Year 1, Year 2, Year 3)": true,
+    "At least 15 task entries": true,
+    "Task dependencies shown (after keywords)": true,
+    "Critical path tasks marked (crit tag)": true,
+    "Date range spanning 2024-2026": true,
+    "No truncated task names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

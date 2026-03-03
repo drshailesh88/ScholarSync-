@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-068",
+  "attempt": 7,
+  "timestamp": "2026-03-02T17:14:28.976Z",
+  "mermaidSyntax": "classDiagram\n  class SequenceData {\n    <<abstract>>\n    +String sampleId\n    +int readCount\n    +float qualityScore\n    +validate()\n    +getStats()\n  }\n  class FastQReader {\n    +String filePath\n    +String format\n    +readFastQ()\n    +trimAdapters()\n  }\n  class BamProcessor {\n    +String referenceGenome\n    +int mappingQuality\n    +align()\n    +sort()\n    +markDuplicates()\n    +indexBam()\n  }\n  class VariantCaller {\n    +String callerType\n    +int minDepth\n    +float minQuality\n    +callSNPs()\n    +callIndels()\n    +filterVariants()\n    +annotateVCF()\n  }\n  class QualityControl {\n    +Map thresholds\n    +List metrics\n    +runFastQC()\n    +checkCoverage()\n    +generateReport()\n  }\n  class Annotator {\n    +List databases\n    +String version\n    +annotateGenes()\n    +predictEffect()\n    +queryGnomAD()\n    +checkClinVar()\n  }\n  class ReportGenerator {\n    +String template\n    +String format\n    +generatePDF()\n    +generateHTML()\n    +addPlots()\n    +exportCSV()\n  }\n  class PipelineConfig {\n    +List steps\n    +int parallelism\n    +String memory\n    +loadConfig()\n    +validate()\n    +serialize()\n  }\n  class SampleManifest {\n    +List samples\n    +Map metadata\n    +parseSampleSheet()\n    +validateBarcodes()\n    +assignLanes()\n  }\n  class ResultsDatabase {\n    +String connection\n    +String schema\n    +store()\n    +query()\n    +exportResults()\n    +archiveOldRuns()\n  }\n  SequenceData <|-- FastQReader\n  SequenceData <|-- BamProcessor\n  FastQReader --> QualityControl : uses\n  BamProcessor --> VariantCaller : feeds\n  VariantCaller --> Annotator : annotates\n  Annotator --> ReportGenerator : generates\n  QualityControl --> ReportGenerator : reports\n  PipelineConfig --> FastQReader : configures\n  PipelineConfig --> BamProcessor : configures\n  SampleManifest --> FastQReader : provides samples\n  ResultsDatabase --> ReportGenerator : stores\n  ResultsDatabase --> VariantCaller : archives",
+  "diagramType": "classDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is classDiagram": true,
+    "Abstract SequenceData class with validate and getStats methods": true,
+    "FastQReader extends SequenceData (inheritance arrow)": true,
+    "BamProcessor extends SequenceData with align and markDuplicates methods": true,
+    "VariantCaller class with callSNPs and filterVariants methods": true,
+    "QualityControl class with runFastQC and generateReport": true,
+    "Annotator class with queryGnomAD and checkClinVar methods": true,
+    "ReportGenerator class with generatePDF and exportCSV": true,
+    "At least 10 distinct classes with attributes and methods": true,
+    "Inheritance and dependency relationships shown between classes": true
+  },
+  "overallScore": 10
+}

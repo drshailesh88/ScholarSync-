@@ -1,0 +1,22 @@
+{
+  "id": "ralph-034",
+  "name": "Multi-Actor Lab Protocol with Lifelines and Parallel Processing",
+  "category": "sequence_advanced",
+  "difficulty": "hard",
+  "input": "Create a sequence diagram for a multi-site biobanking protocol. Actors: Clinician, Biobank Coordinator, Sample Processing Lab, Quality Control, LIMS Database. Flow: Clinician collects sample and sends to Biobank Coordinator. Coordinator logs receipt in LIMS Database. Coordinator sends sample to Sample Processing Lab. Sample Processing Lab activates and processes in parallel: aliquoting, DNA extraction, and plasma separation. After processing, Lab deactivates and sends results to Quality Control. QC runs integrity checks. If QC passes, QC updates LIMS Database with sample status and notifies Coordinator of availability. If QC fails, QC sends sample back to Processing Lab for reprocessing (loop up to 3 times). After all processing, Coordinator notifies Clinician of sample availability. Include activate/deactivate on Processing Lab and QC lifelines.",
+  "expectedDiagramType": "sequence",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "Sequence diagram type declared",
+    "All 5 participants declared (Clinician, Coordinator, Lab, QC, LIMS)",
+    "Activate/deactivate used on at least one participant",
+    "Parallel block (par) for simultaneous sample processing",
+    "At least 3 parallel processing steps mentioned (aliquoting, DNA extraction, plasma)",
+    "Alt or opt block for QC pass/fail branching",
+    "Loop construct for reprocessing (up to 3 times)",
+    "LIMS Database interactions present (log and update)",
+    "At least 10 messages between participants",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Sequence diagram with 5 actors, activate/deactivate lifelines, par block for 3 parallel processes, alt for QC, loop for reprocessing."
+}

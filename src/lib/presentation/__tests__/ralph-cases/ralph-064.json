@@ -1,0 +1,20 @@
+{
+  "id": "ralph-064",
+  "name": "Precision Data — Pie Chart with Exact Decimal Percentages",
+  "input": "Create a pie chart of our NIH R01 grant budget allocation. The exact figures are: Personnel 42.3%, Equipment 18.7%, Reagents & Supplies 14.2%, Animal Costs 8.9%, Travel 3.1%, Publication Fees 2.8%, Indirect Costs (F&A) 10.0%. These must sum to exactly 100.0%. Do not round or approximate any values.",
+  "expectedDiagramType": "pie",
+  "difficulty": "hard",
+  "expectedNodeCount": 7,
+  "qualityCriteria": [
+    "Diagram type is pie chart",
+    "Personnel slice shows exactly 42.3",
+    "Equipment slice shows exactly 18.7",
+    "Reagents & Supplies slice present at 14.2",
+    "Animal Costs slice shows exactly 8.9",
+    "Travel slice shows exactly 3.1",
+    "Publication Fees slice shows exactly 2.8",
+    "Indirect Costs or F&A slice shows exactly 10.0",
+    "All 7 categories present as slices",
+    "Values sum to 100.0 when added"
+  ]
+}

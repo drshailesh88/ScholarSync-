@@ -1,0 +1,20 @@
+{
+  "id": "ralph-028",
+  "name": "Manuscript Lifecycle State Diagram",
+  "category": "cross_type_conversion",
+  "difficulty": "medium",
+  "input": "Create a state diagram showing the lifecycle of a scientific manuscript. States: Draft, Internal Review, Submitted, Under Review, Revision Requested, Revised, Accepted, In Production, Published, Rejected. Transitions: Draft -> Internal Review (submit for co-author review). Internal Review -> Draft (revisions needed) or Internal Review -> Submitted (approved). Submitted -> Under Review (editor assigns reviewers). Under Review -> Revision Requested (reviewers request changes) or Under Review -> Accepted (accepted as-is) or Under Review -> Rejected (rejected). Revision Requested -> Revised (author revises). Revised -> Under Review (re-review). Accepted -> In Production (copyediting). In Production -> Published (final). Rejected -> Draft (rewrite for another journal). Use stateDiagram-v2 syntax.",
+  "expectedDiagramType": "stateDiagram",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "State diagram type declared (stateDiagram-v2)",
+    "All 10 states present (Draft, Internal Review, Submitted, Under Review, Revision Requested, Revised, Accepted, In Production, Published, Rejected)",
+    "Bidirectional transitions shown (Draft <-> Internal Review)",
+    "Rejection path to Draft present",
+    "Revision cycle loop (Under Review -> Revision Requested -> Revised -> Under Review)",
+    "Terminal state Published reached from In Production",
+    "No truncated labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "State diagram with 10 states, revision cycle loop, rejection path, full manuscript lifecycle."
+}

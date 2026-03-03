@@ -1,0 +1,24 @@
+{
+  "testId": "ralph-054",
+  "attempt": 23,
+  "timestamp": "2026-03-02T17:14:36.125Z",
+  "mermaidSyntax": "stateDiagram-v2\n  [*] --> PatientAdmitted\n  PatientAdmitted --> ICUMonitoring\n  state ICUMonitoring {\n    state fork_monitor <<fork>>\n    [*] --> fork_monitor\n    state CardiacMonitoring {\n      [*] --> NormalSinusRhythm\n      NormalSinusRhythm --> Tachycardia\n      NormalSinusRhythm --> Bradycardia\n      Tachycardia --> ArrhythmiaDetected\n      Bradycardia --> ArrhythmiaDetected\n      ArrhythmiaDetected --> CodeBlue\n      ArrhythmiaDetected --> NormalSinusRhythm : Treatment effective\n    }\n    state RespiratoryMonitoring {\n      [*] --> SpontaneousBreathing\n      SpontaneousBreathing --> VentilatorAssisted\n      VentilatorAssisted --> WeaningTrial\n      WeaningTrial --> ExtubationReady\n      WeaningTrial --> VentilatorAssisted : Weaning failed\n    }\n    state NeurologicalMonitoring {\n      [*] --> AlertOriented\n      AlertOriented --> Sedated\n      Sedated --> DecreasedConsciousness\n      DecreasedConsciousness --> Unresponsive\n      Sedated --> AlertOriented : Sedation lifted\n    }\n    fork_monitor --> CardiacMonitoring\n    fork_monitor --> RespiratoryMonitoring\n    fork_monitor --> NeurologicalMonitoring\n    state join_discharge <<join>>\n    CardiacMonitoring --> join_discharge\n    RespiratoryMonitoring --> join_discharge\n    NeurologicalMonitoring --> join_discharge\n    join_discharge --> [*]\n  }\n  ICUMonitoring --> StableForTransfer : Discharge criteria met\n  StableForTransfer --> TransferredToFloor\n  TransferredToFloor --> [*]\n  ICUMonitoring --> EmergencyIntervention : Critical state detected\n  EmergencyIntervention --> ICUMonitoring : Stabilized",
+  "diagramType": "stateDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "stateDiagram-v2 type declared": true,
+    "Patient Admitted as initial state": true,
+    "Cardiac monitoring region with at least 3 cardiac states": true,
+    "Respiratory monitoring region with ventilator and weaning states": true,
+    "Neurological monitoring region with consciousness levels": true,
+    "Fork notation for parallel region entry": true,
+    "Join notation for discharge criteria convergence": true,
+    "Emergency Intervention state present": true,
+    "Terminal state (Transferred to Floor or similar)": true,
+    "At least 14 distinct states": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ralph-068",
+  "category": "large_scale_density",
+  "name": "Large Scale — 25+ Node Bioinformatics Pipeline Class Diagram",
+  "input": "Create a class diagram for a next-generation sequencing analysis pipeline. Classes: abstract class SequenceData (attributes: sampleId, readCount, qualityScore; methods: validate(), getStats()). FastQReader extends SequenceData (filePath, format; readFastQ(), trimAdapters()). BamProcessor extends SequenceData (referenceGenome, mappingQuality; align(), sort(), markDuplicates(), indexBam()). VariantCaller (callerType enum, minDepth int, minQuality float; callSNPs(), callIndels(), filterVariants(), annotateVCF()). QualityControl (thresholds Map, metrics List; runFastQC(), checkCoverage(), generateReport()). Annotator (databases List, version string; annotateGenes(), predictEffect(), queryGnomAD(), checkClinVar()). ReportGenerator (template string, format enum; generatePDF(), generateHTML(), addPlots(), exportCSV()). PipelineConfig (steps List, parallelism int, memory string; loadConfig(), validate(), serialize()). SampleManifest (samples List, metadata Map; parseSampleSheet(), validateBarcodes(), assignLanes()). ResultsDatabase (connection string, schema string; store(), query(), exportResults(), archiveOldRuns()). Show inheritance, composition, and dependency relationships between all classes.",
+  "expectedDiagramType": "classDiagram",
+  "difficulty": "hard",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "Diagram type is classDiagram",
+    "Abstract SequenceData class with validate and getStats methods",
+    "FastQReader extends SequenceData (inheritance arrow)",
+    "BamProcessor extends SequenceData with align and markDuplicates methods",
+    "VariantCaller class with callSNPs and filterVariants methods",
+    "QualityControl class with runFastQC and generateReport",
+    "Annotator class with queryGnomAD and checkClinVar methods",
+    "ReportGenerator class with generatePDF and exportCSV",
+    "At least 10 distinct classes with attributes and methods",
+    "Inheritance and dependency relationships shown between classes"
+  ]
+}

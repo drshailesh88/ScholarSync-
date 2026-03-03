@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-009",
+  "attempt": 2,
+  "timestamp": "2026-03-02T11:34:08.726Z",
+  "mermaidSyntax": "stateDiagram-v2\n    [*] --> Draft\n    \n    Draft --> InternalReview: submit for co-author review\n    InternalReview --> Draft: revisions needed\n    InternalReview --> Submitted: approved by all\n    \n    Submitted --> UnderReview: editor assigns reviewers\n    \n    UnderReview --> RevisionsRequested: minor/major revisions\n    UnderReview --> Accepted: no revisions needed\n    UnderReview --> Rejected\n    \n    RevisionsRequested --> Resubmitted: submit revised version\n    Resubmitted --> UnderReview: re-review\n    \n    Accepted --> InProduction: copyediting/typesetting\n    InProduction --> Published\n    Published --> [*]\n    \n    Draft --> Withdrawn\n    InternalReview --> Withdrawn\n    Submitted --> Withdrawn\n    UnderReview --> Withdrawn\n    RevisionsRequested --> Withdrawn\n    Resubmitted --> Withdrawn\n    Accepted --> Withdrawn\n    InProduction --> Withdrawn\n    Rejected --> Withdrawn\n    Withdrawn --> [*]\n    \n    note right of Withdrawn: Can transition from any state except Published",
+  "diagramType": "stateDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 11 states present": true,
+    "Bidirectional transitions shown (Draft <-> Internal Review)": true,
+    "Multiple outgoing transitions from Under Review (Revisions, Accepted, Rejected)": true,
+    "Resubmission loop visible (Revisions -> Resubmitted -> Under Review)": true,
+    "Terminal states clear (Published, Rejected, Withdrawn)": true,
+    "No truncated state names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

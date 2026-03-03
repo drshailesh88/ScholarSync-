@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-004",
+  "attempt": 2,
+  "timestamp": "2026-03-02T10:48:47.566Z",
+  "mermaidSyntax": "sequenceDiagram\n  participant A as Author\n  participant E as Editor\n  participant R1 as Reviewer 1\n  participant R2 as Reviewer 2\n  participant P as Production\n\n  A->>E: Submit Manuscript\n  E->>E: Desk Review\n\n  alt Desk Reject\n    E-->>A: Reject\n  else Send to Peer Review\n    par Parallel Review Assignment\n      E->>R1: Assign Manuscript\n      E->>R2: Assign Manuscript\n    end\n    R1-->>E: Review Report (2-4 weeks)\n    R2-->>E: Review Report (2-4 weeks)\n\n    alt Accept\n      E-->>A: Accept Decision\n    else Minor Revisions\n      E-->>A: Minor Revisions Required\n      A->>E: Resubmit Revised Manuscript\n      Note over A,E: Review cycle repeats\n    else Major Revisions\n      E-->>A: Major Revisions Required\n      A->>E: Resubmit Revised Manuscript\n      Note over A,E: Review cycle repeats\n    else Reject\n      E-->>A: Reject Decision\n    end\n  end\n\n  Note over E,P: Post-Acceptance Production\n  E->>P: Final Manuscript\n  P->>P: Copyediting & Typesetting\n  P->>A: Send Proofs\n  A->>P: Approve Proofs\n  P->>P: Publish Article",
+  "diagramType": "sequence",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 5 participants present: Author, Editor, Reviewer 1, Reviewer 2, Production": true,
+    "Parallel reviewer assignments shown (par block or concurrent arrows)": true,
+    "Decision point with multiple outcomes visible (accept/revise/reject)": true,
+    "Revision loop is represented (resubmit cycle)": true,
+    "Temporal annotations present (2-4 weeks)": true,
+    "Post-acceptance production steps shown": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

@@ -1,0 +1,26 @@
+{
+  "testId": "ralph-017",
+  "attempt": 1,
+  "timestamp": "2026-03-02T12:57:10.728Z",
+  "mermaidSyntax": "classDiagram\n    class EthicalPrinciple {\n        +String name\n        +String description\n        +evaluate()\n        +report_violation()\n    }\n    \n    class Beneficence {\n        +Float risk_benefit_ratio\n        +assess_harm()\n        +assess_benefit()\n    }\n    \n    class NonMaleficence {\n        +Float harm_threshold\n        +identify_risks()\n    }\n    \n    class Autonomy {\n        +String consent_type\n        +verify_informed_consent()\n        +assess_capacity()\n    }\n    \n    class Justice {\n        +List selection_criteria\n        +evaluate_fair_selection()\n        +assess_burden_distribution()\n    }\n    \n    class IRBReview {\n        +String protocol_id\n        +String review_type\n        +List committee_members\n        +full_board_review()\n        +expedited_review()\n        +exempt_determination()\n    }\n    \n    Beneficence --|> EthicalPrinciple\n    NonMaleficence --|> EthicalPrinciple\n    Autonomy --|> EthicalPrinciple\n    Justice --|> EthicalPrinciple\n    \n    IRBReview ..> Beneficence : uses\n    IRBReview ..> NonMaleficence : uses\n    IRBReview ..> Autonomy : uses\n    IRBReview ..> Justice : uses",
+  "diagramType": "classDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [
+    {
+      "type": "missing-data",
+      "description": "Expected inheritance arrows, found 0",
+      "severity": "major",
+      "suggestedFix": "Use <|-- notation for inheritance in Mermaid classDiagram"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "All 6 classes present (EthicalPrinciple, Beneficence, NonMaleficence, Autonomy, Justice, IRBReview)": true,
+    "Inheritance relationships shown (4 subclasses extend EthicalPrinciple)": false,
+    "IRBReview association with subclasses shown": true,
+    "Attributes and methods present in each class": true,
+    "No truncated class names (NonMaleficence fully spelled)": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 7
+}

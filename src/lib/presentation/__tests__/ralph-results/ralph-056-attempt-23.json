@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-056",
+  "attempt": 23,
+  "timestamp": "2026-03-02T17:14:44.142Z",
+  "mermaidSyntax": "flowchart TD\n  A[Health screening] --> B[PPE donning sequence<br>N95 respirator fit check<br>Tyvek suit, double gloves<br>shoe covers, face shield]\n  B --> C[Decontamination shower]\n  C --> D[Airlock entry<br>Negative pressure verification]\n  D --> E[Work procedures]\n  E --> F{Pathogen handling<br>Centrifuge protocols<br>Sharps disposal}\n  F --> G{Spill occurs?}\n  G -->|Small spill| H[Small spill response<br>Local decontamination]\n  G -->|Large spill| I[Large spill response<br>Evacuate, HazMat team]\n  G -->|No spill| J[Waste autoclave cycle]\n  H --> J\n  I --> J\n  E --> K{Emergency?}\n  K -->|Exposure incident| L[Exposure protocol<br>Immediate decontamination]\n  K -->|Fire| M[Fire evacuation protocol]\n  K -->|Power/Ventilation failure| N[Emergency shutdown procedure]\n  J --> O[Exit: PPE doffing sequence]\n  O --> P[Hand washing + shower]\n  P --> Q[Health log entry]\n  Q --> R[Annual recertification check]",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Flowchart type declared with TD direction": true,
+    "Entry procedure node or section present": true,
+    "PPE or donning mentioned in the diagram": true,
+    "Work procedures section with pathogen handling": true,
+    "Emergency procedures branch present": true,
+    "Exit procedure or doffing step present": true,
+    "Spill response included (small or large spill)": true,
+    "More than 5 nodes despite the contradictory 5-node limit request": true,
+    "Diagram is organized and readable despite comprehensive content": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

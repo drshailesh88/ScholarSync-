@@ -1,0 +1,20 @@
+{
+  "testId": "ralph-015",
+  "attempt": 2,
+  "timestamp": "2026-03-02T12:40:08.151Z",
+  "mermaidSyntax": "graph TD\n  A[Sample Preparation<br/>──────────<br/>• Cell Lysis: RIPA Buffer<br/>• BCA Protein Assay<br/>• Reduction: DTT<br/>• Alkylation: IAA] --> QC1{{QC Checkpoint<br/>Protein Yield & Quality}}\n  QC1 --> B[Enzymatic Digestion<br/>──────────<br/>• Trypsin/Lys-C<br/>• 37°C Overnight<br/>• C18 Cleanup]\n  B --> QC2{{QC Checkpoint<br/>Peptide Quantification}}\n  QC2 --> C[TMT Labeling<br/>──────────<br/>• TMT-10plex<br/>• Label Check: LC-MS/MS]\n  C --> QC3{{QC Checkpoint<br/>Labeling Efficiency >95%}}\n  QC3 --> D[Fractionation<br/>──────────<br/>• High-pH RP Chromatography<br/>• 12 Fractions]\n  D --> QC4{{QC Checkpoint<br/>Fraction Quality}}\n  QC4 --> E[LC-MS/MS Analysis<br/>──────────<br/>• Orbitrap Exploris 480<br/>• 120min Gradient<br/>• DDA Top20]\n  E --> QC5{{QC Checkpoint<br/>MS Quality Metrics}}\n  QC5 --> F[Data Analysis<br/>──────────<br/>• MaxQuant/Proteome Discoverer<br/>• FDR < 1%<br/>• log₂ FC > 1.5<br/>• adj. p < 0.05]\n  F --> QC6{{QC Checkpoint<br/>Statistical Validation}}\n  QC6 --> G[Validation<br/>──────────<br/>• Western Blot: Top 5<br/>• PRM Targeted Assay]\n  style A fill:#3b82f6,stroke:#1e40af,color:#fff\n  style B fill:#3b82f6,stroke:#1e40af,color:#fff\n  style C fill:#8b5cf6,stroke:#6d28d9,color:#fff\n  style D fill:#3b82f6,stroke:#1e40af,color:#fff\n  style E fill:#3b82f6,stroke:#1e40af,color:#fff\n  style F fill:#3b82f6,stroke:#1e40af,color:#fff\n  style G fill:#10b981,stroke:#047857,color:#fff\n  style QC1 fill:#fbbf24,stroke:#d97706,color:#000\n  style QC2 fill:#fbbf24,stroke:#d97706,color:#000\n  style QC3 fill:#fbbf24,stroke:#d97706,color:#000\n  style QC4 fill:#fbbf24,stroke:#d97706,color:#000\n  style QC5 fill:#fbbf24,stroke:#d97706,color:#000\n  style QC6 fill:#fbbf24,stroke:#d97706,color:#000",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 7 major steps present (Sample prep, Digestion, TMT labeling, Fractionation, LC-MS/MS, Data analysis, Validation)": true,
+    "Technical abbreviations preserved (TMT, LC-MS/MS, DTT, IAA, BCA, DDA, FDR, PRM)": true,
+    "Quality control checkpoints shown between major steps": true,
+    "Sequential workflow is clear (top-down or left-right)": true,
+    "No truncated technical terms (Orbitrap Exploris 480 fully spelled)": true,
+    "Chemical/temperature annotations present (37°C, RIPA buffer)": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

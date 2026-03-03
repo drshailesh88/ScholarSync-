@@ -1,0 +1,19 @@
+{
+  "testId": "ralph-001",
+  "attempt": 12,
+  "timestamp": "2026-03-02T10:42:32.164Z",
+  "mermaidSyntax": "graph TD\n  A[Literature Review] --> B[Hypothesis Formation]\n  B --> C[Study Design]\n  C --> D[Data Collection]\n  C --> E[Ethical Approval]\n  D --> F[Data Analysis]\n  E --> F\n  F --> G[Results Interpretation]\n  G --> H[Publication]\n\n  classDef phase1 fill:#3b82f6,stroke:#1e40af,color:#fff\n  classDef phase2 fill:#10b981,stroke:#047857,color:#fff\n  classDef phase3 fill:#8b5cf6,stroke:#6d28d9,color:#fff\n  classDef phase4 fill:#f59e0b,stroke:#d97706,color:#fff\n\n  class A,B phase1\n  class C,D,E phase2\n  class F,G phase3\n  class H phase4",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 7 nodes are present and labeled correctly": true,
+    "Flow direction is top-down (TD) or left-right (LR)": true,
+    "Branch from Study Design shows parallel paths": true,
+    "Convergence at Data Analysis is clear": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

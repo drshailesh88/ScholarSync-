@@ -1,0 +1,22 @@
+{
+  "id": "ralph-047",
+  "name": "Hypertension Treatment Escalation with Loop-Back and Dosage Guards",
+  "category": "flowchart_decision_logic",
+  "difficulty": "hard",
+  "input": "Create a flowchart for hypertension treatment escalation. Start: Diagnose hypertension (BP >= 140/90 on 3 occasions). Step 1: Start ACE inhibitor (Lisinopril 10mg). Wait 4 weeks. Decision: BP at goal (<130/80)? If Yes -> Continue current therapy, annual follow-up. If No -> Increase ACE inhibitor to max dose (40mg). Wait 4 weeks. Decision: BP at goal? If Yes -> Continue, annual follow-up. If No -> Add thiazide diuretic (HCTZ 25mg). Wait 4 weeks. Decision: BP at goal? If Yes -> Continue dual therapy. If No -> Decision: Side effects present? If Yes -> Switch to ARB (Losartan). If No -> Add calcium channel blocker (Amlodipine 5mg) for triple therapy. Final check: If still not at goal after triple therapy -> Refer to hypertension specialist. Show the escalation steps clearly with loop-back decisions at each stage.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 15,
+  "qualityCriteria": [
+    "Flowchart type declared with TD direction",
+    "Hypertension diagnosis as starting node",
+    "ACE inhibitor as first-line treatment",
+    "At least 3 BP goal decision diamonds",
+    "Dose escalation step present (10mg to 40mg)",
+    "Addition of second drug (thiazide/diuretic)",
+    "Side effects decision branch",
+    "Specialist referral as final escalation",
+    "At least 12 distinct nodes",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart TD with 15+ nodes, stepwise treatment escalation, 3+ decision diamonds, side effect branching, specialist referral."
+}

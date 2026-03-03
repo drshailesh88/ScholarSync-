@@ -1,0 +1,20 @@
+{
+  "id": "ralph-004",
+  "name": "Peer Review Sequence Diagram",
+  "category": "academic_essentials",
+  "difficulty": "medium",
+  "input": "Create a sequence diagram showing the peer review process for a journal submission. Author submits manuscript to Editor. Editor performs desk review (reject or send to reviewers). Editor assigns Reviewer 1 and Reviewer 2 in parallel. Both Reviewers send reports back to Editor (2-4 weeks). Editor makes decision: Accept, Minor Revisions, Major Revisions, or Reject. If revisions needed, Author resubmits and the review cycle repeats. After acceptance, manuscript goes to Production for copyediting, typesetting, and proofs. Author approves proofs. Production publishes the article.",
+  "expectedDiagramType": "sequence",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "All 5 participants present: Author, Editor, Reviewer 1, Reviewer 2, Production",
+    "Parallel reviewer assignments shown (par block or concurrent arrows)",
+    "Decision point with multiple outcomes visible (accept/revise/reject)",
+    "Revision loop is represented (resubmit cycle)",
+    "Temporal annotations present (2-4 weeks)",
+    "Post-acceptance production steps shown",
+    "No truncated labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Clean sequence diagram with 5 swimlanes, parallel review block, alt/opt blocks for decision branching, loop for revision cycle, clear temporal annotations."
+}

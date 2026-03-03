@@ -1,0 +1,28 @@
+{
+  "testId": "ralph-067",
+  "attempt": 2,
+  "timestamp": "2026-03-02T17:11:23.976Z",
+  "syntaxValid": false,
+  "renderSuccess": false,
+  "failures": [
+    {
+      "type": "bad-syntax",
+      "description": "No Mermaid syntax generated",
+      "severity": "critical",
+      "suggestedFix": "Check AI prompt and generation pipeline"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Diagram type is flowchart with at least 30 nodes": false,
+    "5 subgraphs present (Design, Cell Culture, Transfection, Selection, Validation)": false,
+    "gRNA design and off-target analysis nodes in Design subgraph": false,
+    "HEK293T cell culture nodes with passage and seeding details": false,
+    "Lipofectamine transfection and GFP check nodes present": false,
+    "Puromycin selection at 2μg/mL node present": false,
+    "T7 endonuclease assay with decision diamond": false,
+    "Western blot with knockout confirmed decision diamond": false,
+    "RT-qPCR and functional assay validation nodes": false,
+    "At least 30 distinct nodes rendered without syntax errors": false
+  },
+  "overallScore": 0
+}

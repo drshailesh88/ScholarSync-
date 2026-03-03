@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-021",
+  "attempt": 17,
+  "timestamp": "2026-03-02T17:11:14.964Z",
+  "mermaidSyntax": "graph TD\n  subgraph UMC[\"University Medical Center\"]\n    subgraph RD[\"Research Division\"]\n      subgraph BSL[\"Basic Science Labs\"]\n        GL[Genomics Lab]\n        PL[Proteomics Lab]\n        BC[Bioinformatics Core]\n      end\n      subgraph TR[\"Translational Research\"]\n        P1[Phase I Unit]\n        BB[Biobank]\n        AF[Animal Facility]\n      end\n    end\n    subgraph CD[\"Clinical Division\"]\n      subgraph OT[\"Oncology Trials\"]\n        ST[Solid Tumors]\n        HM[Hematology]\n        IT[Immunotherapy]\n      end\n      subgraph CT[\"Cardiology Trials\"]\n        HF[Heart Failure]\n        AR[Arrhythmia]\n      end\n      subgraph NT[\"Neurology Trials\"]\n        AD[\"Alzheimer's\"]\n        PD[\"Parkinson's\"]\n        SK[Stroke]\n      end\n    end\n  end\n\n  GL --> P1 --> ST\n  BB --> ST & HM & IT\n  BC -.-> GL & PL\n  BC -.-> OT & CT & NT",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "At least 3 levels of subgraph nesting visible": true,
+    "All top-level divisions present (Research Division, Clinical Division)": true,
+    "Lab nodes present (Genomics Lab, Proteomics Lab, Bioinformatics Core)": true,
+    "Trial program nodes present (Solid Tumors, Hematology, Immunotherapy, Heart Failure)": true,
+    "Cross-division data flow arrows shown (Genomics->Phase I->Solid Tumors)": true,
+    "Biobank connections to multiple trial programs": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

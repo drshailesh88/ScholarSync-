@@ -1,0 +1,20 @@
+{
+  "id": "ralph-003",
+  "name": "Clinical Trial Timeline",
+  "category": "foundation",
+  "difficulty": "medium",
+  "input": "Create a timeline diagram for a Phase III clinical trial: Screening Period (Weeks -4 to 0) involves informed consent, eligibility assessment, and baseline measurements. Randomization occurs at Week 0, splitting into Treatment Arm (Drug X 10mg daily) and Control Arm (Placebo). Treatment Period spans Weeks 0-52 with follow-up visits at Weeks 4, 12, 26, and 52. Primary endpoint assessment at Week 52. Extension Period (Weeks 52-104) is optional open-label. Safety follow-up at Week 56.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "Chronological sequence is clear (left-to-right or top-to-bottom)",
+    "Week numbers are visible at each stage",
+    "Randomization branch point shows two arms clearly",
+    "Follow-up visit timepoints are marked",
+    "Treatment vs Control arms are distinguishable",
+    "Extension period shown as optional/different styling",
+    "No overlapping text or labels",
+    "Valid Mermaid syntax"
+  ],
+  "napkinBenchmark": "Horizontal timeline with colored segments for each period, branch point at randomization shown as a fork, visit markers along the timeline, clean typography with week numbers."
+}

@@ -1,0 +1,28 @@
+{
+  "testId": "ralph-002",
+  "attempt": 4,
+  "timestamp": "2026-03-02T09:56:14.322Z",
+  "mermaidSyntax": "graph TD\n    subgraph Identification[\"Identification of studies via databases\"]\n        A[PubMed<br/>n = 2,847]\n        B[Embase<br/>n = 1,923]\n        C[Cochrane<br/>n = 456]\n    end\n    \n    A --> D[Records identified<br/>n = 5,226]\n    B --> D\n    C --> D\n    \n    D --> E[Duplicates removed<br/>n = 1,156]\n    E --> F[Records screened<br/>n = 4,070]\n    \n    subgraph Screening[\"Screening\"]\n        F --> G{Title/Abstract<br/>Screening}\n        G -->|Excluded| H[Records excluded<br/>n = 3,891]\n        G -->|Included| I[Full-text articles<br/>assessed for eligibility<br/>n = 179]\n    end\n    \n    subgraph Eligibility[\"Eligibility Assessment\"]\n        I --> J{Full-text<br/>Assessment}\n        J -->|Excluded| K[Full-text articles excluded<br/>n = 142<br/>• Wrong outcome: 67<br/>• Wrong population: 38<br/>• Wrong intervention: 22<br/>• Conference abstracts only: 15]\n        J -->|Included| L[Studies included in<br/>qualitative synthesis<br/>n = 37]\n    end\n    \n    subgraph Included[\"Final Inclusion\"]\n        L --> M[Studies included in<br/>meta-analysis<br/>n = 28]\n    end\n    \n    style D fill:#e1f5fe,stroke:#0277bd,color:#000\n    style F fill:#fff3e0,stroke:#f57c00,color:#000\n    style I fill:#f3e5f5,stroke:#7b1fa2,color:#000\n    style L fill:#e8f5e8,stroke:#388e3c,color:#000\n    style M fill:#c8e6c9,stroke:#2e7d32,color:#000\n    style G fill:#ffecb3,stroke:#ffa000,color:#000\n    style J fill:#ffecb3,stroke:#ffa000,color:#000",
+  "diagramType": "flowchart",
+  "syntaxValid": false,
+  "renderSuccess": false,
+  "failures": [
+    {
+      "type": "bad-syntax",
+      "description": "Syntax errors: Contains smart quotes (curly quotes) — Mermaid requires straight quotes",
+      "severity": "critical",
+      "suggestedFix": "Fix Mermaid syntax — check bracket matching and type declarations"
+    }
+  ],
+  "qualityCriteriaResults": {
+    "Four clear phases: Identification, Screening, Eligibility, Included": true,
+    "All numeric values present and correct": true,
+    "Exclusion reasons shown as side branches with counts": true,
+    "Database sources listed separately": true,
+    "Duplicate removal step clearly shown": true,
+    "Color coding distinguishes phases (blue, yellow, orange, green)": true,
+    "Long text like 'SGLT2 inhibitors' not truncated": true,
+    "Valid Mermaid syntax": false
+  },
+  "overallScore": 6
+}

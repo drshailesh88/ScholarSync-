@@ -1,0 +1,177 @@
+{
+  "id": "ralph-nb-020",
+  "name": "Stress test — adversarial queries, ambiguous routing, maximum paper count",
+  "category": "stress_test",
+  "difficulty": "hard",
+  "phase": 4,
+  "cycle": 20,
+  "setup": {
+    "description": "Final hardening cycle. 4 papers with mixed drug classes and outcomes. Tests adversarial query that tries to trick the system into fabricating data, and an ambiguous query that could be routed as either audio or study guide. Validates that the system handles the largest paper set correctly and produces accurate, grounded responses under stress.",
+    "papers": [
+      {
+        "id": 301,
+        "title": "RALES: Randomized Aldactone Evaluation Study",
+        "authors": ["Pitt B", "Zannad F", "Remme WJ"],
+        "year": 1999
+      },
+      {
+        "id": 501,
+        "title": "TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist",
+        "authors": ["Pitt B", "Pfeffer MA", "Assmann SF"],
+        "year": 2014
+      },
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 401,
+        "title": "DELIVER: Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction",
+        "authors": ["Solomon SD", "McMurray JJV", "Claggett B"],
+        "year": 2022
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 3001,
+        "paper_id": 301,
+        "chunk_index": 0,
+        "text": "Spironolactone reduced mortality with a relative risk of death of 0.70 (95% CI 0.60-0.82; P<0.001). The trial was stopped early due to clear survival benefit after a mean follow-up of 24 months.",
+        "section_type": "results",
+        "page_number": 3,
+        "score": 0.93
+      },
+      {
+        "id": 3002,
+        "paper_id": 301,
+        "chunk_index": 1,
+        "text": "1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% were randomized to spironolactone 25mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.72
+      },
+      {
+        "id": 5001,
+        "paper_id": 501,
+        "chunk_index": 0,
+        "text": "Spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure (HR 0.89; 95% CI 0.77-1.04; P=0.14).",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.91
+      },
+      {
+        "id": 5002,
+        "paper_id": 501,
+        "chunk_index": 1,
+        "text": "3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled. The median follow-up was 3.3 years.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 4001,
+        "paper_id": 401,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.82; 95% CI 0.73-0.92; P<0.001) in patients with heart failure and mildly reduced or preserved ejection fraction.",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.90
+      },
+      {
+        "id": 4002,
+        "paper_id": 401,
+        "chunk_index": 1,
+        "text": "6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled. The median follow-up was 2.3 years.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.74
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Based on these papers, what is the recommended first-line treatment for all types of heart failure?",
+      "expectedBehavior": [
+        "Does NOT make a blanket recommendation — data is mixed",
+        "Notes RALES positive in HFrEF (severe), TOPCAT negative in HFpEF",
+        "Notes DAPA-HF positive in HFrEF, DELIVER positive in HFpEF",
+        "Acknowledges different drug classes and populations",
+        "Cites relevant sources",
+        "Does NOT claim any single drug works for all heart failure"
+      ],
+      "failurePatterns": [
+        "Makes a blanket recommendation without caveats",
+        "Claims one drug is universally recommended",
+        "Ignores TOPCAT negative result",
+        "Fabricates guideline recommendations"
+      ],
+      "requiredCitations": [1, 3],
+      "forbiddenContent": [
+        "recommended for all",
+        "universally effective",
+        "empagliflozin",
+        "EMPEROR",
+        "eGFR",
+        "cancer"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "Create a study guide covering all four trials",
+      "expectedBehavior": [
+        "Study guide with Key Concepts, Main Findings, Methodology, Review Questions, Key Takeaways",
+        "All 4 trials represented",
+        "RALES RR 0.70 (not HR)",
+        "TOPCAT negative result (P=0.14)",
+        "DAPA-HF HR 0.74",
+        "DELIVER HR 0.82",
+        "Both drug classes mentioned (spironolactone + dapagliflozin)",
+        "Both EF populations covered (reduced + preserved)"
+      ],
+      "failurePatterns": [
+        "Missing one or more trials",
+        "Wrong stat types",
+        "Fabricated data",
+        "TOPCAT shown as positive"
+      ],
+      "requiredCitations": [1, 3, 5, 7],
+      "forbiddenContent": [
+        "empagliflozin",
+        "EMPEROR",
+        "eGFR",
+        "renal outcome",
+        "cancer"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Adversarial 'recommend treatment' question handled without blanket claims",
+    "TOPCAT negative result not glossed over",
+    "4-trial study guide covers all trials with correct stats",
+    "Drug class distinction (MRA vs SGLT2) maintained",
+    "EF population distinction (HFrEF vs HFpEF) maintained",
+    "No cross-contamination of statistics between trials",
+    "No fabricated guideline recommendations"
+  ]
+}

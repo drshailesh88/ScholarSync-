@@ -1,0 +1,175 @@
+{
+  "id": "ralph-nb-015",
+  "name": "Timeline generation and artifact routing robustness",
+  "category": "artifacts",
+  "difficulty": "hard",
+  "phase": 3,
+  "cycle": 15,
+  "setup": {
+    "description": "Four landmark heart failure trials spanning 1999–2022. Tests timeline artifact generation from chronologically ordered evidence, single-paper artifact generation, and queries that should NOT trigger artifact routing. The timeline must respect actual publication dates, not fabricate events, and cite every claim.",
+    "papers": [
+      {
+        "id": 701,
+        "title": "RALES: Randomized Aldactone Evaluation Study",
+        "authors": ["Pitt B", "Zannad F", "Remme WJ"],
+        "year": 1999
+      },
+      {
+        "id": 801,
+        "title": "PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure",
+        "authors": ["McMurray JJV", "Packer M", "Desai AS"],
+        "year": 2014
+      },
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      },
+      {
+        "id": 301,
+        "title": "DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction",
+        "authors": ["Anker SD", "Butler J", "Filippatos G"],
+        "year": 2022
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 7001,
+        "paper_id": 701,
+        "chunk_index": 0,
+        "text": "Spironolactone reduced the risk of death from all causes by 30% (RR 0.70; 95% CI 0.60-0.82; P<0.001) among patients with severe heart failure (NYHA class III-IV) and LVEF ≤35%.",
+        "section_type": "results",
+        "page_number": 3,
+        "score": 0.90
+      },
+      {
+        "id": 7002,
+        "paper_id": 701,
+        "chunk_index": 1,
+        "text": "1663 patients with NYHA class III-IV heart failure and LVEF ≤35% were randomized to spironolactone 25mg or placebo. The trial was stopped early due to the magnitude of benefit.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      },
+      {
+        "id": 8001,
+        "paper_id": 801,
+        "chunk_index": 0,
+        "text": "Sacubitril/valsartan reduced the composite of cardiovascular death or hospitalization for heart failure by 20% compared with enalapril (HR 0.80; 95% CI 0.73-0.87; P<0.001).",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.92
+      },
+      {
+        "id": 8002,
+        "paper_id": 801,
+        "chunk_index": 1,
+        "text": "8442 patients with NYHA class II-IV heart failure and LVEF ≤40% were enrolled. The trial was stopped early for overwhelming benefit at a median follow-up of 27 months.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.91
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.72
+      },
+      {
+        "id": 3001,
+        "paper_id": 301,
+        "chunk_index": 0,
+        "text": "Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure in patients with heart failure and a preserved ejection fraction (HR 0.79; 95% CI 0.69-0.90; P<0.001).",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.88
+      },
+      {
+        "id": 3002,
+        "paper_id": 301,
+        "chunk_index": 1,
+        "text": "6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled. The median follow-up was 2.2 years. Unlike HFrEF trials, DELIVER enrolled patients with preserved ejection fraction.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Create a timeline of major heart failure trials from these papers",
+      "expectedBehavior": [
+        "Entries ordered chronologically (1999, 2014, 2019, 2022)",
+        "Each entry cites its source",
+        "RALES (1999) appears first, DELIVER (2022) appears last",
+        "Key results mentioned for each trial",
+        "No fabricated dates or events between known trials"
+      ],
+      "failurePatterns": [
+        "Trials out of chronological order",
+        "Missing any of the four trials",
+        "Fabricates events not in the sources",
+        "Entries without citations"
+      ],
+      "requiredCitations": [1, 3, 5, 7],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "COPERNICUS",
+        "MERIT-HF",
+        "2001",
+        "2005",
+        "2010"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "What was the primary result of the RALES trial?",
+      "expectedBehavior": [
+        "NOT routed as an artifact — this is a plain question",
+        "Answers with RALES RR 0.70 and P<0.001",
+        "Mentions severe heart failure (NYHA III-IV) population",
+        "Cites source correctly",
+        "Does NOT generate study guide, FAQ, or timeline structure"
+      ],
+      "failurePatterns": [
+        "Generates artifact structure for a plain question",
+        "Wrong statistic (HR instead of RR)",
+        "Fabricates data not in sources"
+      ],
+      "requiredCitations": [1],
+      "forbiddenContent": [
+        "renal outcome",
+        "kidney function",
+        "eGFR",
+        "cancer",
+        "COPERNICUS"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Timeline entries are in strict chronological order (1999 → 2014 → 2019 → 2022)",
+    "Every timeline entry has at least one citation [N]",
+    "No fabricated trials, dates, or events not in the sources",
+    "Plain question (q2) is NOT routed as an artifact",
+    "RR (not HR) used for RALES result since that's what the source says",
+    "DELIVER correctly noted as preserved EF trial",
+    "Statistics exactly match source text"
+  ]
+}

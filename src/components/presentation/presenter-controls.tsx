@@ -13,6 +13,9 @@ import {
   ArrowsOut,
   SpeakerHigh,
   Clock,
+  Flashlight,
+  PencilSimple,
+  Monitor,
 } from "@phosphor-icons/react";
 
 // ---------------------------------------------------------------------------
@@ -25,12 +28,17 @@ interface PresenterControlsProps {
   elapsedSeconds: number;
   isTimerRunning: boolean;
   showNotes: boolean;
+  spotlightActive?: boolean;
+  editActive?: boolean;
   onPrevious: () => void;
   onNext: () => void;
   onToggleTimer: () => void;
   onToggleNotes: () => void;
   onToggleGrid: () => void;
   onToggleFullscreen: () => void;
+  onToggleSpotlight?: () => void;
+  onToggleEdit?: () => void;
+  onOpenAudienceWindow?: () => void;
   onExit: () => void;
 }
 
@@ -52,6 +60,7 @@ function useAutoHide(delayMs = 3000) {
     const onMove = () => resetTimer();
     window.addEventListener("mousemove", onMove);
     window.addEventListener("touchstart", onMove);
+    window.addEventListener("keydown", onMove);
 
     // Start initial auto-hide timer
     timeoutRef.current = setTimeout(() => setVisible(false), delayMs);
@@ -59,6 +68,7 @@ function useAutoHide(delayMs = 3000) {
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("touchstart", onMove);
+      window.removeEventListener("keydown", onMove);
       clearTimeout(timeoutRef.current);
     };
   }, [resetTimer, delayMs]);
@@ -76,12 +86,17 @@ export function PresenterControls({
   elapsedSeconds,
   isTimerRunning,
   showNotes,
+  spotlightActive = false,
+  editActive = false,
   onPrevious,
   onNext,
   onToggleTimer,
   onToggleNotes,
   onToggleGrid,
   onToggleFullscreen,
+  onToggleSpotlight,
+  onToggleEdit,
+  onOpenAudienceWindow,
   onExit,
 }: PresenterControlsProps) {
   const visible = useAutoHide(3000);
@@ -170,6 +185,30 @@ export function PresenterControls({
               <SpeakerHigh weight="bold" className="w-4 h-4" />
             </ControlButton>
 
+            {/* Spotlight Toggle */}
+            {onToggleSpotlight && (
+              <ControlButton
+                onClick={onToggleSpotlight}
+                active={spotlightActive}
+                tooltip="Spotlight Mode (S)"
+                aria-label="Toggle spotlight mode"
+              >
+                <Flashlight weight="bold" className="w-4 h-4" />
+              </ControlButton>
+            )}
+
+            {/* Quick Edit Toggle */}
+            {onToggleEdit && (
+              <ControlButton
+                onClick={onToggleEdit}
+                active={editActive}
+                tooltip="Quick Edit (E)"
+                aria-label="Toggle quick edit"
+              >
+                <PencilSimple weight="bold" className="w-4 h-4" />
+              </ControlButton>
+            )}
+
             {/* Grid Toggle */}
             <ControlButton
               onClick={onToggleGrid}
@@ -178,6 +217,17 @@ export function PresenterControls({
             >
               <GridFour weight="bold" className="w-4 h-4" />
             </ControlButton>
+
+            {/* Audience Window */}
+            {onOpenAudienceWindow && (
+              <ControlButton
+                onClick={onOpenAudienceWindow}
+                tooltip="Open Audience Window (D)"
+                aria-label="Open audience window"
+              >
+                <Monitor weight="bold" className="w-4 h-4" />
+              </ControlButton>
+            )}
 
             {/* Fullscreen Toggle */}
             <ControlButton

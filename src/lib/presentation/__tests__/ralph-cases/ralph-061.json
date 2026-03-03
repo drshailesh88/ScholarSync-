@@ -1,0 +1,20 @@
+{
+  "id": "ralph-061",
+  "name": "Minimal Sparse Input — Two-Word PCR Workflow",
+  "input": "PCR workflow",
+  "expectedDiagramType": "flowchart",
+  "difficulty": "hard",
+  "expectedNodeCount": 6,
+  "qualityCriteria": [
+    "Diagram type is flowchart for a process workflow",
+    "Denaturation step present (90-98°C range)",
+    "Annealing step present (50-65°C range)",
+    "Extension step present (72°C)",
+    "Cycle loop indicated (back arrow or note about 25-35 cycles)",
+    "At least 6 distinct nodes despite minimal input",
+    "DNA template or sample preparation as starting node",
+    "Final product or analysis as ending node",
+    "Temperature or time annotations on at least 2 steps",
+    "Valid Mermaid syntax that renders without errors"
+  ]
+}

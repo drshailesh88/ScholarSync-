@@ -1,0 +1,136 @@
+{
+  "id": "ralph-nb-017",
+  "name": "Audio overview edge cases — conflicting evidence and single-paper audio",
+  "category": "audio_overview",
+  "difficulty": "hard",
+  "phase": 4,
+  "cycle": 17,
+  "setup": {
+    "description": "Uses the TOPCAT (negative) and Aldo-DHF (mixed) spironolactone trials from Cycle 14. Tests that the audio overview format handles conflicting evidence honestly — the conversational tone must NOT fabricate consensus or downplay negative results. Also tests single-query audio with a single paper to verify the generator handles 1-paper gracefully.",
+    "papers": [
+      {
+        "id": 501,
+        "title": "TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist",
+        "authors": ["Pitt B", "Pfeffer MA", "Assmann SF"],
+        "year": 2014
+      },
+      {
+        "id": 601,
+        "title": "Aldo-DHF: Effect of Spironolactone on Diastolic Function in Heart Failure with Preserved Ejection Fraction",
+        "authors": ["Edelmann F", "Wachter R", "Schmidt AG"],
+        "year": 2013
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 5001,
+        "paper_id": 501,
+        "chunk_index": 0,
+        "text": "Spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure (HR 0.89; 95% CI 0.77-1.04; P=0.14).",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.91
+      },
+      {
+        "id": 5002,
+        "paper_id": 501,
+        "chunk_index": 1,
+        "text": "3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled. The median follow-up was 3.3 years.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 5003,
+        "paper_id": 501,
+        "chunk_index": 2,
+        "text": "A post-hoc regional analysis revealed significant heterogeneity: patients in the Americas showed benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46).",
+        "section_type": "results",
+        "page_number": 7,
+        "score": 0.80
+      },
+      {
+        "id": 6001,
+        "paper_id": 601,
+        "chunk_index": 0,
+        "text": "Spironolactone significantly improved diastolic function as measured by E/e' ratio (change: -1.5 vs -0.1; P<0.001). However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.88
+      },
+      {
+        "id": 6002,
+        "paper_id": 601,
+        "chunk_index": 1,
+        "text": "422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled. Patients received spironolactone 25mg daily for 12 months.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.72
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Generate an audio overview discussing these spironolactone trials as a deep dive",
+      "expectedBehavior": [
+        "Contains Host/Expert dialogue structure",
+        "TOPCAT negative result (P=0.14) clearly stated by Expert",
+        "Aldo-DHF dissociation (function vs symptoms) discussed",
+        "Expert does NOT claim spironolactone is effective",
+        "Conflicting evidence presented honestly in wrap-up",
+        "Post-hoc regional analysis mentioned with caveat"
+      ],
+      "failurePatterns": [
+        "Claims spironolactone is effective in HFpEF",
+        "Fabricates consensus between conflicting trials",
+        "Omits the negative P=0.14 from TOPCAT",
+        "Expert makes claims without citations"
+      ],
+      "requiredCitations": [1, 4],
+      "forbiddenContent": [
+        "proven effective",
+        "strong evidence supporting",
+        "recommended for all",
+        "renal outcome",
+        "cancer",
+        "SGLT2"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "What is the clinical significance of the TOPCAT regional analysis?",
+      "expectedBehavior": [
+        "NOT routed as audio overview — plain question",
+        "Mentions post-hoc analysis and regional heterogeneity",
+        "Notes Americas vs Russia/Georgia difference",
+        "Includes appropriate caveat about post-hoc interpretation",
+        "Cites the post-hoc chunk"
+      ],
+      "failurePatterns": [
+        "Generates audio script for a plain question",
+        "Presents post-hoc results without caveat",
+        "Fabricates additional regional data"
+      ],
+      "requiredCitations": [3],
+      "forbiddenContent": [
+        "proven effective",
+        "renal outcome",
+        "cancer",
+        "SGLT2",
+        "Asia",
+        "Europe",
+        "Africa"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Audio overview honestly presents the conflicting evidence",
+    "TOPCAT negative P=0.14 is not buried or minimized",
+    "Aldo-DHF function-vs-symptom dissociation is clearly stated",
+    "Wrap-up acknowledges mixed evidence, does NOT fabricate consensus",
+    "Post-hoc regional analysis mentioned with caveat about interpretation",
+    "Plain question (q2) is NOT routed as audio",
+    "No fabricated trial data or outcomes"
+  ]
+}

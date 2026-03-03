@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-018",
+  "attempt": 3,
+  "timestamp": "2026-03-02T13:17:46.587Z",
+  "mermaidSyntax": "graph TD\n  subgraph GEN[\"🧬 Genomics Pipeline\"]\n    G1[WGS Sequencing] --> G2[Variant Calling]\n    G2 --> G3[SNP/Indel Annotation]\n  end\n\n  subgraph TRA[\"🧪 Transcriptomics Pipeline\"]\n    T1[RNA-seq] --> T2[Differential Expression]\n    T2 --> T3[Pathway Enrichment]\n  end\n\n  subgraph PRO[\"🔬 Proteomics Pipeline\"]\n    P1[Mass Spectrometry] --> P2[Protein Quantification]\n    P2 --> P3[Post-translational Modifications]\n  end\n\n  G3 --> INT\n  T3 --> INT\n  P3 --> INT\n\n  G2 -.->|variants inform DE| T2\n  P3 -.->|validate findings| T3\n\n  subgraph INT_HUB[\"🔗 Integration Hub\"]\n    INT[Integration Hub]\n    INT --> MOFA[Multi-omics Factor Analysis MOFA]\n    INT --> NET[Network Analysis]\n    INT --> CAU[Causal Inference]\n  end\n\n  MOFA --> BIO\n  NET --> MEC\n  CAU --> PUB\n\n  subgraph BIO_OUT[\"🎯 Biomarker Discovery\"]\n    BIO[Biomarker Discovery] --> B1[Candidate Selection]\n    B1 --> B2[Validation Cohort]\n    B2 --> B3[Clinical Utility]\n  end\n\n  subgraph MEC_OUT[\"⚙️ Mechanism Insight\"]\n    MEC[Mechanism Insight] --> M1[Pathway Modeling]\n    M1 --> M2[Drug Target Identification]\n  end\n\n  subgraph PUB_OUT[\"📄 Publication\"]\n    PUB[Publication] --> P1[Manuscript]\n    P1 --> P2[Peer Review]\n    P2 --> P3[Journal Publication]\n  end\n\n  B3 -.->|targeted validation| G1\n  B3 -.->|targeted validation| T1\n  B3 -.->|targeted validation| P1\n\n  style INT fill:#6366f1,stroke:#4338ca,color:#fff\n  style MOFA fill:#818cf8,stroke:#6366f1,color:#fff\n  style NET fill:#818cf8,stroke:#6366f1,color:#fff\n  style CAU fill:#818cf8,stroke:#6366f1,color:#fff",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Three parallel omics streams visible (Genomics, Transcriptomics, Proteomics)": true,
+    "All three streams converge at Integration Hub": true,
+    "Post-integration branches present (Biomarker, Mechanism, Publication)": true,
+    "Cross-links between streams shown (Genomics->Transcriptomics, Proteomics->Transcriptomics)": true,
+    "Feedback loop from Biomarker Discovery back to omics streams": false,
+    "Technical terms preserved (MOFA, WGS, RNA-seq, PTMs, SNP/Indel)": true,
+    "No truncated labels": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 9
+}

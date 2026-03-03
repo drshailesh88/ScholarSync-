@@ -1,0 +1,23 @@
+{
+  "testId": "ralph-061",
+  "attempt": 10,
+  "timestamp": "2026-03-02T17:14:08.801Z",
+  "mermaidSyntax": "flowchart TD\n  A[DNA Template<br>+ PCR Master Mix] --> B[Initial Denaturation<br>95°C, 5 min]\n  B --> C[Denaturation<br>95°C, 30 sec]\n  C --> D[Annealing<br>55°C, 30 sec]\n  D --> E[Extension<br>72°C, 1 min]\n  E --> F{Cycle Complete?<br>25-35 cycles}\n  F -->|No| C\n  F -->|Yes| G[Final Extension<br>72°C, 10 min]\n  G --> H[Hold at 4°C]\n  H --> I[Gel Electrophoresis<br>Analysis]",
+  "diagramType": "flowchart",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "Diagram type is flowchart for a process workflow": true,
+    "Denaturation step present (90-98°C range)": true,
+    "Annealing step present (50-65°C range)": true,
+    "Extension step present (72°C)": true,
+    "Cycle loop indicated (back arrow or note about 25-35 cycles)": true,
+    "At least 6 distinct nodes despite minimal input": true,
+    "DNA template or sample preparation as starting node": true,
+    "Final product or analysis as ending node": true,
+    "Temperature or time annotations on at least 2 steps": true,
+    "Valid Mermaid syntax that renders without errors": true
+  },
+  "overallScore": 10
+}

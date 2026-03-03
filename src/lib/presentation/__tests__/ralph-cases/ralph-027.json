@@ -1,0 +1,20 @@
+{
+  "id": "ralph-027",
+  "name": "Complex ER Diagram — Clinical Research Database",
+  "category": "scale_complexity",
+  "difficulty": "hard",
+  "input": "Create an ER diagram for a clinical research database. Entities: PATIENT (patient_id PK, mrn, dob, sex, ethnicity, enrollment_date), STUDY (study_id PK, title, pi_name, irb_number, start_date, status), SITE (site_id PK, name, address, principal_investigator), VISIT (visit_id PK, patient_id FK, study_id FK, visit_date, visit_type, status), LAB_RESULT (result_id PK, visit_id FK, test_name, value, unit, reference_range, abnormal_flag), ADVERSE_EVENT (ae_id PK, patient_id FK, study_id FK, description, severity, relatedness, onset_date, resolution_date), MEDICATION (med_id PK, patient_id FK, drug_name, dose, route, start_date, end_date), CONSENT (consent_id PK, patient_id FK, study_id FK, consent_date, version, status). Relationships: PATIENT enrolled in many STUDY (many-to-many via CONSENT). PATIENT has many VISIT. VISIT belongs to one STUDY. VISIT has many LAB_RESULT. PATIENT has many ADVERSE_EVENT. ADVERSE_EVENT belongs to one STUDY. PATIENT takes many MEDICATION. STUDY conducted at many SITE.",
+  "expectedDiagramType": "erDiagram",
+  "expectedNodeCount": 8,
+  "qualityCriteria": [
+    "All 8 entities present (PATIENT, STUDY, SITE, VISIT, LAB_RESULT, ADVERSE_EVENT, MEDICATION, CONSENT)",
+    "Entity attributes shown with types (PK, FK markers)",
+    "At least 8 relationships defined",
+    "Cardinality notation correct (one-to-many, many-to-many)",
+    "PATIENT as central entity with most connections",
+    "CONSENT as junction table for PATIENT-STUDY many-to-many",
+    "No truncated entity or attribute names",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Complex ER diagram with 8 entities, 15+ attributes total, 8+ relationships with cardinality, professional database schema."
+}

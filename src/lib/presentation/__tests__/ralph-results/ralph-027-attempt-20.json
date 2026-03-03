@@ -1,0 +1,21 @@
+{
+  "testId": "ralph-027",
+  "attempt": 20,
+  "timestamp": "2026-03-02T17:14:01.915Z",
+  "mermaidSyntax": "erDiagram\n  PATIENT {\n    int patient_id PK\n    string mrn\n    date dob\n    string sex\n    string ethnicity\n    date enrollment_date\n  }\n  STUDY {\n    int study_id PK\n    string title\n    string pi_name\n    string irb_number\n    date start_date\n    string status\n  }\n  SITE {\n    int site_id PK\n    string name\n    string address\n    string principal_investigator\n  }\n  VISIT {\n    int visit_id PK\n    int patient_id FK\n    int study_id FK\n    date visit_date\n    string visit_type\n    string status\n  }\n  LAB_RESULT {\n    int result_id PK\n    int visit_id FK\n    string test_name\n    string value\n    string unit\n    string reference_range\n    boolean abnormal_flag\n  }\n  ADVERSE_EVENT {\n    int ae_id PK\n    int patient_id FK\n    int study_id FK\n    string description\n    string severity\n    string relatedness\n    date onset_date\n    date resolution_date\n  }\n  MEDICATION {\n    int med_id PK\n    int patient_id FK\n    string drug_name\n    string dose\n    string route\n    date start_date\n    date end_date\n  }\n  CONSENT {\n    int consent_id PK\n    int patient_id FK\n    int study_id FK\n    date consent_date\n    string version\n    string status\n  }\n\n  PATIENT ||--o{ CONSENT : \"gives\"\n  STUDY ||--o{ CONSENT : \"requires\"\n  PATIENT ||--o{ VISIT : \"attends\"\n  STUDY ||--o{ VISIT : \"includes\"\n  VISIT ||--o{ LAB_RESULT : \"produces\"\n  PATIENT ||--o{ ADVERSE_EVENT : \"experiences\"\n  STUDY ||--o{ ADVERSE_EVENT : \"records\"\n  PATIENT ||--o{ MEDICATION : \"takes\"\n  STUDY }o--o{ SITE : \"conducted at\"",
+  "diagramType": "erDiagram",
+  "syntaxValid": true,
+  "renderSuccess": true,
+  "failures": [],
+  "qualityCriteriaResults": {
+    "All 8 entities present (PATIENT, STUDY, SITE, VISIT, LAB_RESULT, ADVERSE_EVENT, MEDICATION, CONSENT)": true,
+    "Entity attributes shown with types (PK, FK markers)": true,
+    "At least 8 relationships defined": true,
+    "Cardinality notation correct (one-to-many, many-to-many)": true,
+    "PATIENT as central entity with most connections": true,
+    "CONSENT as junction table for PATIENT-STUDY many-to-many": true,
+    "No truncated entity or attribute names": true,
+    "Valid Mermaid syntax that parses without errors": true
+  },
+  "overallScore": 10
+}

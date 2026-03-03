@@ -1,0 +1,149 @@
+{
+  "id": "ralph-nb-019",
+  "name": "Cross-feature integration — routing, stat fidelity, artifact switching",
+  "category": "integration",
+  "difficulty": "hard",
+  "phase": 4,
+  "cycle": 19,
+  "setup": {
+    "description": "Uses 3 diverse trials (RALES 1999, TOPCAT 2014, DAPA-HF 2019) spanning different drug classes, outcomes (positive, negative, stopped early). Tests that multiple artifact types and plain questions all work correctly with the same source set, routing is accurate, and statistics are never contaminated across trials.",
+    "papers": [
+      {
+        "id": 301,
+        "title": "RALES: Randomized Aldactone Evaluation Study",
+        "authors": ["Pitt B", "Zannad F", "Remme WJ"],
+        "year": 1999
+      },
+      {
+        "id": 501,
+        "title": "TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist",
+        "authors": ["Pitt B", "Pfeffer MA", "Assmann SF"],
+        "year": 2014
+      },
+      {
+        "id": 101,
+        "title": "DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction",
+        "authors": ["McMurray JJV", "Solomon SD", "Inzucchi SE"],
+        "year": 2019
+      }
+    ],
+    "mockChunks": [
+      {
+        "id": 3001,
+        "paper_id": 301,
+        "chunk_index": 0,
+        "text": "Spironolactone reduced mortality with a relative risk of death of 0.70 (95% CI 0.60-0.82; P<0.001). The trial was stopped early due to clear survival benefit after a mean follow-up of 24 months.",
+        "section_type": "results",
+        "page_number": 3,
+        "score": 0.93
+      },
+      {
+        "id": 3002,
+        "paper_id": 301,
+        "chunk_index": 1,
+        "text": "1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% were randomized to spironolactone 25mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.72
+      },
+      {
+        "id": 5001,
+        "paper_id": 501,
+        "chunk_index": 0,
+        "text": "Spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure (HR 0.89; 95% CI 0.77-1.04; P=0.14).",
+        "section_type": "results",
+        "page_number": 5,
+        "score": 0.91
+      },
+      {
+        "id": 5002,
+        "paper_id": 501,
+        "chunk_index": 1,
+        "text": "3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled. The median follow-up was 3.3 years.",
+        "section_type": "methods",
+        "page_number": 3,
+        "score": 0.75
+      },
+      {
+        "id": 1001,
+        "paper_id": 101,
+        "chunk_index": 0,
+        "text": "Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001). The number needed to treat was 21 over a median follow-up of 18.2 months.",
+        "section_type": "results",
+        "page_number": 4,
+        "score": 0.92
+      },
+      {
+        "id": 1002,
+        "paper_id": 101,
+        "chunk_index": 1,
+        "text": "Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40%. Patients were randomized 1:1 to dapagliflozin 10mg or placebo.",
+        "section_type": "methods",
+        "page_number": 2,
+        "score": 0.78
+      }
+    ]
+  },
+  "queries": [
+    {
+      "id": "q1",
+      "query": "Create a timeline of these heart failure trials",
+      "expectedBehavior": [
+        "Chronological order: RALES (1999), TOPCAT (2014), DAPA-HF (2019)",
+        "RALES uses RR 0.70, NOT HR",
+        "TOPCAT negative result (P=0.14) clearly stated",
+        "DAPA-HF uses HR 0.74",
+        "Stopped early note for RALES",
+        "All three trials cited"
+      ],
+      "failurePatterns": [
+        "Wrong chronological order",
+        "RALES reported as HR instead of RR",
+        "TOPCAT shown as positive",
+        "Stats from one trial attributed to another"
+      ],
+      "requiredCitations": [1, 3, 5],
+      "forbiddenContent": [
+        "empagliflozin",
+        "EMPEROR",
+        "DELIVER",
+        "PARADIGM",
+        "renal outcome",
+        "eGFR"
+      ]
+    },
+    {
+      "id": "q2",
+      "query": "What was the primary result of the DAPA-HF trial?",
+      "expectedBehavior": [
+        "HR 0.74 correctly cited",
+        "P<0.001 mentioned",
+        "NNT 21 mentioned",
+        "Follow-up 18.2 months mentioned",
+        "Cites DAPA-HF chunk",
+        "No RALES or TOPCAT stats mixed in"
+      ],
+      "failurePatterns": [
+        "Uses RR 0.70 (RALES) instead of HR 0.74",
+        "Uses HR 0.89 (TOPCAT) instead of HR 0.74",
+        "Fabricates data not in sources"
+      ],
+      "requiredCitations": [5],
+      "forbiddenContent": [
+        "empagliflozin",
+        "EMPEROR",
+        "renal outcome",
+        "eGFR",
+        "aldosterone"
+      ]
+    }
+  ],
+  "qualityCriteria": [
+    "Timeline artifact correctly routes and orders 3 trials",
+    "RALES stat type (RR) not confused with HR",
+    "TOPCAT negative result not softened or omitted",
+    "Plain DAPA-HF question uses correct stats without cross-contamination",
+    "All statistics exactly match source chunks",
+    "No fabricated trial data or outcomes"
+  ]
+}

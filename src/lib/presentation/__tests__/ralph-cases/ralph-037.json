@@ -1,0 +1,22 @@
+{
+  "id": "ralph-037",
+  "name": "Research Funding Distribution Pie — 10+ Categories",
+  "category": "pie_and_quadrant_stress",
+  "difficulty": "hard",
+  "input": "Create a pie chart showing NIH funding distribution by institute for FY2024. Data: National Cancer Institute (NCI) 18.2%, National Institute of Allergy and Infectious Diseases (NIAID) 14.8%, National Heart Lung and Blood Institute (NHLBI) 9.1%, National Institute of General Medical Sciences (NIGMS) 7.8%, National Institute of Neurological Disorders and Stroke (NINDS) 6.5%, National Institute of Diabetes and Digestive and Kidney Diseases (NIDDK) 5.9%, National Institute of Mental Health (NIMH) 5.2%, National Institute on Aging (NIA) 4.7%, National Institute of Child Health and Human Development (NICHD) 4.1%, National Eye Institute (NEI) 2.3%, Other Institutes Combined 21.4%. Title it 'NIH Funding Distribution by Institute (FY2024)'. Make sure percentages sum to approximately 100%.",
+  "expectedDiagramType": "pie",
+  "expectedNodeCount": 11,
+  "qualityCriteria": [
+    "Pie chart type declared",
+    "Title present containing NIH or Funding",
+    "At least 10 distinct slices present",
+    "NCI slice present with largest percentage",
+    "NIAID slice present as second largest",
+    "Other Institutes Combined slice present",
+    "Percentage values sum to approximately 100% (95-105 range)",
+    "No truncated institute names or abbreviations lost",
+    "All percentage values are numeric",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Pie chart with 11 slices, NIH funding by institute, percentages summing to ~100%, proper title."
+}

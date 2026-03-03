@@ -1,0 +1,22 @@
+{
+  "id": "ralph-041",
+  "name": "Clinical Trial Gantt with Parallel Tracks and Regulatory Milestones",
+  "category": "gantt_advanced",
+  "difficulty": "hard",
+  "input": "Create a Gantt chart for a Phase II clinical trial timeline. Title: 'Phase II Clinical Trial — Anti-PD-L1 Combination Therapy'. Sections: Regulatory & Startup (Pre-IND meeting 2024-01 to 2024-02, IND submission 2024-03 to 2024-04, IND approval milestone 2024-05-01, Site selection 2024-03 to 2024-06, IRB approvals 2024-05 to 2024-08). Enrollment & Treatment (First patient in milestone 2024-09-01, Enrollment period 2024-09 to 2025-06, Treatment cycles 2024-09 to 2025-12, Safety monitoring 2024-09 to 2026-03). Follow-up & Analysis (Follow-up period 2025-06 to 2026-06, Interim analysis milestone 2025-09-01, Data lock 2026-06 to 2026-08, Statistical analysis 2026-07 to 2026-10, CSR drafting 2026-09 to 2026-12, Database lock milestone 2026-08-01). Include critical path markers on IND approval, First patient in, Interim analysis, and Database lock.",
+  "expectedDiagramType": "gantt",
+  "expectedNodeCount": 16,
+  "qualityCriteria": [
+    "Gantt chart type declared",
+    "Title contains Clinical Trial or Phase II",
+    "All 3 sections present (Regulatory, Enrollment, Follow-up)",
+    "At least 4 milestone events present",
+    "IND-related tasks present (submission, approval)",
+    "Enrollment and treatment tasks present",
+    "Critical path markers on key milestones",
+    "At least 14 task entries",
+    "Date range spanning 2024-2026",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Gantt with 3 clinical trial phases, 4+ milestones, 14+ tasks, critical path, regulatory and treatment tracks."
+}

@@ -1,0 +1,20 @@
+{
+  "id": "ralph-063",
+  "name": "Minimal Sparse Input — Single Sentence Patient Journey",
+  "input": "Show how a patient goes from ER triage to admission, surgery, recovery, and discharge with satisfaction scores.",
+  "expectedDiagramType": "journey",
+  "difficulty": "hard",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "Diagram type is journey for a patient experience path",
+    "ER Triage as first section or task",
+    "Admission step present",
+    "Surgery step present",
+    "Recovery step present",
+    "Discharge as final step",
+    "Satisfaction scores present (1-5 range) for each task",
+    "At least 5 distinct tasks in the journey",
+    "Proper journey syntax with section headers",
+    "Logical score progression (triage lower, recovery improving)"
+  ]
+}

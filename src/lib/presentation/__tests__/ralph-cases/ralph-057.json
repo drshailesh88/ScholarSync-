@@ -1,0 +1,21 @@
+{
+  "id": "ralph-057",
+  "name": "Multi-Type Keyword Soup — Genome Annotation Pipeline",
+  "category": "edge_case_robustness",
+  "difficulty": "hard",
+  "input": "Show the genome annotation pipeline. The sequence of steps goes: raw reads -> quality control -> assembly -> gene prediction -> functional annotation -> submission to NCBI. Each step has a state (pending, running, complete, failed) and transitions between states. The timeline for completion is roughly: Week 1 QC, Week 2-3 Assembly, Week 4 Gene Prediction, Week 5-6 Annotation, Week 7 Submission. There's a class hierarchy of tools: BaseAligner is the parent class with children BWA, Bowtie2, and STAR. The relationship between Reads and Assemblies is one-to-many, and Genes belong to Assemblies. The journey of a bioinformatician using this pipeline: Setup environment 3, Run QC 4, Wait for assembly 2, Check results 4, Debug failures 1, Final submission 5. Pick the single best diagram type for showing the pipeline workflow steps.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 8,
+  "qualityCriteria": [
+    "Selected a single diagram type (flowchart most likely)",
+    "Pipeline steps present: QC, Assembly, Gene Prediction, Annotation, Submission",
+    "Raw reads as starting point",
+    "Sequential flow is clear from input to output",
+    "NCBI or submission as endpoint",
+    "Did not mix multiple diagram types in one diagram",
+    "At least 6 distinct nodes representing pipeline stages",
+    "Tool names or technical terms preserved where relevant",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Single flowchart (not mixed types) with 8+ nodes showing genome annotation pipeline, despite input mentioning states/timeline/classes/ER/journey."
+}

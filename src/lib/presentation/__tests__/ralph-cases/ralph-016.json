@@ -1,0 +1,18 @@
+{
+  "id": "ralph-016",
+  "name": "Bioinformatics Pipeline Class Diagram",
+  "category": "class_diagrams",
+  "difficulty": "hard",
+  "input": "Create a class diagram for a bioinformatics analysis pipeline. Classes: SequenceData (attributes: fastq_files, quality_scores, read_length; methods: trim_adapters(), filter_quality()), Aligner (attributes: reference_genome, index_path; methods: align(SequenceData), generate_bam()), VariantCaller (attributes: min_quality, min_depth; methods: call_variants(bam_file), filter_variants()), Annotation (attributes: database, version; methods: annotate_variants(vcf_file), predict_impact()), QualityReport (attributes: metrics, pass_threshold; methods: generate_report(), visualize()). Relationships: SequenceData is used by Aligner. Aligner produces output consumed by VariantCaller. VariantCaller output goes to Annotation. QualityReport aggregates metrics from all other classes.",
+  "expectedDiagramType": "classDiagram",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "All 5 classes present (SequenceData, Aligner, VariantCaller, Annotation, QualityReport)",
+    "Attributes listed in each class with types or names",
+    "Methods listed in each class with parentheses",
+    "Relationships between classes shown with correct direction",
+    "No truncated class or method names",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Standard UML class diagram with 5 boxes, each containing attributes and methods sections, relationship arrows with labels, clean layout."
+}

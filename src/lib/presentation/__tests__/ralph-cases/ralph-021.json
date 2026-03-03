@@ -1,0 +1,20 @@
+{
+  "id": "ralph-021",
+  "name": "Deeply Nested Subgraph — Hospital Research Organization",
+  "category": "advanced_types",
+  "difficulty": "hard",
+  "input": "Create a flowchart showing a hospital's clinical research organization with deeply nested structure. Top level: University Medical Center. Inside that: Research Division and Clinical Division. Inside Research Division: Basic Science Labs (containing Genomics Lab, Proteomics Lab, Bioinformatics Core) and Translational Research (containing Phase I Unit, Biobank, Animal Facility). Inside Clinical Division: Oncology Trials (containing Solid Tumors, Hematology, Immunotherapy), Cardiology Trials (containing Heart Failure, Arrhythmia), and Neurology Trials (containing Alzheimer's, Parkinson's, Stroke). Show data flow: Genomics Lab --> Phase I Unit --> Solid Tumors. Biobank --> all trial programs. Bioinformatics Core provides analysis to all labs and trials.",
+  "expectedDiagramType": "flowchart",
+  "expectedNodeCount": 18,
+  "qualityCriteria": [
+    "At least 3 levels of subgraph nesting visible",
+    "All top-level divisions present (Research Division, Clinical Division)",
+    "Lab nodes present (Genomics Lab, Proteomics Lab, Bioinformatics Core)",
+    "Trial program nodes present (Solid Tumors, Hematology, Immunotherapy, Heart Failure)",
+    "Cross-division data flow arrows shown (Genomics->Phase I->Solid Tumors)",
+    "Biobank connections to multiple trial programs",
+    "No truncated labels",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Flowchart with 3+ levels of nested subgraphs, cross-division arrows, professional hospital org chart appearance."
+}
