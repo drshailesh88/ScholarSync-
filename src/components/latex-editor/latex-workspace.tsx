@@ -265,18 +265,25 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   }, []);
 
   const handleExportZip = useCallback(async () => {
-    // Build a simple zip-like download with all files as separate downloads
-    // (Full ZIP support requires a library; for now, download main .tex)
-    // In a real implementation, use JSZip to bundle all project files
-    const content = useLatexEditorStore.getState().documentContent;
-    const blob = new Blob([content], { type: "text/x-tex" });
+    const JSZip = (await import("jszip")).default;
+    const zip = new JSZip();
+    const projectName = project.title.replace(/[^a-zA-Z0-9]/g, "_");
+
+    // Add all project files to the ZIP
+    for (const file of files) {
+      if (file.content != null) {
+        zip.file(file.path, file.content);
+      }
+    }
+
+    const blob = await zip.generateAsync({ type: "blob" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${project.title.replace(/[^a-zA-Z0-9]/g, "_")}_project.tex`;
+    a.download = `${projectName}.zip`;
     a.click();
     URL.revokeObjectURL(url);
-  }, [project.title]);
+  }, [project.title, files]);
 
   // Handle inline AI apply — replace the selected text in the editor
   const handleInlineAiApply = useCallback((newText: string) => {
