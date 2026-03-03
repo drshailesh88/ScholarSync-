@@ -1,0 +1,32 @@
+{
+  "lastUpdated": "2026-03-03T08:35:00.000Z",
+  "currentCycle": 1,
+  "totalCases": 79,
+  "passing": 79,
+  "failing": 0,
+  "averageScore": 9.0,
+  "consecutivePerfect": 0,
+  "cycles": [
+    {
+      "cycle": 1,
+      "description": "Extract testable modules + comprehensive unit tests for latexToHtml, error parser, latex checks, outline, template validator",
+      "casesAdded": 79,
+      "passing": 79,
+      "failing": 0,
+      "score": 9.0,
+      "improvements": [
+        "Extracted latexToHtml to shared module src/lib/latex/latex-to-html.ts",
+        "Extracted error parser to src/lib/latex/error-parser.ts with human-readable errors",
+        "Extracted latex checks to src/lib/latex/latex-checks.ts with expanded ref detection (autoref/cref)",
+        "Extracted outline to src/lib/latex/outline.ts with chapter/part support",
+        "Created template validator src/lib/latex/template-validator.ts",
+        "Added footnote, textsc, href, url, newpage rendering to latexToHtml",
+        "Human-readable error messages for 12 common LaTeX errors (UX improvement over Overleaf)",
+        "Package conflict detection expanded (5 known conflicts)",
+        "Environment order checking (not just count mismatch)",
+        "Missing bibliographystyle detection"
+      ],
+      "newBugs": []
+    }
+  ]
+}
