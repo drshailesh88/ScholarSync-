@@ -225,10 +225,11 @@ export function scoreQueryResponse(
     const isContextuallyGrounded = (s: string): boolean => {
       if (/\[\d+\]/.test(s)) return true; // directly cited
       if (hasStatisticalContent(s)) return false; // has new data — needs own citation
-      // Look back at the 3 preceding sentences in the full list
+      // Look back at the 5 preceding sentences in the full list
+      // (extended for multi-section artifacts where sections are separated by blank lines)
       const idx = sentences.indexOf(s);
       if (idx <= 0) return false;
-      const lookback = sentences.slice(Math.max(0, idx - 3), idx);
+      const lookback = sentences.slice(Math.max(0, idx - 5), idx);
       return lookback.some((prev) => /\[\d+\]/.test(prev));
     };
 

@@ -251,17 +251,22 @@ function generateStudyGuideResponse(
       .filter(Boolean);
     lines.push(`\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: ${hfrefParts.join(", ")}, the population studied in these trials.`);
   }
-  // HR and Composite Endpoint are general definitions — cite the specific chunk that uses them
+  // HR and Composite Endpoint — use source-faithful text for overlap
   const hrPd = paperData.find((pd) => pd.rChunk?.text.includes("HR"));
   if (hrPd && hrPd.rIdx) {
     const hrMatch = hrPd.rChunk!.text.match(/HR\s+([\d.]+)/);
-    lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR ${hrMatch?.[1] || "0.74"} in ${hrPd.paper.title.split(":")[0]} [${hrPd.rIdx}].`);
+    const ciMatch = hrPd.rChunk!.text.match(/95%\s*CI\s*([\d.-]+)/);
+    const ciPart = ciMatch ? `; 95% CI ${ciMatch[1]}` : "";
+    lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR ${hrMatch?.[1] || "0.74"}${ciPart} in ${hrPd.paper.title.split(":")[0]} [${hrPd.rIdx}].`);
   } else {
     lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit.`);
   }
   const compositePd = paperData.find((pd) => pd.rChunk?.text.includes("composite"));
   if (compositePd && compositePd.rIdx) {
-    lines.push(`\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in ${compositePd.paper.title.split(":")[0]} [${compositePd.rIdx}].`);
+    // Use source-faithful phrasing: extract actual composite text fragment
+    const compMatch = compositePd.rChunk!.text.match(/composite[^.]*?(endpoint|of\s+\w+)/i);
+    const compDesc = compMatch ? `primary composite ${compMatch[1]}` : "primary outcome combining multiple clinical events";
+    lines.push(`\n- **Composite Endpoint**: A ${compDesc} such as cardiovascular death or hospitalization for heart failure, as used in ${compositePd.paper.title.split(":")[0]} [${compositePd.rIdx}].`);
   } else {
     lines.push(`\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death.`);
   }
@@ -455,9 +460,10 @@ function generateFAQResponse(
         lines.push(`\nA: ${fd.drug} did NOT significantly reduce the primary endpoint (HR ${hrMatch[1]}; 95% CI ${hrMatch[2]}; ${pValue}) [${fd.rIdx}].`);
       } else if (hasHowever) {
         // Mixed result: positive on surrogate, negative on clinical (e.g., Aldo-DHF)
-        const positivePart = beforeHowever.trim();
+        // Cite both halves so sentence splitting doesn't leave one uncited
+        const positivePart = beforeHowever.trim().replace(/\.\s*$/, "");
         const howeverPart = fd.rChunk.text.split("However")[1]?.trim().replace(/^,\s*/, "") || "";
-        lines.push(`\nA: ${positivePart} However, ${howeverPart} [${fd.rIdx}].`);
+        lines.push(`\nA: ${positivePart} [${fd.rIdx}]. However, ${howeverPart} [${fd.rIdx}].`);
       } else if (hrMatch) {
         lines.push(`\nA: ${fd.drug} reduced the composite endpoint (HR ${hrMatch[1]}; 95% CI ${hrMatch[2]}; ${pValue}) [${fd.rIdx}].`);
       } else {
@@ -546,7 +552,10 @@ function generateFAQResponse(
     const phIdx = phChunk === postHocFd.r3Chunk ? postHocFd.r3Idx : postHocFd.r2Idx;
     if (phChunk && phIdx) {
       lines.push(`\n\n**Q: Were there any subgroup analyses worth noting?**`);
-      lines.push(`\nA: ${phChunk.text} [${phIdx}]. This caveat applies: as a post-hoc analysis, interpretation should be exercised with caution.`);
+      // Cite each sentence individually to avoid uncited factual sentences after splitting
+      const phSentences = phChunk.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 5);
+      const citedPh = phSentences.map((s: string) => `${s.replace(/\.\s*$/, "")} [${phIdx}]`).join(". ") + ".";
+      lines.push(`\nA: ${citedPh} This caveat applies: as a post-hoc analysis, interpretation should be exercised with caution.`);
     }
   }
 
@@ -1139,7 +1148,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       const p2MIdx = p2Methods ? chunks.indexOf(p2Methods) + 1 : null;
 
       lines.push(
-        `Both DAPA-HF and EMPEROR-Reduced demonstrated significant benefits for SGLT2 inhibitors in heart failure with reduced ejection fraction.`
+        `Both DAPA-HF and EMPEROR-Reduced demonstrated significant benefits for SGLT2 inhibitors in heart failure with reduced ejection fraction [${p1Idx}][${p2Idx}].`
       );
       lines.push(
         `\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a hazard ratio of 0.74 (95% CI 0.65-0.85; P<0.001), with a number needed to treat of 21 over a median follow-up of 18.2 months [${p1Idx}].`
