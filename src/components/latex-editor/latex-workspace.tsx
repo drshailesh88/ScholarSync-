@@ -385,21 +385,46 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
   // Handle BibTeX insertion from Cite tab
   useEffect(() => {
-    const handler = (e: Event) => {
+    const handler = async (e: Event) => {
       const detail = (e as CustomEvent).detail as { bibtex: string; citeKey: string };
       if (!detail?.bibtex) return;
+
       const bibFile = files.find((f) => f.path.endsWith(".bib"));
-      if (bibFile) {
+
+      // Auto-create .bib file if it doesn't exist
+      if (!bibFile) {
+        try {
+          const { createLatexFile } = await import("@/lib/actions/latex");
+          const newBib = await createLatexFile({
+            latexProjectId: project.id,
+            path: "references.bib",
+            content: detail.bibtex,
+            isMain: false,
+          });
+          if (newBib) {
+            setFiles((prev) => [...prev, newBib as LatexFile]);
+          }
+        } catch {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(detail.bibtex);
+        }
+      } else {
+        // Append to existing .bib file
         const newContent = (bibFile.content || "") + "\n\n" + detail.bibtex;
         updateLatexFile(bibFile.id, { content: newContent }).catch(() => {});
         setFiles((prev) =>
-          prev.map((f) => f.id === bibFile.id ? { ...f, content: newContent } : f)
+          prev.map((f) => f.id === bibFile!.id ? { ...f, content: newContent } : f)
         );
+      }
+
+      // Insert \cite{key} at cursor in the editor
+      if (detail.citeKey) {
+        editorRef.current?.insertAtCursor(`\\cite{${detail.citeKey}}`);
       }
     };
     window.addEventListener("latex:insert-bibtex", handler);
     return () => window.removeEventListener("latex:insert-bibtex", handler);
-  }, [files]);
+  }, [files, project.id]);
 
   // Jump-to-line handler for outline clicks
   const handleJumpToLine = useCallback((line: number) => {
