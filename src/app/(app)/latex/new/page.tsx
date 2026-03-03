@@ -10,6 +10,14 @@ import {
   Newspaper,
   Flask,
   GraduationCap,
+  FirstAid,
+  Heartbeat,
+  Stethoscope,
+  Globe,
+  Hospital,
+  Article,
+  TreeStructure,
+  ListChecks,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { createLatexProjectFromTemplate } from "@/lib/actions/latex";
@@ -21,6 +29,7 @@ const TEMPLATES = [
     description: "Standard article with sections and bibliography",
     icon: FileText,
     color: "text-ink-muted",
+    category: "general" as const,
   },
   {
     id: "ieee",
@@ -28,6 +37,7 @@ const TEMPLATES = [
     description: "Two-column format with structured sections",
     icon: Newspaper,
     color: "text-blue-500",
+    category: "general" as const,
   },
   {
     id: "nature",
@@ -35,6 +45,7 @@ const TEMPLATES = [
     description: "Nature journal style with line numbers",
     icon: Flask,
     color: "text-emerald-500",
+    category: "general" as const,
   },
   {
     id: "thesis",
@@ -42,6 +53,71 @@ const TEMPLATES = [
     description: "Multi-chapter report with TOC and appendices",
     icon: GraduationCap,
     color: "text-violet-500",
+    category: "general" as const,
+  },
+  {
+    id: "ijmr",
+    label: "IJMR",
+    description: "Indian Journal of Medical Research format",
+    icon: FirstAid,
+    color: "text-orange-500",
+    category: "medical" as const,
+  },
+  {
+    id: "japi",
+    label: "JAPI",
+    description: "J. Assoc. Physicians of India format",
+    icon: Heartbeat,
+    color: "text-rose-500",
+    category: "medical" as const,
+  },
+  {
+    id: "jama",
+    label: "JAMA",
+    description: "JAMA structured research article",
+    icon: Stethoscope,
+    color: "text-sky-500",
+    category: "medical" as const,
+  },
+  {
+    id: "lancet",
+    label: "Lancet",
+    description: "The Lancet with Research in Context panel",
+    icon: Globe,
+    color: "text-red-500",
+    category: "medical" as const,
+  },
+  {
+    id: "bmj",
+    label: "BMJ",
+    description: "BMJ with What This Study Adds box",
+    icon: Hospital,
+    color: "text-cyan-500",
+    category: "medical" as const,
+  },
+  {
+    id: "elsevier",
+    label: "Elsevier",
+    description: "Elsevier with highlights & graphical abstract",
+    icon: Article,
+    color: "text-amber-500",
+    category: "general" as const,
+  },
+  {
+    id: "casereport",
+    label: "Case Report",
+    description: "CARE-guideline compliant case report",
+    icon: TreeStructure,
+    color: "text-teal-500",
+    category: "medical" as const,
+  },
+  {
+    id: "systematicreview",
+    label: "Systematic Review",
+    description: "PRISMA-compliant review & meta-analysis",
+    icon: ListChecks,
+    color: "text-indigo-500",
+    category: "medical" as const,
   },
 ] as const;
 
@@ -66,8 +142,36 @@ export default function NewLatexProjectPage() {
     }
   };
 
+  const generalTemplates = TEMPLATES.filter((t) => t.category === "general");
+  const medicalTemplates = TEMPLATES.filter((t) => t.category === "medical");
+
+  const renderTemplateCard = (t: typeof TEMPLATES[number]) => {
+    const Icon = t.icon;
+    return (
+      <button
+        key={t.id}
+        onClick={() => setSelectedTemplate(t.id)}
+        className={cn(
+          "p-3 rounded-xl border text-left transition-all",
+          selectedTemplate === t.id
+            ? "border-brand bg-brand/5 ring-1 ring-brand/20"
+            : "border-border-subtle hover:border-brand/30"
+        )}
+      >
+        <div className="flex items-center gap-2 mb-1">
+          <Icon
+            size={16}
+            className={selectedTemplate === t.id ? "text-brand" : t.color}
+          />
+          <p className="text-sm font-medium text-ink">{t.label}</p>
+        </div>
+        <p className="text-xs text-ink-muted">{t.description}</p>
+      </button>
+    );
+  };
+
   return (
-    <div className="max-w-lg mx-auto py-8">
+    <div className="max-w-2xl mx-auto py-8">
       <div className="flex items-center gap-3 mb-6">
         <Link
           href="/latex"
@@ -97,31 +201,19 @@ export default function NewLatexProjectPage() {
           <label className="block text-sm font-medium text-ink mb-1.5">
             Template
           </label>
-          <div className="grid grid-cols-2 gap-2">
-            {TEMPLATES.map((t) => {
-              const Icon = t.icon;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => setSelectedTemplate(t.id)}
-                  className={cn(
-                    "p-3 rounded-xl border text-left transition-all",
-                    selectedTemplate === t.id
-                      ? "border-brand bg-brand/5 ring-1 ring-brand/20"
-                      : "border-border-subtle hover:border-brand/30"
-                  )}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <Icon
-                      size={16}
-                      className={selectedTemplate === t.id ? "text-brand" : t.color}
-                    />
-                    <p className="text-sm font-medium text-ink">{t.label}</p>
-                  </div>
-                  <p className="text-xs text-ink-muted">{t.description}</p>
-                </button>
-              );
-            })}
+
+          <p className="text-[10px] font-semibold text-ink-muted/60 tracking-wider uppercase mb-2">
+            General
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
+            {generalTemplates.map(renderTemplateCard)}
+          </div>
+
+          <p className="text-[10px] font-semibold text-ink-muted/60 tracking-wider uppercase mb-2">
+            Medical &amp; Clinical
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {medicalTemplates.map(renderTemplateCard)}
           </div>
         </div>
 
