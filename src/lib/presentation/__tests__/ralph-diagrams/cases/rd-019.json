@@ -1,0 +1,46 @@
+{
+  "id": "rd-019",
+  "name": "Hierarchy — Multi-Site Clinical Trial Organization with 12 nodes",
+  "category": "hierarchy_complex",
+  "difficulty": "hard",
+  "napkinFeature": "org_chart",
+  "input": "Show a multi-site clinical trial organizational hierarchy. Sponsor at top. Under Sponsor: Global Medical Monitor, Contract Research Organization (CRO). Under CRO: Data Management, Biostatistics, Regulatory Affairs. Under Global Medical Monitor: Regional Lead Americas, Regional Lead EMEA, Regional Lead APAC. Under Regional Lead Americas: Site 1 Boston, Site 2 Houston.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "hierarchy",
+  "expectedItemCount": 11,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (hierarchy)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 11",
+    "Items present (Sponsor, Medical Monitor, CRO, Data Management, Biostatistics, Regulatory, Americas, EMEA, APAC, Boston, Houston)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Multi-level org chart tree with 4 depth levels showing sponsor hierarchy down to individual sites.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "hierarchy",
+      "title": "Multi-Site Clinical Trial Organization",
+      "items": [
+        { "label": "Sponsor", "description": "Pharmaceutical company funding and overseeing the clinical program", "icon": "🏢" },
+        { "label": "Global Medical Monitor", "description": "Physician responsible for medical oversight across all regions", "icon": "👨‍⚕️" },
+        { "label": "Contract Research Organization", "description": "CRO managing operational execution of the trial", "icon": "📋" },
+        { "label": "Data Management", "description": "Electronic data capture, query resolution, database lock", "icon": "💾" },
+        { "label": "Biostatistics", "description": "Statistical analysis plan, interim analyses, final report", "icon": "📊" },
+        { "label": "Regulatory Affairs", "description": "IND/CTA submissions, safety reporting, regulatory compliance", "icon": "⚖️" },
+        { "label": "Regional Lead Americas", "description": "Oversees North and South American trial sites", "icon": "🌎" },
+        { "label": "Regional Lead EMEA", "description": "Oversees European and Middle Eastern trial sites", "icon": "🌍" },
+        { "label": "Regional Lead APAC", "description": "Oversees Asia-Pacific trial sites", "icon": "🌏" },
+        { "label": "Site 1 — Boston", "description": "Massachusetts General Hospital principal investigator site", "icon": "🏥" },
+        { "label": "Site 2 — Houston", "description": "MD Anderson Cancer Center principal investigator site", "icon": "🏥" }
+      ],
+      "colorScheme": "blue",
+      "caption": "Clinical trial organizational structure from sponsor to individual sites"
+    }
+  }
+}

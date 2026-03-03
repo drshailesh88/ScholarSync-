@@ -1,0 +1,41 @@
+{
+  "id": "rd-015",
+  "name": "Funnel — Systematic Review Screening with Exact Numbers",
+  "category": "funnel_precision",
+  "difficulty": "hard",
+  "napkinFeature": "funnel_diagram",
+  "input": "Show a systematic review screening funnel with precise numbers: 12,847 Records Identified, 3,291 Duplicates Removed, 9,556 Title/Abstract Screened, 847 Full-Text Assessed, 234 Studies Included, 89 in Meta-Analysis.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "funnel",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (funnel)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 6",
+    "Numeric values preserved in items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "Funnel narrowing from 12,847 at the top to 89 at the bottom. Each stage shows the count prominently.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "funnel",
+      "title": "Systematic Review Screening Funnel",
+      "items": [
+        { "label": "Records Identified", "description": "Database searching across PubMed, Embase, Cochrane, Web of Science", "value": "12,847", "icon": "🔍" },
+        { "label": "Duplicates Removed", "description": "De-duplication using Covidence reference manager", "value": "3,291", "icon": "🗑️" },
+        { "label": "Title/Abstract Screened", "description": "Two independent reviewers applied inclusion criteria", "value": "9,556", "icon": "👁️" },
+        { "label": "Full-Text Assessed", "description": "Retrieved and assessed for eligibility against detailed criteria", "value": "847", "icon": "📄" },
+        { "label": "Studies Included", "description": "Met all inclusion criteria for qualitative synthesis", "value": "234", "icon": "✅" },
+        { "label": "In Meta-Analysis", "description": "Provided sufficient data for quantitative pooling", "value": "89", "icon": "📊" }
+      ],
+      "colorScheme": "purple",
+      "caption": "PRISMA-compliant screening flow from identification to meta-analysis inclusion"
+    }
+  }
+}

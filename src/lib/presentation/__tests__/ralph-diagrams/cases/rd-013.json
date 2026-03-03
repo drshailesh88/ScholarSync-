@@ -1,0 +1,48 @@
+{
+  "id": "rd-013",
+  "name": "Comparison — RCT vs Observational Study Design (4 attributes)",
+  "category": "comparison_advanced",
+  "difficulty": "medium",
+  "napkinFeature": "comparison_chart",
+  "input": "Compare Randomized Controlled Trial vs Observational Study. RCT: randomization eliminates confounding, gold standard for causality, expensive ($10M-$100M), ethical limitations on interventions. Observational: real-world generalizability, lower cost ($100K-$5M), larger sample sizes possible, susceptible to confounding bias.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "comparison",
+  "expectedItemCount": 2,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (comparison)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 2",
+    "Items present (Randomized Controlled Trial, Observational)",
+    "Description for each item is present",
+    "Numeric values preserved in items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Two-column table with pro/con attributes listed side by side. Headers in bold with distinct background colors.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "comparison",
+      "title": "RCT vs Observational Study Design",
+      "items": [
+        {
+          "label": "Randomized Controlled Trial",
+          "description": "Randomization eliminates confounding; gold standard for causality; costly ($10M-$100M); ethical limitations on harmful interventions",
+          "value": "$10M-$100M",
+          "icon": "🎲"
+        },
+        {
+          "label": "Observational Study",
+          "description": "Real-world generalizability; lower cost ($100K-$5M); larger sample sizes feasible; susceptible to confounding bias",
+          "value": "$100K-$5M",
+          "icon": "👁️"
+        }
+      ],
+      "colorScheme": "blue",
+      "caption": "Trade-offs between interventional and observational research designs"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "rd-016",
+  "name": "Pyramid — Research Funding Tiers with Dollar Amounts",
+  "category": "pyramid_precision",
+  "difficulty": "hard",
+  "napkinFeature": "pyramid_diagram",
+  "input": "Show the research funding pyramid. Bottom (most common): Seed Grants ($5K-$50K), next: R21/Pilot Awards ($100K-$300K), then: R01/R15 Grants ($250K-$500K/year), then: Program Project Grants ($1M-$5M), top (rarest): Center Grants ($5M-$25M/year).",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "pyramid",
+  "expectedItemCount": 5,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (pyramid)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 5",
+    "Items present (Seed Grants, Pilot Awards, R01, Program Project, Center Grants)",
+    "Numeric values preserved in items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Pyramid with 5 layers, widest at bottom (Seed Grants) to narrowest at top (Center Grants). Each layer shows dollar range.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "pyramid",
+      "title": "Research Funding Tiers",
+      "items": [
+        { "label": "Center Grants", "description": "Multi-PI institutional center awards for large research programs", "value": "$5M-$25M/year", "icon": "🏛️" },
+        { "label": "Program Project Grants", "description": "Multi-project collaborative grants with shared resources", "value": "$1M-$5M", "icon": "🔗" },
+        { "label": "R01/R15 Grants", "description": "Standard investigator-initiated research project awards", "value": "$250K-$500K/year", "icon": "📋" },
+        { "label": "R21/Pilot Awards", "description": "Exploratory/developmental grants for preliminary data", "value": "$100K-$300K", "icon": "🌱" },
+        { "label": "Seed Grants", "description": "Small institutional or foundation grants for feasibility studies", "value": "$5K-$50K", "icon": "💰" }
+      ],
+      "colorScheme": "orange",
+      "caption": "NIH and institutional funding tiers from most common (base) to rarest (apex)"
+    }
+  }
+}

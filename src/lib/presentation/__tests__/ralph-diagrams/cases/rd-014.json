@@ -1,0 +1,43 @@
+{
+  "id": "rd-014",
+  "name": "Cycle — Drug Development Lifecycle (7 stages)",
+  "category": "cycle_advanced",
+  "difficulty": "hard",
+  "napkinFeature": "cycle_diagram",
+  "input": "Show the drug development lifecycle as a circular process: Target Discovery, Lead Identification, Preclinical Testing, Phase I (Safety), Phase II (Efficacy), Phase III (Confirmation), FDA Review & Approval. After approval, post-market surveillance feeds back to Target Discovery for next-generation compounds.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "cycle",
+  "expectedItemCount": 7,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (cycle)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 7",
+    "Items present (Target Discovery, Lead Identification, Preclinical, Phase I, Phase II, Phase III, FDA Review)",
+    "Description for each item is present",
+    "Icon present on items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Circular diagram with 7 nodes, each labeled with a phase name. Arrows between nodes form a closed loop.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "cycle",
+      "title": "Drug Development Lifecycle",
+      "items": [
+        { "label": "Target Discovery", "description": "Identify molecular targets involved in disease pathology", "icon": "🎯" },
+        { "label": "Lead Identification", "description": "Screen compound libraries for active molecules against the target", "icon": "🔬" },
+        { "label": "Preclinical Testing", "description": "In vitro and animal model studies for safety and pharmacokinetics", "icon": "🐁" },
+        { "label": "Phase I — Safety", "description": "First-in-human trials with healthy volunteers to assess safety and dosing", "icon": "1️⃣" },
+        { "label": "Phase II — Efficacy", "description": "Controlled trials in patients to evaluate therapeutic efficacy", "icon": "2️⃣" },
+        { "label": "Phase III — Confirmation", "description": "Large multi-site trials to confirm benefit-risk profile", "icon": "3️⃣" },
+        { "label": "FDA Review & Approval", "description": "Regulatory submission, advisory committee review, and market authorization", "icon": "✅" }
+      ],
+      "colorScheme": "green",
+      "caption": "Iterative drug development from target discovery through regulatory approval"
+    }
+  }
+}

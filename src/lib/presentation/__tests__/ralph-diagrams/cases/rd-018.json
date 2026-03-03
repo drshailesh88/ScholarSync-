@@ -1,0 +1,39 @@
+{
+  "id": "rd-018",
+  "name": "Venn — Precision Medicine Overlap (4 domains)",
+  "category": "venn_complex",
+  "difficulty": "hard",
+  "napkinFeature": "venn_diagram",
+  "input": "Create a 4-circle Venn diagram for precision medicine: Genomics (WGS, WES, SNP arrays), Proteomics (mass spectrometry, protein biomarkers), Clinical Data (EHR, imaging, pathology), and Patient Preferences (lifestyle, values, shared decision-making). The central overlap is Precision Treatment Selection.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "venn",
+  "expectedItemCount": 4,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (venn)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 4",
+    "Items present (Genomics, Proteomics, Clinical Data, Patient Preferences)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Four overlapping circles in distinct colors, center labeled Precision Treatment Selection.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "venn",
+      "title": "Precision Medicine Integration",
+      "items": [
+        { "label": "Genomics", "description": "Whole genome/exome sequencing and SNP array analysis for genetic variants", "icon": "🧬" },
+        { "label": "Proteomics", "description": "Mass spectrometry profiling and protein biomarker identification", "icon": "🔬" },
+        { "label": "Clinical Data", "description": "Electronic health records, medical imaging, and pathology reports", "icon": "🏥" },
+        { "label": "Patient Preferences", "description": "Lifestyle factors, personal values, and shared decision-making input", "icon": "👤" }
+      ],
+      "colorScheme": "rainbow",
+      "caption": "Four intersecting domains converging on precision treatment selection"
+    }
+  }
+}

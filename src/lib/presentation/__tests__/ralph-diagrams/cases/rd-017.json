@@ -1,0 +1,40 @@
+{
+  "id": "rd-017",
+  "name": "Matrix — Research Design Decision Grid (2x2)",
+  "category": "matrix_decision",
+  "difficulty": "medium",
+  "napkinFeature": "swot_analysis",
+  "input": "Create a 2x2 decision matrix for choosing research study design. Axes: Internal Validity (Low/High) vs External Validity (Low/High). Top-left (High Internal, Low External): Randomized Controlled Trial — Strong causality but limited generalizability. Top-right (High Internal, High External): Pragmatic Trial — Balances rigor and real-world relevance. Bottom-left (Low Internal, Low External): Case Report — Weakest evidence, hypothesis generating only. Bottom-right (Low Internal, High External): Cross-sectional Survey — Good representativeness but no causal inference.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "matrix",
+  "expectedItemCount": 4,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (matrix)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 4",
+    "Items present (RCT, Pragmatic Trial, Case Report, Cross-sectional)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Four quadrants labeled with study designs"
+  ],
+  "napkinBenchmark": "2x2 grid with axis labels. Each quadrant contains study design name and brief description.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "matrix",
+      "title": "Research Design Decision Matrix",
+      "items": [
+        { "label": "Randomized Controlled Trial", "description": "High internal validity, low external validity — strong causality but limited generalizability to real-world settings", "icon": "🎲" },
+        { "label": "Pragmatic Trial", "description": "High internal and external validity — balances methodological rigor with real-world clinical relevance", "icon": "⚖️" },
+        { "label": "Case Report", "description": "Low internal and external validity — weakest evidence level, useful only for hypothesis generation", "icon": "📝" },
+        { "label": "Cross-sectional Survey", "description": "Low internal validity, high external validity — good population representativeness but no causal inference possible", "icon": "📊" }
+      ],
+      "colorScheme": "blue",
+      "caption": "Study design selection based on internal vs external validity trade-offs"
+    }
+  }
+}
