@@ -1,0 +1,20 @@
+{
+  "id": "ralph-024",
+  "name": "Bidirectional Sequence Diagram — Peer Review Process",
+  "category": "styling_layout",
+  "difficulty": "medium",
+  "input": "Create a sequence diagram showing the academic peer review process. Participants: Author, Editor, Reviewer1, Reviewer2, Reviewer3. Flow: Author submits manuscript to Editor. Editor sends to all 3 reviewers simultaneously. Each reviewer returns verdict independently (Reviewer1: Accept with minor revisions, Reviewer2: Major revisions required, Reviewer3: Accept). Editor compiles decision and sends 'Revise and Resubmit' to Author. Author revises and resubmits. Editor sends to Reviewer2 only for re-review. Reviewer2 returns 'Accept'. Editor sends final 'Accepted for Publication' to Author. Include a note over Editor about 'Desk Review: 3 business days'.",
+  "expectedDiagramType": "sequence",
+  "expectedNodeCount": 5,
+  "qualityCriteria": [
+    "All 5 participants declared",
+    "Simultaneous dispatch to all 3 reviewers",
+    "Distinct verdicts from each reviewer",
+    "Revision cycle shown (revise and resubmit)",
+    "Desk review note present",
+    "Final acceptance message shown",
+    "Manuscript submission as first interaction",
+    "Valid Mermaid syntax that parses without errors"
+  ],
+  "napkinBenchmark": "Sequence diagram with 5 participants, parallel review dispatch, revision cycle, notes, professional journal peer review flow."
+}
