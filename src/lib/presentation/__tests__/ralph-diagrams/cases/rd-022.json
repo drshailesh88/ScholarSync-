@@ -1,0 +1,45 @@
+{
+  "id": "rd-022",
+  "name": "Checklist — IRB Application Requirements with Mixed Statuses",
+  "category": "checklist_complex",
+  "difficulty": "hard",
+  "napkinFeature": "kanban_board",
+  "input": "Create an IRB application checklist with varying statuses. Done: Protocol synopsis, CITI training certificates, CV for PI and Co-I. Active: Informed consent document (revision 3 under review), HIPAA authorization form. Pending: Data safety monitoring plan, recruitment materials, site assessment, budget justification, FDA IND letter.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "checklist",
+  "expectedItemCount": 10,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (checklist)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 10",
+    "Status field is used on items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Checklist with status indicators for each item"
+  ],
+  "napkinBenchmark": "Vertical checklist with green checkmarks for done, blue spinners for active, and grey circles for pending.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "checklist",
+      "title": "IRB Application Requirements",
+      "items": [
+        { "label": "Protocol Synopsis", "description": "Study summary with objectives, design, endpoints", "status": "done" },
+        { "label": "CITI Training Certificates", "description": "Human subjects research and GCP certifications", "status": "done" },
+        { "label": "CV for PI and Co-I", "description": "Updated curriculum vitae with recent publications", "status": "done" },
+        { "label": "Informed Consent Document", "description": "Revision 3 currently under institutional review", "status": "active" },
+        { "label": "HIPAA Authorization Form", "description": "Protected health information use and disclosure authorization", "status": "active" },
+        { "label": "Data Safety Monitoring Plan", "description": "Adverse event reporting and DSMB charter", "status": "pending" },
+        { "label": "Recruitment Materials", "description": "Flyers, social media ads, physician referral letters", "status": "pending" },
+        { "label": "Site Assessment", "description": "Facility capabilities, equipment, staff qualifications", "status": "pending" },
+        { "label": "Budget Justification", "description": "Per-patient costs, investigator effort, lab fees", "status": "pending" },
+        { "label": "FDA IND Letter", "description": "Investigational new drug application acknowledgment", "status": "pending" }
+      ],
+      "colorScheme": "green",
+      "caption": "Status of required documents for Institutional Review Board submission"
+    }
+  }
+}

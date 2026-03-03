@@ -1,0 +1,37 @@
+{
+  "id": "rd-025",
+  "name": "Color Theme Test — Same Content Across All 6 Schemes",
+  "category": "color_theme",
+  "difficulty": "medium",
+  "napkinFeature": "color_themes",
+  "input": "Create a process flow showing a basic 3-step workflow: Plan, Execute, Evaluate. Test with 'theme' color scheme.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "process_flow",
+  "expectedItemCount": 3,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (process_flow)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 3",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "Three-step process flow with theme-based colors applied correctly.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "process_flow",
+      "title": "Research Workflow",
+      "items": [
+        { "label": "Plan", "description": "Define research questions, design methodology, secure funding", "icon": "📋" },
+        { "label": "Execute", "description": "Collect data, run experiments, analyze results", "icon": "⚡" },
+        { "label": "Evaluate", "description": "Interpret findings, peer review, publish conclusions", "icon": "📊" }
+      ],
+      "colorScheme": "theme",
+      "caption": "Simplified three-phase research workflow"
+    }
+  }
+}

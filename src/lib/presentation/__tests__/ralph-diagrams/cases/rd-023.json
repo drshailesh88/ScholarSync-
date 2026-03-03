@@ -1,0 +1,44 @@
+{
+  "id": "rd-023",
+  "name": "Process Flow — Laboratory Sample Processing Pipeline (8 steps with icons)",
+  "category": "process_flow_complex",
+  "difficulty": "hard",
+  "napkinFeature": "process_diagram",
+  "input": "Show a laboratory sample processing workflow: Sample Collection (blood draw, 10mL EDTA tubes) → Centrifugation (3000 RPM, 15 min) → Aliquoting (500μL per tube) → Quality Check (hemolysis, volume verification) → DNA Extraction (Qiagen DNeasy kit) → Quantification (NanoDrop 260/280 ratio) → Normalization (50 ng/μL) → Storage (-80°C biobank).",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "process_flow",
+  "expectedItemCount": 8,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (process_flow)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 8",
+    "Items present (Sample Collection, Centrifugation, Aliquoting, Quality Check, DNA Extraction, Quantification, Normalization, Storage)",
+    "Description for each item is present",
+    "Icon present on items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Horizontal process flow with 8 cards connected by arrows, each showing a step name, brief description with technical specs, and an icon.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "process_flow",
+      "title": "Laboratory Sample Processing Pipeline",
+      "items": [
+        { "label": "Sample Collection", "description": "Blood draw into 10mL EDTA anticoagulant tubes", "icon": "💉" },
+        { "label": "Centrifugation", "description": "Spin at 3000 RPM for 15 minutes to separate plasma", "icon": "🔄" },
+        { "label": "Aliquoting", "description": "Distribute 500μL per cryovial for individual assays", "icon": "🧪" },
+        { "label": "Quality Check", "description": "Assess hemolysis index and verify sample volume", "icon": "✅" },
+        { "label": "DNA Extraction", "description": "Isolate genomic DNA using Qiagen DNeasy Blood kit", "icon": "🧬" },
+        { "label": "Quantification", "description": "Measure concentration and purity via NanoDrop 260/280", "icon": "📏" },
+        { "label": "Normalization", "description": "Dilute samples to standardized 50 ng/μL concentration", "icon": "⚖️" },
+        { "label": "Storage", "description": "Archive in -80°C biobank freezer with barcode tracking", "icon": "❄️" }
+      ],
+      "colorScheme": "blue",
+      "caption": "End-to-end workflow from blood collection to long-term biobank storage"
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "rd-024",
+  "name": "Radial — One Health Research Framework (8 spokes)",
+  "category": "radial_complex",
+  "difficulty": "hard",
+  "napkinFeature": "radial_diagram",
+  "input": "Create a radial diagram for the One Health research framework. Central hub: One Health. Spokes: Human Health (infectious disease surveillance), Animal Health (veterinary epidemiology), Environmental Health (water quality monitoring), Food Safety (farm-to-fork tracking), Antimicrobial Resistance (susceptibility testing), Climate Change (vector ecology), Zoonotic Disease (spillover events), Policy Integration (multi-sector governance).",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "radial",
+  "expectedItemCount": 8,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (radial)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 8",
+    "Items present (Human Health, Animal Health, Environmental, Food Safety, Antimicrobial, Climate, Zoonotic, Policy)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Central node with spokes radiating outward"
+  ],
+  "napkinBenchmark": "Central 'One Health' hub with 8 labeled spokes radiating outward, each with an icon and description.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "radial",
+      "title": "One Health Research Framework",
+      "items": [
+        { "label": "Human Health", "description": "Infectious disease surveillance and clinical epidemiology", "icon": "🏥" },
+        { "label": "Animal Health", "description": "Veterinary epidemiology and livestock disease monitoring", "icon": "🐄" },
+        { "label": "Environmental Health", "description": "Water quality monitoring and pollution assessment", "icon": "🌊" },
+        { "label": "Food Safety", "description": "Farm-to-fork pathogen tracking and supply chain analysis", "icon": "🍎" },
+        { "label": "Antimicrobial Resistance", "description": "Susceptibility testing and stewardship programs", "icon": "💊" },
+        { "label": "Climate Change", "description": "Vector ecology shifts and disease range expansion", "icon": "🌡️" },
+        { "label": "Zoonotic Disease", "description": "Cross-species spillover events and emergence risk", "icon": "🦠" },
+        { "label": "Policy Integration", "description": "Multi-sector governance frameworks and interagency coordination", "icon": "⚖️" }
+      ],
+      "colorScheme": "rainbow",
+      "caption": "Interconnected research domains within the One Health paradigm"
+    }
+  }
+}

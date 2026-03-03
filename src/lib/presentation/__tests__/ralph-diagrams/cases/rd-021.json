@@ -1,0 +1,41 @@
+{
+  "id": "rd-021",
+  "name": "Stats Row — Meta-Analysis Forest Plot Summary Metrics",
+  "category": "stats_row_precision",
+  "difficulty": "hard",
+  "napkinFeature": "data_visualization",
+  "input": "Display meta-analysis summary metrics: 42 Studies Included, Pooled OR 0.73 (95% CI: 0.61-0.88), I² Heterogeneity 47.3%, Egger's Test p = 0.12, NNT 8.4, Overall GRADE: Moderate.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "stats_row",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (stats_row)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 6",
+    "Value for each item is present",
+    "Numeric values preserved in items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Horizontal stat cards with large values, each representing a key meta-analysis metric.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "stats_row",
+      "title": "Meta-Analysis Summary",
+      "items": [
+        { "label": "Studies Included", "value": "42", "icon": "📚" },
+        { "label": "Pooled Odds Ratio", "value": "0.73 (0.61-0.88)", "description": "95% confidence interval", "icon": "📊" },
+        { "label": "I² Heterogeneity", "value": "47.3%", "description": "Moderate heterogeneity", "icon": "📈" },
+        { "label": "Egger's Test", "value": "p = 0.12", "description": "No significant publication bias", "icon": "📐" },
+        { "label": "NNT", "value": "8.4", "description": "Number needed to treat", "icon": "💊" },
+        { "label": "GRADE Rating", "value": "Moderate", "description": "Overall certainty of evidence", "icon": "⭐" }
+      ],
+      "colorScheme": "purple",
+      "caption": "Key statistics from the systematic review and meta-analysis"
+    }
+  }
+}

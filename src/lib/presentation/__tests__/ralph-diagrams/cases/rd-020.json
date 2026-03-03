@@ -1,0 +1,41 @@
+{
+  "id": "rd-020",
+  "name": "Cause-Effect — Publication Bias Root Causes (Fishbone with 5 branches)",
+  "category": "cause_effect_advanced",
+  "difficulty": "hard",
+  "napkinFeature": "fishbone_diagram",
+  "input": "Create a fishbone diagram analyzing root causes of publication bias in medical research. Effect: Publication Bias. Categories: Researchers (career pressure, positive result preference), Journals (preference for novel findings, rejection of null results), Funding (industry sponsorship, grant renewal pressure), Methodology (underpowered studies, flexible analysis), Peer Review (reviewer bias toward significance, lack of blinding).",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "cause_effect",
+  "expectedItemCount": 5,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (cause_effect)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 5",
+    "Items present (Researchers, Journals, Funding, Methodology, Peer Review)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Cause and effect branches for each category"
+  ],
+  "napkinBenchmark": "Fishbone with central spine pointing to effect, 5 diagonal branches each with 2 sub-causes.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "cause_effect",
+      "title": "Root Causes of Publication Bias",
+      "items": [
+        { "label": "Researchers", "description": "Career pressure to publish positive results; inherent preference for confirming hypotheses", "icon": "👩‍🔬" },
+        { "label": "Journals", "description": "Editorial preference for novel significant findings; systematic rejection of null or negative results", "icon": "📰" },
+        { "label": "Funding", "description": "Industry sponsorship bias toward favorable outcomes; grant renewal pressure for positive data", "icon": "💰" },
+        { "label": "Methodology", "description": "Underpowered studies with small sample sizes; flexible analysis strategies (p-hacking)", "icon": "📐" },
+        { "label": "Peer Review", "description": "Reviewer bias favoring statistically significant results; lack of outcome blinding in review", "icon": "👥" }
+      ],
+      "colorScheme": "orange",
+      "caption": "Ishikawa analysis of factors contributing to publication bias in medical literature"
+    }
+  }
+}
