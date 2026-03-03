@@ -9,10 +9,14 @@ import { getLangfuse, isLangfuseConfigured } from "@/lib/langfuse";
 //   anthropic → ANTHROPIC_API_KEY
 //   zhipu     → ZHIPU_API_KEY
 
-type Provider = "zhipu" | "anthropic";
+type Provider = "zhipu" | "anthropic" | "openai";
 
 export const AI_PROVIDER: Provider =
-  (process.env.AI_PROVIDER as Provider) === "zhipu" ? "zhipu" : "anthropic";
+  (process.env.AI_PROVIDER as Provider) === "zhipu"
+    ? "zhipu"
+    : (process.env.AI_PROVIDER as Provider) === "openai"
+      ? "openai"
+      : "anthropic";
 
 // ── Lazy-initialised clients (created once, reused) ────────────────
 let _zhipu: ReturnType<typeof createZhipu> | null = null;
@@ -98,12 +102,15 @@ export function traceGeneration(meta: {
 /** Returns true when the active provider's API key is set. */
 export function isAIConfigured(): boolean {
   if (AI_PROVIDER === "anthropic") return !!process.env.ANTHROPIC_API_KEY;
+  if (AI_PROVIDER === "openai") return !!process.env.OPENAI_API_KEY;
   return !!process.env.ZHIPU_API_KEY;
 }
 
 /** Human-readable name of the env var needed for the active provider. */
 export function requiredKeyName(): string {
-  return AI_PROVIDER === "anthropic" ? "ANTHROPIC_API_KEY" : "ZHIPU_API_KEY";
+  if (AI_PROVIDER === "anthropic") return "ANTHROPIC_API_KEY";
+  if (AI_PROVIDER === "openai") return "OPENAI_API_KEY";
+  return "ZHIPU_API_KEY";
 }
 
 // ── Model factories ────────────────────────────────────────────────
@@ -113,6 +120,9 @@ export function getModel() {
   if (AI_PROVIDER === "anthropic") {
     return getAnthropic()("claude-sonnet-4-20250514");
   }
+  if (AI_PROVIDER === "openai") {
+    return getOpenAI()("gpt-4o");
+  }
   return getZhipu()("glm-5");
 }
 
@@ -120,6 +130,9 @@ export function getModel() {
 export function getSmallModel() {
   if (AI_PROVIDER === "anthropic") {
     return getAnthropic()("claude-haiku-4-5-20251001");
+  }
+  if (AI_PROVIDER === "openai") {
+    return getOpenAI()("gpt-4o-mini");
   }
   // GLM-4-flash is Z.AI's cost-efficient model
   return getZhipu()("glm-4-flash");
@@ -129,6 +142,9 @@ export function getSmallModel() {
 export function getBigModel() {
   if (AI_PROVIDER === "anthropic") {
     return getAnthropic()("claude-sonnet-4-20250514");
+  }
+  if (AI_PROVIDER === "openai") {
+    return getOpenAI()("gpt-4o");
   }
   return getZhipu()("glm-5");
 }

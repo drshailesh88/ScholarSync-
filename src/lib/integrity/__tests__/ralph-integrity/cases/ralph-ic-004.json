@@ -1,0 +1,23 @@
+{
+  "id": "ralph-ic-004",
+  "name": "Human literature review — Indian epidemiology",
+  "category": "ai_detection",
+  "phase": 1,
+  "difficulty": "medium",
+  "input": {
+    "mode": "ai_detection",
+    "textKey": "literature_review"
+  },
+  "expectedResult": {
+    "humanScore_min": 70,
+    "humanScore_max": 100,
+    "overallRisk": "low",
+    "flaggedParagraphs_max": 1
+  },
+  "qualityCriteria": [
+    "Literature review scores ≥70% human probability",
+    "Indian-specific data (ICMR-INDIAB, INR costs, named Indian researchers) signals human authorship",
+    "Contextual references to Ayushman Bharat and tier-2 cities should not be flagged",
+    "Overall risk is 'low'"
+  ]
+}

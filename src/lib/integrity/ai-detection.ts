@@ -401,8 +401,7 @@ const paragraphAssessmentSchema = z.object({
         ),
       suggestion: z
         .string()
-        .optional()
-        .describe("Actionable suggestion to improve originality"),
+        .describe("Actionable suggestion to improve originality, or empty string if none"),
     })
   ),
 });

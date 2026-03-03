@@ -1,0 +1,295 @@
+{
+  "lastUpdated": "2026-03-03T02:21:19.987Z",
+  "totalCycles": 12,
+  "completedCycles": 1,
+  "phaseAverages": {
+    "phase1": 7.3,
+    "phase2": 0,
+    "phase3": 0
+  },
+  "cycles": [
+    {
+      "cycleId": "cycle-1",
+      "name": "Baseline Specificity — Human Medical Text",
+      "phase": 1,
+      "timestamp": "2026-03-03T02:21:19.987Z",
+      "casesRun": 5,
+      "casesPassing": 5,
+      "avgHumanScore": 87.4,
+      "dimensionScores": {
+        "sensitivity": 5,
+        "specificity": 10,
+        "actionability": 10,
+        "citationAccuracy": 5,
+        "robustness": 5
+      },
+      "weightedScore": 7.3,
+      "results": [
+        {
+          "testId": "ralph-ic-001",
+          "name": "Human case report — specificity baseline",
+          "humanScore": 92,
+          "overallRisk": "low",
+          "paragraphScores": [
+            95,
+            92,
+            90
+          ],
+          "flags": [],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "specificity": 10,
+            "actionability": 10,
+            "sensitivity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 7.25,
+          "details": [
+            {
+              "dimension": "specificity",
+              "metric": "humanScore",
+              "value": 92,
+              "target": "≥ 70%",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "overallRisk",
+              "value": "low",
+              "target": "low",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "flaggedParagraphs",
+              "value": 0,
+              "target": "≤ 1",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "misleadingFlags",
+              "value": 0,
+              "target": "0 (no false AI flags on human text)",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-002",
+          "name": "Human methods section — CONSORT-style rigidity",
+          "humanScore": 87,
+          "overallRisk": "low",
+          "paragraphScores": [
+            85,
+            90,
+            88,
+            83
+          ],
+          "flags": [],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "specificity": 10,
+            "actionability": 10,
+            "sensitivity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 7.25,
+          "details": [
+            {
+              "dimension": "specificity",
+              "metric": "humanScore",
+              "value": 87,
+              "target": "≥ 65%",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "overallRisk",
+              "value": "low",
+              "target": "low",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "flaggedParagraphs",
+              "value": 0,
+              "target": "≤ 2",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "misleadingFlags",
+              "value": 0,
+              "target": "0 (no false AI flags on human text)",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-003",
+          "name": "Human discussion — hedging in context",
+          "humanScore": 85,
+          "overallRisk": "low",
+          "paragraphScores": [
+            85,
+            90,
+            80
+          ],
+          "flags": [],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "specificity": 10,
+            "actionability": 10,
+            "sensitivity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 7.25,
+          "details": [
+            {
+              "dimension": "specificity",
+              "metric": "humanScore",
+              "value": 85,
+              "target": "≥ 70%",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "overallRisk",
+              "value": "low",
+              "target": "low",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "flaggedParagraphs",
+              "value": 0,
+              "target": "≤ 1",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "misleadingFlags",
+              "value": 0,
+              "target": "0 (no false AI flags on human text)",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-004",
+          "name": "Human literature review — Indian epidemiology",
+          "humanScore": 85,
+          "overallRisk": "low",
+          "paragraphScores": [
+            85,
+            90,
+            80
+          ],
+          "flags": [],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "specificity": 10,
+            "actionability": 10,
+            "sensitivity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 7.25,
+          "details": [
+            {
+              "dimension": "specificity",
+              "metric": "humanScore",
+              "value": 85,
+              "target": "≥ 70%",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "overallRisk",
+              "value": "low",
+              "target": "low",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "flaggedParagraphs",
+              "value": 0,
+              "target": "≤ 1",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "misleadingFlags",
+              "value": 0,
+              "target": "0 (no false AI flags on human text)",
+              "pass": true
+            }
+          ]
+        },
+        {
+          "testId": "ralph-ic-005",
+          "name": "Human clinical protocol — paediatric sepsis",
+          "humanScore": 88,
+          "overallRisk": "low",
+          "paragraphScores": [
+            95,
+            90,
+            85,
+            80
+          ],
+          "flags": [
+            "formulaic hedging"
+          ],
+          "pass": true,
+          "notes": [],
+          "dimensions": {
+            "specificity": 10,
+            "actionability": 10,
+            "sensitivity": 5,
+            "citationAccuracy": 5,
+            "robustness": 5
+          },
+          "weighted": 7.25,
+          "details": [
+            {
+              "dimension": "specificity",
+              "metric": "humanScore",
+              "value": 88,
+              "target": "≥ 65%",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "overallRisk",
+              "value": "low",
+              "target": "low",
+              "pass": true
+            },
+            {
+              "dimension": "specificity",
+              "metric": "flaggedParagraphs",
+              "value": 0,
+              "target": "≤ 2",
+              "pass": true
+            },
+            {
+              "dimension": "actionability",
+              "metric": "misleadingFlags",
+              "value": 0,
+              "target": "0 (no false AI flags on human text)",
+              "pass": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
