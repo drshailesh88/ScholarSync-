@@ -395,23 +395,25 @@ function generateFAQResponse(
     }
   }
 
-  // Q: Enrollment
+  // Q: Enrollment — cite each chunk's sentences with that chunk's own index
   lines.push(`\n\n**Q: Who was enrolled in these trials?**`);
   const enrollParts: string[] = [];
   for (const fd of faqData) {
-    const cites: string[] = [];
-    if (fd.mIdx) cites.push(`[${fd.mIdx}]`);
-    if (fd.m2Idx) cites.push(`[${fd.m2Idx}]`);
-    if (cites.length === 0 && fd.r2Idx) cites.push(`[${fd.r2Idx}]`);
-    if (fd.mChunk) {
-      // Split chunk text and cite each sentence to avoid grounding gaps
+    const chunkParts: string[] = [];
+    if (fd.mChunk && fd.mIdx) {
       const sentences = fd.mChunk.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
-      const cited = sentences.map((s: string) => `${s.replace(/\.\s*$/, "")} ${cites.join("")}`).join(". ");
-      enrollParts.push(`${fd.abbrev}: ${cited}`);
-    } else if (fd.r2Chunk && fd.r2Chunk.text.match(/\d+ patients/)) {
+      chunkParts.push(...sentences.map((s: string) => `${s.replace(/\.\s*$/, "")} [${fd.mIdx}]`));
+    }
+    if (fd.m2Chunk && fd.m2Idx) {
+      const sentences = fd.m2Chunk.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
+      chunkParts.push(...sentences.map((s: string) => `${s.replace(/\.\s*$/, "")} [${fd.m2Idx}]`));
+    }
+    if (chunkParts.length === 0 && fd.r2Chunk && fd.r2Idx && fd.r2Chunk.text.match(/\d+ patients/)) {
       const sentences = fd.r2Chunk.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
-      const cited = sentences.map((s: string) => `${s.replace(/\.\s*$/, "")} ${cites.join("")}`).join(". ");
-      enrollParts.push(`${fd.abbrev}: ${cited}`);
+      chunkParts.push(...sentences.map((s: string) => `${s.replace(/\.\s*$/, "")} [${fd.r2Idx}]`));
+    }
+    if (chunkParts.length > 0) {
+      enrollParts.push(`${fd.abbrev}: ${chunkParts.join(". ")}`);
     }
   }
   lines.push(`\nA: ${enrollParts.join(". ")}.`);
@@ -502,11 +504,16 @@ function generateFAQResponse(
   lines.push(`\n\n**Q: How long were patients followed in each trial?**`);
   const followUpParts: string[] = [];
   for (const fd of faqData) {
-    const fuMatch = fd.rChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i)
-      || fd.mChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
-    if (fuMatch && (fd.rIdx || fd.mIdx)) {
-      const cite = fd.rIdx || fd.mIdx;
-      followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatch[1]} ${fuMatch[2]} [${cite}]`);
+    // Use the citation index from the chunk that actually contains the follow-up data
+    const fuMatchR = fd.rChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
+    const fuMatchM = fd.mChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
+    const fuMatchR2 = fd.r2Chunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
+    if (fuMatchR && fd.rIdx) {
+      followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatchR[1]} ${fuMatchR[2]} [${fd.rIdx}]`);
+    } else if (fuMatchR2 && fd.r2Idx) {
+      followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatchR2[1]} ${fuMatchR2[2]} [${fd.r2Idx}]`);
+    } else if (fuMatchM && fd.mIdx) {
+      followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatchM[1]} ${fuMatchM[2]} [${fd.mIdx}]`);
     }
   }
   if (followUpParts.length > 0) {
@@ -818,7 +825,10 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       : chunks.find((c) => c.section_type === "methods");
     if (methodsChunk) {
       const chunkIndex = chunks.indexOf(methodsChunk) + 1;
-      lines.push(`\n${methodsChunk.text} [${chunkIndex}].`);
+      // Cite each sentence individually to maintain grounding
+      const mSents = methodsChunk.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
+      const cited = mSents.map((s: string) => `${s.replace(/\.\s*$/, "")} [${chunkIndex}]`).join(". ");
+      lines.push(`\n${cited}.`);
     }
   } else if (
     query.query.toLowerCase().includes("main findings") ||
@@ -1387,15 +1397,19 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       }
     }
 
-    // Q: Follow-up durations
+    // Q: Follow-up durations — cite the chunk that actually mentions follow-up
     lines.push(`\n\n**Q: How long were patients followed in each trial?**`);
     const followUpParts: string[] = [];
     for (const fd of faqData) {
-      const fuMatch = fd.rChunk?.text.match(/median follow-up[^.]*(\d+\.?\d*)\s*(months|years)/i)
-        || fd.mChunk?.text.match(/median follow-up[^.]*(\d+\.?\d*)\s*(months|years)/i);
-      if (fuMatch && (fd.rIdx || fd.mIdx)) {
-        const cite = fd.rIdx || fd.mIdx;
-        followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatch[1]} ${fuMatch[2]} [${cite}]`);
+      const fuMatchR = fd.rChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
+      const fuMatchM = fd.mChunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
+      const fuMatchR2 = fd.r2Chunk?.text.match(/median follow-up.*?(\d+\.?\d*)\s*(months|years)/i);
+      if (fuMatchR && fd.rIdx) {
+        followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatchR[1]} ${fuMatchR[2]} [${fd.rIdx}]`);
+      } else if (fuMatchR2 && fd.r2Idx) {
+        followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatchR2[1]} ${fuMatchR2[2]} [${fd.r2Idx}]`);
+      } else if (fuMatchM && fd.mIdx) {
+        followUpParts.push(`${fd.abbrev} had a median follow-up of ${fuMatchM[1]} ${fuMatchM[2]} [${fd.mIdx}]`);
       }
     }
     if (followUpParts.length > 0) {
