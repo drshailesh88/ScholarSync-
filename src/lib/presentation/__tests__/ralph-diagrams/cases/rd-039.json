@@ -1,0 +1,30 @@
+{
+  "id": "rd-039",
+  "name": "Mermaid Flowchart with Subgraphs — Multi-Phase Experiment",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "smart_connectors",
+  "input": "Create a flowchart with subgraphs showing a multi-phase experiment: Phase 1 subgraph (Sample Collection → DNA Extraction → Quality Check), Phase 2 subgraph (Library Prep → Sequencing → Raw Data), Phase 3 subgraph (Alignment → Variant Calling → Annotation), with connections between phases.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "flowchart",
+  "expectedNodeCount": 9,
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (flowchart)",
+    "Valid Mermaid syntax",
+    "Node count at least 9",
+    "Subgraph is present",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Flowchart with grouped subgraph containers showing phase separation.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "flowchart",
+      "syntax": "flowchart TD\n    subgraph Phase1[Phase 1: Sample Prep]\n        A[Sample Collection] --> B[DNA Extraction]\n        B --> C[Quality Check]\n    end\n    subgraph Phase2[Phase 2: Sequencing]\n        D[Library Prep] --> E[Sequencing]\n        E --> F[Raw Data]\n    end\n    subgraph Phase3[Phase 3: Analysis]\n        G[Alignment] --> H[Variant Calling]\n        H --> I[Annotation]\n    end\n    C --> D\n    F --> G",
+      "caption": "Multi-phase genomics experiment workflow with subgraph containers"
+    }
+  }
+}

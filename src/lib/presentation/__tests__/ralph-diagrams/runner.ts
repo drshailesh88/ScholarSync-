@@ -590,14 +590,20 @@ function assessQuality(
     } else if (lower.includes("entity") && lower.includes("definition")) {
       if (block.type === "diagram") {
         const data = block.data as DiagramData;
-        criteriaResults[criterion] = /\w+\s*\{/.test(data.syntax) && /\w+\s+(int|string|date|float|boolean)/i.test(data.syntax);
+        // Support both ER diagram (int/string/date fields) and class diagram (+Type name) patterns
+        const hasERFields = /\w+\s+(int|string|date|float|boolean)/i.test(data.syntax);
+        const hasClassFields = /[+\-#~]\w+\s+\w+/.test(data.syntax) || /class\s+\w+\s*\{/.test(data.syntax);
+        criteriaResults[criterion] = /\w+\s*\{/.test(data.syntax) && (hasERFields || hasClassFields);
       } else {
         criteriaResults[criterion] = false;
       }
     } else if (lower.includes("relationship") && lower.includes("line")) {
       if (block.type === "diagram") {
         const data = block.data as DiagramData;
-        criteriaResults[criterion] = /\|\|--|--o\{|--\|\||o--/.test(data.syntax);
+        // Support both ER diagram (||--|--o{) and class diagram (-->, --*, --o) relationship syntax
+        const hasERRelations = /\|\|--|--o\{|--\|\||o--/.test(data.syntax);
+        const hasClassRelations = /-->|--\*|--o|\.\.>|<\|--/.test(data.syntax);
+        criteriaResults[criterion] = hasERRelations || hasClassRelations;
       } else {
         criteriaResults[criterion] = false;
       }

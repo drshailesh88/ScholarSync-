@@ -1,0 +1,42 @@
+{
+  "id": "rd-042",
+  "name": "Infographic Rainbow Color Scheme — Research Methodology Spectrum",
+  "category": "color_theme",
+  "difficulty": "medium",
+  "napkinFeature": "color_themes",
+  "input": "Create a process flow showing the research methodology spectrum from qualitative to quantitative: Ethnography → Case Study → Mixed Methods → Survey Research → Experimental Design → Meta-Analysis. Use rainbow color scheme.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "process_flow",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (process_flow)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 6",
+    "All labels are meaningful",
+    "Description set on each item",
+    "Arrows between steps implied by process flow",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "Process flow with rainbow coloring showing methodology continuum.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "process_flow",
+      "title": "Research Methodology Spectrum",
+      "items": [
+        { "label": "Ethnography", "description": "Deep immersion in cultural context, qualitative data collection", "icon": "🔍" },
+        { "label": "Case Study", "description": "In-depth analysis of specific instances or phenomena", "icon": "📋" },
+        { "label": "Mixed Methods", "description": "Integration of qualitative and quantitative approaches", "icon": "🔀" },
+        { "label": "Survey Research", "description": "Structured data collection from representative samples", "icon": "📊" },
+        { "label": "Experimental Design", "description": "Controlled manipulation of variables with randomization", "icon": "🧪" },
+        { "label": "Meta-Analysis", "description": "Statistical synthesis of multiple study findings", "icon": "📈" }
+      ],
+      "colorScheme": "rainbow",
+      "caption": "Continuum from qualitative to quantitative research methodologies"
+    }
+  }
+}

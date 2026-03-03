@@ -1,0 +1,29 @@
+{
+  "id": "rd-038",
+  "name": "Mermaid Class Diagram — Research Paper Object Model",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "class_diagrams",
+  "input": "Create a class diagram showing a research paper object model: Paper has title, abstract, doi. Paper contains many Authors (name, affiliation, orcid). Paper has many References. Paper belongs to Journal (name, impactFactor). Paper has ReviewStatus (submitted, underReview, accepted, rejected).",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "classDiagram",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (classDiagram)",
+    "Valid Mermaid syntax",
+    "Contains entity definitions",
+    "Contains relationship lines",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "UML class diagram with attributes, methods, and relationship annotations.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "classDiagram",
+      "syntax": "classDiagram\n    class Paper {\n        +String title\n        +String abstract\n        +String doi\n        +submit()\n        +revise()\n    }\n    class Author {\n        +String name\n        +String affiliation\n        +String orcid\n    }\n    class Reference {\n        +String citation\n        +int year\n    }\n    class Journal {\n        +String name\n        +float impactFactor\n    }\n    class ReviewStatus {\n        <<enumeration>>\n        SUBMITTED\n        UNDER_REVIEW\n        ACCEPTED\n        REJECTED\n    }\n    Paper \"1\" --> \"*\" Author : authors\n    Paper \"1\" --> \"*\" Reference : references\n    Paper \"*\" --> \"1\" Journal : publishedIn\n    Paper --> ReviewStatus : status",
+      "caption": "Research paper domain model with UML class relationships"
+    }
+  }
+}

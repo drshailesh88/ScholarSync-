@@ -1,0 +1,39 @@
+{
+  "id": "rd-043",
+  "name": "Infographic Orange Scheme — Bioethics Framework Pyramid",
+  "category": "color_theme",
+  "difficulty": "medium",
+  "napkinFeature": "color_themes",
+  "input": "Create a pyramid showing the bioethics framework hierarchy: Autonomy (base), Beneficence, Non-maleficence, Justice (top). Use orange color scheme.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "pyramid",
+  "expectedItemCount": 4,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (pyramid)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 4",
+    "All labels are meaningful",
+    "Layers form pyramid structure",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "Pyramid with orange color scheme applied to bioethics framework.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "pyramid",
+      "title": "Bioethics Principlist Framework",
+      "items": [
+        { "label": "Autonomy", "description": "Respect for individual self-determination and informed consent" },
+        { "label": "Beneficence", "description": "Obligation to act in the patient's best interest" },
+        { "label": "Non-maleficence", "description": "Duty to do no harm, primum non nocere" },
+        { "label": "Justice", "description": "Fair distribution of benefits, risks, and resources" }
+      ],
+      "colorScheme": "orange",
+      "caption": "Beauchamp and Childress four principles of biomedical ethics"
+    }
+  }
+}
