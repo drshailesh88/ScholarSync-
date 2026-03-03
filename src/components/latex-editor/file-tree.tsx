@@ -14,6 +14,7 @@ import {
   CaretRight,
   ListBullets,
   ArrowLineDown,
+  Sparkle,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
@@ -38,6 +39,8 @@ interface FileTreeProps {
   files: FileItem[];
   onFilesChange: (files: FileItem[]) => void;
   onJumpToLine?: (line: number) => void;
+  onFileSelect?: (file: FileItem) => void;
+  onDraftSection?: (sectionTitle: string) => void;
 }
 
 function getFileIcon(path: string) {
@@ -91,7 +94,7 @@ function buildFolderTree(files: FileItem[]): { folders: Record<string, FileItem[
   return { folders, rootFiles };
 }
 
-export function FileTree({ projectId, files, onFilesChange, onJumpToLine }: FileTreeProps) {
+export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFileSelect, onDraftSection }: FileTreeProps) {
   const activeFileId = useLatexEditorStore((s) => s.activeFileId);
   const setActiveFileId = useLatexEditorStore((s) => s.setActiveFileId);
   const setDocumentContent = useLatexEditorStore((s) => s.setDocumentContent);
@@ -131,7 +134,8 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine }: File
   const handleSelectFile = useCallback((file: FileItem) => {
     setActiveFileId(file.id);
     setDocumentContent(file.content ?? "");
-  }, [setActiveFileId, setDocumentContent]);
+    onFileSelect?.(file);
+  }, [setActiveFileId, setDocumentContent, onFileSelect]);
 
   const handleCreateFile = useCallback(async () => {
     const name = newFileName.trim();
@@ -376,15 +380,28 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine }: File
               </p>
             ) : (
               outline.map((item, i) => (
-                <button
+                <div
                   key={i}
-                  onClick={() => onJumpToLine?.(item.line)}
-                  className="w-full flex items-center gap-1.5 px-2 py-1 rounded-md text-left text-[10px] text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+                  className="flex items-center group"
                   style={{ paddingLeft: `${8 + item.level * 12}px` }}
                 >
-                  <ArrowLineDown size={9} className="shrink-0 opacity-50" />
-                  <span className="truncate">{item.title}</span>
-                </button>
+                  <button
+                    onClick={() => onJumpToLine?.(item.line)}
+                    className="flex-1 flex items-center gap-1.5 px-2 py-1 rounded-md text-left text-[10px] text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors min-w-0"
+                  >
+                    <ArrowLineDown size={9} className="shrink-0 opacity-50" />
+                    <span className="truncate">{item.title}</span>
+                  </button>
+                  {onDraftSection && (
+                    <button
+                      onClick={() => onDraftSection(item.title)}
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded text-ink-muted hover:text-brand hover:bg-brand/10 transition-all shrink-0"
+                      title={`AI Draft: ${item.title}`}
+                    >
+                      <Sparkle size={10} />
+                    </button>
+                  )}
+                </div>
               ))
             )}
           </div>

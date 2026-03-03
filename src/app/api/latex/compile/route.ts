@@ -51,23 +51,67 @@ export async function POST(req: Request) {
 
     const startTime = Date.now();
 
-    // Call the LaTeX compiler microservice
-    const compileResponse = await fetch(`${LATEX_COMPILER_URL}/compile`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(LATEX_COMPILER_SECRET
-          ? { Authorization: `Bearer ${LATEX_COMPILER_SECRET}` }
-          : {}),
-      },
-      body: JSON.stringify({
-        files: files.map((f) => ({
-          path: f.path,
-          content: f.content,
-          isMain: f.isMain,
-        })),
-      }),
+    const compilePayload = JSON.stringify({
+      files: files.map((f) => ({
+        path: f.path,
+        content: f.content,
+        isMain: f.isMain,
+      })),
     });
+
+    const compileHeaders: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(LATEX_COMPILER_SECRET
+        ? { Authorization: `Bearer ${LATEX_COMPILER_SECRET}` }
+        : {}),
+    };
+
+    // Retry transient compiler failures (connection reset, 503, timeout)
+    let compileResponse: Response | null = null;
+    const MAX_RETRIES = 2;
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        compileResponse = await fetch(`${LATEX_COMPILER_URL}/compile`, {
+          method: "POST",
+          headers: compileHeaders,
+          body: compilePayload,
+          signal: AbortSignal.timeout(60_000), // 60s timeout per attempt
+        });
+
+        // Only retry on 503 (service unavailable) or 504 (gateway timeout)
+        if (
+          (compileResponse.status === 503 || compileResponse.status === 504) &&
+          attempt < MAX_RETRIES
+        ) {
+          await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
+
+        break; // Success or non-retryable error
+      } catch (fetchErr) {
+        if (attempt < MAX_RETRIES) {
+          await new Promise((r) => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
+        // All retries exhausted — return a clear error
+        console.error("Compiler service unreachable after retries:", fetchErr);
+        return NextResponse.json(
+          {
+            error: "LaTeX compiler service is currently unavailable. Please try again later.",
+            retryable: true,
+          },
+          { status: 503 }
+        );
+      }
+    }
+
+    if (!compileResponse) {
+      return NextResponse.json(
+        { error: "Compiler service unavailable", retryable: true },
+        { status: 503 }
+      );
+    }
 
     const durationMs = Date.now() - startTime;
 

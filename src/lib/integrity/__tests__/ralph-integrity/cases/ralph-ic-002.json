@@ -1,0 +1,23 @@
+{
+  "id": "ralph-ic-002",
+  "name": "Human methods section — CONSORT-style rigidity",
+  "category": "ai_detection",
+  "phase": 1,
+  "difficulty": "medium",
+  "input": {
+    "mode": "ai_detection",
+    "textKey": "methods_section"
+  },
+  "expectedResult": {
+    "humanScore_min": 65,
+    "humanScore_max": 100,
+    "overallRisk": "low",
+    "flaggedParagraphs_max": 2
+  },
+  "qualityCriteria": [
+    "Methods section scores ≥65% human probability (lower bar due to formulaic structure)",
+    "No more than 2 paragraphs flagged",
+    "Overall risk is 'low'",
+    "CONSORT-required language (randomisation, blinding, sample size) should not be penalised"
+  ]
+}

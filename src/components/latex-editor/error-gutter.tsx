@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Warning, WarningCircle, Wrench, CircleNotch } from "@phosphor-icons/react";
+import { useState, useMemo } from "react";
+import { Warning, WarningCircle, Wrench, CircleNotch, Lightbulb, CaretDown, CaretRight } from "@phosphor-icons/react";
+import { enrichError, type EnrichedDiagnostic } from "./error-intelligence";
 
 export interface CompilationDiagnostic {
   line: number | null;
@@ -17,11 +18,31 @@ interface ErrorGutterPanelProps {
 
 export function ErrorGutterPanel({ diagnostics, onGoToLine, onFixError }: ErrorGutterPanelProps) {
   const [fixingIndex, setFixingIndex] = useState<number | null>(null);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+
+  // Enrich diagnostics with human-readable explanations
+  const enriched = useMemo(
+    () => diagnostics.map((d) => ({ ...d, enriched: enrichError(d.message) })),
+    [diagnostics]
+  );
 
   if (diagnostics.length === 0) return null;
 
   const errors = diagnostics.filter((d) => d.severity === "error");
   const warnings = diagnostics.filter((d) => d.severity === "warning");
+
+  const categoryLabel = (cat: EnrichedDiagnostic["category"]) => {
+    const labels: Record<string, string> = {
+      syntax: "Syntax",
+      package: "Package",
+      math: "Math",
+      reference: "Reference",
+      font: "Font",
+      file: "File",
+      other: "General",
+    };
+    return labels[cat] ?? "General";
+  };
 
   return (
     <div className="border-t border-border-subtle bg-surface/80">
@@ -42,47 +63,98 @@ export function ErrorGutterPanel({ diagnostics, onGoToLine, onFixError }: ErrorG
       </div>
 
       {/* Scrollable list */}
-      <div className="max-h-32 overflow-y-auto border-t border-border-subtle">
-        {diagnostics.map((d, i) => (
-          <div
-            key={i}
-            className="flex items-start gap-2 px-4 py-1.5 text-[11px] hover:bg-surface-raised/50 transition-colors group"
-          >
-            {d.severity === "error" ? (
-              <WarningCircle size={12} className="text-red-400 shrink-0 mt-0.5" />
-            ) : (
-              <Warning size={12} className="text-amber-400 shrink-0 mt-0.5" />
-            )}
-            <div className="flex-1 min-w-0">
-              {d.line != null && (
-                <button
-                  onClick={() => onGoToLine?.(d.line!)}
-                  className="text-brand hover:underline font-mono mr-1"
-                >
-                  L{d.line}
-                </button>
-              )}
-              <span className="text-ink-muted">{d.message}</span>
-            </div>
-            {d.severity === "error" && onFixError && (
-              <button
-                onClick={() => {
-                  setFixingIndex(i);
-                  onFixError(d);
-                  setTimeout(() => setFixingIndex(null), 3000);
-                }}
-                className="opacity-0 group-hover:opacity-100 p-1 rounded text-ink-muted hover:text-brand hover:bg-brand/10 transition-all shrink-0"
-                title="AI fix"
+      <div className="max-h-48 overflow-y-auto border-t border-border-subtle">
+        {enriched.map((d, i) => {
+          const isExpanded = expandedIndex === i;
+          const hasExplanation = d.enriched.explanation !== d.enriched.raw;
+          const hasSuggestion = !!d.enriched.suggestion;
+
+          return (
+            <div key={i} className="border-b border-border-subtle/50 last:border-b-0">
+              {/* Main error row */}
+              <div
+                className="flex items-start gap-2 px-4 py-1.5 text-[11px] hover:bg-surface-raised/50 transition-colors group cursor-pointer"
+                onClick={() => setExpandedIndex(isExpanded ? null : i)}
               >
-                {fixingIndex === i ? (
-                  <CircleNotch size={12} className="animate-spin" />
+                {d.severity === "error" ? (
+                  <WarningCircle size={12} className="text-red-400 shrink-0 mt-0.5" />
                 ) : (
-                  <Wrench size={12} />
+                  <Warning size={12} className="text-amber-400 shrink-0 mt-0.5" />
                 )}
-              </button>
-            )}
-          </div>
-        ))}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    {d.line != null && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onGoToLine?.(d.line!);
+                        }}
+                        className="text-brand hover:underline font-mono shrink-0"
+                      >
+                        L{d.line}
+                      </button>
+                    )}
+                    {hasExplanation && (
+                      <span className="text-[8px] px-1 py-0.5 rounded bg-brand/10 text-brand font-medium shrink-0">
+                        {categoryLabel(d.enriched.category)}
+                      </span>
+                    )}
+                  </div>
+                  {/* Show enriched explanation when available, raw message otherwise */}
+                  <span className="text-ink-muted">
+                    {hasExplanation ? d.enriched.explanation : d.message}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  {d.severity === "error" && onFixError && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFixingIndex(i);
+                        onFixError(d);
+                        setTimeout(() => setFixingIndex(null), 3000);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded text-ink-muted hover:text-brand hover:bg-brand/10 transition-all"
+                      title="AI fix"
+                    >
+                      {fixingIndex === i ? (
+                        <CircleNotch size={12} className="animate-spin" />
+                      ) : (
+                        <Wrench size={12} />
+                      )}
+                    </button>
+                  )}
+                  {(hasExplanation || hasSuggestion) && (
+                    isExpanded ? (
+                      <CaretDown size={10} className="text-ink-muted" />
+                    ) : (
+                      <CaretRight size={10} className="text-ink-muted" />
+                    )
+                  )}
+                </div>
+              </div>
+
+              {/* Expanded detail panel */}
+              {isExpanded && (hasExplanation || hasSuggestion) && (
+                <div className="px-4 pb-2 ml-6 space-y-1.5">
+                  {/* Show raw message when we replaced it with the explanation */}
+                  {hasExplanation && (
+                    <p className="text-[10px] text-ink-muted/60 font-mono break-all">
+                      {d.message}
+                    </p>
+                  )}
+                  {hasSuggestion && (
+                    <div className="flex items-start gap-1.5 text-[10px] text-emerald-400">
+                      <Lightbulb size={12} className="shrink-0 mt-0.5" />
+                      <span>{d.enriched.suggestion}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

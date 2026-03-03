@@ -35,6 +35,22 @@ class ItalicWidget extends WidgetType {
 // Visual Decorations Plugin
 // ---------------------------------------------------------------------------
 
+/**
+ * Find the matching closing brace for a command, handling nested braces.
+ * Returns the index of the closing brace, or -1 if not found.
+ */
+function findMatchingBrace(text: string, openIdx: number): number {
+  let depth = 0;
+  for (let i = openIdx; i < text.length; i++) {
+    if (text[i] === "{") depth++;
+    else if (text[i] === "}") {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
 /** Decorations that render LaTeX commands visually while keeping them editable */
 function buildVisualDecorations(view: EditorView): DecorationSet {
   const builder = new RangeSetBuilder<Decoration>();
@@ -44,7 +60,7 @@ function buildVisualDecorations(view: EditorView): DecorationSet {
     const line = doc.line(i);
     const text = line.text;
 
-    // Section headings - make them visually larger
+    // Section headings — make them visually larger
     const sectionMatch = text.match(/^\\(section|subsection|subsubsection)\*?\{(.+)\}$/);
     if (sectionMatch) {
       const level = sectionMatch[1] === "section" ? 0 : sectionMatch[1] === "subsection" ? 1 : 2;
@@ -52,47 +68,72 @@ function buildVisualDecorations(view: EditorView): DecorationSet {
       builder.add(line.from, line.from, Decoration.line({ class: sizes[level] }));
     }
 
-    // Bold text styling
-    let boldMatch;
-    const boldRegex = /\\textbf\{([^}]*)\}/g;
-    while ((boldMatch = boldRegex.exec(text)) !== null) {
-      const start = line.from + boldMatch.index;
-      // Hide the \textbf{ part
-      builder.add(start, start + 8, Decoration.replace({ widget: new BoldWidget() }));
-      // Mark the content as bold
-      const contentEnd = start + boldMatch[0].length - 1;
-      builder.add(start + 8, contentEnd, Decoration.mark({ class: "font-bold" }));
-      // Hide the closing }
-      builder.add(contentEnd, contentEnd + 1, Decoration.replace({}));
+    // Process formatting commands with proper brace matching
+    const formatCommands: { cmd: string; cmdLen: number; cls: string; widget: WidgetType | null }[] = [
+      { cmd: "\\textbf{", cmdLen: 8, cls: "font-bold", widget: new BoldWidget() },
+      { cmd: "\\textit{", cmdLen: 8, cls: "italic", widget: new ItalicWidget() },
+      { cmd: "\\emph{", cmdLen: 6, cls: "italic", widget: null },
+      { cmd: "\\underline{", cmdLen: 11, cls: "underline", widget: null },
+      { cmd: "\\texttt{", cmdLen: 8, cls: "font-mono text-sm", widget: null },
+    ];
+
+    for (const fmt of formatCommands) {
+      let searchFrom = 0;
+      while (true) {
+        const cmdIdx = text.indexOf(fmt.cmd, searchFrom);
+        if (cmdIdx === -1) break;
+
+        const braceOpen = cmdIdx + fmt.cmdLen - 1;
+        const braceClose = findMatchingBrace(text, braceOpen);
+        if (braceClose === -1) {
+          searchFrom = cmdIdx + fmt.cmdLen;
+          continue;
+        }
+
+        const absStart = line.from + cmdIdx;
+        const absContentStart = line.from + braceOpen + 1;
+        const absContentEnd = line.from + braceClose;
+        const absEnd = absContentEnd + 1;
+
+        try {
+          if (fmt.widget) {
+            builder.add(absStart, absContentStart, Decoration.replace({ widget: fmt.widget }));
+          } else {
+            builder.add(absStart, absContentStart, Decoration.replace({}));
+          }
+          if (absContentStart < absContentEnd) {
+            builder.add(absContentStart, absContentEnd, Decoration.mark({ class: fmt.cls }));
+          }
+          builder.add(absContentEnd, absEnd, Decoration.replace({}));
+        } catch {
+          // Overlapping decorations — skip
+        }
+
+        searchFrom = braceClose + 1;
+      }
     }
 
-    // Italic text styling
-    let italicMatch;
-    const italicRegex = /\\textit\{([^}]*)\}/g;
-    while ((italicMatch = italicRegex.exec(text)) !== null) {
-      const start = line.from + italicMatch.index;
-      builder.add(start, start + 8, Decoration.replace({ widget: new ItalicWidget() }));
-      const contentEnd = start + italicMatch[0].length - 1;
-      builder.add(start + 8, contentEnd, Decoration.mark({ class: "italic" }));
-      builder.add(contentEnd, contentEnd + 1, Decoration.replace({}));
+    // List items — visual indicator
+    if (text.match(/^\s*\\item\s/)) {
+      builder.add(line.from, line.from, Decoration.line({ class: "cm-visual-list-item" }));
     }
 
-    // Emph styling
-    let emphMatch;
-    const emphRegex = /\\emph\{([^}]*)\}/g;
-    while ((emphMatch = emphRegex.exec(text)) !== null) {
-      const start = line.from + emphMatch.index;
-      builder.add(start, start + 6, Decoration.replace({}));
-      const contentEnd = start + emphMatch[0].length - 1;
-      builder.add(start + 6, contentEnd, Decoration.mark({ class: "italic" }));
-      builder.add(contentEnd, contentEnd + 1, Decoration.replace({}));
+    // Citation preview — subtle styling for \cite{key}
+    if (text.includes("\\cite")) {
+      const citeRegex = /\\cite[tp]?\{[^}]*\}/g;
+      let citeMatch;
+      while ((citeMatch = citeRegex.exec(text)) !== null) {
+        const absStart = line.from + citeMatch.index;
+        const absEnd = absStart + citeMatch[0].length;
+        builder.add(absStart, absEnd, Decoration.mark({ class: "cm-visual-cite" }));
+      }
     }
 
-    // Environment highlights
-    if (text.match(/^\\begin\{(equation|align|figure|table)\*?\}/)) {
+    // Environment highlights (expanded list)
+    if (text.match(/^\\begin\{(equation|align|figure|table|itemize|enumerate)\*?\}/)) {
       builder.add(line.from, line.from, Decoration.line({ class: "cm-visual-env-start" }));
     }
-    if (text.match(/^\\end\{(equation|align|figure|table)\*?\}/)) {
+    if (text.match(/^\\end\{(equation|align|figure|table|itemize|enumerate)\*?\}/)) {
       builder.add(line.from, line.from, Decoration.line({ class: "cm-visual-env-end" }));
     }
   }
@@ -184,6 +225,19 @@ const visualTheme = EditorView.theme({
     paddingLeft: "8px",
     opacity: "0.6",
     fontSize: "0.85em",
+  },
+  // List item styling
+  ".cm-visual-list-item": {
+    paddingLeft: "24px",
+    position: "relative",
+  },
+  // Citation styling
+  ".cm-visual-cite": {
+    color: "var(--color-brand)",
+    fontWeight: "500",
+    backgroundColor: "var(--color-brand)08",
+    borderRadius: "3px",
+    padding: "0 2px",
   },
   // Tooltip/autocomplete styles
   ".cm-tooltip": {

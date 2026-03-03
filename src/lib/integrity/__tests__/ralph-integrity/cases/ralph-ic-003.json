@@ -1,0 +1,23 @@
+{
+  "id": "ralph-ic-003",
+  "name": "Human discussion — hedging in context",
+  "category": "ai_detection",
+  "phase": 1,
+  "difficulty": "medium",
+  "input": {
+    "mode": "ai_detection",
+    "textKey": "discussion"
+  },
+  "expectedResult": {
+    "humanScore_min": 70,
+    "humanScore_max": 100,
+    "overallRisk": "low",
+    "flaggedParagraphs_max": 1
+  },
+  "qualityCriteria": [
+    "Discussion section scores ≥70% human probability",
+    "Context-appropriate hedging should not trigger AI flags",
+    "References to specific studies (STARRT-AKI, ELAIN, AKIKI) signal human writing",
+    "Self-critical limitations section should read as genuine"
+  ]
+}

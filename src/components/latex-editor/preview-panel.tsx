@@ -87,11 +87,17 @@ async function renderMath(container: HTMLElement) {
   }
 }
 
-export function PreviewPanel() {
+interface PreviewPanelProps {
+  /** Current top line in the editor for scroll sync */
+  editorTopLine?: number;
+}
+
+export function PreviewPanel({ editorTopLine }: PreviewPanelProps) {
   const documentContent = useLatexEditorStore((s) => s.documentContent);
   const previewMode = useLatexEditorStore((s) => s.previewMode);
   const compiledPdfUrl = useLatexEditorStore((s) => s.compiledPdfUrl);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [renderedHtml, setRenderedHtml] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -118,6 +124,24 @@ export function PreviewPanel() {
     }
   }, [renderedHtml]);
 
+  // Scroll sync: scroll preview to match editor top line
+  useEffect(() => {
+    if (!editorTopLine || !containerRef.current || !scrollContainerRef.current) return;
+    const headings = containerRef.current.querySelectorAll("[data-line]");
+    let targetEl: Element | null = null;
+    for (const el of headings) {
+      const line = parseInt(el.getAttribute("data-line") || "0", 10);
+      if (line > 0 && line <= editorTopLine) {
+        targetEl = el;
+      } else if (line > editorTopLine) {
+        break;
+      }
+    }
+    if (targetEl) {
+      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [editorTopLine]);
+
   if (previewMode === "pdf" && compiledPdfUrl) {
     return (
       <div className="h-full w-full">
@@ -131,7 +155,7 @@ export function PreviewPanel() {
   }
 
   return (
-    <div className="h-full overflow-auto">
+    <div ref={scrollContainerRef} className="h-full overflow-auto">
       <div
         ref={containerRef}
         className="latex-preview max-w-none px-10 py-8"
