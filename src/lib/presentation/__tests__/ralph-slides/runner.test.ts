@@ -2535,3 +2535,228 @@ describe("Cycle 23: Theme Color Hex Validation", () => {
     expect(new Set(names).size).toBe(names.length);
   });
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 24: Comprehensive Stress Tests, Animation Preset Map Integrity,
+//           Cross-Reference Edge Cases, Text Diff Merging, PRISMA Style
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 24: Animation Preset Map Integrity", () => {
+  test("ANIMATION_PRESETS array and MAP have same entries", () => {
+    expect(ANIMATION_PRESETS.length).toBe(Object.keys(ANIMATION_PRESETS_MAP).length);
+    for (const preset of ANIMATION_PRESETS) {
+      expect(ANIMATION_PRESETS_MAP[preset.key]).toBe(preset);
+    }
+  });
+
+  test("each preset generate returns correct count", () => {
+    for (const preset of ANIMATION_PRESETS) {
+      for (const count of [0, 1, 5, 10]) {
+        const result = preset.generate(count);
+        expect(result).toHaveLength(count);
+      }
+    }
+  });
+
+  test("applyAnimationPreset returns same length as input", () => {
+    for (const key of Object.keys(ANIMATION_PRESETS_MAP)) {
+      const blocks = Array.from({ length: 3 }, () => makeTextBlock("t"));
+      const result = applyAnimationPreset(blocks, key as keyof typeof ANIMATION_PRESETS_MAP);
+      expect(result).toHaveLength(3);
+    }
+  });
+
+  test("applyAnimationPreset with unknown key returns original blocks", () => {
+    const blocks = [makeTextBlock("a")];
+    const result = applyAnimationPreset(blocks, "nonexistent" as never);
+    expect(result).toBe(blocks);
+  });
+});
+
+describe("Cycle 24: Cross-Reference Segment Types", () => {
+  test("text segments have type 'text'", () => {
+    const segments = resolveCrossReferences("plain text");
+    expect(segments).toHaveLength(1);
+    expect(segments[0].type).toBe("text");
+    expect(segments[0].content).toBe("plain text");
+  });
+
+  test("figure ref segments have type 'figure_ref'", () => {
+    const segments = resolveCrossReferences("{fig:5}");
+    expect(segments).toHaveLength(1);
+    expect(segments[0].type).toBe("figure_ref");
+    expect(segments[0].content).toBe("Figure 5");
+    expect(segments[0].number).toBe(5);
+  });
+
+  test("table ref segments have type 'table_ref'", () => {
+    const segments = resolveCrossReferences("{tbl:3}");
+    expect(segments).toHaveLength(1);
+    expect(segments[0].type).toBe("table_ref");
+    expect(segments[0].content).toBe("Table 3");
+    expect(segments[0].number).toBe(3);
+  });
+
+  test("text before and after ref produces 3 segments", () => {
+    const segments = resolveCrossReferences("See {fig:1} below");
+    expect(segments).toHaveLength(3);
+    expect(segments[0]).toEqual({ type: "text", content: "See " });
+    expect(segments[1]).toEqual({ type: "figure_ref", content: "Figure 1", number: 1 });
+    expect(segments[2]).toEqual({ type: "text", content: " below" });
+  });
+
+  test("resolveCrossReferencesPlain replaces all refs", () => {
+    const result = resolveCrossReferencesPlain(
+      "As shown in {fig:1}, {fig:2}, and {tbl:1}"
+    );
+    expect(result).toBe("As shown in Figure 1, Figure 2, and Table 1");
+  });
+});
+
+describe("Cycle 24: Text Diff Segment Merging", () => {
+  test("identical text produces single 'same' segment", () => {
+    const result = computeTextDiff("a b c", "a b c");
+    expect(result).toEqual([{ type: "same", text: "a b c" }]);
+  });
+
+  test("segments of same type are merged", () => {
+    const result = computeTextDiff("a b", "c d");
+    // removed segments should be merged, added segments should be merged
+    const removed = result.filter((s) => s.type === "removed");
+    const added = result.filter((s) => s.type === "added");
+    // Adjacent same-type segments get merged
+    for (const segs of [removed, added]) {
+      for (let i = 1; i < segs.length; i++) {
+        // Should not have two adjacent segments of same type in the result
+        expect(result.indexOf(segs[i]) - result.indexOf(segs[i - 1])).toBeGreaterThanOrEqual(1);
+      }
+    }
+  });
+
+  test("diff of single-word texts", () => {
+    const result = computeTextDiff("hello", "world");
+    expect(result.some((s) => s.type === "removed" && s.text === "hello")).toBe(true);
+    expect(result.some((s) => s.type === "added" && s.text === "world")).toBe(true);
+  });
+});
+
+describe("Cycle 24: PRISMA Diagram Style", () => {
+  test("has colored subgraph styles", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid).toContain("style Identification fill:#E0F2FE");
+    expect(mermaid).toContain("style Screening fill:#FEF3C7");
+    expect(mermaid).toContain("style Eligibility fill:#FEE2E2");
+    expect(mermaid).toContain("style Included fill:#D1FAE5");
+  });
+
+  test("stroke colors are consistent with PRISMA standard", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid).toContain("stroke:#0284C7"); // Identification blue
+    expect(mermaid).toContain("stroke:#D97706"); // Screening amber
+    expect(mermaid).toContain("stroke:#DC2626"); // Eligibility red
+    expect(mermaid).toContain("stroke:#059669"); // Included green
+  });
+
+  test("all subgraph styles have stroke-width:2px", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    const styleLines = mermaid.split("\n").filter((l) => l.includes("style "));
+    expect(styleLines).toHaveLength(4);
+    for (const line of styleLines) {
+      expect(line).toContain("stroke-width:2px");
+    }
+  });
+});
+
+describe("Cycle 24: Version Diff Stats Validation", () => {
+  function makeVersion(
+    slideData: { id: number; title: string }[]
+  ): VersionSnapshot {
+    return {
+      deck: { id: 1, title: "D", theme: "modern", createdAt: new Date(), updatedAt: new Date() },
+      slides: slideData.map((s, i) => ({
+        id: s.id,
+        title: s.title,
+        subtitle: null,
+        layout: "title_content" as SlideLayout,
+        sortOrder: i,
+        speakerNotes: null,
+        contentBlocks: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })),
+    } as unknown as VersionSnapshot;
+  }
+
+  test("stats sum equals total slides processed", () => {
+    const v1 = makeVersion([{ id: 1, title: "A" }, { id: 2, title: "B" }, { id: 3, title: "C" }]);
+    const v2 = makeVersion([{ id: 1, title: "A" }, { id: 2, title: "B2" }, { id: 4, title: "D" }]);
+    const diff = computeDeckDiff(v1, v2);
+    const total = diff.stats.added + diff.stats.removed + diff.stats.modified + diff.stats.unchanged;
+    expect(total).toBe(diff.slideDiffs.length);
+  });
+
+  test("empty v1, 3 slides in v2 = 3 added", () => {
+    const v1 = makeVersion([]);
+    const v2 = makeVersion([{ id: 1, title: "A" }, { id: 2, title: "B" }, { id: 3, title: "C" }]);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.stats.added).toBe(3);
+    expect(diff.stats.removed).toBe(0);
+    expect(diff.stats.modified).toBe(0);
+    expect(diff.stats.unchanged).toBe(0);
+  });
+
+  test("3 slides in v1, empty v2 = 3 removed", () => {
+    const v1 = makeVersion([{ id: 1, title: "A" }, { id: 2, title: "B" }, { id: 3, title: "C" }]);
+    const v2 = makeVersion([]);
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.stats.removed).toBe(3);
+    expect(diff.stats.added).toBe(0);
+  });
+
+  test("identical decks = all unchanged", () => {
+    const v = makeVersion([{ id: 1, title: "A" }, { id: 2, title: "B" }]);
+    const diff = computeDeckDiff(v, v);
+    expect(diff.stats.unchanged).toBe(2);
+    expect(diff.stats.modified).toBe(0);
+  });
+});
+
+describe("Cycle 24: Auto-Numbering Stress & Ordering", () => {
+  test("100 slides with alternating chart/table", () => {
+    const slides = Array.from({ length: 100 }, (_, i) => ({
+      contentBlocks: [i % 2 === 0 ? makeChartBlock() : makeTableBlock()],
+    }));
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    let figCount = 0;
+    let tblCount = 0;
+    for (let i = 0; i < 100; i++) {
+      if (i % 2 === 0) {
+        figCount++;
+        expect(figureLabel(result[i].contentBlocks[0])).toBe(`Figure ${figCount}`);
+      } else {
+        tblCount++;
+        expect(figureLabel(result[i].contentBlocks[0])).toBe(`Table ${tblCount}`);
+      }
+    }
+    expect(figCount).toBe(50);
+    expect(tblCount).toBe(50);
+  });
+
+  test("sortOrder determines numbering order", () => {
+    const slides = [
+      { sortOrder: 2, contentBlocks: [makeChartBlock()] },
+      { sortOrder: 0, contentBlocks: [makeChartBlock()] },
+      { sortOrder: 1, contentBlocks: [makeChartBlock()] },
+    ];
+    const result = autoNumberFiguresAndTables(slides);
+    // Sorted by sortOrder: 0, 1, 2
+    // So slides[1] (sortOrder=0) gets Figure 1
+    // slides[2] (sortOrder=1) gets Figure 2
+    // slides[0] (sortOrder=2) gets Figure 3
+    expect(figureLabel(result[0].contentBlocks[0])).toBe("Figure 1"); // result is sorted
+    expect(figureLabel(result[1].contentBlocks[0])).toBe("Figure 2");
+    expect(figureLabel(result[2].contentBlocks[0])).toBe("Figure 3");
+  });
+});
