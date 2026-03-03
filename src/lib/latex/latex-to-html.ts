@@ -151,8 +151,18 @@ export function latexToHtml(tex: string): string {
   // Convert environments (figure, table, verbatim, quote, center)
   html = convertEnvironments(html);
   // Remove remaining known commands that don't render (safely)
-  html = html.replace(/\\(?:usepackage|documentclass|bibliographystyle|bibliography|label|ref|cite|includegraphics|input|include)\{[^}]*\}(?:\{[^}]*\})?/g, "");
+  html = html.replace(/\\(?:usepackage|documentclass|bibliographystyle|bibliography|label|ref|eqref|pageref|cite|citep|citet|citeauthor|autoref|cref|includegraphics|input|include)\b(?:\[[^\]]*\])?\{[^}]*\}(?:\{[^}]*\})?/g, "");
   html = html.replace(/\\(?:usepackage|documentclass)\[[^\]]*\]\{[^}]*\}/g, "");
+
+  // \today — replace with current date
+  html = html.replace(/\\today\b/g, new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }));
+
+  // \protect — just remove
+  html = html.replace(/\\protect\s*/g, "");
+
+  // Page style commands — just remove
+  html = html.replace(/\\(?:pagenumbering|pagestyle|thispagestyle)\{[^}]*\}/g, "");
+  html = html.replace(/\\setcounter\{[^}]*\}\{[^}]*\}/g, "");
 
   // \newpage and \clearpage
   html = html.replace(/\\(?:newpage|clearpage|cleardoublepage)/g, '<hr class="latex-pagebreak" />');

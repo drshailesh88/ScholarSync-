@@ -1232,3 +1232,120 @@ describe("Cycle 6: Outline with chapters and parts", () => {
     expect(text).toContain("    Subsection");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// Cycle 7: Cross-referencing, cite styles, today, stress tests
+// ═══════════════════════════════════════════════════════════════
+
+describe("Cycle 7: Cross-referencing in preview", () => {
+  it("strips label commands", () => {
+    const html = latexToHtml("\\section{Intro}\\label{sec:intro}");
+    expect(html).not.toContain("\\label");
+    expect(html).toContain("Intro");
+  });
+
+  it("strips ref commands", () => {
+    const html = latexToHtml("See Section~\\ref{sec:intro}.");
+    expect(html).not.toContain("\\ref");
+  });
+
+  it("strips eqref commands", () => {
+    const html = latexToHtml("Equation~\\eqref{eq:main}");
+    expect(html).not.toContain("\\eqref");
+  });
+
+  it("strips pageref commands", () => {
+    const html = latexToHtml("On page~\\pageref{sec:intro}");
+    expect(html).not.toContain("\\pageref");
+  });
+
+  it("strips cite with optional argument", () => {
+    const html = latexToHtml("\\cite[p.~42]{smith2024}");
+    expect(html).not.toContain("\\cite");
+  });
+
+  it("strips citep and citet", () => {
+    const html = latexToHtml("\\citep{a} and \\citet{b}");
+    expect(html).not.toContain("\\citep");
+    expect(html).not.toContain("\\citet");
+  });
+});
+
+describe("Cycle 7: Additional command support", () => {
+  it("converts today to current date in body", () => {
+    const html = latexToHtml("Date: \\today");
+    // Should contain something date-like (month name at minimum)
+    expect(html).not.toContain("\\today");
+  });
+
+  it("strips pagenumbering command", () => {
+    const html = latexToHtml("\\pagenumbering{roman}\nContent here");
+    expect(html).not.toContain("\\pagenumbering");
+    expect(html).toContain("Content here");
+  });
+
+  it("strips setcounter command", () => {
+    const html = latexToHtml("\\setcounter{page}{1}\nContent");
+    expect(html).not.toContain("\\setcounter");
+    expect(html).toContain("Content");
+  });
+
+  it("strips pagestyle command", () => {
+    const html = latexToHtml("\\pagestyle{plain}\nContent");
+    expect(html).not.toContain("\\pagestyle");
+  });
+
+  it("strips thispagestyle command", () => {
+    const html = latexToHtml("\\thispagestyle{empty}\nContent");
+    expect(html).not.toContain("\\thispagestyle");
+  });
+
+  it("converts protect command (strips it)", () => {
+    const html = latexToHtml("\\protect\\ref{fig:1}");
+    expect(html).not.toContain("\\protect");
+  });
+});
+
+describe("Cycle 7: Stress tests - large documents", () => {
+  it("handles document with many sections", () => {
+    let tex = "\\begin{document}\n";
+    for (let i = 0; i < 50; i++) {
+      tex += `\\section{Section ${i}}\nContent for section ${i}.\n`;
+    }
+    tex += "\\end{document}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("Section 0");
+    expect(html).toContain("Section 49");
+    expect(html.match(/latex-section/g)?.length).toBe(50);
+  });
+
+  it("handles document with many list items", () => {
+    let tex = "\\begin{itemize}\n";
+    for (let i = 0; i < 100; i++) {
+      tex += `\\item Item ${i}\n`;
+    }
+    tex += "\\end{itemize}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("Item 0");
+    expect(html).toContain("Item 99");
+  });
+
+  it("handles document with multiple environments", () => {
+    let tex = "";
+    for (let i = 0; i < 20; i++) {
+      tex += `\\begin{quote}\nQuote ${i}\n\\end{quote}\n`;
+    }
+    const html = latexToHtml(tex);
+    expect(html).toContain("Quote 0");
+    expect(html).toContain("Quote 19");
+    expect(html.match(/latex-quote/g)?.length).toBe(20);
+  });
+
+  it("handles mixed math and text without mangling", () => {
+    const tex = "Text $a + b = c$ more text $d^2$ and \\textbf{bold} end.";
+    const html = latexToHtml(tex);
+    expect(html).toContain("$a + b = c$");
+    expect(html).toContain("$d^2$");
+    expect(html).toContain("<strong>bold</strong>");
+  });
+});
