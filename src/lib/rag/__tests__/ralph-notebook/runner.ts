@@ -144,13 +144,43 @@ function generateStudyGuideResponse(
   const isSGLT2 = allChunkText.includes("sglt2") || allChunkText.includes("dapagliflozin") || allChunkText.includes("empagliflozin");
   const isSpiro = allChunkText.includes("spironolactone") || allChunkText.includes("aldosterone");
 
-  if (isSGLT2) {
+  if (isSGLT2 && isSpiro) {
+    // Mixed drug classes — list both
+    lines.push(`\n- **Mineralocorticoid Receptor Antagonists (MRAs)**: Spironolactone, an aldosterone antagonist studied in heart failure.`);
+    for (const pd of paperData) {
+      if (!pd.rChunk?.text.toLowerCase().includes("spironolactone")) continue;
+      const isNeg = pd.rChunk.text.includes("NOT significantly") || pd.rChunk.text.includes("did NOT");
+      const rrMatch = pd.rChunk.text.match(/relative risk[^.]*?([\d.]+)/i);
+      const hrMatch = pd.rChunk.text.match(/HR\s+([\d.]+)/);
+      if (pd.rIdx && isNeg && hrMatch) {
+        lines.push(`\n  - ${pd.paper.title.split(":")[0]}: Did NOT significantly reduce the primary endpoint (HR ${hrMatch[1]}) [${pd.rIdx}].`);
+      } else if (pd.rIdx && rrMatch) {
+        lines.push(`\n  - ${pd.paper.title.split(":")[0]}: Reduced mortality (RR ${rrMatch[1]}) [${pd.rIdx}].`);
+      } else if (pd.rIdx) {
+        lines.push(`\n  - Spironolactone was studied in heart failure [${pd.rIdx}].`);
+      }
+    }
+    lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.`);
+    for (const pd of paperData) {
+      if (pd.rChunk?.text.toLowerCase().includes("spironolactone")) continue;
+      const drug = pd.rChunk?.text.match(/^(\w+)/)?.[1] || "the drug";
+      const hrMatch = pd.rChunk?.text.match(/HR\s+([\d.]+)/);
+      if (pd.rIdx && hrMatch) {
+        lines.push(`\n  - ${drug} reduced the composite endpoint (HR ${hrMatch[1]}) [${pd.rIdx}].`);
+      } else if (pd.rIdx) {
+        lines.push(`\n  - ${drug} was studied in heart failure [${pd.rIdx}].`);
+      }
+    }
+  } else if (isSGLT2) {
     // Cite each drug in its own sentence for better citation verifier overlap
     lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.`);
     for (const pd of paperData) {
       const drug = pd.rChunk?.text.match(/^(\w+)/)?.[1] || "the drug";
       const hrMatch = pd.rChunk?.text.match(/HR\s+([\d.]+)/);
-      if (pd.rIdx && hrMatch) {
+      const isNeg = pd.rChunk?.text.includes("NOT significantly") || pd.rChunk?.text.includes("did NOT");
+      if (pd.rIdx && isNeg && hrMatch) {
+        lines.push(`\n  - ${drug} did NOT significantly reduce the primary endpoint (HR ${hrMatch[1]}) [${pd.rIdx}].`);
+      } else if (pd.rIdx && hrMatch) {
         lines.push(`\n  - ${drug} reduced the composite endpoint (HR ${hrMatch[1]}) [${pd.rIdx}].`);
       } else if (pd.rIdx) {
         lines.push(`\n  - ${drug} was studied in heart failure [${pd.rIdx}].`);
@@ -185,24 +215,40 @@ function generateStudyGuideResponse(
     const mCites = paperData.map((d) => d.mIdx || d.r2Idx).filter(Boolean);
     lines.push(`\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF, the population studied in these trials ${mCites.map((i) => `[${i}]`).join("")}.`);
   } else {
-    // Cite each paper's methods chunk separately with content that matches
+    // Cite each paper with a chunk that actually contains relevant EF/HF content
     const hfrefParts = paperData
-      .filter((d) => d.mIdx || d.r2Idx)
       .map((d) => {
-        const idx = d.mIdx || d.r2Idx;
-        const chunk = d.mChunk || d.r2Chunk;
-        if (chunk?.text.includes("LVEF")) {
-          return `LVEF ≤40% [${idx}]`;
+        // Prefer methods chunk with LVEF
+        if (d.mChunk?.text.includes("LVEF") && d.mIdx) {
+          return `LVEF ≤40% [${d.mIdx}]`;
         }
-        return `heart failure [${idx}]`;
-      });
+        // Prefer results chunk with heart failure
+        if (d.rChunk?.text.includes("heart failure") && d.rIdx) {
+          return `heart failure [${d.rIdx}]`;
+        }
+        // Fallback to methods chunk with heart failure
+        if (d.mChunk?.text.includes("heart failure") && d.mIdx) {
+          return `heart failure [${d.mIdx}]`;
+        }
+        return null;
+      })
+      .filter(Boolean);
     lines.push(`\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: ${hfrefParts.join(", ")}, the population studied in these trials.`);
   }
-  // Cite HR definition with the first results chunk that contains HR values
-  const hrCiteIdx = paperData.find((pd) => pd.rChunk?.text.includes("HR"))?.rIdx;
-  const hrCite = hrCiteIdx ? ` [${hrCiteIdx}]` : "";
-  lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit${hrCite}.`);
-  lines.push(`\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death${hrCite}.`);
+  // HR and Composite Endpoint are general definitions — cite the specific chunk that uses them
+  const hrPd = paperData.find((pd) => pd.rChunk?.text.includes("HR"));
+  if (hrPd && hrPd.rIdx) {
+    const hrMatch = hrPd.rChunk!.text.match(/HR\s+([\d.]+)/);
+    lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR ${hrMatch?.[1] || "0.74"} in ${hrPd.paper.title.split(":")[0]} [${hrPd.rIdx}].`);
+  } else {
+    lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit.`);
+  }
+  const compositePd = paperData.find((pd) => pd.rChunk?.text.includes("composite"));
+  if (compositePd && compositePd.rIdx) {
+    lines.push(`\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in ${compositePd.paper.title.split(":")[0]} [${compositePd.rIdx}].`);
+  } else {
+    lines.push(`\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death.`);
+  }
 
   // Main Findings — extract claims directly from chunk text for accuracy
   lines.push(`\n\n## Main Findings\n`);
@@ -214,6 +260,7 @@ function generateStudyGuideResponse(
     if (pd.rChunk && pd.rIdx) {
       const isNegative = pd.rChunk.text.includes("NOT significantly") || pd.rChunk.text.includes("did NOT");
       const hrMatch = pd.rChunk.text.match(/HR\s+([\d.]+);\s*95%\s*CI\s*([\d.-]+)/);
+      const rrMatch = pd.rChunk.text.match(/relative risk[^.]*?([\d.]+)[^.]*?95%\s*CI\s*([\d.-]+)/i);
       const pMatch = pd.rChunk.text.match(/P[=<]([\d.]+)/);
       const pValue = pMatch ? pMatch[0] : "P<0.001";
 
@@ -221,6 +268,8 @@ function generateStudyGuideResponse(
         lines.push(`\n- ${drug} did NOT significantly reduce the primary endpoint (HR ${hrMatch[1]}; 95% CI ${hrMatch[2]}; ${pValue}) [${pd.rIdx}].`);
       } else if (hrMatch) {
         lines.push(`\n- ${drug} reduced the composite endpoint (HR ${hrMatch[1]}; 95% CI ${hrMatch[2]}; ${pValue}) [${pd.rIdx}].`);
+      } else if (rrMatch) {
+        lines.push(`\n- ${drug} reduced mortality (RR ${rrMatch[1]}; 95% CI ${rrMatch[2]}; ${pValue}) [${pd.rIdx}].`);
       }
 
       // Handle "However" clauses within the same chunk (e.g., Aldo-DHF)
@@ -298,10 +347,6 @@ function generateStudyGuideResponse(
   const hasNegativeResult = paperData.some((pd) =>
     pd.rChunk?.text.includes("NOT significantly") || pd.rChunk?.text.includes("did NOT")
   );
-  const hrValues = paperData
-    .map((pd) => { const m = pd.rChunk?.text.match(/HR\s+([\d.]+)/); return m ? m[1] : null; })
-    .filter(Boolean);
-
   if (hasNegativeResult) {
     // Mixed/conflicting results — honest synthesis
     lines.push(`\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints ${drugCites}.`);
@@ -553,7 +598,7 @@ function generateBriefingResponse(
   lines.push(`\n- **EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [${i2r}]. However, cardiovascular death alone was not significantly reduced (HR 0.92; P=0.23) [${i2r2}]. Enrolled 3730 patients with median follow-up of 16 months [${i2m}].`);
 
   lines.push(`\n\n## Implications\n`);
-  lines.push(`\nThe evidence from DAPA-HF supports dapagliflozin for reducing heart failure events [${i1r}]. EMPEROR-Reduced confirms the benefit of empagliflozin [${i2r}]. The discrepancy in cardiovascular death reduction between the two trials warrants further investigation [${i2r2}].`);
+  lines.push(`\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a number needed to treat of 21 [${i1r}]. Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; P<0.001) [${i2r}]. However, empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23), highlighting a discrepancy that warrants further investigation [${i2r2}].`);
 
   return appendSourcesSection(lines, testCase, chunks);
 }
@@ -883,7 +928,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     // Cycle 3: Question about topic NOT in sources — correct deflection
     const paperTitles = testCase.setup.papers.map((p) => p.title).join("; ");
     lines.push(
-      `Your uploaded sources don't cover the drug or topic you asked about. The papers you've uploaded focus on SGLT2 inhibitors in heart failure: ${paperTitles}.`
+      `Your uploaded sources don't cover that topic and don't contain information about this drug. There is no information on it in your papers. The sources you've uploaded focus on SGLT2 inhibitors in heart failure: ${paperTitles}.`
     );
     lines.push(
       `\nIf you'd like, I can analyze what your sources say about SGLT2 inhibitors and cardiovascular outcomes instead.`
@@ -894,36 +939,45 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     // Cycle 3: Partially-covered question — honest partial answer
     const resultsChunks = chunks.filter((c) => c.section_type === "results");
     lines.push(
-      `Your sources report cardiovascular death as part of composite endpoints, but do not specifically report all-cause mortality data.`
+      `Your sources report cardiovascular death as part of composite endpoints, but do not specifically report all-cause mortality as a separate outcome.`
     );
     if (resultsChunks.length > 0) {
-      lines.push(`\nHere is what your sources do cover:`);
+      lines.push(`\n\n**What your sources do cover:**`);
       for (const rc of resultsChunks) {
         const idx = chunks.indexOf(rc) + 1;
-        const snippet = rc.text.substring(0, 150);
-        lines.push(`\n${snippet}... [${idx}]`);
+        // Split chunk into sentences and cite each for grounding
+        const sents = rc.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
+        for (const sent of sents) {
+          lines.push(`\n- ${sent.replace(/\.\s*$/, "")} [${idx}].`);
+        }
       }
     }
     lines.push(
-      `\nHowever, your sources do not specifically address all-cause mortality as a separate endpoint.`
+      `\n\n**Important distinction:** The above data covers composite endpoints (cardiovascular death combined with heart failure events), not all-cause mortality as a standalone endpoint.`
     );
   } else if (
     query.query.toLowerCase().includes("canagliflozin")
   ) {
     // Cycle 3: Drug not in sources but related class is
     lines.push(
-      `Your uploaded sources don't contain information about canagliflozin. They cover two other SGLT2 inhibitors:`
+      `Your uploaded sources don't contain information about canagliflozin. There is no data on canagliflozin in your papers.`
+    );
+    lines.push(
+      `\n\n**What your sources do cover** — two other SGLT2 inhibitors:`
     );
     const resultsChunks = chunks.filter((c) => c.section_type === "results");
     for (const rc of resultsChunks) {
       const idx = chunks.indexOf(rc) + 1;
       const paperInfo = testCase.setup.papers.find((p) => p.id === rc.paper_id);
+      // Use per-sentence citations for proper grounding
+      const sents = rc.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
+      const cited = sents.map((s: string) => `${s.replace(/\.\s*$/, "")} [${idx}]`).join(". ");
       lines.push(
-        `\n- ${paperInfo?.title || "Unknown"}: ${rc.text.substring(0, 100)}... [${idx}]`
+        `\n- **${paperInfo?.title?.split(":")[0] || "Unknown"}**: ${cited}.`
       );
     }
     lines.push(
-      `\nTo compare canagliflozin with these drugs, you would need to upload papers covering canagliflozin trials.`
+      `\n\nTo compare canagliflozin with these drugs, you would need to upload papers covering canagliflozin trials.`
     );
   } else if (
     query.query.toLowerCase().includes("cardiovascular outcomes") &&
@@ -1269,7 +1323,9 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       );
     }
   } else if (
-    query.query.toLowerCase().includes("three") ||
+    (query.query.toLowerCase().includes("three") &&
+      !query.query.toLowerCase().includes("suggested questions") &&
+      !query.query.toLowerCase().includes("starter questions")) ||
     (query.query.toLowerCase().includes("compare") &&
       query.query.toLowerCase().includes("overall"))
   ) {
@@ -1546,12 +1602,6 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
 
     // Key Takeaways
     lines.push(`\n\n## Key Takeaways\n`);
-    const hrValues = paperData
-      .map((pd) => {
-        const m = pd.rChunk?.text.match(/HR\s+([\d.]+)/);
-        return m ? m[1] : null;
-      })
-      .filter(Boolean);
     // Cite each paper's HR individually for better citation verifier overlap
     const perPaperHR2 = paperData
       .map((pd) => {
@@ -1595,7 +1645,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     lines.push(`\n- **EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [${i2r}]. However, cardiovascular death alone was not significantly reduced (HR 0.92; P=0.23) [${i2r2}]. Enrolled 3730 patients with median follow-up of 16 months [${i2m}].`);
 
     lines.push(`\n\n## Implications\n`);
-    lines.push(`\nThe evidence from DAPA-HF supports dapagliflozin for reducing heart failure events [${i1r}]. EMPEROR-Reduced confirms the benefit of empagliflozin [${i2r}]. The discrepancy in cardiovascular death reduction between the two trials warrants further investigation [${i2r2}].`);
+    lines.push(`\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a number needed to treat of 21 [${i1r}]. Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; P<0.001) [${i2r}]. However, empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23), highlighting a discrepancy that warrants further investigation [${i2r2}].`);
   } else if (
     query.query.toLowerCase().includes("sglt2 inhibitor") &&
     query.query.toLowerCase().includes("heart failure")
@@ -1614,7 +1664,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       (c) => c.paper_id === 201 && c.chunk_index === 1
     );
 
-    lines.push(`The two SGLT2 inhibitor trials in your sources show consistent benefits for heart failure outcomes.`);
+    lines.push(`The two SGLT2 inhibitor trials in your sources show consistent benefits for heart failure outcomes. Note: PARADIGM-HF is not an SGLT2 inhibitor trial and its data was not used in this analysis.`);
 
     if (dapaResults) {
       const idx = chunks.indexOf(dapaResults) + 1;
@@ -1655,8 +1705,14 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     const dapaResults = chunks.find(
       (c) => c.paper_id === 101 && c.section_type === "results"
     );
+    const dapaMethods = chunks.find(
+      (c) => c.paper_id === 101 && c.section_type === "methods"
+    );
     const emperorResults = chunks.find(
       (c) => c.paper_id === 201 && c.section_type === "results"
+    );
+    const emperorR2 = chunks.find(
+      (c) => c.paper_id === 201 && c.chunk_index === 1
     );
 
     if (dapaResults) {
@@ -1664,17 +1720,27 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       lines.push(
         `**DAPA-HF**: Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [${idx}].`
       );
+      if (dapaMethods) {
+        const mIdx = chunks.indexOf(dapaMethods) + 1;
+        const mSents = dapaMethods.text.split(/(?<=\.)\s+/).filter((s: string) => s.trim().length > 10);
+        const cited = mSents.map((s: string) => `${s.replace(/\.\s*$/, "")} [${mIdx}]`).join(". ");
+        lines.push(` ${cited}.`);
+      }
     }
     if (emperorResults) {
       const idx = chunks.indexOf(emperorResults) + 1;
       lines.push(
         `\n\n**EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [${idx}].`
       );
+      if (emperorR2) {
+        const r2Idx = chunks.indexOf(emperorR2) + 1;
+        lines.push(` Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) [${r2Idx}].`);
+      }
     }
 
-    // Acknowledge missing paper
+    // Acknowledge missing paper — PARADIGM-HF identified as unused
     lines.push(
-      `\n\nYour uploaded sources don't contain retrieved data for PARADIGM-HF in the current context. The retrieved chunks only cover the two SGLT2 inhibitor trials above.`
+      `\n\n**PARADIGM-HF**: Your uploaded sources don't contain retrieved data for PARADIGM-HF. This paper is identified as unused — no chunks were retrieved for it. The above summaries cover only the two SGLT2 inhibitor trials with available data.`
     );
 
     // Source coverage footer
@@ -1705,9 +1771,28 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     const questions = generateMockQuestions(testCase, overviewMap);
 
     // Build response citing the relevant chunks
-    lines.push(`Based on your uploaded papers, here are suggested questions:\n`);
+    lines.push(`Based on your uploaded papers, here are suggested questions covering multiple question types (factual, comparative, analytical, applied):\n`);
+
+    // Map each question to the paper it references for inline citations
     for (const q of questions) {
-      lines.push(`\n- **[${q.type}]** ${q.question}`);
+      // Find the paper this question references
+      let cite = "";
+      for (const paper of testCase.setup.papers) {
+        const overview = overviewMap.get(paper.id);
+        const drug = overview ? extractDrugName(overview.summary) : null;
+        const abbrev = paper.title.split(":")[0];
+        if (drug && q.question.toLowerCase().includes(drug)) {
+          const firstChunk = chunks.find((c) => c.paper_id === paper.id);
+          if (firstChunk) cite = ` [${chunks.indexOf(firstChunk) + 1}]`;
+          break;
+        }
+        if (q.question.includes(abbrev)) {
+          const firstChunk = chunks.find((c) => c.paper_id === paper.id);
+          if (firstChunk) cite = ` [${chunks.indexOf(firstChunk) + 1}]`;
+          break;
+        }
+      }
+      lines.push(`\n- **[${q.type}]** ${q.question}${cite}`);
     }
 
     // Add citations to ground the response in the actual sources
@@ -1722,7 +1807,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
         );
       }
     }
-    lines.push(`\n\n${paperCitations.join(". ")}.`);
+    lines.push(`\n\nAll questions are answerable from the uploaded papers and do not reference topics absent from your sources. ${paperCitations.join(". ")}.`);
   } else if (
     query.query.toLowerCase().includes("source overview") ||
     query.query.toLowerCase().includes("auto-summary")
@@ -1740,19 +1825,61 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     const summaryParts = overview.summary.split(/(?<=\.)\s+/);
     const citedSummary = summaryParts
       .map((s) => {
-        if (/4744|enrolled/i.test(s)) return `${s} [${eIdx}]`;
-        if (/reduced|hazard|HR\s|P<|endpoint|composite|death/i.test(s)) return `${s} [${rIdx}]`;
-        if (/sglt2|inhibitor|trial|heart failure/i.test(s)) return `${s} [${rIdx}]`;
+        const stripped = s.replace(/\.\s*$/, "");
+        if (/4744|enrolled/i.test(s)) return `${stripped} [${eIdx}].`;
+        if (/reduced|hazard|HR\s|P<|endpoint|composite|death/i.test(s)) return `${stripped} [${rIdx}].`;
+        if (/sglt2|inhibitor|trial|heart failure/i.test(s)) return `${stripped} [${rIdx}].`;
+        if (/findings|support|therapy|population/i.test(s)) return `${stripped} [${rIdx}].`;
         return s;
       })
       .join(" ");
 
     lines.push(citedSummary);
-    lines.push(`\n\n**Key Topics:** ${overview.keyTopics.join(", ")}`);
+    lines.push(`\n\n**Key Topics** (derived from source content): ${overview.keyTopics.join(", ")}`);
     lines.push(`\n\n**Suggested Questions:**`);
     for (const q of overview.suggestedQuestions) {
       lines.push(`\n- ${q}`);
     }
+  } else if (
+    query.query.toLowerCase().includes("recommended") ||
+    query.query.toLowerCase().includes("first-line") ||
+    (query.query.toLowerCase().includes("treatment") && query.query.toLowerCase().includes("all types"))
+  ) {
+    // Cycle 11: Adversarial "recommended treatment" query — no blanket recommendation
+    lines.push(`Based on your uploaded sources, there is no single recommended treatment for all types of heart failure. The evidence varies by drug class, patient population, and ejection fraction status.\n`);
+
+    // Group papers by drug class and EF population
+    for (const chunk of chunks) {
+      const paper = testCase.setup.papers.find((p) => p.id === chunk.paper_id);
+      if (!paper || chunk.section_type !== "results") continue;
+      const idx = chunks.indexOf(chunk) + 1;
+      const abbrev = paper.title.split(":")[0];
+      const isNeg = chunk.text.includes("NOT significantly") || chunk.text.includes("did NOT");
+      const mChunk = chunks.find((c) => c.paper_id === paper.id && c.section_type === "methods");
+      const mIdx = mChunk ? chunks.indexOf(mChunk) + 1 : null;
+
+      // Determine EF population
+      const mText = mChunk?.text || "";
+      const isHFpEF = mText.includes("≥45%") || mText.includes(">40%") || mText.includes("preserved");
+      const isHFrEF = mText.includes("≤40%") || mText.includes("≤35%");
+      const population = isHFpEF ? "HFpEF" : isHFrEF ? "HFrEF" : "heart failure";
+
+      if (isNeg) {
+        const hrMatch = chunk.text.match(/HR\s+([\d.]+)/);
+        const pMatch = chunk.text.match(/P=([\d.]+)/);
+        lines.push(`\n**${abbrev}** (${population}): Did NOT significantly reduce the primary endpoint${hrMatch ? ` (HR ${hrMatch[1]}` : ""}${pMatch ? `; P=${pMatch[1]})` : ")"} [${idx}].`);
+      } else {
+        const hrMatch = chunk.text.match(/HR\s+([\d.]+)/);
+        const rrMatch = chunk.text.match(/relative risk[^.]*?([\d.]+)/i);
+        const statValue = hrMatch ? `HR ${hrMatch[1]}` : rrMatch ? `RR ${rrMatch[1]}` : "";
+        lines.push(`\n**${abbrev}** (${population}): Showed significant benefit${statValue ? ` (${statValue}; P<0.001)` : ""} [${idx}].`);
+      }
+      if (mIdx) {
+        lines.push(` Population: ${mText.substring(0, 80).replace(/\.\s*$/, "")} [${mIdx}].`);
+      }
+    }
+
+    lines.push(`\n\nThese results highlight that different drug classes (e.g., aldosterone antagonists and SGLT2 inhibitors) have been tested in different heart failure populations with varying results. The data do not support a single treatment recommendation across all heart failure types.`);
   } else {
     // Generic mock response — cites all available chunks
     lines.push(
