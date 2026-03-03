@@ -78,7 +78,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   }>({ visible: false, selectedText: "", position: { top: 0, left: 0 } });
 
   // Slash command menu state
-  const [_slashMenu, setSlashMenu] = useState<{
+  const [slashMenu, setSlashMenu] = useState<{
     visible: boolean;
     filter: string;
     position: { top: number; left: number };
@@ -181,13 +181,13 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
       // Escape: dismiss panels
       if (e.key === "Escape") {
         if (inlineAi.visible) setInlineAi((s) => ({ ...s, visible: false }));
-        if (_slashMenu.visible) setSlashMenu((s) => ({ ...s, visible: false }));
+        if (slashMenu.visible) setSlashMenu((s) => ({ ...s, visible: false }));
       }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inlineAi.visible, _slashMenu.visible]);
+  }, [inlineAi.visible, slashMenu.visible]);
 
   const handleCompile = useCallback(async () => {
     // Save current file before compiling
@@ -277,21 +277,45 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     setInlineAi({ visible: false, selectedText: "", position: { top: 0, left: 0 } });
   }, []);
 
+  // Slash command templates for non-AI commands
+  const SLASH_TEMPLATES: Record<string, string> = {
+    template: "\\section{}\n\n",
+    bib: "\\bibliography{references}\n\\bibliographystyle{plain}\n",
+  };
+
   // Handle slash command selection
   const handleSlashCommand = useCallback(async (command: SlashCommand) => {
     setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } });
 
     if (command.id === "cite") {
+      // Remove the slash text, then open the Cite tab
+      editorRef.current?.insertAtCursor("");
       useLatexEditorStore.getState().setAgentPanelOpen(true);
       useLatexEditorStore.getState().setAgentTab("cite");
       return;
     }
 
+    if (command.id === "fix") {
+      // Remove the slash text, then trigger compile
+      editorRef.current?.insertAtCursor("");
+      handleCompile();
+      return;
+    }
+
+    // Non-AI commands: insert template directly
+    if (command.aiModel === "none" && SLASH_TEMPLATES[command.id]) {
+      editorRef.current?.insertAtCursor(SLASH_TEMPLATES[command.id]);
+      return;
+    }
+
+    // AI commands (table, figure, equation, tikz): open Draft tab with pre-filled prompt
     if (command.aiModel !== "none") {
+      editorRef.current?.insertAtCursor("");
       useLatexEditorStore.getState().setAgentPanelOpen(true);
       useLatexEditorStore.getState().setAgentTab("draft");
     }
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [handleCompile]);
 
   // Handle AI fix for compilation errors — replace the error line(s) in the editor
   const handleFixError = useCallback(async (diagnostic: CompilationDiagnostic) => {
@@ -421,6 +445,12 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                 initialContent={initialContent}
                 onChange={handleEditorChange}
                 getBibContent={getBibContent}
+                onSlashTrigger={(pos, filter) =>
+                  setSlashMenu({ visible: true, filter, position: pos })
+                }
+                onSlashDismiss={() =>
+                  setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } })
+                }
               />
             )}
           </div>
@@ -469,10 +499,10 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         />
       )}
 
-      {_slashMenu.visible && (
+      {slashMenu.visible && (
         <SlashCommandMenu
-          position={_slashMenu.position}
-          filter={_slashMenu.filter}
+          position={slashMenu.position}
+          filter={slashMenu.filter}
           onSelect={handleSlashCommand}
           onDismiss={() => setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } })}
         />

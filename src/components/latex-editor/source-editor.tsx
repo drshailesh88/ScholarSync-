@@ -143,6 +143,8 @@ export interface SourceEditorHandle {
   getSelection: () => { from: number; to: number; text: string } | null;
   /** Set content (for file switching) */
   setContent: (content: string) => void;
+  /** Insert text at the current cursor position (replacing any existing slash command text) */
+  insertAtCursor: (text: string) => void;
 }
 
 interface SourceEditorProps {
@@ -151,10 +153,14 @@ interface SourceEditorProps {
   className?: string;
   /** Callback to get .bib file content for citation autocompletion */
   getBibContent?: () => string;
+  /** Called when user types "/" at the start of a line — provides screen coords for menu */
+  onSlashTrigger?: (position: { top: number; left: number }, filter: string) => void;
+  /** Called when the slash command trigger is dismissed (user continues typing non-slash) */
+  onSlashDismiss?: () => void;
 }
 
 export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
-  function SourceEditor({ initialContent, onChange, className, getBibContent }, ref) {
+  function SourceEditor({ initialContent, onChange, className, getBibContent, onSlashTrigger, onSlashDismiss }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
     const onChangeRef = useRef(onChange);
@@ -163,6 +169,12 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
     // Stable ref for bib content getter
     const getBibContentRef = useRef(getBibContent);
     getBibContentRef.current = getBibContent;
+
+    // Stable refs for slash command callbacks
+    const onSlashTriggerRef = useRef(onSlashTrigger);
+    onSlashTriggerRef.current = onSlashTrigger;
+    const onSlashDismissRef = useRef(onSlashDismiss);
+    onSlashDismissRef.current = onSlashDismiss;
 
     // Expose imperative handle to parent
     useImperativeHandle(ref, () => ({
@@ -199,6 +211,21 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
           selection: { anchor: 0 },
         });
       },
+      insertAtCursor: (text: string) => {
+        const view = viewRef.current;
+        if (!view) return;
+        const cursor = view.state.selection.main.head;
+        // Find and remove the slash command text (e.g., "/table") on the current line
+        const line = view.state.doc.lineAt(cursor);
+        const lineText = line.text.slice(0, cursor - line.from);
+        const slashIdx = lineText.lastIndexOf("/");
+        const from = slashIdx >= 0 ? line.from + slashIdx : cursor;
+        view.dispatch({
+          changes: { from, to: cursor, insert: text },
+          selection: { anchor: from + text.length },
+        });
+        view.focus();
+      },
     }));
 
     // Detect dark mode
@@ -210,9 +237,49 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
     useEffect(() => {
       if (!containerRef.current) return;
 
+      // Track whether slash menu is active
+      let slashActive = false;
+      let slashFrom = -1;
+
       const updateListener = EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           onChangeRef.current?.(update.state.doc.toString());
+
+          // Slash command detection: check if "/" was just typed at start of line or after whitespace
+          const cursor = update.state.selection.main.head;
+          const line = update.state.doc.lineAt(cursor);
+          const lineTextBeforeCursor = line.text.slice(0, cursor - line.from);
+
+          if (!slashActive && lineTextBeforeCursor === "/") {
+            // Trigger slash menu
+            slashActive = true;
+            slashFrom = cursor - 1;
+            const coords = update.view.coordsAtPos(cursor);
+            if (coords) {
+              onSlashTriggerRef.current?.(
+                { top: coords.bottom + 4, left: coords.left },
+                ""
+              );
+            }
+          } else if (slashActive) {
+            // Update filter or dismiss
+            const textSinceSlash = update.state.sliceDoc(slashFrom, cursor);
+            if (textSinceSlash.startsWith("/") && !textSinceSlash.includes(" ") && !textSinceSlash.includes("\n")) {
+              const filter = textSinceSlash.slice(1);
+              const coords = update.view.coordsAtPos(cursor);
+              if (coords) {
+                onSlashTriggerRef.current?.(
+                  { top: coords.bottom + 4, left: coords.left - (filter.length * 7) },
+                  filter
+                );
+              }
+            } else {
+              // Dismiss
+              slashActive = false;
+              slashFrom = -1;
+              onSlashDismissRef.current?.();
+            }
+          }
         }
       });
 
