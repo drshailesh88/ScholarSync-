@@ -25,8 +25,10 @@ export function latexToHtml(tex: string): string {
     html = html.slice(0, html.indexOf("\\end{document}"));
   }
 
-  // Remove comments
+  // Remove comments (but preserve escaped \%)
+  html = html.replace(/\\%/g, "\x00PCNT\x00");
   html = html.replace(/%.*$/gm, "");
+  html = html.replace(/\x00PCNT\x00/g, "%");
 
   // Extract \title, \author, \date from preamble
   const titleMatch = tex.match(/\\title\{([^}]*)\}/);
@@ -107,6 +109,31 @@ export function latexToHtml(tex: string): string {
     '<span style="font-variant:small-caps">$1</span>'
   );
 
+  // \textcolor{color}{text}
+  html = html.replace(
+    /\\textcolor\{([^}]*)\}\{([^}]*)\}/g,
+    '<span style="color:$1">$2</span>'
+  );
+
+  // \colorbox{color}{text}
+  html = html.replace(
+    /\\colorbox\{([^}]*)\}\{([^}]*)\}/g,
+    '<span style="background-color:$1;padding:0.1em 0.3em">$2</span>'
+  );
+
+  // Font size commands: {\tiny text} etc.
+  const fontSizes: [string, string][] = [
+    ["tiny", "0.6em"], ["scriptsize", "0.7em"], ["footnotesize", "0.8em"],
+    ["small", "0.9em"], ["normalsize", "1em"], ["large", "1.2em"],
+    ["Large", "1.4em"], ["LARGE", "1.7em"], ["huge", "2em"], ["Huge", "2.5em"],
+  ];
+  for (const [cmd, size] of fontSizes) {
+    html = html.replace(
+      new RegExp(`\\{\\\\${cmd}\\s+([^}]*)\\}`, "g"),
+      `<span style="font-size:${size}">$1</span>`,
+    );
+  }
+
   // \href{url}{text}
   html = html.replace(
     /\\href\{([^}]*)\}\{([^}]*)\}/g,
@@ -133,6 +160,41 @@ export function latexToHtml(tex: string): string {
 
   // \centering — just remove (handled by parent environment)
   html = html.replace(/\\centering\s*/g, "");
+
+  // \vspace and \hspace
+  html = html.replace(/\\vspace\*?\{([^}]*)\}/g, '<div style="margin-top:$1"></div>');
+  html = html.replace(/\\hspace\*?\{([^}]*)\}/g, '<span style="margin-left:$1"></span>');
+
+  // \vfill and \hfill — just strip
+  html = html.replace(/\\vfill/g, "");
+  html = html.replace(/\\hfill/g, "");
+
+  // \tableofcontents, \listoffigures, \listoftables — placeholders
+  html = html.replace(/\\tableofcontents/g, '<nav class="latex-toc"><em>Table of Contents</em></nav>');
+  html = html.replace(/\\listoffigures/g, '<nav class="latex-lof"><em>List of Figures</em></nav>');
+  html = html.replace(/\\listoftables/g, '<nav class="latex-lot"><em>List of Tables</em></nav>');
+
+  // Special LaTeX characters: \$ \% \& \# \_ \{ \}
+  html = html.replace(/\\\$/g, "$");
+  // \\% already handled above (before comment stripping)
+  html = html.replace(/\\&/g, "&amp;");
+  html = html.replace(/\\#/g, "#");
+  html = html.replace(/\\_/g, "_");
+  html = html.replace(/\\\{/g, "{");
+  html = html.replace(/\\\}/g, "}");
+
+  // Tilde as non-breaking space (unescaped ~ in LaTeX)
+  html = html.replace(/~/g, "\u00a0");
+
+  // Smart quotes: ``...'' → "..." and `...' → '...'
+  html = html.replace(/``/g, "\u201c");
+  html = html.replace(/''/g, "\u201d");
+  html = html.replace(/`/g, "\u2018");
+  html = html.replace(/'/g, "\u2019");
+
+  // Em-dash (---) and en-dash (--)  — must come before line break conversion
+  html = html.replace(/---/g, "\u2014");
+  html = html.replace(/--/g, "\u2013");
 
   // Line breaks
   html = html.replace(/\\\\/g, "<br />");

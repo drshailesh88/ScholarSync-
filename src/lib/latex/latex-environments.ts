@@ -149,5 +149,25 @@ export function convertEnvironments(html: string): string {
     '<div class="latex-proof"><em>Proof.</em>$1<span style="float:right">∎</span></div>',
   );
 
+  // Titlepage environment
+  html = html.replace(
+    /\\begin\{titlepage\}([\s\S]*?)\\end\{titlepage\}/g,
+    '<div class="latex-titlepage" style="text-align:center;padding:2em 0">$1</div>',
+  );
+
+  // thebibliography environment
+  html = html.replace(
+    /\\begin\{thebibliography\}\{[^}]*\}([\s\S]*?)\\end\{thebibliography\}/g,
+    (_: string, inner: string) => {
+      let bib = '<div class="latex-bibliography"><h2>References</h2><ol>';
+      const items = inner.split(/\\bibitem\{[^}]*\}/).filter((s: string) => s.trim());
+      for (const item of items) {
+        bib += `<li>${item.trim()}</li>`;
+      }
+      bib += "</ol></div>";
+      return bib;
+    },
+  );
+
   return html;
 }

@@ -366,3 +366,45 @@ export {
   type CERQualFindingAssessment,
   type CERQualSummary,
 } from "./cerqual-assessment";
+
+// ---------------------------------------------------------------------------
+// PROBAST — Prediction model Risk of Bias Assessment
+// ---------------------------------------------------------------------------
+
+export {
+  PROBAST_DOMAINS,
+  assessPROBAST,
+  computeOverallPROBAST,
+  inferDomainJudgment,
+  exportPROBASTSummaryCSV,
+  generateJudgmentIndicator,
+  PROBAST_DOMAIN_LABELS,
+  PROBAST_JUDGMENT_LABELS,
+  PROBAST_SIGNAL_LABELS,
+  type PROBASTJudgment,
+  type PROBASTSignalingAnswer,
+  type PROBASTSignalingQuestion,
+  type PROBASTDomainAssessment,
+  type FullPROBASTAssessment,
+} from "./probast-assessment";
+
+// ---------------------------------------------------------------------------
+// MOOSE — Meta-analysis Of Observational Studies in Epidemiology
+// ---------------------------------------------------------------------------
+
+export {
+  MOOSE_ITEMS,
+  assessMOOSE,
+  computeMOOSECompliance,
+  computeMOOSEStats,
+  exportMOOSEChecklistCSV,
+  getMOOSEItemsBySection,
+  getMOOSESections,
+  MOOSE_SECTION_LABELS,
+  MOOSE_RATING_LABELS,
+  type MOOSEItem,
+  type MOOSERating,
+  type MOOSECompliance,
+  type MOOSEItemResult,
+  type MOOSEAssessment,
+} from "./moose-checklist";

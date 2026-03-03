@@ -960,3 +960,116 @@ describe("Cycle 4: Theorem-like environments", () => {
     expect(html).toContain("∎");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// Cycle 5: Text color/sizing + spacing + bibliography + more
+// ═══════════════════════════════════════════════════════════════
+
+describe("Cycle 5: Text color and sizing", () => {
+  it("converts textcolor command", () => {
+    const html = latexToHtml("\\textcolor{red}{Important text}");
+    expect(html).toContain("color:red");
+    expect(html).toContain("Important text");
+  });
+
+  it("converts colorbox command", () => {
+    const html = latexToHtml("\\colorbox{yellow}{Highlighted}");
+    expect(html).toContain("background-color:yellow");
+    expect(html).toContain("Highlighted");
+  });
+
+  it("converts font size commands", () => {
+    const tiny = latexToHtml("{\\tiny Small text}");
+    expect(tiny).toContain("font-size");
+    expect(tiny).toContain("Small text");
+  });
+
+  it("converts large/Large/LARGE/huge/Huge", () => {
+    const large = latexToHtml("{\\Large Big text}");
+    expect(large).toContain("font-size");
+    expect(large).toContain("Big text");
+  });
+});
+
+describe("Cycle 5: Spacing commands", () => {
+  it("converts vspace to margin", () => {
+    const html = latexToHtml("Before\\vspace{1cm}After");
+    expect(html).toContain("margin");
+    expect(html).not.toContain("\\vspace");
+  });
+
+  it("converts hspace to inline spacing", () => {
+    const html = latexToHtml("Word\\hspace{2em}Word");
+    expect(html).toContain("margin-left");
+    expect(html).not.toContain("\\hspace");
+  });
+
+  it("strips vfill", () => {
+    const html = latexToHtml("Top\\vfill Bottom");
+    expect(html).not.toContain("\\vfill");
+    expect(html).toContain("Top");
+    expect(html).toContain("Bottom");
+  });
+
+  it("strips hfill", () => {
+    const html = latexToHtml("Left\\hfill Right");
+    expect(html).not.toContain("\\hfill");
+  });
+});
+
+describe("Cycle 5: Bibliography and titlepage", () => {
+  it("converts thebibliography environment", () => {
+    const tex = "\\begin{thebibliography}{9}\n\\bibitem{smith2024} Smith, J. (2024). A paper.\n\\bibitem{doe2023} Doe, A. (2023). Another paper.\n\\end{thebibliography}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-bibliography");
+    expect(html).toContain("Smith");
+    expect(html).toContain("Doe");
+  });
+
+  it("converts titlepage environment", () => {
+    const tex = "\\begin{titlepage}\n\\centering\n{\\Large My Title}\n\\end{titlepage}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-titlepage");
+    expect(html).toContain("My Title");
+  });
+
+  it("renders tableofcontents placeholder", () => {
+    const html = latexToHtml("\\tableofcontents");
+    expect(html).toContain("Table of Contents");
+  });
+
+  it("renders listoffigures placeholder", () => {
+    const html = latexToHtml("\\listoffigures");
+    expect(html).toContain("List of Figures");
+  });
+
+  it("renders listoftables placeholder", () => {
+    const html = latexToHtml("\\listoftables");
+    expect(html).toContain("List of Tables");
+  });
+});
+
+describe("Cycle 5: Special characters and commands", () => {
+  it("converts tilde to non-breaking space", () => {
+    const html = latexToHtml("Figure~1");
+    expect(html).toContain("Figure\u00a0" + "1");
+  });
+
+  it("converts dashes correctly", () => {
+    const html = latexToHtml("pages 1--10 and --- em dash");
+    expect(html).toContain("–"); // en-dash
+    expect(html).toContain("—"); // em-dash
+  });
+
+  it("converts smart quotes", () => {
+    const html = latexToHtml("``Hello'' and \`single'");
+    expect(html).toContain("\u201c"); // left double quote
+    expect(html).toContain("\u201d"); // right double quote
+  });
+
+  it("converts special LaTeX chars", () => {
+    const html = latexToHtml("Cost is \\$10 and 100\\% done");
+    expect(html).toContain("$10");
+    expect(html).toContain("100%");
+  });
+});
