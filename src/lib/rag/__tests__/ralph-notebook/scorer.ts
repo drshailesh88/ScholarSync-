@@ -379,7 +379,7 @@ export function scoreQueryResponse(
       const afterVerb = expectedLower.split(negationMatch[0])[1]?.trim() || "";
       // Skip subject nouns (drug names, trial names) that will naturally appear in the response
       // Focus on VALUE/CLAIM keywords (effective, superior, beneficial, etc.)
-      const subjectNouns = /^(spironolactone|dapagliflozin|empagliflozin|sacubitril|valsartan|canagliflozin|paradigm|rales|topcat|dapa-hf|emperor|deliver|aldo-dhf|single|drug|works|heart|failure|sglt2|pooled|meta-analytic|second|trial|death|data|summary|chunks|questions|papers|topics|absent|non-existent|sources|content|results|disagreement|interpretation|post-hoc)$/;
+      const subjectNouns = /^(spironolactone|dapagliflozin|empagliflozin|sacubitril|valsartan|canagliflozin|paradigm|paradigm-hf|rales|topcat|dapa-hf|emperor|emperor-reduced|deliver|aldo-dhf|single|drug|works|heart|failure|sglt2|pooled|meta-analytic|second|trial|death|data|summary|chunks|questions|papers|topics|absent|non-existent|sources|content|results|disagreement|interpretation|post-hoc|renal)$/;
       // Strip qualifier after em-dash (e.g., "— data is mixed" is context, not forbidden content)
       const beforeDash = afterVerb.split(/\s*[—–]\s*/)[0];
       const forbiddenKeywords = beforeDash

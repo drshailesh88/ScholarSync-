@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-03-03T12:01:29.111Z",
+  "lastUpdated": "2026-03-03T12:10:36.621Z",
   "phase": 1,
   "currentCycle": 5,
   "totalCases": 20,
   "passing": 20,
   "failing": 0,
-  "averageScore": 9.49,
+  "averageScore": 9.5,
   "gateStatus": {
     "phase1_grounding": "passed",
     "phase2_intelligence": "passed",
@@ -17,7 +17,7 @@
       "caseId": "ralph-nb-001",
       "caseName": "Basic single-source factual question",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:01:28.849Z",
+      "timestamp": "2026-03-03T12:10:36.349Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 3,
@@ -70,7 +70,7 @@
       "caseId": "ralph-nb-002",
       "caseName": "Citation content verification — multi-chunk synthesis",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:01:28.858Z",
+      "timestamp": "2026-03-03T12:10:36.362Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -151,7 +151,7 @@
       "caseId": "ralph-nb-003",
       "caseName": "Hallucination detection — question with no answer in sources",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:01:28.868Z",
+      "timestamp": "2026-03-03T12:10:36.372Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -172,10 +172,10 @@
         {
           "queryId": "q1",
           "query": "What are the cardiovascular benefits of semaglutide in patients with obesity?",
-          "response": "Your uploaded sources don't cover that topic and don't contain information about this drug. There is no information on it in your papers. The sources you've uploaded focus on SGLT2 inhibitors in heart failure: DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction; EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction.\nIf you'd like, I can analyze what your sources say about SGLT2 inhibitors and cardiovascular outcomes instead.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "Your uploaded sources don't cover that topic and don't contain information about this drug. There is no information on it in your papers. The sources you've uploaded focus on SGLT2 inhibitors in heart failure: DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction; EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction.\nIf you'd like, I can analyze what your sources say about SGLT2 inhibitors and cardiovascular outcomes instead.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
-            2
+            3
           ],
           "scores": {
             "grounding": 10,
@@ -199,10 +199,9 @@
         {
           "queryId": "q2",
           "query": "What was the effect of SGLT2 inhibitors on all-cause mortality?",
-          "response": "Your sources report cardiovascular death as part of composite endpoints, but do not specifically report all-cause mortality as a separate outcome.\n\n**What your sources do cover:**\n- Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n- The number needed to treat was 21 over a median follow-up of 18.2 months [1].\n- Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n- The effect was consistent across prespecified subgroups [3].\n\n**Important distinction:** The above data covers composite endpoints (cardiovascular death combined with heart failure events), not all-cause mortality as a standalone endpoint.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "Your sources report cardiovascular death as part of composite endpoints, but do not specifically report all-cause mortality as a separate outcome.\n\n**What your sources do cover:**\n- Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n- The number needed to treat was 21 over a median follow-up of 18.2 months [1].\n- Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n- The effect was consistent across prespecified subgroups [3].\n\n**Important distinction:** The above data covers composite endpoints (cardiovascular death combined with heart failure events), not all-cause mortality as a standalone endpoint.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
-            2,
             3
           ],
           "scores": {
@@ -228,10 +227,9 @@
         {
           "queryId": "q3",
           "query": "How does canagliflozin compare to dapagliflozin and empagliflozin?",
-          "response": "Your uploaded sources don't contain information about canagliflozin. There is no data on canagliflozin in your papers.\n\n**What your sources do cover** — two other SGLT2 inhibitors:\n- **DAPA-HF**: Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. The number needed to treat was 21 over a median follow-up of 18.2 months [1].\n- **EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. The effect was consistent across prespecified subgroups [3].\n\nTo compare canagliflozin with these drugs, you would need to upload papers covering canagliflozin trials.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "Your uploaded sources don't contain information about canagliflozin. There is no data on canagliflozin in your papers.\n\n**What your sources do cover** — two other SGLT2 inhibitors:\n- **DAPA-HF**: Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. The number needed to treat was 21 over a median follow-up of 18.2 months [1].\n- **EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. The effect was consistent across prespecified subgroups [3].\n\nTo compare canagliflozin with these drugs, you would need to upload papers covering canagliflozin trials.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
-            2,
             3
           ],
           "scores": {
@@ -263,7 +261,7 @@
       "caseId": "ralph-nb-004",
       "caseName": "Multi-chunk synthesis — answer requires combining 3+ chunks across papers",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:01:28.876Z",
+      "timestamp": "2026-03-03T12:10:36.380Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -284,7 +282,7 @@
         {
           "queryId": "q1",
           "query": "Compare the efficacy of dapagliflozin (DAPA-HF) and empagliflozin (EMPEROR-Reduced) in heart failure with reduced ejection fraction. Which trial showed a greater benefit?",
-          "response": "Both DAPA-HF and EMPEROR-Reduced demonstrated significant benefits for SGLT2 inhibitors in heart failure with reduced ejection fraction.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a hazard ratio of 0.74 (95% CI 0.65-0.85; P<0.001), with a number needed to treat of 21 over a median follow-up of 18.2 months [1]. The trial enrolled 4744 patients with NYHA class II-IV heart failure and LVEF ≤40% [2].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. The trial enrolled 3730 patients with a median follow-up of 16 months [4].\n\n**Comparison**\nThe hazard ratios were similar (0.74 for dapagliflozin [1] vs 0.75 for empagliflozin [3]), suggesting comparable efficacy. However, these were separate trials with different patient populations and follow-up durations, so a direct head-to-head comparison cannot be made from these data alone.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "Both DAPA-HF and EMPEROR-Reduced demonstrated significant benefits for SGLT2 inhibitors in heart failure with reduced ejection fraction.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a hazard ratio of 0.74 (95% CI 0.65-0.85; P<0.001), with a number needed to treat of 21 over a median follow-up of 18.2 months [1]. The trial enrolled 4744 patients with NYHA class II-IV heart failure and LVEF ≤40% [2].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. The trial enrolled 3730 patients with a median follow-up of 16 months [4].\n\n**Comparison**\nThe hazard ratios were similar (0.74 for dapagliflozin [1] vs 0.75 for empagliflozin [3]), suggesting comparable efficacy. However, these were separate trials with different patient populations and follow-up durations, so a direct head-to-head comparison cannot be made from these data alone.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -314,34 +312,35 @@
         {
           "queryId": "q2",
           "query": "Did either trial report renal benefits? How do the renal outcomes compare between the two drugs?",
-          "response": "Of the trials in your sources, EMPEROR-Reduced reported specific renal outcomes.\n\n**EMPEROR-Reduced Renal Data**\nThe annual rate of decline in eGFR was significantly slower in the empagliflozin group compared to placebo (-0.55 vs -2.28 mL/min/1.73m²/year; P<0.001). Empagliflozin was also associated with a lower risk of serious renal outcomes [5].\n\n**DAPA-HF**\nYour uploaded DAPA-HF sources do not contain renal outcome data. The DAPA-HF results focus on the composite endpoint. The primary result was HR 0.74; 95% CI 0.65-0.85; P<0.001 [1].\n\nTherefore, based on your sources, only EMPEROR-Reduced has demonstrated renal preservation benefits.\n\nSources:\n[1] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[2] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
+          "response": "Of the trials in your sources, EMPEROR-Reduced reported specific renal outcomes [5].\n\n**EMPEROR-Reduced Renal Data**\nThe annual rate of decline in eGFR was significantly slower in the empagliflozin group compared to placebo (-0.55 vs -2.28 mL/min/1.73m²/year; P<0.001). Empagliflozin was also associated with a lower risk of serious renal outcomes [5].\n\n**DAPA-HF**\nYour uploaded DAPA-HF sources do not contain renal outcome data. The DAPA-HF results focus on the composite endpoint. The primary result was HR 0.74; 95% CI 0.65-0.85; P<0.001 [1].\n\nTherefore, based on your sources, only EMPEROR-Reduced has demonstrated renal preservation benefits [3].\n\nSources:\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
           "citationsFound": [
             1,
-            2,
+            3,
             5
           ],
           "scores": {
-            "grounding": 7,
-            "citationAccuracy": 10,
-            "completeness": 7,
+            "grounding": 8,
+            "citationAccuracy": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 8.7,
+          "weightedScore": 8.8,
           "issues": [
-            "67% of factual sentences have citations (target: 100%)",
-            "Missing expected behaviors: Does NOT fabricate renal data for DAPA-HF"
+            "83% of factual sentences have citations (target: 100%)",
+            "Citation content mismatch: 1 citation(s) don't match their source content",
+            "  CV: Citation [3] has low overlap (0.00) with source content (should likely be [5], overlap=0.64)"
           ],
           "passedChecks": [
             "All required citations present",
-            "Citation verifier: all 2 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "4 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 9.15,
+      "overallScore": 9.2,
       "pass": true,
       "regressions": []
     },
@@ -349,7 +348,7 @@
       "caseId": "ralph-nb-005",
       "caseName": "Adversarial citation — contradictory findings, source-specific querying",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:01:28.885Z",
+      "timestamp": "2026-03-03T12:10:36.389Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -398,10 +397,9 @@
         {
           "queryId": "q2",
           "query": "Do these two trials agree on whether spironolactone works in HFpEF? Summarize the conflict.",
-          "response": "These two trials reached different conclusions about spironolactone in heart failure with preserved ejection fraction.\n\n**TOPCAT** found that spironolactone did NOT significantly reduce the composite of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\n**Aldo-DHF** found that spironolactone DID significantly improve the primary endpoint of diastolic function (E/e' ratio, P<0.001) [4]. However, this did NOT translate into improved symptoms, exercise capacity, or quality of life [4].\n\nThe key conflict is that improving a cardiac biomarker (diastolic function) did not translate into clinical benefit (symptoms, hospitalizations, or death). The trials used different primary endpoints — TOPCAT measured hard clinical outcomes while Aldo-DHF measured echocardiographic parameters.\n\nSources:\n[1] TOPCAT: Spironolactone for Heart Failure with Preserved Ejection Fraction — Pitt B, Pfeffer MA, Assmann SF (2014)\n[2] Aldo-DHF: Spironolactone in Diastolic Heart Failure — Edelmann F, Wachter R, Schmidt AG (2013)",
+          "response": "These two trials reached different conclusions about spironolactone in heart failure with preserved ejection fraction.\n\n**TOPCAT** found that spironolactone did NOT significantly reduce the composite of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\n**Aldo-DHF** found that spironolactone DID significantly improve the primary endpoint of diastolic function (E/e' ratio, P<0.001) [4]. However, this did NOT translate into improved symptoms, exercise capacity, or quality of life [4].\n\nThe key conflict is that improving a cardiac biomarker (diastolic function) did not translate into clinical benefit (symptoms, hospitalizations, or death). The trials used different primary endpoints — TOPCAT measured hard clinical outcomes while Aldo-DHF measured echocardiographic parameters.\n\nSources:\n[1] TOPCAT: Spironolactone for Heart Failure with Preserved Ejection Fraction — Pitt B, Pfeffer MA, Assmann SF (2014)\n[4] Aldo-DHF: Spironolactone in Diastolic Heart Failure — Edelmann F, Wachter R, Schmidt AG (2013)",
           "citationsFound": [
             1,
-            2,
             4
           ],
           "scores": {
@@ -427,9 +425,8 @@
         {
           "queryId": "q3",
           "query": "Based on the Aldo-DHF trial specifically, should clinicians prescribe spironolactone for symptom relief in HFpEF?",
-          "response": "Based on the Aldo-DHF trial, spironolactone should NOT be prescribed specifically for symptom relief in HFpEF. While the trial showed that spironolactone significantly improved diastolic function (E/e' ratio change: -1.5 vs -0.1; P<0.001), it explicitly did NOT improve symptoms, exercise capacity, or quality of life [4].\n\nThe trial enrolled 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%), treated with spironolactone 25mg daily for 12 months [5].\n\nThis dissociation between improved diastolic function and unchanged symptoms suggests that targeting diastolic function alone is insufficient for symptom relief in HFpEF.\n\nSources:\n[1] Aldo-DHF: Spironolactone in Diastolic Heart Failure — Edelmann F, Wachter R, Schmidt AG (2013)",
+          "response": "Based on the Aldo-DHF trial, spironolactone should NOT be prescribed specifically for symptom relief in HFpEF. While the trial showed that spironolactone significantly improved diastolic function (E/e' ratio change: -1.5 vs -0.1; P<0.001), it explicitly did NOT improve symptoms, exercise capacity, or quality of life [4].\n\nThe trial enrolled 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%), treated with spironolactone 25mg daily for 12 months [5].\n\nThis dissociation between improved diastolic function and unchanged symptoms suggests that targeting diastolic function alone is insufficient for symptom relief in HFpEF.\n\nSources:\n[4] Aldo-DHF: Spironolactone in Diastolic Heart Failure — Edelmann F, Wachter R, Schmidt AG (2013)",
           "citationsFound": [
-            1,
             4,
             5
           ],
@@ -461,7 +458,7 @@
       "caseId": "ralph-nb-006",
       "caseName": "Source-specific querying — paper-name detection and filtered retrieval",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:01:28.910Z",
+      "timestamp": "2026-03-03T12:10:36.414Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -510,9 +507,8 @@
         {
           "queryId": "q2",
           "query": "Summarize the PARADIGM-HF trial results and study design.",
-          "response": "The PARADIGM-HF trial demonstrated that sacubitril/valsartan reduced the primary composite of cardiovascular death or heart failure hospitalization by 20% compared to enalapril (HR 0.80; 95% CI 0.73-0.87; P<0.001) [5]. All-cause mortality was also significantly reduced (HR 0.84; P=0.001) [5].\n\nThe trial enrolled 8442 patients with NYHA class II-IV heart failure and LVEF ≤40%, randomized to sacubitril/valsartan 200mg twice daily or enalapril 10mg twice daily [6]. The median follow-up was 27 months. The trial was stopped early due to overwhelming benefit [6].\n\nSources:\n[1] PARADIGM-HF: Angiotensin–Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
+          "response": "The PARADIGM-HF trial demonstrated that sacubitril/valsartan reduced the primary composite of cardiovascular death or heart failure hospitalization by 20% compared to enalapril (HR 0.80; 95% CI 0.73-0.87; P<0.001) [5]. All-cause mortality was also significantly reduced (HR 0.84; P=0.001) [5].\n\nThe trial enrolled 8442 patients with NYHA class II-IV heart failure and LVEF ≤40%, randomized to sacubitril/valsartan 200mg twice daily or enalapril 10mg twice daily [6]. The median follow-up was 27 months. The trial was stopped early due to overwhelming benefit [6].\n\nSources:\n[5] PARADIGM-HF: Angiotensin–Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
           "citationsFound": [
-            1,
             5,
             6
           ],
@@ -539,10 +535,9 @@
         {
           "queryId": "q3",
           "query": "How do the outcomes of these three heart failure trials compare overall?",
-          "response": "All three trials demonstrated significant cardiovascular benefits in patients with heart failure with reduced ejection fraction.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with HR 0.74 (95% CI 0.65-0.85; P<0.001) [1].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n\n**PARADIGM-HF (Sacubitril/Valsartan)**\nSacubitril/valsartan reduced the primary composite by 20% versus enalapril (HR 0.80; 95% CI 0.73-0.87; P<0.001), with all-cause mortality also reduced (HR 0.84; P=0.001) [5].\n\nAll three trials showed statistically significant reductions in their primary composite endpoints. However, these were separate trials with different comparators (placebo vs enalapril), different patient populations, and different follow-up durations, so a direct head-to-head comparison cannot be made from these data alone.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[3] PARADIGM-HF: Angiotensin–Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
+          "response": "All three trials demonstrated significant cardiovascular benefits in patients with heart failure with reduced ejection fraction.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with HR 0.74 (95% CI 0.65-0.85; P<0.001) [1].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n\n**PARADIGM-HF (Sacubitril/Valsartan)**\nSacubitril/valsartan reduced the primary composite by 20% versus enalapril (HR 0.80; 95% CI 0.73-0.87; P<0.001), with all-cause mortality also reduced (HR 0.84; P=0.001) [5].\n\nAll three trials showed statistically significant reductions in their primary composite endpoints. However, these were separate trials with different comparators (placebo vs enalapril), different patient populations, and different follow-up durations, so a direct head-to-head comparison cannot be made from these data alone.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] PARADIGM-HF: Angiotensin–Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
           "citationsFound": [
             1,
-            2,
             3,
             5
           ],
@@ -575,7 +570,7 @@
       "caseId": "ralph-nb-007",
       "caseName": "Cross-source comparison — structured synthesis with comparison prompt",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:01:28.928Z",
+      "timestamp": "2026-03-03T12:10:36.430Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -597,7 +592,7 @@
         {
           "queryId": "q1",
           "query": "How do these papers compare on cardiovascular outcomes? Do the SGLT2 inhibitor trials agree?",
-          "response": "These three trials examined SGLT2 inhibitors in heart failure but in different populations and with some key differences. Below are the per-paper findings with citations for each trial.\n\n**DAPA-HF (Dapagliflozin — HFrEF)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. Importantly, dapagliflozin also significantly reduced cardiovascular death alone (HR 0.82; P=0.029) and all-cause mortality (HR 0.83; P=0.022) [2].\n\n**EMPEROR-Reduced (Empagliflozin — HFrEF)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. However, empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4].\n\n**DELIVER (Empagliflozin — HFpEF)**\nIn patients with preserved ejection fraction (LVEF >40%), empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [5]. Notably, this trial enrolled a different population — patients with LVEF >40% — unlike the other two trials which enrolled HFrEF patients with LVEF ≤40% [6].\n\n**Points of Agreement**\nAll three trials showed significant reductions in their primary composite endpoints [1][3][5], with similar effect sizes (HR 0.74-0.79).\n\n**Key Disagreement**\nThe most notable disagreement is on cardiovascular death: DAPA-HF showed a significant reduction (HR 0.82; P=0.029) [2], while EMPEROR-Reduced did not (HR 0.92; P=0.23) [4]. This difference has not been fully explained.\n\n**Important Caveats**\nDELIVER enrolled a fundamentally different population (preserved EF, LVEF >40%) [6] compared to DAPA-HF and EMPEROR-Reduced (reduced EF, LVEF ≤40%), which limits direct comparison of effect sizes.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[3] DELIVER: Empagliflozin in Heart Failure with Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
+          "response": "These three trials examined SGLT2 inhibitors in heart failure but in different populations and with some key differences. Below are the per-paper findings with citations for each trial.\n\n**DAPA-HF (Dapagliflozin — HFrEF)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. Importantly, dapagliflozin also significantly reduced cardiovascular death alone (HR 0.82; P=0.029) and all-cause mortality (HR 0.83; P=0.022) [2].\n\n**EMPEROR-Reduced (Empagliflozin — HFrEF)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. However, empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4].\n\n**DELIVER (Empagliflozin — HFpEF)**\nIn patients with preserved ejection fraction (LVEF >40%), empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [5]. Notably, this trial enrolled a different population — patients with LVEF >40% — unlike the other two trials which enrolled HFrEF patients with LVEF ≤40% [6].\n\n**Points of Agreement**\nAll three trials showed significant reductions in their primary composite endpoints [1][3][5], with similar effect sizes (HR 0.74-0.79).\n\n**Key Disagreement**\nThe most notable disagreement is on cardiovascular death: DAPA-HF showed a significant reduction (HR 0.82; P=0.029) [2], while EMPEROR-Reduced did not (HR 0.92; P=0.23) [4]. This difference has not been fully explained.\n\n**Important Caveats**\nDELIVER enrolled a fundamentally different population (preserved EF, LVEF >40%) [6] compared to DAPA-HF and EMPEROR-Reduced (reduced EF, LVEF ≤40%), which limits direct comparison of effect sizes.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] DELIVER: Empagliflozin in Heart Failure with Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
           "citationsFound": [
             1,
             2,
@@ -630,12 +625,13 @@
         {
           "queryId": "q2",
           "query": "Where do these studies disagree? What are the key differences in their findings?",
-          "response": "The three trials have several important areas of disagreement and difference.\n\n**1. Cardiovascular Death — The Key Disagreement**\nDAPA-HF showed that dapagliflozin significantly reduced cardiovascular death (HR 0.82; P=0.029) and all-cause mortality (HR 0.83; P=0.022) [2]. In contrast, EMPEROR-Reduced found that empagliflozin did NOT significantly reduce cardiovascular death (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4]. This discrepancy between two drugs in the same class, tested in similar populations, remains unexplained.\n\n**2. Different Patient Populations**\nDAPA-HF and EMPEROR-Reduced enrolled patients with reduced ejection fraction (LVEF ≤40%), while DELIVER enrolled patients with preserved ejection fraction (LVEF >40%) [6]. This is a fundamentally different heart failure phenotype.\n\n**3. Sample Size and Follow-up**\nThe trials differed in size: 4744 patients in DAPA-HF [1], 3730 in EMPEROR-Reduced [4], and 6263 in DELIVER [6]. These differences in statistical power may partly explain divergent secondary endpoint results.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[3] DELIVER: Empagliflozin in Heart Failure with Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
+          "response": "The three trials have several important areas of disagreement and difference.\n\n**1. Cardiovascular Death — The Key Disagreement**\nDAPA-HF showed that dapagliflozin significantly reduced cardiovascular death (HR 0.82; P=0.029) and all-cause mortality (HR 0.83; P=0.022) [2]. In contrast, EMPEROR-Reduced found that empagliflozin did NOT significantly reduce cardiovascular death (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4]. This discrepancy between two drugs in the same class, tested in similar populations, remains unexplained.\n\n**2. Different Patient Populations**\nDAPA-HF and EMPEROR-Reduced enrolled patients with reduced ejection fraction (LVEF ≤40%), while DELIVER enrolled patients with preserved ejection fraction (LVEF >40%) [6]. This is a fundamentally different heart failure phenotype.\n\n**3. Sample Size and Follow-up**\nThe trials differed in size: 4744 patients in DAPA-HF [1], 3730 in EMPEROR-Reduced [4], and 6263 in DELIVER [6]. These differences in statistical power may partly explain divergent secondary endpoint results.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] DELIVER: Empagliflozin in Heart Failure with Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
           "citationsFound": [
             1,
             2,
             3,
             4,
+            5,
             6
           ],
           "scores": {
@@ -666,7 +662,7 @@
       "caseId": "ralph-nb-008",
       "caseName": "Source overview generation — auto-summary on upload",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:01:28.934Z",
+      "timestamp": "2026-03-03T12:10:36.436Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -721,7 +717,7 @@
       "caseId": "ralph-nb-009",
       "caseName": "Dynamic suggested questions — source-aware starter questions",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:01:28.940Z",
+      "timestamp": "2026-03-03T12:10:36.446Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -743,10 +739,9 @@
         {
           "queryId": "q1",
           "query": "Generate dynamic suggested questions for these three heart failure papers",
-          "response": "Based on your uploaded papers, here are suggested questions covering multiple question types (factual, comparative, analytical, applied):\n\n- **[factual]** What was the primary endpoint result for dapagliflozin [1]?\n- **[factual]** How many patients were enrolled in EMPEROR-Reduced and what were the inclusion criteria [4]?\n- **[comparative]** How do the hazard ratios for dapagliflozin and empagliflozin compare on the primary composite endpoint [1]?\n- **[analytical]** What are the main limitations across these heart failure trials?\n- **[applied]** What does this evidence suggest for treating patients with heart failure and reduced ejection fraction?\n- **[comparative]** How does sacubitril/valsartan compare on cardiovascular death reduction [5]?\n\nAll questions are answerable from the uploaded papers and do not reference topics absent from your sources. Questions derived from DAPA-HF (dapagliflozin trial) [1]. Questions derived from EMPEROR-Reduced (empagliflozin trial) [3]. Questions derived from PARADIGM-HF (sacubitril/valsartan trial) [5].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[3] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
+          "response": "Based on your uploaded papers, here are suggested questions covering multiple question types (factual, comparative, analytical, applied):\n\n- **[factual]** What was the primary endpoint result for dapagliflozin [1]?\n- **[factual]** How many patients were enrolled in EMPEROR-Reduced and what were the inclusion criteria [4]?\n- **[comparative]** How do the hazard ratios for dapagliflozin and empagliflozin compare on the primary composite endpoint [1]?\n- **[analytical]** What are the main limitations across these heart failure trials?\n- **[applied]** What does this evidence suggest for treating patients with heart failure and reduced ejection fraction?\n- **[comparative]** How does sacubitril/valsartan compare on cardiovascular death reduction [5]?\n\nAll questions are answerable from the uploaded papers and do not reference topics absent from your sources. Questions derived from DAPA-HF (dapagliflozin trial) [1]. Questions derived from EMPEROR-Reduced (empagliflozin trial) [3]. Questions derived from PARADIGM-HF (sacubitril/valsartan trial) [5].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
           "citationsFound": [
             1,
-            2,
             3,
             4,
             5
@@ -780,7 +775,7 @@
       "caseId": "ralph-nb-010",
       "caseName": "Source coverage analysis — which papers contributed",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:01:28.947Z",
+      "timestamp": "2026-03-03T12:10:36.451Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -801,7 +796,7 @@
         {
           "queryId": "q1",
           "query": "What do the SGLT2 inhibitor trials show about heart failure outcomes?",
-          "response": "The two SGLT2 inhibitor trials in your sources show consistent benefits for heart failure outcomes [1]. PARADIGM-HF is identified as an unused paper — it is not an SGLT2 inhibitor trial and its data was not included in this analysis.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. The trial enrolled 4744 patients with NYHA class II-IV heart failure and LVEF ≤40% [2].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) [4].\n\n---\n*Source coverage: 2/3 papers used. PARADIGM-HF did not contribute to this response — the query may not relate to that paper.*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "The two SGLT2 inhibitor trials in your sources show consistent benefits for heart failure outcomes [1]. PARADIGM-HF is identified as an unused paper — it is not an SGLT2 inhibitor trial and its data was not included in this analysis.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. The trial enrolled 4744 patients with NYHA class II-IV heart failure and LVEF ≤40% [2].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) [4].\n\n---\n*Source coverage: 2/3 papers used. PARADIGM-HF did not contribute to this response — the query may not relate to that paper.*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -811,27 +806,27 @@
           "scores": {
             "grounding": 8,
             "citationAccuracy": 10,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.1,
+          "weightedScore": 9.3,
           "issues": [
-            "75% of factual sentences have citations (target: 100%)",
-            "Missing expected behaviors: Does NOT fabricate PARADIGM-HF SGLT2 data"
+            "75% of factual sentences have citations (target: 100%)"
           ],
           "passedChecks": [
             "All required citations present",
             "Citation verifier: all 5 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "8 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         },
         {
           "queryId": "q2",
           "query": "Summarize all three papers for me",
-          "response": "**DAPA-HF**: Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled [2].\n\n**EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) [4].\n\n**PARADIGM-HF**: Your uploaded sources don't contain retrieved data for PARADIGM-HF. This paper is identified as unused — no chunks were retrieved for it. The above summaries cover only the two SGLT2 inhibitor trials with available data.\n\n---\n*Source coverage: 2/3 papers used. PARADIGM-HF did not contribute to this response — the query may not relate to that paper.*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "**DAPA-HF**: Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1]. Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled [2].\n\n**EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3]. Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) [4].\n\n**PARADIGM-HF**: Your uploaded sources don't contain retrieved data for PARADIGM-HF. This paper is identified as unused — no chunks were retrieved for it. The above summaries cover only the two SGLT2 inhibitor trials with available data.\n\n---\n*Source coverage: 2/3 papers used. PARADIGM-HF did not contribute to this response — the query may not relate to that paper.*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -841,25 +836,25 @@
           "scores": {
             "grounding": 8,
             "citationAccuracy": 10,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.1,
+          "weightedScore": 9.3,
           "issues": [
-            "78% of factual sentences have citations (target: 100%)",
-            "Missing expected behaviors: Does NOT fabricate PARADIGM-HF summary from non-existent chunks"
+            "78% of factual sentences have citations (target: 100%)"
           ],
           "passedChecks": [
             "All required citations present",
             "Citation verifier: all 6 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "8 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 9.1,
+      "overallScore": 9.3,
       "pass": true,
       "regressions": []
     },
@@ -867,7 +862,7 @@
       "caseId": "ralph-nb-011",
       "caseName": "Study guide generation — structured artifact from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:01:28.958Z",
+      "timestamp": "2026-03-03T12:10:36.463Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -888,7 +883,7 @@
         {
           "queryId": "q1",
           "query": "Create a study guide from these papers on SGLT2 inhibitors in heart failure",
-          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [1].\n  - Empagliflozin reduced the composite endpoint (HR 0.75) [4].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: LVEF ≤40% [2], 3730 patients enrolled [5], the population studied in these trials.\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.74 in DAPA-HF [1].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in DAPA-HF [1].\n\n## Main Findings\n\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n- The number needed to treat was 21 [1].\n**EMPEROR-Reduced (Empagliflozin)**\n- Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4].\n- Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [5].\n\n## Methodology Overview\n\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled at 410 sites in 20 countries [3]. The median age was 66 years, 77% were male, and 42% had diabetes [3].\n- EMPEROR-Reduced: Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6]. Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n## Review Questions\n\n1. What was the primary composite endpoint result for each trial?\n2. How did the trials differ in their effect on cardiovascular death alone?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThese trials demonstrated significant reductions in the primary composite endpoint in heart failure: HR 0.74 [1], HR 0.75 [4].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [1].\n  - Empagliflozin reduced the composite endpoint (HR 0.75) [4].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: LVEF ≤40% [2], 3730 patients enrolled [5], the population studied in these trials.\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.74 in DAPA-HF [1].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in DAPA-HF [1].\n\n## Main Findings\n\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n- The number needed to treat was 21 [1].\n**EMPEROR-Reduced (Empagliflozin)**\n- Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4].\n- Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [5].\n\n## Methodology Overview\n\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled at 410 sites in 20 countries [3]. The median age was 66 years, 77% were male, and 42% had diabetes [3].\n- EMPEROR-Reduced: Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6]. Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n## Review Questions\n\n1. What was the primary composite endpoint result for each trial?\n2. How did the trials differ in their effect on cardiovascular death alone?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThese trials demonstrated significant reductions in the primary composite endpoint in heart failure: HR 0.74 [1], HR 0.75 [4].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -920,7 +915,7 @@
         {
           "queryId": "q2",
           "query": "Generate a briefing document summarizing the key evidence",
-          "response": "## Bottom Line\n\nSGLT2 inhibitors reduce heart failure composite endpoints in patients with HFrEF. Dapagliflozin achieved HR 0.74 [1] and empagliflozin achieved HR 0.75 [4].\n\n## Evidence Summary\n\n- **DAPA-HF**: Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) with NNT of 21 over 18.2 months [1]. Enrolled 4744 patients with LVEF ≤40% [2][3].\n- **EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4]. However, cardiovascular death alone was not significantly reduced (HR 0.92; P=0.23) [5]. Enrolled 3730 patients with median follow-up of 16 months [6].\n\n## Implications\n\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a number needed to treat of 21 [1]. Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; P<0.001) [4]. However, empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23), highlighting a discrepancy that warrants further investigation [5].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "## Bottom Line\n\nSGLT2 inhibitors reduce heart failure composite endpoints in patients with HFrEF. Dapagliflozin achieved HR 0.74 [1] and empagliflozin achieved HR 0.75 [4].\n\n## Evidence Summary\n\n- **DAPA-HF**: Dapagliflozin reduced the composite of worsening heart failure or cardiovascular death (HR 0.74; 95% CI 0.65-0.85; P<0.001) with NNT of 21 over 18.2 months [1]. Enrolled 4744 patients with LVEF ≤40% [2][3].\n- **EMPEROR-Reduced**: Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4]. However, cardiovascular death alone was not significantly reduced (HR 0.92; P=0.23) [5]. Enrolled 3730 patients with median follow-up of 16 months [6].\n\n## Implications\n\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a number needed to treat of 21 [1]. Empagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; P<0.001) [4]. However, empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23), highlighting a discrepancy that warrants further investigation [5].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -958,7 +953,7 @@
       "caseId": "ralph-nb-012",
       "caseName": "FAQ generation — cited question-answer pairs from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:01:28.977Z",
+      "timestamp": "2026-03-03T12:10:36.483Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -979,7 +974,7 @@
         {
           "queryId": "q1",
           "query": "Generate a FAQ from these papers on SGLT2 inhibitors in heart failure",
-          "response": "**Q: What was the primary endpoint result of the DAPA-HF trial?**\nA: Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n\n**Q: What was the primary endpoint result of the EMPEROR-Reduced trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4].\n\n**Q: Who was enrolled in these trials?**\nA: DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled at 410 sites in 20 countries [3]. The median age was 66 years, 77% were male, and 42% had diabetes [3]. EMPEROR-Reduced: Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6]. Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n**Q: Did Empagliflozin reduce cardiovascular death alone?**\nA: In EMPEROR-Reduced, Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [5]. The DAPA-HF sources focus on the composite endpoint result [1].\n\n**Q: What were the key demographic characteristics of the DAPA-HF population?**\nA: A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes. [3].\n\n**Q: How long were patients followed in each trial?**\nA: DAPA-HF had a median follow-up of 18.2 months [1]. EMPEROR-Reduced had a median follow-up of 16 months [5].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "**Q: What was the primary endpoint result of the DAPA-HF trial?**\nA: Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n\n**Q: What was the primary endpoint result of the EMPEROR-Reduced trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4].\n\n**Q: Who was enrolled in these trials?**\nA: DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled at 410 sites in 20 countries [3]. The median age was 66 years, 77% were male, and 42% had diabetes [3]. EMPEROR-Reduced: Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6]. Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n**Q: Did Empagliflozin reduce cardiovascular death alone?**\nA: In EMPEROR-Reduced, Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [5]. The DAPA-HF sources focus on the composite endpoint result [1].\n\n**Q: What were the key demographic characteristics of the DAPA-HF population?**\nA: A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes. [3].\n\n**Q: How long were patients followed in each trial?**\nA: DAPA-HF had a median follow-up of 18.2 months [1]. EMPEROR-Reduced had a median follow-up of 16 months [5].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -1011,7 +1006,7 @@
         {
           "queryId": "q2",
           "query": "Create a list of common questions and answers about these heart failure trials",
-          "response": "**Q: What was the primary endpoint result of the DAPA-HF trial?**\nA: Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n\n**Q: What was the primary endpoint result of the EMPEROR-Reduced trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4].\n\n**Q: Who was enrolled in these trials?**\nA: DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled at 410 sites in 20 countries [3]. The median age was 66 years, 77% were male, and 42% had diabetes [3]. EMPEROR-Reduced: Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6]. Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n**Q: Did Empagliflozin reduce cardiovascular death alone?**\nA: In EMPEROR-Reduced, Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [5]. The DAPA-HF sources focus on the composite endpoint result [1].\n\n**Q: What were the key demographic characteristics of the DAPA-HF population?**\nA: A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes. [3].\n\n**Q: How long were patients followed in each trial?**\nA: DAPA-HF had a median follow-up of 18.2 months [1]. EMPEROR-Reduced had a median follow-up of 16 months [5].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "**Q: What was the primary endpoint result of the DAPA-HF trial?**\nA: Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n\n**Q: What was the primary endpoint result of the EMPEROR-Reduced trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4].\n\n**Q: Who was enrolled in these trials?**\nA: DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. A total of 4744 patients were enrolled at 410 sites in 20 countries [3]. The median age was 66 years, 77% were male, and 42% had diabetes [3]. EMPEROR-Reduced: Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6]. Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n**Q: Did Empagliflozin reduce cardiovascular death alone?**\nA: In EMPEROR-Reduced, Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [5]. The DAPA-HF sources focus on the composite endpoint result [1].\n\n**Q: What were the key demographic characteristics of the DAPA-HF population?**\nA: A total of 4744 patients were enrolled at 410 sites in 20 countries. The median age was 66 years, 77% were male, and 42% had diabetes. [3].\n\n**Q: How long were patients followed in each trial?**\nA: DAPA-HF had a median follow-up of 18.2 months [1]. EMPEROR-Reduced had a median follow-up of 16 months [5].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -1049,7 +1044,7 @@
       "caseId": "ralph-nb-013",
       "caseName": "Cross-artifact consistency — same sources, different formats",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:01:29.002Z",
+      "timestamp": "2026-03-03T12:10:36.508Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1071,7 +1066,7 @@
         {
           "queryId": "q1",
           "query": "Create a study guide covering all three heart failure trials",
-          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [1].\n  - Empagliflozin reduced the composite endpoint (HR 0.75) [3].\n  - Empagliflozin reduced the composite endpoint (HR 0.79) [5].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40% [2].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF (≥45% or ≥50%) [6].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.74 in DAPA-HF [1].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in DAPA-HF [1].\n\n## Main Findings\n\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n- The number needed to treat was 21 [1].\n**EMPEROR-Reduced (Empagliflozin)**\n- Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n- Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4].\n**DELIVER (Empagliflozin)**\n- Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [5].\n\n## Methodology Overview\n\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2].\n- 3730 patients were enrolled [4].\n- DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [6]. The median follow-up was 2.2 years [6]. Unlike HFrEF trials, DELIVER enrolled patients with preserved ejection fraction [6]. 6263 patients were enrolled [6].\n\n## Review Questions\n\n1. What was the primary composite endpoint result for each trial?\n2. How does the DELIVER trial population differ from DAPA-HF and EMPEROR-Reduced?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThese trials demonstrated significant reductions in the primary composite endpoint in heart failure: HR 0.74 [1], HR 0.75 [3], HR 0.79 [5]. Notably, benefits extended to patients with preserved ejection fraction (LVEF >40%) [6].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[3] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
+          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [1].\n  - Empagliflozin reduced the composite endpoint (HR 0.75) [3].\n  - Empagliflozin reduced the composite endpoint (HR 0.79) [5].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40% [2].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF (≥45% or ≥50%) [6].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.74 in DAPA-HF [1].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in DAPA-HF [1].\n\n## Main Findings\n\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n- The number needed to treat was 21 [1].\n**EMPEROR-Reduced (Empagliflozin)**\n- Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n- Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4].\n**DELIVER (Empagliflozin)**\n- Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [5].\n\n## Methodology Overview\n\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2].\n- 3730 patients were enrolled [4].\n- DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [6]. The median follow-up was 2.2 years [6]. Unlike HFrEF trials, DELIVER enrolled patients with preserved ejection fraction [6]. 6263 patients were enrolled [6].\n\n## Review Questions\n\n1. What was the primary composite endpoint result for each trial?\n2. How does the DELIVER trial population differ from DAPA-HF and EMPEROR-Reduced?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThese trials demonstrated significant reductions in the primary composite endpoint in heart failure: HR 0.74 [1], HR 0.75 [3], HR 0.79 [5]. Notably, benefits extended to patients with preserved ejection fraction (LVEF >40%) [6].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
           "citationsFound": [
             1,
             2,
@@ -1103,7 +1098,7 @@
         {
           "queryId": "q2",
           "query": "Generate a FAQ about these three SGLT2 inhibitor trials",
-          "response": "**Q: What was the primary endpoint result of the DAPA-HF trial?**\nA: Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n\n**Q: What was the primary endpoint result of the EMPEROR-Reduced trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n\n**Q: What was the primary endpoint result of the DELIVER trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [5].\n\n**Q: Who was enrolled in these trials?**\nA: DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. EMPEROR-Reduced: Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4]. 3730 patients were randomized with a median follow-up of 16 months [4]. DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [6]. The median follow-up was 2.2 years [6]. Unlike HFrEF trials, DELIVER enrolled patients with preserved ejection fraction [6].\n\n**Q: Did Empagliflozin reduce cardiovascular death alone?**\nA: In EMPEROR-Reduced, Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4]. The DAPA-HF sources focus on the composite endpoint result [1].\n\n**Q: How does the DELIVER trial differ from the other trials?**\nA: Unlike the HFrEF trials which enrolled patients with LVEF ≤40%, DELIVER enrolled patients with preserved ejection fraction (LVEF >40%) [6]. Despite this different population, Empagliflozin still reduced the composite endpoint [5].\n\n**Q: How long were patients followed in each trial?**\nA: DAPA-HF had a median follow-up of 18.2 months [1]. EMPEROR-Reduced had a median follow-up of 16 months [4]. DELIVER had a median follow-up of 2.2 years [6].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[3] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
+          "response": "**Q: What was the primary endpoint result of the DAPA-HF trial?**\nA: Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [1].\n\n**Q: What was the primary endpoint result of the EMPEROR-Reduced trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.75; 95% CI 0.65-0.86; P<0.001) [3].\n\n**Q: What was the primary endpoint result of the DELIVER trial?**\nA: Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [5].\n\n**Q: Who was enrolled in these trials?**\nA: DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2]. EMPEROR-Reduced: Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4]. 3730 patients were randomized with a median follow-up of 16 months [4]. DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [6]. The median follow-up was 2.2 years [6]. Unlike HFrEF trials, DELIVER enrolled patients with preserved ejection fraction [6].\n\n**Q: Did Empagliflozin reduce cardiovascular death alone?**\nA: In EMPEROR-Reduced, Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) [4]. The DAPA-HF sources focus on the composite endpoint result [1].\n\n**Q: How does the DELIVER trial differ from the other trials?**\nA: Unlike the HFrEF trials which enrolled patients with LVEF ≤40%, DELIVER enrolled patients with preserved ejection fraction (LVEF >40%) [6]. Despite this different population, Empagliflozin still reduced the composite endpoint [5].\n\n**Q: How long were patients followed in each trial?**\nA: DAPA-HF had a median follow-up of 18.2 months [1]. EMPEROR-Reduced had a median follow-up of 16 months [4]. DELIVER had a median follow-up of 2.2 years [6].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
           "citationsFound": [
             1,
             2,
@@ -1141,7 +1136,7 @@
       "caseId": "ralph-nb-014",
       "caseName": "Artifact edge cases — ambiguous queries and grounding under format pressure",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:01:29.021Z",
+      "timestamp": "2026-03-03T12:10:36.526Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1162,7 +1157,7 @@
         {
           "queryId": "q1",
           "query": "Create a study guide about spironolactone in heart failure with preserved ejection fraction",
-          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **Spironolactone**: An aldosterone antagonist (mineralocorticoid receptor antagonist) studied in heart failure [2][5].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF, the population studied in these trials [2][5].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.89 in TOPCAT [1].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in TOPCAT [1].\n\n## Main Findings\n\n**TOPCAT (Spironolactone)**\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n**Aldo-DHF (Spironolactone)**\n- However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n## Methodology Overview\n\n- TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [2]. The median follow-up was 3.3 years [2]. 3445 patients were enrolled [2].\n- Aldo-DHF: 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled [5]. Patients received spironolactone 25mg daily for 12 months [5]. 422 patients were enrolled [5].\n\n## Review Questions\n\n1. What were the primary endpoint results of each trial, and which reached statistical significance?\n2. How do the conflicting results across these trials affect clinical interpretation?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints [1][4].\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[2] Aldo-DHF: Effect of Spironolactone on Diastolic Function in Heart Failure with Preserved Ejection Fraction — Edelmann F, Wachter R, Schmidt AG (2013)",
+          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **Spironolactone**: An aldosterone antagonist (mineralocorticoid receptor antagonist) studied in heart failure [2][5].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF, the population studied in these trials [2][5].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.89 in TOPCAT [1].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in TOPCAT [1].\n\n## Main Findings\n\n**TOPCAT (Spironolactone)**\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n**Aldo-DHF (Spironolactone)**\n- However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n## Methodology Overview\n\n- TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [2]. The median follow-up was 3.3 years [2]. 3445 patients were enrolled [2].\n- Aldo-DHF: 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled [5]. Patients received spironolactone 25mg daily for 12 months [5]. 422 patients were enrolled [5].\n\n## Review Questions\n\n1. What were the primary endpoint results of each trial, and which reached statistical significance?\n2. How do the conflicting results across these trials affect clinical interpretation?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints [1][4].\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[4] Aldo-DHF: Effect of Spironolactone on Diastolic Function in Heart Failure with Preserved Ejection Fraction — Edelmann F, Wachter R, Schmidt AG (2013)",
           "citationsFound": [
             1,
             2,
@@ -1192,7 +1187,7 @@
         {
           "queryId": "q2",
           "query": "Generate a FAQ about these spironolactone trials",
-          "response": "**Q: What was the primary endpoint result of the TOPCAT trial?**\nA: Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\n**Q: What was the primary endpoint result of the Aldo-DHF trial?**\nA: Spironolactone significantly improved diastolic function as measured by E/e' ratio (change: -1.5 vs -0.1; P<0.001). However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n**Q: Who was enrolled in these trials?**\nA: TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [2]. The median follow-up was 3.3 years [2]. Aldo-DHF: 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled [5]. Patients received spironolactone 25mg daily for 12 months [5].\n\n**Q: Do these trials agree on the effectiveness of Spironolactone?**\nA: No. The results are conflicting. TOPCAT did NOT show a statistically significant benefit on the primary endpoint (P=0.14) [1]. Aldo-DHF showed that spironolactone significantly improved diastolic function but did NOT improve symptoms or quality of life [4]. The evidence is genuinely mixed and does not support a definitive conclusion.\n\n**Q: Were there any subgroup analyses worth noting?**\nA: A post-hoc regional analysis revealed significant heterogeneity: patients in the Americas showed benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46). [3]. This caveat applies: as a post-hoc analysis, interpretation should be exercised with caution.\n\n**Q: How long were patients followed in each trial?**\nA: TOPCAT had a median follow-up of 3.3 years [2].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[2] Aldo-DHF: Effect of Spironolactone on Diastolic Function in Heart Failure with Preserved Ejection Fraction — Edelmann F, Wachter R, Schmidt AG (2013)",
+          "response": "**Q: What was the primary endpoint result of the TOPCAT trial?**\nA: Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\n**Q: What was the primary endpoint result of the Aldo-DHF trial?**\nA: Spironolactone significantly improved diastolic function as measured by E/e' ratio (change: -1.5 vs -0.1; P<0.001). However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n**Q: Who was enrolled in these trials?**\nA: TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [2]. The median follow-up was 3.3 years [2]. Aldo-DHF: 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled [5]. Patients received spironolactone 25mg daily for 12 months [5].\n\n**Q: Do these trials agree on the effectiveness of Spironolactone?**\nA: No. The results are conflicting. TOPCAT did NOT show a statistically significant benefit on the primary endpoint (P=0.14) [1]. Aldo-DHF showed that spironolactone significantly improved diastolic function but did NOT improve symptoms or quality of life [4]. The evidence is genuinely mixed and does not support a definitive conclusion.\n\n**Q: Were there any subgroup analyses worth noting?**\nA: A post-hoc regional analysis revealed significant heterogeneity: patients in the Americas showed benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46). [3]. This caveat applies: as a post-hoc analysis, interpretation should be exercised with caution.\n\n**Q: How long were patients followed in each trial?**\nA: TOPCAT had a median follow-up of 3.3 years [2].\n\n*These Q&A pairs contain cited answers with hazard ratios and key findings from your uploaded sources [1].*\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[4] Aldo-DHF: Effect of Spironolactone on Diastolic Function in Heart Failure with Preserved Ejection Fraction — Edelmann F, Wachter R, Schmidt AG (2013)",
           "citationsFound": [
             1,
             2,
@@ -1229,7 +1224,7 @@
       "caseId": "ralph-nb-015",
       "caseName": "Timeline generation and artifact routing robustness",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:01:29.037Z",
+      "timestamp": "2026-03-03T12:10:36.546Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1252,7 +1247,7 @@
         {
           "queryId": "q1",
           "query": "Create a timeline of major heart failure trials from these papers",
-          "response": "## Timeline of Major Heart Failure Trials\n\nEach entry below cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced the risk with RR 0.70 (95% CI 0.60-0.82; P<0.001) [1].\n- The trial was stopped early due to the magnitude of benefit [2].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — PARADIGM-HF\n- Sacubitril/valsartan reduced the composite endpoint (HR 0.80; 95% CI 0.73-0.87; P<0.001) [3].\n- The trial was stopped early due to the magnitude of benefit [4].\n- Enrolled 8442 patients with LVEF ≤40% [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n### 2022 — DELIVER\n- Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [7].\n- Enrolled 6263 patients with LVEF >40% [8].\n- Notable: This trial enrolled patients with preserved ejection fraction, unlike earlier HFrEF trials [8].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[2] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)\n[3] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
+          "response": "## Timeline of Major Heart Failure Trials\n\nEach entry below cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced the risk with RR 0.70 (95% CI 0.60-0.82; P<0.001) [1].\n- The trial was stopped early due to the magnitude of benefit [2].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — PARADIGM-HF\n- Sacubitril/valsartan reduced the composite endpoint (HR 0.80; 95% CI 0.73-0.87; P<0.001) [3].\n- The trial was stopped early due to the magnitude of benefit [4].\n- Enrolled 8442 patients with LVEF ≤40% [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n### 2022 — DELIVER\n- Empagliflozin reduced the composite endpoint (HR 0.79; 95% CI 0.69-0.90; P<0.001) [7].\n- Enrolled 6263 patients with LVEF >40% [8].\n- Notable: This trial enrolled patients with preserved ejection fraction, unlike earlier HFrEF trials [8].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[7] DELIVER: Empagliflozin in Heart Failure with a Preserved Ejection Fraction — Anker SD, Butler J, Filippatos G (2022)",
           "citationsFound": [
             1,
             2,
@@ -1319,7 +1314,7 @@
       "caseId": "ralph-nb-016",
       "caseName": "Audio overview — conversational podcast script from sources",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T12:01:29.053Z",
+      "timestamp": "2026-03-03T12:10:36.561Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1340,7 +1335,7 @@
         {
           "queryId": "q1",
           "query": "Generate an audio overview of these heart failure papers as a deep dive podcast",
-          "response": "**Host:** Welcome to today's deep dive. We're looking at 2 major heart failure trials — DAPA-HF and EMPEROR-Reduced [1]. Let's break down what they found.\n\n**Host:** Let's start with DAPA-HF. What did this trial show?\n**Expert:** DAPA-HF demonstrated that dapagliflozin significantly reduced the composite endpoint, with a hazard ratio of 0.74 (95% CI 0.65-0.85; P<0.001) [1]. The number needed to treat was 21 [1].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2].\n**Host:** Let's start with EMPEROR-Reduced. What did this trial show?\n**Expert:** EMPEROR-Reduced demonstrated that empagliflozin significantly reduced the composite endpoint, with a hazard ratio of 0.75 (95% CI 0.65-0.86; P<0.001) [4].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n**Host:** What about individual endpoints like cardiovascular death?\n**Expert:** That's an important distinction. Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) in EMPEROR-Reduced [5].\n\n**Host:** So to summarize — what are the key takeaways from these trials?\n**Expert:** Both trials show consistent benefit of SGLT2 inhibitors in heart failure: DAPA-HF (HR 0.74) [1] and EMPEROR-Reduced (HR 0.75) [4]. The evidence strongly supports their use in HFrEF.\n\n**Host:** Great discussion. Thanks for breaking that down for us.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "**Host:** Welcome to today's deep dive. We're looking at 2 major heart failure trials — DAPA-HF and EMPEROR-Reduced [1]. Let's break down what they found.\n\n**Host:** Let's start with DAPA-HF. What did this trial show?\n**Expert:** DAPA-HF demonstrated that dapagliflozin significantly reduced the composite endpoint, with a hazard ratio of 0.74 (95% CI 0.65-0.85; P<0.001) [1]. The number needed to treat was 21 [1].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [2]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [2].\n**Host:** Let's start with EMPEROR-Reduced. What did this trial show?\n**Expert:** EMPEROR-Reduced demonstrated that empagliflozin significantly reduced the composite endpoint, with a hazard ratio of 0.75 (95% CI 0.65-0.86; P<0.001) [4].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** Patients were randomized to empagliflozin 10mg or placebo on top of recommended therapy [6]. The median follow-up was 16 months [6].\n\n**Host:** What about individual endpoints like cardiovascular death?\n**Expert:** That's an important distinction. Empagliflozin did NOT significantly reduce cardiovascular death alone (HR 0.92; P=0.23) or all-cause mortality (HR 0.92; P=0.22) in EMPEROR-Reduced [5].\n\n**Host:** So to summarize — what are the key takeaways from these trials?\n**Expert:** Both trials show consistent benefit of SGLT2 inhibitors in heart failure: DAPA-HF (HR 0.74) [1] and EMPEROR-Reduced (HR 0.75) [4]. The evidence strongly supports their use in HFrEF.\n\n**Host:** Great discussion. Thanks for breaking that down for us.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -1371,7 +1366,7 @@
         {
           "queryId": "q2",
           "query": "How do the primary endpoints compare between DAPA-HF and EMPEROR-Reduced?",
-          "response": "Both DAPA-HF and EMPEROR-Reduced demonstrated significant benefits for SGLT2 inhibitors in heart failure with reduced ejection fraction.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a hazard ratio of 0.74 (95% CI 0.65-0.85; P<0.001), with a number needed to treat of 21 over a median follow-up of 18.2 months [1]. The trial enrolled 4744 patients with NYHA class II-IV heart failure and LVEF ≤40% [2].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4]. The trial enrolled 3730 patients with a median follow-up of 16 months [6].\n\n**Comparison**\nThe hazard ratios were similar (0.74 for dapagliflozin [1] vs 0.75 for empagliflozin [4]), suggesting comparable efficacy. However, these were separate trials with different patient populations and follow-up durations, so a direct head-to-head comparison cannot be made from these data alone.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "Both DAPA-HF and EMPEROR-Reduced demonstrated significant benefits for SGLT2 inhibitors in heart failure with reduced ejection fraction.\n\n**DAPA-HF (Dapagliflozin)**\nDapagliflozin reduced the composite of worsening heart failure or cardiovascular death with a hazard ratio of 0.74 (95% CI 0.65-0.85; P<0.001), with a number needed to treat of 21 over a median follow-up of 18.2 months [1]. The trial enrolled 4744 patients with NYHA class II-IV heart failure and LVEF ≤40% [2].\n\n**EMPEROR-Reduced (Empagliflozin)**\nEmpagliflozin reduced the composite of cardiovascular death or hospitalization for heart failure (HR 0.75; 95% CI 0.65-0.86; P<0.001) [4]. The trial enrolled 3730 patients with a median follow-up of 16 months [6].\n\n**Comparison**\nThe hazard ratios were similar (0.74 for dapagliflozin [1] vs 0.75 for empagliflozin [4]), suggesting comparable efficacy. However, these were separate trials with different patient populations and follow-up durations, so a direct head-to-head comparison cannot be made from these data alone.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2,
@@ -1407,7 +1402,7 @@
       "caseId": "ralph-nb-017",
       "caseName": "Audio overview edge cases — conflicting evidence and single-paper audio",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T12:01:29.066Z",
+      "timestamp": "2026-03-03T12:10:36.574Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1428,7 +1423,7 @@
         {
           "queryId": "q1",
           "query": "Generate an audio overview discussing these spironolactone trials as a deep dive",
-          "response": "**Host:** Welcome to today's deep dive. We're looking at 2 major heart failure trials — TOPCAT and Aldo-DHF [1]. Let's break down what they found.\n\n**Host:** Let's start with TOPCAT. What did this trial show?\n**Expert:** Interestingly, TOPCAT found that spironolactone did NOT significantly reduce the primary endpoint, with an HR of 0.89 (95% CI 0.77-1.04; P=0.14) [1].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [2]. The median follow-up was 3.3 years [2].\n\n**Host:** Were there any notable subgroup findings?\n**Expert:** Yes, but it was a post-hoc analysis and should be interpreted cautiously. A post-hoc regional analysis revealed significant heterogeneity: patients in the Americas showed benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46). [3].\n**Host:** Let's start with Aldo-DHF. What did this trial show?\n**Expert:** Spironolactone significantly improved diastolic function as measured by E/e' ratio (change: -1.5 vs -0.1; P<0.001). However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n**Host:** Were there any caveats?\n**Expert:** Yes. However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled [5]. Patients received spironolactone 25mg daily for 12 months [5].\n\n**Host:** So to summarize — what are the key takeaways from these trials?\n**Expert:** The evidence is mixed and presents conflicting results. TOPCAT did not show clear benefit on its primary endpoint [1], while Aldo-DHF showed some improvement [4]. These findings must be honestly presented to avoid overstating the evidence.\n\n**Host:** Great discussion. Thanks for breaking that down for us.\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[2] Aldo-DHF: Effect of Spironolactone on Diastolic Function in Heart Failure with Preserved Ejection Fraction — Edelmann F, Wachter R, Schmidt AG (2013)",
+          "response": "**Host:** Welcome to today's deep dive. We're looking at 2 major heart failure trials — TOPCAT and Aldo-DHF [1]. Let's break down what they found.\n\n**Host:** Let's start with TOPCAT. What did this trial show?\n**Expert:** Interestingly, TOPCAT found that spironolactone did NOT significantly reduce the primary endpoint, with an HR of 0.89 (95% CI 0.77-1.04; P=0.14) [1].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [2]. The median follow-up was 3.3 years [2].\n\n**Host:** Were there any notable subgroup findings?\n**Expert:** Yes, but it was a post-hoc analysis and should be interpreted cautiously. A post-hoc regional analysis revealed significant heterogeneity: patients in the Americas showed benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46). [3].\n**Host:** Let's start with Aldo-DHF. What did this trial show?\n**Expert:** Spironolactone significantly improved diastolic function as measured by E/e' ratio (change: -1.5 vs -0.1; P<0.001). However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n**Host:** Were there any caveats?\n**Expert:** Yes. However, spironolactone did NOT improve symptoms, exercise capacity, or quality of life. [4].\n\n**Host:** Who was enrolled in this trial?\n**Expert:** 422 patients with diastolic dysfunction and preserved ejection fraction (LVEF ≥50%) were enrolled [5]. Patients received spironolactone 25mg daily for 12 months [5].\n\n**Host:** So to summarize — what are the key takeaways from these trials?\n**Expert:** The evidence is mixed and presents conflicting results. TOPCAT did not show clear benefit on its primary endpoint [1], while Aldo-DHF showed some improvement [4]. These findings must be honestly presented to avoid overstating the evidence.\n\n**Host:** Great discussion. Thanks for breaking that down for us.\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[4] Aldo-DHF: Effect of Spironolactone on Diastolic Function in Heart Failure with Preserved Ejection Fraction — Edelmann F, Wachter R, Schmidt AG (2013)",
           "citationsFound": [
             1,
             2,
@@ -1494,7 +1489,7 @@
       "caseId": "ralph-nb-018",
       "caseName": "Edge cases — single paper, minimal chunks, boundary conditions",
       "category": "polish",
-      "timestamp": "2026-03-03T12:01:29.077Z",
+      "timestamp": "2026-03-03T12:10:36.586Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 2,
@@ -1549,14 +1544,12 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 10,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.7,
-          "issues": [
-            "Missing expected behaviors: Does NOT fabricate renal data"
-          ],
+          "weightedScore": 9.9,
+          "issues": [],
           "passedChecks": [
             "Correctly identifies topic is not in sources",
             "Citations used appropriately to indicate what sources DO cover",
@@ -1564,11 +1557,12 @@
             "Citation verifier: all 1 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "3 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 9.5,
+      "overallScore": 9.6,
       "pass": true,
       "regressions": []
     },
@@ -1576,7 +1570,7 @@
       "caseId": "ralph-nb-019",
       "caseName": "Cross-feature integration — routing, stat fidelity, artifact switching",
       "category": "integration",
-      "timestamp": "2026-03-03T12:01:29.089Z",
+      "timestamp": "2026-03-03T12:10:36.599Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1598,7 +1592,7 @@
         {
           "queryId": "q1",
           "query": "Create a timeline of these heart failure trials",
-          "response": "## Timeline of Major Heart Failure Trials\n\nEach entry below cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced mortality with a relative risk of death of 0.70 (95% CI 0.60-0.82; P<0.001). The trial was stopped early due to clear survival benefit after a mean follow-up of 24 months. [1].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — TOPCAT\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n- Enrolled 3445 patients [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[2] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[3] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
+          "response": "## Timeline of Major Heart Failure Trials\n\nEach entry below cites its source. No fabricated dates or events are included.\n\n### 1999 — RALES\n- Spironolactone reduced mortality with a relative risk of death of 0.70 (95% CI 0.60-0.82; P<0.001). The trial was stopped early due to clear survival benefit after a mean follow-up of 24 months. [1].\n- Enrolled 1663 patients with LVEF ≤35% [2].\n### 2014 — TOPCAT\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n- Enrolled 3445 patients [4].\n### 2019 — DAPA-HF\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- Number needed to treat: 21 [5].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
           "citationsFound": [
             1,
             2,
@@ -1629,9 +1623,8 @@
         {
           "queryId": "q2",
           "query": "What was the primary result of the DAPA-HF trial?",
-          "response": "The DAPA-HF trial demonstrated that dapagliflozin significantly reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5]. The number needed to treat was 21 over a median follow-up of 18.2 months [5].\nEnrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [6]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [6].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
+          "response": "The DAPA-HF trial demonstrated that dapagliflozin significantly reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5]. The number needed to treat was 21 over a median follow-up of 18.2 months [5].\nEnrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [6]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [6].\n\nSources:\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)",
           "citationsFound": [
-            1,
             5,
             6
           ],
@@ -1664,7 +1657,7 @@
       "caseId": "ralph-nb-020",
       "caseName": "Stress test — adversarial queries, ambiguous routing, maximum paper count",
       "category": "stress_test",
-      "timestamp": "2026-03-03T12:01:29.111Z",
+      "timestamp": "2026-03-03T12:10:36.620Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1687,7 +1680,7 @@
         {
           "queryId": "q1",
           "query": "Based on these papers, what is the recommended first-line treatment for all types of heart failure?",
-          "response": "Based on your uploaded sources, the data is mixed and no single drug has been shown to work across all types of heart failure [1]. The evidence varies by drug class, patient population, and ejection fraction status.\n\n**RALES** (HFrEF): Showed significant benefit (RR 0.70; P<0.001) [1]. Population: 1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% wer [2].\n**TOPCAT** (HFpEF): Did NOT significantly reduce the primary endpoint (HR 0.89; P=0.14) [3]. Population: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fractio [4].\n**DAPA-HF** (HFrEF): Showed significant benefit (HR 0.74; P<0.001) [5]. Population: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LV [6].\n**DELIVER** (HFpEF): Showed significant benefit (HR 0.82; P<0.001) [7]. Population: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled. T [8].\n\nThese results highlight that different drug classes (aldosterone antagonists and SGLT2 inhibitors) have been tested in different heart failure populations with mixed results [1][7]. No single drug works for all heart failure types based on this evidence.\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[2] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[3] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] DELIVER: Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
+          "response": "Based on your uploaded sources, the data is mixed and no single drug has been shown to work across all types of heart failure [1]. The evidence varies by drug class, patient population, and ejection fraction status.\n\n**RALES** (HFrEF): Showed significant benefit (RR 0.70; P<0.001) [1]. Population: 1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% wer [2].\n**TOPCAT** (HFpEF): Did NOT significantly reduce the primary endpoint (HR 0.89; P=0.14) [3]. Population: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fractio [4].\n**DAPA-HF** (HFrEF): Showed significant benefit (HR 0.74; P<0.001) [5]. Population: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LV [6].\n**DELIVER** (HFpEF): Showed significant benefit (HR 0.82; P<0.001) [7]. Population: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled. T [8].\n\nThese results highlight that different drug classes (aldosterone antagonists and SGLT2 inhibitors) have been tested in different heart failure populations with mixed results [1][7]. No single drug works for all heart failure types based on this evidence.\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[7] DELIVER: Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
           "citationsFound": [
             1,
             2,
@@ -1721,7 +1714,7 @@
         {
           "queryId": "q2",
           "query": "Create a study guide covering all four trials",
-          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **Mineralocorticoid Receptor Antagonists (MRAs)**: Spironolactone, an aldosterone antagonist studied in heart failure.\n  - RALES: Reduced mortality (RR 0.70) [1].\n  - TOPCAT: Did NOT significantly reduce the primary endpoint (HR 0.89) [3].\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [5].\n  - Dapagliflozin reduced the composite endpoint (HR 0.82) [7].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40% [2][6][8].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF (≥45% or ≥50%) [4].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.89 in TOPCAT [3].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in TOPCAT [3].\n\n## Main Findings\n\n**RALES (Spironolactone)**\n- Spironolactone reduced mortality (RR 0.70; 95% CI 0.60-0.82; P<0.001) [1].\n**TOPCAT (Spironolactone)**\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- The number needed to treat was 21 [5].\n**DELIVER (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.82; 95% CI 0.73-0.92; P<0.001) [7].\n\n## Methodology Overview\n\n- RALES: 1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% were randomized to spironolactone 25mg or placebo [2]. 1663 patients were enrolled [2].\n- TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [4]. The median follow-up was 3.3 years [4]. 3445 patients were enrolled [4].\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [6]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [6].\n- DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [8]. The median follow-up was 2.3 years [8]. 6263 patients were enrolled [8].\n\n## Review Questions\n\n1. What were the primary endpoint results of each trial, and which reached statistical significance?\n2. How do the conflicting results across these trials affect clinical interpretation?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints [1][3][5][7]. Spironolactone did NOT significantly reduce the primary composite endpoint (HR 0.89; P=0.14) [3].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[2] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[3] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[4] DELIVER: Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
+          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **Mineralocorticoid Receptor Antagonists (MRAs)**: Spironolactone, an aldosterone antagonist studied in heart failure.\n  - RALES: Reduced mortality (RR 0.70) [1].\n  - TOPCAT: Did NOT significantly reduce the primary endpoint (HR 0.89) [3].\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [5].\n  - Dapagliflozin reduced the composite endpoint (HR 0.82) [7].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40% [2][6][8].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF (≥45% or ≥50%) [4].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.89 in TOPCAT [3].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in TOPCAT [3].\n\n## Main Findings\n\n**RALES (Spironolactone)**\n- Spironolactone reduced mortality (RR 0.70; 95% CI 0.60-0.82; P<0.001) [1].\n**TOPCAT (Spironolactone)**\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- The number needed to treat was 21 [5].\n**DELIVER (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.82; 95% CI 0.73-0.92; P<0.001) [7].\n\n## Methodology Overview\n\n- RALES: 1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% were randomized to spironolactone 25mg or placebo [2]. 1663 patients were enrolled [2].\n- TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [4]. The median follow-up was 3.3 years [4]. 3445 patients were enrolled [4].\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [6]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [6].\n- DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [8]. The median follow-up was 2.3 years [8]. 6263 patients were enrolled [8].\n\n## Review Questions\n\n1. What were the primary endpoint results of each trial, and which reached statistical significance?\n2. How do the conflicting results across these trials affect clinical interpretation?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints [1][3][5][7]. Spironolactone did NOT significantly reduce the primary composite endpoint (HR 0.89; P=0.14) [3].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[7] DELIVER: Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
           "citationsFound": [
             1,
             2,

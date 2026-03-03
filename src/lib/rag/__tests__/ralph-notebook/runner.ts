@@ -92,11 +92,13 @@ function appendSourcesSection(
       if (p && !citedPaperSet.has(p.id)) citedPaperSet.set(p.id, p);
     }
   }
+  // Use first chunk index for each paper (matches inline citation numbering)
   const sourcesSection = [...citedPaperSet.values()]
-    .map(
-      (p, i) =>
-        `[${i + 1}] ${p.title} — ${p.authors.slice(0, 3).join(", ")} (${p.year})`
-    )
+    .map((p) => {
+      const firstChunk = chunks.find((c) => c.paper_id === p.id);
+      const chunkIdx = firstChunk ? chunks.indexOf(firstChunk) + 1 : 1;
+      return `[${chunkIdx}] ${p.title} — ${p.authors.slice(0, 3).join(", ")} (${p.year})`;
+    })
     .join("\n");
   lines.push(`\n\nSources:\n${sourcesSection}`);
   return lines.join("");
@@ -1172,7 +1174,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       const renalAbbrev = renalPaper?.title.split(":")[0] || "One trial";
       const idx = chunks.indexOf(renalChunk) + 1;
       lines.push(
-        `Of the trials in your sources, ${renalAbbrev} reported specific renal outcomes.`
+        `Of the trials in your sources, ${renalAbbrev} reported specific renal outcomes [${idx}].`
       );
       lines.push(
         `\n\n**${renalAbbrev} Renal Data**\nThe annual rate of decline in eGFR was significantly slower in the empagliflozin group compared to placebo (-0.55 vs -2.28 mL/min/1.73m²/year; P<0.001). Empagliflozin was also associated with a lower risk of serious renal outcomes [${idx}].`
@@ -1206,8 +1208,9 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     if (renalChunk) {
       // Summarize: only the renal paper has renal data
       const renalPaperAbbrev = testCase.setup.papers.find((p) => p.id === renalChunk.paper_id)?.title.split(":")[0] || "One trial";
+      const renalSumIdx = chunks.findIndex((c) => c.paper_id === renalChunk.paper_id && c.section_type === "results");
       lines.push(
-        `\n\nTherefore, based on your sources, only ${renalPaperAbbrev} has demonstrated renal preservation benefits.`
+        `\n\nTherefore, based on your sources, only ${renalPaperAbbrev} has demonstrated renal preservation benefits [${renalSumIdx + 1}].`
       );
     }
   } else if (
@@ -1988,11 +1991,13 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     }
   }
 
+  // Use first chunk index for each paper (matches inline citation numbering)
   const sourcesSection = [...citedPaperSet.values()]
-    .map(
-      (p, i) =>
-        `[${i + 1}] ${p.title} — ${p.authors.slice(0, 3).join(", ")} (${p.year})`
-    )
+    .map((p) => {
+      const firstChunk = chunks.find((c) => c.paper_id === p.id);
+      const chunkIdx = firstChunk ? chunks.indexOf(firstChunk) + 1 : 1;
+      return `[${chunkIdx}] ${p.title} — ${p.authors.slice(0, 3).join(", ")} (${p.year})`;
+    })
     .join("\n");
   lines.push(`\n\nSources:\n${sourcesSection}`);
 
