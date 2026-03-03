@@ -14,17 +14,9 @@ import {
 } from "../../plagiarism-engine";
 import { checkPredatoryJournal } from "../../predatory-journals";
 import type {
-  IntegrityCheckResult,
   IntegrityCheckInput,
-  AIDetectionResult,
   PlagiarismResult,
-  CitationAuditResult,
-  SelfPlagiarismResult,
   TextStatistics,
-  PredatoryJournalInfo,
-  RetractionInfo,
-  AIParagraphResult,
-  CitationIssue,
 } from "../../types";
 
 // ── Cycle 48: Cross-Module Consistency ──────────────────────────────
@@ -68,9 +60,13 @@ describe("Cycle 48: Cross-module consistency", () => {
       const stats = computeTextStatistics(input);
       expect(Object.keys(stats).sort()).toEqual([
         "avgSentenceLength",
+        "formulaicTransitionDensity",
         "hedgingPhraseCount",
+        "markdownHeadingCount",
+        "paragraphLengthStdDev",
         "passiveVoicePercent",
         "readabilityGrade",
+        "repetitiveSentenceOpeningRatio",
         "sentenceLengthStdDev",
         "typeTokenRatio",
       ]);
