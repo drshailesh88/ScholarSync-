@@ -279,7 +279,7 @@ describe("Cycle 19: Animation Presets", () => {
       const blocks = [makeTextBlock("A")];
       const result = applyAnimationPreset(
         blocks,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         "nonexistent_key" as unknown as Parameters<typeof applyAnimationPreset>[1],
       );
       expect(result).toEqual(blocks);
