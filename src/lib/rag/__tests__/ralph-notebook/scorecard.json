@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-03-03T09:42:35.850Z",
+  "lastUpdated": "2026-03-03T09:48:04.748Z",
   "phase": 1,
   "currentCycle": 5,
   "totalCases": 20,
   "passing": 20,
   "failing": 0,
-  "averageScore": 9.01,
+  "averageScore": 9.09,
   "gateStatus": {
     "phase1_grounding": "passed",
     "phase2_intelligence": "passed",
@@ -17,7 +17,7 @@
       "caseId": "ralph-nb-001",
       "caseName": "Basic single-source factual question",
       "category": "grounding",
-      "timestamp": "2026-03-03T09:42:35.583Z",
+      "timestamp": "2026-03-03T09:48:04.481Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 3,
@@ -70,7 +70,7 @@
       "caseId": "ralph-nb-002",
       "caseName": "Citation content verification — multi-chunk synthesis",
       "category": "grounding",
-      "timestamp": "2026-03-03T09:42:35.594Z",
+      "timestamp": "2026-03-03T09:48:04.491Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -151,7 +151,7 @@
       "caseId": "ralph-nb-003",
       "caseName": "Hallucination detection — question with no answer in sources",
       "category": "grounding",
-      "timestamp": "2026-03-03T09:42:35.602Z",
+      "timestamp": "2026-03-03T09:48:04.500Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -172,7 +172,7 @@
         {
           "queryId": "q1",
           "query": "What are the cardiovascular benefits of semaglutide in patients with obesity?",
-          "response": "Your uploaded sources don't cover semaglutide or GLP-1 agonists. The papers you've uploaded focus on SGLT2 inhibitors in heart failure: DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction; EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction.\nIf you'd like, I can analyze what your sources say about SGLT2 inhibitors and cardiovascular outcomes instead.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
+          "response": "Your uploaded sources don't cover the drug or topic you asked about. The papers you've uploaded focus on SGLT2 inhibitors in heart failure: DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction; EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction.\nIf you'd like, I can analyze what your sources say about SGLT2 inhibitors and cardiovascular outcomes instead.\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Heart Failure with Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[2] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)",
           "citationsFound": [
             1,
             2
@@ -180,19 +180,19 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 10,
-            "completeness": 3,
-            "hallucinationResistance": 8,
+            "completeness": 7,
+            "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 8.7,
+          "weightedScore": 9.6,
           "issues": [
-            "Contains forbidden content: \"GLP-1 agonist\"",
-            "Missing expected behaviors: Uses language like 'not covered' or 'don't contain' or 'no information'; Does NOT fabricate semaglutide data"
+            "Missing expected behaviors: Uses language like 'not covered' or 'don't contain' or 'no information'"
           ],
           "passedChecks": [
             "Correctly identifies topic is not in sources",
             "Citations used appropriately to indicate what sources DO cover",
             "All required citations present",
+            "No forbidden content detected",
             "Response includes Sources section"
           ]
         },
@@ -208,14 +208,14 @@
           "scores": {
             "grounding": 8,
             "citationAccuracy": 10,
-            "completeness": 3,
+            "completeness": 7,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 8.6,
+          "weightedScore": 9,
           "issues": [
             "75% of factual sentences have citations (target: 100%)",
-            "Missing expected behaviors: Shares what sources DO say (composite endpoints); Clear boundary between source-grounded info and any general context"
+            "Missing expected behaviors: Clear boundary between source-grounded info and any general context"
           ],
           "passedChecks": [
             "All required citations present",
@@ -254,7 +254,7 @@
           ]
         }
       ],
-      "overallScore": 8.52,
+      "overallScore": 8.95,
       "pass": true,
       "regressions": []
     },
@@ -262,7 +262,7 @@
       "caseId": "ralph-nb-004",
       "caseName": "Multi-chunk synthesis — answer requires combining 3+ chunks across papers",
       "category": "grounding",
-      "timestamp": "2026-03-03T09:42:35.611Z",
+      "timestamp": "2026-03-03T09:48:04.507Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -348,7 +348,7 @@
       "caseId": "ralph-nb-005",
       "caseName": "Adversarial citation — contradictory findings, source-specific querying",
       "category": "grounding",
-      "timestamp": "2026-03-03T09:42:35.620Z",
+      "timestamp": "2026-03-03T09:48:04.518Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -369,26 +369,25 @@
         {
           "queryId": "q1",
           "query": "What did the TOPCAT trial find about spironolactone in heart failure? Was it effective?",
-          "response": "The TOPCAT trial found that spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure compared to placebo (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\nThe trial enrolled 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45%, with a median follow-up of 3.3 years [2].\n\nNotably, a post-hoc regional analysis revealed significant heterogeneity: patients in the Americas (excluding Russia/Georgia) showed a significant benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46) [3].\n\nIn summary, the overall TOPCAT result was negative (P=0.14), meaning spironolactone was not proven effective in this population, though the regional findings suggest possible benefit in certain patient groups.\n\nSources:\n[1] TOPCAT: Spironolactone for Heart Failure with Preserved Ejection Fraction — Pitt B, Pfeffer MA, Assmann SF (2014)",
+          "response": "The TOPCAT trial found that spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure compared to placebo (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\nThe trial enrolled 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45%, with a median follow-up of 3.3 years [2].\n\nNotably, a post-hoc regional analysis revealed significant heterogeneity: patients in the Americas (excluding Russia/Georgia) showed a significant benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46) [3]. This post-hoc analysis should be interpreted with caution as it was not a pre-specified endpoint.\n\nIn summary, the overall TOPCAT result was negative (P=0.14), meaning the trial did not demonstrate statistically significant benefit in this population [1], though the regional findings suggest possible benefit in certain patient groups.\n\nSources:\n[1] TOPCAT: Spironolactone for Heart Failure with Preserved Ejection Fraction — Pitt B, Pfeffer MA, Assmann SF (2014)",
           "citationsFound": [
             1,
             2,
             3
           ],
           "scores": {
-            "grounding": 8,
+            "grounding": 10,
             "citationAccuracy": 10,
             "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.3,
-          "issues": [
-            "80% of factual sentences have citations (target: 100%)"
-          ],
+          "weightedScore": 9.9,
+          "issues": [],
           "passedChecks": [
+            "All factual sentences have citations",
             "All required citations present",
-            "Citation verifier: all 3 citations match source content (avg overlap: 100%)",
+            "Citation verifier: all 4 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
             "8 statistical values verified against sources",
             "All expected behaviors matched",
@@ -453,7 +452,7 @@
           ]
         }
       ],
-      "overallScore": 9.63,
+      "overallScore": 9.83,
       "pass": true,
       "regressions": []
     },
@@ -461,7 +460,7 @@
       "caseId": "ralph-nb-006",
       "caseName": "Source-specific querying — paper-name detection and filtered retrieval",
       "category": "intelligence",
-      "timestamp": "2026-03-03T09:42:35.643Z",
+      "timestamp": "2026-03-03T09:48:04.543Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -575,7 +574,7 @@
       "caseId": "ralph-nb-007",
       "caseName": "Cross-source comparison — structured synthesis with comparison prompt",
       "category": "intelligence",
-      "timestamp": "2026-03-03T09:42:35.659Z",
+      "timestamp": "2026-03-03T09:48:04.560Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -665,7 +664,7 @@
       "caseId": "ralph-nb-008",
       "caseName": "Source overview generation — auto-summary on upload",
       "category": "intelligence",
-      "timestamp": "2026-03-03T09:42:35.665Z",
+      "timestamp": "2026-03-03T09:48:04.566Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -721,7 +720,7 @@
       "caseId": "ralph-nb-009",
       "caseName": "Dynamic suggested questions — source-aware starter questions",
       "category": "intelligence",
-      "timestamp": "2026-03-03T09:42:35.672Z",
+      "timestamp": "2026-03-03T09:48:04.572Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -779,7 +778,7 @@
       "caseId": "ralph-nb-010",
       "caseName": "Source coverage analysis — which papers contributed",
       "category": "intelligence",
-      "timestamp": "2026-03-03T09:42:35.680Z",
+      "timestamp": "2026-03-03T09:48:04.576Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -865,7 +864,7 @@
       "caseId": "ralph-nb-011",
       "caseName": "Study guide generation — structured artifact from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T09:42:35.694Z",
+      "timestamp": "2026-03-03T09:48:04.590Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -960,7 +959,7 @@
       "caseId": "ralph-nb-012",
       "caseName": "FAQ generation — cited question-answer pairs from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T09:42:35.714Z",
+      "timestamp": "2026-03-03T09:48:04.610Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1051,7 +1050,7 @@
       "caseId": "ralph-nb-013",
       "caseName": "Cross-artifact consistency — same sources, different formats",
       "category": "artifacts",
-      "timestamp": "2026-03-03T09:42:35.740Z",
+      "timestamp": "2026-03-03T09:48:04.636Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1145,7 +1144,7 @@
       "caseId": "ralph-nb-014",
       "caseName": "Artifact edge cases — ambiguous queries and grounding under format pressure",
       "category": "artifacts",
-      "timestamp": "2026-03-03T09:42:35.760Z",
+      "timestamp": "2026-03-03T09:48:04.656Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1234,7 +1233,7 @@
       "caseId": "ralph-nb-015",
       "caseName": "Timeline generation and artifact routing robustness",
       "category": "artifacts",
-      "timestamp": "2026-03-03T09:42:35.775Z",
+      "timestamp": "2026-03-03T09:48:04.672Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1298,13 +1297,13 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 10,
-            "completeness": 2,
+            "completeness": 4,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.1,
+          "weightedScore": 9.3,
           "issues": [
-            "Missing expected behaviors: NOT routed as an artifact — this is a plain question; Mentions severe heart failure (NYHA III-IV) population; Cites source correctly; Does NOT generate study guide, FAQ, or timeline structure"
+            "Missing expected behaviors: NOT routed as an artifact — this is a plain question; Cites source correctly; Does NOT generate study guide, FAQ, or timeline structure"
           ],
           "passedChecks": [
             "All factual sentences have citations",
@@ -1316,7 +1315,7 @@
           ]
         }
       ],
-      "overallScore": 9.2,
+      "overallScore": 9.3,
       "pass": true,
       "regressions": []
     },
@@ -1324,7 +1323,7 @@
       "caseId": "ralph-nb-016",
       "caseName": "Audio overview — conversational podcast script from sources",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T09:42:35.793Z",
+      "timestamp": "2026-03-03T09:48:04.691Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1412,7 +1411,7 @@
       "caseId": "ralph-nb-017",
       "caseName": "Audio overview edge cases — conflicting evidence and single-paper audio",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T09:42:35.805Z",
+      "timestamp": "2026-03-03T09:48:04.703Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1444,14 +1443,14 @@
           "scores": {
             "grounding": 7,
             "citationAccuracy": 10,
-            "completeness": 3,
+            "completeness": 7,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 8.3,
+          "weightedScore": 8.7,
           "issues": [
             "70% of factual sentences have citations (target: 100%)",
-            "Missing expected behaviors: Contains Host/Expert dialogue structure; Aldo-DHF dissociation (function vs symptoms) discussed; Expert does NOT claim spironolactone is effective; Conflicting evidence presented honestly in wrap-up"
+            "Missing expected behaviors: Expert does NOT claim spironolactone is effective; Conflicting evidence presented honestly in wrap-up"
           ],
           "passedChecks": [
             "All required citations present",
@@ -1464,34 +1463,34 @@
         {
           "queryId": "q2",
           "query": "What is the clinical significance of the TOPCAT regional analysis?",
-          "response": "The TOPCAT trial found that spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure compared to placebo (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\nThe trial enrolled 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45%, with a median follow-up of 3.3 years [2].\n\nNotably, a post-hoc regional analysis revealed significant heterogeneity: patients in the Americas (excluding Russia/Georgia) showed a significant benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46) [3].\n\nIn summary, the overall TOPCAT result was negative (P=0.14), meaning spironolactone was not proven effective in this population, though the regional findings suggest possible benefit in certain patient groups.\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)",
+          "response": "The TOPCAT trial found that spironolactone did NOT significantly reduce the primary composite endpoint of cardiovascular death, aborted cardiac arrest, or hospitalization for heart failure compared to placebo (HR 0.89; 95% CI 0.77-1.04; P=0.14) [1].\n\nThe trial enrolled 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45%, with a median follow-up of 3.3 years [2].\n\nNotably, a post-hoc regional analysis revealed significant heterogeneity: patients in the Americas (excluding Russia/Georgia) showed a significant benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46) [3]. This post-hoc analysis should be interpreted with caution as it was not a pre-specified endpoint.\n\nIn summary, the overall TOPCAT result was negative (P=0.14), meaning the trial did not demonstrate statistically significant benefit in this population [1], though the regional findings suggest possible benefit in certain patient groups.\n\nSources:\n[1] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)",
           "citationsFound": [
             1,
             2,
             3
           ],
           "scores": {
-            "grounding": 8,
+            "grounding": 10,
             "citationAccuracy": 10,
             "completeness": 4,
-            "hallucinationResistance": 8,
+            "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 8.2,
+          "weightedScore": 9.3,
           "issues": [
-            "80% of factual sentences have citations (target: 100%)",
-            "Contains forbidden content: \"proven effective\"",
             "Missing expected behaviors: NOT routed as audio overview — plain question; Includes appropriate caveat about post-hoc interpretation; Cites the post-hoc chunk"
           ],
           "passedChecks": [
+            "All factual sentences have citations",
             "All required citations present",
-            "Citation verifier: all 3 citations match source content (avg overlap: 100%)",
+            "Citation verifier: all 4 citations match source content (avg overlap: 100%)",
+            "No forbidden content detected",
             "8 statistical values verified against sources",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 8.25,
+      "overallScore": 9,
       "pass": true,
       "regressions": []
     },
@@ -1499,7 +1498,7 @@
       "caseId": "ralph-nb-018",
       "caseName": "Edge cases — single paper, minimal chunks, boundary conditions",
       "category": "polish",
-      "timestamp": "2026-03-03T09:42:35.817Z",
+      "timestamp": "2026-03-03T09:48:04.715Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 2,
@@ -1555,14 +1554,14 @@
           "scores": {
             "grounding": 6,
             "citationAccuracy": 10,
-            "completeness": 5,
+            "completeness": 8,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 8.2,
+          "weightedScore": 8.5,
           "issues": [
             "Cited sources for information not contained in them",
-            "Missing expected behaviors: Acknowledges that renal outcomes are NOT in the provided sources; May reference what IS available (cardiac outcomes)"
+            "Missing expected behaviors: Acknowledges that renal outcomes are NOT in the provided sources"
           ],
           "passedChecks": [
             "Correctly identifies topic is not in sources",
@@ -1574,7 +1573,7 @@
           ]
         }
       ],
-      "overallScore": 8.5,
+      "overallScore": 8.65,
       "pass": true,
       "regressions": []
     },
@@ -1582,7 +1581,7 @@
       "caseId": "ralph-nb-019",
       "caseName": "Cross-feature integration — routing, stat fidelity, artifact switching",
       "category": "integration",
-      "timestamp": "2026-03-03T09:42:35.829Z",
+      "timestamp": "2026-03-03T09:48:04.727Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1670,7 +1669,7 @@
       "caseId": "ralph-nb-020",
       "caseName": "Stress test — adversarial queries, ambiguous routing, maximum paper count",
       "category": "stress_test",
-      "timestamp": "2026-03-03T09:42:35.849Z",
+      "timestamp": "2026-03-03T09:48:04.747Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1740,17 +1739,16 @@
           "scores": {
             "grounding": 10,
             "citationAccuracy": 4,
-            "completeness": 8,
+            "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 7
           },
-          "weightedScore": 8,
+          "weightedScore": 8.2,
           "issues": [
             "Citation content mismatch: 3 citation(s) don't match their source content",
             "  CV: Citation [3] has low overlap (0.24) with source content",
             "  CV: Citation [3] has low overlap (0.25) with source content (should likely be [7], overlap=0.75)",
             "  CV: Citation [3] has low overlap (0.13) with source content (should likely be [2], overlap=0.60)",
-            "Missing expected behaviors: RALES RR 0.70 (not HR); Both EF populations covered (reduced + preserved)",
             "Response excessively long"
           ],
           "passedChecks": [
@@ -1758,11 +1756,12 @@
             "All required citations present",
             "No forbidden content detected",
             "12 statistical values verified against sources",
+            "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 8.4,
+      "overallScore": 8.5,
       "pass": true,
       "regressions": []
     }

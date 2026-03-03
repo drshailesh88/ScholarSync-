@@ -883,7 +883,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     // Cycle 3: Question about topic NOT in sources — correct deflection
     const paperTitles = testCase.setup.papers.map((p) => p.title).join("; ");
     lines.push(
-      `Your uploaded sources don't cover semaglutide or GLP-1 agonists. The papers you've uploaded focus on SGLT2 inhibitors in heart failure: ${paperTitles}.`
+      `Your uploaded sources don't cover the drug or topic you asked about. The papers you've uploaded focus on SGLT2 inhibitors in heart failure: ${paperTitles}.`
     );
     lines.push(
       `\nIf you'd like, I can analyze what your sources say about SGLT2 inhibitors and cardiovascular outcomes instead.`
@@ -1150,11 +1150,11 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
     if (topcatRegional) {
       const idx = chunks.indexOf(topcatRegional) + 1;
       lines.push(
-        `\n\nNotably, a post-hoc regional analysis revealed significant heterogeneity: patients in the Americas (excluding Russia/Georgia) showed a significant benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46) [${idx}].`
+        `\n\nNotably, a post-hoc regional analysis revealed significant heterogeneity: patients in the Americas (excluding Russia/Georgia) showed a significant benefit (HR 0.82; P=0.026), while patients in Russia/Georgia showed no benefit (HR 1.10; P=0.46) [${idx}]. This post-hoc analysis should be interpreted with caution as it was not a pre-specified endpoint.`
       );
     }
     lines.push(
-      `\n\nIn summary, the overall TOPCAT result was negative (P=0.14), meaning spironolactone was not proven effective in this population, though the regional findings suggest possible benefit in certain patient groups.`
+      `\n\nIn summary, the overall TOPCAT result was negative (P=0.14), meaning the trial did not demonstrate statistically significant benefit in this population${topcatResults ? ` [${chunks.indexOf(topcatResults) + 1}]` : ""}, though the regional findings suggest possible benefit in certain patient groups.`
     );
   } else if (
     query.query.toLowerCase().includes("agree") ||

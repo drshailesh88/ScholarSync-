@@ -2274,3 +2274,261 @@ describe("Cycle 22: PRISMA Round-Trip Validation", () => {
     }
   });
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 23: Social Format Detail, Twitter Thread Boundary, Version Diff
+//           Content Interaction, Auto-Numbering Infographic/Code/Citation,
+//           Theme Color Validation
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 23: Social Format Details", () => {
+  test("linkedin_carousel correct config", () => {
+    const lc = SOCIAL_FORMATS.linkedin_carousel;
+    expect(lc.width).toBe(1080);
+    expect(lc.height).toBe(1080);
+    expect(lc.aspectRatio).toBe("1:1");
+    expect(lc.maxSlides).toBe(20);
+    expect(lc.fileFormat).toBe("pdf");
+  });
+
+  test("twitter_thread is text-only format", () => {
+    const tt = SOCIAL_FORMATS.twitter_thread;
+    expect("width" in tt).toBe(false);
+    expect("height" in tt).toBe(false);
+    expect(tt.maxChars).toBe(280);
+    expect(tt.fileFormat).toBe("text");
+  });
+
+  test("twitter_images has 16:9 aspect ratio", () => {
+    const ti = SOCIAL_FORMATS.twitter_images;
+    expect(ti.width).toBe(1200);
+    expect(ti.height).toBe(675);
+    expect(ti.aspectRatio).toBe("16:9");
+    expect(ti.maxSlides).toBe(4);
+    expect(ti.fileFormat).toBe("png");
+  });
+
+  test("instagram_story is 9:16 vertical", () => {
+    const fmt = SOCIAL_FORMATS.instagram_story;
+    expect(fmt.width).toBe(1080);
+    expect(fmt.height).toBe(1920);
+    expect(fmt.aspectRatio).toBe("9:16");
+    expect(fmt.fileFormat).toBe("png");
+  });
+
+  test("instagram_carousel is square with 10 limit", () => {
+    const ic = SOCIAL_FORMATS.instagram_carousel;
+    expect(ic.width).toBe(1080);
+    expect(ic.height).toBe(1080);
+    expect(ic.maxSlides).toBe(10);
+    expect(ic.fileFormat).toBe("png");
+  });
+
+  test("all formats have icon string", () => {
+    for (const [, format] of Object.entries(SOCIAL_FORMATS)) {
+      expect(format).toHaveProperty("icon");
+      expect(typeof format.icon).toBe("string");
+      expect(format.icon.length).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("Cycle 23: Twitter Thread Boundaries", () => {
+  test("exactly 280 chars single slide not truncated", () => {
+    const longTitle = "A".repeat(280);
+    const slides = [{ title: longTitle, subtitle: null, contentBlocks: [] }];
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread[0]).toHaveLength(280);
+    expect(thread[0]).not.toContain("...");
+  });
+
+  test("281 chars single slide truncated", () => {
+    const longTitle = "A".repeat(281);
+    const slides = [{ title: longTitle, subtitle: null, contentBlocks: [] }];
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread[0].length).toBeLessThanOrEqual(280);
+    expect(thread[0]).toContain("...");
+  });
+
+  test("multi-slide prefix reduces available chars", () => {
+    const longTitle = "B".repeat(280);
+    const slides = [
+      { title: longTitle, subtitle: null, contentBlocks: [] },
+      { title: "Second", subtitle: null, contentBlocks: [] },
+    ];
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread[0].length).toBeLessThanOrEqual(280);
+    expect(thread[0]).toContain("1/2");
+  });
+
+  test("callout without title includes only text", () => {
+    const slides = [{
+      title: null,
+      subtitle: null,
+      contentBlocks: [
+        { type: "callout", data: { title: "", text: "Important note" } } as ContentBlock,
+      ],
+    }];
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread[0]).toContain("Important note");
+  });
+
+  test("empty slide produces empty tweet", () => {
+    const slides = [{ title: null, subtitle: null, contentBlocks: [] }];
+    const thread = generateTwitterThread(slides as SlideData[]);
+    expect(thread).toHaveLength(1);
+    expect(thread[0].trim()).toBe("");
+  });
+});
+
+describe("Cycle 23: Auto-Numbering for Infographic/Code/Citation", () => {
+  test("infographic blocks not numbered (only chart/image/diagram are)", () => {
+    const slides = [{
+      contentBlocks: [
+        { type: "infographic", data: { sections: [] } } as ContentBlock,
+      ],
+    }];
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result[0].contentBlocks[0])).toBeUndefined();
+  });
+
+  test("code blocks not numbered", () => {
+    const slides = [{
+      contentBlocks: [
+        { type: "code", data: { language: "python", code: "x=1" } } as ContentBlock,
+      ],
+    }];
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result[0].contentBlocks[0])).toBeUndefined();
+  });
+
+  test("citation blocks not numbered", () => {
+    const slides = [{
+      contentBlocks: [
+        { type: "citation", data: { authors: "A", year: "2024", title: "T" } } as ContentBlock,
+      ],
+    }];
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result[0].contentBlocks[0])).toBeUndefined();
+  });
+
+  test("mixed chart + table + infographic + code sequence", () => {
+    const slides = [{
+      contentBlocks: [
+        makeChartBlock(),
+        makeTableBlock(),
+        { type: "infographic", data: { sections: [] } } as ContentBlock,
+        { type: "code", data: { language: "js", code: "" } } as ContentBlock,
+      ],
+    }];
+    const result = autoNumberFiguresAndTables(
+      slides as { contentBlocks: ContentBlock[] }[]
+    );
+    expect(figureLabel(result[0].contentBlocks[0])).toBe("Figure 1");
+    expect(figureLabel(result[0].contentBlocks[1])).toBe("Table 1");
+    expect(figureLabel(result[0].contentBlocks[2])).toBeUndefined(); // infographic not numbered
+    expect(figureLabel(result[0].contentBlocks[3])).toBeUndefined(); // code not numbered
+  });
+});
+
+describe("Cycle 23: Version Diff — Content Block Interaction", () => {
+  function versionsFromBlocks(
+    b1: ContentBlock[],
+    b2: ContentBlock[]
+  ): { v1: VersionSnapshot; v2: VersionSnapshot } {
+    const slide = {
+      id: 1, title: "S", subtitle: null,
+      layout: "title_content" as SlideLayout,
+      sortOrder: 0, speakerNotes: null,
+      createdAt: new Date(), updatedAt: new Date(),
+    };
+    const deck = {
+      id: 1, title: "D", theme: "modern",
+      createdAt: new Date(), updatedAt: new Date(),
+    };
+    return {
+      v1: { deck, slides: [{ ...slide, contentBlocks: b1 }] } as unknown as VersionSnapshot,
+      v2: { deck, slides: [{ ...slide, contentBlocks: b2 }] } as unknown as VersionSnapshot,
+    };
+  }
+
+  test("changed bullet items marks modified", () => {
+    const { v1, v2 } = versionsFromBlocks(
+      [makeBulletsBlock(["a", "b"])],
+      [makeBulletsBlock(["a", "c"])]
+    );
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.slideDiffs[0].contentBlockChanges[0].status).toBe("modified");
+  });
+
+  test("adding a bullet item marks modified", () => {
+    const { v1, v2 } = versionsFromBlocks(
+      [makeBulletsBlock(["a"])],
+      [makeBulletsBlock(["a", "b"])]
+    );
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.slideDiffs[0].contentBlockChanges[0].status).toBe("modified");
+  });
+
+  test("swapping two blocks marks both modified", () => {
+    const { v1, v2 } = versionsFromBlocks(
+      [makeTextBlock("first"), makeChartBlock()],
+      [makeChartBlock(), makeTextBlock("first")]
+    );
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.slideDiffs[0].contentBlockChanges.filter((c) => c.status === "modified")).toHaveLength(2);
+  });
+
+  test("growing block count marks extra as added", () => {
+    const { v1, v2 } = versionsFromBlocks(
+      [makeTextBlock("a")],
+      [makeTextBlock("a"), makeChartBlock(), makeTableBlock()]
+    );
+    const diff = computeDeckDiff(v1, v2);
+    const changes = diff.slideDiffs[0].contentBlockChanges;
+    expect(changes).toHaveLength(3);
+    expect(changes[0].status).toBe("unchanged");
+    expect(changes[1].status).toBe("added");
+    expect(changes[2].status).toBe("added");
+  });
+});
+
+describe("Cycle 23: Theme Color Hex Validation", () => {
+  const hexRegex = /^#[0-9A-Fa-f]{6}$/;
+  const colorFields = [
+    "primaryColor", "secondaryColor", "backgroundColor",
+    "textColor", "accentColor", "surfaceColor", "borderColor", "codeBackground",
+  ];
+
+  test("all themes have valid hex colors", () => {
+    for (const [, theme] of Object.entries(PRESET_THEMES)) {
+      for (const field of colorFields) {
+        const val = (theme as Record<string, string>)[field];
+        expect(val).toMatch(hexRegex);
+      }
+    }
+  });
+
+  test("fontFamily non-empty for all themes", () => {
+    for (const [, theme] of Object.entries(PRESET_THEMES)) {
+      expect(theme.fontFamily.length).toBeGreaterThan(0);
+    }
+  });
+
+  test("headingFontFamily non-empty for all themes", () => {
+    for (const [, theme] of Object.entries(PRESET_THEMES)) {
+      expect(theme.headingFontFamily.length).toBeGreaterThan(0);
+    }
+  });
+
+  test("no two themes share same name", () => {
+    const names = Object.values(PRESET_THEMES).map((t) => t.name);
+    expect(new Set(names).size).toBe(names.length);
+  });
+});

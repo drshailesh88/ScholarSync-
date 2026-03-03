@@ -373,8 +373,10 @@ export function scoreQueryResponse(
     }
 
     // Standard keyword matching (length > 3 instead of > 4 to catch more terms)
+    // Split on whitespace, slashes, and strip parentheses for compound terms
     const keywords = expectedLower
-      .split(/\s+/)
+      .replace(/[()]/g, "")
+      .split(/[\s/]+/)
       .filter((w) => w.length > 3 && !/^(that|this|from|with|into|about|their|they|them|these|those|been|have|will|just|like|than|then|when|what|which|also|does|here|only|such|very|each|some|more|both|many|most|same|even|back|over|were|should|could|would)$/.test(w));
     const matched = keywords.filter((k) => lower.includes(k));
     // Require at least 40% of keywords to match (more lenient than just "any")
