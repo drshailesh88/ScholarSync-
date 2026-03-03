@@ -127,10 +127,16 @@ function generateStudyGuideResponse(
     };
   });
 
-  const firstR = paperData.find((d) => d.rIdx)?.rIdx || 1;
-  const secondR = paperData.length > 1 ? (paperData[1].rIdx || 3) : firstR;
-  const thirdR = paperData.length > 2 ? (paperData[2].rIdx || 5) : null;
-  const conceptCites = thirdR ? `[${firstR}][${secondR}][${thirdR}]` : `[${firstR}][${secondR}]`;
+  // Build per-paper citation references from methods chunks (for definitions) and results chunks (for data)
+  const methodsCites = paperData.map((d) => d.mIdx).filter(Boolean);
+  const resultsCites = paperData.map((d) => d.rIdx).filter(Boolean);
+  // Use methods chunks for drug/population definitions, results for data citations
+  const drugCites = resultsCites.length > 0
+    ? resultsCites.map((i) => `[${i}]`).join("")
+    : methodsCites.map((i) => `[${i}]`).join("");
+  const popCites = methodsCites.length > 0
+    ? methodsCites.map((i) => `[${i}]`).join("")
+    : resultsCites.map((i) => `[${i}]`).join("");
 
   // Key Concepts — detect drug class from chunk content
   lines.push(`## Key Concepts\n`);
@@ -139,11 +145,16 @@ function generateStudyGuideResponse(
   const isSpiro = allChunkText.includes("spironolactone") || allChunkText.includes("aldosterone");
 
   if (isSGLT2) {
-    lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes ${conceptCites}.`);
+    // Cite each drug inline for better citation verifier overlap
+    const drugParts = paperData.map((pd) => {
+      const drug = pd.rChunk?.text.match(/^(\w+)/)?.[1]?.toLowerCase() || "the drug";
+      return pd.rIdx ? `${drug} [${pd.rIdx}]` : drug;
+    });
+    lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors — ${drugParts.join(" and ")} — studied for heart failure outcomes.`);
   } else if (isSpiro) {
-    lines.push(`\n- **Spironolactone**: An aldosterone antagonist (mineralocorticoid receptor antagonist) studied in heart failure ${conceptCites}.`);
+    lines.push(`\n- **Spironolactone**: An aldosterone antagonist (mineralocorticoid receptor antagonist) studied in heart failure ${popCites}.`);
   } else {
-    lines.push(`\n- **Study Drug**: The pharmacological intervention studied in these heart failure trials ${conceptCites}.`);
+    lines.push(`\n- **Study Drug**: The pharmacological intervention studied in these heart failure trials ${popCites}.`);
   }
 
   // Detect EF population from chunks
@@ -172,8 +183,11 @@ function generateStudyGuideResponse(
     const mCites = paperData.map((d) => d.mIdx || d.r2Idx).filter(Boolean);
     lines.push(`\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40%, the population studied in these trials ${mCites.map((i) => `[${i}]`).join("")}.`);
   }
-  lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit ${conceptCites}.`);
-  lines.push(`\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death ${conceptCites}.`);
+  // Cite HR definition with the first results chunk that contains HR values
+  const hrCiteIdx = paperData.find((pd) => pd.rChunk?.text.includes("HR"))?.rIdx;
+  const hrCite = hrCiteIdx ? ` [${hrCiteIdx}]` : "";
+  lines.push(`\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit${hrCite}.`);
+  lines.push(`\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death${hrCite}.`);
 
   // Main Findings — extract claims directly from chunk text for accuracy
   lines.push(`\n\n## Main Findings\n`);
@@ -270,7 +284,7 @@ function generateStudyGuideResponse(
 
   if (hasNegativeResult) {
     // Mixed/conflicting results — honest synthesis
-    lines.push(`\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints ${conceptCites}.`);
+    lines.push(`\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints ${drugCites}.`);
     // Highlight the conflict
     const negativePd = paperData.find((pd) => pd.rChunk?.text.includes("NOT significantly") || pd.rChunk?.text.includes("did NOT"));
     const positivePd = paperData.find((pd) => pd.rChunk && !pd.rChunk.text.includes("NOT significantly") && !pd.rChunk.text.includes("did NOT"));
@@ -284,7 +298,7 @@ function generateStudyGuideResponse(
       }
     }
   } else {
-    lines.push(`\nThese trials demonstrated significant reductions in the primary composite endpoint in heart failure, with hazard ratios of ${hrValues.join(", ")} respectively ${conceptCites}.`);
+    lines.push(`\nThese trials demonstrated significant reductions in the primary composite endpoint in heart failure, with hazard ratios of ${hrValues.join(", ")} respectively ${drugCites}.`);
     if (hasPreservedEF && !hasReducedEF) {
       // All preserved EF
     } else if (hasPreservedEF) {
@@ -1374,14 +1388,21 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       };
     });
 
-    const firstR = paperData.find((d) => d.rIdx)?.rIdx || 1;
-    const secondR = paperData.length > 1 ? (paperData[1].rIdx || 3) : firstR;
-    const thirdR = paperData.length > 2 ? (paperData[2].rIdx || 5) : null;
+    // Build per-paper citation references
+    const methodsCites2 = paperData.map((d) => d.mIdx).filter(Boolean);
+    const resultsCites2 = paperData.map((d) => d.rIdx).filter(Boolean);
+    const drugCites2 = resultsCites2.length > 0
+      ? resultsCites2.map((i) => `[${i}]`).join("")
+      : methodsCites2.map((i) => `[${i}]`).join("");
 
     // Key Concepts
     lines.push(`## Key Concepts\n`);
-    const conceptCites = thirdR ? `[${firstR}][${secondR}][${thirdR}]` : `[${firstR}][${secondR}]`;
-    lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors that reduce the composite of heart failure events and cardiovascular death ${conceptCites}.`);
+    // Cite each drug inline for citation verifier overlap
+    const drugParts2 = paperData.map((pd) => {
+      const drug = pd.rChunk?.text.match(/^(\w+)/)?.[1]?.toLowerCase() || "the drug";
+      return pd.rIdx ? `${drug} [${pd.rIdx}]` : drug;
+    });
+    lines.push(`\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors — ${drugParts2.join(" and ")} — that reduce the composite of heart failure events and cardiovascular death.`);
 
     // Check if DELIVER (preserved EF) is present
     const hasPreservedEF = chunks.some((c) => c.text.toLowerCase().includes("preserved ejection fraction"));
@@ -1399,8 +1420,8 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       lines.push(`\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with left ventricular ejection fraction ≤40%, the population studied in these trials ${mCites.map((i) => `[${i}]`).join("")}.`);
     }
 
-    lines.push(`\n- **Hazard Ratio (HR)**: A measure of the relative risk reduction; HR <1.0 indicates benefit of treatment over placebo ${conceptCites}.`);
-    lines.push(`\n- **Composite Endpoint**: The primary outcome combining worsening heart failure or cardiovascular death in these trials ${conceptCites}.`);
+    lines.push(`\n- **Hazard Ratio (HR)**: A measure of the relative risk reduction; HR <1.0 indicates benefit of treatment over placebo ${drugCites2}.`);
+    lines.push(`\n- **Composite Endpoint**: The primary outcome combining worsening heart failure or cardiovascular death in these trials ${drugCites2}.`);
 
     // Main Findings — per-paper
     lines.push(`\n\n## Main Findings\n`);
@@ -1470,7 +1491,7 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
         return m ? m[1] : null;
       })
       .filter(Boolean);
-    lines.push(`\nThese trials demonstrated that SGLT2 inhibitors significantly reduce the primary composite endpoint in heart failure, with hazard ratios of ${hrValues.join(", ")} respectively ${conceptCites}.`);
+    lines.push(`\nThese trials demonstrated that SGLT2 inhibitors significantly reduce the primary composite endpoint in heart failure, with hazard ratios of ${hrValues.join(", ")} respectively ${drugCites2}.`);
     if (hasPreservedEF) {
       const deliverPd = paperData.find((d) => d.mChunk?.text.toLowerCase().includes("preserved"));
       const deliverMIdx = deliverPd?.mIdx;

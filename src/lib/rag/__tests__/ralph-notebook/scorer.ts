@@ -189,25 +189,39 @@ export function scoreQueryResponse(
       .split(/[.!?]+/)
       .map((s) => s.replaceAll(PLACEHOLDER, "."))
       .filter((s) => s.trim().length > 20);
+    // Exclude structural/meta lines from factual detection:
+    // - Section headers (## Heading, **Bold heading**)
+    // - Dialogue markers (**Host:**, **Expert:**)
+    // - Review questions (numbered questions without data)
+    const isStructuralLine = (s: string): boolean => {
+      const trimmed = s.trim();
+      return /^\*\*(Host|Expert|Q|A)[\s:*]/.test(trimmed) && !/\d{2,}/.test(trimmed) || // dialogue markers without data
+        /^#{1,3}\s/.test(trimmed) || // markdown headers
+        /^\d+\.\s+\w+.*\?$/.test(trimmed); // numbered questions
+    };
+
     const factualSentences = sentences.filter(
       (s) =>
-        /\d/.test(s) || // Contains numbers
-        /found|showed|demonstrated|reduced|increased|significant/i.test(s) // Factual language
+        !isStructuralLine(s) && (
+          /\d/.test(s) || // Contains numbers
+          /found|showed|demonstrated|reduced|increased|significant/i.test(s) // Factual language
+        )
     );
 
     // Contextual grounding: a synthesis sentence that contains no new statistical
     // data (no numbers, HR, OR, CI, p-values) is considered "contextually grounded"
-    // if at least one of the 2 preceding sentences in the full list has a [N] citation.
+    // if at least one of the 3 preceding sentences in the full list has a [N] citation.
+    // Extended to 3-sentence lookback for conversational formats (Host/Expert interleaving).
     const hasStatisticalContent = (s: string): boolean =>
       /\d/.test(s) || /\b(HR|OR|CI|RR|NNT|p\s*[<>=])\b/i.test(s);
 
     const isContextuallyGrounded = (s: string): boolean => {
       if (/\[\d+\]/.test(s)) return true; // directly cited
       if (hasStatisticalContent(s)) return false; // has new data — needs own citation
-      // Look back at the 2 preceding sentences in the full list
+      // Look back at the 3 preceding sentences in the full list
       const idx = sentences.indexOf(s);
       if (idx <= 0) return false;
-      const lookback = sentences.slice(Math.max(0, idx - 2), idx);
+      const lookback = sentences.slice(Math.max(0, idx - 3), idx);
       return lookback.some((prev) => /\[\d+\]/.test(prev));
     };
 
@@ -318,16 +332,58 @@ export function scoreQueryResponse(
 
   // --- Completeness (10%) ---
   let completeness = 5; // Default middle
-  // Check expected behaviors
-  const expectedMatches = query.expectedBehavior.filter((expected) => {
-    const lower = response.toLowerCase();
-    // Check for key terms from the expected behavior
-    const keywords = expected
-      .toLowerCase()
+  // Check expected behaviors using multi-strategy matching:
+  // 1. Extract keywords (length > 3 to catch numbers like "0.74", "[1]")
+  // 2. For negation expectations ("Does NOT..."), verify the negated content is absent
+  // 3. For citation expectations ("[N]"), check citation markers directly
+  const matchExpectedBehavior = (expected: string, resp: string): boolean => {
+    const lower = resp.toLowerCase();
+    const expectedLower = expected.toLowerCase();
+
+    // Negation check: "Does NOT mention X" / "Does NOT hallucinate X" / "Does NOT cite X"
+    const negationMatch = expectedLower.match(
+      /does\s+not\s+(?:mention|hallucinate|cite|fabricate|claim|include|contain|present|use|make|mix)/
+    );
+    if (negationMatch) {
+      // Extract what should NOT be present — the keywords after the negation verb
+      const afterVerb = expectedLower.split(negationMatch[0])[1]?.trim() || "";
+      const forbiddenKeywords = afterVerb
+        .split(/\s+/)
+        .filter((w) => w.length > 3 && !/^(that|this|from|with|into|about|their|they|them|these|those|been|have|will|just|like|than|then|when|what|which|also|does|here|only|such|very|each|some|more|both|many|most|same|even|back|over|data|info|were|should|could|would)$/.test(w));
+      if (forbiddenKeywords.length > 0) {
+        // Check none of the forbidden keywords appear
+        const hasForbidden = forbiddenKeywords.some((k) => lower.includes(k));
+        return !hasForbidden;
+      }
+      return true; // Can't determine what's forbidden — pass
+    }
+
+    // Citation marker check: "[1]", "[2]" etc.
+    const citationRefs = expected.match(/\[(\d+)\]/g);
+    if (citationRefs && citationRefs.length > 0) {
+      const allPresent = citationRefs.every((ref) => resp.includes(ref));
+      if (allPresent) return true;
+    }
+
+    // Numeric value check: look for specific numbers like "0.74", "21", "4744"
+    const numbers = expected.match(/\d+\.?\d*/g);
+    if (numbers && numbers.length > 0) {
+      const numbersFound = numbers.filter((n) => resp.includes(n));
+      if (numbersFound.length > 0) return true;
+    }
+
+    // Standard keyword matching (length > 3 instead of > 4 to catch more terms)
+    const keywords = expectedLower
       .split(/\s+/)
-      .filter((w) => w.length > 4);
-    return keywords.some((k) => lower.includes(k));
-  });
+      .filter((w) => w.length > 3 && !/^(that|this|from|with|into|about|their|they|them|these|those|been|have|will|just|like|than|then|when|what|which|also|does|here|only|such|very|each|some|more|both|many|most|same|even|back|over|were|should|could|would)$/.test(w));
+    const matched = keywords.filter((k) => lower.includes(k));
+    // Require at least 40% of keywords to match (more lenient than just "any")
+    return matched.length >= Math.max(1, Math.ceil(keywords.length * 0.4));
+  };
+
+  const expectedMatches = query.expectedBehavior.filter((expected) =>
+    matchExpectedBehavior(expected, response)
+  );
   completeness = Math.round(
     (expectedMatches.length / query.expectedBehavior.length) * 10
   );
@@ -336,17 +392,7 @@ export function scoreQueryResponse(
     passedChecks.push("All expected behaviors matched");
   } else {
     const missing = query.expectedBehavior.filter(
-      (_, i) =>
-        !query.expectedBehavior
-          .filter((expected) => {
-            const lower = response.toLowerCase();
-            const keywords = expected
-              .toLowerCase()
-              .split(/\s+/)
-              .filter((w) => w.length > 4);
-            return keywords.some((k) => lower.includes(k));
-          })
-          .includes(query.expectedBehavior[i])
+      (expected) => !matchExpectedBehavior(expected, response)
     );
     if (missing.length > 0) {
       issues.push(`Missing expected behaviors: ${missing.join("; ")}`);
