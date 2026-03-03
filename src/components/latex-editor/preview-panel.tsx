@@ -56,10 +56,30 @@ function latexToHtml(tex: string): string {
     '<div class="latex-abstract"><h3>Abstract</h3><p>$1</p></div>'
   );
 
-  // Sections
-  html = html.replace(/\\section\*?\{([^}]*)\}/g, '<h2 class="latex-section">$1</h2>');
-  html = html.replace(/\\subsection\*?\{([^}]*)\}/g, '<h3 class="latex-subsection">$1</h3>');
-  html = html.replace(/\\subsubsection\*?\{([^}]*)\}/g, '<h4 class="latex-subsubsection">$1</h4>');
+  // Sections — track line numbers for scroll sync
+  // We count the original line number in the tex source for each section
+  const texLines = tex.split("\n");
+  const sectionLineMap: Record<string, number> = {};
+  texLines.forEach((line, idx) => {
+    const secMatch = line.match(/\\((?:sub)*section)\*?\{([^}]*)\}/);
+    if (secMatch) {
+      const key = `${secMatch[1]}-${secMatch[2]}`;
+      sectionLineMap[key] = idx + 1;
+    }
+  });
+
+  html = html.replace(/\\section\*?\{([^}]*)\}/g, (_m, title: string) => {
+    const lineNum = sectionLineMap[`section-${title}`] ?? 0;
+    return `<h2 class="latex-section" data-line="${lineNum}">${title}</h2>`;
+  });
+  html = html.replace(/\\subsection\*?\{([^}]*)\}/g, (_m, title: string) => {
+    const lineNum = sectionLineMap[`subsection-${title}`] ?? 0;
+    return `<h3 class="latex-subsection" data-line="${lineNum}">${title}</h3>`;
+  });
+  html = html.replace(/\\subsubsection\*?\{([^}]*)\}/g, (_m, title: string) => {
+    const lineNum = sectionLineMap[`subsubsection-${title}`] ?? 0;
+    return `<h4 class="latex-subsubsection" data-line="${lineNum}">${title}</h4>`;
+  });
 
   // Bold, italic, underline
   html = html.replace(/\\textbf\{([^}]*)\}/g, "<strong>$1</strong>");
@@ -288,13 +308,20 @@ async function renderMath(container: HTMLElement) {
   }
 }
 
-export function PreviewPanel() {
+interface PreviewPanelProps {
+  /** Current editor top visible line (for scroll sync) */
+  editorTopLine?: number;
+}
+
+export function PreviewPanel({ editorTopLine }: PreviewPanelProps) {
   const documentContent = useLatexEditorStore((s) => s.documentContent);
   const previewMode = useLatexEditorStore((s) => s.previewMode);
   const compiledPdfUrl = useLatexEditorStore((s) => s.compiledPdfUrl);
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [renderedHtml, setRenderedHtml] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const isSyncing = useRef(false);
 
   // Debounced LaTeX -> HTML conversion
   const updatePreview = useCallback((content: string) => {
@@ -319,6 +346,30 @@ export function PreviewPanel() {
     }
   }, [renderedHtml]);
 
+  // Scroll sync: editor line → preview position
+  useEffect(() => {
+    if (!editorTopLine || !containerRef.current || !scrollContainerRef.current) return;
+    if (isSyncing.current) return;
+
+    // Find the nearest heading with data-line <= editorTopLine
+    const headings = containerRef.current.querySelectorAll("[data-line]");
+    let target: Element | null = null;
+    for (const heading of headings) {
+      const line = parseInt(heading.getAttribute("data-line") ?? "0", 10);
+      if (line > 0 && line <= editorTopLine) {
+        target = heading;
+      } else if (line > editorTopLine) {
+        break;
+      }
+    }
+
+    if (target) {
+      isSyncing.current = true;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => { isSyncing.current = false; }, 200);
+    }
+  }, [editorTopLine]);
+
   if (previewMode === "pdf" && compiledPdfUrl) {
     return (
       <div className="h-full w-full">
@@ -332,7 +383,8 @@ export function PreviewPanel() {
   }
 
   return (
-    <div className="h-full overflow-auto">
+    <div ref={scrollContainerRef} className="h-full overflow-auto">
+      {/* Content is generated from user's own LaTeX source — not untrusted external input */}
       <div
         ref={containerRef}
         className="latex-preview max-w-none px-10 py-8"

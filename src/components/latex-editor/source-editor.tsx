@@ -161,10 +161,12 @@ interface SourceEditorProps {
   onSlashTrigger?: (position: { top: number; left: number }, filter: string) => void;
   /** Called when the slash command trigger is dismissed (user continues typing non-slash) */
   onSlashDismiss?: () => void;
+  /** Called with the top visible line number when the editor scrolls */
+  onScrollLine?: (line: number) => void;
 }
 
 export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
-  function SourceEditor({ initialContent, onChange, className, getBibContent, onSlashTrigger, onSlashDismiss }, ref) {
+  function SourceEditor({ initialContent, onChange, className, getBibContent, onSlashTrigger, onSlashDismiss, onScrollLine }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
     const onChangeRef = useRef(onChange);
@@ -179,6 +181,8 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
     onSlashTriggerRef.current = onSlashTrigger;
     const onSlashDismissRef = useRef(onSlashDismiss);
     onSlashDismissRef.current = onSlashDismiss;
+    const onScrollLineRef = useRef(onScrollLine);
+    onScrollLineRef.current = onScrollLine;
 
     // Expose imperative handle to parent
     useImperativeHandle(ref, () => ({
@@ -390,6 +394,18 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
 
           // Line wrapping
           EditorView.lineWrapping,
+
+          // Scroll listener for preview sync
+          EditorView.domEventHandlers({
+            scroll(_event: Event, view: EditorView) {
+              const rect = view.dom.getBoundingClientRect();
+              const topPos = view.posAtCoords({ x: rect.left + 10, y: rect.top + 10 });
+              if (topPos != null) {
+                const line = view.state.doc.lineAt(topPos).number;
+                onScrollLineRef.current?.(line);
+              }
+            },
+          }),
         ],
       });
 

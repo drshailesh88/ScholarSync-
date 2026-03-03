@@ -67,6 +67,9 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     return bibFile?.content ?? "";
   }, [files]);
 
+  // Editor scroll position for preview sync
+  const [editorTopLine, setEditorTopLine] = useState(1);
+
   // Error diagnostics from compilation
   const [diagnostics, setDiagnostics] = useState<CompilationDiagnostic[]>([]);
 
@@ -463,6 +466,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                 onSlashDismiss={() =>
                   setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } })
                 }
+                onScrollLine={setEditorTopLine}
               />
             )}
           </div>
@@ -476,7 +480,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
         {/* Preview Panel */}
         <div className="flex-1 min-w-0 bg-white dark:bg-slate-950/50">
-          <PreviewPanel />
+          <PreviewPanel editorTopLine={editorTopLine} />
         </div>
 
         {/* Agent Panel Toggle Tab (right edge) */}
