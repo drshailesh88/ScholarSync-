@@ -997,6 +997,305 @@ export function runSensitivityAnalysis(
 }
 
 // ---------------------------------------------------------------------------
+// Meta-Regression (Weighted Least Squares)
+// ---------------------------------------------------------------------------
+
+export interface MetaRegressionCovariate {
+  name: string;
+  values: number[]; // one value per study, in same order as studies array
+}
+
+export interface MetaRegressionCoefficient {
+  name: string;
+  estimate: number;
+  se: number;
+  ciLower: number;
+  ciUpper: number;
+  zValue: number;
+  pValue: number;
+}
+
+export interface MetaRegressionOutput {
+  intercept: MetaRegressionCoefficient;
+  coefficients: MetaRegressionCoefficient[];
+  /** Proportion of heterogeneity explained (analogous to R²) */
+  R2: number;
+  /** Residual heterogeneity (tau² after accounting for covariates) */
+  tau2Residual: number;
+  /** Q-test for residual heterogeneity */
+  QResidual: number;
+  QResidualDf: number;
+  QResidualP: number;
+  /** Omnibus test of moderators (all coefficients = 0) */
+  QModerator: number;
+  QModeratorDf: number;
+  QModeratorP: number;
+  /** Model used */
+  modelType: ModelType;
+}
+
+/**
+ * Meta-regression via weighted least squares (WLS).
+ *
+ * For fixed-effects: weights = 1/SE²
+ * For random-effects: weights = 1/(SE² + tau²), where tau² is estimated
+ * from the unrestricted model using method-of-moments (DerSimonian-Laird).
+ *
+ * Reference: Thompson & Higgins, Stat Med 2002;21:1559-73
+ */
+export function runMetaRegression(
+  studies: StudyEffect[],
+  covariates: MetaRegressionCovariate[],
+  effectType: EffectType,
+  modelType: ModelType = "random"
+): MetaRegressionOutput {
+  const k = studies.length;
+  const p = covariates.length; // number of predictors (excluding intercept)
+
+  if (k < p + 2) {
+    throw new Error(`Meta-regression requires at least ${p + 2} studies for ${p} covariate(s)`);
+  }
+
+  // Validate covariate lengths
+  for (const cov of covariates) {
+    if (cov.values.length !== k) {
+      throw new Error(`Covariate "${cov.name}" has ${cov.values.length} values but there are ${k} studies`);
+    }
+  }
+
+  // Step 1: Build design matrix X (k × (p+1)) with intercept column
+  const X: number[][] = studies.map((_, i) => [1, ...covariates.map((c) => c.values[i])]);
+  const y = studies.map((s) => s.effect);
+
+  // Step 2: Initial fixed-effects weights
+  const w0 = studies.map((s) => 1 / (s.se * s.se));
+
+  // Step 3: Estimate tau² for random-effects
+  let tau2 = 0;
+  if (modelType === "random") {
+    const fixedFit = wlsFit(X, y, w0);
+    const QRes = fixedFit.QResidual;
+    const dfRes = k - p - 1;
+
+    if (dfRes > 0 && QRes > dfRes) {
+      const sumW = w0.reduce((a, b) => a + b, 0);
+      const sumW2 = w0.reduce((a, b) => a + b * b, 0);
+      const C = sumW - sumW2 / sumW;
+      tau2 = Math.max(0, (QRes - dfRes) / C);
+    }
+  }
+
+  // Step 4: Compute final weights incorporating tau²
+  const wFinal = studies.map((s) => 1 / (s.se * s.se + tau2));
+
+  // Step 5: WLS fit with final weights
+  const fit = wlsFit(X, y, wFinal);
+
+  // Step 6: Compute R² (proportion of tau² explained)
+  const unrestrictedResult = computeRandomEffectsMeta(studies);
+  const tau2Unrestricted = unrestrictedResult.heterogeneity.tau2;
+  const R2 =
+    tau2Unrestricted > 0 ? Math.max(0, 1 - tau2 / tau2Unrestricted) : 0;
+
+  // Step 7: Omnibus test of moderators
+  const interceptOnlyFit = wlsFit(
+    studies.map(() => [1]),
+    y,
+    wFinal
+  );
+  const QModerator = Math.max(0, interceptOnlyFit.QResidual - fit.QResidual);
+  const dfModerator = p;
+  const QModeratorP = dfModerator > 0 ? chiSquaredPValue(QModerator, dfModerator) : 1;
+
+  // Step 8: Build coefficient results
+  const dfRes = k - p - 1;
+  const QResP = dfRes > 0 ? chiSquaredPValue(fit.QResidual, dfRes) : 1;
+
+  const makeCoefficientResult = (
+    name: string,
+    estimate: number,
+    se: number
+  ): MetaRegressionCoefficient => {
+    const z = se > 0 ? estimate / se : 0;
+    return {
+      name,
+      estimate,
+      se,
+      ciLower: estimate - Z_95 * se,
+      ciUpper: estimate + Z_95 * se,
+      zValue: z,
+      pValue: se > 0 ? 2 * (1 - normalCDF(Math.abs(z))) : 1,
+    };
+  };
+
+  const intercept = makeCoefficientResult(
+    "intercept",
+    fit.beta[0],
+    fit.seBeta[0]
+  );
+
+  const coefficients = covariates.map((cov, i) =>
+    makeCoefficientResult(cov.name, fit.beta[i + 1], fit.seBeta[i + 1])
+  );
+
+  return {
+    intercept,
+    coefficients,
+    R2,
+    tau2Residual: tau2,
+    QResidual: fit.QResidual,
+    QResidualDf: dfRes,
+    QResidualP: QResP,
+    QModerator,
+    QModeratorDf: dfModerator,
+    QModeratorP,
+    modelType,
+  };
+}
+
+/** Weighted least squares fit: beta = (X'WX)^{-1} X'Wy */
+function wlsFit(
+  X: number[][],
+  y: number[],
+  w: number[]
+): { beta: number[]; seBeta: number[]; QResidual: number } {
+  const k = X.length;
+  const m = X[0].length;
+
+  const XWX: number[][] = Array.from({ length: m }, () => Array(m).fill(0));
+  const XWy: number[] = Array(m).fill(0);
+
+  for (let i = 0; i < k; i++) {
+    for (let a = 0; a < m; a++) {
+      XWy[a] += X[i][a] * w[i] * y[i];
+      for (let b = 0; b < m; b++) {
+        XWX[a][b] += X[i][a] * w[i] * X[i][b];
+      }
+    }
+  }
+
+  const inv = invertMatrix(XWX);
+
+  const beta: number[] = Array(m).fill(0);
+  for (let a = 0; a < m; a++) {
+    for (let b = 0; b < m; b++) {
+      beta[a] += inv[a][b] * XWy[b];
+    }
+  }
+
+  const seBeta = inv.map((row, i) => Math.sqrt(Math.max(0, row[i])));
+
+  let QResidual = 0;
+  for (let i = 0; i < k; i++) {
+    let predicted = 0;
+    for (let a = 0; a < m; a++) {
+      predicted += X[i][a] * beta[a];
+    }
+    const resid = y[i] - predicted;
+    QResidual += w[i] * resid * resid;
+  }
+
+  return { beta, seBeta, QResidual };
+}
+
+/** Gauss-Jordan matrix inversion for small symmetric matrices */
+function invertMatrix(mat: number[][]): number[][] {
+  const n = mat.length;
+  const aug: number[][] = mat.map((row, i) => {
+    const newRow = [...row];
+    for (let j = 0; j < n; j++) {
+      newRow.push(i === j ? 1 : 0);
+    }
+    return newRow;
+  });
+
+  for (let col = 0; col < n; col++) {
+    let maxRow = col;
+    let maxVal = Math.abs(aug[col][col]);
+    for (let row = col + 1; row < n; row++) {
+      if (Math.abs(aug[row][col]) > maxVal) {
+        maxVal = Math.abs(aug[row][col]);
+        maxRow = row;
+      }
+    }
+    if (maxRow !== col) {
+      [aug[col], aug[maxRow]] = [aug[maxRow], aug[col]];
+    }
+
+    const pivot = aug[col][col];
+    if (Math.abs(pivot) < 1e-15) {
+      return mat.map((_, i) =>
+        Array.from({ length: n }, (__, j) => (i === j ? 1e10 : 0))
+      );
+    }
+
+    for (let j = 0; j < 2 * n; j++) {
+      aug[col][j] /= pivot;
+    }
+
+    for (let row = 0; row < n; row++) {
+      if (row !== col) {
+        const factor = aug[row][col];
+        for (let j = 0; j < 2 * n; j++) {
+          aug[row][j] -= factor * aug[col][j];
+        }
+      }
+    }
+  }
+
+  return aug.map((row) => row.slice(n));
+}
+
+// ---------------------------------------------------------------------------
+// Cumulative Meta-Analysis
+// ---------------------------------------------------------------------------
+
+export interface CumulativeMetaAnalysisResult {
+  /** Study added at this step */
+  studyLabel: string;
+  /** Number of studies included so far */
+  studiesIncluded: number;
+  /** Pooled result including all studies up to this point */
+  pooled: PooledResult;
+  /** Heterogeneity stats at this point */
+  heterogeneity: HeterogeneityStats;
+}
+
+/**
+ * Cumulative meta-analysis: re-pools the estimate after adding each study.
+ *
+ * Studies are added in the order provided. Typically the caller sorts by
+ * publication year (or another meaningful order) before calling.
+ *
+ * Reference: Lau et al., NEJM 1992;327:248-54
+ */
+export function runCumulativeMetaAnalysis(
+  studies: StudyEffect[],
+  effectType: EffectType,
+  modelType: ModelType = "random"
+): CumulativeMetaAnalysisResult[] {
+  if (studies.length < 2) return [];
+
+  const compute =
+    modelType === "fixed" ? computeFixedEffectsMeta : computeRandomEffectsMeta;
+
+  const results: CumulativeMetaAnalysisResult[] = [];
+
+  for (let i = 1; i < studies.length; i++) {
+    const subset = studies.slice(0, i + 1);
+    const output = compute(subset);
+    results.push({
+      studyLabel: studies[i].studyLabel,
+      studiesIncluded: i + 1,
+      pooled: output.pooled,
+      heterogeneity: output.heterogeneity,
+    });
+  }
+
+  return results;
+}
+
+// ---------------------------------------------------------------------------
 // Helper: convert log-scale effect to natural scale for display
 // ---------------------------------------------------------------------------
 
