@@ -822,3 +822,141 @@ describe("Cycle 3: Edge cases", () => {
     expect(html).toContain("After");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// Cycle 4: Math mode preservation + more headings + theorem envs
+// ═══════════════════════════════════════════════════════════════
+
+describe("Cycle 4: Math mode preservation", () => {
+  it("preserves inline math $...$", () => {
+    const html = latexToHtml("The equation $E = mc^2$ is famous.");
+    expect(html).toContain("$E = mc^2$");
+  });
+
+  it("preserves display math \\[...\\]", () => {
+    const html = latexToHtml("Consider:\n\\[x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\\]");
+    expect(html).toContain("\\[x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\\]");
+  });
+
+  it("preserves inline math \\(...\\)", () => {
+    const html = latexToHtml("We have \\(a + b = c\\) as given.");
+    expect(html).toContain("\\(a + b = c\\)");
+  });
+
+  it("preserves equation environment", () => {
+    const html = latexToHtml("\\begin{equation}\nx^2 + y^2 = z^2\n\\end{equation}");
+    expect(html).toContain("\\begin{equation}");
+    expect(html).toContain("x^2 + y^2 = z^2");
+    expect(html).toContain("\\end{equation}");
+  });
+
+  it("preserves align environment", () => {
+    const html = latexToHtml("\\begin{align}\na &= b + c \\\\\nd &= e + f\n\\end{align}");
+    expect(html).toContain("\\begin{align}");
+    expect(html).toContain("\\end{align}");
+  });
+
+  it("preserves equation* environment", () => {
+    const html = latexToHtml("\\begin{equation*}\nE = mc^2\n\\end{equation*}");
+    expect(html).toContain("\\begin{equation*}");
+    expect(html).toContain("\\end{equation*}");
+  });
+
+  it("preserves gather environment", () => {
+    const html = latexToHtml("\\begin{gather}\nx = 1 \\\\\ny = 2\n\\end{gather}");
+    expect(html).toContain("\\begin{gather}");
+  });
+
+  it("preserves $$...$$ display math", () => {
+    const html = latexToHtml("Result: $$\\sum_{i=1}^n i = \\frac{n(n+1)}{2}$$");
+    expect(html).toContain("$$\\sum_{i=1}^n i = \\frac{n(n+1)}{2}$$");
+  });
+
+  it("does not mangle math commands inside math mode", () => {
+    const html = latexToHtml("$\\textbf{x}$ outside \\textbf{bold}");
+    // Math content should be preserved; outside textbf should be converted
+    expect(html).toContain("<strong>bold</strong>");
+  });
+});
+
+describe("Cycle 4: Chapter, part, paragraph headings", () => {
+  it("converts chapter to h1", () => {
+    const html = latexToHtml("\\chapter{Introduction}");
+    expect(html).toContain('<h1 class="latex-chapter">Introduction</h1>');
+  });
+
+  it("converts chapter* (starred)", () => {
+    const html = latexToHtml("\\chapter*{Preface}");
+    expect(html).toContain('<h1 class="latex-chapter">Preface</h1>');
+  });
+
+  it("converts part to large heading", () => {
+    const html = latexToHtml("\\part{Theoretical Framework}");
+    expect(html).toContain("latex-part");
+    expect(html).toContain("Theoretical Framework");
+  });
+
+  it("converts paragraph to bold run-in heading", () => {
+    const html = latexToHtml("\\paragraph{Note.} Some text follows.");
+    expect(html).toContain("latex-paragraph");
+    expect(html).toContain("Note.");
+  });
+
+  it("converts subparagraph", () => {
+    const html = latexToHtml("\\subparagraph{Detail.} More specifics.");
+    expect(html).toContain("latex-subparagraph");
+    expect(html).toContain("Detail.");
+  });
+});
+
+describe("Cycle 4: Theorem-like environments", () => {
+  it("renders theorem environment", () => {
+    const html = latexToHtml("\\begin{theorem}\nEvery even number greater than 2 is the sum of two primes.\n\\end{theorem}");
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("Theorem");
+    expect(html).toContain("sum of two primes");
+  });
+
+  it("renders lemma environment", () => {
+    const html = latexToHtml("\\begin{lemma}\nIf $p$ divides $ab$, then $p$ divides $a$ or $b$.\n\\end{lemma}");
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("Lemma");
+  });
+
+  it("renders definition environment", () => {
+    const html = latexToHtml("\\begin{definition}\nA prime number is a natural number greater than 1.\n\\end{definition}");
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("Definition");
+  });
+
+  it("renders corollary environment", () => {
+    const html = latexToHtml("\\begin{corollary}\nThe result follows immediately.\n\\end{corollary}");
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("Corollary");
+  });
+
+  it("renders proposition environment", () => {
+    const html = latexToHtml("\\begin{proposition}\nFor all n, f(n) > 0.\n\\end{proposition}");
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("Proposition");
+  });
+
+  it("renders remark environment", () => {
+    const html = latexToHtml("\\begin{remark}\nThis is worth noting.\n\\end{remark}");
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("Remark");
+  });
+
+  it("renders example environment", () => {
+    const html = latexToHtml("\\begin{example}\nConsider x = 5.\n\\end{example}");
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("Example");
+  });
+
+  it("renders proof environment with QED", () => {
+    const html = latexToHtml("\\begin{proof}\nBy induction on n.\n\\end{proof}");
+    expect(html).toContain("latex-proof");
+    expect(html).toContain("Proof");
+    expect(html).toContain("∎");
+  });
+});

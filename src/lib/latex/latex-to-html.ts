@@ -55,10 +55,14 @@ export function latexToHtml(tex: string): string {
     '<div class="latex-abstract"><h3>Abstract</h3><p>$1</p></div>'
   );
 
-  // Sections
+  // Sectioning (full LaTeX hierarchy)
+  html = html.replace(/\\part\*?\{([^}]*)\}/g, '<h1 class="latex-part" style="text-align:center;font-size:1.8em">$1</h1>');
+  html = html.replace(/\\chapter\*?\{([^}]*)\}/g, '<h1 class="latex-chapter">$1</h1>');
   html = html.replace(/\\section\*?\{([^}]*)\}/g, '<h2 class="latex-section">$1</h2>');
   html = html.replace(/\\subsection\*?\{([^}]*)\}/g, '<h3 class="latex-subsection">$1</h3>');
   html = html.replace(/\\subsubsection\*?\{([^}]*)\}/g, '<h4 class="latex-subsubsection">$1</h4>');
+  html = html.replace(/\\paragraph\*?\{([^}]*)\}/g, '<strong class="latex-paragraph">$1</strong> ');
+  html = html.replace(/\\subparagraph\*?\{([^}]*)\}/g, '<strong class="latex-subparagraph">$1</strong> ');
 
   // Bold, italic, underline
   html = html.replace(/\\textbf\{([^}]*)\}/g, "<strong>$1</strong>");

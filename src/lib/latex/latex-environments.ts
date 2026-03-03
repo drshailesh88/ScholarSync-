@@ -133,5 +133,21 @@ export function convertEnvironments(html: string): string {
     "<dt>$1</dt><dd>",
   );
 
+  // Theorem-like environments
+  const theoremEnvs = ["theorem", "lemma", "definition", "corollary", "proposition", "remark", "example", "conjecture", "notation", "axiom"];
+  for (const env of theoremEnvs) {
+    const label = env.charAt(0).toUpperCase() + env.slice(1);
+    html = html.replace(
+      new RegExp(`\\\\begin\\{${env}\\}([\\s\\S]*?)\\\\end\\{${env}\\}`, "g"),
+      `<div class="latex-theorem latex-${env}"><strong>${label}.</strong>$1</div>`,
+    );
+  }
+
+  // Proof environment (with QED symbol)
+  html = html.replace(
+    /\\begin\{proof\}([\s\S]*?)\\end\{proof\}/g,
+    '<div class="latex-proof"><em>Proof.</em>$1<span style="float:right">∎</span></div>',
+  );
+
   return html;
 }
