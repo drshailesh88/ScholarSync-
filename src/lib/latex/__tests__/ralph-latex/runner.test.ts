@@ -1349,3 +1349,161 @@ describe("Cycle 7: Stress tests - large documents", () => {
     expect(html).toContain("<strong>bold</strong>");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// Cycle 8: Overleaf parity verification + regression hardening
+// ═══════════════════════════════════════════════════════════════
+
+describe("Cycle 8: Overleaf parity - complete document rendering", () => {
+  it("renders IEEE template preview correctly", () => {
+    const tmpl = getTemplate("ieee");
+    expect(tmpl).not.toBeNull();
+    const html = latexToHtml(tmpl!.files[0].content);
+    expect(html).toContain("latex-section");
+    expect(html).toContain("latex-subsection");
+    expect(html).toContain("latex-table");
+    expect(html).toContain("latex-tabular");
+  });
+
+  it("renders Nature template preview correctly", () => {
+    const tmpl = getTemplate("nature");
+    expect(tmpl).not.toBeNull();
+    const html = latexToHtml(tmpl!.files[0].content);
+    expect(html).toContain("latex-figure");
+    expect(html).toContain("latex-table");
+    expect(html).toContain("latex-tabular");
+  });
+
+  it("renders Thesis template preview correctly", () => {
+    const tmpl = getTemplate("thesis");
+    expect(tmpl).not.toBeNull();
+    const html = latexToHtml(tmpl!.files[0].content);
+    expect(html).toContain("latex-chapter");
+    expect(html).toContain("latex-section");
+  });
+
+  it("renders Blank template preview correctly", () => {
+    const tmpl = getTemplate("blank");
+    expect(tmpl).not.toBeNull();
+    const html = latexToHtml(tmpl!.files[0].content);
+    expect(html).toContain("latex-section");
+    expect(html).toContain("latex-abstract");
+  });
+});
+
+describe("Cycle 8: Regression tests - all environments render", () => {
+  it("all basic environments produce correct CSS classes", () => {
+    const envTests = [
+      { env: "figure", cls: "latex-figure" },
+      { env: "table", cls: "latex-table" },
+      { env: "verbatim", cls: "latex-verbatim" },
+      { env: "lstlisting", cls: "latex-listing" },
+      { env: "quote", cls: "latex-quote" },
+      { env: "quotation", cls: "latex-quote" },
+      { env: "center", cls: "latex-center" },
+      { env: "flushleft", cls: "latex-flushleft" },
+      { env: "flushright", cls: "latex-flushright" },
+      { env: "minipage", cls: "latex-minipage" },
+    ];
+    for (const { env, cls } of envTests) {
+      const tex = env === "minipage"
+        ? `\\begin{minipage}{0.5\\textwidth}\nContent\n\\end{minipage}`
+        : env === "figure" || env === "table"
+        ? `\\begin{${env}}[h]\n\\caption{Cap}\n\\end{${env}}`
+        : `\\begin{${env}}\nContent\n\\end{${env}}`;
+      const html = latexToHtml(tex);
+      expect(html).toContain(cls);
+    }
+  });
+
+  it("all theorem environments produce latex-theorem class", () => {
+    const envs = ["theorem", "lemma", "definition", "corollary", "proposition", "remark", "example"];
+    for (const env of envs) {
+      const label = env.charAt(0).toUpperCase() + env.slice(1);
+      const html = latexToHtml(`\\begin{${env}}\nContent.\n\\end{${env}}`);
+      expect(html).toContain("latex-theorem");
+      expect(html).toContain(`${label}.`);
+    }
+  });
+
+  it("proof environment has QED symbol", () => {
+    const html = latexToHtml("\\begin{proof}\nDone.\n\\end{proof}");
+    expect(html).toContain("∎");
+    expect(html).toContain("latex-proof");
+  });
+});
+
+describe("Cycle 8: Regression tests - all text formatting", () => {
+  it("all text commands produce correct HTML", () => {
+    const tests = [
+      { cmd: "\\textbf{X}", expected: "<strong>X</strong>" },
+      { cmd: "\\textit{X}", expected: "<em>X</em>" },
+      { cmd: "\\emph{X}", expected: "<em>X</em>" },
+      { cmd: "\\underline{X}", expected: "<u>X</u>" },
+      { cmd: "\\texttt{X}", expected: "<code>X</code>" },
+      { cmd: "\\textsuperscript{X}", expected: "<sup>X</sup>" },
+      { cmd: "\\textsubscript{X}", expected: "<sub>X</sub>" },
+    ];
+    for (const { cmd, expected } of tests) {
+      expect(latexToHtml(cmd)).toContain(expected);
+    }
+  });
+
+  it("all heading levels produce correct HTML", () => {
+    expect(latexToHtml("\\part{X}")).toContain("latex-part");
+    expect(latexToHtml("\\chapter{X}")).toContain("latex-chapter");
+    expect(latexToHtml("\\section{X}")).toContain("latex-section");
+    expect(latexToHtml("\\subsection{X}")).toContain("latex-subsection");
+    expect(latexToHtml("\\subsubsection{X}")).toContain("latex-subsubsection");
+    expect(latexToHtml("\\paragraph{X}")).toContain("latex-paragraph");
+    expect(latexToHtml("\\subparagraph{X}")).toContain("latex-subparagraph");
+  });
+
+  it("special characters all convert correctly", () => {
+    expect(latexToHtml("Figure~1")).toContain("\u00a0");
+    expect(latexToHtml("---")).toContain("\u2014");
+    expect(latexToHtml("--")).toContain("\u2013");
+    expect(latexToHtml("\\$")).toContain("$");
+    expect(latexToHtml("\\#")).toContain("#");
+    expect(latexToHtml("\\_")).toContain("_");
+  });
+});
+
+describe("Cycle 8: Error parser regression", () => {
+  it("handles all error pattern types", () => {
+    const patterns = [
+      { log: "! Undefined control sequence.\nl.10 \\bad", severity: "error" },
+      { log: "! Missing $ inserted.\nl.5 x^2", severity: "error" },
+      { log: "! Too many }'s.\nl.20", severity: "error" },
+      { log: "LaTeX Warning: Reference `fig:x' on input line 10 undefined.", severity: "warning" },
+      { log: "Overfull \\hbox (5pt too wide) at line 30", severity: "warning" },
+      { log: "Underfull \\hbox (badness 10000) at line 40", severity: "warning" },
+    ];
+    for (const { log, severity } of patterns) {
+      const errors = parseCompilationErrors(log);
+      expect(errors.length).toBeGreaterThanOrEqual(1);
+      expect(errors[0].severity).toBe(severity);
+    }
+  });
+
+  it("humanizeError covers all known patterns", () => {
+    expect(humanizeError("Undefined control sequence.")).toContain("Unknown command");
+    expect(humanizeError("Missing $ inserted.")).toContain("Math mode");
+    expect(humanizeError("Too many }'s.")).toContain("Extra closing brace");
+    expect(humanizeError("Misplaced alignment tab character &.")).toContain("Stray &");
+    expect(humanizeError("Missing \\begin{document}.")).toContain("\\begin{document}");
+  });
+});
+
+describe("Cycle 8: LaTeX checks regression", () => {
+  it("all check types return results", () => {
+    const tex = "\\documentclass{article}\n\\usepackage{amsmath}\n\\begin{document}\n\\section{Intro}\\label{sec:intro}\nSee \\ref{sec:intro}.\n\\end{document}";
+    const checks = runLatexChecks(tex);
+    expect(checks.length).toBeGreaterThanOrEqual(4);
+    const labels = checks.map(c => c.label);
+    expect(labels).toContain("Unused labels");
+    expect(labels).toContain("Undefined references");
+    expect(labels).toContain("Package conflicts");
+    expect(labels).toContain("Environment matching");
+  });
+});
