@@ -1020,3 +1020,356 @@ export function toNaturalScaleCI(
   }
   return { lower, upper };
 }
+
+// ---------------------------------------------------------------------------
+// Funnel Plot SVG Generator
+// ---------------------------------------------------------------------------
+
+export interface FunnelPlotOptions {
+  width?: number;
+  height?: number;
+  /** Display on natural scale for OR/RR (exp transform) */
+  naturalScale?: boolean;
+  /** Show Egger's regression line */
+  showEggerLine?: boolean;
+  /** Show trim-and-fill imputed studies */
+  showTrimAndFill?: boolean;
+}
+
+/**
+ * Generates a publication-quality funnel plot SVG.
+ *
+ * X-axis: Effect size (log-scale for OR/RR, raw for SMD/MD/RD)
+ * Y-axis: Standard error (inverted, so precise studies are at the top)
+ *
+ * Includes:
+ * - 95% pseudo-CI lines (the funnel shape)
+ * - Pooled estimate vertical line
+ * - Optional Egger's regression line
+ * - Optional trim-and-fill imputed studies
+ *
+ * Reference: Sterne & Egger, BMJ 2001;323:101-105
+ */
+export function generateFunnelPlotSVG(
+  studies: StudyEffect[],
+  pooledEffect: number,
+  effectType: EffectType,
+  options: FunnelPlotOptions = {}
+): string {
+  const W = options.width ?? 700;
+  const H = options.height ?? 500;
+  const pad = { top: 40, right: 60, bottom: 60, left: 70 };
+
+  const plotW = W - pad.left - pad.right;
+  const plotH = H - pad.top - pad.bottom;
+
+  // Determine data range
+  const seValues = studies.map((s) => s.se);
+  const effectValues = studies.map((s) => s.effect);
+  const maxSE = Math.max(...seValues) * 1.2;
+
+  // Effect range: extend beyond data to show funnel
+  const effectSpread = maxSE * Z_95;
+  const effectMin = Math.min(pooledEffect - effectSpread * 1.3, Math.min(...effectValues) - 0.1);
+  const effectMax = Math.max(pooledEffect + effectSpread * 1.3, Math.max(...effectValues) + 0.1);
+  const effectRange = effectMax - effectMin;
+
+  // Scale functions
+  const xScale = (val: number) =>
+    pad.left + ((val - effectMin) / effectRange) * plotW;
+  const yScale = (se: number) =>
+    pad.top + (se / maxSE) * plotH; // SE=0 at top, maxSE at bottom
+
+  // Funnel lines: at SE=s, the 95% CI bounds are pooledEffect ± 1.96 * s
+  const funnelPoints = 50;
+  const leftLine: string[] = [];
+  const rightLine: string[] = [];
+  for (let i = 0; i <= funnelPoints; i++) {
+    const se = (i / funnelPoints) * maxSE;
+    const x1 = xScale(pooledEffect - Z_95 * se);
+    const x2 = xScale(pooledEffect + Z_95 * se);
+    const y = yScale(se);
+    leftLine.push(`${x1},${y}`);
+    rightLine.push(`${x2},${y}`);
+  }
+
+  // Study dots
+  const dots = studies.map((s) => {
+    const cx = xScale(s.effect);
+    const cy = yScale(s.se);
+    const isImputed = s.studyId.startsWith("imputed_");
+    return `<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="4"
+      fill="${isImputed ? "none" : "#3b82f6"}"
+      stroke="${isImputed ? "#ef4444" : "#1e40af"}"
+      stroke-width="${isImputed ? 1.5 : 1}"
+      stroke-dasharray="${isImputed ? "3,2" : "none"}"
+      data-study="${s.studyLabel}" data-effect="${s.effect.toFixed(4)}" data-se="${s.se.toFixed(4)}"/>`;
+  });
+
+  // Optional: Egger's regression line
+  let eggerLineSVG = "";
+  if (options.showEggerLine) {
+    const egger = eggerTest(studies.filter((s) => !s.studyId.startsWith("imputed_")));
+    if (egger) {
+      // Egger regression: y/se = intercept + slope*(1/se), rearranged: effect = intercept*se + slope
+      // At SE=0: effect = slope (precision → ∞)
+      // At SE=maxSE: effect = intercept*maxSE + slope
+      const eTop = pooledEffect;
+      const eBottom = egger.intercept * maxSE + pooledEffect;
+      eggerLineSVG = `<line x1="${xScale(eTop).toFixed(1)}" y1="${yScale(0).toFixed(1)}"
+        x2="${xScale(eBottom).toFixed(1)}" y2="${yScale(maxSE).toFixed(1)}"
+        stroke="#ef4444" stroke-width="1" stroke-dasharray="5,3"/>`;
+    }
+  }
+
+  // X-axis ticks
+  const tickCount = 7;
+  const xTicks: string[] = [];
+  for (let i = 0; i <= tickCount; i++) {
+    const val = effectMin + (i / tickCount) * effectRange;
+    const x = xScale(val);
+    const displayVal =
+      options.naturalScale && (effectType === "OR" || effectType === "RR")
+        ? Math.exp(val).toFixed(2)
+        : val.toFixed(2);
+    xTicks.push(`<line x1="${x.toFixed(1)}" y1="${pad.top + plotH}" x2="${x.toFixed(1)}" y2="${pad.top + plotH + 5}" stroke="#64748b"/>
+      <text x="${x.toFixed(1)}" y="${pad.top + plotH + 20}" text-anchor="middle" class="tick">${displayVal}</text>`);
+  }
+
+  // Y-axis ticks
+  const yTickCount = 5;
+  const yTicks: string[] = [];
+  for (let i = 0; i <= yTickCount; i++) {
+    const se = (i / yTickCount) * maxSE;
+    const y = yScale(se);
+    yTicks.push(`<line x1="${pad.left - 5}" y1="${y.toFixed(1)}" x2="${pad.left}" y2="${y.toFixed(1)}" stroke="#64748b"/>
+      <text x="${pad.left - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="tick">${se.toFixed(2)}</text>`);
+  }
+
+  const axisLabel =
+    options.naturalScale && (effectType === "OR" || effectType === "RR")
+      ? effectType
+      : `log(${effectType})`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="sans-serif" font-size="11">
+  <style>
+    .tick { fill: #64748b; font-size: 10px; }
+    .axis-label { fill: #1e293b; font-size: 12px; font-weight: 600; }
+    .title { fill: #1e293b; font-size: 14px; font-weight: 700; }
+  </style>
+
+  <!-- Title -->
+  <text x="${W / 2}" y="20" text-anchor="middle" class="title">Funnel Plot</text>
+
+  <!-- Plot area background -->
+  <rect x="${pad.left}" y="${pad.top}" width="${plotW}" height="${plotH}" fill="#fafafa" stroke="#e2e8f0"/>
+
+  <!-- 95% pseudo-CI funnel -->
+  <polygon points="${leftLine.join(" ")} ${rightLine.reverse().join(" ")}" fill="#e0f2fe" fill-opacity="0.5" stroke="none"/>
+  <polyline points="${leftLine.join(" ")}" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,2"/>
+  <polyline points="${rightLine.reverse().join(" ")}" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,2"/>
+
+  <!-- Pooled estimate vertical line -->
+  <line x1="${xScale(pooledEffect).toFixed(1)}" y1="${pad.top}" x2="${xScale(pooledEffect).toFixed(1)}" y2="${pad.top + plotH}" stroke="#334155" stroke-width="1" stroke-dasharray="6,3"/>
+
+  ${eggerLineSVG}
+
+  <!-- Study dots -->
+  ${dots.join("\n  ")}
+
+  <!-- X-axis -->
+  <line x1="${pad.left}" y1="${pad.top + plotH}" x2="${pad.left + plotW}" y2="${pad.top + plotH}" stroke="#334155" stroke-width="1"/>
+  ${xTicks.join("\n  ")}
+  <text x="${pad.left + plotW / 2}" y="${H - 10}" text-anchor="middle" class="axis-label">${axisLabel}</text>
+
+  <!-- Y-axis -->
+  <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${pad.top + plotH}" stroke="#334155" stroke-width="1"/>
+  ${yTicks.join("\n  ")}
+  <text x="15" y="${pad.top + plotH / 2}" text-anchor="middle" class="axis-label" transform="rotate(-90, 15, ${pad.top + plotH / 2})">Standard Error</text>
+</svg>`;
+}
+
+// ---------------------------------------------------------------------------
+// Forest Plot SVG Generator
+// ---------------------------------------------------------------------------
+
+export interface ForestPlotOptions {
+  width?: number;
+  height?: number;
+  /** Display on natural scale for OR/RR (exp transform) */
+  naturalScale?: boolean;
+  /** Show prediction interval for random-effects */
+  showPredictionInterval?: boolean;
+  /** Custom null effect line (default: 0 for SMD/MD/RD, 1 for natural OR/RR) */
+  nullEffect?: number;
+}
+
+/**
+ * Generates a publication-quality forest plot SVG.
+ *
+ * Each study is shown as:
+ * - A square (area proportional to study weight)
+ * - Horizontal whiskers for 95% CI
+ * - Study label and numeric effect + CI on the sides
+ *
+ * Pooled estimate is shown as a diamond at the bottom.
+ *
+ * Reference: Lewis & Clarke, BMJ 2001;322:1479-1480
+ */
+export function generateForestPlotSVG(
+  output: MetaAnalysisOutput,
+  options: ForestPlotOptions = {}
+): string {
+  const studies = output.studies;
+  const k = studies.length;
+  const useNatural = options.naturalScale && (output.effectType === "OR" || output.effectType === "RR");
+
+  const W = options.width ?? 800;
+  const rowH = 28;
+  const H = options.height ?? Math.max(300, (k + 4) * rowH + 100);
+  const labelW = 220; // left label area
+  const statsW = 150; // right stats area
+  const pad = { top: 50, bottom: 50 };
+  const plotLeft = labelW;
+  const plotRight = W - statsW;
+  const plotW = plotRight - plotLeft;
+
+  // Transform helper
+  const tx = (val: number) => useNatural ? Math.exp(val) : val;
+
+  // Determine data range (in display scale)
+  const allLower = studies.map((s) => tx(s.ciLower));
+  const allUpper = studies.map((s) => tx(s.ciUpper));
+  const pooledLower = tx(output.pooled.ciLower);
+  const pooledUpper = tx(output.pooled.ciUpper);
+
+  const dataMin = Math.min(Math.min(...allLower), pooledLower);
+  const dataMax = Math.max(Math.max(...allUpper), pooledUpper);
+  const dataPad = (dataMax - dataMin) * 0.15;
+  const xMin = dataMin - dataPad;
+  const xMax = dataMax + dataPad;
+  const xRange = xMax - xMin;
+
+  // Null effect line
+  const nullVal = options.nullEffect ?? (useNatural ? 1 : 0);
+
+  const xScale = (val: number) =>
+    plotLeft + ((val - xMin) / xRange) * plotW;
+
+  // Max weight for square sizing
+  const maxWeight = Math.max(...studies.map((s) => s.weight ?? 1));
+
+  // Study rows
+  const rows: string[] = [];
+  studies.forEach((s, i) => {
+    const y = pad.top + (i + 1) * rowH;
+    const effect = tx(s.effect);
+    const ciL = tx(s.ciLower);
+    const ciU = tx(s.ciUpper);
+    const w = s.weight ?? (100 / k);
+    const sqSize = Math.max(4, Math.sqrt(w / maxWeight) * 14);
+
+    // Clamp CI whiskers to visible area
+    const x1 = Math.max(plotLeft, xScale(ciL));
+    const x2 = Math.min(plotRight, xScale(ciU));
+    const xCenter = xScale(effect);
+
+    // Study label
+    rows.push(`<text x="${labelW - 10}" y="${y + 4}" text-anchor="end" class="study-label">${s.studyLabel}</text>`);
+
+    // CI whisker
+    rows.push(`<line x1="${x1.toFixed(1)}" y1="${y}" x2="${x2.toFixed(1)}" y2="${y}" stroke="#1e293b" stroke-width="1.5"/>`);
+
+    // Effect square
+    rows.push(`<rect x="${(xCenter - sqSize / 2).toFixed(1)}" y="${(y - sqSize / 2).toFixed(1)}" width="${sqSize.toFixed(1)}" height="${sqSize.toFixed(1)}" fill="#3b82f6" stroke="#1e40af" stroke-width="0.5"/>`);
+
+    // Stats text (right side)
+    const effectDisplay = effect.toFixed(2);
+    const ciDisplay = `[${ciL.toFixed(2)}, ${ciU.toFixed(2)}]`;
+    const weightDisplay = `${w.toFixed(1)}%`;
+    rows.push(`<text x="${plotRight + 10}" y="${y + 4}" class="stats-text">${effectDisplay} ${ciDisplay}</text>`);
+    rows.push(`<text x="${W - 10}" y="${y + 4}" text-anchor="end" class="stats-text">${weightDisplay}</text>`);
+  });
+
+  // Pooled diamond
+  const pooledY = pad.top + (k + 2) * rowH;
+  const pooledEffect = tx(output.pooled.effect);
+  const pL = xScale(tx(output.pooled.ciLower));
+  const pR = xScale(tx(output.pooled.ciUpper));
+  const pC = xScale(pooledEffect);
+  const dH = 8; // diamond half-height
+
+  const diamondPoints = `${pL.toFixed(1)},${pooledY} ${pC.toFixed(1)},${pooledY - dH} ${pR.toFixed(1)},${pooledY} ${pC.toFixed(1)},${pooledY + dH}`;
+
+  // Header row
+  const headerY = pad.top - 10;
+
+  // X-axis ticks
+  const tickCount = 7;
+  const xAxisY = pad.top + (k + 3) * rowH;
+  const xTicks: string[] = [];
+  for (let i = 0; i <= tickCount; i++) {
+    const val = xMin + (i / tickCount) * xRange;
+    const x = xScale(val);
+    xTicks.push(`<line x1="${x.toFixed(1)}" y1="${xAxisY}" x2="${x.toFixed(1)}" y2="${xAxisY + 5}" stroke="#64748b"/>
+      <text x="${x.toFixed(1)}" y="${xAxisY + 18}" text-anchor="middle" class="tick">${val.toFixed(2)}</text>`);
+  }
+
+  // Axis label
+  const axisLabel = useNatural ? output.effectType : `${output.effectType} (${output.effectType === "OR" || output.effectType === "RR" ? "log scale" : "raw"})`;
+
+  // Separator line between studies and pooled
+  const sepY = pad.top + (k + 1.5) * rowH;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" font-family="sans-serif" font-size="11">
+  <style>
+    .study-label { fill: #1e293b; font-size: 11px; }
+    .stats-text { fill: #475569; font-size: 10px; }
+    .tick { fill: #64748b; font-size: 10px; }
+    .axis-label { fill: #1e293b; font-size: 12px; font-weight: 600; }
+    .title { fill: #1e293b; font-size: 14px; font-weight: 700; }
+    .header { fill: #1e293b; font-size: 11px; font-weight: 700; }
+  </style>
+
+  <!-- Title -->
+  <text x="${W / 2}" y="20" text-anchor="middle" class="title">Forest Plot — ${output.model === "random" ? "Random" : "Fixed"}-Effects Model</text>
+
+  <!-- Column headers -->
+  <text x="${labelW - 10}" y="${headerY}" text-anchor="end" class="header">Study</text>
+  <text x="${plotLeft + plotW / 2}" y="${headerY}" text-anchor="middle" class="header">${axisLabel}</text>
+  <text x="${plotRight + 10}" y="${headerY}" class="header">Effect [95% CI]</text>
+  <text x="${W - 10}" y="${headerY}" text-anchor="end" class="header">Weight</text>
+
+  <!-- Plot area -->
+  <rect x="${plotLeft}" y="${pad.top - 5}" width="${plotW}" height="${(k + 3) * rowH + 10}" fill="#fafafa" stroke="none"/>
+
+  <!-- Null effect line -->
+  <line x1="${xScale(nullVal).toFixed(1)}" y1="${pad.top - 5}" x2="${xScale(nullVal).toFixed(1)}" y2="${xAxisY}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Study rows -->
+  ${rows.join("\n  ")}
+
+  <!-- Separator -->
+  <line x1="${labelW - 200}" y1="${sepY}" x2="${W}" y2="${sepY}" stroke="#cbd5e1" stroke-width="0.5"/>
+
+  <!-- Pooled estimate label -->
+  <text x="${labelW - 10}" y="${pooledY + 4}" text-anchor="end" class="header">${output.model === "random" ? "RE" : "FE"} Model</text>
+
+  <!-- Pooled diamond -->
+  <polygon points="${diamondPoints}" fill="#ef4444" stroke="#991b1b" stroke-width="1"/>
+
+  <!-- Pooled stats -->
+  <text x="${plotRight + 10}" y="${pooledY + 4}" class="stats-text">${pooledEffect.toFixed(2)} [${tx(output.pooled.ciLower).toFixed(2)}, ${tx(output.pooled.ciUpper).toFixed(2)}]</text>
+
+  <!-- Heterogeneity footer -->
+  <text x="${plotLeft}" y="${xAxisY + 35}" class="stats-text">Heterogeneity: I² = ${output.heterogeneity.I2.toFixed(1)}%, τ² = ${output.heterogeneity.tau2.toFixed(4)}, Q = ${output.heterogeneity.Q.toFixed(2)} (p = ${output.heterogeneity.pValue.toFixed(3)})</text>
+
+  <!-- X-axis -->
+  <line x1="${plotLeft}" y1="${xAxisY}" x2="${plotRight}" y2="${xAxisY}" stroke="#334155" stroke-width="1"/>
+  ${xTicks.join("\n  ")}
+
+  <!-- Favours labels -->
+  <text x="${xScale(nullVal) - 30}" y="${xAxisY + 35}" text-anchor="end" class="axis-label" font-size="10">← Favours treatment</text>
+  <text x="${xScale(nullVal) + 30}" y="${xAxisY + 35}" text-anchor="start" class="axis-label" font-size="10">Favours control →</text>
+</svg>`;
+}

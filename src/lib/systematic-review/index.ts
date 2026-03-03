@@ -108,6 +108,10 @@ export {
   type SubgroupResult,
   type SubgroupAnalysisOutput,
   type LeaveOneOutResult,
+  generateFunnelPlotSVG,
+  generateForestPlotSVG,
+  type FunnelPlotOptions,
+  type ForestPlotOptions,
 } from "./meta-analysis";
 
 export {
