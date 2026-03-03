@@ -200,6 +200,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     setCompileStatus("compiling");
     setCompileError(null);
     setDiagnostics([]);
+    editorRef.current?.clearDiagnostics();
     try {
       const res = await fetch("/api/latex/compile", {
         method: "POST",
@@ -212,7 +213,18 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         setCompileStatus("error");
         setCompileError(data.error || "Compilation failed");
         if (data.errors) {
-          setDiagnostics(data.errors as CompilationDiagnostic[]);
+          const errors = data.errors as CompilationDiagnostic[];
+          setDiagnostics(errors);
+          // Push diagnostics as inline error markers in the editor
+          editorRef.current?.setDiagnostics(
+            errors
+              .filter((e) => e.line != null)
+              .map((e) => ({
+                line: e.line!,
+                message: e.message,
+                severity: e.severity,
+              }))
+          );
         }
         return;
       }

@@ -7,7 +7,7 @@ import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirro
 import { syntaxHighlighting, indentOnInput, bracketMatching, foldGutter, foldKeymap, defaultHighlightStyle, HighlightStyle } from "@codemirror/language";
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
-import { lintKeymap } from "@codemirror/lint";
+import { lintKeymap, lintGutter, setDiagnostics, type Diagnostic } from "@codemirror/lint";
 import { latex } from "codemirror-lang-latex";
 import { tags } from "@lezer/highlight";
 import {
@@ -145,6 +145,10 @@ export interface SourceEditorHandle {
   setContent: (content: string) => void;
   /** Insert text at the current cursor position (replacing any existing slash command text) */
   insertAtCursor: (text: string) => void;
+  /** Push compilation diagnostics as inline error markers */
+  setDiagnostics: (diags: { line: number; message: string; severity: "error" | "warning" }[]) => void;
+  /** Clear all inline diagnostics */
+  clearDiagnostics: () => void;
 }
 
 interface SourceEditorProps {
@@ -215,7 +219,6 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
         const view = viewRef.current;
         if (!view) return;
         const cursor = view.state.selection.main.head;
-        // Find and remove the slash command text (e.g., "/table") on the current line
         const line = view.state.doc.lineAt(cursor);
         const lineText = line.text.slice(0, cursor - line.from);
         const slashIdx = lineText.lastIndexOf("/");
@@ -225,6 +228,37 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
           selection: { anchor: from + text.length },
         });
         view.focus();
+      },
+      setDiagnostics: (diags) => {
+        const view = viewRef.current;
+        if (!view) return;
+        const cmDiags: Diagnostic[] = diags
+          .filter((d) => d.line != null && d.line > 0)
+          .map((d) => {
+            const lineCount = view.state.doc.lines;
+            const lineNum = Math.min(d.line, lineCount);
+            const lineInfo = view.state.doc.line(lineNum);
+            return {
+              from: lineInfo.from,
+              to: lineInfo.to,
+              severity: d.severity === "error" ? "error" as const : "warning" as const,
+              message: d.message,
+            };
+          });
+        view.dispatch(setDiagnostics(view.state, cmDiags));
+        // Auto-scroll to first error
+        const firstError = cmDiags.find((d) => d.severity === "error") ?? cmDiags[0];
+        if (firstError) {
+          view.dispatch({
+            selection: { anchor: firstError.from },
+            scrollIntoView: true,
+          });
+        }
+      },
+      clearDiagnostics: () => {
+        const view = viewRef.current;
+        if (!view) return;
+        view.dispatch(setDiagnostics(view.state, []));
       },
     }));
 
@@ -312,6 +346,9 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
           indentOnInput(),
           bracketMatching(),
           closeBrackets(),
+
+          // Lint gutter (error/warning markers in the gutter)
+          lintGutter(),
 
           // LaTeX autocompletion with custom sources
           autocompletion({
