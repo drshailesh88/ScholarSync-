@@ -1,3 +1,4 @@
+import { convertEnvironments } from "./latex-environments";
 /**
  * LaTeX-to-HTML converter for live preview.
  * Converts a subset of LaTeX to HTML for client-side rendering.
@@ -102,6 +103,8 @@ export function latexToHtml(tex: string): string {
     '<a href="$1" target="_blank" rel="noopener"><code>$1</code></a>'
   );
 
+  // Convert environments (figure, table, verbatim, quote, center)
+  html = convertEnvironments(html);
   // Remove remaining known commands that don't render (safely)
   html = html.replace(/\\(?:usepackage|documentclass|bibliographystyle|bibliography|label|ref|cite|includegraphics|input|include)\{[^}]*\}(?:\{[^}]*\})?/g, "");
   html = html.replace(/\\(?:usepackage|documentclass)\[[^\]]*\]\{[^}]*\}/g, "");

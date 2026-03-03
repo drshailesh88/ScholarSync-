@@ -96,11 +96,7 @@ describe("latexToHtml", () => {
   });
 
   it("strips preamble content", () => {
-    const tex = `\\documentclass{article}
-\\usepackage{amsmath}
-\\begin{document}
-Hello world
-\\end{document}`;
+    const tex = "\\documentclass{article}\n\\usepackage{amsmath}\n\\begin{document}\nHello world\n\\end{document}";
     const html = latexToHtml(tex);
     expect(html).not.toContain("documentclass");
     expect(html).not.toContain("usepackage");
@@ -121,12 +117,7 @@ Hello world
   });
 
   it("handles maketitle with title/author/date", () => {
-    const tex = `\\title{My Paper}
-\\author{John Doe}
-\\date{2024}
-\\begin{document}
-\\maketitle
-\\end{document}`;
+    const tex = "\\title{My Paper}\n\\author{John Doe}\n\\date{2024}\n\\begin{document}\n\\maketitle\n\\end{document}";
     const html = latexToHtml(tex);
     expect(html).toContain('class="latex-title"');
     expect(html).toContain("My Paper");
@@ -163,7 +154,7 @@ Hello world
   });
 
   it("converts href to anchor", () => {
-    const html = latexToHtml('\\href{https://example.com}{Click here}');
+    const html = latexToHtml("\\href{https://example.com}{Click here}");
     expect(html).toContain('href="https://example.com"');
     expect(html).toContain("Click here");
   });
@@ -219,7 +210,7 @@ describe("parseCompilationErrors", () => {
   });
 
   it("parses LaTeX warning", () => {
-    const log = "LaTeX Warning: Reference `fig:missing' on input line 15 undefined.";
+    const log = "LaTeX Warning: Reference \`fig:missing' on input line 15 undefined.";
     const errors = parseCompilationErrors(log);
     expect(errors.some((e) => e.severity === "warning")).toBe(true);
     expect(errors.some((e) => e.line === 15)).toBe(true);
@@ -241,10 +232,7 @@ describe("parseCompilationErrors", () => {
   });
 
   it("parses multiple errors", () => {
-    const log = `! Missing $ inserted.
-l.10 x^2
-! Undefined control sequence.
-l.20 \\badcmd`;
+    const log = "! Missing \$ inserted.\nl.10 x^2\n! Undefined control sequence.\nl.20 \\badcmd";
     const errors = parseCompilationErrors(log);
     const errorEntries = errors.filter((e) => e.severity === "error");
     expect(errorEntries.length).toBe(2);
@@ -277,7 +265,7 @@ describe("humanizeError", () => {
   });
 
   it("humanizes missing dollar", () => {
-    const result = humanizeError("Missing $ inserted.");
+    const result = humanizeError("Missing \$ inserted.");
     expect(result).toContain("Math mode");
   });
 
@@ -357,7 +345,7 @@ describe("LaTeX checks - extractors", () => {
   });
 
   it("extracts bib keys", () => {
-    const bib = `@article{smith2024,\n  author = {Smith},\n}\n@book{doe2023,\n  title = {Book},\n}`;
+    const bib = "@article{smith2024,\n  author = {Smith},\n}\n@book{doe2023,\n  title = {Book},\n}";
     expect(extractBibKeys(bib)).toEqual(["smith2024", "doe2023"]);
   });
 
@@ -540,7 +528,6 @@ describe("validateTemplate", () => {
       const result = validateTemplate(template);
       expect(result.valid).toBe(true);
       expect(result.errors).toEqual([]);
-      // Check no critical warnings
       expect(result.templateId).toBe(id);
     }
   });
@@ -593,7 +580,7 @@ describe("validateTemplate", () => {
         isMain: true,
       }],
     });
-    expect(result.warnings).toContain("No __TITLE__ placeholder found — title substitution will not work");
+    expect(result.warnings).toContain("No __TITLE__ placeholder found \u2014 title substitution will not work");
   });
 
   it("getTemplate returns null for unknown", () => {
@@ -606,5 +593,113 @@ describe("validateTemplate", () => {
       expect(tmpl).not.toBeNull();
       expect(tmpl!.id).toBe(id);
     }
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// Cycle 2: Environment rendering in latexToHtml
+// ═══════════════════════════════════════════════════════════════
+
+describe("Cycle 2: Template helpers", () => {
+  it("has at least 4 templates", () => {
+    const ids = Object.keys(LATEX_TEMPLATES);
+    expect(ids.length).toBeGreaterThanOrEqual(4);
+    expect(ids).toContain("blank");
+    expect(ids).toContain("ieee");
+  });
+
+  it("all templates have unique ids", () => {
+    const ids = Object.keys(LATEX_TEMPLATES);
+    const unique = new Set(ids);
+    expect(unique.size).toBe(ids.length);
+  });
+
+  it("all templates have non-empty descriptions", () => {
+    for (const tmpl of Object.values(LATEX_TEMPLATES)) {
+      expect(tmpl.description.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("all templates validate successfully", () => {
+    for (const tmpl of Object.values(LATEX_TEMPLATES)) {
+      const result = validateTemplate(tmpl);
+      expect(result.valid).toBe(true);
+    }
+  });
+});
+
+describe("Cycle 2: latexToHtml environment rendering", () => {
+  it("converts figure environment with caption", () => {
+    const tex = "\\begin{figure}[h]\n\\includegraphics{img.png}\n\\caption{My figure}\n\\end{figure}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-figure");
+    expect(html).toContain("My figure");
+    expect(html).toContain("img.png");
+  });
+
+  it("converts table environment with caption and tabular", () => {
+    const tex = "\\begin{table}[h]\n\\caption{Results}\n\\begin{tabular}{|l|r|}\n\\hline\nName & Score \\\\\n\\hline\nAlice & 95 \\\\\nBob & 87 \\\\\n\\hline\n\\end{tabular}\n\\end{table}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-table");
+    expect(html).toContain("Results");
+    expect(html).toContain("Alice");
+  });
+
+  it("converts standalone tabular", () => {
+    const tex = "\\begin{tabular}{cc}\nA & B \\\\\nC & D \\\\\n\\end{tabular}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-tabular");
+    expect(html).toContain("<th>");
+    expect(html).toContain("<td>");
+  });
+
+  it("converts verbatim environment", () => {
+    const tex = "\\begin{verbatim}\nsome code here\n\\end{verbatim}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-verbatim");
+    expect(html).toContain("some code here");
+  });
+
+  it("converts quote environment", () => {
+    const tex = "\\begin{quote}\nA famous quote.\n\\end{quote}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-quote");
+    expect(html).toContain("A famous quote.");
+  });
+
+  it("converts quotation environment", () => {
+    const tex = "\\begin{quotation}\nLong quotation here.\n\\end{quotation}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-quote");
+  });
+
+  it("converts center environment", () => {
+    const tex = "\\begin{center}\nCentered text\n\\end{center}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-center");
+    expect(html).toContain("text-align:center");
+  });
+
+  it("handles figure without caption", () => {
+    const tex = "\\begin{figure}\n\\includegraphics{plot.pdf}\n\\end{figure}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-figure");
+    expect(html).toContain("plot.pdf");
+    expect(html).not.toContain("figcaption");
+  });
+
+  it("handles figure without includegraphics", () => {
+    const tex = "\\begin{figure}\n\\caption{Empty figure}\n\\end{figure}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-figure");
+    expect(html).toContain("Empty figure");
+  });
+
+  it("handles nested environments in document", () => {
+    const tex = "\\begin{document}\n\\section{Results}\n\\begin{figure}[h]\n\\includegraphics{res.png}\n\\caption{Results plot}\n\\end{figure}\n\\begin{quote}\nImportant quote.\n\\end{quote}\n\\end{document}";
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-figure");
+    expect(html).toContain("latex-quote");
+    expect(html).toContain("Results plot");
   });
 });
