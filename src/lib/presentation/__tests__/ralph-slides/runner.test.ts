@@ -2385,7 +2385,7 @@ describe("Cycle 23: Auto-Numbering for Infographic/Code/Citation", () => {
   test("infographic blocks not numbered (only chart/image/diagram are)", () => {
     const slides = [{
       contentBlocks: [
-        { type: "infographic", data: { infographicType: "timeline", items: [] } } as ContentBlock,
+        { type: "infographic", data: { infographicType: "process_flow", items: [] } } as unknown as ContentBlock,
       ],
     }];
     const result = autoNumberFiguresAndTables(
@@ -2423,7 +2423,7 @@ describe("Cycle 23: Auto-Numbering for Infographic/Code/Citation", () => {
       contentBlocks: [
         makeChartBlock(),
         makeTableBlock(),
-        { type: "infographic", data: { infographicType: "timeline", items: [] } } as ContentBlock,
+        { type: "infographic", data: { infographicType: "process_flow", items: [] } } as unknown as ContentBlock,
         { type: "code", data: { language: "js", code: "" } } as ContentBlock,
       ],
     }];
@@ -2509,7 +2509,7 @@ describe("Cycle 23: Theme Color Hex Validation", () => {
   test("all themes have valid hex colors", () => {
     for (const [, theme] of Object.entries(PRESET_THEMES)) {
       for (const field of colorFields) {
-        const val = (theme as Record<string, unknown>)[field] as string;
+        const val = (theme as unknown as Record<string, string>)[field];
         expect(val).toMatch(hexRegex);
       }
     }
