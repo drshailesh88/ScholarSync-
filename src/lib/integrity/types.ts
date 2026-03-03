@@ -56,6 +56,14 @@ export interface TextStatistics {
   readabilityGrade: number;
   /** Count of hedging phrases detected */
   hedgingPhraseCount: number;
+  /** Density of formulaic transition words (Furthermore/However/Moreover/etc.) per 100 words */
+  formulaicTransitionDensity: number;
+  /** Standard deviation of paragraph lengths in words (low = uniform = AI signal) */
+  paragraphLengthStdDev: number;
+  /** Ratio of sentences that share an opening bigram with another sentence (0-1) */
+  repetitiveSentenceOpeningRatio: number;
+  /** Count of markdown-style bold headings (e.g. **Section:**) */
+  markdownHeadingCount: number;
 }
 
 // ── Plagiarism Detection ────────────────────────────────────────

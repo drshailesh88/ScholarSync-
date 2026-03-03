@@ -1,23 +1,7 @@
 {
   "id": "ralph-ic-007",
-  "name": "AI methods section — sensitivity baseline",
-  "category": "ai_detection",
-  "phase": 1,
-  "difficulty": "easy",
-  "input": {
-    "mode": "ai_detection",
-    "textKey": "_generate",
-    "generatePrompt": "Write the methods section of a randomised controlled trial comparing two antihypertensive drugs in elderly patients. Include study design, inclusion/exclusion criteria, randomisation, blinding, primary and secondary endpoints, and statistical analysis plan. Write approximately 300 words in formal academic style."
-  },
-  "expectedResult": {
-    "humanScore_max": 40,
-    "overallRisk": "high",
-    "flaggedParagraphs_min": 2
-  },
-  "qualityCriteria": [
-    "AI-generated methods section scores ≤30% human probability",
-    "At least 2 paragraphs flagged as AI",
-    "Overall risk is 'high'",
-    "Methods text is especially formulaic — detector should still flag it"
-  ]
+  "name": "AI-generated: methods section (RCT)",
+  "input": { "mode": "generate+detect", "textKey": "aiMethodsRCT", "generatePrompt": "Write a methods section for a randomized controlled trial investigating a novel GLP-1 receptor agonist for type 2 diabetes. Include study design, eligibility criteria, randomization, interventions, primary and secondary endpoints, and statistical analysis plan. Write in formal academic style, approximately 400 words." },
+  "expectedResult": { "humanScore_max": 30, "overallRisk": "high", "flaggedParagraphs_min": 2 },
+  "qualityCriteria": ["Detects overly polished structure", "Flags formulaic methods prose"]
 }

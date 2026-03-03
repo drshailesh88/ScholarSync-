@@ -1,0 +1,18 @@
+{
+  "id": "ralph-ic-013",
+  "name": "Mixed: alternating human-AI-human-AI",
+  "input": {
+    "mode": "mixed",
+    "humanParagraphs": [0, 2],
+    "aiParagraphs": [1, 3],
+    "humanTextKey": "methodsRCT",
+    "humanParagraphIndices": [0, 2],
+    "generatePrompt": "Write two paragraphs for a methods section of a randomized controlled trial about a new antidepressant. Paragraph 1: describe the randomization and blinding procedures. Paragraph 2: describe the statistical analysis plan. Formal academic style, approximately 100 words per paragraph."
+  },
+  "expectedResult": {
+    "humanParas_humanProb_min": 60,
+    "aiParas_humanProb_max": 50,
+    "overallRisk": "medium"
+  },
+  "qualityCriteria": ["Distinguishes interleaved paragraphs", "No cross-contamination of scores", "Handles paragraph-level granularity"]
+}

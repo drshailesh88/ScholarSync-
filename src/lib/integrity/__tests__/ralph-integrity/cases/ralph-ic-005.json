@@ -1,23 +1,7 @@
 {
   "id": "ralph-ic-005",
-  "name": "Human clinical protocol — paediatric sepsis",
-  "category": "ai_detection",
-  "phase": 1,
-  "difficulty": "medium",
-  "input": {
-    "mode": "ai_detection",
-    "textKey": "clinical_protocol"
-  },
-  "expectedResult": {
-    "humanScore_min": 60,
-    "humanScore_max": 100,
-    "overallRisk": "low",
-    "flaggedParagraphs_max": 2
-  },
-  "qualityCriteria": [
-    "Clinical protocol scores ≥65% human probability (lower bar due to imperative/instructional style)",
-    "Weight-based dosing and step-by-step instructions are convention, not AI patterns",
-    "Practical nursing notes demonstrate lived clinical experience",
-    "Overall risk is 'low'"
-  ]
+  "name": "Clinical protocol / guideline excerpt",
+  "input": { "mode": "detect", "textKey": "clinicalProtocol" },
+  "expectedResult": { "humanScore_min": 70, "overallRisk": "low", "flaggedParagraphs_max": 1 },
+  "qualityCriteria": ["Handles prescriptive tone common in guidelines", "Does not flag structured dosing as formulaic AI"]
 }

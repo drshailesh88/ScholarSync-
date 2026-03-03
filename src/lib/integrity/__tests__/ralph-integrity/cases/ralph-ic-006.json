@@ -1,23 +1,7 @@
 {
   "id": "ralph-ic-006",
-  "name": "AI case report — sensitivity baseline",
-  "category": "ai_detection",
-  "phase": 1,
-  "difficulty": "easy",
-  "input": {
-    "mode": "ai_detection",
-    "textKey": "_generate",
-    "generatePrompt": "Write a detailed clinical case report about a 62-year-old woman presenting with acute onset atrial fibrillation. Include vital signs, examination findings, ECG results, lab values, and the treatment plan. Write approximately 300 words in the style of a medical journal case report."
-  },
-  "expectedResult": {
-    "humanScore_max": 40,
-    "overallRisk": "high",
-    "flaggedParagraphs_min": 2
-  },
-  "qualityCriteria": [
-    "AI-generated case report scores ≤30% human probability",
-    "At least 2 paragraphs flagged as AI",
-    "Overall risk is 'high'",
-    "Flags should identify specific AI patterns (uniform length, hedging, etc.)"
-  ]
+  "name": "AI-generated: clinical case report",
+  "input": { "mode": "generate+detect", "textKey": "aiCaseReport", "generatePrompt": "Write a detailed clinical case report about a 62-year-old male presenting with acute decompensated heart failure. Include history of present illness, physical examination findings, laboratory results, imaging, management, and hospital course. Write in formal medical prose, approximately 400 words." },
+  "expectedResult": { "humanScore_max": 30, "overallRisk": "high", "flaggedParagraphs_min": 2 },
+  "qualityCriteria": ["Detects uniformity in sentence structure", "Flags lack of genuine clinical uncertainty"]
 }

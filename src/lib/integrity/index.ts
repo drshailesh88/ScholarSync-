@@ -94,6 +94,10 @@ export async function runIntegrityCheck(
       passiveVoicePercent: 0,
       readabilityGrade: 0,
       hedgingPhraseCount: 0,
+      formulaicTransitionDensity: 0,
+      paragraphLengthStdDev: 0,
+      repetitiveSentenceOpeningRatio: 0,
+      markdownHeadingCount: 0,
     },
   };
 

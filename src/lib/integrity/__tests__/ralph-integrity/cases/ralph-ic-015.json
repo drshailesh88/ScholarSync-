@@ -1,0 +1,18 @@
+{
+  "id": "ralph-ic-015",
+  "name": "Mixed: mostly AI with one human paragraph",
+  "input": {
+    "mode": "mixed",
+    "humanParagraphs": [2],
+    "aiParagraphs": [0, 1, 3],
+    "humanTextKey": "clinicalProtocol",
+    "humanParagraphIndices": [1],
+    "generatePrompt": "Write three paragraphs for a clinical guideline about acute myocardial infarction management. Paragraph 1: prehospital recognition and catheterization lab activation. Paragraph 2: post-PCI monitoring and complications. Paragraph 3: discharge planning and secondary prevention. Formal academic style, approximately 100 words per paragraph."
+  },
+  "expectedResult": {
+    "humanParas_humanProb_min": 60,
+    "aiParas_humanProb_max": 45,
+    "overallRisk": "high"
+  },
+  "qualityCriteria": ["Correctly flags majority-AI document", "Preserves human paragraph score", "Handles AI-dominant mixed document"]
+}

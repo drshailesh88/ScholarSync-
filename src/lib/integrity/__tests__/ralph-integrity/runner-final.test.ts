@@ -4,7 +4,7 @@
  * Focus: orchestrator formula consistency, self-plagiarism constants,
  * comprehensive Turnitin parity verification, API route contracts.
  */
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import { computeTextStatistics } from "../../ai-detection";
 import {
   tokenize,
@@ -140,6 +140,10 @@ describe("Cycle 43: Full type contract coverage", () => {
           passiveVoicePercent: 15,
           readabilityGrade: 12,
           hedgingPhraseCount: 2,
+          formulaicTransitionDensity: 0,
+          paragraphLengthStdDev: 0,
+          repetitiveSentenceOpeningRatio: 0,
+          markdownHeadingCount: 0,
         },
       },
       plagiarism: {
@@ -212,6 +216,10 @@ describe("Cycle 43: Full type contract coverage", () => {
           passiveVoicePercent: 10,
           readabilityGrade: 12,
           hedgingPhraseCount: 0,
+          formulaicTransitionDensity: 0,
+          paragraphLengthStdDev: 0,
+          repetitiveSentenceOpeningRatio: 0,
+          markdownHeadingCount: 0,
         },
       };
       expect(result.engine).toBe(engine);
@@ -412,6 +420,10 @@ describe("Cycle 46: AI detection score combination logic", () => {
           passiveVoicePercent: 0,
           readabilityGrade: 0,
           hedgingPhraseCount: 0,
+          formulaicTransitionDensity: 0,
+          paragraphLengthStdDev: 0,
+          repetitiveSentenceOpeningRatio: 0,
+          markdownHeadingCount: 0,
         },
       };
       expect(result.humanScore + result.aiScore).toBe(100);

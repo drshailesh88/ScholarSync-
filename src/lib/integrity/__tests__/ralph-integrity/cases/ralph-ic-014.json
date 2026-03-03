@@ -1,0 +1,18 @@
+{
+  "id": "ralph-ic-014",
+  "name": "Mixed: mostly human with one AI paragraph",
+  "input": {
+    "mode": "mixed",
+    "humanParagraphs": [0, 1, 2],
+    "aiParagraphs": [3],
+    "humanTextKey": "litReview",
+    "humanParagraphIndices": [0, 1, 2],
+    "generatePrompt": "Write one concluding paragraph for a literature review about gut microbiota and inflammatory bowel disease treatment response. Summarize the state of the field and identify future directions. Formal academic style, approximately 100 words."
+  },
+  "expectedResult": {
+    "humanParas_humanProb_min": 65,
+    "aiParas_humanProb_max": 50,
+    "overallRisk": "low"
+  },
+  "qualityCriteria": ["Detects single AI paragraph among human text", "Does not raise false alarm on human majority", "Handles mostly-human document"]
+}

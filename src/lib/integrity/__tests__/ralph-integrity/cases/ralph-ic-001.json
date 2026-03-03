@@ -1,23 +1,7 @@
 {
   "id": "ralph-ic-001",
-  "name": "Human case report — specificity baseline",
-  "category": "ai_detection",
-  "phase": 1,
-  "difficulty": "easy",
-  "input": {
-    "mode": "ai_detection",
-    "textKey": "case_report"
-  },
-  "expectedResult": {
-    "humanScore_min": 70,
-    "humanScore_max": 100,
-    "overallRisk": "low",
-    "flaggedParagraphs_max": 1
-  },
-  "qualityCriteria": [
-    "Clinical case report scores ≥70% human probability",
-    "No more than 1 paragraph flagged as AI",
-    "Overall risk is 'low'",
-    "Specific vitals, drug doses, and time stamps should signal human authorship"
-  ]
+  "name": "Clinical case report (PE presentation)",
+  "input": { "mode": "detect", "textKey": "caseReport" },
+  "expectedResult": { "humanScore_min": 70, "overallRisk": "low", "flaggedParagraphs_max": 1 },
+  "qualityCriteria": ["Recognises clinical narrative voice", "Does not penalise medical jargon", "Paragraph scores consistently >= 65%"]
 }
