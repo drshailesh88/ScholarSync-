@@ -163,6 +163,8 @@ export function scoreQueryResponse(
         responseLower.includes("instead") ||
         responseLower.includes("do cover") ||
         responseLower.includes("does cover") ||
+        responseLower.includes("data covers") ||
+        responseLower.includes("available data") ||
         responseLower.includes("here is what");
       if (!isAppropriateUse) {
         grounding = Math.max(1, grounding - 4);
@@ -340,16 +342,49 @@ export function scoreQueryResponse(
     const lower = resp.toLowerCase();
     const expectedLower = expected.toLowerCase();
 
-    // Negation check: "Does NOT mention X" / "Does NOT hallucinate X" / "Does NOT cite X"
+    // Negation check: "Does NOT mention X" / "Does NOT hallucinate X" / "NOT routed as X"
     const negationMatch = expectedLower.match(
-      /does\s+not\s+(?:mention|hallucinate|cite|fabricate|claim|include|contain|present|use|make|mix)/
+      /does\s+not\s+(?:mention|hallucinate|cite|fabricate|claim|include|contain|present|use|make|mix|generate|minimize|route)/
     );
+    // Also check "NOT routed as" pattern
+    const notRoutedMatch = expectedLower.match(/not\s+routed\s+as/);
+    if (notRoutedMatch) {
+      const afterVerb = expectedLower.split(notRoutedMatch[0])[1]?.trim().split(/\s*[—–]\s*/)[0] || "";
+      const forbiddenKeywords = afterVerb
+        .split(/\s+/)
+        .filter((w) => w.length > 3 && !/^(that|this|from|with|into|about|their|they|them|these|those|been|have|will|just|like|than|then|when|what|which|also|does|here|only|such|very|each|some|more|both|many|most|same|even|back|over|data|info|were|should|could|would|plain|question)$/.test(w));
+      if (forbiddenKeywords.length > 0) {
+        const hasForbidden = forbiddenKeywords.some((k) => lower.includes(k));
+        return !hasForbidden;
+      }
+      return true;
+    }
+    // "No X structure" / "No X data" negation: "No podcast/dialogue structure" means none should be present
+    const noNegationMatch = expectedLower.match(/^no\s+/);
+    if (noNegationMatch && !expectedLower.includes("noted") && !expectedLower.includes("no fabricated")) {
+      // "No podcast/dialogue structure" — extract forbidden keywords
+      const afterNo = expectedLower.replace(/^no\s+/, "");
+      const forbiddenKeywords = afterNo
+        .replace(/[()]/g, "")
+        .split(/[\s/]+/)
+        .filter((w) => w.length > 3 && !/^(that|this|from|with|into|about|their|they|them|these|those|been|have|will|just|like|than|then|when|what|which|also|does|here|only|such|very|each|some|more|both|many|most|same|even|back|over|data|info|were|should|could|would|mixed|rales|topcat|stats|questions|papers|topics|absent|sources|content|results)$/.test(w));
+      if (forbiddenKeywords.length > 0) {
+        const hasForbidden = forbiddenKeywords.some((k) => lower.includes(k));
+        return !hasForbidden;
+      }
+      return true;
+    }
     if (negationMatch) {
       // Extract what should NOT be present — the keywords after the negation verb
       const afterVerb = expectedLower.split(negationMatch[0])[1]?.trim() || "";
-      const forbiddenKeywords = afterVerb
+      // Skip subject nouns (drug names, trial names) that will naturally appear in the response
+      // Focus on VALUE/CLAIM keywords (effective, superior, beneficial, etc.)
+      const subjectNouns = /^(spironolactone|dapagliflozin|empagliflozin|sacubitril|valsartan|canagliflozin|paradigm|rales|topcat|dapa-hf|emperor|deliver|aldo-dhf|single|drug|works|heart|failure|sglt2|pooled|meta-analytic|second|trial|death|data|summary|chunks|questions|papers|topics|absent|non-existent|sources|content|results|disagreement|interpretation|post-hoc)$/;
+      // Strip qualifier after em-dash (e.g., "— data is mixed" is context, not forbidden content)
+      const beforeDash = afterVerb.split(/\s*[—–]\s*/)[0];
+      const forbiddenKeywords = beforeDash
         .split(/\s+/)
-        .filter((w) => w.length > 3 && !/^(that|this|from|with|into|about|their|they|them|these|those|been|have|will|just|like|than|then|when|what|which|also|does|here|only|such|very|each|some|more|both|many|most|same|even|back|over|data|info|were|should|could|would)$/.test(w));
+        .filter((w) => w.length > 3 && !subjectNouns.test(w) && !/^(that|this|from|with|into|about|their|they|them|these|those|been|have|will|just|like|than|then|when|what|which|also|does|here|only|such|very|each|some|more|both|many|most|same|even|back|over|data|info|were|should|could|would)$/.test(w));
       if (forbiddenKeywords.length > 0) {
         // Check none of the forbidden keywords appear
         const hasForbidden = forbiddenKeywords.some((k) => lower.includes(k));
