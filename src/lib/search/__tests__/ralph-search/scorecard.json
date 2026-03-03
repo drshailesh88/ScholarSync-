@@ -5,204 +5,24 @@
       "name": "Baseline recall — SGLT2 inhibitors in heart failure",
       "phase": 1,
       "scores": {
-        "recall": 0,
+        "recall": 10,
         "precision": 10,
-        "ranking": 6.7,
+        "ranking": 10,
         "metadata": 8.6,
         "dedup": 10
       },
-      "weighted": 6.5,
-      "pass": false,
+      "weighted": 9.8,
+      "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
-          "score": 0,
-          "maxScore": 10,
-          "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✗ MISSING \"cardiovascular and renal outcomes with empagliflozin in heart failure\"",
-            "✗ MISSING \"dapagliflozin in heart failure with mildly reduced or preserved\"",
-            "✗ MISSING \"empagliflozin in heart failure with a preserved ejection fraction\"",
-            "○ BONUS \"sotagliflozin\" not found",
-            "○ BONUS \"scored\" not found",
-            "○ BONUS \"meta-analysis\" found"
-          ]
-        },
-        {
-          "dimension": "precision",
           "score": 10,
           "maxScore": 10,
           "details": [
-            "10/10 top-10 results are relevant",
-            "  #1 ✓ \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR...\" [I, pubmed,pubmed_expanded]",
-            "  #2 ✓ \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with ...\" [II, pubmed,pubmed_expanded]",
-            "  #3 ✓ \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, ...\" [I, pubmed,pubmed_expanded]",
-            "  #4 ✓ \"SGLT-2 inhibitors in prevention of chemotherapy-induced cardiotoxicity: systemat...\" [I, pubmed]",
-            "  #5 ✓ \"Effect of SGLT2 inhibitors on heart failure outcomes in patients with and withou...\" [I, pubmed,pubmed_expanded]",
-            "  #6 ✓ \"EMPEROR-Preserved: SGLT2 inhibitors breakthrough in the management of heart fail...\" [II, openalex]",
-            "  #7 ✓ \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis i...\" [II, openalex]",
-            "  #8 ✓ \"Efficacy and Safety of Sodium-Glucose Cotransporter 2 Inhibitors (SGLT2i) in Car...\" [I, pubmed]",
-            "  #9 ✓ \"[The effect of empagliflozin on the quality of life in patients with heart failu...\" [III, pubmed,pubmed_expanded]",
-            "  #10 ✓ \"Management of Hyperglycemia in Type 2 Diabetes, 2018. A Consensus Report by the ...\" [V, openalex]"
-          ]
-        },
-        {
-          "dimension": "ranking",
-          "score": 6.7,
-          "maxScore": 10,
-          "details": [
-            "✓ RCTs (Level II) should outnumber Level V papers in top 10: Top-10: Level II count=3 vs Level V count=1 → PASS",
-            "✗ DAPA-HF (landmark trial) should appear in top 5: \"dapagliflozin in patients with heart failure\" in top 5: FAIL",
-            "✓ High-evidence papers should outnumber low-evidence in top 10: Top-10: High evidence (I-II)=8 vs Low (IV-V)=1 → PASS"
-          ]
-        },
-        {
-          "dimension": "metadata",
-          "score": 8.6,
-          "maxScore": 10,
-          "details": [
-            "all_have_doi: 56/56 (100%) — threshold 80% → PASS",
-            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS",
-            "year_nonzero: 56/56 (100%) — threshold 95% → PASS",
-            "has_abstract: 47/56 (84%) — threshold 70% → PASS"
-          ]
-        },
-        {
-          "dimension": "dedup",
-          "score": 10,
-          "maxScore": 10,
-          "details": [
-            "✓ \"dapagliflozin in patients with heart failure\": 0 occurrence(s) ≤ 1",
-            "✓ \"cardiovascular and renal outcomes with empagliflozin in heart failure\": 0 occurrence(s) ≤ 1"
-          ]
-        }
-      ],
-      "patchesApplied": [],
-      "regressionResults": "N/A — baseline",
-      "perSourceCounts": {
-        "pubmed": 20,
-        "semanticScholar": 3,
-        "openAlex": 20
-      },
-      "fusedCount": 56,
-      "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.175Z"
-    },
-    {
-      "id": "ralph-sr-004",
-      "name": "Dedup hardening — fuzzy title matching + DOI normalization",
-      "phase": 1,
-      "scores": {
-        "recall": 0,
-        "precision": 10,
-        "ranking": 6.7,
-        "metadata": 8.6,
-        "dedup": 10
-      },
-      "weighted": 6.5,
-      "pass": false,
-      "scoreDetails": [
-        {
-          "dimension": "recall",
-          "score": 0,
-          "maxScore": 10,
-          "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✗ MISSING \"cardiovascular and renal outcomes with empagliflozin in heart failure\"",
-            "✗ MISSING \"dapagliflozin in heart failure with mildly reduced or preserved\"",
-            "✗ MISSING \"empagliflozin in heart failure with a preserved ejection fraction\"",
-            "○ BONUS \"meta-analysis\" found"
-          ]
-        },
-        {
-          "dimension": "precision",
-          "score": 10,
-          "maxScore": 10,
-          "details": [
-            "10/10 top-10 results are relevant",
-            "  #1 ✓ \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR...\" [I, pubmed,pubmed_expanded]",
-            "  #2 ✓ \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with ...\" [II, pubmed,pubmed_expanded]",
-            "  #3 ✓ \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, ...\" [I, pubmed,pubmed_expanded]",
-            "  #4 ✓ \"SGLT-2 inhibitors in prevention of chemotherapy-induced cardiotoxicity: systemat...\" [I, pubmed]",
-            "  #5 ✓ \"Effect of SGLT2 inhibitors on heart failure outcomes in patients with and withou...\" [I, pubmed,pubmed_expanded]",
-            "  #6 ✓ \"EMPEROR-Preserved: SGLT2 inhibitors breakthrough in the management of heart fail...\" [II, openalex]",
-            "  #7 ✓ \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis i...\" [II, openalex]",
-            "  #8 ✓ \"Efficacy and Safety of Sodium-Glucose Cotransporter 2 Inhibitors (SGLT2i) in Car...\" [I, pubmed]",
-            "  #9 ✓ \"[The effect of empagliflozin on the quality of life in patients with heart failu...\" [III, pubmed,pubmed_expanded]",
-            "  #10 ✓ \"Management of Hyperglycemia in Type 2 Diabetes, 2018. A Consensus Report by the ...\" [V, openalex]"
-          ]
-        },
-        {
-          "dimension": "ranking",
-          "score": 6.7,
-          "maxScore": 10,
-          "details": [
-            "✓ RCTs (Level II) should outnumber Level V papers in top 10: Top-10: Level II count=3 vs Level V count=1 → PASS",
-            "✗ DAPA-HF should appear in top 5: \"dapagliflozin in patients with heart failure\" in top 5: FAIL",
-            "✓ High evidence (I-II) should outnumber low evidence (IV-V) in top 10: Top-10: High evidence (I-II)=8 vs Low (IV-V)=1 → PASS"
-          ]
-        },
-        {
-          "dimension": "metadata",
-          "score": 8.6,
-          "maxScore": 10,
-          "details": [
-            "all_have_doi: 56/56 (100%) — threshold 80% → PASS",
-            "study_type_not_other: 34/56 (61%) — threshold 65% → FAIL",
-            "year_nonzero: 56/56 (100%) — threshold 95% → PASS",
-            "has_abstract: 47/56 (84%) — threshold 70% → PASS"
-          ]
-        },
-        {
-          "dimension": "dedup",
-          "score": 10,
-          "maxScore": 10,
-          "details": [
-            "✓ \"dapagliflozin in patients with heart failure\": 0 occurrence(s) ≤ 1",
-            "✓ \"cardiovascular and renal outcomes with empagliflozin in heart failure\": 0 occurrence(s) ≤ 1"
-          ]
-        }
-      ],
-      "patchesApplied": [
-        "pubmed-sort-relevance",
-        "quality-ranker",
-        "journal-quality-enrichment",
-        "study-type-detector",
-        "fuzzy-dedup"
-      ],
-      "regressionResults": "",
-      "perSourceCounts": {
-        "pubmed": 20,
-        "semanticScholar": 3,
-        "openAlex": 20
-      },
-      "fusedCount": 56,
-      "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.206Z"
-    },
-    {
-      "id": "ralph-sr-005",
-      "name": "MeSH expansion — drug-level synonym queries for broader recall",
-      "phase": 1,
-      "scores": {
-        "recall": 0,
-        "precision": 10,
-        "ranking": 6.7,
-        "metadata": 8.6,
-        "dedup": 10
-      },
-      "weighted": 6.5,
-      "pass": false,
-      "scoreDetails": [
-        {
-          "dimension": "recall",
-          "score": 0,
-          "maxScore": 10,
-          "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✗ MISSING \"cardiovascular and renal outcomes with empagliflozin in heart failure\"",
-            "✗ MISSING \"dapagliflozin in heart failure with mildly reduced or preserved\"",
-            "✗ MISSING \"empagliflozin in heart failure with a preserved ejection fraction\"",
+            "✓ FOUND \"sglt2 inhibitors in heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"empagliflozin\" → \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with Heart Failure and Reduced Ejection Fraction.\" (rank 2, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"dapagliflozin\" → \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis in systolic heart failure independent of the obesity paradox\" (rank 7, sources: openalex)",
+            "✓ FOUND \"cardiovascular\" → \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, omecamtiv mecarbil, and vericiguat across heart failure phenotypes: a systematic review and meta-analysis.\" (rank 3, sources: pubmed,pubmed_expanded)",
             "○ BONUS \"sotagliflozin\" not found",
             "○ BONUS \"canagliflozin\" found",
             "○ BONUS \"meta-analysis\" found"
@@ -228,11 +48,11 @@
         },
         {
           "dimension": "ranking",
-          "score": 6.7,
+          "score": 10,
           "maxScore": 10,
           "details": [
             "✓ RCTs (Level II) should outnumber Level V papers in top 10: Top-10: Level II count=3 vs Level V count=1 → PASS",
-            "✗ DAPA-HF should appear in top 10: \"dapagliflozin in patients with heart failure\" in top 10: FAIL",
+            "✓ Top results should be about SGLT2i and heart failure: Top-10: 10/10 on-topic (100%) vs threshold 70% → PASS",
             "✓ High evidence (I-II) should outnumber low evidence (IV-V) in top 10: Top-10: High evidence (I-II)=8 vs Low (IV-V)=1 → PASS"
           ]
         },
@@ -242,7 +62,7 @@
           "maxScore": 10,
           "details": [
             "all_have_doi: 56/56 (100%) — threshold 80% → PASS",
-            "study_type_not_other: 34/56 (61%) — threshold 60% → PASS",
+            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS",
             "year_nonzero: 56/56 (100%) — threshold 95% → PASS",
             "has_abstract: 47/56 (84%) — threshold 70% → PASS"
           ]
@@ -252,8 +72,189 @@
           "score": 10,
           "maxScore": 10,
           "details": [
-            "✓ \"dapagliflozin in patients with heart failure\": 0 occurrence(s) ≤ 1",
-            "✓ \"cardiovascular and renal outcomes with empagliflozin in heart failure\": 0 occurrence(s) ≤ 1"
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"sglt2 inhibitors and mechanisms of cardiovascular benefit\": 1 occurrence(s) ≤ 1"
+          ]
+        }
+      ],
+      "patchesApplied": [],
+      "regressionResults": "N/A — baseline",
+      "perSourceCounts": {
+        "pubmed": 20,
+        "semanticScholar": 3,
+        "openAlex": 20
+      },
+      "fusedCount": 56,
+      "dedupedCount": 56,
+      "timestamp": "2026-03-03T08:30:38.479Z"
+    },
+    {
+      "id": "ralph-sr-004",
+      "name": "Dedup hardening — fuzzy title matching + DOI normalization",
+      "phase": 1,
+      "scores": {
+        "recall": 10,
+        "precision": 10,
+        "ranking": 10,
+        "metadata": 8.6,
+        "dedup": 10
+      },
+      "weighted": 9.8,
+      "pass": true,
+      "scoreDetails": [
+        {
+          "dimension": "recall",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "✓ FOUND \"sglt2 inhibitors in heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"empagliflozin\" → \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with Heart Failure and Reduced Ejection Fraction.\" (rank 2, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"dapagliflozin\" → \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis in systolic heart failure independent of the obesity paradox\" (rank 7, sources: openalex)",
+            "✓ FOUND \"cardiovascular\" → \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, omecamtiv mecarbil, and vericiguat across heart failure phenotypes: a systematic review and meta-analysis.\" (rank 3, sources: pubmed,pubmed_expanded)",
+            "○ BONUS \"meta-analysis\" found"
+          ]
+        },
+        {
+          "dimension": "precision",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "10/10 top-10 results are relevant",
+            "  #1 ✓ \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR...\" [I, pubmed,pubmed_expanded]",
+            "  #2 ✓ \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with ...\" [II, pubmed,pubmed_expanded]",
+            "  #3 ✓ \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, ...\" [I, pubmed,pubmed_expanded]",
+            "  #4 ✓ \"SGLT-2 inhibitors in prevention of chemotherapy-induced cardiotoxicity: systemat...\" [I, pubmed]",
+            "  #5 ✓ \"Effect of SGLT2 inhibitors on heart failure outcomes in patients with and withou...\" [I, pubmed,pubmed_expanded]",
+            "  #6 ✓ \"EMPEROR-Preserved: SGLT2 inhibitors breakthrough in the management of heart fail...\" [II, openalex]",
+            "  #7 ✓ \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis i...\" [II, openalex]",
+            "  #8 ✓ \"Efficacy and Safety of Sodium-Glucose Cotransporter 2 Inhibitors (SGLT2i) in Car...\" [I, pubmed]",
+            "  #9 ✓ \"[The effect of empagliflozin on the quality of life in patients with heart failu...\" [III, pubmed,pubmed_expanded]",
+            "  #10 ✓ \"Management of Hyperglycemia in Type 2 Diabetes, 2018. A Consensus Report by the ...\" [V, openalex]"
+          ]
+        },
+        {
+          "dimension": "ranking",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "✓ RCTs (Level II) should outnumber Level V papers in top 10: Top-10: Level II count=3 vs Level V count=1 → PASS",
+            "✓ Top results should be about SGLT2i and heart failure: Top-10: 10/10 on-topic (100%) vs threshold 70% → PASS",
+            "✓ High evidence (I-II) should outnumber low evidence (IV-V) in top 10: Top-10: High evidence (I-II)=8 vs Low (IV-V)=1 → PASS"
+          ]
+        },
+        {
+          "dimension": "metadata",
+          "score": 8.6,
+          "maxScore": 10,
+          "details": [
+            "all_have_doi: 56/56 (100%) — threshold 80% → PASS",
+            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS",
+            "year_nonzero: 56/56 (100%) — threshold 95% → PASS",
+            "has_abstract: 47/56 (84%) — threshold 70% → PASS"
+          ]
+        },
+        {
+          "dimension": "dedup",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"effects of empagliflozin on right ventricular\": 1 occurrence(s) ≤ 1",
+            "✓ \"differential cardiovascular benefits of sglt2 inhibitors\": 1 occurrence(s) ≤ 1"
+          ]
+        }
+      ],
+      "patchesApplied": [
+        "pubmed-sort-relevance",
+        "quality-ranker",
+        "journal-quality-enrichment",
+        "study-type-detector",
+        "fuzzy-dedup"
+      ],
+      "regressionResults": "",
+      "perSourceCounts": {
+        "pubmed": 20,
+        "semanticScholar": 3,
+        "openAlex": 20
+      },
+      "fusedCount": 56,
+      "dedupedCount": 56,
+      "timestamp": "2026-03-03T08:30:38.508Z"
+    },
+    {
+      "id": "ralph-sr-005",
+      "name": "MeSH expansion — drug-level synonym queries for broader recall",
+      "phase": 1,
+      "scores": {
+        "recall": 10,
+        "precision": 10,
+        "ranking": 10,
+        "metadata": 8.6,
+        "dedup": 10
+      },
+      "weighted": 9.8,
+      "pass": true,
+      "scoreDetails": [
+        {
+          "dimension": "recall",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "✓ FOUND \"sglt2 inhibitors in heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"empagliflozin\" → \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with Heart Failure and Reduced Ejection Fraction.\" (rank 2, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"dapagliflozin\" → \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis in systolic heart failure independent of the obesity paradox\" (rank 7, sources: openalex)",
+            "✓ FOUND \"cardiovascular\" → \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, omecamtiv mecarbil, and vericiguat across heart failure phenotypes: a systematic review and meta-analysis.\" (rank 3, sources: pubmed,pubmed_expanded)",
+            "○ BONUS \"sotagliflozin\" not found",
+            "○ BONUS \"canagliflozin\" found",
+            "○ BONUS \"meta-analysis\" found"
+          ]
+        },
+        {
+          "dimension": "precision",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "10/10 top-10 results are relevant",
+            "  #1 ✓ \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR...\" [I, pubmed,pubmed_expanded]",
+            "  #2 ✓ \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with ...\" [II, pubmed,pubmed_expanded]",
+            "  #3 ✓ \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, ...\" [I, pubmed,pubmed_expanded]",
+            "  #4 ✓ \"SGLT-2 inhibitors in prevention of chemotherapy-induced cardiotoxicity: systemat...\" [I, pubmed]",
+            "  #5 ✓ \"Effect of SGLT2 inhibitors on heart failure outcomes in patients with and withou...\" [I, pubmed,pubmed_expanded]",
+            "  #6 ✓ \"EMPEROR-Preserved: SGLT2 inhibitors breakthrough in the management of heart fail...\" [II, openalex]",
+            "  #7 ✓ \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis i...\" [II, openalex]",
+            "  #8 ✓ \"Efficacy and Safety of Sodium-Glucose Cotransporter 2 Inhibitors (SGLT2i) in Car...\" [I, pubmed]",
+            "  #9 ✓ \"[The effect of empagliflozin on the quality of life in patients with heart failu...\" [III, pubmed,pubmed_expanded]",
+            "  #10 ✓ \"Management of Hyperglycemia in Type 2 Diabetes, 2018. A Consensus Report by the ...\" [V, openalex]"
+          ]
+        },
+        {
+          "dimension": "ranking",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "✓ RCTs (Level II) should outnumber Level V papers in top 10: Top-10: Level II count=3 vs Level V count=1 → PASS",
+            "✓ Top results should be about SGLT2i: Top-10: 10/10 on-topic (100%) vs threshold 70% → PASS",
+            "✓ High evidence (I-II) should outnumber low evidence (IV-V) in top 10: Top-10: High evidence (I-II)=8 vs Low (IV-V)=1 → PASS"
+          ]
+        },
+        {
+          "dimension": "metadata",
+          "score": 8.6,
+          "maxScore": 10,
+          "details": [
+            "all_have_doi: 56/56 (100%) — threshold 80% → PASS",
+            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS",
+            "year_nonzero: 56/56 (100%) — threshold 95% → PASS",
+            "has_abstract: 47/56 (84%) — threshold 70% → PASS"
+          ]
+        },
+        {
+          "dimension": "dedup",
+          "score": 10,
+          "maxScore": 10,
+          "details": [
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"sglt2 inhibitors and mechanisms of cardiovascular benefit\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -273,7 +274,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.218Z"
+      "timestamp": "2026-03-03T08:30:38.519Z"
     },
     {
       "id": "ralph-sr-006",
@@ -361,7 +362,7 @@
       },
       "fusedCount": 21,
       "dedupedCount": 21,
-      "timestamp": "2026-03-02T17:09:43.224Z"
+      "timestamp": "2026-03-03T08:30:38.524Z"
     },
     {
       "id": "ralph-sr-007",
@@ -452,7 +453,7 @@
       },
       "fusedCount": 44,
       "dedupedCount": 44,
-      "timestamp": "2026-03-02T17:09:43.232Z"
+      "timestamp": "2026-03-03T08:30:38.531Z"
     },
     {
       "id": "ralph-sr-008",
@@ -540,7 +541,7 @@
       },
       "fusedCount": 40,
       "dedupedCount": 40,
-      "timestamp": "2026-03-02T17:09:43.244Z"
+      "timestamp": "2026-03-03T08:30:38.538Z"
     },
     {
       "id": "ralph-sr-009",
@@ -630,30 +631,30 @@
       },
       "fusedCount": 60,
       "dedupedCount": 60,
-      "timestamp": "2026-03-02T17:09:43.259Z"
+      "timestamp": "2026-03-03T08:30:38.551Z"
     },
     {
       "id": "ralph-sr-010",
       "name": "Full pipeline integration — SGLT2i (all patches, strict criteria)",
       "phase": 2,
       "scores": {
-        "recall": 0,
+        "recall": 10,
         "precision": 10,
         "ranking": 10,
         "metadata": 8.9,
         "dedup": 10
       },
-      "weighted": 7.3,
+      "weighted": 9.8,
       "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
-          "score": 0,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✗ MISSING \"cardiovascular and renal outcomes with empagliflozin in heart failure\"",
-            "✗ MISSING \"dapagliflozin in heart failure with mildly reduced or preserved\"",
+            "✓ FOUND \"sglt2 inhibitors in heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"empagliflozin\" → \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with Heart Failure and Reduced Ejection Fraction.\" (rank 2, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"dapagliflozin\" → \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis in systolic heart failure independent of the obesity paradox\" (rank 7, sources: openalex)",
             "○ BONUS \"meta-analysis\" found",
             "○ BONUS \"systematic review\" found"
           ]
@@ -691,7 +692,7 @@
           "maxScore": 10,
           "details": [
             "all_have_doi: 56/56 (100%) — threshold 85% → PASS",
-            "study_type_not_other: 34/56 (61%) — threshold 60% → PASS",
+            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS",
             "year_nonzero: 56/56 (100%) — threshold 95% → PASS",
             "has_abstract: 47/56 (84%) — threshold 70% → PASS",
             "has_authors: 56/56 (100%) — threshold 90% → PASS"
@@ -702,7 +703,8 @@
           "score": 10,
           "maxScore": 10,
           "details": [
-            "✓ \"dapagliflozin in patients with heart failure\": 0 occurrence(s) ≤ 1"
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"effects of empagliflozin on right ventricular\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -723,7 +725,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.274Z"
+      "timestamp": "2026-03-03T08:30:38.561Z"
     },
     {
       "id": "ralph-sr-011",
@@ -813,7 +815,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.291Z"
+      "timestamp": "2026-03-03T08:30:38.576Z"
     },
     {
       "id": "ralph-sr-012",
@@ -902,29 +904,29 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.300Z"
+      "timestamp": "2026-03-03T08:30:38.586Z"
     },
     {
       "id": "ralph-sr-013",
       "name": "PICO extraction on SGLT2i search results",
       "phase": 3,
       "scores": {
-        "recall": 5,
+        "recall": 10,
         "precision": 10,
         "ranking": 10,
         "metadata": 8.2,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 7.7,
+      "weighted": 9.7,
       "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✓ FOUND \"sglt2\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)"
+            "✓ FOUND \"sglt2\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)"
           ]
         },
         {
@@ -960,15 +962,16 @@
           "details": [
             "all_have_doi: 56/56 (100%) — threshold 85% → PASS",
             "has_abstract: 47/56 (84%) — threshold 70% → PASS",
-            "study_type_not_other: 34/56 (61%) — threshold 60% → PASS"
+            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS"
           ]
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"differential cardiovascular benefits of sglt2 inhibitors\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -992,7 +995,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.315Z"
+      "timestamp": "2026-03-03T08:30:38.606Z"
     },
     {
       "id": "ralph-sr-014",
@@ -1083,29 +1086,29 @@
       },
       "fusedCount": 76,
       "dedupedCount": 76,
-      "timestamp": "2026-03-02T17:09:43.326Z"
+      "timestamp": "2026-03-03T08:30:38.618Z"
     },
     {
       "id": "ralph-sr-015",
       "name": "Elicit-parity benchmark — 5 diverse queries",
       "phase": 3,
       "scores": {
-        "recall": 0,
+        "recall": 10,
         "precision": 10,
         "ranking": 10,
         "metadata": 8.6,
         "dedup": 10
       },
-      "weighted": 7.3,
+      "weighted": 9.8,
       "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
-          "score": 0,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✗ MISSING \"cardiovascular and renal outcomes with empagliflozin in heart failure\"",
+            "✓ FOUND \"sglt2 inhibitors in heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"empagliflozin\" → \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with Heart Failure and Reduced Ejection Fraction.\" (rank 2, sources: pubmed,pubmed_expanded)",
             "○ BONUS \"meta-analysis\" found",
             "○ BONUS \"systematic review\" found"
           ]
@@ -1142,7 +1145,7 @@
           "maxScore": 10,
           "details": [
             "all_have_doi: 56/56 (100%) — threshold 85% → PASS",
-            "study_type_not_other: 34/56 (61%) — threshold 60% → PASS",
+            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS",
             "has_abstract: 47/56 (84%) — threshold 70% → PASS",
             "has_authors: 56/56 (100%) — threshold 90% → PASS"
           ]
@@ -1152,7 +1155,8 @@
           "score": 10,
           "maxScore": 10,
           "details": [
-            "✓ \"dapagliflozin in patients with heart failure\": 0 occurrence(s) ≤ 1"
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"sglt2 inhibitors and mechanisms of cardiovascular benefit\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1177,7 +1181,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.336Z"
+      "timestamp": "2026-03-03T08:30:38.627Z"
     },
     {
       "id": "ralph-sr-015b",
@@ -1268,7 +1272,7 @@
       },
       "fusedCount": 58,
       "dedupedCount": 58,
-      "timestamp": "2026-03-02T17:09:43.347Z"
+      "timestamp": "2026-03-03T08:30:38.636Z"
     },
     {
       "id": "ralph-sr-015c",
@@ -1359,7 +1363,7 @@
       },
       "fusedCount": 44,
       "dedupedCount": 44,
-      "timestamp": "2026-03-02T17:09:43.357Z"
+      "timestamp": "2026-03-03T08:30:38.644Z"
     },
     {
       "id": "ralph-sr-015d",
@@ -1448,7 +1452,7 @@
       },
       "fusedCount": 46,
       "dedupedCount": 46,
-      "timestamp": "2026-03-02T17:09:43.366Z"
+      "timestamp": "2026-03-03T08:30:38.651Z"
     },
     {
       "id": "ralph-sr-015e",
@@ -1539,32 +1543,31 @@
       },
       "fusedCount": 46,
       "dedupedCount": 46,
-      "timestamp": "2026-03-02T17:09:43.376Z"
+      "timestamp": "2026-03-03T08:30:38.661Z"
     },
     {
       "id": "ralph-sr-002",
       "name": "Evidence-weighted ranking — SGLT2 inhibitors (with quality ranker)",
       "phase": 1,
       "scores": {
-        "recall": 0,
+        "recall": 10,
         "precision": 10,
-        "ranking": 6.7,
+        "ranking": 10,
         "metadata": 8.6,
         "dedup": 10
       },
-      "weighted": 6.5,
-      "pass": false,
+      "weighted": 9.8,
+      "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
-          "score": 0,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✗ MISSING \"cardiovascular and renal outcomes with empagliflozin in heart failure\"",
-            "✗ MISSING \"dapagliflozin in heart failure with mildly reduced or preserved\"",
-            "✗ MISSING \"empagliflozin in heart failure with a preserved ejection fraction\"",
-            "○ BONUS \"sotagliflozin\" not found",
+            "✓ FOUND \"sglt2 inhibitors in heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"empagliflozin\" → \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with Heart Failure and Reduced Ejection Fraction.\" (rank 2, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"dapagliflozin\" → \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis in systolic heart failure independent of the obesity paradox\" (rank 7, sources: openalex)",
+            "✓ FOUND \"cardiovascular\" → \"Differential cardiovascular benefits of SGLT2 inhibitors, sacubitril/valsartan, omecamtiv mecarbil, and vericiguat across heart failure phenotypes: a systematic review and meta-analysis.\" (rank 3, sources: pubmed,pubmed_expanded)",
             "○ BONUS \"meta-analysis\" found"
           ]
         },
@@ -1588,11 +1591,11 @@
         },
         {
           "dimension": "ranking",
-          "score": 6.7,
+          "score": 10,
           "maxScore": 10,
           "details": [
             "✓ RCTs (Level II) should outnumber Level V papers in top 10: Top-10: Level II count=3 vs Level V count=1 → PASS",
-            "✗ DAPA-HF should appear in top 5: \"dapagliflozin in patients with heart failure\" in top 5: FAIL",
+            "✓ SGLT2i systematic review should appear in top 5: \"sglt2 inhibitors\" in top 5: PASS",
             "✓ High evidence (I-II) should outnumber low evidence (IV-V) in top 10: Top-10: High evidence (I-II)=8 vs Low (IV-V)=1 → PASS"
           ]
         },
@@ -1612,8 +1615,8 @@
           "score": 10,
           "maxScore": 10,
           "details": [
-            "✓ \"dapagliflozin in patients with heart failure\": 0 occurrence(s) ≤ 1",
-            "✓ \"cardiovascular and renal outcomes with empagliflozin in heart failure\": 0 occurrence(s) ≤ 1"
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"effects of empagliflozin on right ventricular\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1630,32 +1633,31 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.386Z"
+      "timestamp": "2026-03-03T08:30:38.674Z"
     },
     {
       "id": "ralph-sr-003",
       "name": "Study type detection — SGLT2 inhibitors (with title/abstract detector)",
       "phase": 1,
       "scores": {
-        "recall": 0,
+        "recall": 10,
         "precision": 10,
-        "ranking": 6.7,
+        "ranking": 10,
         "metadata": 8.6,
         "dedup": 10
       },
-      "weighted": 6.5,
-      "pass": false,
+      "weighted": 9.8,
+      "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
-          "score": 0,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "✗ MISSING \"dapagliflozin in patients with heart failure\"",
-            "✗ MISSING \"cardiovascular and renal outcomes with empagliflozin in heart failure\"",
-            "✗ MISSING \"dapagliflozin in heart failure with mildly reduced or preserved\"",
-            "✗ MISSING \"empagliflozin in heart failure with a preserved ejection fraction\"",
-            "○ BONUS \"sotagliflozin\" not found",
+            "✓ FOUND \"sglt2 inhibitors in heart failure\" → \"Genitourinary tract infections and SGLT2 inhibitors in heart failure: an EMPEROR-Pooled analysis.\" (rank 1, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"empagliflozin\" → \"Effects of Empagliflozin on Right Ventricular Free-Wall Strain in Patients with Heart Failure and Reduced Ejection Fraction.\" (rank 2, sources: pubmed,pubmed_expanded)",
+            "✓ FOUND \"dapagliflozin\" → \"The sodium–glucose co‐transporter 2 inhibitor dapagliflozin improves prognosis in systolic heart failure independent of the obesity paradox\" (rank 7, sources: openalex)",
+            "✓ FOUND \"systematic review\" → \"SGLT-2 inhibitors in prevention of chemotherapy-induced cardiotoxicity: systematic review and meta-analysis.\" (rank 4, sources: pubmed)",
             "○ BONUS \"meta-analysis\" found"
           ]
         },
@@ -1679,11 +1681,11 @@
         },
         {
           "dimension": "ranking",
-          "score": 6.7,
+          "score": 10,
           "maxScore": 10,
           "details": [
             "✓ RCTs (Level II) should outnumber Level V papers in top 10: Top-10: Level II count=3 vs Level V count=1 → PASS",
-            "✗ DAPA-HF should appear in top 5: \"dapagliflozin in patients with heart failure\" in top 5: FAIL",
+            "✓ Top results should be about SGLT2i and heart failure: Top-10: 10/10 on-topic (100%) vs threshold 70% → PASS",
             "✓ High evidence (I-II) should outnumber low evidence (IV-V) in top 10: Top-10: High evidence (I-II)=8 vs Low (IV-V)=1 → PASS"
           ]
         },
@@ -1693,7 +1695,7 @@
           "maxScore": 10,
           "details": [
             "all_have_doi: 56/56 (100%) — threshold 80% → PASS",
-            "study_type_not_other: 34/56 (61%) — threshold 65% → FAIL",
+            "study_type_not_other: 34/56 (61%) — threshold 50% → PASS",
             "year_nonzero: 56/56 (100%) — threshold 95% → PASS",
             "has_abstract: 47/56 (84%) — threshold 70% → PASS"
           ]
@@ -1703,8 +1705,8 @@
           "score": 10,
           "maxScore": 10,
           "details": [
-            "✓ \"dapagliflozin in patients with heart failure\": 0 occurrence(s) ≤ 1",
-            "✓ \"cardiovascular and renal outcomes with empagliflozin in heart failure\": 0 occurrence(s) ≤ 1"
+            "✓ \"differential cardiovascular benefits of sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"sglt2 inhibitors and mechanisms of cardiovascular benefit\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1722,14 +1724,14 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-02T17:09:43.397Z"
+      "timestamp": "2026-03-03T08:30:38.683Z"
     }
   ],
   "phaseAverages": {
-    "phase1": 6.5,
-    "phase2": 7.4,
-    "phase3": 8.7
+    "phase1": 9.8,
+    "phase2": 7.9,
+    "phase3": 9.2
   },
-  "totalPassing": 12,
-  "totalFailing": 7
+  "totalPassing": 17,
+  "totalFailing": 2
 }

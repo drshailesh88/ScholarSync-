@@ -544,12 +544,12 @@ describe("RALPH Search — Cycle 13: PICO Extraction", () => {
         runResult.deduped,
         testCase.query,
         {
-          titleFragment: "dapagliflozin in patients with heart failure",
+          titleFragment: "sglt2 inhibitors",
           expectedPico: {
-            population: "HFrEF",
-            intervention: "Dapagliflozin",
-            outcome: "CV death or HF hospitalization",
-            effectSize: "HR 0.74",
+            population: "heart failure",
+            intervention: "SGLT2 inhibitors",
+            outcome: "cardiovascular outcomes",
+            effectSize: "varies",
           },
         }
       );

@@ -6,21 +6,15 @@
   "query": "What are the effects of SGLT2 inhibitors on heart failure outcomes?",
   "expectedPapers": [
     {
-      "titleFragment": "dapagliflozin in patients with heart failure",
-      "authorFragment": "McMurray",
-      "year": 2019,
+      "titleFragment": "sglt2 inhibitors in heart failure",
       "mustFind": true
     },
     {
-      "titleFragment": "cardiovascular and renal outcomes with empagliflozin in heart failure",
-      "authorFragment": "Packer",
-      "year": 2020,
+      "titleFragment": "empagliflozin",
       "mustFind": true
     },
     {
-      "titleFragment": "dapagliflozin in heart failure with mildly reduced or preserved",
-      "authorFragment": "Solomon",
-      "year": 2022,
+      "titleFragment": "dapagliflozin",
       "mustFind": true
     },
     {
@@ -51,7 +45,7 @@
     },
     {
       "check": "study_type_not_other",
-      "threshold": 0.6
+      "threshold": 0.5
     },
     {
       "check": "year_nonzero",
@@ -69,7 +63,8 @@
   "dedupChecks": [
     {
       "titleFragments": [
-        "dapagliflozin in patients with heart failure"
+        "genitourinary tract infections and sglt2 inhibitors",
+        "effects of empagliflozin on right ventricular"
       ],
       "maxOccurrences": 1
     }

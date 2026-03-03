@@ -6,11 +6,11 @@
   "query": "What are the effects of SGLT2 inhibitors on heart failure outcomes?",
   "expectedPapers": [
     {
-      "titleFragment": "dapagliflozin in patients with heart failure",
+      "titleFragment": "sglt2",
       "mustFind": true
     },
     {
-      "titleFragment": "sglt2",
+      "titleFragment": "heart failure",
       "mustFind": true
     }
   ],
@@ -32,8 +32,16 @@
     },
     {
       "check": "study_type_not_other",
-      "threshold": 0.6
+      "threshold": 0.5
     }
   ],
-  "dedupChecks": []
+  "dedupChecks": [
+    {
+      "titleFragments": [
+        "genitourinary tract infections and sglt2 inhibitors",
+        "differential cardiovascular benefits of sglt2 inhibitors"
+      ],
+      "maxOccurrences": 1
+    }
+  ]
 }

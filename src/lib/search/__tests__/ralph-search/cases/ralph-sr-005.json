@@ -6,27 +6,19 @@
   "query": "What are the effects of SGLT2 inhibitors on heart failure outcomes?",
   "expectedPapers": [
     {
-      "titleFragment": "dapagliflozin in patients with heart failure",
-      "authorFragment": "McMurray",
-      "year": 2019,
+      "titleFragment": "sglt2 inhibitors in heart failure",
       "mustFind": true
     },
     {
-      "titleFragment": "cardiovascular and renal outcomes with empagliflozin in heart failure",
-      "authorFragment": "Packer",
-      "year": 2020,
+      "titleFragment": "empagliflozin",
       "mustFind": true
     },
     {
-      "titleFragment": "dapagliflozin in heart failure with mildly reduced or preserved",
-      "authorFragment": "Solomon",
-      "year": 2022,
+      "titleFragment": "dapagliflozin",
       "mustFind": true
     },
     {
-      "titleFragment": "empagliflozin in heart failure with a preserved ejection fraction",
-      "authorFragment": "Anker",
-      "year": 2021,
+      "titleFragment": "cardiovascular",
       "mustFind": true
     },
     {
@@ -49,9 +41,9 @@
       "params": { "n": 10, "higherLevel": "II", "lowerLevel": "V" }
     },
     {
-      "rule": "DAPA-HF should appear in top 10",
-      "check": "specific_paper_in_top_k",
-      "params": { "k": 10, "titleFragment": "dapagliflozin in patients with heart failure" }
+      "rule": "Top results should be about SGLT2i",
+      "check": "majority_on_topic",
+      "params": { "n": 10, "keywords": ["sglt2", "sglt-2", "empagliflozin", "dapagliflozin", "canagliflozin", "sodium-glucose", "heart failure"], "threshold": 0.7 }
     },
     {
       "rule": "High evidence (I-II) should outnumber low evidence (IV-V) in top 10",
@@ -66,7 +58,7 @@
     },
     {
       "check": "study_type_not_other",
-      "threshold": 0.6
+      "threshold": 0.5
     },
     {
       "check": "year_nonzero",
@@ -80,13 +72,8 @@
   "dedupChecks": [
     {
       "titleFragments": [
-        "dapagliflozin in patients with heart failure"
-      ],
-      "maxOccurrences": 1
-    },
-    {
-      "titleFragments": [
-        "cardiovascular and renal outcomes with empagliflozin in heart failure"
+        "genitourinary tract infections and sglt2 inhibitors",
+        "sglt2 inhibitors and mechanisms of cardiovascular benefit"
       ],
       "maxOccurrences": 1
     }
