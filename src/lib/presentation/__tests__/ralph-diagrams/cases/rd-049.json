@@ -1,0 +1,38 @@
+{
+  "id": "rd-049",
+  "name": "Edge Case — Long Text Content in Descriptions",
+  "category": "edge_case",
+  "difficulty": "hard",
+  "napkinFeature": "auto_layout",
+  "input": "Create a comparison of three statistical tests with detailed descriptions (>100 chars each): Student's t-test with full explanation, ANOVA with assumptions and use cases, Chi-squared test with contingency table context.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "comparison",
+  "expectedItemCount": 3,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (comparison)",
+    "Valid schema structure",
+    "Title is present",
+    "Item count at least 3",
+    "All labels are meaningful",
+    "Description set on each item",
+    "Side-by-side column structure",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "Comparison with long-form descriptions that maintain readability and layout.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "comparison",
+      "title": "Statistical Test Comparison Guide",
+      "items": [
+        { "label": "Student's t-test", "description": "Compares means of two groups assuming normal distribution and equal variances. Used for continuous outcomes with independent or paired samples. Effect size measured via Cohen's d." },
+        { "label": "ANOVA", "description": "Analysis of variance comparing means across three or more groups simultaneously. Assumes normality, homoscedasticity, and independence. Post-hoc tests (Tukey, Bonferroni) identify specific group differences." },
+        { "label": "Chi-squared Test", "description": "Tests association between categorical variables using contingency tables. Compares observed vs expected frequencies under null hypothesis of independence. Requires expected cell counts of at least 5 for validity." }
+      ],
+      "colorScheme": "blue",
+      "caption": "Detailed comparison of parametric and non-parametric statistical tests"
+    }
+  }
+}

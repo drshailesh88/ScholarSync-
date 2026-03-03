@@ -1,0 +1,43 @@
+{
+  "id": "rd-044",
+  "name": "Cycle Diagram — Krebs Cycle with Values",
+  "category": "advanced_infographic",
+  "difficulty": "hard",
+  "napkinFeature": "cycle_diagrams",
+  "input": "Create a cycle diagram of the Krebs cycle: Acetyl-CoA → Citrate → Isocitrate → α-Ketoglutarate → Succinyl-CoA → Succinate → Fumarate → Malate → Oxaloacetate → back to Citrate.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "cycle",
+  "expectedItemCount": 9,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (cycle)",
+    "Valid schema structure",
+    "Title is present",
+    "Item count at least 8",
+    "All labels are meaningful",
+    "Circular flow between stages",
+    "No placeholder or lorem ipsum content",
+    "Caption is present"
+  ],
+  "napkinBenchmark": "Complex biochemistry cycle with 9 stages showing circular flow.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "cycle",
+      "title": "Krebs Cycle (Citric Acid Cycle)",
+      "items": [
+        { "label": "Acetyl-CoA", "description": "Entry point, 2-carbon acetyl group combines with oxaloacetate", "icon": "🔬" },
+        { "label": "Citrate", "description": "6-carbon molecule formed from acetyl-CoA and oxaloacetate", "icon": "🧪" },
+        { "label": "Isocitrate", "description": "Isomerization of citrate via aconitase", "icon": "🔄" },
+        { "label": "α-Ketoglutarate", "description": "Oxidative decarboxylation releases CO₂, produces NADH", "icon": "⚗️" },
+        { "label": "Succinyl-CoA", "description": "Second CO₂ released, another NADH produced", "icon": "🧬" },
+        { "label": "Succinate", "description": "Substrate-level phosphorylation produces GTP/ATP", "icon": "⚡" },
+        { "label": "Fumarate", "description": "FAD reduced to FADH₂ via succinate dehydrogenase", "icon": "🔋" },
+        { "label": "Malate", "description": "Hydration of fumarate by fumarase", "icon": "💧" },
+        { "label": "Oxaloacetate", "description": "Regenerated, ready to accept next acetyl-CoA", "icon": "♻️" }
+      ],
+      "colorScheme": "green",
+      "caption": "The citric acid cycle showing all 9 intermediates in mitochondrial matrix"
+    }
+  }
+}
