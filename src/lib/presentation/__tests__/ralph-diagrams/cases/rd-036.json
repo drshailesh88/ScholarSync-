@@ -1,0 +1,34 @@
+{
+  "id": "rd-036",
+  "name": "Edge Case — Empty/Minimal Content Infographic",
+  "category": "edge_case",
+  "difficulty": "easy",
+  "napkinFeature": "auto_layout",
+  "input": "Create a simple comparison with just 2 items: Pros and Cons.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "comparison",
+  "expectedItemCount": 2,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (comparison)",
+    "Valid schema structure",
+    "Title is present",
+    "Item count at least 2",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Minimal 2-item comparison that renders cleanly without layout issues.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "comparison",
+      "title": "Pros and Cons",
+      "items": [
+        { "label": "Pros", "description": "Advantages and benefits of the approach" },
+        { "label": "Cons", "description": "Disadvantages and limitations to consider" }
+      ],
+      "colorScheme": "green",
+      "caption": "Simple pros and cons comparison"
+    }
+  }
+}

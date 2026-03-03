@@ -1,0 +1,29 @@
+{
+  "id": "rd-035",
+  "name": "Mermaid Quadrant Chart — Research Method Selection",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "quadrant_charts",
+  "input": "Create a quadrant chart for selecting research methods based on cost and sample size.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "quadrantChart",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (quadrantChart)",
+    "Valid Mermaid syntax",
+    "Contains axis labels",
+    "Contains data points",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "2x2 quadrant chart with labeled axes and positioned data points.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "quadrantChart",
+      "syntax": "quadrantChart\n    title Research Method Selection\n    x-axis Low Cost --> High Cost\n    y-axis Small Sample --> Large Sample\n    quadrant-1 Population Studies\n    quadrant-2 Large-Scale Trials\n    quadrant-3 Exploratory Research\n    quadrant-4 Precision Studies\n    Surveys: [0.2, 0.8]\n    Questionnaires: [0.3, 0.7]\n    RCTs: [0.8, 0.9]\n    Cohort Studies: [0.7, 0.8]\n    Case Studies: [0.2, 0.2]\n    Literature Reviews: [0.1, 0.3]\n    Lab Experiments: [0.8, 0.3]\n    Genetic Studies: [0.9, 0.2]",
+      "caption": "Research method selection based on cost and sample size requirements"
+    }
+  }
+}

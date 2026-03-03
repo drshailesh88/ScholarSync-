@@ -527,6 +527,119 @@ function assessQuality(
       } else {
         criteriaResults[criterion] = true;
       }
+    } else if (lower.includes("valid mermaid syntax")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        const validation = validateMermaidSyntax(data.syntax, testCase.expectedVisualType);
+        criteriaResults[criterion] = validation.valid;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("node count") && lower.includes("at least")) {
+      const minCount = parseInt(criterion.match(/(\d+)/)?.[1] ?? "3");
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        const validation = validateMermaidSyntax(data.syntax, testCase.expectedVisualType);
+        criteriaResults[criterion] = validation.nodeCount >= minCount;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("no smart quotes")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = !/[\u201C\u201D\u2018\u2019]/.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = true;
+      }
+    } else if (lower.includes("decision") && lower.includes("diamond")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /\{[^}]+\}/.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("participant") && lower.includes("declaration")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /participant\s+\w+/i.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("arrow") && lower.includes("interaction")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /->>|-->>|->|-->/.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("section") && lower.includes("task") && lower.includes("declaration")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /section\s+\w+/i.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("hierarchical") && lower.includes("node") && lower.includes("structure")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        const lines = data.syntax.split("\n").filter(l => l.trim().length > 0);
+        criteriaResults[criterion] = lines.length >= 5;
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("entity") && lower.includes("definition")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /\w+\s*\{/.test(data.syntax) && /\w+\s+(int|string|date|float|boolean)/i.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("relationship") && lower.includes("line")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /\|\|--|--o\{|--\|\||o--/.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("state") && lower.includes("transition")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /-->/.test(data.syntax) && /\[\*\]|state\s/.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("dated") && lower.includes("entr")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /\d{3,4}\s*:/.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("axis") && lower.includes("label")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /x-axis|y-axis/i.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("data") && lower.includes("point")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /\[\s*[\d.]+\s*,\s*[\d.]+\s*\]/.test(data.syntax);
+      } else {
+        criteriaResults[criterion] = false;
+      }
+    } else if (lower.includes("numeric") && lower.includes("value") && !lower.includes("preserved")) {
+      if (block.type === "diagram") {
+        const data = block.data as DiagramData;
+        criteriaResults[criterion] = /\d+/.test(data.syntax);
+      } else if (block.type === "infographic") {
+        const data = block.data as InfographicData;
+        const allText = data.items.map(i => `${i.value ?? ""} ${i.description ?? ""}`).join(" ");
+        criteriaResults[criterion] = /\d+/.test(allText);
+      } else {
+        criteriaResults[criterion] = false;
+      }
     } else {
       // Default: mark as passed (unknown criterion)
       criteriaResults[criterion] = true;

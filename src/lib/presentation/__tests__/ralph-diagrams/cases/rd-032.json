@@ -1,0 +1,28 @@
+{
+  "id": "rd-032",
+  "name": "Mermaid State Diagram — Patient Treatment States",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "state_diagrams",
+  "input": "Create a state diagram showing patient treatment states: Initial Assessment, Diagnosed, Treatment Planning, Active Treatment, Monitoring, Remission or Relapse paths.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "stateDiagram",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (stateDiagram)",
+    "Valid Mermaid syntax",
+    "Contains state transitions",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "State machine with transitions, branching paths, and circular loops.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "stateDiagram",
+      "syntax": "stateDiagram-v2\n    [*] --> Assessment\n    Assessment --> Diagnosed\n    Diagnosed --> Planning: Treatment plan\n    Planning --> ActiveTx: Begin treatment\n    ActiveTx --> Monitoring: Complete cycle\n    Monitoring --> Remission: Positive response\n    Monitoring --> Relapse: Disease progression\n    Relapse --> Planning: Revise plan\n    Remission --> FollowUp: Stable\n    Remission --> ActiveTx: Recurrence\n    FollowUp --> [*]: Discharged",
+      "caption": "Patient treatment state machine showing progression and relapse pathways"
+    }
+  }
+}

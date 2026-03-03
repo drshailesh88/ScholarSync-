@@ -1,0 +1,28 @@
+{
+  "id": "rd-034",
+  "name": "Mermaid Journey — Patient Experience Through Clinical Trial",
+  "category": "mermaid_diagram",
+  "difficulty": "medium",
+  "napkinFeature": "journey_maps",
+  "input": "Create a user journey diagram showing a patient experience through a clinical trial with satisfaction ratings.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "journey",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (journey)",
+    "Valid Mermaid syntax",
+    "Contains section and task declarations",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "User journey map with phases, touchpoints, and satisfaction ratings.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "journey",
+      "syntax": "journey\n    title Patient Clinical Trial Experience\n    section Screening\n      Learn about trial: 3: Patient\n      Consent process: 4: Patient, Coordinator\n      Eligibility tests: 2: Patient, Lab\n    section Enrollment\n      Randomization: 3: Patient, Coordinator\n      Baseline tests: 4: Patient, Lab\n    section Treatment\n      Receive medication: 5: Patient, Pharmacist\n      Report side effects: 2: Patient\n      Follow-up visits: 4: Patient, Physician\n    section Completion\n      Final assessment: 4: Patient, Physician\n      Unblinding: 5: Patient, Coordinator\n      Results shared: 5: Patient",
+      "caption": "Patient journey through clinical trial phases with satisfaction scores"
+    }
+  }
+}

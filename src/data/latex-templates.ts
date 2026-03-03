@@ -535,3 +535,11 @@ Additional details, proofs, or data tables.
 export function getTemplate(id: string): LatexTemplate | null {
   return LATEX_TEMPLATES[id] ?? null;
 }
+
+export function getTemplateIds(): string[] {
+  return Object.keys(LATEX_TEMPLATES);
+}
+
+export function getAllTemplates(): LatexTemplate[] {
+  return Object.values(LATEX_TEMPLATES);
+}

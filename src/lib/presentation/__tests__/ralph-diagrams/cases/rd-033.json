@@ -1,0 +1,28 @@
+{
+  "id": "rd-033",
+  "name": "Mermaid Timeline — History of Vaccine Development",
+  "category": "mermaid_diagram",
+  "difficulty": "medium",
+  "napkinFeature": "timeline_charts",
+  "input": "Create a timeline showing vaccine development milestones from 1796 to 2020.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "timeline",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (timeline)",
+    "Valid Mermaid syntax",
+    "Contains dated entries",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Chronological timeline with dated milestones and brief descriptions.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "timeline",
+      "syntax": "timeline\n    title History of Vaccine Development\n    1796 : Smallpox vaccine\n         : Edward Jenner\n    1885 : Rabies vaccine\n         : Louis Pasteur\n    1921 : BCG tuberculosis vaccine\n    1955 : Polio vaccine\n         : Jonas Salk\n    1971 : MMR combined vaccine\n    2020 : COVID-19 mRNA vaccines\n         : Pfizer and Moderna",
+      "caption": "Key milestones in the history of vaccine development from 1796 to 2020"
+    }
+  }
+}
