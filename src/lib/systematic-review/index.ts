@@ -314,3 +314,23 @@ export {
   type NMAStudy,
   type NMAResult,
 } from "./network-meta-analysis";
+
+// ---------------------------------------------------------------------------
+// Newcastle-Ottawa Scale — Quality assessment for observational studies
+// ---------------------------------------------------------------------------
+
+export {
+  getNOSItems,
+  computeQualityRating,
+  scoreNOSAssessment,
+  exportNOSSummaryCSV,
+  generateStarDisplay,
+  NOS_COHORT_ITEMS,
+  NOS_CASE_CONTROL_ITEMS,
+  type NOSStudyDesign,
+  type NOSQualityRating,
+  type NOSItem,
+  type NOSItemOption,
+  type NOSItemResult,
+  type NOSAssessment,
+} from "./newcastle-ottawa";
