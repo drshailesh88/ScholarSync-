@@ -3,13 +3,11 @@
 // Server-only: do NOT import this file in "use client" components.
 // ============================================================================
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { Cite } = require("@citation-js/core");
-require("@citation-js/plugin-csl");
-require("@citation-js/plugin-bibtex");
-require("@citation-js/plugin-ris");
-require("@citation-js/plugin-doi");
-/* eslint-enable @typescript-eslint/no-require-imports */
+import { Cite } from "@citation-js/core";
+import "@citation-js/plugin-csl";
+import "@citation-js/plugin-bibtex";
+import "@citation-js/plugin-ris";
+import "@citation-js/plugin-doi";
 
 import type { ParsedReference, ReferenceType } from "./types";
 

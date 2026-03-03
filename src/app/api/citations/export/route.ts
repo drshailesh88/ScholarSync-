@@ -12,13 +12,11 @@
  * POST /api/citations/export  { results: UnifiedSearchResult[], format: string }
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { Cite } = require("@citation-js/core");
-require("@citation-js/plugin-csl");
-require("@citation-js/plugin-bibtex");
-require("@citation-js/plugin-doi");
-require("@citation-js/plugin-ris");
-/* eslint-enable @typescript-eslint/no-require-imports */
+import { Cite } from "@citation-js/core";
+import "@citation-js/plugin-csl";
+import "@citation-js/plugin-bibtex";
+import "@citation-js/plugin-doi";
+import "@citation-js/plugin-ris";
 
 import { NextResponse } from "next/server";
 import type { UnifiedSearchResult } from "@/types/search";

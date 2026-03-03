@@ -6,10 +6,8 @@
  * For v1, supports Vancouver (numeric) formatting.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { Cite, plugins: _plugins } = require("@citation-js/core");
-require("@citation-js/plugin-csl");
-/* eslint-enable @typescript-eslint/no-require-imports */
+import { Cite, plugins as _plugins } from "@citation-js/core";
+import "@citation-js/plugin-csl";
 
 import type {
   Reference,

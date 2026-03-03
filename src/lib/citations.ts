@@ -7,11 +7,9 @@
  * This is a plain server-side utility module -- no "use server" directive.
  */
 
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { Cite, plugins } = require("@citation-js/core");
-require("@citation-js/plugin-csl");
-require("@citation-js/plugin-bibtex");
-/* eslint-enable @typescript-eslint/no-require-imports */
+import { Cite, plugins } from "@citation-js/core";
+import "@citation-js/plugin-csl";
+import "@citation-js/plugin-bibtex";
 
 // ---------------------------------------------------------------------------
 // Types
