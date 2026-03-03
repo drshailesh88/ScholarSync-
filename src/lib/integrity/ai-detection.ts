@@ -338,8 +338,10 @@ export function computeTextStatistics(text: string): TextStatistics {
     ) / sentenceCount;
   const sentenceLengthStdDev = Math.sqrt(variance);
 
-  // 3. Type-token ratio
-  const uniqueWords = new Set(allWords.map((w) => w.toLowerCase()));
+  // 3. Type-token ratio (strip punctuation for accurate uniqueness)
+  const uniqueWords = new Set(
+    allWords.map((w) => w.toLowerCase().replace(/[^a-z0-9]/g, "")).filter(Boolean)
+  );
   const typeTokenRatio = uniqueWords.size / totalWords;
 
   // 4. Passive voice percentage

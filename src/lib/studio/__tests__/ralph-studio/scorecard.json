@@ -1,0 +1,1297 @@
+{
+  "lastUpdated": "2026-03-03T08:43:30.456Z",
+  "currentCycle": 9,
+  "totalCases": 45,
+  "passing": 45,
+  "failing": 0,
+  "averageScore": 10,
+  "cases": [
+    {
+      "caseId": "ralph-studio-001",
+      "caseName": "addReference and retrieval",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.384Z",
+      "checks": [
+        {
+          "name": "Reference added to map",
+          "passed": true
+        },
+        {
+          "name": "Reference retrievable by id",
+          "passed": true
+        },
+        {
+          "name": "Multiple references coexist",
+          "passed": true
+        },
+        {
+          "name": "Duplicate add overwrites (no extra entry)",
+          "passed": true
+        },
+        {
+          "name": "Overwritten reference has updated title",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-002",
+      "caseName": "addReferences batch insert",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.387Z",
+      "checks": [
+        {
+          "name": "Batch add inserts all references",
+          "passed": true
+        },
+        {
+          "name": "Each reference retrievable",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-003",
+      "caseName": "updateReference partial update",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.389Z",
+      "checks": [
+        {
+          "name": "Title updated",
+          "passed": true
+        },
+        {
+          "name": "Year updated",
+          "passed": true
+        },
+        {
+          "name": "Other fields preserved",
+          "passed": true
+        },
+        {
+          "name": "Update non-existent ref is no-op",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-004",
+      "caseName": "removeReference",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.391Z",
+      "checks": [
+        {
+          "name": "Reference removed",
+          "passed": true
+        },
+        {
+          "name": "Other references preserved",
+          "passed": true
+        },
+        {
+          "name": "Remove non-existent is no-op",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-005",
+      "caseName": "clearReferences resets all citation state",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.392Z",
+      "checks": [
+        {
+          "name": "References cleared",
+          "passed": true
+        },
+        {
+          "name": "Number map cleared",
+          "passed": true
+        },
+        {
+          "name": "Bibliography entries cleared",
+          "passed": true
+        },
+        {
+          "name": "Citation display map cleared",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-006",
+      "caseName": "citation style switching",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.392Z",
+      "checks": [
+        {
+          "name": "Default style is vancouver",
+          "passed": true
+        },
+        {
+          "name": "Style switches to APA",
+          "passed": true
+        },
+        {
+          "name": "Style switches to IEEE",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-007",
+      "caseName": "sidebar and dialog toggles",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.393Z",
+      "checks": [
+        {
+          "name": "Sidebar starts closed",
+          "passed": true
+        },
+        {
+          "name": "Citation dialog starts closed",
+          "passed": true
+        },
+        {
+          "name": "Toggle opens sidebar",
+          "passed": true
+        },
+        {
+          "name": "Toggle closes sidebar",
+          "passed": true
+        },
+        {
+          "name": "setSidebarOpen(true) works",
+          "passed": true
+        },
+        {
+          "name": "openCitationDialog opens it",
+          "passed": true
+        },
+        {
+          "name": "closeCitationDialog closes it",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-008",
+      "caseName": "referenceNumberMap and citationDisplayMap",
+      "category": "reference-store",
+      "timestamp": "2026-03-03T08:43:30.394Z",
+      "checks": [
+        {
+          "name": "Number map stored correctly",
+          "passed": true
+        },
+        {
+          "name": "Number map values correct",
+          "passed": true
+        },
+        {
+          "name": "Citation display map stored",
+          "passed": true
+        },
+        {
+          "name": "Display text correct",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-018",
+      "caseName": "guide stages ordered correctly",
+      "category": "types",
+      "timestamp": "2026-03-03T08:43:30.430Z",
+      "checks": [
+        {
+          "name": "6 guide stages defined",
+          "passed": true
+        },
+        {
+          "name": "Stages in correct order",
+          "passed": true
+        },
+        {
+          "name": "All stages have labels",
+          "passed": true
+        },
+        {
+          "name": "Document type labels defined",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-019",
+      "caseName": "draft mode types and labels",
+      "category": "types",
+      "timestamp": "2026-03-03T08:43:30.434Z",
+      "checks": [
+        {
+          "name": "All 3 modes have labels",
+          "passed": true
+        },
+        {
+          "name": "All 3 modes have descriptions",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-020",
+      "caseName": "citation type definitions",
+      "category": "types",
+      "timestamp": "2026-03-03T08:43:30.437Z",
+      "checks": [
+        {
+          "name": "Citation types module loads",
+          "passed": true
+        },
+        {
+          "name": "Valid reference object constructable",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-021",
+      "caseName": "save status state machine",
+      "category": "page-logic",
+      "timestamp": "2026-03-03T08:43:30.438Z",
+      "checks": [
+        {
+          "name": "5 valid status transitions defined",
+          "passed": true
+        },
+        {
+          "name": "All 5 SaveStatus values valid",
+          "passed": true
+        },
+        {
+          "name": "SaveIndicator covers all statuses (4 cases + default)",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-022",
+      "caseName": "citedSourcesList computation",
+      "category": "page-logic",
+      "timestamp": "2026-03-03T08:43:30.438Z",
+      "checks": [
+        {
+          "name": "Cited sources capped at 5",
+          "passed": true
+        },
+        {
+          "name": "Sources sorted by number",
+          "passed": true
+        },
+        {
+          "name": "Author extracted correctly",
+          "passed": true
+        },
+        {
+          "name": "Empty number map produces empty list",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-023",
+      "caseName": "AI panel tab definitions",
+      "category": "page-logic",
+      "timestamp": "2026-03-03T08:43:30.439Z",
+      "checks": [
+        {
+          "name": "3 AI panel tabs defined",
+          "passed": true
+        },
+        {
+          "name": "Tab keys are valid",
+          "passed": true
+        },
+        {
+          "name": "All tabs have non-empty labels",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-024",
+      "caseName": "slash command action mapping",
+      "category": "page-logic",
+      "timestamp": "2026-03-03T08:43:30.440Z",
+      "checks": [
+        {
+          "name": "5 slash command actions defined",
+          "passed": true
+        },
+        {
+          "name": "3 actions route to chat",
+          "passed": true
+        },
+        {
+          "name": "2 actions route to sidebars/tabs",
+          "passed": true
+        },
+        {
+          "name": "continue action includes context",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-025",
+      "caseName": "chat message ID generation",
+      "category": "page-logic",
+      "timestamp": "2026-03-03T08:43:30.440Z",
+      "checks": [
+        {
+          "name": "Message IDs have msg_ prefix",
+          "passed": true
+        },
+        {
+          "name": "Message IDs are unique",
+          "passed": true
+        },
+        {
+          "name": "User and assistant IDs differ",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-026",
+      "caseName": "export filename sanitization",
+      "category": "page-logic",
+      "timestamp": "2026-03-03T08:43:30.441Z",
+      "checks": [
+        {
+          "name": "Simple title unchanged",
+          "passed": true
+        },
+        {
+          "name": "Spaces become underscores",
+          "passed": true
+        },
+        {
+          "name": "Special chars become underscores",
+          "passed": true
+        },
+        {
+          "name": "Empty title produces empty string",
+          "passed": true
+        },
+        {
+          "name": "Unicode chars become underscores",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-027",
+      "caseName": "basic heading parsing",
+      "category": "export-pdf",
+      "timestamp": "2026-03-03T08:43:30.443Z",
+      "checks": [
+        {
+          "name": "4 blocks parsed",
+          "passed": true
+        },
+        {
+          "name": "h1 mapped to h2",
+          "passed": true
+        },
+        {
+          "name": "p mapped to body",
+          "passed": true
+        },
+        {
+          "name": "h2 mapped to h2",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-028",
+      "caseName": "HTML entity decoding",
+      "category": "export-pdf",
+      "timestamp": "2026-03-03T08:43:30.443Z",
+      "checks": [
+        {
+          "name": "1 block parsed",
+          "passed": true
+        },
+        {
+          "name": "Entities decoded",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-029",
+      "caseName": "inline tags stripped",
+      "category": "export-pdf",
+      "timestamp": "2026-03-03T08:43:30.444Z",
+      "checks": [
+        {
+          "name": "1 block parsed",
+          "passed": true
+        },
+        {
+          "name": "Inline tags stripped",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-030",
+      "caseName": "empty elements skipped",
+      "category": "export-pdf",
+      "timestamp": "2026-03-03T08:43:30.445Z",
+      "checks": [
+        {
+          "name": "Empty paragraphs skipped",
+          "passed": true
+        },
+        {
+          "name": "Content paragraphs preserved",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-031",
+      "caseName": "h3-h6 heading mapping",
+      "category": "export-pdf",
+      "timestamp": "2026-03-03T08:43:30.446Z",
+      "checks": [
+        {
+          "name": "All 4 headings parsed",
+          "passed": true
+        },
+        {
+          "name": "h3 to h3",
+          "passed": true
+        },
+        {
+          "name": "h4 to h3",
+          "passed": true
+        },
+        {
+          "name": "h5 to h3",
+          "passed": true
+        },
+        {
+          "name": "h6 to h3",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-032",
+      "caseName": "PDF text sanitization",
+      "category": "export-pdf",
+      "timestamp": "2026-03-03T08:43:30.447Z",
+      "checks": [
+        {
+          "name": "Smart single quotes converted",
+          "passed": true
+        },
+        {
+          "name": "Smart double quotes converted",
+          "passed": true
+        },
+        {
+          "name": "Em dash converted",
+          "passed": true
+        },
+        {
+          "name": "En dash converted",
+          "passed": true
+        },
+        {
+          "name": "Non-Latin-1 stripped",
+          "passed": true
+        },
+        {
+          "name": "Latin-1 preserved",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-036",
+      "caseName": "inline formatting detection",
+      "category": "export-docx",
+      "timestamp": "2026-03-03T08:43:30.450Z",
+      "checks": [
+        {
+          "name": "Multiple runs created",
+          "passed": true
+        },
+        {
+          "name": "First run is plain",
+          "passed": true
+        },
+        {
+          "name": "Bold detected",
+          "passed": true
+        },
+        {
+          "name": "Italic detected",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-037",
+      "caseName": "br tag handling",
+      "category": "export-docx",
+      "timestamp": "2026-03-03T08:43:30.451Z",
+      "checks": [
+        {
+          "name": "br tags create newline runs",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-038",
+      "caseName": "HTML-to-DOCX block mapping",
+      "category": "export-docx",
+      "timestamp": "2026-03-03T08:43:30.451Z",
+      "checks": [
+        {
+          "name": "h1 to HEADING_1",
+          "passed": true
+        },
+        {
+          "name": "h2 to HEADING_2",
+          "passed": true
+        },
+        {
+          "name": "h3 to HEADING_3",
+          "passed": true
+        },
+        {
+          "name": "Body tags mapped",
+          "passed": true
+        },
+        {
+          "name": "List tags mapped",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-039",
+      "caseName": "localStorage draft fallback logic",
+      "category": "edge-cases",
+      "timestamp": "2026-03-03T08:43:30.452Z",
+      "checks": [
+        {
+          "name": "Draft has content",
+          "passed": true
+        },
+        {
+          "name": "Draft has plainText",
+          "passed": true
+        },
+        {
+          "name": "Draft has wordCount",
+          "passed": true
+        },
+        {
+          "name": "Draft has timestamp",
+          "passed": true
+        },
+        {
+          "name": "Draft has title",
+          "passed": true
+        },
+        {
+          "name": "Word count for empty string is 0",
+          "passed": true
+        },
+        {
+          "name": "Word count handles multiple spaces",
+          "passed": true
+        },
+        {
+          "name": "Word count for single word",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-040",
+      "caseName": "project selector edge cases",
+      "category": "edge-cases",
+      "timestamp": "2026-03-03T08:43:30.452Z",
+      "checks": [
+        {
+          "name": "0 projects: selector hidden",
+          "passed": true
+        },
+        {
+          "name": "1 project: selector hidden",
+          "passed": true
+        },
+        {
+          "name": "2 projects: selector shown",
+          "passed": true
+        },
+        {
+          "name": "Selected project found",
+          "passed": true
+        },
+        {
+          "name": "No match falls back gracefully",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-041",
+      "caseName": "chat body construction",
+      "category": "edge-cases",
+      "timestamp": "2026-03-03T08:43:30.453Z",
+      "checks": [
+        {
+          "name": "Learn mode sets mode correctly",
+          "passed": true
+        },
+        {
+          "name": "Guide context included",
+          "passed": true
+        },
+        {
+          "name": "Guide stage included",
+          "passed": true
+        },
+        {
+          "name": "Project title included",
+          "passed": true
+        },
+        {
+          "name": "No draft context in learn mode",
+          "passed": true
+        },
+        {
+          "name": "Draft mode sets mode correctly",
+          "passed": true
+        },
+        {
+          "name": "Draft context included",
+          "passed": true
+        },
+        {
+          "name": "Untitled Document excluded from projectTitle",
+          "passed": true
+        },
+        {
+          "name": "No guide context in draft mode",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-042",
+      "caseName": "sendMessage guards",
+      "category": "edge-cases",
+      "timestamp": "2026-03-03T08:43:30.454Z",
+      "checks": [
+        {
+          "name": "Empty input blocked",
+          "passed": true
+        },
+        {
+          "name": "Whitespace-only input blocked",
+          "passed": true
+        },
+        {
+          "name": "Loading state blocked",
+          "passed": true
+        },
+        {
+          "name": "Valid input allowed",
+          "passed": true
+        },
+        {
+          "name": "Trimmed valid input allowed",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-043",
+      "caseName": "ProjectSelector selectedId lookup",
+      "category": "edge-cases",
+      "timestamp": "2026-03-03T08:43:30.454Z",
+      "checks": [
+        {
+          "name": "Finds first project",
+          "passed": true
+        },
+        {
+          "name": "Finds last project",
+          "passed": true
+        },
+        {
+          "name": "null selectedId returns undefined",
+          "passed": true
+        },
+        {
+          "name": "Display fallback for null",
+          "passed": true
+        },
+        {
+          "name": "Display shows title for valid id",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-044",
+      "caseName": "complete reference to citation to bibliography flow",
+      "category": "integration",
+      "timestamp": "2026-03-03T08:43:30.455Z",
+      "checks": [
+        {
+          "name": "Step 1: References added",
+          "passed": true
+        },
+        {
+          "name": "Step 2: Citation numbers assigned",
+          "passed": true
+        },
+        {
+          "name": "Step 3: Citation display text set",
+          "passed": true
+        },
+        {
+          "name": "Step 4: Bibliography entries set",
+          "passed": true
+        },
+        {
+          "name": "Step 5: Cited list has correct count",
+          "passed": true
+        },
+        {
+          "name": "First citation is Smith",
+          "passed": true
+        },
+        {
+          "name": "Second citation is Jones",
+          "passed": true
+        },
+        {
+          "name": "Step 6: Reference updated",
+          "passed": true
+        },
+        {
+          "name": "Step 7: Reference removed",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-009",
+      "caseName": "research sidebar toggle",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.418Z",
+      "checks": [
+        {
+          "name": "Starts closed",
+          "passed": true
+        },
+        {
+          "name": "openSidebar opens",
+          "passed": true
+        },
+        {
+          "name": "closeSidebar closes",
+          "passed": true
+        },
+        {
+          "name": "toggle opens when closed",
+          "passed": true
+        },
+        {
+          "name": "toggle closes when open",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-010",
+      "caseName": "search state management",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.420Z",
+      "checks": [
+        {
+          "name": "Query set",
+          "passed": true
+        },
+        {
+          "name": "Searching flag set",
+          "passed": true
+        },
+        {
+          "name": "Results stored",
+          "passed": true
+        },
+        {
+          "name": "Total count stored",
+          "passed": true
+        },
+        {
+          "name": "Page reset to 0",
+          "passed": true
+        },
+        {
+          "name": "appendResults adds to existing",
+          "passed": true
+        },
+        {
+          "name": "hasSearchedBefore flag",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-011",
+      "caseName": "library add/remove/check",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.421Z",
+      "checks": [
+        {
+          "name": "Paper added to library",
+          "passed": true
+        },
+        {
+          "name": "isInLibrary returns true",
+          "passed": true
+        },
+        {
+          "name": "Paper in results marked inLibrary",
+          "passed": true
+        },
+        {
+          "name": "Duplicate add is no-op",
+          "passed": true
+        },
+        {
+          "name": "Paper removed from library",
+          "passed": true
+        },
+        {
+          "name": "Correct paper remains",
+          "passed": true
+        },
+        {
+          "name": "Removed paper unmarked in results",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-012",
+      "caseName": "chat message management",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.422Z",
+      "checks": [
+        {
+          "name": "User message added",
+          "passed": true
+        },
+        {
+          "name": "Assistant message added",
+          "passed": true
+        },
+        {
+          "name": "Last assistant message updated",
+          "passed": true
+        },
+        {
+          "name": "updateLastChatMessage no-op when last is user",
+          "passed": true
+        },
+        {
+          "name": "clearChat empties messages",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-013",
+      "caseName": "paper selection for evidence tables",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.422Z",
+      "checks": [
+        {
+          "name": "Two papers selected",
+          "passed": true
+        },
+        {
+          "name": "Toggle deselects",
+          "passed": true
+        },
+        {
+          "name": "selectAllPapers selects all results",
+          "passed": true
+        },
+        {
+          "name": "clearPaperSelection empties selection",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-014",
+      "caseName": "evidence table CRUD",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.423Z",
+      "checks": [
+        {
+          "name": "Table created with id",
+          "passed": true
+        },
+        {
+          "name": "Table has columns",
+          "passed": true
+        },
+        {
+          "name": "Table stored in state",
+          "passed": true
+        },
+        {
+          "name": "Active table set",
+          "passed": true
+        },
+        {
+          "name": "Row added to table",
+          "passed": true
+        },
+        {
+          "name": "Existing row updated (not duplicated)",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-015",
+      "caseName": "clearSearch resets search state",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.424Z",
+      "checks": [
+        {
+          "name": "Query cleared",
+          "passed": true
+        },
+        {
+          "name": "Results cleared",
+          "passed": true
+        },
+        {
+          "name": "Total cleared",
+          "passed": true
+        },
+        {
+          "name": "AI summary cleared",
+          "passed": true
+        },
+        {
+          "name": "Scroll position reset",
+          "passed": true
+        },
+        {
+          "name": "Selected paper cleared",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-016",
+      "caseName": "sidebar width constraints",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.425Z",
+      "checks": [
+        {
+          "name": "Default width is 380",
+          "passed": true
+        },
+        {
+          "name": "Width set to 400",
+          "passed": true
+        },
+        {
+          "name": "Width clamped to minimum 320",
+          "passed": true
+        },
+        {
+          "name": "Width clamped to maximum 520",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-017",
+      "caseName": "verification cache",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.426Z",
+      "checks": [
+        {
+          "name": "Verification cached",
+          "passed": true
+        },
+        {
+          "name": "Result updated with verification status",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-033",
+      "caseName": "chip removal updates filters",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.448Z",
+      "checks": [
+        {
+          "name": "Study type chip removed",
+          "passed": true
+        },
+        {
+          "name": "Study type filter cleared",
+          "passed": true
+        },
+        {
+          "name": "Date chip removed",
+          "passed": true
+        },
+        {
+          "name": "Date filter reset",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-034",
+      "caseName": "paper detail selection",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.449Z",
+      "checks": [
+        {
+          "name": "Paper selected",
+          "passed": true
+        },
+        {
+          "name": "Paper detail populated",
+          "passed": true
+        },
+        {
+          "name": "Extraction initially undefined",
+          "passed": true
+        },
+        {
+          "name": "Paper deselected",
+          "passed": true
+        },
+        {
+          "name": "Detail cleared",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-035",
+      "caseName": "tab switching",
+      "category": "research-store",
+      "timestamp": "2026-03-03T08:43:30.449Z",
+      "checks": [
+        {
+          "name": "Default tab is search",
+          "passed": true
+        },
+        {
+          "name": "Switch to library",
+          "passed": true
+        },
+        {
+          "name": "Switch to chat",
+          "passed": true
+        },
+        {
+          "name": "Switch back to search",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    },
+    {
+      "caseId": "ralph-studio-045",
+      "caseName": "research to library to cite flow",
+      "category": "integration",
+      "timestamp": "2026-03-03T08:43:30.456Z",
+      "checks": [
+        {
+          "name": "Step 1: Search results loaded",
+          "passed": true
+        },
+        {
+          "name": "Step 2: Paper added to library",
+          "passed": true
+        },
+        {
+          "name": "Step 3: Reference added to citation system",
+          "passed": true
+        },
+        {
+          "name": "Step 4: Citation number assigned",
+          "passed": true
+        },
+        {
+          "name": "Step 5: Same title across stores",
+          "passed": true
+        }
+      ],
+      "overallScore": 10,
+      "pass": true,
+      "issues": []
+    }
+  ]
+}
