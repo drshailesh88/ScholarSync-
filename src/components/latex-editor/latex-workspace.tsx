@@ -148,17 +148,23 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         e.preventDefault();
         handleCompile();
       }
-      // Cmd+K: toggle inline AI on selection
+      // Cmd+K: toggle inline AI on selection (uses CodeMirror selection)
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        const sel = window.getSelection();
-        if (sel && sel.toString().trim()) {
-          const range = sel.getRangeAt(0);
-          const rect = range.getBoundingClientRect();
+        const cmSel = editorRef.current?.getSelection();
+        if (cmSel && cmSel.text.trim()) {
+          // Get position from DOM selection for positioning the bar
+          const domSel = window.getSelection();
+          const rect = domSel?.rangeCount
+            ? domSel.getRangeAt(0).getBoundingClientRect()
+            : null;
           setInlineAi({
             visible: true,
-            selectedText: sel.toString(),
-            position: { top: rect.bottom + 8, left: rect.left },
+            selectedText: cmSel.text,
+            position: {
+              top: rect ? rect.bottom + 8 : 200,
+              left: rect ? rect.left : 100,
+            },
           });
         }
       }

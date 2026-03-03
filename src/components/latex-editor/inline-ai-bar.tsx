@@ -3,6 +3,13 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { PaperPlaneRight, Check, ArrowCounterClockwise, CircleNotch } from "@phosphor-icons/react";
 
+const PRESET_CHIPS = [
+  { label: "Improve", instruction: "Improve the writing quality" },
+  { label: "Formalize", instruction: "Make more formal and academic" },
+  { label: "Shorten", instruction: "Make more concise" },
+  { label: "Fix grammar", instruction: "Fix grammar and spelling" },
+] as const;
+
 interface InlineAiBarProps {
   selectedText: string;
   position: { top: number; left: number };
@@ -21,19 +28,33 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
     inputRef.current?.focus();
   }, []);
 
-  // Dismiss on Escape
+  // Keyboard shortcuts: Escape to dismiss, Enter to accept when result is ready
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onDismiss();
+      if (e.key === "Escape") {
+        e.preventDefault();
+        if (result !== null && !streaming) {
+          // If showing result, revert first
+          handleRevert();
+        } else {
+          onDismiss();
+        }
+      }
+      // Enter to accept (only when result is shown and not streaming, and input not focused)
+      if (e.key === "Enter" && result !== null && !streaming && document.activeElement !== inputRef.current) {
+        e.preventDefault();
+        handleAccept();
+      }
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [onDismiss]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result, streaming, onDismiss]);
 
   const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      e?.preventDefault();
-      if (!instruction.trim() || streaming) return;
+    async (overrideInstruction?: string) => {
+      const instr = overrideInstruction ?? instruction.trim();
+      if (!instr || streaming) return;
 
       setStreaming(true);
       setResult("");
@@ -45,7 +66,7 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             selectedText,
-            instruction: instruction.trim(),
+            instruction: instr,
           }),
           signal: abortRef.current.signal,
         });
@@ -83,8 +104,16 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
     [instruction, selectedText, streaming]
   );
 
+  const handleFormSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      handleSubmit();
+    },
+    [handleSubmit]
+  );
+
   const handleAccept = useCallback(() => {
-    if (result) {
+    if (result && !result.startsWith("Error:")) {
       onApply(result);
     }
   }, [result, onApply]);
@@ -94,22 +123,45 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
     setResult(null);
     setInstruction("");
     setStreaming(false);
+    inputRef.current?.focus();
   }, []);
+
+  // Clamp position to viewport
+  const clampedTop = Math.min(position.top, typeof window !== "undefined" ? window.innerHeight - 200 : position.top);
+  const clampedLeft = Math.max(8, Math.min(position.left, typeof window !== "undefined" ? window.innerWidth - 340 : position.left));
 
   return (
     <div
       className="fixed z-50 animate-in fade-in slide-in-from-bottom-2 duration-200"
-      style={{ top: position.top, left: position.left }}
+      style={{ top: clampedTop, left: clampedLeft }}
     >
       <div className="w-80 rounded-xl glass-panel border border-border shadow-lg overflow-hidden">
+        {/* Preset chips */}
+        {result === null && !streaming && (
+          <div className="flex items-center gap-1 px-2 pt-2 pb-0.5 flex-wrap">
+            {PRESET_CHIPS.map((chip) => (
+              <button
+                key={chip.label}
+                onClick={() => {
+                  setInstruction(chip.instruction);
+                  handleSubmit(chip.instruction);
+                }}
+                className="px-2 py-0.5 rounded-md text-[10px] font-medium text-ink-muted border border-border-subtle hover:text-brand hover:border-brand/30 hover:bg-brand/5 transition-colors"
+              >
+                {chip.label}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Input bar */}
-        <form onSubmit={handleSubmit} className="flex items-center gap-2 p-2">
+        <form onSubmit={handleFormSubmit} className="flex items-center gap-2 p-2">
           <input
             ref={inputRef}
             type="text"
             value={instruction}
             onChange={(e) => setInstruction(e.target.value)}
-            placeholder="Make more formal..."
+            placeholder="Edit instruction..."
             disabled={streaming}
             className="flex-1 px-2.5 py-1.5 rounded-lg bg-surface-raised border border-border text-xs text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/40 disabled:opacity-50"
           />
@@ -126,30 +178,46 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
           </button>
         </form>
 
-        {/* Result preview */}
+        {/* Diff-style result preview */}
         {result !== null && (
           <div className="border-t border-border-subtle">
-            <div className="px-3 py-2 max-h-32 overflow-y-auto">
-              <p className="text-xs text-ink whitespace-pre-wrap font-mono leading-relaxed">
-                {result || (streaming ? "Thinking..." : "")}
-              </p>
+            <div className="px-3 py-2 max-h-40 overflow-y-auto space-y-1.5">
+              {/* Original (strikethrough) */}
+              <div className="text-[10px] font-mono leading-relaxed">
+                <span className="text-[9px] font-sans font-medium text-red-400/70 uppercase tracking-wider">Original</span>
+                <p className="text-ink-muted line-through decoration-red-400/40 mt-0.5 whitespace-pre-wrap">
+                  {selectedText.length > 200 ? selectedText.slice(0, 200) + "..." : selectedText}
+                </p>
+              </div>
+              {/* Suggestion */}
+              <div className="text-[10px] font-mono leading-relaxed">
+                <span className="text-[9px] font-sans font-medium text-emerald-400/70 uppercase tracking-wider">Suggestion</span>
+                <p className="text-ink whitespace-pre-wrap mt-0.5">
+                  {result || (streaming ? "Thinking..." : "")}
+                </p>
+              </div>
             </div>
             {!streaming && (
-              <div className="flex items-center gap-1 px-2 py-1.5 border-t border-border-subtle">
-                <button
-                  onClick={handleAccept}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-medium bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
-                >
-                  <Check size={12} />
-                  Accept
-                </button>
-                <button
-                  onClick={handleRevert}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
-                >
-                  <ArrowCounterClockwise size={12} />
-                  Revert
-                </button>
+              <div className="flex items-center justify-between px-2 py-1.5 border-t border-border-subtle">
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handleAccept}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-medium bg-emerald-500 text-white hover:bg-emerald-600 transition-colors"
+                  >
+                    <Check size={12} />
+                    Accept
+                  </button>
+                  <button
+                    onClick={handleRevert}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+                  >
+                    <ArrowCounterClockwise size={12} />
+                    Revert
+                  </button>
+                </div>
+                <span className="text-[9px] text-ink-muted">
+                  Enter accept · Esc revert
+                </span>
               </div>
             )}
           </div>
