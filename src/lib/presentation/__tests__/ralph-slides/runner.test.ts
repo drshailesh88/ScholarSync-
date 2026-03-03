@@ -1973,3 +1973,304 @@ describe("Cycle 21: Social Format Validation", () => {
     expect(thread[0]).toContain("Gandhi");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CYCLE 22: Precise Animation Timing, Theme Inventory, Version Diff Deck Fields,
+//           Text Diff Sentence Patterns, PRISMA Round-Trip Validation
+// ═══════════════════════════════════════════════════════════════════════════════
+
+describe("Cycle 22: Animation Timing Precision", () => {
+  test("sequential_build delay increments by 0.5s per block", () => {
+    const preset = ANIMATION_PRESETS_MAP.sequential_build;
+    const anims = preset.generate(5);
+    for (let i = 0; i < 5; i++) {
+      expect(anims[i].delay).toBeCloseTo(i * 0.5, 5);
+      expect(anims[i].duration).toBe(0.4);
+      expect(anims[i].order).toBe(i + 1);
+    }
+  });
+
+  test("fade_all all blocks have delay=0 and order=1", () => {
+    const preset = ANIMATION_PRESETS_MAP.fade_all;
+    const anims = preset.generate(4);
+    for (const a of anims) {
+      expect(a.delay).toBe(0);
+      expect(a.duration).toBe(0.6);
+      expect(a.order).toBe(1);
+    }
+  });
+
+  test("stagger delay increments by 0.15s per block", () => {
+    const preset = ANIMATION_PRESETS_MAP.stagger;
+    const anims = preset.generate(6);
+    for (let i = 0; i < 6; i++) {
+      expect(anims[i].delay).toBeCloseTo(i * 0.15, 5);
+      expect(anims[i].type).toBe("slideUp");
+    }
+  });
+
+  test("results_reveal first block fadeIn at delay=0", () => {
+    const preset = ANIMATION_PRESETS_MAP.results_reveal;
+    const anims = preset.generate(4);
+    expect(anims[0].type).toBe("fadeIn");
+    expect(anims[0].delay).toBe(0);
+    expect(anims[0].duration).toBe(0.3);
+  });
+
+  test("results_reveal subsequent blocks use scaleIn with 0.7s gap", () => {
+    const preset = ANIMATION_PRESETS_MAP.results_reveal;
+    const anims = preset.generate(4);
+    for (let i = 1; i < 4; i++) {
+      expect(anims[i].type).toBe("scaleIn");
+      expect(anims[i].delay).toBeCloseTo(0.3 + (i - 1) * 0.7, 5);
+      expect(anims[i].duration).toBe(0.5);
+      expect(anims[i].order).toBe(i + 1);
+    }
+  });
+
+  test("none preset: all blocks type='none', delay=0, duration=0, order=0", () => {
+    const preset = ANIMATION_PRESETS_MAP.none;
+    const anims = preset.generate(3);
+    for (const a of anims) {
+      expect(a.type).toBe("none");
+      expect(a.delay).toBe(0);
+      expect(a.duration).toBe(0);
+      expect(a.order).toBe(0);
+    }
+  });
+
+  test("sequential_build 10 blocks: last block delay = 4.5s", () => {
+    const anims = ANIMATION_PRESETS_MAP.sequential_build.generate(10);
+    expect(anims[9].delay).toBeCloseTo(4.5, 5);
+    expect(anims[9].order).toBe(10);
+  });
+});
+
+describe("Cycle 22: Complete Theme Inventory", () => {
+  const themeKeys = Object.keys(PRESET_THEMES);
+
+  test("at least 8 preset themes defined", () => {
+    expect(themeKeys.length).toBeGreaterThanOrEqual(8);
+  });
+
+  test("every theme has all required color fields", () => {
+    const requiredFields = [
+      "name", "primaryColor", "secondaryColor",
+      "backgroundColor", "textColor", "accentColor",
+      "surfaceColor", "borderColor", "codeBackground",
+      "fontFamily", "headingFontFamily",
+    ];
+    for (const key of themeKeys) {
+      const theme = PRESET_THEMES[key];
+      for (const field of requiredFields) {
+        expect(theme).toHaveProperty(field);
+      }
+    }
+  });
+
+  test("dark theme has low-luminance background", () => {
+    const darkTheme = PRESET_THEMES.dark;
+    // #0F172A - first byte 0F = 15, which is dark
+    const bg = darkTheme.backgroundColor;
+    const r = parseInt(bg.slice(1, 3), 16);
+    expect(r).toBeLessThan(50);
+  });
+
+  test("thesis theme uses serif font", () => {
+    expect(PRESET_THEMES.thesis.fontFamily).toContain("serif");
+    expect(PRESET_THEMES.thesis.fontFamily).not.toContain("sans-serif");
+  });
+
+  test("vibrant theme has gradient properties", () => {
+    const vibrant = PRESET_THEMES.vibrant;
+    expect(vibrant.gradientFrom).toBeDefined();
+    expect(vibrant.gradientTo).toBeDefined();
+  });
+
+  test("clinical theme uses Helvetica", () => {
+    expect(PRESET_THEMES.clinical.fontFamily).toContain("Helvetica");
+  });
+
+  test("academic theme uses different heading and body fonts", () => {
+    expect(PRESET_THEMES.academic.fontFamily).not.toBe(
+      PRESET_THEMES.academic.headingFontFamily
+    );
+  });
+
+  test("nature theme has green primary color", () => {
+    const primary = PRESET_THEMES.nature.primaryColor;
+    // #166534 - green component (65) > red (16)
+    const r = parseInt(primary.slice(1, 3), 16);
+    const g = parseInt(primary.slice(3, 5), 16);
+    expect(g).toBeGreaterThan(r);
+  });
+});
+
+describe("Cycle 22: Version Diff Deck-Level Fields", () => {
+  function makeVersionWithDeck(deck: Record<string, unknown>): VersionSnapshot {
+    return {
+      deck: {
+        id: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        title: "T",
+        theme: "modern",
+        ...deck,
+      },
+      slides: [],
+    } as unknown as VersionSnapshot;
+  }
+
+  test("detects audienceType change", () => {
+    const v1 = makeVersionWithDeck({ audienceType: "academic" });
+    const v2 = makeVersionWithDeck({ audienceType: "general" });
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.deckMetadataChanged).toBe(true);
+    expect(diff.deckFieldChanges.find((f) => f.field === "audienceType")).toBeDefined();
+  });
+
+  test("detects templateId change", () => {
+    const v1 = makeVersionWithDeck({ templateId: "tmpl-1" });
+    const v2 = makeVersionWithDeck({ templateId: "tmpl-2" });
+    const diff = computeDeckDiff(v1, v2);
+    const change = diff.deckFieldChanges.find((f) => f.field === "templateId");
+    expect(change).toBeDefined();
+    expect(change?.oldValue).toBe("tmpl-1");
+    expect(change?.newValue).toBe("tmpl-2");
+  });
+
+  test("detects citationStyle change", () => {
+    const v1 = makeVersionWithDeck({ citationStyle: "APA" });
+    const v2 = makeVersionWithDeck({ citationStyle: "MLA" });
+    const diff = computeDeckDiff(v1, v2);
+    const change = diff.deckFieldChanges.find((f) => f.field === "citationStyle");
+    expect(change?.oldValue).toBe("APA");
+    expect(change?.newValue).toBe("MLA");
+  });
+
+  test("no changes when deck metadata identical", () => {
+    const v1 = makeVersionWithDeck({});
+    const v2 = makeVersionWithDeck({});
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.deckMetadataChanged).toBe(false);
+    expect(diff.deckFieldChanges).toHaveLength(0);
+  });
+
+  test("multiple deck field changes detected simultaneously", () => {
+    const v1 = makeVersionWithDeck({ title: "Old", theme: "modern" });
+    const v2 = makeVersionWithDeck({ title: "New", theme: "dark" });
+    const diff = computeDeckDiff(v1, v2);
+    expect(diff.deckFieldChanges.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe("Cycle 22: Text Diff — Sentence Patterns", () => {
+  test("word replacement mid-sentence", () => {
+    const result = computeTextDiff("the cat sat", "the dog sat");
+    expect(result.some((s) => s.type === "removed" && s.text.includes("cat"))).toBe(true);
+    expect(result.some((s) => s.type === "added" && s.text.includes("dog"))).toBe(true);
+    expect(result.some((s) => s.type === "same" && s.text.includes("the"))).toBe(true);
+  });
+
+  test("appended words detected as added", () => {
+    const result = computeTextDiff("hello world", "hello world today");
+    expect(result.some((s) => s.type === "added" && s.text.includes("today"))).toBe(true);
+  });
+
+  test("prepended words detected as added", () => {
+    const result = computeTextDiff("world today", "hello world today");
+    expect(result.some((s) => s.type === "added" && s.text.includes("hello"))).toBe(true);
+  });
+
+  test("complete sentence replacement", () => {
+    const result = computeTextDiff("alpha beta gamma", "one two three");
+    const removedText = result
+      .filter((s) => s.type === "removed")
+      .map((s) => s.text)
+      .join("");
+    const addedText = result
+      .filter((s) => s.type === "added")
+      .map((s) => s.text)
+      .join("");
+    expect(removedText).toContain("alpha");
+    expect(addedText).toContain("one");
+  });
+
+  test("handles numeric text changes", () => {
+    const result = computeTextDiff("p = 0.05", "p = 0.01");
+    expect(result.some((s) => s.type === "removed" && s.text.includes("0.05"))).toBe(true);
+    expect(result.some((s) => s.type === "added" && s.text.includes("0.01"))).toBe(true);
+  });
+});
+
+describe("Cycle 22: PRISMA Round-Trip Validation", () => {
+  test("full data → mermaid has all 4 subgraph labels", () => {
+    const data: PrismaFlowData = {
+      databaseRecords: 500,
+      registerRecords: 100,
+      otherSourceRecords: 25,
+      duplicatesRemoved: 75,
+      recordsScreened: 550,
+      recordsExcluded: 400,
+      fullTextAssessed: 150,
+      fullTextExcluded: 50,
+      fullTextExclusionReasons: [
+        { reason: "Wrong study type", count: 30 },
+        { reason: "Insufficient data", count: 20 },
+      ],
+      studiesIncluded: 100,
+      reportsIncluded: 80,
+    };
+    const mermaid = generatePrismaMermaid(data);
+    expect(mermaid).toContain("subgraph Identification");
+    expect(mermaid).toContain("subgraph Screening");
+    expect(mermaid).toContain("subgraph Eligibility");
+    expect(mermaid).toContain("subgraph Included");
+
+    // Verify specific counts appear
+    expect(mermaid).toContain("n = 500");
+    expect(mermaid).toContain("n = 125"); // 100+25 combined
+    expect(mermaid).toContain("n = 550"); // afterDuplicates: 625-75=550
+    expect(mermaid).toContain("n = 400");
+    expect(mermaid).toContain("n = 150");
+    expect(mermaid).toContain("n = 50");
+    expect(mermaid).toContain("n = 100");
+    expect(mermaid).toContain("n = 80");
+  });
+
+  test("mermaid output starts with 'graph TD'", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    expect(mermaid.startsWith("graph TD")).toBe(true);
+  });
+
+  test("mermaid contains all 9 node references (A through I)", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    for (const node of ["A[", "B[", "C[", "D[", "E[", "F[", "G[", "H[", "I["]) {
+      expect(mermaid).toContain(node);
+    }
+  });
+
+  test("mermaid contains all required flow arrows", () => {
+    const mermaid = generatePrismaMermaid(createEmptyPrismaData());
+    const requiredArrows = [
+      "A --> C", "B --> C", "C --> D", "D --> E",
+      "D --> F", "F --> G", "F --> H", "H --> I",
+    ];
+    for (const arrow of requiredArrows) {
+      expect(mermaid).toContain(arrow);
+    }
+  });
+
+  test("createEmptyPrismaData has all PrismaFlowData keys", () => {
+    const empty = createEmptyPrismaData();
+    const expectedKeys: (keyof PrismaFlowData)[] = [
+      "databaseRecords", "registerRecords", "otherSourceRecords",
+      "duplicatesRemoved", "recordsScreened", "recordsExcluded",
+      "fullTextAssessed", "fullTextExcluded", "fullTextExclusionReasons",
+      "studiesIncluded", "reportsIncluded",
+    ];
+    for (const key of expectedKeys) {
+      expect(empty).toHaveProperty(key);
+    }
+  });
+});
