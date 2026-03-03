@@ -38,6 +38,7 @@ interface FileTreeProps {
   files: FileItem[];
   onFilesChange: (files: FileItem[]) => void;
   onJumpToLine?: (line: number) => void;
+  onFileSelect?: (file: FileItem) => void;
 }
 
 function getFileIcon(path: string) {
@@ -91,7 +92,7 @@ function buildFolderTree(files: FileItem[]): { folders: Record<string, FileItem[
   return { folders, rootFiles };
 }
 
-export function FileTree({ projectId, files, onFilesChange, onJumpToLine }: FileTreeProps) {
+export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFileSelect }: FileTreeProps) {
   const activeFileId = useLatexEditorStore((s) => s.activeFileId);
   const setActiveFileId = useLatexEditorStore((s) => s.setActiveFileId);
   const setDocumentContent = useLatexEditorStore((s) => s.setDocumentContent);
@@ -131,7 +132,8 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine }: File
   const handleSelectFile = useCallback((file: FileItem) => {
     setActiveFileId(file.id);
     setDocumentContent(file.content ?? "");
-  }, [setActiveFileId, setDocumentContent]);
+    onFileSelect?.(file);
+  }, [setActiveFileId, setDocumentContent, onFileSelect]);
 
   const handleCreateFile = useCallback(async () => {
     const name = newFileName.trim();

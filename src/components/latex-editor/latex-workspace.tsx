@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import { updateLatexFile } from "@/lib/actions/latex";
 import { TopBar } from "./top-bar";
-import { SourceEditor } from "./source-editor";
+import { SourceEditor, type SourceEditorHandle } from "./source-editor";
 import { VisualEditor } from "./visual-editor";
 import { PreviewPanel } from "./preview-panel";
 import { AgentPanel } from "./agent-panel";
@@ -51,12 +51,21 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const setPreviewMode = useLatexEditorStore((s) => s.setPreviewMode);
   const viewMode = useLatexEditorStore((s) => s.viewMode);
 
+  // Ref to the CodeMirror editor (exposed via forwardRef)
+  const editorRef = useRef<SourceEditorHandle>(null);
+
   // Managed file list (mutable after create/rename/delete)
   const [files, setFiles] = useState<LatexFile[]>(initialFiles);
 
   // Get the main file content
   const mainFile = files.find((f) => f.isMain);
   const initialContent = mainFile?.content ?? "";
+
+  // Getter for .bib file content (used by citation autocompletion)
+  const getBibContent = useCallback(() => {
+    const bibFile = files.find((f) => f.path.endsWith(".bib"));
+    return bibFile?.content ?? "";
+  }, [files]);
 
   // Error diagnostics from compilation
   const [diagnostics, setDiagnostics] = useState<CompilationDiagnostic[]>([]);
@@ -248,9 +257,17 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     URL.revokeObjectURL(url);
   }, [project.title]);
 
-  // Handle inline AI apply
-  const handleInlineAiApply = useCallback((_newText: string) => {
-    navigator.clipboard.writeText(_newText);
+  // Handle inline AI apply — replace the selected text in the editor
+  const handleInlineAiApply = useCallback((newText: string) => {
+    const view = editorRef.current?.getView();
+    if (view) {
+      const { from, to } = view.state.selection.main;
+      view.dispatch({
+        changes: { from, to, insert: newText },
+        selection: { anchor: from + newText.length },
+      });
+      view.focus();
+    }
     setInlineAi({ visible: false, selectedText: "", position: { top: 0, left: 0 } });
   }, []);
 
@@ -270,13 +287,16 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     }
   }, []);
 
-  // Handle AI fix for compilation errors
+  // Handle AI fix for compilation errors — replace the error line(s) in the editor
   const handleFixError = useCallback(async (diagnostic: CompilationDiagnostic) => {
     if (!diagnostic.line) return;
 
     const content = useLatexEditorStore.getState().documentContent;
     const lines = content.split("\n");
-    const context = lines.slice(Math.max(0, diagnostic.line - 3), diagnostic.line + 2).join("\n");
+    const errorLineIdx = diagnostic.line - 1; // 0-based
+    const contextStart = Math.max(0, errorLineIdx - 2);
+    const contextEnd = Math.min(lines.length, errorLineIdx + 3);
+    const context = lines.slice(contextStart, contextEnd).join("\n");
 
     try {
       const res = await fetch("/api/latex/generate", {
@@ -299,7 +319,19 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           if (done) break;
           fixed += decoder.decode(value, { stream: true });
         }
-        navigator.clipboard.writeText(fixed);
+        // Replace the context lines in the editor
+        const view = editorRef.current?.getView();
+        if (view) {
+          const fromLine = view.state.doc.line(contextStart + 1);
+          const toLine = view.state.doc.line(contextEnd);
+          view.dispatch({
+            changes: { from: fromLine.from, to: toLine.to, insert: fixed.trim() },
+          });
+          view.focus();
+        } else {
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(fixed);
+        }
       }
     } catch {
       // Silent failure
@@ -325,10 +357,8 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   }, [files]);
 
   // Jump-to-line handler for outline clicks
-  const handleJumpToLine = useCallback((_line: number) => {
-    // The CodeMirror view is internal to SourceEditor. We scroll by searching for
-    // the section heading text. A future improvement would expose the CM view ref.
-    // For now, copy the line number to provide user feedback.
+  const handleJumpToLine = useCallback((line: number) => {
+    editorRef.current?.scrollToLine(line);
   }, []);
 
   return (
@@ -366,6 +396,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
               files={files}
               onFilesChange={setFiles}
               onJumpToLine={handleJumpToLine}
+              onFileSelect={(file) => editorRef.current?.setContent(file.content ?? "")}
             />
           </aside>
         )}
@@ -380,8 +411,10 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
               />
             ) : (
               <SourceEditor
+                ref={editorRef}
                 initialContent={initialContent}
                 onChange={handleEditorChange}
+                getBibContent={getBibContent}
               />
             )}
           </div>
@@ -389,6 +422,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           <ErrorGutterPanel
             diagnostics={diagnostics}
             onFixError={handleFixError}
+            onGoToLine={(line) => editorRef.current?.scrollToLine(line)}
           />
         </div>
 

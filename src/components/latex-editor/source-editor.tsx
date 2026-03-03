@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from "react";
 import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection, rectangularSelection, highlightActiveLineGutter } from "@codemirror/view";
 import { EditorState, Compartment } from "@codemirror/state";
 import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
@@ -10,6 +10,12 @@ import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import { lintKeymap } from "@codemirror/lint";
 import { latex } from "codemirror-lang-latex";
 import { tags } from "@lezer/highlight";
+import {
+  latexCommandCompletion,
+  latexEnvironmentCompletion,
+  createCitationCompletion,
+  createRefCompletion,
+} from "./completions";
 
 // Custom LaTeX-friendly highlight style
 const latexHighlightStyle = HighlightStyle.define([
@@ -93,6 +99,11 @@ const lightTheme = EditorView.theme({
     boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
   },
   ".cm-tooltip-autocomplete": {
+    "& > ul": {
+      maxHeight: "220px",
+      fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', monospace",
+      fontSize: "12px",
+    },
     "& > ul > li": {
       padding: "4px 8px",
       fontSize: "12px",
@@ -101,6 +112,15 @@ const lightTheme = EditorView.theme({
       backgroundColor: "var(--color-brand)15",
       color: "var(--color-ink)",
     },
+  },
+  ".cm-completionLabel": {
+    fontSize: "12px",
+  },
+  ".cm-completionDetail": {
+    fontSize: "10px",
+    fontStyle: "normal",
+    opacity: "0.6",
+    marginLeft: "8px",
   },
   ".cm-panels": {
     backgroundColor: "var(--color-surface-raised)",
@@ -111,127 +131,199 @@ const lightTheme = EditorView.theme({
 const themeCompartment = new Compartment();
 const highlightCompartment = new Compartment();
 
+/** Handle exposed by SourceEditor via forwardRef */
+export interface SourceEditorHandle {
+  /** Get the underlying CodeMirror EditorView */
+  getView: () => EditorView | null;
+  /** Replace text at a specific range */
+  replaceRange: (from: number, to: number, text: string) => void;
+  /** Scroll to a specific line number (1-based) */
+  scrollToLine: (line: number) => void;
+  /** Get current selection range */
+  getSelection: () => { from: number; to: number; text: string } | null;
+  /** Set content (for file switching) */
+  setContent: (content: string) => void;
+}
+
 interface SourceEditorProps {
   initialContent: string;
   onChange?: (content: string) => void;
   className?: string;
+  /** Callback to get .bib file content for citation autocompletion */
+  getBibContent?: () => string;
 }
 
-export function SourceEditor({ initialContent, onChange, className }: SourceEditorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const viewRef = useRef<EditorView | null>(null);
-  const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
+  function SourceEditor({ initialContent, onChange, className, getBibContent }, ref) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const viewRef = useRef<EditorView | null>(null);
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
 
-  // Detect dark mode
-  const isDark = useCallback(() => {
-    if (typeof document === "undefined") return false;
-    return document.documentElement.classList.contains("dark");
-  }, []);
+    // Stable ref for bib content getter
+    const getBibContentRef = useRef(getBibContent);
+    getBibContentRef.current = getBibContent;
 
-  useEffect(() => {
-    if (!containerRef.current) return;
+    // Expose imperative handle to parent
+    useImperativeHandle(ref, () => ({
+      getView: () => viewRef.current,
+      replaceRange: (from: number, to: number, text: string) => {
+        viewRef.current?.dispatch({
+          changes: { from, to, insert: text },
+          selection: { anchor: from + text.length },
+        });
+      },
+      scrollToLine: (line: number) => {
+        const view = viewRef.current;
+        if (!view) return;
+        const lineCount = view.state.doc.lines;
+        const clampedLine = Math.max(1, Math.min(line, lineCount));
+        const lineInfo = view.state.doc.line(clampedLine);
+        view.dispatch({
+          selection: { anchor: lineInfo.from },
+          scrollIntoView: true,
+        });
+        view.focus();
+      },
+      getSelection: () => {
+        const view = viewRef.current;
+        if (!view) return null;
+        const { from, to } = view.state.selection.main;
+        return { from, to, text: view.state.sliceDoc(from, to) };
+      },
+      setContent: (content: string) => {
+        const view = viewRef.current;
+        if (!view) return;
+        view.dispatch({
+          changes: { from: 0, to: view.state.doc.length, insert: content },
+          selection: { anchor: 0 },
+        });
+      },
+    }));
 
-    const updateListener = EditorView.updateListener.of((update) => {
-      if (update.docChanged) {
-        onChangeRef.current?.(update.state.doc.toString());
-      }
-    });
+    // Detect dark mode
+    const isDark = useCallback(() => {
+      if (typeof document === "undefined") return false;
+      return document.documentElement.classList.contains("dark");
+    }, []);
 
-    const state = EditorState.create({
-      doc: initialContent,
-      extensions: [
-        // Line numbers and gutters
-        lineNumbers(),
-        highlightActiveLineGutter(),
-        foldGutter(),
+    useEffect(() => {
+      if (!containerRef.current) return;
 
-        // History (undo/redo)
-        history(),
-
-        // Selection and drawing
-        drawSelection(),
-        rectangularSelection(),
-        highlightActiveLine(),
-        highlightSelectionMatches(),
-
-        // Input handling
-        indentOnInput(),
-        bracketMatching(),
-        closeBrackets(),
-
-        // Autocompletion
-        autocompletion(),
-
-        // LaTeX language support
-        latex(),
-
-        // Theme
-        themeCompartment.of(lightTheme),
-        highlightCompartment.of(
-          syntaxHighlighting(isDark() ? latexDarkHighlightStyle : latexHighlightStyle)
-        ),
-        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-
-        // Keymaps
-        keymap.of([
-          ...defaultKeymap,
-          ...historyKeymap,
-          ...completionKeymap,
-          ...closeBracketsKeymap,
-          ...searchKeymap,
-          ...foldKeymap,
-          ...lintKeymap,
-          indentWithTab,
-        ]),
-
-        // Change listener
-        updateListener,
-
-        // Line wrapping
-        EditorView.lineWrapping,
-      ],
-    });
-
-    const view = new EditorView({
-      state,
-      parent: containerRef.current,
-    });
-
-    viewRef.current = view;
-
-    // Watch for theme changes
-    const observer = new MutationObserver(() => {
-      const dark = isDark();
-      view.dispatch({
-        effects: highlightCompartment.reconfigure(
-          syntaxHighlighting(dark ? latexDarkHighlightStyle : latexHighlightStyle)
-        ),
+      const updateListener = EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          onChangeRef.current?.(update.state.doc.toString());
+        }
       });
-    });
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
+      // Build LaTeX-specific completion sources
+      const citationSource = createCitationCompletion(
+        () => getBibContentRef.current?.() ?? ""
+      );
+      const refSource = createRefCompletion(
+        () => viewRef.current?.state.doc.toString() ?? ""
+      );
 
-    return () => {
-      observer.disconnect();
-      view.destroy();
-      viewRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      const state = EditorState.create({
+        doc: initialContent,
+        extensions: [
+          // Line numbers and gutters
+          lineNumbers(),
+          highlightActiveLineGutter(),
+          foldGutter(),
 
-  return (
-    <div
-      ref={containerRef}
-      className={`h-full overflow-auto [&_.cm-editor]:h-full [&_.cm-editor]:outline-none ${className ?? ""}`}
-    />
-  );
-}
+          // History (undo/redo)
+          history(),
 
-/** Imperative handle to get/set editor content */
-export function useSourceEditorRef() {
-  return useRef<EditorView | null>(null);
-}
+          // Selection and drawing
+          drawSelection(),
+          rectangularSelection(),
+          highlightActiveLine(),
+          highlightSelectionMatches(),
+
+          // Input handling
+          indentOnInput(),
+          bracketMatching(),
+          closeBrackets(),
+
+          // LaTeX autocompletion with custom sources
+          autocompletion({
+            override: [
+              latexEnvironmentCompletion,  // Must be before command (more specific match)
+              latexCommandCompletion,
+              citationSource,
+              refSource,
+            ],
+            defaultKeymap: true,
+            activateOnTyping: true,
+            maxRenderedOptions: 12,
+          }),
+
+          // LaTeX language support
+          latex(),
+
+          // Theme
+          themeCompartment.of(lightTheme),
+          highlightCompartment.of(
+            syntaxHighlighting(isDark() ? latexDarkHighlightStyle : latexHighlightStyle)
+          ),
+          syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+
+          // Keymaps
+          keymap.of([
+            ...defaultKeymap,
+            ...historyKeymap,
+            ...completionKeymap,
+            ...closeBracketsKeymap,
+            ...searchKeymap,
+            ...foldKeymap,
+            ...lintKeymap,
+            indentWithTab,
+          ]),
+
+          // Change listener
+          updateListener,
+
+          // Line wrapping
+          EditorView.lineWrapping,
+        ],
+      });
+
+      const view = new EditorView({
+        state,
+        parent: containerRef.current,
+      });
+
+      viewRef.current = view;
+
+      // Watch for theme changes
+      const observer = new MutationObserver(() => {
+        const dark = isDark();
+        view.dispatch({
+          effects: highlightCompartment.reconfigure(
+            syntaxHighlighting(dark ? latexDarkHighlightStyle : latexHighlightStyle)
+          ),
+        });
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
+
+      return () => {
+        observer.disconnect();
+        view.destroy();
+        viewRef.current = null;
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return (
+      <div
+        ref={containerRef}
+        className={`h-full overflow-auto [&_.cm-editor]:h-full [&_.cm-editor]:outline-none ${className ?? ""}`}
+      />
+    );
+  }
+);
