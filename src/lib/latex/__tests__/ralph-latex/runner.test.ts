@@ -1073,3 +1073,162 @@ describe("Cycle 5: Special characters and commands", () => {
     expect(html).toContain("100%");
   });
 });
+
+// ═══════════════════════════════════════════════════════════════
+// Cycle 6: Robustness, edge cases, and template expansion
+// ═══════════════════════════════════════════════════════════════
+
+describe("Cycle 6: Robustness - complex documents", () => {
+  it("handles full academic paper structure", () => {
+    const tex = `\\documentclass{article}
+\\usepackage{amsmath}
+\\title{Test Paper}
+\\author{Author}
+\\date{2024}
+\\begin{document}
+\\maketitle
+\\begin{abstract}
+This is an abstract.
+\\end{abstract}
+\\section{Introduction}
+Some text with \\textbf{bold} and \\textit{italic}.
+\\subsection{Background}
+See \\cite{ref1}.
+\\section{Methods}
+\\begin{enumerate}
+\\item Step one
+\\item Step two
+\\end{enumerate}
+\\section{Results}
+\\begin{figure}[h]
+\\includegraphics{fig.png}
+\\caption{A figure}
+\\end{figure}
+\\begin{table}[h]
+\\caption{Data}
+\\begin{tabular}{ll}
+A & B \\\\
+C & D \\\\
+\\end{tabular}
+\\end{table}
+\\section{Conclusion}
+Final remarks.
+\\end{document}`;
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-title");
+    expect(html).toContain("latex-abstract");
+    expect(html).toContain("latex-section");
+    expect(html).toContain("<strong>bold</strong>");
+    expect(html).toContain("<em>italic</em>");
+    expect(html).toContain("<ol>");
+    expect(html).toContain("latex-figure");
+    expect(html).toContain("latex-table");
+    expect(html).toContain("Final remarks");
+    expect(html).not.toContain("\\documentclass");
+    expect(html).not.toContain("\\usepackage");
+  });
+
+  it("handles thesis-style document with chapters", () => {
+    const tex = `\\begin{document}
+\\chapter{Introduction}
+\\section{Motivation}
+The motivation is clear.
+\\chapter{Background}
+\\section{Prior Work}
+Prior work is extensive.
+\\end{document}`;
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-chapter");
+    expect(html).toContain("Introduction");
+    expect(html).toContain("Background");
+    expect(html).toContain("latex-section");
+  });
+
+  it("handles document with theorem and proof", () => {
+    const tex = `\\begin{theorem}
+For all n, the sum is n(n+1)/2.
+\\end{theorem}
+\\begin{proof}
+By induction on n.
+\\end{proof}`;
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-theorem");
+    expect(html).toContain("latex-proof");
+  });
+
+  it("handles mixed environments in sequence", () => {
+    const tex = `\\begin{quote}
+A quote.
+\\end{quote}
+\\begin{center}
+Centered.
+\\end{center}
+\\begin{verbatim}
+code
+\\end{verbatim}`;
+    const html = latexToHtml(tex);
+    expect(html).toContain("latex-quote");
+    expect(html).toContain("latex-center");
+    expect(html).toContain("latex-verbatim");
+  });
+});
+
+describe("Cycle 6: Edge cases - empty and malformed inputs", () => {
+  it("handles empty string", () => {
+    expect(latexToHtml("")).toBeDefined();
+  });
+
+  it("handles only whitespace", () => {
+    expect(latexToHtml("   \n\n   ")).toBeDefined();
+  });
+
+  it("handles unknown commands gracefully", () => {
+    expect(latexToHtml("\\unknowncommand{something}")).toBeDefined();
+  });
+
+  it("handles unclosed braces gracefully", () => {
+    expect(latexToHtml("\\textbf{unclosed")).toBeDefined();
+  });
+
+  it("handles deeply nested braces", () => {
+    const html = latexToHtml("\\textbf{\\textit{\\underline{deep}}}");
+    expect(html).toContain("<strong>");
+    expect(html).toContain("<em>");
+    expect(html).toContain("<u>deep</u>");
+  });
+
+  it("preserves plain text", () => {
+    const html = latexToHtml("Just plain text here.");
+    expect(html).toContain("Just plain text here.");
+  });
+
+  it("handles consecutive commands", () => {
+    const html = latexToHtml("\\textbf{A}\\textit{B}\\underline{C}");
+    expect(html).toContain("<strong>A</strong>");
+    expect(html).toContain("<em>B</em>");
+    expect(html).toContain("<u>C</u>");
+  });
+});
+
+describe("Cycle 6: Outline with chapters and parts", () => {
+  it("extracts parts from outline", () => {
+    const outline = extractOutline("\\part{Part One}\n\\chapter{Ch1}\n\\section{Sec1}");
+    expect(outline.length).toBe(3);
+    expect(outline[0].level).toBe(-1);
+    expect(outline[0].title).toBe("Part One");
+  });
+
+  it("generates correct indentation for full hierarchy", () => {
+    const outline = [
+      { level: -1, title: "Part", line: 1 },
+      { level: 0, title: "Chapter", line: 5 },
+      { level: 1, title: "Section", line: 10 },
+      { level: 2, title: "Subsection", line: 15 },
+    ];
+    const text = outlineToText(outline);
+    expect(text).toContain("Part");
+    expect(text).toContain("Chapter");
+    expect(text).toContain("  Section");
+    expect(text).toContain("    Subsection");
+  });
+});

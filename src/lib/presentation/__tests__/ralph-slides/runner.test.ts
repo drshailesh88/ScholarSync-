@@ -2385,7 +2385,7 @@ describe("Cycle 23: Auto-Numbering for Infographic/Code/Citation", () => {
   test("infographic blocks not numbered (only chart/image/diagram are)", () => {
     const slides = [{
       contentBlocks: [
-        { type: "infographic", data: { sections: [] } } as ContentBlock,
+        { type: "infographic", data: { infographicType: "timeline", items: [] } } as ContentBlock,
       ],
     }];
     const result = autoNumberFiguresAndTables(
@@ -2409,7 +2409,7 @@ describe("Cycle 23: Auto-Numbering for Infographic/Code/Citation", () => {
   test("citation blocks not numbered", () => {
     const slides = [{
       contentBlocks: [
-        { type: "citation", data: { authors: "A", year: "2024", title: "T" } } as ContentBlock,
+        { type: "citation", data: { text: "Smith 2024", source: "Nature" } } as ContentBlock,
       ],
     }];
     const result = autoNumberFiguresAndTables(
@@ -2423,7 +2423,7 @@ describe("Cycle 23: Auto-Numbering for Infographic/Code/Citation", () => {
       contentBlocks: [
         makeChartBlock(),
         makeTableBlock(),
-        { type: "infographic", data: { sections: [] } } as ContentBlock,
+        { type: "infographic", data: { infographicType: "timeline", items: [] } } as ContentBlock,
         { type: "code", data: { language: "js", code: "" } } as ContentBlock,
       ],
     }];
@@ -2509,7 +2509,7 @@ describe("Cycle 23: Theme Color Hex Validation", () => {
   test("all themes have valid hex colors", () => {
     for (const [, theme] of Object.entries(PRESET_THEMES)) {
       for (const field of colorFields) {
-        const val = (theme as Record<string, string>)[field];
+        const val = (theme as Record<string, unknown>)[field] as string;
         expect(val).toMatch(hexRegex);
       }
     }
@@ -2517,13 +2517,13 @@ describe("Cycle 23: Theme Color Hex Validation", () => {
 
   test("fontFamily non-empty for all themes", () => {
     for (const [, theme] of Object.entries(PRESET_THEMES)) {
-      expect(theme.fontFamily.length).toBeGreaterThan(0);
+      expect(theme.fontFamily!.length).toBeGreaterThan(0);
     }
   });
 
   test("headingFontFamily non-empty for all themes", () => {
     for (const [, theme] of Object.entries(PRESET_THEMES)) {
-      expect(theme.headingFontFamily.length).toBeGreaterThan(0);
+      expect(theme.headingFontFamily!.length).toBeGreaterThan(0);
     }
   });
 

@@ -66,11 +66,13 @@ export function latexToHtml(tex: string): string {
   html = html.replace(/\\paragraph\*?\{([^}]*)\}/g, '<strong class="latex-paragraph">$1</strong> ');
   html = html.replace(/\\subparagraph\*?\{([^}]*)\}/g, '<strong class="latex-subparagraph">$1</strong> ');
 
-  // Bold, italic, underline
-  html = html.replace(/\\textbf\{([^}]*)\}/g, "<strong>$1</strong>");
-  html = html.replace(/\\textit\{([^}]*)\}/g, "<em>$1</em>");
-  html = html.replace(/\\underline\{([^}]*)\}/g, '<u>$1</u>');
-  html = html.replace(/\\emph\{([^}]*)\}/g, "<em>$1</em>");
+  // Bold, italic, underline (loop to handle nesting — [^{}]* matches innermost first)
+  for (let pass = 0; pass < 4; pass++) {
+    html = html.replace(/\\textbf\{([^{}]*)\}/g, "<strong>$1</strong>");
+    html = html.replace(/\\textit\{([^{}]*)\}/g, "<em>$1</em>");
+    html = html.replace(/\\underline\{([^{}]*)\}/g, "<u>$1</u>");
+    html = html.replace(/\\emph\{([^{}]*)\}/g, "<em>$1</em>");
+  }
 
   // Typewriter
 
