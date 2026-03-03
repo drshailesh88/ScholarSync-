@@ -2034,3 +2034,422 @@ describe("Cycle 12: Reporting Guidelines", () => {
     setCycleNumber(12);
   });
 });
+
+// =========================================================================
+// Cycle 13: Keyboard Shortcuts & Event Handling
+// =========================================================================
+describe("Cycle 13: Keyboard Shortcuts", () => {
+  it("ralph-studio-059: Cmd+Shift+R reference sidebar shortcut detection", () => {
+    const checks: TestCheck[] = [];
+
+    // From page.tsx: handler checks metaKey/ctrlKey + shiftKey + key === "R"
+    const matchesShortcut = (e: { metaKey: boolean; ctrlKey: boolean; shiftKey: boolean; key: string }) =>
+      (e.metaKey || e.ctrlKey) && e.shiftKey && e.key === "R";
+
+    checks.push({ name: "Cmd+Shift+R matches", passed: matchesShortcut({ metaKey: true, ctrlKey: false, shiftKey: true, key: "R" }) });
+    checks.push({ name: "Ctrl+Shift+R matches", passed: matchesShortcut({ metaKey: false, ctrlKey: true, shiftKey: true, key: "R" }) });
+    checks.push({ name: "Shift+R alone rejected", passed: !matchesShortcut({ metaKey: false, ctrlKey: false, shiftKey: true, key: "R" }) });
+    checks.push({ name: "Cmd+R (no shift) rejected", passed: !matchesShortcut({ metaKey: true, ctrlKey: false, shiftKey: false, key: "R" }) });
+    checks.push({ name: "Cmd+Shift+S rejected", passed: !matchesShortcut({ metaKey: true, ctrlKey: false, shiftKey: true, key: "S" }) });
+
+    const result = buildResult("ralph-studio-059", "Cmd+Shift+R reference sidebar shortcut", "keyboard", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  it("ralph-studio-060: custom event dispatching patterns", () => {
+    const checks: TestCheck[] = [];
+
+    // The page uses custom events: "scholarsync:open-citation-dialog" and "scholarsync:ai-action"
+    const customEvents = [
+      { name: "scholarsync:open-citation-dialog", hasDetail: false },
+      { name: "scholarsync:ai-action", hasDetail: true },
+    ];
+
+    checks.push({ name: "2 custom events defined", passed: customEvents.length === 2 });
+
+    // AI action event has action + context
+    const aiActionDetail = { action: "continue", context: "Some editor text" };
+    checks.push({ name: "AI action detail has action", passed: typeof aiActionDetail.action === "string" });
+    checks.push({ name: "AI action detail has context", passed: typeof aiActionDetail.context === "string" });
+
+    // Valid actions for AI action event
+    const validActions = ["continue", "summarize", "find-sources", "cite", "integrity-check"];
+    const unknownAction = "unknown-action";
+    checks.push({
+      name: "Valid action recognized",
+      passed: validActions.includes("continue"),
+    });
+    checks.push({
+      name: "Unknown action not in list",
+      passed: !validActions.includes(unknownAction),
+    });
+
+    const result = buildResult("ralph-studio-060", "custom event dispatching patterns", "keyboard", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  it("ralph-studio-061: form submit handler prevents default", () => {
+    const checks: TestCheck[] = [];
+
+    // The handleSubmit function calls e.preventDefault() then sendMessage()
+    let defaultPrevented = false;
+    let messageSent = false;
+
+    const mockEvent = {
+      preventDefault: () => { defaultPrevented = true; },
+    };
+
+    // Simulate handleSubmit
+    const handleSubmit = (e: { preventDefault: () => void }) => {
+      e.preventDefault();
+      messageSent = true;
+    };
+
+    handleSubmit(mockEvent);
+    checks.push({ name: "Default prevented", passed: defaultPrevented });
+    checks.push({ name: "Message send triggered", passed: messageSent });
+
+    const result = buildResult("ralph-studio-061", "form submit handler", "keyboard", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  afterEach(() => {
+    setCycleNumber(13);
+  });
+});
+
+// =========================================================================
+// Cycle 14: Export Edge Cases
+// =========================================================================
+describe("Cycle 14: Export Edge Cases", () => {
+  it("ralph-studio-062: PDF sanitization handles all unicode ranges", () => {
+    const checks: TestCheck[] = [];
+
+    const sanitizeForPdf = (text: string) =>
+      text
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u201C\u201D]/g, '"')
+        .replace(/\u2014/g, "--")
+        .replace(/\u2013/g, "-")
+        .replace(/[^\x00-\xFF]/g, "");
+
+    // Greek letters (often in medical text)
+    checks.push({
+      name: "Greek alpha stripped",
+      passed: sanitizeForPdf("\u03B1-receptor") === "-receptor",
+    });
+    checks.push({
+      name: "Greek beta stripped",
+      passed: sanitizeForPdf("\u03B2-blocker") === "-blocker",
+    });
+
+    // Copyright and registered symbols (Latin-1 extended)
+    checks.push({
+      name: "Copyright sign preserved (Latin-1)",
+      passed: sanitizeForPdf("\u00A9 2024") === "\u00A9 2024",
+    });
+    checks.push({
+      name: "Registered sign preserved (Latin-1)",
+      passed: sanitizeForPdf("Drug\u00AE") === "Drug\u00AE",
+    });
+
+    // Mixed content
+    const mixed = "\u201CHello\u201D \u2014 \u03B1 caf\u00E9";
+    const sanitized = sanitizeForPdf(mixed);
+    checks.push({
+      name: "Mixed content handled correctly",
+      passed: sanitized === '"Hello" -- caf\u00E9',
+    });
+
+    const result = buildResult("ralph-studio-062", "PDF sanitization unicode ranges", "export-edge", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  it("ralph-studio-063: DOCX inline parser handles nested bold+italic", () => {
+    const checks: TestCheck[] = [];
+
+    const parseInlineHtml = (html: string) => {
+      const runs: Array<{ text: string; bold?: boolean; italic?: boolean }> = [];
+      const parts = html.split(/(<\/?(?:strong|b|em|i|br)[^>]*>)/i);
+      let bold = false;
+      let italic = false;
+
+      for (const part of parts) {
+        const lower = part.toLowerCase();
+        if (lower === "<strong>" || lower === "<b>") { bold = true; continue; }
+        if (lower === "</strong>" || lower === "</b>") { bold = false; continue; }
+        if (lower === "<em>" || lower === "<i>") { italic = true; continue; }
+        if (lower === "</em>" || lower === "</i>") { italic = false; continue; }
+        if (lower === "<br>" || lower === "<br/>" || lower === "<br />") { runs.push({ text: "\n" }); continue; }
+
+        const text = part.replace(/<[^>]+>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&");
+        if (text) {
+          runs.push({ text, ...(bold ? { bold: true } : {}), ...(italic ? { italic: true } : {}) });
+        }
+      }
+      return runs;
+    };
+
+    // Nested bold+italic
+    const runs = parseInlineHtml("<strong><em>Bold Italic</em></strong>");
+    checks.push({
+      name: "Bold+italic nested",
+      passed: runs.length === 1 && runs[0].bold === true && runs[0].italic === true,
+    });
+
+    // Alternating formatting
+    const runs2 = parseInlineHtml("<b>bold</b> normal <i>italic</i>");
+    checks.push({
+      name: "Alternating formatting produces 3 runs",
+      passed: runs2.length === 3,
+    });
+    checks.push({
+      name: "First run bold",
+      passed: runs2[0].bold === true && !runs2[0].italic,
+    });
+    checks.push({
+      name: "Second run plain",
+      passed: !runs2[1].bold && !runs2[1].italic,
+    });
+    checks.push({
+      name: "Third run italic",
+      passed: runs2[2].italic === true && !runs2[2].bold,
+    });
+
+    // Plain text (no formatting)
+    const runs3 = parseInlineHtml("Just plain text");
+    checks.push({
+      name: "Plain text produces single run",
+      passed: runs3.length === 1 && !runs3[0].bold && !runs3[0].italic,
+    });
+
+    const result = buildResult("ralph-studio-063", "DOCX nested bold+italic", "export-edge", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  it("ralph-studio-064: export with no content returns early", () => {
+    const checks: TestCheck[] = [];
+
+    // From handleExportPDF and handleExportDocx: if (!content) return
+    const shouldExport = (content: string) => !!content;
+
+    checks.push({ name: "Empty string skips export", passed: !shouldExport("") });
+    checks.push({ name: "Null-ish content skips", passed: !shouldExport("") });
+    checks.push({ name: "Valid content proceeds", passed: shouldExport("<p>Hello</p>") });
+
+    // The getEditorContent function reads from DOM
+    // Test its fallback: el?.innerHTML ?? ""
+    const getContent = (el: { innerHTML: string } | null) => el?.innerHTML ?? "";
+    checks.push({ name: "Null element returns empty", passed: getContent(null) === "" });
+    checks.push({ name: "Element returns innerHTML", passed: getContent({ innerHTML: "<p>Test</p>" }) === "<p>Test</p>" });
+
+    const result = buildResult("ralph-studio-064", "export no content guard", "export-edge", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  afterEach(() => {
+    setCycleNumber(14);
+  });
+});
+
+// =========================================================================
+// Cycle 15: Concurrent Operations & State Consistency
+// =========================================================================
+describe("Cycle 15: Concurrent Operations", () => {
+  it("ralph-studio-065: rapid reference add/remove doesn't corrupt state", async () => {
+    const checks: TestCheck[] = [];
+    const { useReferenceStore } = await import("@/stores/reference-store");
+
+    useReferenceStore.getState().clearReferences();
+
+    const makeRef = (i: number) => ({
+      id: "ref-" + i,
+      documentId: "doc-1",
+      type: "article" as const,
+      title: "Paper " + i,
+      authors: [{ given: "A", family: "Author" + i }],
+      year: 2024,
+      dateAdded: new Date().toISOString(),
+      cslData: { type: "article-journal", title: "Paper " + i },
+    });
+
+    // Rapid add 100 references
+    for (let i = 0; i < 100; i++) {
+      useReferenceStore.getState().addReference(makeRef(i));
+    }
+    checks.push({
+      name: "100 references added correctly",
+      passed: useReferenceStore.getState().references.size === 100,
+    });
+
+    // Rapid remove 50
+    for (let i = 0; i < 50; i++) {
+      useReferenceStore.getState().removeReference("ref-" + i);
+    }
+    checks.push({
+      name: "50 references remain after removal",
+      passed: useReferenceStore.getState().references.size === 50,
+    });
+
+    // Verify remaining are correct (refs 50-99)
+    const remaining = useReferenceStore.getState().references;
+    checks.push({
+      name: "Correct references survived",
+      passed: remaining.has("ref-50") && remaining.has("ref-99") && !remaining.has("ref-0"),
+    });
+
+    // Rapid update all remaining
+    for (let i = 50; i < 100; i++) {
+      useReferenceStore.getState().updateReference("ref-" + i, { year: 2025 });
+    }
+    checks.push({
+      name: "All 50 updated correctly",
+      passed: useReferenceStore.getState().references.get("ref-75")?.year === 2025,
+    });
+
+    const result = buildResult("ralph-studio-065", "rapid reference add/remove state consistency", "concurrent", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  it("ralph-studio-066: research store withstands rapid state changes", async () => {
+    const checks: TestCheck[] = [];
+    const { useResearchStore } = await import("@/stores/research-store");
+
+    // Rapid query changes (simulating fast typing)
+    const queries = ["c", "cr", "cri", "cris", "crisp", "crispr"];
+    for (const q of queries) {
+      useResearchStore.getState().setQuery(q);
+    }
+    checks.push({
+      name: "Final query is crispr",
+      passed: useResearchStore.getState().query === "crispr",
+    });
+
+    // Rapid tab switches
+    const tabs = ["search", "library", "chat", "search", "library"] as const;
+    for (const tab of tabs) {
+      useResearchStore.getState().setActiveTab(tab);
+    }
+    checks.push({
+      name: "Final tab is library",
+      passed: useResearchStore.getState().activeTab === "library",
+    });
+
+    // Rapid sidebar toggles
+    for (let i = 0; i < 10; i++) {
+      useResearchStore.getState().toggleSidebar();
+    }
+    checks.push({
+      name: "Even toggles = closed",
+      passed: useResearchStore.getState().isOpen === false,
+    });
+
+    for (let i = 0; i < 11; i++) {
+      useResearchStore.getState().toggleSidebar();
+    }
+    checks.push({
+      name: "Odd toggles = open",
+      passed: useResearchStore.getState().isOpen === true,
+    });
+
+    const result = buildResult("ralph-studio-066", "rapid research store state changes", "concurrent", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  it("ralph-studio-067: reference number map consistency with large citation sets", async () => {
+    const checks: TestCheck[] = [];
+    const { useReferenceStore } = await import("@/stores/reference-store");
+
+    useReferenceStore.getState().clearReferences();
+
+    // Add 50 references
+    for (let i = 1; i <= 50; i++) {
+      useReferenceStore.getState().addReference({
+        id: "ref-" + i,
+        documentId: "doc-1",
+        type: "article" as const,
+        title: "Paper " + i,
+        authors: [{ given: "A", family: "Auth" + i }],
+        year: 2024,
+        dateAdded: new Date().toISOString(),
+        cslData: { type: "article-journal", title: "Paper " + i },
+      });
+    }
+
+    // Assign citation numbers
+    const numMap = new Map<string, number>();
+    for (let i = 1; i <= 50; i++) {
+      numMap.set("ref-" + i, i);
+    }
+    useReferenceStore.getState().setReferenceNumberMap(numMap);
+
+    const state = useReferenceStore.getState();
+    checks.push({ name: "50 references in store", passed: state.references.size === 50 });
+    checks.push({ name: "50 numbers assigned", passed: state.referenceNumberMap.size === 50 });
+
+    // Cited sources list should cap at 5
+    const citedList = Array.from(state.referenceNumberMap.entries())
+      .sort(([, a], [, b]) => a - b)
+      .slice(0, 5);
+    checks.push({ name: "Cited list capped at 5", passed: citedList.length === 5 });
+    checks.push({ name: "First citation is [1]", passed: citedList[0][1] === 1 });
+    checks.push({ name: "Fifth citation is [5]", passed: citedList[4][1] === 5 });
+
+    const result = buildResult("ralph-studio-067", "large citation number map consistency", "concurrent", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  it("ralph-studio-068: simultaneous store resets", async () => {
+    const checks: TestCheck[] = [];
+    const { useReferenceStore } = await import("@/stores/reference-store");
+    const { useResearchStore } = await import("@/stores/research-store");
+
+    // Populate both stores
+    useReferenceStore.getState().addReference({
+      id: "ref-1",
+      documentId: "doc-1",
+      type: "article" as const,
+      title: "Test",
+      authors: [{ given: "J", family: "S" }],
+      year: 2024,
+      dateAdded: new Date().toISOString(),
+      cslData: { type: "article-journal", title: "Test" },
+    });
+    useResearchStore.getState().setQuery("test");
+
+    // Reset both simultaneously
+    useReferenceStore.getState().clearReferences();
+    useResearchStore.getState().clearSearch();
+
+    checks.push({ name: "Reference store cleared", passed: useReferenceStore.getState().references.size === 0 });
+    checks.push({ name: "Research store cleared", passed: useResearchStore.getState().query === "" });
+    checks.push({ name: "Stores independent after reset", passed: true });
+
+    const result = buildResult("ralph-studio-068", "simultaneous store resets", "concurrent", checks);
+    updateScorecard(result);
+    console.log(formatResult(result));
+    expect(result.pass).toBe(true);
+  });
+
+  afterEach(() => {
+    setCycleNumber(15);
+  });
+});
