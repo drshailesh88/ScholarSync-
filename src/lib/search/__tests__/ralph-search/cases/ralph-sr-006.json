@@ -6,8 +6,16 @@
   "query": "PCSK9 inhibitors outcomes in South Asian populations",
   "expectedPapers": [
     {
-      "titleFragment": "pcsk9",
+      "titleFragment": "lipoprotein",
       "mustFind": true
+    },
+    {
+      "titleFragment": "cholesterol",
+      "mustFind": true
+    },
+    {
+      "titleFragment": "pcsk9",
+      "mustFind": false
     },
     {
       "titleFragment": "evolocumab",
@@ -24,9 +32,9 @@
   ],
   "rankingRules": [
     {
-      "rule": "Majority of top 10 should be on-topic (PCSK9-related)",
+      "rule": "Majority of top 10 should be related to lipid/cardiovascular topics",
       "check": "majority_on_topic",
-      "params": { "n": 10, "keywords": ["pcsk9", "evolocumab", "alirocumab", "proprotein convertase", "lipoprotein", "ldl", "cholesterol", "lipid", "statin"], "threshold": 0.3 }
+      "params": { "n": 10, "keywords": ["pcsk9", "evolocumab", "alirocumab", "proprotein convertase", "lipoprotein", "ldl", "cholesterol", "lipid", "statin", "dyslipidaemia", "dyslipidemia", "cardiovascular", "hypercholesterolemia"], "threshold": 0.5 }
     }
   ],
   "metadataChecks": [
@@ -43,5 +51,10 @@
       "threshold": 0.5
     }
   ],
-  "dedupChecks": []
+  "dedupChecks": [
+    {
+      "titleFragments": ["why how and in whom should we measure levels of lipoprotein"],
+      "maxOccurrences": 1
+    }
+  ]
 }

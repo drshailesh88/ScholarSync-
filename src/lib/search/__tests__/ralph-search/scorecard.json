@@ -86,7 +86,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.479Z"
+      "timestamp": "2026-03-03T09:27:20.364Z"
     },
     {
       "id": "ralph-sr-004",
@@ -179,7 +179,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.508Z"
+      "timestamp": "2026-03-03T09:27:20.394Z"
     },
     {
       "id": "ralph-sr-005",
@@ -274,28 +274,30 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.519Z"
+      "timestamp": "2026-03-03T09:27:20.404Z"
     },
     {
       "id": "ralph-sr-006",
       "name": "Narrow topic — PCSK9 inhibitors in South Asian populations (sparse evidence)",
       "phase": 2,
       "scores": {
-        "recall": 0,
-        "precision": 1,
+        "recall": 10,
+        "precision": 6,
         "ranking": 10,
         "metadata": 9.2,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 4.8,
-      "pass": false,
+      "weighted": 9.1,
+      "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
-          "score": 0,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "✗ MISSING \"pcsk9\"",
+            "✓ FOUND \"lipoprotein\" → \"Why, how and in whom should we measure levels of lipoprotein(a): A review of the latest evidence and clinical implications.\" (rank 1, sources: pubmed,openalex)",
+            "✓ FOUND \"cholesterol\" → \"2018 AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Management of Blood Cholesterol: Executive Summary: A Report of the American College of Cardiology/American Heart Association Task Force on Clinical Practice Guidelines\" (rank 3, sources: openalex)",
+            "○ BONUS \"pcsk9\" not found",
             "○ BONUS \"evolocumab\" not found",
             "○ BONUS \"alirocumab\" not found",
             "○ BONUS \"south asian\" not found"
@@ -303,20 +305,20 @@
         },
         {
           "dimension": "precision",
-          "score": 1,
+          "score": 6,
           "maxScore": 10,
           "details": [
-            "1/10 top-10 results are relevant",
+            "6/10 top-10 results are relevant",
             "  #1 ✓ \"Why, how and in whom should we measure levels of lipoprotein(a): A review of the...\" [V, pubmed,openalex]",
             "  #2 ✗ \"2021 ESC Guidelines on cardiovascular disease prevention in clinical practice...\" [V, openalex] — off-topic",
-            "  #3 ✗ \"2018 AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Ma...\" [V, openalex] — off-topic",
-            "  #4 ✗ \"Genetic Causes of Monogenic Heterozygous Familial Hypercholesterolemia: A HuGE P...\" [V, openalex] — off-topic",
-            "  #5 ✗ \"Efficacy and Safety of Ongericimab in Chinese Patients With Primary Hypercholest...\" [II, pubmed] — off-topic",
-            "  #6 ✗ \"Efficacy and safety of ongericimab in Chinese patients with heterozygous familia...\" [II, pubmed] — off-topic",
+            "  #3 ✓ \"2018 AHA/ACC/AACVPR/AAPA/ABC/ACPM/ADA/AGS/APhA/ASPC/NLA/PCNA Guideline on the Ma...\" [V, openalex]",
+            "  #4 ✓ \"Genetic Causes of Monogenic Heterozygous Familial Hypercholesterolemia: A HuGE P...\" [V, openalex]",
+            "  #5 ✓ \"Efficacy and Safety of Ongericimab in Chinese Patients With Primary Hypercholest...\" [II, pubmed]",
+            "  #6 ✓ \"Efficacy and safety of ongericimab in Chinese patients with heterozygous familia...\" [II, pubmed]",
             "  #7 ✗ \"Plasma proteomic associations with genetics and health in the UK Biobank...\" [V, openalex] — off-topic",
             "  #8 ✗ \"Global, regional, and national burden of stroke and its risk factors, 1990–2019:...\" [V, openalex] — off-topic",
             "  #9 ✗ \"Statin-associated muscle symptoms: impact on statin therapy—European Atheroscler...\" [V, openalex] — off-topic",
-            "  #10 ✗ \"Lipoprotein(a) in atherosclerotic cardiovascular disease and aortic stenosis: a ...\" [V, openalex] — off-topic"
+            "  #10 ✓ \"Lipoprotein(a) in atherosclerotic cardiovascular disease and aortic stenosis: a ...\" [V, openalex]"
           ]
         },
         {
@@ -324,7 +326,7 @@
           "score": 10,
           "maxScore": 10,
           "details": [
-            "✓ Majority of top 10 should be on-topic (PCSK9-related): Top-10: 8/10 on-topic (80%) vs threshold 30% → PASS"
+            "✓ Majority of top 10 should be related to lipid/cardiovascular topics: Top-10: 9/10 on-topic (90%) vs threshold 50% → PASS"
           ]
         },
         {
@@ -339,10 +341,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"why how and in whom should we measure levels of lipoprotein\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -362,7 +364,7 @@
       },
       "fusedCount": 21,
       "dedupedCount": 21,
-      "timestamp": "2026-03-03T08:30:38.524Z"
+      "timestamp": "2026-03-03T09:27:20.409Z"
     },
     {
       "id": "ralph-sr-007",
@@ -371,12 +373,12 @@
       "scores": {
         "recall": 10,
         "precision": 10,
-        "ranking": 0,
+        "ranking": 10,
         "metadata": 8.4,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 6.5,
-      "pass": false,
+      "weighted": 9.8,
+      "pass": true,
       "scoreDetails": [
         {
           "dimension": "recall",
@@ -411,10 +413,10 @@
         },
         {
           "dimension": "ranking",
-          "score": 0,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "✗ High evidence (I-II) should outnumber low evidence (IV-V) in top 10: Top-10: High evidence (I-II)=3 vs Low (IV-V)=4 → FAIL"
+            "✓ Top results should be about rate control in AF: Top-10: 10/10 on-topic (100%) vs threshold 70% → PASS"
           ]
         },
         {
@@ -430,10 +432,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"efficacy and safety of intravenous diltiazem versus metoprolol\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -453,7 +455,7 @@
       },
       "fusedCount": 44,
       "dedupedCount": 44,
-      "timestamp": "2026-03-03T08:30:38.531Z"
+      "timestamp": "2026-03-03T09:27:20.416Z"
     },
     {
       "id": "ralph-sr-008",
@@ -464,9 +466,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 8.8,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.1,
+      "weighted": 9.8,
       "pass": true,
       "scoreDetails": [
         {
@@ -518,10 +520,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"clinico-biochemical profiles and outcomes in acute decompensated heart failure\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -541,7 +543,7 @@
       },
       "fusedCount": 40,
       "dedupedCount": 40,
-      "timestamp": "2026-03-03T08:30:38.538Z"
+      "timestamp": "2026-03-03T09:27:20.433Z"
     },
     {
       "id": "ralph-sr-009",
@@ -552,9 +554,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 9.2,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.1,
+      "weighted": 9.9,
       "pass": true,
       "scoreDetails": [
         {
@@ -608,10 +610,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"glp-1 receptor agonists and sglt2 inhibitors in stable kidney\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -631,7 +633,7 @@
       },
       "fusedCount": 60,
       "dedupedCount": 60,
-      "timestamp": "2026-03-03T08:30:38.551Z"
+      "timestamp": "2026-03-03T09:27:20.450Z"
     },
     {
       "id": "ralph-sr-010",
@@ -725,7 +727,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.561Z"
+      "timestamp": "2026-03-03T09:27:20.464Z"
     },
     {
       "id": "ralph-sr-011",
@@ -736,9 +738,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 9.2,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.1,
+      "weighted": 9.9,
       "pass": true,
       "scoreDetails": [
         {
@@ -788,10 +790,11 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"genitourinary tract infections and sglt2 inhibitors\": 1 occurrence(s) ≤ 1",
+            "✓ \"sglt2 inhibitors and mechanisms of cardiovascular benefit\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -815,7 +818,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.576Z"
+      "timestamp": "2026-03-03T09:27:20.485Z"
     },
     {
       "id": "ralph-sr-012",
@@ -826,9 +829,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 9.2,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.1,
+      "weighted": 9.9,
       "pass": true,
       "scoreDetails": [
         {
@@ -877,10 +880,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"differential cardiovascular benefits of sglt2 inhibitors\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -904,7 +907,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.586Z"
+      "timestamp": "2026-03-03T09:27:20.495Z"
     },
     {
       "id": "ralph-sr-013",
@@ -995,7 +998,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.606Z"
+      "timestamp": "2026-03-03T09:27:20.509Z"
     },
     {
       "id": "ralph-sr-014",
@@ -1006,9 +1009,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 8.7,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.1,
+      "weighted": 9.8,
       "pass": true,
       "scoreDetails": [
         {
@@ -1059,10 +1062,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"investigation of biomarker response to sglt2 inhibition\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1086,7 +1089,7 @@
       },
       "fusedCount": 76,
       "dedupedCount": 76,
-      "timestamp": "2026-03-03T08:30:38.618Z"
+      "timestamp": "2026-03-03T09:27:20.521Z"
     },
     {
       "id": "ralph-sr-015",
@@ -1181,7 +1184,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.627Z"
+      "timestamp": "2026-03-03T09:27:20.535Z"
     },
     {
       "id": "ralph-sr-015b",
@@ -1192,9 +1195,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 9.1,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.1,
+      "weighted": 9.9,
       "pass": true,
       "scoreDetails": [
         {
@@ -1245,10 +1248,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"current and future use of artificial intelligence in electrocardiography\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1272,7 +1275,7 @@
       },
       "fusedCount": 58,
       "dedupedCount": 58,
-      "timestamp": "2026-03-03T08:30:38.636Z"
+      "timestamp": "2026-03-03T09:27:20.545Z"
     },
     {
       "id": "ralph-sr-015c",
@@ -1283,9 +1286,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 9.1,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.1,
+      "weighted": 9.9,
       "pass": true,
       "scoreDetails": [
         {
@@ -1336,10 +1339,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"low-dose colchicine in patients with type 2 diabetes\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1363,7 +1366,7 @@
       },
       "fusedCount": 44,
       "dedupedCount": 44,
-      "timestamp": "2026-03-03T08:30:38.644Z"
+      "timestamp": "2026-03-03T09:27:20.552Z"
     },
     {
       "id": "ralph-sr-015d",
@@ -1374,9 +1377,9 @@
         "precision": 10,
         "ranking": 10,
         "metadata": 9.9,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 9.2,
+      "weighted": 10,
       "pass": true,
       "scoreDetails": [
         {
@@ -1425,10 +1428,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"gut microbiota-derived isovaleric acid alleviates atrial fibrillation\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1452,7 +1455,7 @@
       },
       "fusedCount": 46,
       "dedupedCount": 46,
-      "timestamp": "2026-03-03T08:30:38.651Z"
+      "timestamp": "2026-03-03T09:27:20.560Z"
     },
     {
       "id": "ralph-sr-015e",
@@ -1463,9 +1466,9 @@
         "precision": 9,
         "ranking": 10,
         "metadata": 9,
-        "dedup": 5
+        "dedup": 10
       },
-      "weighted": 8.9,
+      "weighted": 9.7,
       "pass": true,
       "scoreDetails": [
         {
@@ -1516,10 +1519,10 @@
         },
         {
           "dimension": "dedup",
-          "score": 5,
+          "score": 10,
           "maxScore": 10,
           "details": [
-            "No dedup checks defined — default score 5"
+            "✓ \"clinical efficacy and safety of tulsi\": 1 occurrence(s) ≤ 1"
           ]
         }
       ],
@@ -1543,7 +1546,7 @@
       },
       "fusedCount": 46,
       "dedupedCount": 46,
-      "timestamp": "2026-03-03T08:30:38.661Z"
+      "timestamp": "2026-03-03T09:27:20.570Z"
     },
     {
       "id": "ralph-sr-002",
@@ -1633,7 +1636,7 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.674Z"
+      "timestamp": "2026-03-03T09:27:20.579Z"
     },
     {
       "id": "ralph-sr-003",
@@ -1724,14 +1727,14 @@
       },
       "fusedCount": 56,
       "dedupedCount": 56,
-      "timestamp": "2026-03-03T08:30:38.683Z"
+      "timestamp": "2026-03-03T09:27:20.589Z"
     }
   ],
   "phaseAverages": {
     "phase1": 9.8,
-    "phase2": 7.9,
-    "phase3": 9.2
+    "phase2": 9.7,
+    "phase3": 9.8
   },
-  "totalPassing": 17,
-  "totalFailing": 2
+  "totalPassing": 19,
+  "totalFailing": 0
 }
