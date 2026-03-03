@@ -2501,16 +2501,19 @@ describe("Cycle 23: Version Diff — Content Block Interaction", () => {
 
 describe("Cycle 23: Theme Color Hex Validation", () => {
   const hexRegex = /^#[0-9A-Fa-f]{6}$/;
-  const colorFields = [
-    "primaryColor", "secondaryColor", "backgroundColor",
-    "textColor", "accentColor", "surfaceColor", "borderColor", "codeBackground",
-  ];
+
+  function getThemeField(theme: ThemeConfig, field: string): string {
+    return String((theme as never as Record<string, string>)[field]);
+  }
 
   test("all themes have valid hex colors", () => {
+    const colorFields = [
+      "primaryColor", "secondaryColor", "backgroundColor",
+      "textColor", "accentColor", "surfaceColor", "borderColor", "codeBackground",
+    ];
     for (const [, theme] of Object.entries(PRESET_THEMES)) {
       for (const field of colorFields) {
-        const val = (theme as unknown as Record<string, string>)[field];
-        expect(val).toMatch(hexRegex);
+        expect(getThemeField(theme, field)).toMatch(hexRegex);
       }
     }
   });
