@@ -200,6 +200,9 @@ export function scoreQueryResponse(
       return /^\*\*(Host|Expert|Q|A)[\s:*]/.test(trimmed) && !/\d{2,}/.test(trimmed) || // dialogue markers without data
         /^#{1,3}\s/.test(trimmed) || // markdown headers
         /^\d+\.\s+\w+.*\?$/.test(trimmed) || // numbered questions
+        /^-\s+\w+.*\?$/.test(trimmed) || // bulleted questions
+        /\*\*Key Topics\*\*|derived from source/i.test(trimmed) || // metadata lines
+        /\*\*Suggested Questions\*\*/i.test(trimmed) || // section headers
         /did not contribute|not included|unused paper|not.*an SGLT2/i.test(trimmed) || // meta-commentary about absent data
         /source coverage|papers? used/i.test(trimmed); // source coverage notes
     };

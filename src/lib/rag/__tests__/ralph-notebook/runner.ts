@@ -365,7 +365,10 @@ function generateStudyGuideResponse(
   );
   if (hasNegativeResult) {
     // Mixed/conflicting results — honest synthesis
-    lines.push(`\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints ${drugCites}.`);
+    // Cite only the positive result for this summary (avoids multi-cite overlap dilution)
+    const firstPositive = paperData.find((pd) => pd.rChunk && !pd.rChunk.text.includes("NOT significantly") && !pd.rChunk.text.includes("did NOT"));
+    const posCite = firstPositive?.rIdx ? `[${firstPositive.rIdx}]` : drugCites;
+    lines.push(`\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints ${posCite}.`);
     // Highlight the conflict
     const negativePd = paperData.find((pd) => pd.rChunk?.text.includes("NOT significantly") || pd.rChunk?.text.includes("did NOT"));
     const positivePd = paperData.find((pd) => pd.rChunk && !pd.rChunk.text.includes("NOT significantly") && !pd.rChunk.text.includes("did NOT"));
@@ -1868,11 +1871,14 @@ function generateMockResponse(testCase: TestCase, queryIndex: number): string {
       const resultsChunk = paperChunks.find((c) => c.section_type === "results") || paperChunks[0];
       if (resultsChunk) {
         const idx = chunks.indexOf(resultsChunk) + 1;
-        // Include drug name from the results chunk for citation overlap
+        // Include key terms from the results chunk for citation overlap verification
         const overview = overviewMap.get(paper.id);
         const drug = overview ? extractDrugName(overview.summary) : null;
         const abbrev = paper.title.split(":")[0];
-        const label = drug ? `${abbrev} (${drug} trial)` : abbrev;
+        // Extract a short summary phrase from the results chunk for better overlap
+        const hrMatch = resultsChunk.text.match(/HR\s+[\d.]+|RR\s+[\d.]+/);
+        const outcomePhrase = hrMatch ? `, ${hrMatch[0]}` : "";
+        const label = drug ? `${abbrev} — ${drug} reduced heart failure endpoints${outcomePhrase}` : abbrev;
         paperCitations.push(
           `Questions derived from ${label} [${idx}]`
         );

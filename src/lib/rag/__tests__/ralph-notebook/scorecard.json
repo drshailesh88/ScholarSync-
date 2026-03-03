@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-03-03T12:19:23.082Z",
+  "lastUpdated": "2026-03-03T12:29:32.409Z",
   "phase": 1,
   "currentCycle": 5,
   "totalCases": 20,
   "passing": 20,
   "failing": 0,
-  "averageScore": 9.56,
+  "averageScore": 9.62,
   "gateStatus": {
     "phase1_grounding": "passed",
     "phase2_intelligence": "passed",
@@ -17,7 +17,7 @@
       "caseId": "ralph-nb-001",
       "caseName": "Basic single-source factual question",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:19:22.817Z",
+      "timestamp": "2026-03-03T12:29:32.140Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 3,
@@ -70,7 +70,7 @@
       "caseId": "ralph-nb-002",
       "caseName": "Citation content verification — multi-chunk synthesis",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:19:22.826Z",
+      "timestamp": "2026-03-03T12:29:32.149Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -151,7 +151,7 @@
       "caseId": "ralph-nb-003",
       "caseName": "Hallucination detection — question with no answer in sources",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:19:22.836Z",
+      "timestamp": "2026-03-03T12:29:32.159Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -261,7 +261,7 @@
       "caseId": "ralph-nb-004",
       "caseName": "Multi-chunk synthesis — answer requires combining 3+ chunks across papers",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:19:22.844Z",
+      "timestamp": "2026-03-03T12:29:32.167Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -347,7 +347,7 @@
       "caseId": "ralph-nb-005",
       "caseName": "Adversarial citation — contradictory findings, source-specific querying",
       "category": "grounding",
-      "timestamp": "2026-03-03T12:19:22.854Z",
+      "timestamp": "2026-03-03T12:29:32.177Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -457,7 +457,7 @@
       "caseId": "ralph-nb-006",
       "caseName": "Source-specific querying — paper-name detection and filtered retrieval",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:19:22.877Z",
+      "timestamp": "2026-03-03T12:29:32.201Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -569,7 +569,7 @@
       "caseId": "ralph-nb-007",
       "caseName": "Cross-source comparison — structured synthesis with comparison prompt",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:19:22.893Z",
+      "timestamp": "2026-03-03T12:29:32.218Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -661,7 +661,7 @@
       "caseId": "ralph-nb-008",
       "caseName": "Source overview generation — auto-summary on upload",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:19:22.899Z",
+      "timestamp": "2026-03-03T12:29:32.223Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -688,17 +688,16 @@
             3
           ],
           "scores": {
-            "grounding": 8,
+            "grounding": 10,
             "citationAccuracy": 10,
             "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.3,
-          "issues": [
-            "83% of factual sentences have citations (target: 100%)"
-          ],
+          "weightedScore": 9.9,
+          "issues": [],
           "passedChecks": [
+            "All factual sentences have citations",
             "All required citations present",
             "Citation verifier: all 4 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
@@ -708,7 +707,7 @@
           ]
         }
       ],
-      "overallScore": 9.3,
+      "overallScore": 9.9,
       "pass": true,
       "regressions": []
     },
@@ -716,7 +715,7 @@
       "caseId": "ralph-nb-009",
       "caseName": "Dynamic suggested questions — source-aware starter questions",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:19:22.906Z",
+      "timestamp": "2026-03-03T12:29:32.231Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -738,7 +737,7 @@
         {
           "queryId": "q1",
           "query": "Generate dynamic suggested questions for these three heart failure papers",
-          "response": "Based on your uploaded papers, here are suggested questions covering multiple question types (factual, comparative, analytical, applied):\n\n- **[factual]** What was the primary endpoint result for dapagliflozin [1]?\n- **[factual]** How many patients were enrolled in EMPEROR-Reduced and what were the inclusion criteria [4]?\n- **[comparative]** How do the hazard ratios for dapagliflozin and empagliflozin compare on the primary composite endpoint [1]?\n- **[analytical]** What are the main limitations across these heart failure trials?\n- **[applied]** What does this evidence suggest for treating patients with heart failure and reduced ejection fraction?\n- **[comparative]** How does sacubitril/valsartan compare on cardiovascular death reduction [5]?\n\nAll questions are answerable from the uploaded papers and do not reference topics absent from your sources. Questions derived from DAPA-HF (dapagliflozin trial) [1]. Questions derived from EMPEROR-Reduced (empagliflozin trial) [3]. Questions derived from PARADIGM-HF (sacubitril/valsartan trial) [5].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
+          "response": "Based on your uploaded papers, here are suggested questions covering multiple question types (factual, comparative, analytical, applied):\n\n- **[factual]** What was the primary endpoint result for dapagliflozin [1]?\n- **[factual]** How many patients were enrolled in EMPEROR-Reduced and what were the inclusion criteria [4]?\n- **[comparative]** How do the hazard ratios for dapagliflozin and empagliflozin compare on the primary composite endpoint [1]?\n- **[analytical]** What are the main limitations across these heart failure trials?\n- **[applied]** What does this evidence suggest for treating patients with heart failure and reduced ejection fraction?\n- **[comparative]** How does sacubitril/valsartan compare on cardiovascular death reduction [5]?\n\nAll questions are answerable from the uploaded papers and do not reference topics absent from your sources. Questions derived from DAPA-HF — dapagliflozin reduced heart failure endpoints, HR 0.74 [1]. Questions derived from EMPEROR-Reduced — empagliflozin reduced heart failure endpoints, HR 0.75 [3]. Questions derived from PARADIGM-HF — sacubitril/valsartan reduced heart failure endpoints, HR 0.80 [5].\n\nSources:\n[1] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[3] EMPEROR-Reduced: Empagliflozin in Heart Failure with Reduced Ejection Fraction — Packer M, Anker SD, Butler J (2020)\n[5] PARADIGM-HF: Angiotensin-Neprilysin Inhibition versus Enalapril in Heart Failure — McMurray JJV, Packer M, Desai AS (2014)",
           "citationsFound": [
             1,
             3,
@@ -747,26 +746,25 @@
           ],
           "scores": {
             "grounding": 10,
-            "citationAccuracy": 8,
+            "citationAccuracy": 10,
             "completeness": 10,
             "hallucinationResistance": 10,
             "readability": 9
           },
-          "weightedScore": 9.4,
-          "issues": [
-            "Citation content mismatch: 1 citation(s) don't match their source content",
-            "  CV: Citation [3] has low overlap (0.08) with source content (should likely be [4], overlap=0.68)"
-          ],
+          "weightedScore": 9.9,
+          "issues": [],
           "passedChecks": [
             "All factual sentences have citations",
             "All required citations present",
+            "Citation verifier: all 7 citations match source content (avg overlap: 100%)",
             "No forbidden content detected",
+            "3 statistical values verified against sources",
             "All expected behaviors matched",
             "Response includes Sources section"
           ]
         }
       ],
-      "overallScore": 9.4,
+      "overallScore": 9.9,
       "pass": true,
       "regressions": []
     },
@@ -774,7 +772,7 @@
       "caseId": "ralph-nb-010",
       "caseName": "Source coverage analysis — which papers contributed",
       "category": "intelligence",
-      "timestamp": "2026-03-03T12:19:22.916Z",
+      "timestamp": "2026-03-03T12:29:32.238Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 4,
@@ -860,7 +858,7 @@
       "caseId": "ralph-nb-011",
       "caseName": "Study guide generation — structured artifact from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:19:22.928Z",
+      "timestamp": "2026-03-03T12:29:32.249Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -951,7 +949,7 @@
       "caseId": "ralph-nb-012",
       "caseName": "FAQ generation — cited question-answer pairs from sources",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:19:22.948Z",
+      "timestamp": "2026-03-03T12:29:32.270Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1042,7 +1040,7 @@
       "caseId": "ralph-nb-013",
       "caseName": "Cross-artifact consistency — same sources, different formats",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:19:22.974Z",
+      "timestamp": "2026-03-03T12:29:32.297Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1134,7 +1132,7 @@
       "caseId": "ralph-nb-014",
       "caseName": "Artifact edge cases — ambiguous queries and grounding under format pressure",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:19:22.993Z",
+      "timestamp": "2026-03-03T12:29:32.318Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1222,7 +1220,7 @@
       "caseId": "ralph-nb-015",
       "caseName": "Timeline generation and artifact routing robustness",
       "category": "artifacts",
-      "timestamp": "2026-03-03T12:19:23.009Z",
+      "timestamp": "2026-03-03T12:29:32.334Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1312,7 +1310,7 @@
       "caseId": "ralph-nb-016",
       "caseName": "Audio overview — conversational podcast script from sources",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T12:19:23.024Z",
+      "timestamp": "2026-03-03T12:29:32.351Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1400,7 +1398,7 @@
       "caseId": "ralph-nb-017",
       "caseName": "Audio overview edge cases — conflicting evidence and single-paper audio",
       "category": "audio_overview",
-      "timestamp": "2026-03-03T12:19:23.037Z",
+      "timestamp": "2026-03-03T12:29:32.363Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 5,
@@ -1486,7 +1484,7 @@
       "caseId": "ralph-nb-018",
       "caseName": "Edge cases — single paper, minimal chunks, boundary conditions",
       "category": "polish",
-      "timestamp": "2026-03-03T12:19:23.049Z",
+      "timestamp": "2026-03-03T12:29:32.375Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 2,
@@ -1568,7 +1566,7 @@
       "caseId": "ralph-nb-019",
       "caseName": "Cross-feature integration — routing, stat fidelity, artifact switching",
       "category": "integration",
-      "timestamp": "2026-03-03T12:19:23.060Z",
+      "timestamp": "2026-03-03T12:29:32.387Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 6,
@@ -1654,7 +1652,7 @@
       "caseId": "ralph-nb-020",
       "caseName": "Stress test — adversarial queries, ambiguous routing, maximum paper count",
       "category": "stress_test",
-      "timestamp": "2026-03-03T12:19:23.081Z",
+      "timestamp": "2026-03-03T12:29:32.408Z",
       "mode": "mock",
       "promptAnalysis": {
         "totalSourceBlocks": 8,
@@ -1711,7 +1709,7 @@
         {
           "queryId": "q2",
           "query": "Create a study guide covering all four trials",
-          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **Mineralocorticoid Receptor Antagonists (MRAs)**: Spironolactone, an aldosterone antagonist studied in heart failure.\n  - RALES: Reduced mortality (RR 0.70) [1].\n  - TOPCAT: Did NOT significantly reduce the primary endpoint (HR 0.89) [3].\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [5].\n  - Dapagliflozin reduced the composite endpoint (HR 0.82) [7].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40% [2][6][8].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF (≥45% or ≥50%) [4].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.89 in TOPCAT [3].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in TOPCAT [3].\n\n## Main Findings\n\n**RALES (Spironolactone)**\n- Spironolactone reduced mortality (RR 0.70; 95% CI 0.60-0.82; P<0.001) [1].\n**TOPCAT (Spironolactone)**\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- The number needed to treat was 21 [5].\n**DELIVER (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.82; 95% CI 0.73-0.92; P<0.001) [7].\n\n## Methodology Overview\n\n- RALES: 1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% were randomized to spironolactone 25mg or placebo [2]. 1663 patients were enrolled [2].\n- TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [4]. The median follow-up was 3.3 years [4]. 3445 patients were enrolled [4].\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [6]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [6].\n- DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [8]. The median follow-up was 2.3 years [8]. 6263 patients were enrolled [8].\n\n## Review Questions\n\n1. What were the primary endpoint results of each trial, and which reached statistical significance?\n2. How do the conflicting results across these trials affect clinical interpretation?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints [1][3][5][7]. Spironolactone did NOT significantly reduce the primary composite endpoint (HR 0.89; P=0.14) [3].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[7] DELIVER: Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
+          "response": "## Key Concepts\n\nThis section contains the key concepts from your sources.\n\n- **Mineralocorticoid Receptor Antagonists (MRAs)**: Spironolactone, an aldosterone antagonist studied in heart failure.\n  - RALES: Reduced mortality (RR 0.70) [1].\n  - TOPCAT: Did NOT significantly reduce the primary endpoint (HR 0.89) [3].\n- **SGLT2 Inhibitors**: Sodium-glucose cotransporter 2 inhibitors studied for heart failure outcomes.\n  - Dapagliflozin reduced the composite endpoint (HR 0.74) [5].\n  - Dapagliflozin reduced the composite endpoint (HR 0.82) [7].\n- **Heart Failure with Reduced Ejection Fraction (HFrEF)**: Heart failure with LVEF ≤40% [2][6][8].\n- **Heart Failure with Preserved Ejection Fraction (HFpEF)**: Heart failure with preserved LVEF (≥45% or ≥50%) [4].\n- **Hazard Ratio (HR)**: A measure comparing event rates between groups; HR <1.0 suggests treatment benefit, e.g., HR 0.89 in TOPCAT [3].\n- **Composite Endpoint**: A primary outcome combining multiple clinical events such as heart failure hospitalization or cardiovascular death, as used in TOPCAT [3].\n\n## Main Findings\n\n**RALES (Spironolactone)**\n- Spironolactone reduced mortality (RR 0.70; 95% CI 0.60-0.82; P<0.001) [1].\n**TOPCAT (Spironolactone)**\n- Spironolactone did NOT significantly reduce the primary endpoint (HR 0.89; 95% CI 0.77-1.04; P=0.14) [3].\n**DAPA-HF (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.74; 95% CI 0.65-0.85; P<0.001) [5].\n- The number needed to treat was 21 [5].\n**DELIVER (Dapagliflozin)**\n- Dapagliflozin reduced the composite endpoint (HR 0.82; 95% CI 0.73-0.92; P<0.001) [7].\n\n## Methodology Overview\n\n- RALES: 1663 patients with severe heart failure (NYHA class III or IV) and LVEF ≤35% were randomized to spironolactone 25mg or placebo [2]. 1663 patients were enrolled [2].\n- TOPCAT: 3445 patients aged ≥50 years with symptomatic heart failure and ejection fraction ≥45% were enrolled [4]. The median follow-up was 3.3 years [4]. 3445 patients were enrolled [4].\n- DAPA-HF: Enrolled patients were aged ≥18 years with NYHA class II-IV heart failure and LVEF ≤40% [6]. Patients were randomized 1:1 to dapagliflozin 10mg or placebo [6].\n- DELIVER: 6263 patients with NYHA class II-IV heart failure and LVEF >40% were enrolled [8]. The median follow-up was 2.3 years [8]. 6263 patients were enrolled [8].\n\n## Review Questions\n\n1. What were the primary endpoint results of each trial, and which reached statistical significance?\n2. How do the conflicting results across these trials affect clinical interpretation?\n3. What patient populations were enrolled in each trial?\n\n## Key Takeaways\n\nThe evidence from these trials is mixed. Not all trials showed statistically significant benefit on their primary endpoints [1]. Spironolactone did NOT significantly reduce the primary composite endpoint (HR 0.89; P=0.14) [3].\n\nSources:\n[1] RALES: Randomized Aldactone Evaluation Study — Pitt B, Zannad F, Remme WJ (1999)\n[3] TOPCAT: Treatment of Preserved Cardiac Function Heart Failure with an Aldosterone Antagonist — Pitt B, Pfeffer MA, Assmann SF (2014)\n[5] DAPA-HF: Dapagliflozin in Patients with Heart Failure and Reduced Ejection Fraction — McMurray JJV, Solomon SD, Inzucchi SE (2019)\n[7] DELIVER: Dapagliflozin in Heart Failure with Mildly Reduced or Preserved Ejection Fraction — Solomon SD, McMurray JJV, Claggett B (2022)",
           "citationsFound": [
             1,
             2,
