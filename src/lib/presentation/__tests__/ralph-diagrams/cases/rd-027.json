@@ -1,0 +1,29 @@
+{
+  "id": "rd-027",
+  "name": "Mermaid Sequence — API Authentication Flow",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "smart_connectors",
+  "input": "Create a sequence diagram showing API authentication: Client sends credentials to Auth Server, Auth Server validates with Database, Database returns user data, Auth Server generates JWT token, Auth Server sends token to Client, Client uses token to access Resource Server, Resource Server validates token with Auth Server, Resource Server returns protected data to Client.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "sequence",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (sequence)",
+    "Valid Mermaid syntax",
+    "Contains participant declarations",
+    "Contains arrow interactions",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Multi-participant sequence diagram with labeled messages between actors.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "sequence",
+      "syntax": "sequenceDiagram\n    participant C as Client\n    participant AS as Auth Server\n    participant DB as Database\n    participant RS as Resource Server\n    C->>AS: Send credentials\n    AS->>DB: Validate user\n    DB-->>AS: User data\n    AS->>AS: Generate JWT\n    AS-->>C: Return token\n    C->>RS: Request with token\n    RS->>AS: Validate token\n    AS-->>RS: Token valid\n    RS-->>C: Protected data",
+      "caption": "API authentication flow with JWT token exchange"
+    }
+  }
+}

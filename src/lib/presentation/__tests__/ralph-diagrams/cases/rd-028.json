@@ -1,0 +1,28 @@
+{
+  "id": "rd-028",
+  "name": "Mermaid Gantt — Clinical Trial Timeline",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "timeline_charts",
+  "input": "Create a Gantt chart showing a clinical trial timeline: Phase I (6 months), Phase II (12 months, starts after Phase I), Phase III (24 months, starts after Phase II), FDA Review (12 months, starts after Phase III), Post-Market Surveillance (ongoing, starts after FDA Review).",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "gantt",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (gantt)",
+    "Valid Mermaid syntax",
+    "Contains section or task declarations",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Timeline/Gantt chart with sequential phases and duration indicators.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "gantt",
+      "syntax": "gantt\n    title Clinical Trial Timeline\n    dateFormat YYYY-MM-DD\n    section Phase I\n    Safety & Dosage    :p1, 2024-01-01, 180d\n    section Phase II\n    Efficacy Testing   :p2, after p1, 365d\n    section Phase III\n    Large-Scale Trials :p3, after p2, 730d\n    section Regulatory\n    FDA Review         :p4, after p3, 365d\n    section Post-Market\n    Surveillance       :p5, after p4, 365d",
+      "caption": "Clinical trial development timeline from Phase I through post-market surveillance"
+    }
+  }
+}

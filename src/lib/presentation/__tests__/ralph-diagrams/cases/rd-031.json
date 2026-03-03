@@ -1,0 +1,29 @@
+{
+  "id": "rd-031",
+  "name": "Mermaid ER Diagram — Clinical Database Schema",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "entity_relationship",
+  "input": "Create an ER diagram for a clinical database: Patient has many Visits, Visit belongs to one Patient and one Physician, Physician has many Visits, Visit has many Lab Results, Patient has many Prescriptions, Prescription references one Drug.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "erDiagram",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (erDiagram)",
+    "Valid Mermaid syntax",
+    "Contains entity definitions",
+    "Contains relationship lines",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Entity-relationship diagram with cardinality notations and entity attributes.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "erDiagram",
+      "syntax": "erDiagram\n    PATIENT ||--o{ VISIT : attends\n    PHYSICIAN ||--o{ VISIT : conducts\n    VISIT ||--o{ LAB_RESULT : produces\n    PATIENT ||--o{ PRESCRIPTION : receives\n    PRESCRIPTION }o--|| DRUG : references\n    PATIENT {\n        int patient_id PK\n        string name\n        date dob\n        string gender\n    }\n    VISIT {\n        int visit_id PK\n        date visit_date\n        string chief_complaint\n    }\n    PHYSICIAN {\n        int physician_id PK\n        string name\n        string specialty\n    }\n    LAB_RESULT {\n        int result_id PK\n        string test_name\n        string value\n        string unit\n    }\n    PRESCRIPTION {\n        int rx_id PK\n        string dosage\n        date start_date\n    }\n    DRUG {\n        int drug_id PK\n        string name\n        string class\n    }",
+      "caption": "Clinical database entity-relationship schema"
+    }
+  }
+}

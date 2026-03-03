@@ -1,0 +1,30 @@
+{
+  "id": "rd-026",
+  "name": "Mermaid Flowchart — Drug Interaction Decision Tree",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "smart_connectors",
+  "input": "Create a flowchart showing a drug interaction decision tree: Start → Check Drug A → Is there interaction? → Yes → Check severity → Severe → Contraindicated → Stop; Moderate → Adjust dose → Monitor; No interaction → Prescribe normally → End",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "flowchart",
+  "expectedNodeCount": 10,
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (flowchart)",
+    "Valid Mermaid syntax",
+    "Node count at least 8",
+    "Contains decision diamond node",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Multi-branch decision tree with conditional paths, diamond decision nodes, and terminus nodes.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "flowchart",
+      "syntax": "flowchart TD\n    A[Start] --> B[Check Drug A]\n    B --> C{Drug Interaction?}\n    C -->|Yes| D{Check Severity}\n    C -->|No| H[Prescribe Normally]\n    D -->|Severe| E[Contraindicated]\n    D -->|Moderate| F[Adjust Dose]\n    E --> G[Stop]\n    F --> I[Monitor Patient]\n    H --> J[End]\n    I --> J",
+      "caption": "Drug interaction decision tree for clinical pharmacology"
+    }
+  }
+}

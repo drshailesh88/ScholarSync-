@@ -1,0 +1,28 @@
+{
+  "id": "rd-030",
+  "name": "Mermaid Pie — Research Funding Distribution",
+  "category": "mermaid_diagram",
+  "difficulty": "medium",
+  "napkinFeature": "pie_charts",
+  "input": "Create a pie chart showing research funding distribution: NIH 45%, NSF 20%, Private Foundation 15%, Industry 12%, DoD 5%, Other 3%.",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "pie",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (pie)",
+    "Valid Mermaid syntax",
+    "Contains numeric values",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Pie chart with labeled slices and percentage values.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "pie",
+      "syntax": "pie title Research Funding Distribution\n    \"NIH\" : 45\n    \"NSF\" : 20\n    \"Private Foundation\" : 15\n    \"Industry\" : 12\n    \"DoD\" : 5\n    \"Other\" : 3",
+      "caption": "Distribution of research funding by source"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "rd-029",
+  "name": "Mermaid Mindmap — Systematic Review Methodology",
+  "category": "mermaid_diagram",
+  "difficulty": "hard",
+  "napkinFeature": "mindmap_hierarchy",
+  "input": "Create a mindmap of Systematic Review methodology with these branches: 1) Research Question (PICO framework, inclusion criteria, exclusion criteria), 2) Search Strategy (databases, search terms, grey literature), 3) Study Selection (title screening, abstract screening, full-text review), 4) Data Extraction (standardized forms, quality assessment, risk of bias), 5) Synthesis (meta-analysis, narrative synthesis, subgroup analysis).",
+  "expectedBlockType": "diagram",
+  "expectedVisualType": "mindmap",
+  "qualityCriteria": [
+    "Block type is correct (diagram)",
+    "Diagram type is correct (mindmap)",
+    "Valid Mermaid syntax",
+    "Contains hierarchical node structure",
+    "Caption is present",
+    "No smart quotes in syntax",
+    "No placeholder or lorem ipsum content"
+  ],
+  "napkinBenchmark": "Multi-level mindmap with central topic and branching subtopics.",
+  "baseline": {
+    "type": "diagram",
+    "data": {
+      "diagramType": "mindmap",
+      "syntax": "mindmap\n  root((Systematic Review))\n    Research Question\n      PICO Framework\n      Inclusion Criteria\n      Exclusion Criteria\n    Search Strategy\n      Databases\n      Search Terms\n      Grey Literature\n    Study Selection\n      Title Screening\n      Abstract Screening\n      Full-Text Review\n    Data Extraction\n      Standardized Forms\n      Quality Assessment\n      Risk of Bias\n    Synthesis\n      Meta-Analysis\n      Narrative Synthesis\n      Subgroup Analysis",
+      "caption": "Systematic review methodology mindmap covering all key phases"
+    }
+  }
+}

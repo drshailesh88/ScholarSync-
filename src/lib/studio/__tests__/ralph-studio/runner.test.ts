@@ -399,16 +399,17 @@ describe("Cycle 2: Research Store", () => {
     const checks: TestCheck[] = [];
     const store = useResearchStore.getState();
 
-    store.addChatMessage({ id: "m1", role: "user", content: "What is CRISPR?" });
+    const ts = Date.now();
+    store.addChatMessage({ id: "m1", role: "user", content: "What is CRISPR?", timestamp: ts });
     checks.push({ name: "User message added", passed: useResearchStore.getState().chatMessages.length === 1 });
 
-    store.addChatMessage({ id: "m2", role: "assistant", content: "CRISPR is..." });
+    store.addChatMessage({ id: "m2", role: "assistant", content: "CRISPR is...", timestamp: ts });
     checks.push({ name: "Assistant message added", passed: useResearchStore.getState().chatMessages.length === 2 });
 
     store.updateLastChatMessage("CRISPR is a gene editing tool.");
     checks.push({ name: "Last assistant message updated", passed: useResearchStore.getState().chatMessages[1].content === "CRISPR is a gene editing tool." });
 
-    store.addChatMessage({ id: "m3", role: "user", content: "Tell me more" });
+    store.addChatMessage({ id: "m3", role: "user", content: "Tell me more", timestamp: ts });
     store.updateLastChatMessage("This should not change anything");
     checks.push({ name: "updateLastChatMessage no-op when last is user", passed: useResearchStore.getState().chatMessages[2].content === "Tell me more" });
 
