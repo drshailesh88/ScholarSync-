@@ -1,0 +1,42 @@
+{
+  "id": "rd-008",
+  "name": "Radial — Research Impact Dimensions",
+  "category": "radial",
+  "difficulty": "medium",
+  "napkinFeature": "radial_diagram",
+  "input": "Create a radial diagram showing the dimensions of research impact centered on 'Research Output'. Spokes: Publications (h-index, citations), Funding (grants awarded), Collaboration (co-authors network), Training (PhD students mentored), Translation (patents, clinical guidelines), Public Engagement (media coverage, policy briefs).",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "radial",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (radial)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 6",
+    "Items present (Publications, Funding, Collaboration, Training, Translation, Public Engagement)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Central node with spokes radiating outward"
+  ],
+  "napkinBenchmark": "Central circle labeled 'Research Output' with 6 spokes connecting to satellite nodes. Each spoke labeled with a dimension and its metrics.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "radial",
+      "title": "Research Impact Dimensions",
+      "items": [
+        { "label": "Publications", "description": "h-index, citation counts, journal impact factors", "icon": "📄" },
+        { "label": "Funding", "description": "Grants awarded, total funding secured, success rates", "icon": "💰" },
+        { "label": "Collaboration", "description": "Co-author networks, international partnerships, consortia", "icon": "🤝" },
+        { "label": "Training", "description": "PhD students mentored, postdocs supervised, courses taught", "icon": "🎓" },
+        { "label": "Translation", "description": "Patents filed, clinical guidelines influenced, spin-off companies", "icon": "🔧" },
+        { "label": "Public Engagement", "description": "Media coverage, policy briefs, community outreach events", "icon": "📢" }
+      ],
+      "colorScheme": "purple",
+      "caption": "Six dimensions of research impact centered on research output"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "rd-007",
+  "name": "Matrix — SWOT Analysis for Clinical Trial Program",
+  "category": "matrix",
+  "difficulty": "medium",
+  "napkinFeature": "swot_analysis",
+  "input": "Create a SWOT analysis for a clinical trial program. Strengths: experienced investigators, strong patient recruitment. Weaknesses: limited funding, regulatory delays. Opportunities: orphan drug designation, international partnerships. Threats: competitor trials, evolving regulatory landscape.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "matrix",
+  "expectedItemCount": 4,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (matrix)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 4",
+    "Items present (Strengths, Weaknesses, Opportunities, Threats)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Four quadrants labeled for SWOT"
+  ],
+  "napkinBenchmark": "2x2 grid with Strengths (green, top-left), Weaknesses (red, top-right), Opportunities (blue, bottom-left), Threats (orange, bottom-right). Each quadrant lists 2-3 bullet points.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "matrix",
+      "title": "Clinical Trial Program SWOT Analysis",
+      "items": [
+        {
+          "label": "Strengths",
+          "description": "Experienced investigators with strong track record; robust patient recruitment network and community engagement",
+          "icon": "💪"
+        },
+        {
+          "label": "Weaknesses",
+          "description": "Limited NIH and industry funding; regulatory filing delays slowing trial initiation timelines",
+          "icon": "⚠️"
+        },
+        {
+          "label": "Opportunities",
+          "description": "Orphan drug designation eligibility; international partnerships expanding patient access",
+          "icon": "🌟"
+        },
+        {
+          "label": "Threats",
+          "description": "Competitor trials recruiting from same patient population; evolving FDA regulatory landscape",
+          "icon": "⚡"
+        }
+      ],
+      "colorScheme": "rainbow",
+      "caption": "Strategic assessment of the clinical trial program"
+    }
+  }
+}

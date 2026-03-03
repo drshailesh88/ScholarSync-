@@ -1,0 +1,45 @@
+{
+  "id": "rd-011",
+  "name": "Checklist — Manuscript Submission Readiness",
+  "category": "checklist",
+  "difficulty": "easy",
+  "napkinFeature": "kanban_board",
+  "input": "Create a manuscript submission checklist. Done: Title page formatted, Abstract written, Methods section complete, Results with figures. Active: Discussion draft in review. Pending: Cover letter, Supplementary materials, Author contributions, Conflict of interest forms.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "checklist",
+  "expectedItemCount": 9,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (checklist)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 9",
+    "Items present (Title page, Abstract, Methods, Results, Discussion, Cover letter, Supplementary, Author, Conflict)",
+    "Status field is used on items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Checklist with status indicators for each item"
+  ],
+  "napkinBenchmark": "Vertical checklist with checkmarks (green) for done items, spinner/arrow for active, and empty circles for pending. Clear visual distinction between statuses.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "checklist",
+      "title": "Manuscript Submission Readiness",
+      "items": [
+        { "label": "Title page formatted", "description": "Title, authors, affiliations, corresponding author details", "status": "done" },
+        { "label": "Abstract written", "description": "Structured abstract with background, methods, results, conclusion", "status": "done" },
+        { "label": "Methods section complete", "description": "Study design, participants, procedures, statistical analysis", "status": "done" },
+        { "label": "Results with figures", "description": "All tables, figures, and statistical results finalized", "status": "done" },
+        { "label": "Discussion draft in review", "description": "Interpretation, limitations, future directions under revision", "status": "active" },
+        { "label": "Cover letter", "description": "Addressed to editor, highlighting novelty and significance", "status": "pending" },
+        { "label": "Supplementary materials", "description": "Additional tables, raw data, extended methods", "status": "pending" },
+        { "label": "Author contributions", "description": "CRediT taxonomy roles for each co-author", "status": "pending" },
+        { "label": "Conflict of interest forms", "description": "ICMJE disclosure forms for all authors", "status": "pending" }
+      ],
+      "colorScheme": "green",
+      "caption": "Pre-submission checklist for journal manuscript"
+    }
+  }
+}

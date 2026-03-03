@@ -1,0 +1,42 @@
+{
+  "id": "rd-009",
+  "name": "Cause-Effect — Root Cause Analysis of Failed Replication",
+  "category": "cause_effect",
+  "difficulty": "medium",
+  "napkinFeature": "fishbone_diagram",
+  "input": "Create a fishbone (Ishikawa) diagram for root cause analysis of a failed replication study. Effect: Failed Replication. Causes: Methods (different reagent lot, protocol deviation), Equipment (uncalibrated spectrophotometer, old centrifuge), Personnel (different operator, insufficient training), Materials (sample degradation, contaminated media), Measurement (different assay kit, inconsistent threshold), Environment (temperature fluctuation, humidity difference).",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "cause_effect",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (cause_effect)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 6",
+    "Items present (Methods, Equipment, Personnel, Materials, Measurement, Environment)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Cause and effect branches for each category"
+  ],
+  "napkinBenchmark": "Fishbone diagram with central spine pointing to 'Failed Replication'. Six diagonal branches for each cause category, each with 2 sub-causes.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "cause_effect",
+      "title": "Root Cause Analysis: Failed Replication Study",
+      "items": [
+        { "label": "Methods", "description": "Different reagent lot number; protocol deviation in incubation time", "icon": "📋" },
+        { "label": "Equipment", "description": "Uncalibrated spectrophotometer; aging centrifuge with vibration", "icon": "🔧" },
+        { "label": "Personnel", "description": "Different operator performed assay; insufficient training on protocol", "icon": "👤" },
+        { "label": "Materials", "description": "Sample degradation during shipping; contaminated growth media batch", "icon": "🧪" },
+        { "label": "Measurement", "description": "Different assay kit version used; inconsistent threshold settings", "icon": "📏" },
+        { "label": "Environment", "description": "Temperature fluctuation in incubator; humidity difference in lab", "icon": "🌡️" }
+      ],
+      "colorScheme": "orange",
+      "caption": "Six categories of potential causes for the failed replication attempt"
+    }
+  }
+}

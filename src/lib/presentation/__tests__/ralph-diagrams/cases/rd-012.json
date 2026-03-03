@@ -1,0 +1,46 @@
+{
+  "id": "rd-012",
+  "name": "Process Flow — Systematic Review PRISMA Process",
+  "category": "process_flow",
+  "difficulty": "medium",
+  "napkinFeature": "process_diagram",
+  "input": "Show the systematic review process as a step-by-step flow: Define Research Question, Develop Search Strategy, Search Databases, Remove Duplicates, Screen Titles/Abstracts, Full-Text Review, Data Extraction, Quality Assessment, Synthesize Results.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "process_flow",
+  "expectedItemCount": 9,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (process_flow)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 9",
+    "Items present (Research Question, Search Strategy, Search Databases, Duplicates, Screen, Full-Text, Extraction, Quality, Synthesize)",
+    "Description for each item is present",
+    "Icon present on items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Arrows between steps showing sequential flow"
+  ],
+  "napkinBenchmark": "Horizontal or vertical process flow with 9 numbered steps, each as a card with an icon and brief description. Arrows connect each step to the next.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "process_flow",
+      "title": "Systematic Review Process",
+      "items": [
+        { "label": "Define Research Question", "description": "Formulate PICO question and objectives", "icon": "❓" },
+        { "label": "Develop Search Strategy", "description": "Create Boolean search strings with MeSH terms", "icon": "🔤" },
+        { "label": "Search Databases", "description": "Query PubMed, Embase, Cochrane, and grey literature", "icon": "🔍" },
+        { "label": "Remove Duplicates", "description": "De-duplicate records using reference manager", "icon": "🗑️" },
+        { "label": "Screen Titles/Abstracts", "description": "Two independent reviewers apply inclusion criteria", "icon": "👁️" },
+        { "label": "Full-Text Review", "description": "Retrieve and assess full articles for eligibility", "icon": "📄" },
+        { "label": "Data Extraction", "description": "Extract study characteristics and outcomes into forms", "icon": "📊" },
+        { "label": "Quality Assessment", "description": "Apply risk of bias tool (e.g., Newcastle-Ottawa)", "icon": "⚖️" },
+        { "label": "Synthesize Results", "description": "Conduct meta-analysis or narrative synthesis", "icon": "📈" }
+      ],
+      "colorScheme": "blue",
+      "caption": "Step-by-step systematic review workflow following PRISMA guidelines"
+    }
+  }
+}

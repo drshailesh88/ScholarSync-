@@ -1,0 +1,45 @@
+{
+  "id": "rd-006",
+  "name": "Hierarchy — University Research Organization Chart",
+  "category": "hierarchy",
+  "difficulty": "medium",
+  "napkinFeature": "org_chart",
+  "input": "Show the organizational hierarchy of a university research institute. Vice President of Research at top, reporting to them: Dean of Medicine, Dean of Engineering, Dean of Sciences. Under Medicine: Cardiology Lab, Oncology Lab. Under Engineering: Biomedical Engineering, AI Lab. Under Sciences: Neuroscience Center, Genomics Institute.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "hierarchy",
+  "expectedItemCount": 9,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (hierarchy)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 9",
+    "Items present (Vice President, Medicine, Engineering, Sciences, Cardiology, Oncology, Biomedical, AI Lab, Neuroscience)",
+    "Description for each item is present",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Parent-child tree structure"
+  ],
+  "napkinBenchmark": "Tree diagram with VP at top, three deans below, and specialized labs/centers at the bottom tier. Connecting lines show reporting relationships.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "hierarchy",
+      "title": "University Research Institute Organization",
+      "items": [
+        { "label": "Vice President of Research", "description": "Oversees all research activities across the university", "icon": "🎓" },
+        { "label": "Dean of Medicine", "description": "Leads medical and clinical research programs", "icon": "🏥" },
+        { "label": "Dean of Engineering", "description": "Directs engineering and technology research divisions", "icon": "⚙️" },
+        { "label": "Dean of Sciences", "description": "Manages basic science and interdisciplinary programs", "icon": "🔬" },
+        { "label": "Cardiology Lab", "description": "Cardiovascular disease research and interventions", "icon": "❤️" },
+        { "label": "Oncology Lab", "description": "Cancer biology, immunotherapy, and targeted therapies", "icon": "🧫" },
+        { "label": "Biomedical Engineering", "description": "Medical devices, tissue engineering, and biomaterials", "icon": "🦿" },
+        { "label": "AI Lab", "description": "Machine learning applications in healthcare and science", "icon": "🤖" },
+        { "label": "Neuroscience Center", "description": "Brain imaging, cognitive neuroscience, and neural circuits", "icon": "🧠" }
+      ],
+      "colorScheme": "blue",
+      "caption": "Organizational structure showing research reporting relationships"
+    }
+  }
+}

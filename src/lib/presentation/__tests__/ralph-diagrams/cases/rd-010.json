@@ -1,0 +1,42 @@
+{
+  "id": "rd-010",
+  "name": "Stats Row — Clinical Trial Key Metrics Dashboard",
+  "category": "stats_row",
+  "difficulty": "easy",
+  "napkinFeature": "data_visualization",
+  "input": "Display key metrics from a completed clinical trial: 1,247 Participants Enrolled, 94.2% Retention Rate, p < 0.001 Primary Endpoint, 23% Relative Risk Reduction, 12 Study Sites, 36 Months Duration.",
+  "expectedBlockType": "infographic",
+  "expectedVisualType": "stats_row",
+  "expectedItemCount": 6,
+  "qualityCriteria": [
+    "Block type is correct (infographic)",
+    "Infographic type is correct (stats_row)",
+    "Valid schema structure",
+    "Title is present",
+    "Color scheme is set",
+    "Item count at least 6",
+    "Value for each item is present",
+    "Numeric values preserved in items",
+    "All labels are meaningful",
+    "No placeholder or lorem ipsum content",
+    "Stat cards with large values displayed"
+  ],
+  "napkinBenchmark": "Horizontal row of 6 stat cards, each with a large number and short label. Consistent card sizing and subtle background color.",
+  "baseline": {
+    "type": "infographic",
+    "data": {
+      "infographicType": "stats_row",
+      "title": "Phase III Clinical Trial Results",
+      "items": [
+        { "label": "Participants Enrolled", "value": "1,247", "icon": "👥" },
+        { "label": "Retention Rate", "value": "94.2%", "icon": "📊" },
+        { "label": "Primary Endpoint", "value": "p < 0.001", "icon": "🎯" },
+        { "label": "Risk Reduction", "value": "23%", "icon": "📉" },
+        { "label": "Study Sites", "value": "12", "icon": "🏥" },
+        { "label": "Duration", "value": "36 months", "icon": "📅" }
+      ],
+      "colorScheme": "green",
+      "caption": "Summary statistics from the completed Phase III randomized controlled trial"
+    }
+  }
+}
