@@ -158,6 +158,7 @@ const toolDisplayNames: Record<ToolType, string> = {
   [ToolType.BRACKET]: 'Bracket',
   [ToolType.CALLOUT]: 'Callout',
   [ToolType.DIMENSION]: 'Dimension',
+  [ToolType.CONNECTOR]: 'Connector',
   [ToolType.TEXT]: 'Text',
   [ToolType.TEXT_ON_PATH]: 'Text on Path',
   [ToolType.HAND]: 'Hand',

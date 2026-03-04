@@ -419,6 +419,7 @@ export function toolTypeToName(toolType: ToolType): ToolName | string {
     [ToolType.BRACKET]: 'bracket',
     [ToolType.CALLOUT]: 'callout',
     [ToolType.DIMENSION]: 'dimension',
+    [ToolType.CONNECTOR]: 'connector',
     [ToolType.TEXT]: TOOL_NAMES.TEXT,
     [ToolType.TEXT_ON_PATH]: 'textOnPath',
     [ToolType.HAND]: 'hand',
