@@ -19,6 +19,7 @@ import {
   Sparkle,
   Hash,
   Paragraph,
+  TextSuperscript,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
@@ -43,6 +44,7 @@ const ICON_MAP: Record<string, typeof Paragraph> = {
   code: Code,
   table: Table,
   image: Image,
+  footnote: TextSuperscript,
   ai: Sparkle,
   tools: Hash,
 };

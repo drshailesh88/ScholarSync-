@@ -159,6 +159,19 @@ const structuralCommands: SlashCommandItem[] = [
       input.click();
     },
   },
+  {
+    title: "Footnote",
+    description: "Add a footnote reference",
+    icon: "footnote",
+    category: "academic",
+    shortcut: "Cmd+Shift+F",
+    command: (editor) => {
+      const text = prompt("Enter footnote text:");
+      if (text) {
+        editor.commands.insertFootnote(text);
+      }
+    },
+  },
 
   // AI Actions (integration points — dispatch events, don't implement)
   {

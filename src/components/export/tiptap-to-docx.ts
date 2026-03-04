@@ -49,7 +49,49 @@ export async function tiptapToDocx(
 ): Promise<Uint8Array> {
   const { doubleSpaced = true } = options;
 
-  const children = convertNodes(content.content || [], doubleSpaced);
+  // Array to collect footnotes during conversion
+  const collectedFootnotes: Array<{ number: number; text: string }> = [];
+
+  const children = convertNodes(content.content || [], doubleSpaced, collectedFootnotes);
+
+  // Add footnotes section at the end if any footnotes exist
+  if (collectedFootnotes.length > 0) {
+    children.push(
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "Notes",
+            bold: true,
+            size: 24,
+            font: "Times New Roman",
+          }),
+        ],
+        spacing: { before: 400 },
+        border: { top: solidBorder },
+      })
+    );
+
+    for (const fn of collectedFootnotes) {
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `${fn.number}. `,
+              superScript: true,
+              font: "Times New Roman",
+              size: 20,
+            }),
+            new TextRun({
+              text: fn.text,
+              font: "Times New Roman",
+              size: 20,
+            }),
+          ],
+          spacing: { after: 100 },
+        })
+      );
+    }
+  }
 
   const doc = new Document({
     styles: {
@@ -120,12 +162,13 @@ export async function tiptapToDocx(
 
 function convertNodes(
   nodes: JSONContent[],
-  doubleSpaced: boolean
+  doubleSpaced: boolean,
+  collectedFootnotes: Array<{ number: number; text: string }> = []
 ): (Paragraph | DocxTable)[] {
   const result: (Paragraph | DocxTable)[] = [];
 
   for (const node of nodes) {
-    const converted = convertNode(node, doubleSpaced);
+    const converted = convertNode(node, doubleSpaced, collectedFootnotes);
     if (converted) {
       if (Array.isArray(converted)) {
         result.push(...converted);
@@ -140,7 +183,8 @@ function convertNodes(
 
 function convertNode(
   node: JSONContent,
-  doubleSpaced: boolean
+  doubleSpaced: boolean,
+  collectedFootnotes: Array<{ number: number; text: string }> = []
 ): Paragraph | DocxTable | (Paragraph | DocxTable)[] | null {
   switch (node.type) {
     case "paragraph":
@@ -185,6 +229,29 @@ function convertNode(
           }),
         ],
       });
+
+    case "footnote": {
+      // Add a superscript footnote reference in the text
+      // and collect footnote for the endnotes section
+      const number = node.attrs?.number as number | undefined;
+      const text = node.attrs?.text as string | undefined;
+
+      if (number !== undefined && text) {
+        collectedFootnotes.push({ number, text: text || "" });
+      }
+
+      // Return inline superscript reference
+      return new Paragraph({
+        children: [
+          new TextRun({
+            text: String(number ?? "?"),
+            superScript: true,
+            font: "Times New Roman",
+            size: 20,
+          }),
+        ],
+      });
+    }
 
     default:
       return null;

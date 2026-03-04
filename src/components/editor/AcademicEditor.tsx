@@ -26,12 +26,14 @@ import { TaskItem } from "@tiptap/extension-task-item";
 
 import { SlashCommandsExtension } from "./extensions/slash-commands";
 import { OutlinePlugin } from "./extensions/outline-plugin";
+import { Footnote } from "./extensions/footnote-node";
 import { createSlashMenuRenderer } from "./SlashMenu";
 import { SelectionToolbar } from "./SelectionToolbar";
 import { TopBar } from "./TopBar";
 import { DocumentOutline } from "./DocumentOutline";
 import { LinkPopover } from "./LinkPopover";
 import { CommentSidebar } from "./CommentSidebar";
+import { FootnoteSection } from "./FootnoteSection";
 import { useEditorStore } from "@/stores/editor-store";
 import { getDocumentWordCount } from "@/lib/editor/word-counter";
 import { getCommentCountLocal } from "@/lib/editor/document-comments-local";
@@ -150,6 +152,7 @@ export function AcademicEditor({
         },
         debounceMs: 500,
       }),
+      Footnote,
     ],
     content: content || undefined,
     editable: !readOnly && mode !== "viewing",
@@ -347,6 +350,9 @@ export function AcademicEditor({
 
             {/* Editor content */}
             <EditorContent editor={editor} />
+
+            {/* Footnotes section */}
+            <FootnoteSection editor={editor} />
           </div>
 
           {/* Document outline (floating right) */}
