@@ -6,3 +6,4 @@ export * from "./systematic";
 export * from "./institutional";
 export * from "./platform";
 export * from "./relations";
+export * from "./illustration";
