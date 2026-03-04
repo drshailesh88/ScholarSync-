@@ -30,6 +30,14 @@ export interface IconGridProps {
   showNames?: boolean;
   /** Empty state message */
   emptyMessage?: string;
+  /** Empty state action button */
+  emptyAction?: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  };
+  /** Error message to display */
+  error?: string | null;
   /** Loading state */
   isLoading?: boolean;
   /** Max items to render for virtualization */
@@ -158,7 +166,17 @@ const LoadingSkeleton: React.FC<{ count: number; size: number }> = ({ count, siz
 // EMPTY STATE
 // =============================================================================
 
-const EmptyState: React.FC<{ message: string }> = ({ message }) => (
+interface EmptyStateProps {
+  message: string;
+  action?: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  };
+  error?: string | null;
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({ message, action, error }) => (
   <div className="icon-grid-empty">
     <svg
       viewBox="0 0 24 24"
@@ -172,6 +190,45 @@ const EmptyState: React.FC<{ message: string }> = ({ message }) => (
       <path d="M8 11h6" />
     </svg>
     <p className="icon-grid-empty-text">{message}</p>
+    {action && (
+      <button
+        onClick={action.onClick}
+        disabled={action.disabled}
+        className="icon-grid-empty-action"
+      >
+        {action.disabled ? (
+          <>
+            <svg
+              className="icon-grid-empty-spinner"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="10" opacity="0.25" />
+              <path d="M12 2a10 10 0 0 1 10 10" />
+            </svg>
+            {action.label}
+          </>
+        ) : (
+          <>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="icon-grid-empty-action-icon"
+            >
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+            </svg>
+            {action.label}
+          </>
+        )}
+      </button>
+    )}
+    {error && (
+      <p className="icon-grid-empty-error">{error}</p>
+    )}
   </div>
 );
 
@@ -187,6 +244,10 @@ export const IconGrid: React.FC<IconGridProps> = ({
   columns = 6,
   iconSize = 72,
   showNames = true,
+  emptyMessage,
+  emptyAction,
+  error,
+  isLoading = false,
   emptyMessage = 'No icons found',
   isLoading = false,
   maxVisibleItems = 200,
@@ -254,7 +315,7 @@ export const IconGrid: React.FC<IconGridProps> = ({
   if (icons.length === 0) {
     return (
       <div className={`icon-grid-container ${className}`}>
-        <EmptyState message={emptyMessage} />
+        <EmptyState message={emptyMessage || 'No icons found'} action={emptyAction} error={error} />
       </div>
     );
   }

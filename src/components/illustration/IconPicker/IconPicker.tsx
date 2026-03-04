@@ -20,6 +20,11 @@ import {
   scienceBrandsList,
   type UnifiedIconResult,
 } from '@/lib/illustration/lib/icons';
+import {
+  generateIconFromQuery,
+  isAIGenerationAvailable,
+  type GenerationResult,
+} from '@/lib/illustration/lib/icons/generateIcon';
 import { createSimpleIconSvg } from '@/lib/illustration/lib/icons';
 
 // =============================================================================
@@ -160,6 +165,11 @@ function filterIconsByCategory(icons: UnifiedIconResult[], category: string): Un
 }
 
 async function extractSvgContent(icon: UnifiedIconResult): Promise<string> {
+  // For AI-generated icons with inline SVG
+  if (icon.svg) {
+    return icon.svg;
+  }
+
   // For simple icons, generate SVG directly
   if (icon.library === 'simple' && icon.slug) {
     return createSimpleIconSvg(icon.slug, 64, 'currentColor') || '';
@@ -195,6 +205,8 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   const [selectedIcon, setSelectedIcon] = useState<UnifiedIconResult | null>(null);
   const [showRecent, setShowRecent] = useState(false);
   const [recentIconIds, setRecentIconIds] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   // Load recent icons on mount
   useEffect(() => {
@@ -271,6 +283,53 @@ export const IconPicker: React.FC<IconPickerProps> = ({
     setShowRecent(!showRecent);
     setSearchQuery('');
   }, [showRecent]);
+
+  // Handle AI icon generation
+  const handleAIGenerate = useCallback(async () => {
+    if (!searchQuery.trim() || !isAIGenerationAvailable()) {
+      return;
+    }
+
+    setIsGenerating(true);
+    setGenerationError(null);
+
+    try {
+      const result: GenerationResult = await generateIconFromQuery(searchQuery, {
+        size: 64,
+        style: 'outline',
+      });
+
+      if (!result.svg) {
+        setGenerationError('Failed to generate icon. Please try again.');
+        return;
+      }
+
+      // Create a synthetic icon result for the generated icon
+      const generatedIcon: UnifiedIconResult = {
+        id: `ai-generated-${Date.now()}`,
+        name: searchQuery,
+        category: 'ai-generated',
+        keywords: [searchQuery.toLowerCase()],
+        library: 'tabler', // Use tabler as placeholder for generated icons
+        svg: result.svg,
+      };
+
+      // Select and insert the generated icon
+      setSelectedIcon(generatedIcon);
+      await handleInsert(generatedIcon);
+    } catch (error) {
+      console.error('AI generation failed:', error);
+      setGenerationError(error instanceof Error ? error.message : 'Generation failed');
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [searchQuery, handleInsert]);
+
+  // Check if should show AI generation button
+  const showAIGenerateButton =
+    searchQuery.trim() &&
+    displayedIcons.length === 0 &&
+    isAIGenerationAvailable();
 
   if (!isOpen) return null;
 
@@ -374,6 +433,18 @@ export const IconPicker: React.FC<IconPickerProps> = ({
               ? `No icons matching "${searchQuery}"`
               : 'No icons in this category'
           }
+          emptyAction={
+            showAIGenerateButton
+              ? {
+                  label: isGenerating
+                    ? 'Generating...'
+                    : 'Generate AI Icon',
+                  onClick: handleAIGenerate,
+                  disabled: isGenerating,
+                }
+              : undefined
+          }
+          error={generationError}
         />
       </div>
 

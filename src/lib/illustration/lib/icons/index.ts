@@ -455,6 +455,16 @@ export {
   type SciDrawIcon,
 } from './scidraw';
 
+export {
+  // AI Icon Generation exports
+  generateIconFromQuery,
+  isAIGenerationAvailable,
+  clearIconCache,
+  getCacheSize,
+  type GenerationResult,
+  type GenerationOptions,
+} from './generateIcon';
+
 // Import search functions from each library for unified search
 import { searchHealthIcons, healthIconsList } from './healthIcons';
 import { searchScienceIcons, scienceIconsList } from './scienceIcons';
