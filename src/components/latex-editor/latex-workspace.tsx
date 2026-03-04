@@ -4,6 +4,7 @@ import { useCallback, useRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import { updateLatexFile } from "@/lib/actions/latex";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { TopBar } from "./top-bar";
 import { SourceEditor, type SourceEditorHandle } from "./source-editor";
 import { VisualEditor } from "./visual-editor";
@@ -19,6 +20,9 @@ import {
   ChatCircle,
   FolderOpen,
   Image as ImageIcon,
+  X,
+  Eye,
+  Code,
 } from "@phosphor-icons/react";
 
 type LatexProject = {
@@ -53,6 +57,12 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const setCompiledPdfUrl = useLatexEditorStore((s) => s.setCompiledPdfUrl);
   const setPreviewMode = useLatexEditorStore((s) => s.setPreviewMode);
   const viewMode = useLatexEditorStore((s) => s.viewMode);
+
+  // Responsive hook
+  const { isMobile, isTablet, minTouchTarget } = useMediaQuery();
+
+  // Mobile preview toggle (show preview or editor)
+  const [mobileShowPreview, setMobileShowPreview] = useState(false);
 
   // Ref to the CodeMirror editor (exposed via forwardRef)
   const editorRef = useRef<SourceEditorHandle>(null);
@@ -495,25 +505,105 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         onExportZip={handleExportZip}
       />
 
+      {/* Mobile toggle bar - show editor/preview switcher */}
+      {isMobile && (
+        <div className="flex border-b border-border-subtle bg-surface/50">
+          <button
+            onClick={() => setMobileShowPreview(false)}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors",
+              !mobileShowPreview
+                ? "text-brand border-b-2 border-brand -mb-px bg-brand/5"
+                : "text-ink-muted hover:text-ink"
+            )}
+            style={{ minHeight: minTouchTarget }}
+          >
+            <Code size={16} />
+            Editor
+          </button>
+          <button
+            onClick={() => setMobileShowPreview(true)}
+            className={cn(
+              "flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium transition-colors",
+              mobileShowPreview
+                ? "text-brand border-b-2 border-brand -mb-px bg-brand/5"
+                : "text-ink-muted hover:text-ink"
+            )}
+            style={{ minHeight: minTouchTarget }}
+          >
+            <Eye size={16} />
+            Preview
+          </button>
+        </div>
+      )}
+
       {/* Main workspace */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* File Tree Toggle Tab (left edge) */}
-        <button
-          onClick={toggleFileTree}
-          className={cn(
-            "absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-r-lg border border-l-0 border-border-subtle transition-all",
-            fileTreeOpen
-              ? "bg-brand/10 text-brand"
-              : "bg-surface-raised/80 text-ink-muted hover:text-ink hover:bg-surface-raised"
-          )}
-          title="Toggle file tree (Cmd+B)"
-        >
-          <SidebarSimple size={14} />
-        </button>
+        {/* File Tree Toggle Tab (left edge) - hidden on mobile */}
+        {!isMobile && (
+          <button
+            onClick={toggleFileTree}
+            className={cn(
+              "absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-r-lg border border-l-0 border-border-subtle transition-all",
+              fileTreeOpen
+                ? "bg-brand/10 text-brand"
+                : "bg-surface-raised/80 text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
+            style={{ minHeight: minTouchTarget, minWidth: minTouchTarget }}
+            title="Toggle file tree (Cmd+B)"
+          >
+            <SidebarSimple size={14} />
+          </button>
+        )}
 
-        {/* File Tree Panel (collapsible) */}
+        {/* Mobile File Tree Button */}
+        {isMobile && !fileTreeOpen && (
+          <button
+            onClick={toggleFileTree}
+            className="absolute left-2 top-2 z-20 p-2 rounded-lg bg-surface-raised/90 border border-border-subtle shadow-sm"
+            style={{ minHeight: minTouchTarget, minWidth: minTouchTarget }}
+            title="Toggle file tree"
+          >
+            <FolderOpen size={18} />
+          </button>
+        )}
+
+        {/* Mobile Agent Panel Button */}
+        {isMobile && !agentPanelOpen && (
+          <button
+            onClick={toggleAgentPanel}
+            className="absolute right-2 top-2 z-20 p-2 rounded-lg bg-surface-raised/90 border border-border-subtle shadow-sm"
+            style={{ minHeight: minTouchTarget, minWidth: minTouchTarget }}
+            title="Toggle AI panel"
+          >
+            <ChatCircle size={18} />
+          </button>
+        )}
+
+        {/* File Tree Panel - Mobile Overlay / Desktop Sidebar */}
         {fileTreeOpen && (
-          <aside className="w-56 shrink-0 border-r border-border-subtle bg-surface/50 overflow-hidden flex flex-col">
+          <aside
+            className={cn(
+              "shrink-0 border-r border-border-subtle bg-surface/50 overflow-hidden flex flex-col",
+              isMobile
+                ? "fixed inset-0 z-50 w-full h-full"
+                : "w-56"
+            )}
+          >
+            {/* Mobile header with close button */}
+            {isMobile && (
+              <div className="flex items-center justify-between p-2 border-b border-border-subtle">
+                <span className="text-sm font-medium">Files</span>
+                <button
+                  onClick={toggleFileTree}
+                  className="p-2 rounded-lg hover:bg-surface-raised"
+                  style={{ minHeight: minTouchTarget, minWidth: minTouchTarget }}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            )}
+
             {/* Tab bar for Files / Figures */}
             <div className="flex border-b border-border-subtle">
               <button
@@ -524,6 +614,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                     ? "text-brand border-b-2 border-brand -mb-px"
                     : "text-ink-muted hover:text-ink"
                 )}
+                style={{ minHeight: isMobile ? minTouchTarget : undefined }}
               >
                 <FolderOpen size={12} />
                 Files
@@ -536,6 +627,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                     ? "text-brand border-b-2 border-brand -mb-px"
                     : "text-ink-muted hover:text-ink"
                 )}
+                style={{ minHeight: isMobile ? minTouchTarget : undefined }}
               >
                 <ImageIcon size={12} />
                 Figures
@@ -548,8 +640,14 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                 projectId={project.id}
                 files={files}
                 onFilesChange={setFiles}
-                onJumpToLine={handleJumpToLine}
-                onFileSelect={(file) => editorRef.current?.setContent(file.content ?? "")}
+                onJumpToLine={(line) => {
+                  handleJumpToLine(line);
+                  if (isMobile) toggleFileTree(); // Close on mobile after selection
+                }}
+                onFileSelect={(file) => {
+                  editorRef.current?.setContent(file.content ?? "");
+                  if (isMobile) toggleFileTree(); // Close on mobile after selection
+                }}
                 onDraftSection={(title) => {
                   useLatexEditorStore.getState().setAgentPanelOpen(true);
                   useLatexEditorStore.getState().setAgentTab("draft");
@@ -561,14 +659,22 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
             ) : (
               <ImageBrowser
                 projectId={project.id}
-                onInsertImage={(latexCode) => editorRef.current?.insertAtCursor(latexCode)}
+                onInsertImage={(latexCode) => {
+                  editorRef.current?.insertAtCursor(latexCode);
+                  if (isMobile) toggleFileTree(); // Close on mobile after insertion
+                }}
               />
             )}
           </aside>
         )}
 
-        {/* Editor Panel */}
-        <div className="flex-1 min-w-0 flex flex-col border-r border-border-subtle">
+        {/* Editor Panel - Hidden on mobile when showing preview */}
+        <div
+          className={cn(
+            "flex-1 min-w-0 flex flex-col border-r border-border-subtle",
+            isMobile && mobileShowPreview && "hidden"
+          )}
+        >
           <div className="flex-1 overflow-hidden">
             {viewMode === "visual" ? (
               <VisualEditor
@@ -599,28 +705,73 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           />
         </div>
 
-        {/* Preview Panel */}
-        <div className="flex-1 min-w-0 bg-white dark:bg-slate-950/50">
+        {/* Preview Panel - Full width on mobile when active */}
+        <div
+          className={cn(
+            "bg-white dark:bg-slate-950/50",
+            isMobile
+              ? mobileShowPreview
+                ? "absolute inset-0 z-10"
+                : "hidden"
+              : "flex-1 min-w-0"
+          )}
+        >
+          {/* Mobile close button for preview */}
+          {isMobile && mobileShowPreview && (
+            <button
+              onClick={() => setMobileShowPreview(false)}
+              className="absolute right-2 top-2 z-20 p-2 rounded-lg bg-surface-raised/90 border border-border-subtle shadow-sm"
+              style={{ minHeight: minTouchTarget, minWidth: minTouchTarget }}
+              title="Back to editor"
+            >
+              <X size={18} />
+            </button>
+          )}
           <PreviewPanel editorTopLine={editorTopLine} />
         </div>
 
-        {/* Agent Panel Toggle Tab (right edge) */}
-        <button
-          onClick={toggleAgentPanel}
-          className={cn(
-            "absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-l-lg border border-r-0 border-border-subtle transition-all",
-            agentPanelOpen
-              ? "bg-brand/10 text-brand"
-              : "bg-surface-raised/80 text-ink-muted hover:text-ink hover:bg-surface-raised"
-          )}
-          title="Toggle AI panel (Cmd+J)"
-        >
-          <ChatCircle size={14} />
-        </button>
+        {/* Agent Panel Toggle Tab (right edge) - hidden on mobile/tablet */}
+        {!isMobile && !isTablet && (
+          <button
+            onClick={toggleAgentPanel}
+            className={cn(
+              "absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-l-lg border border-r-0 border-border-subtle transition-all",
+              agentPanelOpen
+                ? "bg-brand/10 text-brand"
+                : "bg-surface-raised/80 text-ink-muted hover:text-ink hover:bg-surface-raised"
+            )}
+            style={{ minHeight: minTouchTarget, minWidth: minTouchTarget }}
+            title="Toggle AI panel (Cmd+J)"
+          >
+            <ChatCircle size={14} />
+          </button>
+        )}
 
-        {/* Agent Panel (collapsible) */}
+        {/* Agent Panel - Mobile Overlay / Desktop Sidebar */}
         {agentPanelOpen && (
-          <aside className="w-72 shrink-0 border-l border-border-subtle bg-surface/50">
+          <aside
+            className={cn(
+              "shrink-0 border-l border-border-subtle bg-surface/50 overflow-hidden flex flex-col",
+              isMobile
+                ? "fixed inset-0 z-50 w-full h-full"
+                : isTablet
+                  ? "w-64"
+                  : "w-72"
+            )}
+          >
+            {/* Mobile header with close button */}
+            {isMobile && (
+              <div className="flex items-center justify-between p-2 border-b border-border-subtle">
+                <span className="text-sm font-medium">AI Assistant</span>
+                <button
+                  onClick={toggleAgentPanel}
+                  className="p-2 rounded-lg hover:bg-surface-raised"
+                  style={{ minHeight: minTouchTarget, minWidth: minTouchTarget }}
+                >
+                  <X size={18} />
+                </button>
+              </div>
+            )}
             <AgentPanel />
           </aside>
         )}
