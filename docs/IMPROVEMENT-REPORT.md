@@ -30,9 +30,10 @@
 
 ### Features Implemented:
 1. [x] Image Upload - API + UI browser panel + Ralph tests (23/23 passing)
+2. [x] Spell Check - nspell + medical dictionary + Ralph tests (28/28 passing)
 
 ### Features Remaining:
-2. [ ] Spell Check - nspell + medical dictionary
+3. [ ] Version History - snapshots on compile
 3. [ ] Version History - snapshots on compile
 4. [ ] SyncTeX - bidirectional source↔PDF sync
 5. [ ] Real-time Collaboration - Liveblocks
