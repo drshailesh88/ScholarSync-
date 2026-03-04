@@ -5,7 +5,7 @@
  * @module components/tools/ShapeGeneratorPanel
  */
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   generateDNAHelix,
   generateCellMembrane,
@@ -13,12 +13,30 @@ import {
   generatePathwayArrow,
   generateNeuron,
   generateMitochondria,
+  generateNucleus,
+  generateRibosome,
+  generateVesicle,
+  generateVirus,
+  generateBacteria,
+  generateGolgi,
+  generateER,
+  generateMicrotubule,
+  generateProtein,
   type DNAHelixOptions,
   type CellMembraneOptions,
   type CellLayerOptions,
   type PathwayArrowOptions,
   type NeuronOptions,
   type MitochondriaOptions,
+  type NucleusOptions,
+  type RibosomeOptions,
+  type VesicleOptions,
+  type VirusOptions,
+  type BacteriaOptions,
+  type GolgiOptions,
+  type EROptions,
+  type MicrotubuleOptions,
+  type ProteinOptions,
 } from '@/lib/illustration/lib/shapes/scientific-shapes';
 import { useCanvas } from '../Canvas/CanvasContext';
 import { FabricImage } from 'fabric';
@@ -42,7 +60,16 @@ export type ShapeType =
   | 'cellLayer'
   | 'arrow'
   | 'neuron'
-  | 'mitochondria';
+  | 'mitochondria'
+  | 'nucleus'
+  | 'ribosome'
+  | 'vesicle'
+  | 'virus'
+  | 'bacteria'
+  | 'golgi'
+  | 'er'
+  | 'microtubule'
+  | 'protein';
 
 interface ShapeCategory {
   id: ShapeType;
@@ -369,6 +396,97 @@ const MitoIcon = () => (
   </svg>
 );
 
+const NucleusIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="3" />
+    <circle cx="6" cy="8" r="1.5" opacity="0.6" />
+    <circle cx="18" cy="8" r="1.5" opacity="0.6" />
+    <circle cx="12" cy="18" r="1.5" opacity="0.6" />
+    <circle cx="12" cy="6" r="1.5" opacity="0.6" />
+  </svg>
+);
+
+const RibosomeIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <ellipse cx="12" cy="10" rx="9" ry="4" />
+    <ellipse cx="12" cy="10" rx="6" ry="2" />
+    <ellipse cx="12" cy="14" rx="9" ry="4" />
+    <path d="M 9 10 Q 12 14 15 10" fill="none" stroke="currentColor" strokeWidth="1.5" stroke-dasharray="2 2" />
+  </svg>
+);
+
+const VesicleIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="16" cy="8" r="2" opacity="0.5" />
+    <circle cx="8" cy="16" r="2" opacity="0.5" />
+  </svg>
+);
+
+const VirusIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="8" />
+    <path d="M 12 4 L 12 8 M 12 16 L 12 20 M 4 12 L 8 12 M 16 12 L 20 12" />
+    <circle cx="12" cy="4" r="2" />
+    <circle cx="12" cy="20" r="2" />
+    <circle cx="4" cy="12" r="2" />
+    <circle cx="20" cy="12" r="2" />
+  </svg>
+);
+
+const BacteriaIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <ellipse cx="12" cy="12" rx="4" ry="9" />
+    <path d="M 16 12 Q 20 8 20 12" fill="none" stroke="currentColor" strokeWidth="1.5" />
+  </svg>
+);
+
+const GolgiIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M 6 6 Q 12 4 18 6" fill="none" />
+    <path d="M 6 10 Q 12 8 18 10" fill="none" />
+    <path d="M 6 14 Q 12 12 18 14" fill="none" />
+    <path d="M 6 18 Q 12 16 18 18" fill="none" />
+    <circle cx="4" cy="6" r="2" />
+    <circle cx="20" cy="18" r="2" />
+  </svg>
+);
+
+const ERIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M 4 8 Q 12 4 20 8" fill="none" />
+    <path d="M 4 12 Q 12 8 20 12" fill="none" />
+    <path d="M 4 16 Q 12 12 20 16" fill="none" />
+    <circle cx="6" cy="10" r="1" />
+    <circle cx="10" cy="14" r="1" />
+    <circle cx="14" cy="10" r="1" />
+    <circle cx="18" cy="14" r="1" />
+  </svg>
+);
+
+const MicrotubuleIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="4" y="4" width="16" height="16" rx="2" />
+    <line x1="6" y1="4" x2="6" y2="20" />
+    <line x1="10" y1="4" x2="10" y2="20" />
+    <line x1="14" y1="4" x2="14" y2="20" />
+    <line x1="18" y1="4" x2="18" y2="20" />
+  </svg>
+);
+
+const ProteinIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M 6 16 L 10 8 L 14 16" fill="none" />
+    <path d="M 10 8 L 14 16 L 18 8" fill="none" />
+    <circle cx="8" cy="12" r="1" />
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="16" cy="12" r="1" />
+    <text x="3" y="9" font-size="6" fill="currentColor">N</text>
+    <text x="15" y="9" font-size="6" fill="currentColor">C</text>
+  </svg>
+);
+
 const ShapesIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M12 2l9 21H3l9-21z" />
@@ -428,6 +546,60 @@ const shapeCategories: ShapeCategory[] = [
     name: 'Mitochondria',
     icon: <MitoIcon />,
     description: 'Create mitochondria with cristae and matrix details.',
+  },
+  {
+    id: 'nucleus',
+    name: 'Nucleus',
+    icon: <NucleusIcon />,
+    description: 'Generate cell nucleus with nuclear pores and nucleolus.',
+  },
+  {
+    id: 'ribosome',
+    name: 'Ribosome',
+    icon: <RibosomeIcon />,
+    description: 'Create ribosomes with large/small subunits and mRNA.',
+  },
+  {
+    id: 'vesicle',
+    name: 'Vesicle',
+    icon: <VesicleIcon />,
+    description: 'Generate membrane-bound vesicles with cargo.',
+  },
+  {
+    id: 'virus',
+    name: 'Virus',
+    icon: <VirusIcon />,
+    description: 'Create viral particles (icosahedral, envelope, bacteriophage).',
+  },
+  {
+    id: 'bacteria',
+    name: 'Bacteria',
+    icon: <BacteriaIcon />,
+    description: 'Generate bacterial cells (bacillus, coccus, spirillum).',
+  },
+  {
+    id: 'golgi',
+    name: 'Golgi',
+    icon: <GolgiIcon />,
+    description: 'Create Golgi apparatus with stacked cisternae.',
+  },
+  {
+    id: 'er',
+    name: 'ER',
+    icon: <ERIcon />,
+    description: 'Generate endoplasmic reticulum (rough or smooth).',
+  },
+  {
+    id: 'microtubule',
+    name: 'Microtubule',
+    icon: <MicrotubuleIcon />,
+    description: 'Generate microtubules with protofilaments.',
+  },
+  {
+    id: 'protein',
+    name: 'Protein',
+    icon: <ProteinIcon />,
+    description: 'Generate protein structures (alpha helix, beta sheet, tertiary).',
   },
 ];
 
@@ -495,6 +667,86 @@ const defaultMitoOptions: MitochondriaOptions = {
   fill: '#FEF3C7',
 };
 
+const defaultNucleusOptions: NucleusOptions = {
+  diameter: 100,
+  pores: 8,
+  envelopeStyle: 'solid',
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#e2e8f0',
+};
+
+const defaultRibosomeOptions: RibosomeOptions = {
+  size: 60,
+  subunits: 'both',
+  showRna: true,
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#fcd34d',
+};
+
+const defaultVesicleOptions: VesicleOptions = {
+  diameter: 80,
+  cargo: 'dots',
+  membraneStyle: 'solid',
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#c4b5fd',
+};
+
+const defaultVirusOptions: VirusOptions = {
+  diameter: 100,
+  type: 'icosahedral',
+  spikeLength: 15,
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#10b981',
+};
+
+const defaultBacteriaOptions: BacteriaOptions = {
+  type: 'bacillus',
+  length: 100,
+  width: 40,
+  flagella: 2,
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#34d399',
+};
+
+const defaultGolgiOptions: GolgiOptions = {
+  size: 120,
+  cisternae: 5,
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#f472b6',
+};
+
+const defaultEROptions: EROptions = {
+  type: 'rough',
+  size: 120,
+  branches: 5,
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#fbbf24',
+};
+
+const defaultMicrotubuleOptions: MicrotubuleOptions = {
+  length: 200,
+  protofilaments: 13,
+  showDimer: false,
+  stroke: '#4a5568',
+  strokeWidth: 2,
+};
+
+const defaultProteinOptions: ProteinOptions = {
+  type: 'alpha-helix',
+  length: 150,
+  strands: 3,
+  stroke: '#4a5568',
+  strokeWidth: 2,
+  fill: '#60a5fa',
+};
+
 // ============================================================================
 // Component
 // ============================================================================
@@ -512,17 +764,19 @@ export function ShapeGeneratorPanel({
   const [arrowOptions, setArrowOptions] = useState<PathwayArrowOptions>(defaultArrowOptions);
   const [neuronOptions, setNeuronOptions] = useState<NeuronOptions>(defaultNeuronOptions);
   const [mitoOptions, setMitoOptions] = useState<MitochondriaOptions>(defaultMitoOptions);
+  const [nucleusOptions, setNucleusOptions] = useState<NucleusOptions>(defaultNucleusOptions);
+  const [ribosomeOptions, setRibosomeOptions] = useState<RibosomeOptions>(defaultRibosomeOptions);
+  const [vesicleOptions, setVesicleOptions] = useState<VesicleOptions>(defaultVesicleOptions);
+  const [virusOptions, setVirusOptions] = useState<VirusOptions>(defaultVirusOptions);
+  const [bacteriaOptions, setBacteriaOptions] = useState<BacteriaOptions>(defaultBacteriaOptions);
+  const [golgiOptions, setGolgiOptions] = useState<GolgiOptions>(defaultGolgiOptions);
+  const [erOptions, setErOptions] = useState<EROptions>(defaultEROptions);
+  const [microtubuleOptions, setMicrotubuleOptions] = useState<MicrotubuleOptions>(defaultMicrotubuleOptions);
+  const [proteinOptions, setProteinOptions] = useState<ProteinOptions>(defaultProteinOptions);
   const [hoveredPreset, setHoveredPreset] = useState<string | null>(null);
 
   // Canvas context
   const canvasContext = useCanvas();
-
-  // Update active category when initialShape changes
-  useEffect(() => {
-    if (initialShape) {
-      setActiveCategory(initialShape);
-    }
-  }, [initialShape]);
 
   // Generate preview SVG
   const previewSvg = useMemo(() => {
@@ -540,6 +794,24 @@ export function ShapeGeneratorPanel({
           return generateNeuron(neuronOptions);
         case 'mitochondria':
           return generateMitochondria(mitoOptions);
+        case 'nucleus':
+          return generateNucleus(nucleusOptions);
+        case 'ribosome':
+          return generateRibosome(ribosomeOptions);
+        case 'vesicle':
+          return generateVesicle(vesicleOptions);
+        case 'virus':
+          return generateVirus(virusOptions);
+        case 'bacteria':
+          return generateBacteria(bacteriaOptions);
+        case 'golgi':
+          return generateGolgi(golgiOptions);
+        case 'er':
+          return generateER(erOptions);
+        case 'microtubule':
+          return generateMicrotubule(microtubuleOptions);
+        case 'protein':
+          return generateProtein(proteinOptions);
         default:
           return '';
       }
@@ -547,7 +819,7 @@ export function ShapeGeneratorPanel({
       console.error('Error generating shape preview:', error);
       return '';
     }
-  }, [activeCategory, dnaOptions, membraneOptions, cellLayerOptions, arrowOptions, neuronOptions, mitoOptions]);
+  }, [activeCategory, dnaOptions, membraneOptions, cellLayerOptions, arrowOptions, neuronOptions, mitoOptions, nucleusOptions, ribosomeOptions, vesicleOptions, virusOptions, bacteriaOptions, golgiOptions, erOptions, microtubuleOptions, proteinOptions]);
 
   // Insert shape to canvas
   const handleInsert = useCallback(async () => {
@@ -615,6 +887,33 @@ export function ShapeGeneratorPanel({
         break;
       case 'mitochondria':
         setMitoOptions(defaultMitoOptions);
+        break;
+      case 'nucleus':
+        setNucleusOptions(defaultNucleusOptions);
+        break;
+      case 'ribosome':
+        setRibosomeOptions(defaultRibosomeOptions);
+        break;
+      case 'vesicle':
+        setVesicleOptions(defaultVesicleOptions);
+        break;
+      case 'virus':
+        setVirusOptions(defaultVirusOptions);
+        break;
+      case 'bacteria':
+        setBacteriaOptions(defaultBacteriaOptions);
+        break;
+      case 'golgi':
+        setGolgiOptions(defaultGolgiOptions);
+        break;
+      case 'er':
+        setErOptions(defaultEROptions);
+        break;
+      case 'microtubule':
+        setMicrotubuleOptions(defaultMicrotubuleOptions);
+        break;
+      case 'protein':
+        setProteinOptions(defaultProteinOptions);
         break;
     }
   }, [activeCategory]);
@@ -1150,6 +1449,616 @@ export function ShapeGeneratorPanel({
     </>
   );
 
+  // Render Nucleus options
+  const renderNucleusOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Diameter</label>
+        <input
+          type="range"
+          min="50"
+          max="200"
+          value={nucleusOptions.diameter}
+          onChange={(e) => setNucleusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={nucleusOptions.diameter}
+          onChange={(e) => setNucleusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Pores</label>
+        <input
+          type="range"
+          min="0"
+          max="20"
+          value={nucleusOptions.pores}
+          onChange={(e) => setNucleusOptions((prev) => ({ ...prev, pores: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={nucleusOptions.pores}
+          onChange={(e) => setNucleusOptions((prev) => ({ ...prev, pores: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Envelope</label>
+        <select
+          value={nucleusOptions.envelopeStyle}
+          onChange={(e) =>
+            setNucleusOptions((prev) => ({
+              ...prev,
+              envelopeStyle: e.target.value as 'solid' | 'dotted' | 'double',
+            }))
+          }
+          style={styles.optionSelect}
+        >
+          <option value="solid">Solid</option>
+          <option value="dotted">Dotted</option>
+          <option value="double">Double</option>
+        </select>
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={nucleusOptions.fill}
+          onChange={(e) => setNucleusOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
+  // Render Ribosome options
+  const renderRibosomeOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Size</label>
+        <input
+          type="range"
+          min="30"
+          max="100"
+          value={ribosomeOptions.size}
+          onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={ribosomeOptions.size}
+          onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Subunits</label>
+        <select
+          value={ribosomeOptions.subunits}
+          onChange={(e) =>
+            setRibosomeOptions((prev) => ({
+              ...prev,
+              subunits: e.target.value as 'large' | 'small' | 'both',
+            }))
+          }
+          style={styles.optionSelect}
+        >
+          <option value="both">Both</option>
+          <option value="large">Large</option>
+          <option value="small">Small</option>
+        </select>
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Show mRNA</label>
+        <label style={styles.optionCheckbox}>
+          <input
+            type="checkbox"
+            checked={ribosomeOptions.showRna}
+            onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, showRna: e.target.checked }))}
+            style={styles.checkbox}
+          />
+        </label>
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={ribosomeOptions.fill}
+          onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
+  // Render Vesicle options
+  const renderVesicleOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Diameter</label>
+        <input
+          type="range"
+          min="30"
+          max="150"
+          value={vesicleOptions.diameter}
+          onChange={(e) => setVesicleOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={vesicleOptions.diameter}
+          onChange={(e) => setVesicleOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Cargo</label>
+        <select
+          value={vesicleOptions.cargo}
+          onChange={(e) =>
+            setVesicleOptions((prev) => ({
+              ...prev,
+              cargo: e.target.value as 'none' | 'dots' | 'circle',
+            }))
+          }
+          style={styles.optionSelect}
+        >
+          <option value="dots">Dots</option>
+          <option value="circle">Circle</option>
+          <option value="none">None</option>
+        </select>
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Membrane</label>
+        <select
+          value={vesicleOptions.membraneStyle}
+          onChange={(e) =>
+            setVesicleOptions((prev) => ({
+              ...prev,
+              membraneStyle: e.target.value as 'solid' | 'studded' | 'coated',
+            }))
+          }
+          style={styles.optionSelect}
+        >
+          <option value="solid">Solid</option>
+          <option value="studded">Studded</option>
+          <option value="coated">Coated</option>
+        </select>
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={vesicleOptions.fill}
+          onChange={(e) => setVesicleOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
+  // Render Virus options
+  const renderVirusOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Virus Type</div>
+      <div style={styles.presetsContainer}>
+        {(['icosahedral', 'envelope', 'bacteriophage'] as const).map((type) => (
+          <button
+            key={type}
+            style={{
+              ...styles.presetButton,
+              ...(virusOptions.type === type || hoveredPreset === type ? styles.presetButtonHover : {}),
+            }}
+            onMouseEnter={() => setHoveredPreset(type)}
+            onMouseLeave={() => setHoveredPreset(null)}
+            onClick={() => setVirusOptions((prev) => ({ ...prev, type }))}
+          >
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Diameter</label>
+        <input
+          type="range"
+          min="50"
+          max="200"
+          value={virusOptions.diameter}
+          onChange={(e) => setVirusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={virusOptions.diameter}
+          onChange={(e) => setVirusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Spike Length</label>
+        <input
+          type="range"
+          min="5"
+          max="30"
+          value={virusOptions.spikeLength}
+          onChange={(e) => setVirusOptions((prev) => ({ ...prev, spikeLength: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={virusOptions.spikeLength}
+          onChange={(e) => setVirusOptions((prev) => ({ ...prev, spikeLength: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={virusOptions.fill}
+          onChange={(e) => setVirusOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
+  // Render Bacteria options
+  const renderBacteriaOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Bacteria Type</div>
+      <div style={styles.presetsContainer}>
+        {(['bacillus', 'coccus', 'spirillum', 'diplococcus'] as const).map((type) => (
+          <button
+            key={type}
+            style={{
+              ...styles.presetButton,
+              ...(bacteriaOptions.type === type || hoveredPreset === type ? styles.presetButtonHover : {}),
+            }}
+            onMouseEnter={() => setHoveredPreset(type)}
+            onMouseLeave={() => setHoveredPreset(null)}
+            onClick={() => setBacteriaOptions((prev) => ({ ...prev, type }))}
+          >
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Length</label>
+        <input
+          type="range"
+          min="50"
+          max="200"
+          value={bacteriaOptions.length}
+          onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={bacteriaOptions.length}
+          onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Width</label>
+        <input
+          type="range"
+          min="20"
+          max="80"
+          value={bacteriaOptions.width}
+          onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={bacteriaOptions.width}
+          onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Flagella</label>
+        <input
+          type="range"
+          min="0"
+          max="6"
+          value={bacteriaOptions.flagella}
+          onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, flagella: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={bacteriaOptions.flagella}
+          onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, flagella: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={bacteriaOptions.fill}
+          onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
+  // Render Golgi options
+  const renderGolgiOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Size</label>
+        <input
+          type="range"
+          min="80"
+          max="200"
+          value={golgiOptions.size}
+          onChange={(e) => setGolgiOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={golgiOptions.size}
+          onChange={(e) => setGolgiOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Cisternae</label>
+        <input
+          type="range"
+          min="3"
+          max="8"
+          value={golgiOptions.cisternae}
+          onChange={(e) => setGolgiOptions((prev) => ({ ...prev, cisternae: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={golgiOptions.cisternae}
+          onChange={(e) => setGolgiOptions((prev) => ({ ...prev, cisternae: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={golgiOptions.fill}
+          onChange={(e) => setGolgiOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
+  // Render ER options
+  const renderEROptions = () => (
+    <>
+      <div style={styles.sectionTitle}>ER Type</div>
+      <div style={styles.presetsContainer}>
+        {(['rough', 'smooth'] as const).map((type) => (
+          <button
+            key={type}
+            style={{
+              ...styles.presetButton,
+              ...(erOptions.type === type || hoveredPreset === type ? styles.presetButtonHover : {}),
+            }}
+            onMouseEnter={() => setHoveredPreset(type)}
+            onMouseLeave={() => setHoveredPreset(null)}
+            onClick={() => setErOptions((prev) => ({ ...prev, type }))}
+          >
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Size</label>
+        <input
+          type="range"
+          min="80"
+          max="200"
+          value={erOptions.size}
+          onChange={(e) => setErOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={erOptions.size}
+          onChange={(e) => setErOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Branches</label>
+        <input
+          type="range"
+          min="3"
+          max="10"
+          value={erOptions.branches}
+          onChange={(e) => setErOptions((prev) => ({ ...prev, branches: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={erOptions.branches}
+          onChange={(e) => setErOptions((prev) => ({ ...prev, branches: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={erOptions.fill}
+          onChange={(e) => setErOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
+  // Render Microtubule options
+  const renderMicrotubuleOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Length</label>
+        <input
+          type="range"
+          min="100"
+          max="400"
+          value={microtubuleOptions.length}
+          onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={microtubuleOptions.length}
+          onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Protofilaments</label>
+        <input
+          type="range"
+          min="5"
+          max="20"
+          value={microtubuleOptions.protofilaments}
+          onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, protofilaments: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={microtubuleOptions.protofilaments}
+          onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, protofilaments: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Show Dimers</label>
+        <label style={styles.optionCheckbox}>
+          <input
+            type="checkbox"
+            checked={microtubuleOptions.showDimer}
+            onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, showDimer: e.target.checked }))}
+            style={styles.checkbox}
+          />
+        </label>
+      </div>
+    </>
+  );
+
+  // Render Protein options
+  const renderProteinOptions = () => (
+    <>
+      <div style={styles.sectionTitle}>Protein Structure</div>
+      <div style={styles.presetsContainer}>
+        {(['alpha-helix', 'beta-sheet', 'tertiary'] as const).map((type) => (
+          <button
+            key={type}
+            style={{
+              ...styles.presetButton,
+              ...(proteinOptions.type === type || hoveredPreset === type ? styles.presetButtonHover : {}),
+            }}
+            onMouseEnter={() => setHoveredPreset(type)}
+            onMouseLeave={() => setHoveredPreset(null)}
+            onClick={() => setProteinOptions((prev) => ({ ...prev, type }))}
+          >
+            {type === 'alpha-helix' ? 'α-Helix' : type === 'beta-sheet' ? 'β-Sheet' : 'Tertiary'}
+          </button>
+        ))}
+      </div>
+
+      <div style={styles.sectionTitle}>Parameters</div>
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Length</label>
+        <input
+          type="range"
+          min="50"
+          max="300"
+          value={proteinOptions.length}
+          onChange={(e) => setProteinOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
+          style={styles.optionSlider}
+        />
+        <input
+          type="number"
+          value={proteinOptions.length}
+          onChange={(e) => setProteinOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
+          style={{ ...styles.optionInput, maxWidth: '60px' }}
+        />
+      </div>
+
+      {proteinOptions.type === 'beta-sheet' && (
+        <div style={styles.optionRow}>
+          <label style={styles.optionLabel}>Strands</label>
+          <input
+            type="range"
+            min="2"
+            max="6"
+            value={proteinOptions.strands}
+            onChange={(e) => setProteinOptions((prev) => ({ ...prev, strands: Number(e.target.value) }))}
+            style={styles.optionSlider}
+          />
+          <input
+            type="number"
+            value={proteinOptions.strands}
+            onChange={(e) => setProteinOptions((prev) => ({ ...prev, strands: Number(e.target.value) }))}
+            style={{ ...styles.optionInput, maxWidth: '60px' }}
+          />
+        </div>
+      )}
+
+      <div style={styles.optionRow}>
+        <label style={styles.optionLabel}>Fill Color</label>
+        <input
+          type="color"
+          value={proteinOptions.fill}
+          onChange={(e) => setProteinOptions((prev) => ({ ...prev, fill: e.target.value }))}
+          style={styles.colorInput}
+        />
+      </div>
+    </>
+  );
+
   // Render options based on category
   const renderOptions = () => {
     switch (activeCategory) {
@@ -1165,6 +2074,24 @@ export function ShapeGeneratorPanel({
         return renderNeuronOptions();
       case 'mitochondria':
         return renderMitoOptions();
+      case 'nucleus':
+        return renderNucleusOptions();
+      case 'ribosome':
+        return renderRibosomeOptions();
+      case 'vesicle':
+        return renderVesicleOptions();
+      case 'virus':
+        return renderVirusOptions();
+      case 'bacteria':
+        return renderBacteriaOptions();
+      case 'golgi':
+        return renderGolgiOptions();
+      case 'er':
+        return renderEROptions();
+      case 'microtubule':
+        return renderMicrotubuleOptions();
+      case 'protein':
+        return renderProteinOptions();
       default:
         return null;
     }

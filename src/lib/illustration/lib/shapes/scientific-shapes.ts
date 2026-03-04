@@ -652,6 +652,547 @@ export function generateMitochondria(options: MitochondriaOptions = {}): string 
 }
 
 // ============================================================================
+// Nucleus Generator
+// ============================================================================
+
+export interface NucleusOptions extends ShapeOptions {
+  diameter?: number;
+  pores?: number;
+  envelopeStyle?: 'solid' | 'dotted' | 'double';
+}
+
+/**
+ * Generate a cell nucleus with nuclear pores
+ */
+export function generateNucleus(options: NucleusOptions = {}): string {
+  const {
+    diameter = 100,
+    pores = 8,
+    envelopeStyle = 'solid',
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#e2e8f0',
+    opacity = 0.9,
+  } = options;
+
+  const cx = diameter / 2;
+  const cy = diameter / 2;
+  const rx = diameter / 2;
+  const ry = diameter / 2;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${diameter}" height="${diameter}" viewBox="0 0 ${diameter} ${diameter}">`;
+
+  // Nuclear envelope
+  if (envelopeStyle === 'double') {
+    svg += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+    svg += `<ellipse cx="${cx}" cy="${cy}" rx="${rx * 0.9}" ry="${ry * 0.9}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+  } else if (envelopeStyle === 'dotted') {
+    svg += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-dasharray="4 4" opacity="${opacity}"/>`;
+  } else {
+    svg += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+  }
+
+  // Nucleolus
+  svg += `<ellipse cx="${cx}" cy="${cy}" rx="${rx * 0.3}" ry="${ry * 0.25}" fill="#a78bfa" stroke="#6366f1" stroke-width="${strokeWidth * 0.5}" opacity="${opacity}"/>`;
+
+  // Nuclear pores
+  for (let i = 0; i < pores; i++) {
+    const angle = (i / pores) * Math.PI * 2;
+    const px = cx + Math.cos(angle) * rx * 0.85;
+    const py = cy + Math.sin(angle) * ry * 0.85;
+    svg += `<circle cx="${px}" cy="${py}" r="${diameter * 0.03}" fill="${stroke}" opacity="0.6"/>`;
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Ribosome Generator
+// ============================================================================
+
+export interface RibosomeOptions extends ShapeOptions {
+  size?: number;
+  subunits?: 'large' | 'small' | 'both';
+  showRna?: boolean;
+}
+
+/**
+ * Generate a ribosome (large and small subunits)
+ */
+export function generateRibosome(options: RibosomeOptions = {}): string {
+  const {
+    size = 60,
+    subunits = 'both',
+    showRna = true,
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#fbbf24',
+    opacity = 0.9,
+  } = options;
+
+  const cx = size / 2;
+  const cy = size / 2;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+
+  // Large subunit (bottom, larger)
+  if (subunits === 'large' || subunits === 'both') {
+    svg += `<ellipse cx="${cx}" cy="${cy * 0.65}" rx="${size * 0.4}" ry="${size * 0.25}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+  }
+
+  // Small subunit (top, smaller)
+  if (subunits === 'small' || subunits === 'both') {
+    svg += `<ellipse cx="${cx}" cy="${cy * 0.3}" rx="${size * 0.3}" ry="${size * 0.18}" fill="#f472b6" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+  }
+
+  // mRNA strand (curved line through subunits)
+  if (showRna) {
+    svg += `<path d="M ${cx * 0.3} ${cy * 0.2} Q ${cx} ${cy * 0.5} ${cx * 0.7} ${cy * 0.8}" fill="none" stroke="#60a5fa" stroke-width="${strokeWidth * 1.5}" stroke-dasharray="3 3"/>`;
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Vesicle Generator
+// ============================================================================
+
+export interface VesicleOptions extends ShapeOptions {
+  diameter?: number;
+  cargo?: 'none' | 'dots' | 'circle';
+  membraneStyle?: 'solid' | 'studded' | 'coated';
+}
+
+/**
+ * Generate a vesicle (membrane-bound organelle)
+ */
+export function generateVesicle(options: VesicleOptions = {}): string {
+  const {
+    diameter = 80,
+    cargo = 'dots',
+    membraneStyle = 'solid',
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#c4b5fd',
+    opacity = 0.85,
+  } = options;
+
+  const cx = diameter / 2;
+  const cy = diameter / 2;
+  const rx = diameter / 2;
+  const ry = diameter / 2;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${diameter}" height="${diameter}" viewBox="0 0 ${diameter} ${diameter}">`;
+
+  // Main vesicle body
+  svg += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+  // Membrane studs (for clathrin-coated or studded vesicles)
+  if (membraneStyle === 'studded') {
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2;
+      const px = cx + Math.cos(angle) * rx * 0.95;
+      const py = cy + Math.sin(angle) * ry * 0.95;
+      svg += `<circle cx="${px}" cy="${py}" r="3" fill="${stroke}" opacity="0.7"/>`;
+    }
+  } else if (membraneStyle === 'coated') {
+    svg += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth + 2}" stroke-dasharray="2 2" opacity="0.5"/>`;
+  }
+
+  // Cargo
+  if (cargo === 'dots') {
+    for (let i = 0; i < 5; i++) {
+      const px = cx + (Math.random() - 0.5) * rx * 0.8;
+      const py = cy + (Math.random() - 0.5) * ry * 0.8;
+      svg += `<circle cx="${px}" cy="${py}" r="4" fill="#7c3aed" opacity="0.6"/>`;
+    }
+  } else if (cargo === 'circle') {
+    svg += `<circle cx="${cx}" cy="${cy}" r="${rx * 0.3}" fill="#7c3aed" opacity="0.5"/>`;
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Virus Generator
+// ============================================================================
+
+export interface VirusOptions extends ShapeOptions {
+  diameter?: number;
+  type?: 'icosahedral' | 'envelope' | 'complex' | 'bacteriophage';
+  spikeLength?: number;
+  genomeType?: 'rna' | 'dna';
+}
+
+/**
+ * Generate a virus particle
+ */
+export function generateVirus(options: VirusOptions = {}): string {
+  const {
+    diameter = 100,
+    type = 'icosahedral',
+    spikeLength = 15,
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#10b981',
+    opacity = 0.9,
+  } = options;
+
+  const cx = diameter / 2;
+  const cy = diameter / 2;
+  const r = diameter / 2 - spikeLength;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${diameter}" height="${diameter}" viewBox="0 0 ${diameter} ${diameter}">`;
+
+  if (type === 'envelope') {
+    // Envelope virus (oval with surface proteins)
+    svg += `<ellipse cx="${cx}" cy="${cy}" rx="${r * 1.2}" ry="${r * 0.8}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+    // Surface glycoproteins
+    for (let i = 0; i < 16; i++) {
+      const angle = (i / 16) * Math.PI * 2;
+      const px = cx + Math.cos(angle) * r * 1.1;
+      const py = cy + Math.sin(angle) * r * 0.72;
+      svg += `<line x1="${px}" y1="${py}" x2="${px + Math.cos(angle) * 12}" y2="${py + Math.sin(angle) * 12}" stroke="${stroke}" stroke-width="${strokeWidth * 0.5}"/>`;
+      svg += `<circle cx="${px + Math.cos(angle) * 14}" cy="${py + Math.sin(angle) * 14}" r="3" fill="#fbbf24"/>`;
+    }
+  } else if (type === 'bacteriophage') {
+    // Bacteriophage (icosahedral head + helical tail)
+    svg += `<circle cx="${cx}" cy="${r * 0.35}" r="${r * 0.3}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+    // Tail sheath
+    svg += `<rect x="${cx - r * 0.1}" y="${r * 0.35}" width="${r * 0.2}" height="${r * 0.5}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+    // Tail fibers
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI;
+      const fx = cx + Math.cos(angle) * r * 0.15;
+      const fy = r * 0.85;
+      svg += `<line x1="${cx}" y1="${r * 0.85}" x2="${fx}" y2="${fy + 20}" stroke="${stroke}" stroke-width="${strokeWidth * 0.5}"/>`;
+    }
+  } else {
+    // Icosahedral virus with spikes
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+    // Facets
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2;
+      svg += `<line x1="${cx}" y1="${cy}" x2="${cx + Math.cos(angle) * r * 0.7}" y2="${cy + Math.sin(angle) * r * 0.7}" stroke="${stroke}" stroke-width="${strokeWidth * 0.5}" opacity="0.3"/>`;
+    }
+
+    // Spikes
+    for (let i = 0; i < 20; i++) {
+      const angle = (i / 20) * Math.PI * 2;
+      const sx = cx + Math.cos(angle) * r;
+      const sy = cy + Math.sin(angle) * r;
+      svg += `<line x1="${sx}" y1="${sy}" x2="${sx + Math.cos(angle) * spikeLength}" y2="${sy + Math.sin(angle) * spikeLength}" stroke="${stroke}" stroke-width="${strokeWidth * 0.8}"/>`;
+      svg += `<circle cx="${sx + Math.cos(angle) * (spikeLength + 4)}" cy="${sy + Math.sin(angle) * (spikeLength + 4)}" r="3" fill="#ef4444"/>`;
+    }
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Bacteria Generator
+// ============================================================================
+
+export interface BacteriaOptions extends ShapeOptions {
+  type?: 'bacillus' | 'coccus' | 'spirillum' | 'diplococcus';
+  length?: number;
+  width?: number;
+  flagella?: number;
+}
+
+/**
+ * Generate bacterial cell
+ */
+export function generateBacteria(options: BacteriaOptions = {}): string {
+  const {
+    type = 'bacillus',
+    length = 100,
+    width = 40,
+    flagella = 2,
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#34d399',
+    opacity = 0.9,
+  } = options;
+
+  const cx = length / 2;
+  const cy = Math.max(length, width) / 2;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${length + 40}" height="${Math.max(length, width) + 40}" viewBox="0 0 ${length + 40} ${Math.max(length, width) + 40}">`;
+
+  if (type === 'coccus') {
+    // Round bacterium
+    const r = width / 2;
+    svg += `<circle cx="${cx + 20}" cy="${cy + 20}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+  } else if (type === 'spirillum') {
+    // Spiral bacterium
+    svg += `<path d="M ${20} ${cy + 20} q ${width / 4} ${-width / 4} ${width / 2} ${cy + 20} t ${width / 2} ${cy + 20 + width / 4}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+  } else if (type === 'diplococcus') {
+    // Two cocci
+    const r = width / 2;
+    svg += `<circle cx="${cx}" cy="${cy + 20}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+    svg += `<circle cx="${cx + width - 5}" cy="${cy + 20}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+  } else {
+    // Bacillus (rod-shaped) - default
+    svg += `<rect x="${20}" y="${cy + 20 - width / 2}" width="${length}" height="${width}" rx="${width / 2}" ry="${width / 2}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+    // Flagella
+    for (let i = 0; i < flagella; i++) {
+      const fx = 20 + length + (i - flagella / 2) * 10;
+      const fy = cy + 20 + (i - flagella / 2 + 0.5) * 15;
+      svg += `<path d="M ${20 + length} ${cy + 20} Q ${fx} ${fy} ${fx} ${fy + 30}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth * 0.8}" stroke-dasharray="4 2"/>`;
+    }
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Golgi Apparatus Generator
+// ============================================================================
+
+export interface GolgiOptions extends ShapeOptions {
+  size?: number;
+  cisternae?: number;
+}
+
+/**
+ * Generate Golgi apparatus (stacked membrane cisternae)
+ */
+export function generateGolgi(options: GolgiOptions = {}): string {
+  const {
+    size = 120,
+    cisternae = 5,
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#f472b6',
+    opacity = 0.85,
+  } = options;
+
+  const cx = size / 2;
+  const cy = size / 2;
+  const width = size * 0.7;
+  const height = size * 0.6;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+
+  // Stacked cisternae with varying sizes
+  for (let i = 0; i < cisternae; i++) {
+    const progress = i / (cisternae - 1);
+    const cWidth = width * (0.6 + Math.abs(progress - 0.5) * 0.8);
+    const cHeight = height * 0.15;
+    const cY = cy - height / 2 + i * (height / cisternae) + cHeight / 2;
+
+    // Curved cisternae
+    svg += `<path d="M ${cx - cWidth / 2} ${cY} Q ${cx} ${cY - cHeight / 2} ${cx + cWidth / 2} ${cY}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+    // Vesicles near Golgi
+    if (i === 0 || i === cisternae - 1) {
+      const vx = cx + (i === 0 ? -1 : 1) * (cWidth / 2 + 15);
+      svg += `<circle cx="${vx}" cy="${cY}" r="6" fill="#c084fc" stroke="${stroke}" stroke-width="${strokeWidth * 0.5}" opacity="${opacity}"/>`;
+    }
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Endoplasmic Reticulum Generator
+// ============================================================================
+
+export interface EROptions extends ShapeOptions {
+  type?: 'rough' | 'smooth';
+  size?: number;
+  branches?: number;
+}
+
+/**
+ * Generate endoplasmic reticulum
+ */
+export function generateER(options: EROptions = {}): string {
+  const {
+    type = 'rough',
+    size = 120,
+    branches = 5,
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#fbbf24',
+    opacity = 0.85,
+  } = options;
+
+  const cx = size / 2;
+  const cy = size / 2;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+
+  if (type === 'smooth') {
+    // Smooth ER (tubular network)
+    for (let i = 0; i < branches; i++) {
+      const startX = 20 + (i / branches) * (size - 40);
+      const startY = 30 + Math.sin(i * 2) * 20;
+      svg += `<path d="M ${startX} ${startY} Q ${startX + 20} ${startY - 20} ${startX + 40} ${startY}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth * 1.5}" opacity="${opacity}"/>`;
+      svg += `<path d="M ${startX + 10} ${startY} Q ${startX + 30} ${startY + 15} ${startX + 50} ${startY - 10}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth * 1.5}" opacity="${opacity}"/>`;
+    }
+  } else {
+    // Rough ER (with ribosomes)
+    for (let i = 0; i < branches; i++) {
+      const startX = 20 + (i / branches) * (size - 40);
+      const startY = 30 + Math.sin(i * 2) * 20;
+      svg += `<path d="M ${startX} ${startY} Q ${startX + 20} ${startY - 20} ${startX + 40} ${startY}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth * 1.5}" opacity="${opacity}"/>`;
+
+      // Ribosomes (dots) on the membrane
+      for (let j = 0; j < 5; j++) {
+        const t = j / 4;
+        const rx = startX + t * 40;
+        const ry = startY + Math.sin(t * Math.PI) * 15;
+        svg += `<circle cx="${rx}" cy="${ry}" r="2" fill="${stroke}" opacity="0.7"/>`;
+      }
+    }
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Microtubule Generator
+// ============================================================================
+
+export interface MicrotubuleOptions extends ShapeOptions {
+  length?: number;
+  protofilaments?: number;
+  showDimer?: boolean;
+}
+
+/**
+ * Generate a microtubule (hollow tube of tubulin)
+ */
+export function generateMicrotubule(options: MicrotubuleOptions = {}): string {
+  const {
+    length = 200,
+    protofilaments = 13,
+    showDimer = false,
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    opacity = 0.9,
+  } = options;
+
+  const width = 30;
+  const cx = width / 2;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${length}" viewBox="0 0 ${width} ${length}">`;
+
+  // Protofilaments (parallel lines)
+  for (let i = 0; i < protofilaments; i++) {
+    const x = (i / protofilaments) * width;
+    svg += `<line x1="${x}" y1="0" x2="${x}" y2="${length}" stroke="${stroke}" stroke-width="${strokeWidth * 0.5}" opacity="${opacity * 0.5}"/>`;
+  }
+
+  // Tubulin dimers (if showing detailed structure)
+  if (showDimer) {
+    for (let i = 0; i < protofilaments; i++) {
+      const x = (i / protofilaments) * width;
+      for (let y = 0; y < length; y += 8) {
+        svg += `<ellipse cx="${x}" cy="${y}" rx="${width / protofilaments / 3}" ry="3" fill="#60a5fa" opacity="${opacity * 0.6}"/>`;
+      }
+    }
+  }
+
+  // Outer boundary
+  svg += `<rect x="0" y="0" width="${width}" height="${length}" fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
+// Protein Structure Generator
+// ============================================================================
+
+export interface ProteinOptions extends ShapeOptions {
+  type?: 'alpha-helix' | 'beta-sheet' | 'tertiary';
+  length?: number;
+  strands?: number;
+}
+
+/**
+ * Generate a protein secondary structure
+ */
+export function generateProtein(options: ProteinOptions = {}): string {
+  const {
+    type = 'alpha-helix',
+    length = 100,
+    strands = 4,
+    stroke = '#4a5568',
+    strokeWidth = 2,
+    fill = '#818cf8',
+    opacity = 0.9,
+  } = options;
+
+  const width = length * 0.8;
+  const height = type === 'beta-sheet' ? 60 : 40;
+
+  let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
+
+  if (type === 'alpha-helix') {
+    // Alpha helix (coil)
+    const coils = 5;
+    const coilWidth = width / coils;
+    for (let i = 0; i < coils; i++) {
+      const x = i * coilWidth;
+      // Arrow shape to represent helix turning away
+      svg += `<path d="M ${x} ${height * 0.8} L ${x + coilWidth * 0.3} ${height * 0.2} L ${x + coilWidth * 0.6} ${height * 0.8}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+      // N to C indicator
+      if (i === 0) {
+        svg += `<text x="${x}" y="${height * 0.95}" font-size="10" fill="${stroke}">N</text>`;
+      }
+    }
+    svg += `<text x="${width - 10}" y="${height * 0.95}" font-size="10" fill="${stroke}">C</text>`;
+  } else if (type === 'beta-sheet') {
+    // Beta sheet (arrows pointing same direction)
+    const strandWidth = width / strands;
+    const arrowLength = height * 0.6;
+
+    for (let i = 0; i < strands; i++) {
+      const x = i * strandWidth + 10;
+      // Parallel beta strands (arrows pointing right)
+      svg += `<path d="M ${x} ${height * 0.2} L ${x + arrowLength} ${height * 0.5} L ${x} ${height * 0.8} Z" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+
+      // Hydrogen bonds (dashed lines between strands)
+      if (i < strands - 1) {
+        for (let j = 0; j < 3; j++) {
+          const hx = x + arrowLength + j * (strandWidth - arrowLength) / 3;
+          svg += `<line x1="${hx}" y1="${height * 0.3 + j * height * 0.2}" x2="${hx}" y2="${height * 0.3 + j * height * 0.2}" stroke="${stroke}" stroke-width="1" stroke-dasharray="3 3" opacity="${opacity * 0.5}"/>`;
+        }
+      }
+    }
+  } else {
+    // Tertiary structure (globular blob)
+    svg += `<ellipse cx="${width / 2}" cy="${height / 2}" rx="${width * 0.4}" ry="${height * 0.4}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}"/>`;
+    // Small pockets on surface
+    for (let i = 0; i < 4; i++) {
+      const angle = (i / 4) * Math.PI * 2;
+      const px = width / 2 + Math.cos(angle) * width * 0.3;
+      const py = height / 2 + Math.sin(angle) * height * 0.3;
+      svg += `<circle cx="${px}" cy="${py}" r="5" fill="#c084fc" stroke="${stroke}" stroke-width="${strokeWidth * 0.5}" opacity="${opacity * 0.7}"/>`;
+    }
+  }
+
+  svg += '</svg>';
+  return svg;
+}
+
+// ============================================================================
 // Export all generators
 // ============================================================================
 
@@ -661,7 +1202,16 @@ export const scientificShapeGenerators = {
   cellLayer: generateCellLayer,
   pathwayArrow: generatePathwayArrow,
   neuron: generateNeuron,
-  mitochondria: generateMitochondria
+  mitochondria: generateMitochondria,
+  nucleus: generateNucleus,
+  ribosome: generateRibosome,
+  vesicle: generateVesicle,
+  virus: generateVirus,
+  bacteria: generateBacteria,
+  golgi: generateGolgi,
+  er: generateER,
+  microtubule: generateMicrotubule,
+  protein: generateProtein,
 };
 
 export default scientificShapeGenerators;

@@ -425,7 +425,7 @@ export function FigurePanelGenerator({
     const startX = (canvas.width || 800) / 2 - totalWidth / 2;
     const startY = (canvas.height || 600) / 2 - totalHeight / 2;
 
-    const allObjects: Array<Rect | Line | IText> = [];
+    const allObjects: Array<Rect | IText> = [];
 
     // Create panels
     for (let row = 0; row < rows; row++) {
