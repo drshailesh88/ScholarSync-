@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import { updateLatexProject } from "@/lib/actions/latex";
+import { CollaboratorAvatars } from "./collaboration-cursors";
 
 interface TopBarProps {
   projectId: string;
@@ -168,8 +169,11 @@ export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExpor
         </div>
       </div>
 
-      {/* Right: Compile + Export */}
-      <div className="flex items-center gap-2">
+      {/* Right: Collaborators + Compile + Export */}
+      <div className="flex items-center gap-3">
+        {/* Collaborator avatars */}
+        <CollaboratorAvatars />
+
         <button
           onClick={onCompile}
           disabled={compileStatus === "compiling"}

@@ -15,6 +15,7 @@ import { ImageBrowser } from "./image-browser";
 import { ErrorGutterPanel, type CompilationDiagnostic } from "./error-gutter";
 import { InlineAiBar } from "./inline-ai-bar";
 import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
+import { LatexCollaborationProvider } from "./collaboration-provider";
 import {
   SidebarSimple,
   ChatCircle,
@@ -495,7 +496,11 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   }, []);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-7rem)] -m-6 -mt-0">
+    <LatexCollaborationProvider
+      projectId={project.id}
+      initialFileId={mainFile?.id ?? ""}
+    >
+      <div className="flex flex-col h-[calc(100vh-7rem)] -m-6 -mt-0">
       {/* Top Bar */}
       <TopBar
         projectId={project.id}
@@ -795,6 +800,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           onDismiss={() => setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } })}
         />
       )}
-    </div>
+      </div>
+    </LatexCollaborationProvider>
   );
 }
