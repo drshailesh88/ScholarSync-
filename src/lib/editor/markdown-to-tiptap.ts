@@ -200,8 +200,8 @@ function parseInline(text: string, sources?: SourceReference[]): TiptapNode[] {
       nodes.push({ type: "text", text: text.slice(lastIndex, match.index) });
     }
 
-    // Safety: prevent infinite loop if match is empty or doesn't advance
-    if (match[0].length === 0 || match.index === lastIndex) {
+    // Safety: prevent infinite loop if match is empty
+    if (match[0].length === 0) {
       break;
     }
 
