@@ -32,6 +32,9 @@ import {
 import { pngToEditableSVG } from "@/lib/illustration/ai/vectorize";
 import { buildSystemPrompt } from "@/lib/illustration/ai/prompts";
 
+// Import utilities
+import { detectBestBackend as utilDetectBestBackend, detectDomainFromPrompt as utilDetectDomainFromPrompt, type Backend } from "@/lib/illustration/ai/utils";
+
 // ===========================================================================
 // TYPES
 // ===========================================================================
@@ -82,11 +85,13 @@ const chatRequestSchema = z.object({
   conversationId: z.string().optional(),
 });
 
-// ===========================================================================
-// DOMAIN DETECTION (shared with AgentMode)
-// ===========================================================================
+// Re-export utilities for use in this module
+const detectDomainFromPrompt = utilDetectDomainFromPrompt;
+const detectBestBackend = utilDetectBestBackend;
 
-function detectDomainFromPrompt(prompt: string): string | undefined {
+// ===========================================================================
+// CONVERSATION CONTEXT BUILDING
+// ===========================================================================
   const lower = prompt.toLowerCase();
 
   const domainPatterns: Record<string, RegExp> = {
@@ -144,87 +149,7 @@ function detectDomainFromPrompt(prompt: string): string | undefined {
 }
 
 // ===========================================================================
-// BACKEND AUTO-ROUTING (shared with generate route)
-// ===========================================================================
-
-type Backend = "mermaid" | "svg" | "gemini";
-
-function detectBestBackend(prompt: string, domain?: string): Backend {
-  const lower = prompt.toLowerCase();
-
-  // Mermaid: flowcharts, process diagrams, decision trees
-  const mermaidKeywords = [
-    "flowchart",
-    "flow chart",
-    "flow diagram",
-    "decision tree",
-    "consort",
-    "prisma",
-    "strobe",
-    "pathway",
-    "algorithm",
-    "sequence diagram",
-    "state diagram",
-    "gantt",
-    "timeline",
-    "process",
-    "workflow",
-    "protocol",
-    "steps",
-    "sequence",
-    "state machine",
-    "er diagram",
-    "class diagram",
-    "entity relationship",
-  ];
-  if (mermaidKeywords.some((k) => lower.includes(k))) return "mermaid";
-
-  // Gemini: complex biological/anatomical illustrations
-  const geminiKeywords = [
-    "illustration",
-    "illustrate",
-    "detailed",
-    "anatomy",
-    "anatomical",
-    "cross-section",
-    "cross section",
-    "microscopy",
-    "photorealistic",
-    "realistic",
-    "organelle",
-    "tissue",
-    "organ",
-    "structure",
-    "cell membrane",
-    "mitochondria",
-    "neuron",
-    "synapse",
-    "sarcomere",
-    "muscle",
-    "blood vessel",
-    "artery",
-    "vein",
-    "protein structure",
-    "molecular structure",
-    "crystal structure",
-    "microscopic",
-    "histology",
-    "embryology",
-    "radiology",
-    "mri",
-    "ct scan",
-    "x-ray",
-    "ultrasound",
-    "endoscopy",
-  ];
-  if (geminiKeywords.some((k) => lower.includes(k))) return "gemini";
-
-  // Default: SVG backend (LLM generates SVG code)
-  return "svg";
-}
-
-// ===========================================================================
-// BACKEND HANDLERS (copied from generate route for direct use)
+// CONVERSATION CONTEXT BUILDING
 // ===========================================================================
 
 async function generateWithMermaid(

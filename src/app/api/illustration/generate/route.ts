@@ -17,6 +17,12 @@ import { pngToEditableSVG } from "@/lib/illustration/ai/vectorize";
 // Import prompts
 import { buildSystemPrompt, DOMAIN_PROMPTS } from "@/lib/illustration/ai/prompts";
 
+// Import utilities
+import { detectBestBackend as utilDetectBestBackend, type Backend } from "@/lib/illustration/ai/utils";
+
+// Re-export for backward compatibility
+const detectBestBackend = utilDetectBestBackend;
+
 // ---------------------------------------------------------------------------
 // TYPES
 // ---------------------------------------------------------------------------
@@ -61,42 +67,6 @@ const requestSchema = z.object({
   slideContext: z.string().nullish(),
   existingDiagram: z.string().optional(),
 });
-
-type Backend = "mermaid" | "svg" | "gemini";
-
-// ---------------------------------------------------------------------------
-// AUTO-ROUTING LOGIC
-// ---------------------------------------------------------------------------
-
-function detectBestBackend(prompt: string, domain?: string): Backend {
-  const lower = prompt.toLowerCase();
-
-  // Mermaid: flowcharts, process diagrams, decision trees
-  const mermaidKeywords = [
-    'flowchart', 'flow chart', 'flow diagram', 'decision tree',
-    'consort', 'prisma', 'strobe', 'pathway', 'algorithm',
-    'sequence diagram', 'state diagram', 'gantt', 'timeline',
-    'process', 'workflow', 'protocol', 'steps', 'sequence',
-    'state machine', 'er diagram', 'class diagram', 'entity relationship',
-  ];
-  if (mermaidKeywords.some(k => lower.includes(k))) return "mermaid";
-
-  // Gemini: complex biological/anatomical illustrations
-  const geminiKeywords = [
-    'illustration', 'illustrate', 'detailed', 'anatomy', 'anatomical',
-    'cross-section', 'cross section', 'microscopy', 'photorealistic',
-    'realistic', 'organelle', 'tissue', 'organ', 'structure',
-    'cell membrane', 'mitochondria', 'neuron', 'synapse',
-    'sarcomere', 'muscle', 'blood vessel', 'artery', 'vein',
-    'protein structure', 'molecular structure', 'crystal structure',
-    'microscopic', 'histology', 'embryology', 'radiology',
-    'mri', 'ct scan', 'x-ray', 'ultrasound', 'endoscopy',
-  ];
-  if (geminiKeywords.some(k => lower.includes(k))) return "gemini";
-
-  // Default: SVG backend (LLM generates SVG code)
-  return "svg";
-}
 
 // ---------------------------------------------------------------------------
 // MERMAID BACKEND HANDLER
