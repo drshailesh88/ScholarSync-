@@ -463,6 +463,7 @@ import { searchSimpleIcons, scienceBrandsList } from './simpleIcons';
 import { searchBioicons, bioiconsList } from './bioicons';
 import { searchBioiconsMetadata, bioiconsMetadata, getBioiconsUrl } from './bioicons-data';
 import { searchSciDrawIcons, scidrawIcons } from './scidraw';
+import { expandWithSynonyms } from '@/lib/illustration/data/icon-synonyms';
 
 /**
  * Unified icon result from any library
@@ -485,16 +486,38 @@ export interface UnifiedIconResult {
 }
 
 /**
- * Search across all icon libraries
+ * Enhanced icon search with synonym expansion and scoring
+ *
+ * Scoring algorithm:
+ * - Exact match on name: 100 points
+ * - Starts with query: 50 points
+ * - Contains query: 25 points
+ * - Contains synonym term: 3 points per synonym match
+ *
+ * Results are deduplicated by ID, limited to 100, and sorted by score (desc), then name (asc).
  */
+export interface ScoredIconResult extends UnifiedIconResult {
+  score: number;
+}
+
 export function searchAllIcons(query: string): UnifiedIconResult[] {
-  const results: UnifiedIconResult[] = [];
   const normalizedQuery = query.toLowerCase().trim();
+
+  if (!normalizedQuery) {
+    // Return empty result for empty query (could also return recent/popular)
+    return [];
+  }
+
+  // Expand query with synonyms for fuzzy matching
+  const expandedTerms = expandWithSynonyms(normalizedQuery);
+
+  // Collect all library search results
+  const allResults: UnifiedIconResult[] = [];
 
   // Search Health Icons
   const healthResults = searchHealthIcons(normalizedQuery);
   for (const icon of healthResults) {
-    results.push({
+    allResults.push({
       id: `health-${icon.id}`,
       name: icon.name,
       category: icon.category,
@@ -507,7 +530,7 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
   // Search Science Icons
   const scienceResults = searchScienceIcons(normalizedQuery);
   for (const icon of scienceResults) {
-    results.push({
+    allResults.push({
       id: `science-${icon.id}`,
       name: icon.name,
       category: icon.category,
@@ -520,7 +543,7 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
   // Search Icon Park
   const iconParkResults = searchIconPark(normalizedQuery);
   for (const icon of iconParkResults) {
-    results.push({
+    allResults.push({
       id: `iconpark-${icon.id}`,
       name: icon.name,
       category: icon.category,
@@ -533,7 +556,7 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
   // Search Simple Icons (brands)
   const simpleResults = searchSimpleIcons(normalizedQuery);
   for (const icon of simpleResults) {
-    results.push({
+    allResults.push({
       id: `simple-${icon.id}`,
       name: icon.name,
       category: icon.category,
@@ -547,7 +570,7 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
   // Search Bioicons (simple inline icons)
   const bioiconsResults = searchBioicons(normalizedQuery);
   for (const icon of bioiconsResults) {
-    results.push({
+    allResults.push({
       id: `bioicons-${icon.id}`,
       name: icon.name,
       category: icon.category,
@@ -562,7 +585,7 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
   // Search Bioicons Full Library (1500+ icons, loaded on-demand)
   const bioiconsFullResults = searchBioiconsMetadata(normalizedQuery);
   for (const icon of bioiconsFullResults) {
-    results.push({
+    allResults.push({
       id: `bioicons-full-${icon.id}`,
       name: icon.name,
       category: icon.category,
@@ -577,7 +600,7 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
   // Search SciDraw
   const scidrawResults = searchSciDrawIcons(normalizedQuery);
   for (const icon of scidrawResults) {
-    results.push({
+    allResults.push({
       id: `scidraw-${icon.id}`,
       name: icon.name,
       category: icon.category,
@@ -589,7 +612,80 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
     });
   }
 
-  return results;
+  // Score, deduplicate, limit, and sort results
+  const scoredResults = new Map<string, ScoredIconResult>();
+
+  for (const result of allResults) {
+    // Skip if already have this ID (deduplication)
+    if (scoredResults.has(result.id)) {
+      continue;
+    }
+
+    let score = 0;
+    const nameLower = result.name.toLowerCase();
+    const categoryLower = result.category.toLowerCase();
+    const keywordsLower = result.keywords.map(k => k.toLowerCase());
+
+    // Exact match on name: 100 points
+    if (nameLower === normalizedQuery) {
+      score += 100;
+    }
+    // Starts with query: 50 points
+    else if (nameLower.startsWith(normalizedQuery)) {
+      score += 50;
+    }
+    // Contains query: 25 points
+    else if (nameLower.includes(normalizedQuery)) {
+      score += 25;
+    }
+
+    // Check category match
+    if (categoryLower.includes(normalizedQuery)) {
+      score += 20;
+    }
+
+    // Check keyword matches
+    for (const keyword of keywordsLower) {
+      if (keyword === normalizedQuery) {
+        score += 30;
+      } else if (keyword.startsWith(normalizedQuery)) {
+        score += 15;
+      } else if (keyword.includes(normalizedQuery)) {
+        score += 10;
+      }
+    }
+
+    // Synonym matches: 3 points per matching synonym term
+    for (const synonym of expandedTerms) {
+      if (synonym !== normalizedQuery) {
+        if (nameLower.includes(synonym) || categoryLower.includes(synonym)) {
+          score += 3;
+        }
+        // Check keywords for synonym matches
+        for (const keyword of keywordsLower) {
+          if (keyword.includes(synonym)) {
+            score += 3;
+            break; // Only count once per keyword
+          }
+        }
+      }
+    }
+
+    scoredResults.set(result.id, { ...result, score });
+  }
+
+  // Convert to array, sort by score (desc), then name (asc), limit to 100
+  const sortedResults = Array.from(scoredResults.values())
+    .sort((a, b) => {
+      if (b.score !== a.score) {
+        return b.score - a.score; // Higher score first
+      }
+      return a.name.localeCompare(b.name); // Alphabetical tie-break
+    })
+    .slice(0, 100);
+
+  // Return without score property (cast back to base type)
+  return sortedResults.map(({ score: _score, ...rest }) => rest);
 }
 
 /**
