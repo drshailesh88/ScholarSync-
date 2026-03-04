@@ -12,6 +12,9 @@ const {
   _mockWhere,
   _mockFrom,
   mockSelect,
+  mockUpdateSet,
+  mockUpdateWhere,
+  mockUpdate,
 } = vi.hoisted(() => {
   const mockOnConflictDoUpdate = vi.fn().mockResolvedValue(undefined);
   const mockValues = vi.fn(() => ({ onConflictDoUpdate: mockOnConflictDoUpdate }));
@@ -24,6 +27,11 @@ const {
   }));
   const mockSelect = vi.fn(() => ({ from: mockFrom }));
 
+  // For db.update().set().where() chain
+  const mockUpdateWhere = vi.fn().mockResolvedValue(undefined);
+  const mockUpdateSet = vi.fn(() => ({ where: mockUpdateWhere }));
+  const mockUpdate = vi.fn(() => ({ set: mockUpdateSet }));
+
   return {
     mockOnConflictDoUpdate,
     mockValues,
@@ -32,6 +40,9 @@ const {
     _mockWhere: mockWhere,
     _mockFrom: mockFrom,
     mockSelect,
+    mockUpdateSet,
+    mockUpdateWhere,
+    mockUpdate,
   };
 });
 
@@ -58,6 +69,7 @@ vi.mock("@/lib/db", () => ({
   db: {
     insert: mockInsert,
     select: mockSelect,
+    update: mockUpdate,
   },
 }));
 
@@ -67,10 +79,17 @@ vi.mock("@/lib/db/schema", () => ({
     paperId: "paperId",
     stage: "stage",
   },
+  projectPapers: {
+    project_id: "project_id",
+    paper_id: "paper_id",
+    screening_decision: "screening_decision",
+    screening_reason: "screening_reason",
+  },
 }));
 
 vi.mock("drizzle-orm", () => ({
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val })),
+  and: vi.fn((...conditions: unknown[]) => conditions),
   sql: vi.fn((strings: TemplateStringsArray) => strings[0]),
 }));
 
@@ -124,6 +143,9 @@ describe("screenPaper — consensus logic", () => {
     mockOnConflictDoUpdate.mockResolvedValue(undefined);
     mockValues.mockReturnValue({ onConflictDoUpdate: mockOnConflictDoUpdate });
     mockInsert.mockReturnValue({ values: mockValues });
+    mockUpdateWhere.mockResolvedValue(undefined);
+    mockUpdateSet.mockReturnValue({ where: mockUpdateWhere });
+    mockUpdate.mockReturnValue({ set: mockUpdateSet });
   });
 
   it("unanimous include → finalDecision is include, no human review", async () => {
@@ -406,7 +428,7 @@ describe("batchScreenPapers", () => {
     expect(results[1].finalDecision).toBe("include");
   });
 
-  it("calls onProgress callback after each batch of 5", async () => {
+  it("calls onProgress callback after each batch of 2", async () => {
     mockGenerateObject.mockResolvedValue(makeAgentResponse("exclude", 0.8) as never);
 
     const papers = Array.from({ length: 6 }, (_, i) => ({
@@ -418,10 +440,11 @@ describe("batchScreenPapers", () => {
     const onProgress = vi.fn();
     await batchScreenPapers(1, papers, sampleCriteria, onProgress);
 
-    // 6 papers with batchSize=5 → 2 batches → 2 progress calls
-    expect(onProgress).toHaveBeenCalledTimes(2);
-    expect(onProgress).toHaveBeenNthCalledWith(1, 5, 6);
-    expect(onProgress).toHaveBeenNthCalledWith(2, 6, 6);
+    // 6 papers with batchSize=2 → 3 batches → 3 progress calls
+    expect(onProgress).toHaveBeenCalledTimes(3);
+    expect(onProgress).toHaveBeenNthCalledWith(1, 2, 6);
+    expect(onProgress).toHaveBeenNthCalledWith(2, 4, 6);
+    expect(onProgress).toHaveBeenNthCalledWith(3, 6, 6);
   });
 
   it("returns empty array for empty papers input", async () => {
@@ -439,10 +462,10 @@ describe("batchScreenPapers", () => {
     expect(results).toHaveLength(1);
   });
 
-  it("processes exactly 5 papers per batch", async () => {
+  it("processes exactly 2 papers per batch", async () => {
     mockGenerateObject.mockResolvedValue(makeAgentResponse("include", 0.9) as never);
 
-    // 5 papers = 1 batch
+    // 5 papers with batchSize=2 → 3 batches
     const papers = Array.from({ length: 5 }, (_, i) => ({
       paperId: i + 1,
       title: `Paper ${i + 1}`,
@@ -452,8 +475,10 @@ describe("batchScreenPapers", () => {
     const onProgress = vi.fn();
     await batchScreenPapers(1, papers, sampleCriteria, onProgress);
 
-    expect(onProgress).toHaveBeenCalledTimes(1);
-    expect(onProgress).toHaveBeenCalledWith(5, 5);
+    expect(onProgress).toHaveBeenCalledTimes(3);
+    expect(onProgress).toHaveBeenNthCalledWith(1, 2, 5);
+    expect(onProgress).toHaveBeenNthCalledWith(2, 4, 5);
+    expect(onProgress).toHaveBeenNthCalledWith(3, 5, 5);
   });
 });
 

@@ -12,7 +12,6 @@ import {
   computeMinHash,
   estimateJaccard,
 } from "../../plagiarism-engine";
-import { checkPredatoryJournal } from "../../predatory-journals";
 
 // ── Cycle 29: Sentence Segmentation Edge Cases ──────────────────────
 
