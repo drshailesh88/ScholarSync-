@@ -9,6 +9,7 @@
  * - Bottom prompt input bar
  *
  * Uses Zustand stores for state management
+ * Calls /api/illustration/generate for multi-backend diagram generation
  * Responsive layout
  */
 
@@ -19,222 +20,259 @@ import { ChatHistory } from './ChatHistory';
 import { PromptInput } from './PromptInput';
 import { DiagramPreview } from './DiagramPreview';
 
-// Sample diagram generators (simulating AI responses)
-const generateConsortDiagram = (): string => `<svg viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .box { fill: #f8f9fa; stroke: #333; stroke-width: 2; }
-    .text { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
-    .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
-  </style>
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
-    </marker>
-  </defs>
-  <rect class="box" x="200" y="20" width="200" height="50" rx="5"/>
-  <text class="text" x="300" y="50">Assessed for eligibility (n=500)</text>
-  <line class="arrow" x1="300" y1="70" x2="300" y2="100"/>
-  <rect class="box" x="420" y="75" width="150" height="60" rx="5"/>
-  <text class="text" x="495" y="100">Excluded (n=100)</text>
-  <text class="text" x="495" y="120" font-size="10">Not meeting criteria: 80</text>
-  <line x1="400" y1="85" x2="420" y2="85" stroke="#333" stroke-width="2"/>
-  <rect class="box" x="200" y="100" width="200" height="50" rx="5"/>
-  <text class="text" x="300" y="130">Randomized (n=400)</text>
-  <line class="arrow" x1="250" y1="150" x2="150" y2="200"/>
-  <line class="arrow" x1="350" y1="150" x2="450" y2="200"/>
-  <rect class="box" x="50" y="200" width="180" height="60" rx="5"/>
-  <text class="text" x="140" y="225">Allocated to Treatment</text>
-  <text class="text" x="140" y="245">(n=200)</text>
-  <rect class="box" x="370" y="200" width="180" height="60" rx="5"/>
-  <text class="text" x="460" y="225">Allocated to Control</text>
-  <text class="text" x="460" y="245">(n=200)</text>
-  <line class="arrow" x1="140" y1="260" x2="140" y2="300"/>
-  <line class="arrow" x1="460" y1="260" x2="460" y2="300"/>
-  <rect class="box" x="50" y="300" width="180" height="60" rx="5"/>
-  <text class="text" x="140" y="325">Lost to follow-up</text>
-  <text class="text" x="140" y="345">(n=10)</text>
-  <rect class="box" x="370" y="300" width="180" height="60" rx="5"/>
-  <text class="text" x="460" y="325">Lost to follow-up</text>
-  <text class="text" x="460" y="345">(n=15)</text>
-  <line class="arrow" x1="140" y1="360" x2="140" y2="400"/>
-  <line class="arrow" x1="460" y1="360" x2="460" y2="400"/>
-  <rect class="box" x="50" y="400" width="180" height="60" rx="5"/>
-  <text class="text" x="140" y="425">Analyzed</text>
-  <text class="text" x="140" y="445">(n=190)</text>
-  <rect class="box" x="370" y="400" width="180" height="60" rx="5"/>
-  <text class="text" x="460" y="425">Analyzed</text>
-  <text class="text" x="460" y="445">(n=185)</text>
-</svg>`;
+// ===========================================================================
+// DOMAIN DETECTION
+// ===========================================================================
 
-const generateForestPlot = (): string => `<svg viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .label { font-family: Arial, sans-serif; font-size: 11px; }
-    .header { font-family: Arial, sans-serif; font-size: 12px; font-weight: bold; }
-    .line { stroke: #333; stroke-width: 1; }
-    .ci-line { stroke: #333; stroke-width: 2; }
-    .point { fill: #333; }
-    .diamond { fill: #0066cc; }
-    .null-line { stroke: #999; stroke-width: 1; stroke-dasharray: 4,4; }
-  </style>
-  <text class="header" x="20" y="30">Study</text>
-  <text class="header" x="150" y="30">Year</text>
-  <text class="header" x="550" y="30">OR (95% CI)</text>
-  <text class="header" x="650" y="30">Weight</text>
-  <line class="null-line" x1="350" y1="50" x2="350" y2="280"/>
-  <line class="line" x1="220" y1="290" x2="480" y2="290"/>
-  <text class="label" x="220" y="305" text-anchor="middle">0.1</text>
-  <text class="label" x="350" y="305" text-anchor="middle">1.0</text>
-  <text class="label" x="480" y="305" text-anchor="middle">10</text>
-  <text class="label" x="20" y="75">Smith et al.</text>
-  <text class="label" x="150" y="75">2019</text>
-  <line class="ci-line" x1="280" y1="70" x2="380" y2="70"/>
-  <rect class="point" x="320" y="65" width="10" height="10"/>
-  <text class="label" x="550" y="75">0.85 (0.62-1.15)</text>
-  <text class="label" x="650" y="75">22.4%</text>
-  <text class="label" x="20" y="115">Johnson et al.</text>
-  <text class="label" x="150" y="115">2020</text>
-  <line class="ci-line" x1="300" y1="110" x2="420" y2="110"/>
-  <rect class="point" x="355" y="105" width="12" height="12"/>
-  <text class="label" x="550" y="115">1.02 (0.78-1.34)</text>
-  <text class="label" x="650" y="115">25.1%</text>
-  <text class="label" x="20" y="155">Williams et al.</text>
-  <text class="label" x="150" y="155">2021</text>
-  <line class="ci-line" x1="260" y1="150" x2="340" y2="150"/>
-  <rect class="point" x="295" y="145" width="8" height="8"/>
-  <text class="label" x="550" y="155">0.72 (0.55-0.94)</text>
-  <text class="label" x="650" y="155">18.3%</text>
-  <line class="line" x1="20" y1="260" x2="680" y2="260"/>
-  <text class="header" x="20" y="278">Overall</text>
-  <polygon class="diamond" points="330,275 350,265 370,275 350,285"/>
-  <text class="header" x="550" y="278">0.89 (0.78-1.02)</text>
-  <text class="header" x="650" y="278">100%</text>
-  <text class="label" x="280" y="325" text-anchor="middle">Favors Treatment</text>
-  <text class="label" x="420" y="325" text-anchor="middle">Favors Control</text>
-</svg>`;
+/**
+ * Detect domain from prompt for specialized illustration generation
+ * Maps keywords to domain-specific prompt enhancement
+ */
+function detectDomainFromPrompt(prompt: string): string | undefined {
+  const lower = prompt.toLowerCase();
 
-const generatePathwayDiagram = (): string => `<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .node { fill: #e3f2fd; stroke: #1976d2; stroke-width: 2; }
-    .receptor { fill: #fff3e0; stroke: #f57c00; stroke-width: 2; }
-    .enzyme { fill: #e8f5e9; stroke: #388e3c; stroke-width: 2; }
-    .tf { fill: #fce4ec; stroke: #c2185b; stroke-width: 2; }
-    .text { font-family: Arial, sans-serif; font-size: 11px; text-anchor: middle; }
-    .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead2); }
-  </style>
-  <defs>
-    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
-    </marker>
-  </defs>
-  <text x="300" y="25" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">MAPK/ERK Signaling Pathway</text>
-  <ellipse class="receptor" cx="300" cy="70" rx="60" ry="25"/>
-  <text class="text" x="300" y="75">Growth Factor Receptor</text>
-  <path class="arrow" d="M300,95 L300,120"/>
-  <ellipse class="node" cx="300" cy="150" rx="40" ry="20"/>
-  <text class="text" x="300" y="155">RAS</text>
-  <path class="arrow" d="M300,170 L300,200"/>
-  <rect class="enzyme" x="260" y="210" width="80" height="35" rx="5"/>
-  <text class="text" x="300" y="232">RAF</text>
-  <path class="arrow" d="M300,245 L300,275"/>
-  <rect class="enzyme" x="260" y="285" width="80" height="35" rx="5"/>
-  <text class="text" x="300" y="307">MEK1/2</text>
-  <path class="arrow" d="M300,320 L300,350"/>
-  <rect class="enzyme" x="260" y="355" width="80" height="35" rx="5"/>
-  <text class="text" x="300" y="377">ERK1/2</text>
-</svg>`;
-
-const generateFlowchart = (): string => `<svg viewBox="0 0 500 450" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .box { fill: #e3f2fd; stroke: #1976d2; stroke-width: 2; }
-    .decision { fill: #fff8e1; stroke: #f9a825; stroke-width: 2; }
-    .terminal { fill: #e8f5e9; stroke: #388e3c; stroke-width: 2; }
-    .text { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
-    .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead3); }
-    .label { font-family: Arial, sans-serif; font-size: 10px; }
-  </style>
-  <defs>
-    <marker id="arrowhead3" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
-    </marker>
-  </defs>
-  <ellipse class="terminal" cx="250" cy="35" rx="60" ry="25"/>
-  <text class="text" x="250" y="40">Start</text>
-  <line class="arrow" x1="250" y1="60" x2="250" y2="85"/>
-  <rect class="box" x="150" y="90" width="200" height="45" rx="5"/>
-  <text class="text" x="250" y="118">Collect Data</text>
-  <line class="arrow" x1="250" y1="135" x2="250" y2="160"/>
-  <polygon class="decision" points="250,165 350,210 250,255 150,210"/>
-  <text class="text" x="250" y="215">Valid Data?</text>
-  <line class="arrow" x1="250" y1="255" x2="250" y2="285"/>
-  <text class="label" x="260" y="275">Yes</text>
-  <rect class="box" x="150" y="290" width="200" height="45" rx="5"/>
-  <text class="text" x="250" y="318">Analyze Results</text>
-  <line class="arrow" x1="250" y1="335" x2="250" y2="360"/>
-  <rect class="box" x="150" y="365" width="200" height="45" rx="5"/>
-  <text class="text" x="250" y="393">Generate Report</text>
-  <line class="arrow" x1="250" y1="410" x2="250" y2="435"/>
-  <ellipse class="terminal" cx="250" cy="460" rx="60" ry="25"/>
-  <text class="text" x="250" y="465">End</text>
-</svg>`;
-
-const generateGenericDiagram = (): string => `<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .box { fill: #e3f2fd; stroke: #1976d2; stroke-width: 2; }
-    .text { font-family: Arial, sans-serif; font-size: 12px; text-anchor: middle; }
-    .arrow { stroke: #333; stroke-width: 2; fill: none; marker-end: url(#arrowhead4); }
-  </style>
-  <defs>
-    <marker id="arrowhead4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
-    </marker>
-  </defs>
-  <rect class="box" x="125" y="30" width="150" height="50" rx="5"/>
-  <text class="text" x="200" y="60">Input</text>
-  <line class="arrow" x1="200" y1="80" x2="200" y2="115"/>
-  <rect class="box" x="125" y="120" width="150" height="50" rx="5"/>
-  <text class="text" x="200" y="150">Process</text>
-  <line class="arrow" x1="200" y1="170" x2="200" y2="205"/>
-  <rect class="box" x="125" y="210" width="150" height="50" rx="5"/>
-  <text class="text" x="200" y="240">Output</text>
-</svg>`;
-
-// Response generator based on prompt
-const generateDiagramFromPrompt = (prompt: string): { text: string; diagram: string } => {
-  const lowerPrompt = prompt.toLowerCase();
-
-  if (lowerPrompt.includes('consort') || lowerPrompt.includes('trial')) {
-    return {
-      text: "I've created a CONSORT flow diagram for your clinical trial. The diagram shows the enrollment, allocation, follow-up, and analysis phases. You can edit it further in the Editor mode.",
-      diagram: generateConsortDiagram()
-    };
+  // Cardiology
+  if (/heart|cardiac|coronary|ecg|ekg|arrhythmia|myocardial|ventricular|atrial|cardiovascular/.test(lower)) {
+    return 'cardiology';
   }
 
-  if (lowerPrompt.includes('forest') || lowerPrompt.includes('meta')) {
-    return {
-      text: "Here's a forest plot showing effect sizes and confidence intervals. Each study is represented with its weight and the diamond shows the overall effect.",
-      diagram: generateForestPlot()
-    };
+  // Neuroscience/Neurology
+  if (/brain|neural|neuron|synapse|cortex|dementia|alzheimer|parkinson|multiple sclerosis|stroke/.test(lower)) {
+    return 'neurology';
   }
 
-  if (lowerPrompt.includes('pathway') || lowerPrompt.includes('signaling') || lowerPrompt.includes('mapk')) {
-    return {
-      text: "I've created a signaling pathway diagram. The nodes represent proteins/molecules and arrows show activation relationships.",
-      diagram: generatePathwayDiagram()
-    };
+  // Pulmonology
+  if (/lung|pulmonary|respiratory|breath|airway|alveol|pneumonia|copd|asthma/.test(lower)) {
+    return 'pulmonology';
   }
 
-  if (lowerPrompt.includes('flowchart') || lowerPrompt.includes('process') || lowerPrompt.includes('flow')) {
-    return {
-      text: "Here's a flowchart for your process. You can customize the steps and connections in the Editor.",
-      diagram: generateFlowchart()
-    };
+  // Gastroenterology
+  if (/stomach|intestine|bowel|liver|pancreas|digestive|gi |gastro|esophagus|colon/.test(lower)) {
+    return 'gastroenterology';
   }
 
-  return {
-    text: "I've created a diagram based on your description. You can further customize it in the Editor mode, or provide more specific requirements.",
-    diagram: generateGenericDiagram()
+  // Endocrinology
+  if (/hormone|thyroid|diabetes|insulin|glucose|endocrine|pituitary|adrenal|metabolic/.test(lower)) {
+    return 'endocrinology';
+  }
+
+  // Nephrology
+  if (/kidney|renal|nephron|dialysis|urine|bladder|urology|ureter/.test(lower)) {
+    return 'nephrology';
+  }
+
+  // Hematology/Oncology
+  if (/blood|leukemia|cancer|tumor|hemoglobin|anemia|clot|coagulation|lymphoma/.test(lower)) {
+    return 'hematology-oncology';
+  }
+
+  // Infectious Disease
+  if (/virus|bacteria|infection|antibiotic|viral|bacterial|sepsis|pathogen|microbe/.test(lower)) {
+    return 'infectious-disease';
+  }
+
+  // Orthopedics
+  if (/bone|fracture|skeletal|muscle|tendon|ligament|joint|spine|orthopedic/.test(lower)) {
+    return 'orthopedics';
+  }
+
+  // Dermatology
+  if (/skin|dermal|rash|lesion|epidermis|dermatitis/.test(lower)) {
+    return 'dermatology';
+  }
+
+  // Ophthalmology
+  if (/eye|vision|ocular|retina|cornea|glaucoma|cataract/.test(lower)) {
+    return 'ophthalmology';
+  }
+
+  // Radiology
+  if (/x-ray|ct|mri|ultrasound|imaging|radiologic/.test(lower)) {
+    return 'radiology';
+  }
+
+  // Physiology
+  if (/physiology|homeostasis|mechanism|feedback|regulation|physiologic/.test(lower)) {
+    return 'physiology';
+  }
+
+  // Biochemistry
+  if (/protein|enzyme|metabolism|amino acid|biochemical|pathway|reaction/.test(lower)) {
+    return 'biochemistry';
+  }
+
+  // Pharmacology
+  if (/drug|medication|pharmacokinetic|pharmacodynamic|dose|therapeutic/.test(lower)) {
+    return 'pharmacology';
+  }
+
+  // Biology/Cell Biology
+  if (/cell|mitochondria|nucleus|organelle|membrane|cytoplasm|cellular/.test(lower)) {
+    return 'cell-biology';
+  }
+
+  // Molecular Biology
+  if (/dna|rna|gene|protein|transcription|translation|mutation|genetic/.test(lower)) {
+    return 'molecular-biology';
+  }
+
+  // Immunology
+  if (/immune|antibody|antigen|lymphocyte|inflammation/.test(lower)) {
+    return 'immunology';
+  }
+
+  // Emergency Medicine
+  if (/emergency|trauma|critical|acute|resuscitation/.test(lower)) {
+    return 'emergency-medicine';
+  }
+
+  // OB/GYN
+  if (/pregnancy|obstetric|gynecologic|fetal|maternal|uterus/.test(lower)) {
+    return 'obgyn';
+  }
+
+  // Pediatrics
+  if (/pediatric|neonatal|infant|child|adolescent/.test(lower)) {
+    return 'pediatrics';
+  }
+
+  // Psychiatry
+  if (/psychiatric|mental|depression|anxiety|schizophrenia|psychological/.test(lower)) {
+    return 'psychiatry';
+  }
+
+  // Surgery
+  if (/surgery|surgical|incision|operation|procedure/.test(lower)) {
+    return 'surgery';
+  }
+
+  // Anesthesiology
+  if (/anesthesia|anesthetic|pain management/.test(lower)) {
+    return 'anesthesiology';
+  }
+
+  // Rheumatology
+  if (/arthritis|rheumatoid|lupus|autoimmune|joint pain/.test(lower)) {
+    return 'rheumatology';
+  }
+
+  // ENT (Otolaryngology)
+  if (/ear|nose|throat|sinus|tonsil|larynx|otolaryngolog/.test(lower)) {
+    return 'ent';
+  }
+
+  // Physics
+  if (/physics|force|energy|wave|quantum|mechanic|optics|electric|magnetic/.test(lower)) {
+    return 'physics';
+  }
+
+  // Chemistry
+  if (/chemical|molecule|bond|reaction|organic|inorganic|analytic/.test(lower)) {
+    return 'chemistry';
+  }
+
+  // Computer Science
+  if (/algorithm|data structure|software|programming|network|database|computing/.test(lower)) {
+    return 'computer-science';
+  }
+
+  // Engineering
+  if (/engineering|mechanical|electrical|civil|system|control|design/.test(lower)) {
+    return 'engineering';
+  }
+
+  // Mathematics
+  if (/mathematical|equation|calculus|algebra|geometry|statistics|probability/.test(lower)) {
+    return 'mathematics';
+  }
+
+  // Ecology
+  if (/ecosystem|environment|climate|habitat|species|population|ecological/.test(lower)) {
+    return 'ecology';
+  }
+
+  // Zoology
+  if (/animal|zoology|insect|entomology|vet|veterinary/.test(lower)) {
+    return 'zoology';
+  }
+
+  // Botany
+  if (/plant|botany|flora|photosynthesis|leaf|root|flower/.test(lower)) {
+    return 'botany';
+  }
+
+  // Astronomy
+  if (/star|planet|galaxy|solar|astronom|cosmic|space|universe/.test(lower)) {
+    return 'astronomy';
+  }
+
+  // Geology
+  if (/geolog|rock|mineral|earth|crust|volcan|earthquake|seismic/.test(lower)) {
+    return 'geology';
+  }
+
+  // Meteorology
+  if (/weather|climate|meteorolog|atmospheric|forecast|temperature|humidity/.test(lower)) {
+    return 'meteorology';
+  }
+
+  // Oceanography
+  if (/ocean|marine|sea|water|oceanograph|nautical|aquatic/.test(lower)) {
+    return 'oceanography';
+  }
+
+  // Agriculture
+  if (/agricultur|farm|crop|soil|harvest|livestock|agronom/.test(lower)) {
+    return 'agriculture';
+  }
+
+  // Forensics
+  if (/forensic|evidence|crime|legal|autopsy|pathology legal/.test(lower)) {
+    return 'forensics';
+  }
+
+  // Aerospace
+  if (/aerospace|aircraft|rocket|satellite|aviation|flight/.test(lower)) {
+    return 'aerospace';
+  }
+
+  // Biomedical Engineering
+  if (/biomedical|bioengineering|medical device|prosthet|implant|biomaterial/.test(lower)) {
+    return 'biomedical-engineering';
+  }
+
+  return undefined;
+}
+
+// ===========================================================================
+// API INTERFACE
+// ===========================================================================
+
+interface IllustrationGenerateRequest {
+  prompt: string;
+  backend: 'mermaid' | 'svg' | 'gemini' | 'auto';
+  domain?: string;
+  style?: 'flat' | 'detailed' | 'schematic' | 'photorealistic';
+  geminiModel?: 'pro' | 'flash';
+  slideContext?: string | null;
+  existingDiagram?: string;
+}
+
+interface IllustrationGenerateResponse {
+  illustration?: {
+    content: string;
+    backend: string;
+    format: string;
+    caption?: string;
+    domain?: string;
+    pathCount?: number;
+    colorPalette?: string[];
+    rasterPreview?: string;
+    vectorized?: boolean;
   };
-};
+  error?: string;
+  details?: string;
+}
 
 interface AgentModeProps {
   onSendToEditor?: (svg: string) => void;
@@ -251,8 +289,14 @@ export const AgentMode: React.FC<AgentModeProps> = ({ onSendToEditor }) => {
     messages
   } = useAgentStore();
 
-  // Handle sending a prompt
-  const handleSendPrompt = useCallback(async (prompt: string) => {
+  /**
+   * Handle sending a prompt to the illustration generation API
+   * Uses multi-backend auto-routing for optimal generation method
+   */
+  const handleSendPrompt = useCallback(async (prompt: string, options?: {
+    style?: 'flat' | 'detailed' | 'schematic' | 'photorealistic';
+    model?: 'pro' | 'flash';
+  }) => {
     // Add user message
     addMessage({
       role: 'user',
@@ -264,26 +308,77 @@ export const AgentMode: React.FC<AgentModeProps> = ({ onSendToEditor }) => {
     abortControllerRef.current = new AbortController();
 
     try {
-      // Simulate API delay
-      await new Promise((resolve, reject) => {
-        const timeout = setTimeout(resolve, 1500);
-        abortControllerRef.current?.signal.addEventListener('abort', () => {
-          clearTimeout(timeout);
-          reject(new Error('Generation cancelled'));
-        });
+      // Detect domain from prompt for specialized generation
+      const domain = detectDomainFromPrompt(prompt);
+
+      // Determine style based on prompt keywords
+      let style: 'flat' | 'detailed' | 'schematic' | 'photorealistic' = options?.style || 'flat';
+      const lowerPrompt = prompt.toLowerCase();
+
+      if (lowerPrompt.includes('detailed') || lowerPrompt.includes('intricate') || lowerPrompt.includes('complex')) {
+        style = 'detailed';
+      } else if (lowerPrompt.includes('schematic') || lowerPrompt.includes('technical') || lowerPrompt.includes('diagram')) {
+        style = 'schematic';
+      } else if (lowerPrompt.includes('realistic') || lowerPrompt.includes('photorealistic') || lowerPrompt.includes('lifelike')) {
+        style = 'photorealistic';
+      }
+
+      // Prepare request to API
+      const requestBody: IllustrationGenerateRequest = {
+        prompt,
+        backend: 'auto', // Let API auto-route to best backend
+        domain,
+        style,
+        geminiModel: options?.model || 'flash', // Default to flash for speed
+      };
+
+      // Call the illustration generation API
+      const response = await fetch('/api/illustration/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        signal: abortControllerRef.current.signal,
+        body: JSON.stringify(requestBody),
       });
 
-      // Generate response
-      const response = generateDiagramFromPrompt(prompt);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.details || errorData.error || `HTTP ${response.status}`);
+      }
+
+      const data: IllustrationGenerateResponse = await response.json();
+
+      if (!data.illustration) {
+        throw new Error(data.details || data.error || 'No illustration generated');
+      }
+
+      // Build response text based on backend used
+      let responseText = data.illustration.caption || `I've generated a ${data.illustration.format} illustration using the ${data.illustration.backend} backend.`;
+
+      if (data.illustration.vectorized) {
+        responseText += ' The image has been vectorized for easy editing.';
+      }
+
+      if (data.illustration.pathCount !== undefined) {
+        responseText += ` This illustration contains ${data.illustration.pathCount} editable paths.`;
+      }
+
+      // Add backend-specific hints
+      if (data.illustration.backend === 'mermaid') {
+        responseText += ' You can edit the diagram structure in the Editor mode.';
+      } else if (data.illustration.backend === 'gemini') {
+        responseText += ' The raster preview is available for reference.';
+      }
 
       // Add assistant message with diagram
       addMessage({
         role: 'assistant',
-        content: response.text,
-        diagram: response.diagram
+        content: responseText,
+        diagram: data.illustration.content,
       });
     } catch (error) {
-      if ((error as Error).message !== 'Generation cancelled') {
+      if ((error as Error).message !== 'Generation cancelled' && (error as Error).name !== 'AbortError') {
         addMessage({
           role: 'assistant',
           content: `Sorry, I encountered an error: ${(error as Error).message}. Please try again.`,
