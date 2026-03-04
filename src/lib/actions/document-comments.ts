@@ -31,10 +31,11 @@ export interface DocumentCommentThread {
 // Used while documents are localStorage-based
 // =============================================================================
 
-const STORAGE_PREFIX = "scholarsync_comments_";
+// Storage prefix is defined in document-comments-local.ts
+const _STORAGE_PREFIX = "scholarsync_comments_";
 
 export async function getDocumentComments(
-  documentId: string
+  _documentId: string
 ): Promise<DocumentCommentThread[]> {
   // This is a "server action" that actually reads from the client
   // In production, this will query the documentComments table
@@ -47,7 +48,7 @@ export async function getDocumentComments(
 // These are stubs that will be wired up post-deployment
 // =============================================================================
 
-export async function addDocumentCommentDB(params: {
+export async function addDocumentCommentDB(_params: {
   sectionId: number;
   content: string;
   textRangeStart?: number;
