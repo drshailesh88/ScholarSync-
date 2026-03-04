@@ -626,6 +626,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
           icon={previewIcon}
           onCopySvg={handleCopySvg}
           onInsert={handleInsert}
+          onFavoriteToggle={handleToggleFavorite}
         />
       </div>
 
