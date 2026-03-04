@@ -52,6 +52,7 @@ export async function POST(req: Request) {
     const startTime = Date.now();
 
     const compilePayload = JSON.stringify({
+      projectId: projectId, // Enable persistent build cache per project
       files: files.map((f) => ({
         path: f.path,
         content: f.content,

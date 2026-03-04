@@ -1,10 +1,10 @@
 import express from "express";
-import { writeFile, mkdir, readFile, rm } from "fs/promises";
+import { writeFile, mkdir, readFile, rm, readdir, stat } from "fs/promises";
 import { execFile } from "child_process";
 import { promisify } from "util";
 import { join } from "path";
 import { tmpdir } from "os";
-import { randomUUID } from "crypto";
+import { randomUUID, createHash } from "crypto";
 
 const execFileAsync = promisify(execFile);
 
@@ -194,6 +194,74 @@ function parseCompilationErrors(log) {
 
   return errors;
 }
+
+// ---------------------------------------------------------------------------
+// DELETE /cache/:projectId
+// Clean up build cache for a specific project
+// ---------------------------------------------------------------------------
+app.delete("/cache/:projectId", async (req, res) => {
+  // Auth: verify shared secret
+  if (SHARED_SECRET) {
+    const auth = req.headers.authorization;
+    if (auth !== `Bearer ${SHARED_SECRET}`) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+  }
+
+  const { projectId } = req.params;
+  if (!projectId) {
+    return res.status(400).json({ error: "Missing projectId" });
+  }
+
+  const dir = join(BUILD_CACHE_DIR, projectId);
+  try {
+    await rm(dir, { recursive: true, force: true });
+    return res.json({ status: "ok", message: `Cache cleared for project ${projectId}` });
+  } catch (error) {
+    return res.json({ status: "ok", message: "No cache to clear" });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// GET /cache/stats
+// Get cache statistics
+// ---------------------------------------------------------------------------
+app.get("/cache/stats", async (req, res) => {
+  // Auth: verify shared secret
+  if (SHARED_SECRET) {
+    const auth = req.headers.authorization;
+    if (auth !== `Bearer ${SHARED_SECRET}`) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+  }
+
+  try {
+    const entries = await readdir(BUILD_CACHE_DIR);
+    let totalSize = 0;
+    let projectCount = 0;
+
+    for (const entry of entries) {
+      const dir = join(BUILD_CACHE_DIR, entry);
+      try {
+        const info = await stat(dir);
+        if (info.isDirectory()) {
+          projectCount++;
+          // Rough estimate - actual size would require recursive stat
+        }
+      } catch {
+        // Ignore errors
+      }
+    }
+
+    return res.json({
+      cacheDirectory: BUILD_CACHE_DIR,
+      projectCount,
+      maxAgeHours: MAX_AGE_MS / (60 * 60 * 1000),
+    });
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to get cache stats" });
+  }
+});
 
 // ---------------------------------------------------------------------------
 // Start
