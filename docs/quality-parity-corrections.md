@@ -1,280 +1,156 @@
-# Feature Parity Audit Corrections
+# Feature Parity Audit Corrections (Comprehensive)
 
 **Date**: 2026-03-04
-**Original Audit Date**: 2026-03-04
-**Root Cause**: Auditor checked wrong component files (`tiptap-editor.tsx` instead of `AcademicEditor.tsx`)
+**Audit Round 2**: LaTeX Editor Re-Audit
 
 ---
 
-## Summary of Corrections
+## Summary of All Corrections
 
-| Module | Original Parity | Corrected Parity | Change |
-|--------|-----------------|------------------|--------|
-| Studio Writing | 48% | 66% | +18% |
-| Notebook | 57% | 71% | +14% |
-| Presentations | 85% | 91% | +6% |
-| Other modules | No change | No change | — |
+| Module | Original Parity | Round 1 Parity | Round 2 Parity | Total Change |
+|--------|-----------------|----------------|----------------|--------------|
+| **LaTeX Editor** | 52% | 52% | **91%** | **+39%** |
+| **Studio Writing** | 48% | 66% | 66% | +18% |
+| **Notebook** | 57% | 71% | 71% | +14% |
+| **Presentations** | 85% | 91% | 91% | +6% |
+| **Integrity Check** | 94% | 94% | 94% | — |
+| **Systematic Review** | 92% | 92% | 92% | — |
+| **Diagrams** | 56% | 56% | 56% | — |
 
-**Total False Negatives Corrected**: 7 features
-
----
-
-## Detailed Corrections
-
-### 1. Tables in Editor (Studio Writing)
-
-**Original Status**: ❌ MISSING
-**Corrected Status**: ✅ EXISTS
-**Reason**: Auditor checked wrong file
-
-**Evidence**:
-- `src/components/editor/AcademicEditor.tsx` L16-19: Imports Table extensions
-  ```typescript
-  import { Table } from "@tiptap/extension-table";
-  import { TableRow } from "@tiptap/extension-table-row";
-  import { TableHeader } from "@tiptap/extension-table-header";
-  import { TableCell } from "@tiptap/extension-table-cell";
-  ```
-- `src/components/editor/AcademicEditor.tsx` L101-109: Configures Table
-  ```typescript
-  Table.configure({
-    resizable: true,
-    HTMLAttributes: {
-      class: "academic-table",
-    },
-  }),
-  ```
-- `src/components/editor/extensions/slash-commands.ts` L126-136: Insert table command
-  ```typescript
-  {
-    title: "Table",
-    description: "Insert data table",
-    icon: "table",
-    category: "academic",
-    command: (editor) => {
-      editor
-        .chain()
-        .focus()
-        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
-        .run();
-    },
-  },
-  ```
+**Total False Negatives Corrected Across All Modules**: 14 features
 
 ---
 
-### 2. Images in Editor (Studio Writing)
+## Updated Executive Summary
 
-**Original Status**: ❌ MISSING
-**Corrected Status**: ✅ EXISTS
-**Reason**: Auditor checked wrong file
-
-**Evidence**:
-- `src/components/editor/AcademicEditor.tsx` L20: Imports Image extension
-  ```typescript
-  import { Image as TiptapImage } from "@tiptap/extension-image";
-  ```
-- `src/components/editor/AcademicEditor.tsx` L110-113: Configures Image
-  ```typescript
-  TiptapImage.configure({
-    inline: false,
-    allowBase64: true,
-  }),
-  ```
-- `src/components/editor/extensions/slash-commands.ts` L139-160: Image upload with file picker
-  ```typescript
-  {
-    title: "Image",
-    description: "Insert an image",
-    icon: "image",
-    category: "academic",
-    command: (editor) => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.onchange = () => {
-        const file = input.files?.[0];
-        if (file) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const src = e.target?.result as string;
-            editor.chain().focus().setImage({ src }).run();
-          };
-          reader.readAsDataURL(file);
-        }
-      };
-      input.click();
-    },
-  },
-  ```
+| Competitor | Total | Exists | Partial | Missing | Parity % | Δ from Original |
+|------------|-------|--------|---------|---------|----------|-----------------|
+| **Turnitin** (Integrity Check) | 16 | 14 | 2 | 0 | **94%** | — |
+| **Covidence/Rayyan/RevMan** (Systematic Review) | 31 | 27 | 4 | 0 | **92%** | — |
+| **Overleaf** (LaTeX Editor) | 27 | 23 | 3 | 1 | **91%** | **+39%** ⬆️ |
+| **Microsoft PowerPoint** (Presentations) | 23 | 19 | 4 | 0 | **91%** | +6% |
+| **Google NotebookLM** (Notebook Mode) | 14 | 8 | 4 | 2 | **71%** | +14% |
+| **Google Docs/Notion AI** (Studio Writing) | 22 | 14 | 1 | 7 | **66%** | +18% |
+| **Napkin.AI** (Diagrams) | 56% | 9 | 6 | 3 | **56%** | — |
 
 ---
 
-### 3. Code Blocks (Studio Writing)
+## LaTeX Editor Corrections (Round 2)
 
-**Original Status**: ❌ MISSING
-**Corrected Status**: ✅ EXISTS
-**Reason**: Auditor checked wrong file
+### 7 Major False Negatives Corrected
 
-**Evidence**:
-- `src/components/editor/extensions/slash-commands.ts` L115-122: Code block toggle
-  ```typescript
-  {
-    title: "Code Block",
-    description: "For statistical code",
-    icon: "code",
-    category: "basic",
-    command: (editor) => {
-      editor.chain().focus().toggleCodeBlock().run();
-    },
-  },
-  ```
+| # | Feature | Was | Now | Evidence |
+|---|---------|-----|-----|----------|
+| 1 | **SyncTeX (bidirectional)** | ❌ | ✅ | `lib/latex/synctex.ts` (440 lines) + API routes |
+| 2 | **Spell check** | ❌ | ✅ | `lib/latex/spell-check.ts` + medical dictionary |
+| 3 | **Image upload** | ❌ | ✅ | `latex-editor/image-browser.tsx` + API |
+| 4 | **Version history** | ❌ | ✅ | `latex-editor/version-history-panel.tsx` |
+| 5 | **Comments/annotations** | ⚠️ | ✅ | `latex-editor/comment-panel.tsx` (threaded) |
+| 6 | **Real-time collaboration** | ❌ | ✅ | `latex-editor/collaboration-provider.tsx` (Yjs) |
+| 7 | **Mobile responsive** | ❌ | ✅ | `latex-workspace.tsx` + media query hook |
 
----
+### New LaTeX Parity Score
 
-### 4. Multiple Citation Styles (Studio Writing)
+**Before**: (16 + 0.5×4) / 27 = 18 / 27 = **52%**
+**After**: (23 + 0.5×3) / 27 = 24.5 / 27 = **91%**
 
-**Original Status**: ❌ MISSING
-**Corrected Status**: ✅ EXISTS
-**Reason**: Auditor only checked UI, not backend
+### Only 1 Feature Still Genuinely Missing
 
-**Evidence**:
-- `src/lib/citations/csl-processor.ts` L20-28: STYLE_MAP with 7 styles
-  ```typescript
-  const STYLE_MAP: Record<CitationStyleId, string> = {
-    vancouver: "vancouver",
-    apa: "apa",
-    ama: "vancouver", // AMA is close to Vancouver
-    icmje: "vancouver", // ICMJE follows Vancouver
-    harvard: "harvard1",
-    "chicago-author-date": "apa", // Close enough for v1
-    ieee: "vancouver", // IEEE is numeric like Vancouver
-  };
-  ```
-- `src/types/citation.ts` L100+: CitationStyleId type definition
-- `src/stores/reference-store.ts` L95: setCitationStyle function
-- `src/lib/studio/__tests__/ralph-studio/runner.test.ts` L198-201: Tests show style switching
-  ```typescript
-  useReferenceStore.getState().setCitationStyle("apa");
-  // ...
-  useReferenceStore.getState().setCitationStyle("ieee");
-  ```
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Track changes (inline diff) | ❌ | Version restore exists, but no inline "suggesting mode" |
 
 ---
 
-### 5. PPTX Export (Presentations)
+## Previous Round 1 Corrections (Studio, Notebook, Presentations)
 
-**Original Status**: ❌ MISSING
-**Corrected Status**: ✅ EXISTS
-**Reason**: Auditor didn't check the export API directory
+### Studio Writing (4 corrections)
 
-**Evidence**:
-- `src/app/api/export/pptx/route.ts`: Full PPTX export implementation (2288 lines)
-- Complete PPTX generation with slides, formatting, images, tables, code blocks
+| Feature | Evidence |
+|---------|----------|
+| Tables | `AcademicEditor.tsx:16-19` + slash-commands.ts:126 |
+| Images | `AcademicEditor.tsx:20` + file picker at slash-commands.ts:139 |
+| Code blocks | `slash-commands.ts:120` - toggleCodeBlock() |
+| Citation styles | 7 styles in `csl-processor.ts:20-28` |
 
----
+### Notebook (2 corrections)
 
-### 6. Audio Overview (Notebook)
+| Feature | Evidence |
+|---------|----------|
+| Audio overview | `lib/ai/prompts/artifacts.ts:52-167` |
+| Source quality (citation count) | Schema + UI at `library/page.tsx:545` |
 
-**Original Status**: ❌ MISSING
-**Corrected Status**: ✅ EXISTS
-**Reason**: Auditor didn't check artifact generation system
+### Presentations (1 correction)
 
-**Evidence**:
-- `src/lib/ai/prompts/artifacts.ts` L52-61: AUDIO_OVERVIEW_KEYWORDS
-  ```typescript
-  const AUDIO_OVERVIEW_KEYWORDS = [
-    "audio overview",
-    "podcast",
-    "audio summary",
-    "deep dive",
-    "discuss these papers",
-    "talk through",
-    "conversation about",
-    "audio briefing",
-  ];
-  ```
-- `src/lib/ai/prompts/artifacts.ts` L63: Artifact type includes "audio_overview"
-  ```typescript
-  export type ArtifactType = "study_guide" | "briefing_doc" | "faq" | "timeline" | "audio_overview" | null;
-  ```
-- `src/lib/ai/prompts/artifacts.ts` L143-167: AUDIO_OVERVIEW_PROMPT with full Host/Expert dialogue structure
-- `src/lib/rag/__tests__/ralph-notebook/` contains multiple audio overview test cases (ralph-nb-016.json, ralph-nb-017.json)
+| Feature | Evidence |
+|---------|----------|
+| PPTX export | Full route at `api/export/pptx/route.ts` |
 
 ---
 
-### 7. Source Quality Indicators (Notebook)
+## Updated Critical Missing Features
 
-**Original Status**: ❌ MISSING
-**Corrected Status**: ✅ EXISTS (partial - citation count only)
-**Reason**: Auditor missed database schema and UI implementation
+### After All Corrections, Only 7 Critical Gaps Remain:
 
-**Evidence**:
-- `src/lib/db/schema/core.ts` L144, L162: Database schema
-  ```typescript
-  citation_count: integer("citation_count").default(0),
-  influential_citation_count: integer("influential_citation_count").default(0),
-  ```
-- `src/app/(app)/library/page.tsx` L419, L545-546: UI display
-  ```typescript
-  <option value="citation_count">Citation Count</option>
-  // ...
-  {paper.citation_count != null && paper.citation_count > 0 && (
-    <span> · {paper.citation_count} citations</span>
-  )}
-  ```
-- `src/lib/actions/papers.ts` L121-123: Sort by citation count
-  ```typescript
-  case "citation_count":
-    return orderBy(papers, desc(papers.citation_count));
-  ```
-
-**Note**: Impact factor is in the schema (`src/lib/db/schema/platform.ts` L91) but not displayed in the UI. Journal ranking is not implemented.
-
----
-
-## Features Still Partial/Missing
-
-### Still Partial (Need Investigation)
-
-1. **Footnotes**: LaTeX has `\footnote{}` but rich text editor has no Tiptap footnote extension
-2. **Comments**: Keyboard shortcut exists (`Mod-Shift-m`) but no Tiptap comment extension found
-3. **Track changes**: `EditorMode` includes "suggesting" and TopBar has UI, but actual diff tracking is partial
-4. **Version history (Studio)**: Basic persistence exists but no full version history UI
-
-### Still Missing
-
-1. **Real-time collaboration (Studio)**: No Liveblocks/Y.js integration (exists for Presentations only)
-2. **SyncTeX**: No bidirectional source-PDF synchronization
-3. **Notebook export**: No markdown/PDF export of chat transcripts
-4. **Mobile responsiveness (LaTeX)**: Desktop-only layout
-5. **Image upload UI (LaTeX)**: No file manager for figures
-6. **Spell check (LaTeX)**: No spell checking
-7. **SWOT analysis**: No dedicated diagram template
-8. **Auto-layout (Diagrams)**: Manual positioning only
+1. **Real-time collaboration (Studio)** - No multiplayer editing
+2. **Track changes (Studio)** - Suggesting mode exists but diff partial
+3. **Footnotes (rich text)** - No Tiptap extension
+4. **Comments/annotations (Studio)** - Shortcut exists but no extension
+5. **Notebook export** - No chat transcript export
+6. **General PDF export (Presentations)** - Only carousel format
+7. **SWOT analysis** - No dedicated diagram template
 
 ---
 
 ## Root Cause Analysis
 
-The original auditor made these mistakes:
+### Why the Original Audit Failed
 
-1. **Wrong component file**: Checked `tiptap-editor.tsx` (wrapper) instead of `AcademicEditor.tsx` (actual editor with extensions)
-2. **Incomplete directory search**: Missed `src/app/api/export/pptx/` directory
-3. **Missed artifact system**: Didn't find `src/lib/ai/prompts/artifacts.ts` for audio overview
-4. **UI-only checking**: For citation styles, only checked UI selector not backend CSL processor
-5. **Schema oversight**: Missed citation_count in database schema
+1. **Wrong component files** - Checked wrapper instead of implementation files
+2. **Incomplete directory search** - Missed entire API route directories
+3. **Missed backend modules** - Didn't search `src/lib/latex/`
+4. **UI-only checking** - For citation styles, only checked UI not backend
+5. **Schema oversight** - Missed database fields for citation tracking
+6. **Test file negligence** - Test files contain feature evidence (e.g., `synctex.test.ts`)
+
+### Why Round 1 Also Missed LaTeX Features
+
+1. **Did not check `src/lib/latex/`** - Core modules exist there
+2. **Did not check `src/app/api/latex/`** - 12 API routes provide functionality
+3. **Did not check test directories** - `ralph-latex/` has 8 test files proving features
+4. **Incomplete component scanning** - Missed `image-browser.tsx`, `version-history-panel.tsx`, `comment-panel.tsx`, `collaboration-provider.tsx`
 
 ---
 
 ## Lessons Learned
 
-1. **Always check the actual component that registers extensions**, not wrapper files
-2. **Search entire codebase** for API routes, not just component directories
-3. **Check backend processors** for features that may not have UI yet
-4. **Verify database schema** for data-driven features
-5. **Look for artifact/prompt systems** when checking AI features
+For accurate feature auditing:
+
+1. **Always check `src/lib/[module]/`** - Core logic often lives here
+2. **Always check `src/app/api/[module]/`** - API routes provide functionality
+3. **Check test files** - Tests prove features exist (`__tests__/ralph-*`)
+4. **Check database schema** - `lib/db/schema/` reveals data-driven features
+5. **Search entire codebase** - Not just component directories
+6. **Check for imported extensions** - Tiptap extensions registered in specific files
+7. **Look for provider components** - Collaboration, themes, etc.
 
 ---
 
-**End of Corrections Document**
+## Final Module Rankings (After All Corrections)
+
+### Tier 1: Excellent Parity (90%+)
+1. **Turnitin (Integrity Check)**: 94%
+2. **Systematic Review**: 92%
+3. **LaTeX Editor**: 91% ⬆️ **(Big Jump)**
+4. **Presentations**: 91%
+
+### Tier 2: Good Parity (65-75%)
+5. **Notebook**: 71%
+6. **Studio Writing**: 66%
+
+### Tier 3: Moderate Parity (50-60%)
+7. **Diagrams**: 56%
+
+---
+
+**End of Comprehensive Corrections Document**
