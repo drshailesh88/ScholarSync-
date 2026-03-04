@@ -44,7 +44,22 @@ const isPublicRoute = createRouteMatcher([
   "/share(.*)",
 ]);
 
+// Playwright dev bypass — skip Clerk auth for E2E tests
+function isPlaywrightDevRequest(request: Request): boolean {
+  // Check for __playwright cookie in development
+  if (process.env.NODE_ENV !== "development") return false;
+
+  const cookieHeader = request.headers.get("cookie") || "";
+  return cookieHeader.includes("__playwright=true");
+}
+
 export default clerkMiddleware(async (auth, request) => {
+  // Skip Clerk auth for Playwright E2E tests in development
+  if (isPlaywrightDevRequest(request)) {
+    const response = NextResponse.next();
+    return applySecurityHeaders(response);
+  }
+
   if (!isPublicRoute(request)) {
     await auth.protect();
   }
