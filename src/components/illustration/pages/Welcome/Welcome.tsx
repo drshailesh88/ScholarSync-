@@ -465,7 +465,7 @@ export function Welcome(): JSX.Element {
         {/* Action Cards */}
         <section style={styles.actions}>
           <Link
-            to="/agent"
+            href="/illustrate/agent"
             style={{
               ...styles.actionCard,
               ...(hoveredAction === 'agent' ? styles.actionCardHover : {}),
@@ -483,7 +483,7 @@ export function Welcome(): JSX.Element {
           </Link>
 
           <Link
-            to="/editor"
+            href="/illustrate/editor"
             style={{
               ...styles.actionCard,
               ...(hoveredAction === 'editor' ? styles.actionCardHover : {}),

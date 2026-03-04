@@ -9,7 +9,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { IconSearch } from './IconSearch';
 import { IconGrid } from './IconGrid';
 import { IconPreview } from './IconPreview';
-import './IconPicker.css';
+// Note: IconPicker.css was removed - using inline styles instead
 import {
   searchAllIcons,
   getTotalIconCount,

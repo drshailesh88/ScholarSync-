@@ -438,29 +438,29 @@ const styles: Record<string, React.CSSProperties> = {
   }
 };
 
-// Add responsive styles
-const responsiveStyles = document.createElement('style');
-responsiveStyles.textContent = `
-  @media (max-width: 1200px) {
-    .agent-preview-pane {
-      width: 300px;
+// Add responsive styles (SSR-safe - only in browser)
+if (typeof window !== 'undefined') {
+  const responsiveStyles = document.createElement('style');
+  responsiveStyles.textContent = `
+    @media (max-width: 1200px) {
+      .agent-preview-pane {
+        width: 300px;
+      }
     }
-  }
-  @media (max-width: 992px) {
-    .agent-sidebar {
-      display: none;
+    @media (max-width: 992px) {
+      .agent-sidebar {
+        display: none;
+      }
+      .agent-preview-pane {
+        display: none;
+      }
     }
-    .agent-preview-pane {
-      display: none;
+    @media (max-width: 768px) {
+      .agent-chat-container {
+        padding: var(--spacing-md);
+      }
     }
-  }
-  @media (max-width: 768px) {
-    .agent-chat-container {
-      padding: var(--spacing-md);
-    }
-  }
-`;
-if (typeof document !== 'undefined') {
+  `;
   document.head.appendChild(responsiveStyles);
 }
 

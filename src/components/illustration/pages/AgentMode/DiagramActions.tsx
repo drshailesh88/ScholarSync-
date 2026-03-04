@@ -298,18 +298,18 @@ const styles: Record<string, React.CSSProperties> = {
   }
 };
 
-// Add hover styles via stylesheet
-const hoverStyles = document.createElement('style');
-hoverStyles.textContent = `
-  .diagram-action-btn:hover {
-    background: var(--accent-primary) !important;
-    border-color: var(--accent-primary) !important;
-  }
-  .diagram-dropdown-item:hover {
-    background: var(--bg-hover);
-  }
-`;
-if (typeof document !== 'undefined') {
+// Add hover styles via stylesheet (SSR-safe)
+if (typeof window !== 'undefined') {
+  const hoverStyles = document.createElement('style');
+  hoverStyles.textContent = `
+    .diagram-action-btn:hover {
+      background: var(--accent-primary) !important;
+      border-color: var(--accent-primary) !important;
+    }
+    .diagram-dropdown-item:hover {
+      background: var(--bg-hover);
+    }
+  `;
   document.head.appendChild(hoverStyles);
 }
 

@@ -7,6 +7,20 @@ declare module "svg2pdf.js" {
   export function convert_svg2pdf(svg: string | HTMLElement, options?: unknown): Promise<Blob>;
 }
 
+declare module "svg2pdf" {
+  export function svg2pdf(svg: SVGElement | string, pdf: unknown): Promise<void>;
+}
+
+declare module "react-plotly.js" {
+  import { ComponentType } from "react";
+  export const Plot: ComponentType<any>;
+}
+
+declare module "react-plotly" {
+  import { ComponentType } from "react";
+  export const Plot: ComponentType<any>;
+}
+
 declare module "svg-parser" {
   export function parse(svg: string): unknown;
 }

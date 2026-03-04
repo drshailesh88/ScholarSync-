@@ -328,18 +328,18 @@ const styles: Record<string, React.CSSProperties> = {
   }
 };
 
-// Add CSS keyframes for spinner
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  .chat-suggestion-btn:hover {
-    background: var(--bg-hover);
-    border-color: var(--accent-primary);
-  }
-`;
-if (typeof document !== 'undefined') {
+// Add CSS keyframes for spinner (SSR-safe)
+if (typeof window !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = `
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .chat-suggestion-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent-primary);
+    }
+  `;
   document.head.appendChild(styleSheet);
 }
 

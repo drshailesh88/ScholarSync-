@@ -447,7 +447,7 @@ export function CreditsPage(): JSX.Element {
     <div style={styles.page}>
       {/* Header */}
       <header style={styles.header}>
-        <Link to="/" style={styles.logo}>
+        <Link href="/" style={styles.logo}>
           <div style={styles.logoIcon}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -456,7 +456,7 @@ export function CreditsPage(): JSX.Element {
           <span style={styles.logoText}>FINNISH</span>
         </Link>
         <Link
-          to="/"
+          href="/"
           style={{
             ...styles.backLink,
             backgroundColor: backLinkHovered ? 'var(--bg-tertiary)' : 'transparent',

@@ -431,25 +431,25 @@ const styles: Record<string, React.CSSProperties> = {
   }
 };
 
-// Add hover styles
-const hoverStyleSheet = document.createElement('style');
-hoverStyleSheet.textContent = `
-  .template-card:hover {
-    border-color: var(--accent-primary);
-    background: var(--bg-hover);
-  }
-  .template-tab:hover {
-    color: var(--text-primary);
-  }
-  .collapse-btn:hover, .expand-btn:hover {
-    color: var(--text-primary);
-    background: var(--bg-hover);
-  }
-  .search-input:focus {
-    border-color: var(--accent-primary);
-  }
-`;
-if (typeof document !== 'undefined') {
+// Add hover styles (SSR-safe - only in browser)
+if (typeof window !== 'undefined') {
+  const hoverStyleSheet = document.createElement('style');
+  hoverStyleSheet.textContent = `
+    .template-card:hover {
+      border-color: var(--accent-primary);
+      background: var(--bg-hover);
+    }
+    .template-tab:hover {
+      color: var(--text-primary);
+    }
+    .collapse-btn:hover, .expand-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+    .search-input:focus {
+      border-color: var(--accent-primary);
+    }
+  `;
   document.head.appendChild(hoverStyleSheet);
 }
 

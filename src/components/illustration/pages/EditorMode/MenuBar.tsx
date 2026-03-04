@@ -9,7 +9,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useEditorStore, useHistoryState, useViewport, useGridState } from '@/stores/illustration/editorStore';
 import { useCanvas } from '@/components/illustration/Canvas/CanvasContext';
 import { useToast } from '@/components/illustration/Toast/useToast';
-import './MenuBar.css';
+// Note: MenuBar.css was removed - using inline styles instead
 
 // ============================================================================
 // Types

@@ -17,7 +17,7 @@ import { Canvas as FabricCanvas, FabricObject, Rect, Ellipse, Line, IText, Trian
 import { useEditorStore, useActiveTool, useViewport, useGridState } from '@/stores/illustration/editorStore';
 import { ToolType } from '@/lib/illustration/types';
 import { PenToolOverlay } from './PenToolOverlay';
-import './Canvas.css';
+// Note: Canvas.css was removed - using inline styles instead
 
 // ============================================================================
 // Types

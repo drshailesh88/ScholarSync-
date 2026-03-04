@@ -293,15 +293,15 @@ const styles: Record<string, React.CSSProperties> = {
   }
 };
 
-// Add shimmer animation
-const shimmerStyle = document.createElement('style');
-shimmerStyle.textContent = `
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-`;
-if (typeof document !== 'undefined') {
+// Add shimmer animation (SSR-safe)
+if (typeof window !== 'undefined') {
+  const shimmerStyle = document.createElement('style');
+  shimmerStyle.textContent = `
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  `;
   document.head.appendChild(shimmerStyle);
 }
 
