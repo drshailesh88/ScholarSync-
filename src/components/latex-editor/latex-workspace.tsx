@@ -16,6 +16,7 @@ import { ErrorGutterPanel, type CompilationDiagnostic } from "./error-gutter";
 import { InlineAiBar } from "./inline-ai-bar";
 import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
 import { YjsCollaborationProvider } from "./collaboration-provider";
+import { CommentPanel } from "./comment-panel";
 import {
   SidebarSimple,
   ChatCircle,
@@ -84,8 +85,8 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   // Editor scroll position for preview sync
   const [editorTopLine, setEditorTopLine] = useState(1);
 
-  // Sidebar tab state (files vs figures)
-  const [sidebarTab, setSidebarTab] = useState<"files" | "figures">("files");
+  // Sidebar tab state (files vs figures vs comments)
+  const [sidebarTab, setSidebarTab] = useState<"files" | "figures" | "comments">("files");
 
   // Error diagnostics from compilation
   const [diagnostics, setDiagnostics] = useState<CompilationDiagnostic[]>([]);
@@ -609,7 +610,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
               </div>
             )}
 
-            {/* Tab bar for Files / Figures */}
+            {/* Tab bar for Files / Figures / Comments */}
             <div className="flex border-b border-border-subtle">
               <button
                 onClick={() => setSidebarTab("files")}
@@ -637,6 +638,19 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                 <ImageIcon size={12} />
                 Figures
               </button>
+              <button
+                onClick={() => setSidebarTab("comments")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-[10px] font-medium transition-colors",
+                  sidebarTab === "comments"
+                    ? "text-brand border-b-2 border-brand -mb-px"
+                    : "text-ink-muted hover:text-ink"
+                )}
+                style={{ minHeight: isMobile ? minTouchTarget : undefined }}
+              >
+                <ChatCircle size={12} />
+                Comments
+              </button>
             </div>
 
             {/* Tab content */}
@@ -661,12 +675,22 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                   );
                 }}
               />
-            ) : (
+            ) : sidebarTab === "figures" ? (
               <ImageBrowser
                 projectId={project.id}
                 onInsertImage={(latexCode) => {
                   editorRef.current?.insertAtCursor(latexCode);
                   if (isMobile) toggleFileTree(); // Close on mobile after insertion
+                }}
+              />
+            ) : (
+              <CommentPanel
+                fileId={mainFile?.id ?? ""}
+                projectId={project.id}
+                currentLine={editorTopLine}
+                onJumpToLine={(line) => {
+                  handleJumpToLine(line);
+                  if (isMobile) toggleFileTree(); // Close on mobile after selection
                 }}
               />
             )}
