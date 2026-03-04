@@ -6,61 +6,224 @@ import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
+// Import backends
+import { svgBackend } from "@/lib/illustration/ai/backends/SVGBackend";
+import type { GenerationRequest } from "@/lib/illustration/ai/types";
+
+// Import new Gemini backend and vectorization
+import { generateImage, isGeminiAvailable } from "@/lib/illustration/ai/backends/GeminiImageBackend";
+import { pngToEditableSVG } from "@/lib/illustration/ai/vectorize";
+
+// Import prompts
+import { buildSystemPrompt, DOMAIN_PROMPTS } from "@/lib/illustration/ai/prompts";
+
+// ---------------------------------------------------------------------------
+// TYPES
+// ---------------------------------------------------------------------------
+
+interface MermaidResult {
+  content: string;
+  backend: string;
+  format: string;
+}
+
+interface SVGResult {
+  content: string;
+  backend: string;
+  format: string;
+}
+
+interface GeminiResult extends SVGResult {
+  rasterPreview?: string;
+  pathCount?: number;
+  colorPalette?: string[];
+  vectorized?: true;
+}
+
+type GenerationResult = MermaidResult | SVGResult | GeminiResult;
+
+// Type guard for Gemini result
+function isGeminiResult(result: GenerationResult): result is GeminiResult {
+  return 'rasterPreview' in result || 'pathCount' in result;
+}
+
 // ---------------------------------------------------------------------------
 // POST /api/illustration/generate
-// Takes a prompt → generates SVG diagram using FINNISH AI services
+// Multi-backend diagram generation with auto-routing
 // ---------------------------------------------------------------------------
 
 const requestSchema = z.object({
   prompt: z.string().min(1).max(4000),
-  backend: z.enum(["mermaid", "svg", "auto"]).default("auto"),
+  backend: z.enum(["mermaid", "svg", "gemini", "auto"]).default("auto"),
   domain: z.string().optional(),
+  style: z.enum(["flat", "detailed", "schematic", "photorealistic"]).default("flat"),
+  geminiModel: z.enum(["pro", "flash"]).default("flash"),
   slideContext: z.string().nullish(),
+  existingDiagram: z.string().optional(),
 });
 
-function getIllustrationPrompt(domain?: string): string {
-  const domainHint = domain
-    ? `\nFocus on the ${domain} domain. Use appropriate terminology and visual conventions.`
-    : "";
+type Backend = "mermaid" | "svg" | "gemini";
 
-  return `You are a scientific illustration AI assistant.
-Generate Mermaid diagram syntax from user descriptions.${domainHint}
+// ---------------------------------------------------------------------------
+// AUTO-ROUTING LOGIC
+// ---------------------------------------------------------------------------
 
-Return ONLY valid Mermaid syntax that will render correctly. Do NOT include markdown fences.
+function detectBestBackend(prompt: string, domain?: string): Backend {
+  const lower = prompt.toLowerCase();
 
-Supported diagram types:
-- flowchart: For processes, flows, decision trees
-- sequence: For interactions between entities
-- classDiagram: For class structures and relationships
-- stateDiagram: For state machines
-- erDiagram: For entity relationships
-- gantt: For timelines and schedules
-- pie: For proportional data
-- mindmap: For hierarchical concepts
-- timeline: For chronological events
+  // Mermaid: flowcharts, process diagrams, decision trees
+  const mermaidKeywords = [
+    'flowchart', 'flow chart', 'flow diagram', 'decision tree',
+    'consort', 'prisma', 'strobe', 'pathway', 'algorithm',
+    'sequence diagram', 'state diagram', 'gantt', 'timeline',
+    'process', 'workflow', 'protocol', 'steps', 'sequence',
+    'state machine', 'er diagram', 'class diagram', 'entity relationship',
+  ];
+  if (mermaidKeywords.some(k => lower.includes(k))) return "mermaid";
 
-Guidelines:
-- Use simple, clear syntax
-- Label nodes and edges appropriately
-- For flowcharts: Use graph TD (top-down) or graph LR (left-right)
-- For sequences: Define participants clearly
-- Include brief, descriptive labels
-- Escape special characters in JSON: \\n for newlines, \\" for quotes
+  // Gemini: complex biological/anatomical illustrations
+  const geminiKeywords = [
+    'illustration', 'illustrate', 'detailed', 'anatomy', 'anatomical',
+    'cross-section', 'cross section', 'microscopy', 'photorealistic',
+    'realistic', 'organelle', 'tissue', 'organ', 'structure',
+    'cell membrane', 'mitochondria', 'neuron', 'synapse',
+    'sarcomere', 'muscle', 'blood vessel', 'artery', 'vein',
+    'protein structure', 'molecular structure', 'crystal structure',
+    'microscopic', 'histology', 'embryology', 'radiology',
+    'mri', 'ct scan', 'x-ray', 'ultrasound', 'endoscopy',
+  ];
+  if (geminiKeywords.some(k => lower.includes(k))) return "gemini";
 
-Example output:
-graph TD
-  A[Input Signal] --> B[Sensor Processing]
-  B --> C{Threshold Check}
-  C -->|Above| D[Activation Signal]
-  C -->|Below| E[No Action]
-  D --> F[Response Generation]
-`;
+  // Default: SVG backend (LLM generates SVG code)
+  return "svg";
 }
+
+// ---------------------------------------------------------------------------
+// MERMAID BACKEND HANDLER
+// ---------------------------------------------------------------------------
+
+async function generateWithMermaid(
+  prompt: string,
+  domain?: string,
+  slideContext?: string | null
+): Promise<{ content: string; backend: string; format: string }> {
+  const systemPrompt = buildSystemPrompt('mermaid', domain);
+
+  let userPrompt = `Create a scientific illustration for: ${prompt}`;
+  if (slideContext) {
+    userPrompt += `\n\nSlide context:\n${slideContext}`;
+  }
+
+  const { text } = await generateText({
+    model: getModel(),
+    system: systemPrompt,
+    prompt: userPrompt.slice(0, 15000),
+  });
+
+  // Clean and extract Mermaid syntax
+  let mermaidSyntax = text
+    .replace(/```mermaid\n?/g, "")
+    .replace(/```json\n?/g, "")
+    .replace(/```\n?/g, "")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'")
+    .trim();
+
+  // Extract just the syntax if it's wrapped in JSON
+  const syntaxMatch = mermaidSyntax.match(/"syntax"\s*:\s*"([^"]+)"/);
+  if (syntaxMatch) {
+    mermaidSyntax = syntaxMatch[1].replace(/\\n/g, "\n");
+  }
+
+  return { content: mermaidSyntax, backend: "mermaid", format: "mermaid" };
+}
+
+// ---------------------------------------------------------------------------
+// SVG BACKEND HANDLER
+// ---------------------------------------------------------------------------
+
+async function generateWithSVG(
+  prompt: string,
+  domain?: string,
+  existingDiagram?: string
+): Promise<{ content: string; backend: string; format: string }> {
+  const request: GenerationRequest = {
+    prompt,
+    metadata: {
+      domain,
+      style: { colorScheme: 'scientific' },
+    },
+    existingDiagram,
+  };
+
+  const result = await svgBackend.generate(request);
+
+  return {
+    content: result.svg,
+    backend: result.backend,
+    format: "svg",
+  };
+}
+
+// ---------------------------------------------------------------------------
+// GEMINI BACKEND HANDLER WITH VECTORIZATION
+// ---------------------------------------------------------------------------
+
+async function generateWithGemini(
+  prompt: string,
+  options: {
+    domain?: string;
+    style?: "flat" | "detailed" | "schematic" | "photorealistic";
+    model?: "pro" | "flash";
+  } = {}
+): Promise<{
+  content: string;
+  backend: string;
+  format: string;
+  rasterPreview?: string;
+  pathCount?: number;
+  colorPalette?: string[];
+  vectorized?: true;
+}> {
+  // Check if Gemini is available
+  if (!isGeminiAvailable()) {
+    throw new Error("GEMINI_API_KEY not configured");
+  }
+
+  // Generate image with Gemini
+  const imageResult = await generateImage(prompt, options);
+
+  // Vectorize to SVG
+  const vectorizeResult = await pngToEditableSVG(imageResult.pngBuffer, {
+    colorCount: options.style === 'flat' ? 16 : options.style === 'detailed' ? 32 : 16,
+    minColorRatio: 0.02,
+    filterSpeckle: 4,
+    simplify: true,
+  });
+
+  // Also generate base64 PNG for preview
+  const pngBase64 = `data:image/png;base64,${imageResult.pngBuffer.toString('base64')}`;
+
+  return {
+    content: vectorizeResult.svg,
+    backend: "gemini",
+    format: "svg",
+    rasterPreview: pngBase64,
+    pathCount: vectorizeResult.pathCount,
+    colorPalette: vectorizeResult.colorPalette,
+    vectorized: true,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// MAIN POST HANDLER
+// ---------------------------------------------------------------------------
 
 export async function POST(req: Request) {
   const log = logger.withRequestId();
 
   try {
+    // Authentication
     let userId: string;
     try {
       userId = await getCurrentUserId();
@@ -68,9 +231,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Rate limiting
     const rateLimitResponse = await checkRateLimit(userId, "illustrations", RATE_LIMITS.ai);
     if (rateLimitResponse) return rateLimitResponse;
 
+    // Parse request
     const parseResult = requestSchema.safeParse(await req.json());
     if (!parseResult.success) {
       return NextResponse.json(
@@ -78,56 +243,90 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const { prompt, backend, domain, slideContext } = parseResult.data;
 
-    const systemPrompt = getIllustrationPrompt(domain);
-    let userPrompt = `Create a scientific illustration for: ${prompt}`;
-    if (slideContext) {
-      userPrompt += `\n\nSlide context:\n${slideContext}`;
+    const { prompt, backend, domain, style, geminiModel, slideContext, existingDiagram } = parseResult.data;
+
+    // Determine which backend to use
+    let selectedBackend: Backend;
+    if (backend === "auto") {
+      selectedBackend = detectBestBackend(prompt, domain);
+      log.info(`Auto-selected backend: ${selectedBackend}`, { prompt: prompt.slice(0, 50) });
+    } else {
+      selectedBackend = backend;
     }
 
+    // Trace generation
     const trace = traceGeneration({
       tier: "standard",
-      modelId: "claude-sonnet-4-20250514",
+      modelId: selectedBackend === "gemini" ? `gemini-${geminiModel}` : String(getModel()),
       feature: "illustration-generate",
       userId,
     });
 
-    const { text, usage } = await generateText({
-      model: getModel(),
-      system: systemPrompt,
-      prompt: userPrompt.slice(0, 15000),
-    });
-    trace.end(usage);
+    let result;
 
-    // Clean and extract Mermaid syntax
-    let mermaidSyntax = text
-      .replace(/```mermaid\n?/g, "")
-      .replace(/```json\n?/g, "")
-      .replace(/```\n?/g, "")
-      .replace(/[\u201C\u201D]/g, '"')
-      .replace(/[\u2018\u2019]/g, "'")
-      .trim();
+    // Route to appropriate backend with fallback logic
+    try {
+      if (selectedBackend === "mermaid") {
+        result = await generateWithMermaid(prompt, domain, slideContext);
+      } else if (selectedBackend === "gemini") {
+        result = await generateWithGemini(prompt, { domain, style, model: geminiModel });
+      } else {
+        result = await generateWithSVG(prompt, domain, existingDiagram);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
 
-    // Extract just the syntax if it's wrapped in JSON
-    const syntaxMatch = mermaidSyntax.match(/"syntax"\s*:\s*"([^"]+)"/);
-    if (syntaxMatch) {
-      // Re-escape newlines from JSON encoding
-      mermaidSyntax = syntaxMatch[1].replace(/\\n/g, "\n");
+      // Fallback logic
+      if (selectedBackend === "gemini" && errorMessage.includes("GEMINI_API_KEY")) {
+        log.warn("Gemini not available, falling back to SVG backend");
+        result = await generateWithSVG(prompt, domain, existingDiagram);
+      } else if (selectedBackend === "svg") {
+        log.warn("SVG backend failed, falling back to Mermaid");
+        result = await generateWithMermaid(prompt, domain, slideContext);
+      } else {
+        throw error;
+      }
     }
 
-    return NextResponse.json({
+    trace.end();
+
+    // Build response
+    const response: Record<string, unknown> = {
       illustration: {
-        svgContent: mermaidSyntax,
-        backend: "mermaid",
-        domain: domain || "general",
+        content: result.content,
+        backend: result.backend,
+        format: result.format,
         caption: prompt.slice(0, 100),
+        domain: domain || "general",
       },
-    });
+    };
+
+    // Add Gemini-specific metadata
+    if (isGeminiResult(result)) {
+      if (result.pathCount !== undefined) {
+        (response.illustration as Record<string, unknown>).pathCount = result.pathCount;
+      }
+      if (result.colorPalette !== undefined) {
+        (response.illustration as Record<string, unknown>).colorPalette = result.colorPalette;
+      }
+      if (result.rasterPreview !== undefined) {
+        (response.illustration as Record<string, unknown>).rasterPreview = result.rasterPreview;
+      }
+      if (result.vectorized !== undefined) {
+        (response.illustration as Record<string, unknown>).vectorized = result.vectorized;
+      }
+    }
+
+    return NextResponse.json(response);
+
   } catch (error) {
     log.error("Illustration generation error", error);
     return NextResponse.json(
-      { error: "Illustration generation failed" },
+      {
+        error: "Illustration generation failed",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }

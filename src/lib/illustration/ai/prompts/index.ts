@@ -381,6 +381,39 @@ export interface FewShotExample {
 // =============================================================================
 
 /**
+ * Build a system prompt for a given backend type with optional domain context
+ *
+ * @param backend - The backend type ('mermaid' or 'svg')
+ * @param domain - Optional domain context for specialized prompts
+ * @returns A complete system prompt string
+ */
+export function buildSystemPrompt(
+  backend: 'mermaid' | 'svg' = 'mermaid',
+  domain?: string
+): string {
+  const basePrompt = backend === 'mermaid' ? MERMAID_SYSTEM_PROMPT : SVG_SYSTEM_PROMPT;
+
+  if (!domain) {
+    return basePrompt;
+  }
+
+  // Try to get domain-specific prompt
+  // Note: Domain names in domain prompt files may not match DiagramDomain enum exactly
+  // We'll use a generic domain enhancement if specific domain prompt isn't found
+  const domainEnhancement = DOMAIN_PROMPTS[domain as DiagramDomain] || '';
+
+  if (domainEnhancement) {
+    return `${basePrompt}\n\n${domainEnhancement}`;
+  }
+
+  return basePrompt;
+}
+
+// =============================================================================
+// MODIFICATION PROMPTS
+// =============================================================================
+
+/**
  * Prompts for diagram modification requests
  */
 export const MODIFICATION_PROMPTS = {
