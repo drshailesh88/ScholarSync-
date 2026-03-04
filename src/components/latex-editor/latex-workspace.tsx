@@ -15,7 +15,7 @@ import { ImageBrowser } from "./image-browser";
 import { ErrorGutterPanel, type CompilationDiagnostic } from "./error-gutter";
 import { InlineAiBar } from "./inline-ai-bar";
 import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
-import { LatexCollaborationProvider } from "./collaboration-provider";
+import { YjsCollaborationProvider } from "./collaboration-provider";
 import {
   SidebarSimple,
   ChatCircle,
@@ -496,7 +496,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   }, []);
 
   return (
-    <LatexCollaborationProvider
+    <YjsCollaborationProvider
       projectId={project.id}
       initialFileId={mainFile?.id ?? ""}
     >
@@ -801,6 +801,6 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         />
       )}
       </div>
-    </LatexCollaborationProvider>
+    </YjsCollaborationProvider>
   );
 }

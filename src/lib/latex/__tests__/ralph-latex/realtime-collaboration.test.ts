@@ -1,7 +1,7 @@
 /**
  * RALPH LaTeX Real-time Collaboration Test Suite
  *
- * Tests the real-time collaboration functionality using Liveblocks.
+ * Tests the real-time collaboration functionality using Y.js.
  * Covers:
  * - Room connection management
  * - Presence tracking (cursors, selections)

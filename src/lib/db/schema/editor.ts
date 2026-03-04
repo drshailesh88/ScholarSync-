@@ -990,3 +990,43 @@ export const latexFileVersions = pgTable(
     index("idx_latex_file_versions_compilation").on(table.compilationId),
   ]
 );
+
+// ---------------------------------------------------------------------------
+// 45. latex_file_comments (LaTeX file commenting)
+// ---------------------------------------------------------------------------
+export const latexFileComments = pgTable(
+  "latex_file_comments",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    latexFileId: text("latex_file_id")
+      .notNull()
+      .references(() => latexFiles.id, { onDelete: "cascade" }),
+    latexProjectId: text("latex_project_id")
+      .notNull()
+      .references(() => latexProjects.id, { onDelete: "cascade" }),
+    lineNumber: integer("line_number").notNull(),
+    userId: text("user_id").notNull(),
+    userName: text("user_name"),
+    userAvatar: text("user_avatar"),
+    content: text("content").notNull(),
+    parentId: text("parent_id"),
+    resolved: boolean("resolved").default(false),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    resolvedBy: text("resolved_by"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_latex_file_comments_file").on(table.latexFileId),
+    index("idx_latex_file_comments_project").on(table.latexProjectId),
+    index("idx_latex_file_comments_parent").on(table.parentId),
+    index("idx_latex_file_comments_line").on(table.lineNumber),
+    index("idx_latex_file_comments_resolved").on(table.resolved),
+  ]
+);
