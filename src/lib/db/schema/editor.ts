@@ -950,6 +950,7 @@ export const latexCompilations = pgTable(
     status: latexCompilationStatusEnum("status").notNull(),
     log: text("log"),
     pdfStorageKey: text("pdf_storage_key"),
+    synctexData: text("synctex_data"), // Base64-encoded .synctex.gz content
     durationMs: integer("duration_ms"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -957,5 +958,35 @@ export const latexCompilations = pgTable(
   },
   (table) => [
     index("idx_latex_compilations_project").on(table.latexProjectId),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 44. latex_file_versions (version history for LaTeX files)
+// ---------------------------------------------------------------------------
+export const latexFileVersions = pgTable(
+  "latex_file_versions",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    latexFileId: text("latex_file_id")
+      .notNull()
+      .references(() => latexFiles.id, { onDelete: "cascade" }),
+    latexProjectId: text("latex_project_id")
+      .notNull()
+      .references(() => latexProjects.id, { onDelete: "cascade" }),
+    compilationId: text("compilation_id")
+      .references(() => latexCompilations.id, { onDelete: "set null" }),
+    content: text("content").notNull(),
+    description: text("description"), // Optional commit message
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_latex_file_versions_file").on(table.latexFileId),
+    index("idx_latex_file_versions_project").on(table.latexProjectId),
+    index("idx_latex_file_versions_compilation").on(table.compilationId),
   ]
 );

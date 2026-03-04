@@ -78,7 +78,7 @@ app.post("/compile", async (req, res) => {
       }
     }
 
-    // Run tectonic
+    // Run tectonic with SyncTeX enabled
     const mainPath = join(tempDir, mainFile.path);
     let log = "";
     let compilationStatus = "success";
@@ -86,7 +86,7 @@ app.post("/compile", async (req, res) => {
     try {
       const { stdout, stderr } = await execFileAsync(
         "tectonic",
-        [mainPath, "--chatter", "minimal"],
+        [mainPath, "--chatter", "minimal", "--synctex"],
         { cwd: tempDir, timeout: 30_000 }
       );
       log = stdout + "\n" + stderr;
@@ -108,6 +108,7 @@ app.post("/compile", async (req, res) => {
     // Read PDF
     const pdfPath = mainPath.replace(/\.tex$/, ".pdf");
     let pdfBuffer = null;
+    let synctexBuffer = null;
 
     if (compilationStatus !== "error") {
       try {
@@ -118,12 +119,24 @@ app.post("/compile", async (req, res) => {
       }
     }
 
+    // Read SyncTeX file if available
+    if (compilationStatus !== "error") {
+      const synctexPath = mainPath.replace(/\.tex$/, ".synctex.gz");
+      try {
+        synctexBuffer = await readFile(synctexPath);
+      } catch {
+        // SyncTeX file is optional, don't fail if missing
+        log += "\nSyncTeX file not generated.";
+      }
+    }
+
     if (pdfBuffer) {
       res.set({
         "Content-Type": "application/pdf",
         "X-Compilation-Status": compilationStatus,
         "X-Compilation-Duration": String(durationMs),
         "X-Compilation-Log": Buffer.from(log).toString("base64"),
+        "X-Synctex-Data": synctexBuffer ? synctexBuffer.toString("base64") : "",
       });
       return res.send(pdfBuffer);
     }
