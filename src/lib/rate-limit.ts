@@ -115,4 +115,6 @@ export const RATE_LIMITS = {
   analysis: { limit: 20, windowSeconds: 3600 },
   /** Embedding: 60 requests per hour */
   embed: { limit: 60, windowSeconds: 3600 },
+  /** Write/save endpoints: 30 requests per hour */
+  write: { limit: 30, windowSeconds: 3600 },
 } as const;

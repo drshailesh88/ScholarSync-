@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import type { IconDefinition, IconDomain } from '../../data/icons';
+import type { IconDefinition, IconDomain } from '@/lib/illustration/data/icons';
 
 // =============================================================================
 // TYPES

@@ -15,7 +15,7 @@ import {
   getIconsByDomain,
   getAvailableDomains,
   domainMetadata,
-} from '../../data/icons';
+} from '@/lib/illustration/data/icons';
 
 // =============================================================================
 // TYPES

@@ -21,7 +21,7 @@ import {
   type Tool,
   type ToolName,
   TOOL_NAMES,
-} from '../editor/tools/index';
+} from '@/lib/illustration/editor/tools/index';
 
 // ============================================================================
 // Types

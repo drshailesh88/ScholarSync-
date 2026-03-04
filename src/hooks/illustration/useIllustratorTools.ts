@@ -12,14 +12,14 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import paper from 'paper';
 import { Canvas as FabricCanvas, Path as FabricPath, FabricObject, loadSVGFromString, util } from 'fabric';
-import { PenTool } from '../lib/paper/PenTool';
-import { getStrokePath, strokePresets, InputPoint } from '../lib/freehand/index';
+import { PenTool } from '@/lib/illustration/lib/paper/PenTool';
+import { getStrokePath, strokePresets, InputPoint } from '@/lib/illustration/lib/freehand/index';
 import {
   convertToHandDrawn,
   StylePreset,
-} from '../lib/rough/index';
-import type { HandDrawnSettings } from '../components/StylePanel';
-import type { IllustratorTool } from '../components/IllustratorToolbar';
+} from '@/lib/illustration/lib/rough/index';
+import type { HandDrawnSettings } from '@/components/illustration/StylePanel';
+import type { IllustratorTool } from '@/components/illustration/IllustratorToolbar';
 
 // ============================================================================
 // Types

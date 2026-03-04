@@ -410,8 +410,8 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
           type: 'warning',
           message: `Diagram "${diagramId}" not found`,
         });
-        // Redirect to editor without ID
-        navigate('/editor', { replace: true });
+        // TODO: Navigate to /illustrate/editor (requires router)
+        // navigate('/editor', { replace: true });
       }
     } catch (error) {
       console.error('Failed to load diagram:', error);

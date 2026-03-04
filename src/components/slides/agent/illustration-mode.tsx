@@ -123,12 +123,12 @@ export function IllustrationMode() {
     setSelectedIndex(null);
   }
 
-  function handleInsertOnNewSlide(block: ContentBlock) {
-    addSlide({
-      layout: "content",
-      title: input || "Illustration",
-      contentBlocks: [block],
-    });
+  async function handleInsertOnNewSlide(block: ContentBlock) {
+    const slideTitle = input || "Illustration";
+    const newSlide = await addSlide(activeSlide?.id);
+    if (newSlide) {
+      updateSlide(newSlide.id, { title: slideTitle, contentBlocks: [block] });
+    }
     setOptions([]);
     setInput("");
     setSelectedIndex(null);
@@ -144,7 +144,7 @@ export function IllustrationMode() {
           svgContent: option.svgContent,
           caption: option.label,
           sourcePrompt: option.description,
-          sourceBackend: option.backend,
+          sourceBackend: option.backend as "svg" | "mermaid" | "ai-image" | "manual",
           domain: option.domain,
           alt: option.description,
         },

@@ -13,7 +13,7 @@ import {
   DiagramTemplate,
   TemplateDomain,
   getAvailableDomains,
-} from '../../data/templates';
+} from '@/lib/illustration/data/templates';
 
 // ============================================================================
 // Types
