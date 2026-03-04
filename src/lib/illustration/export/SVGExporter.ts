@@ -9,8 +9,8 @@ import type {
   SVGExportOptions,
   ExportResult,
   ExportProgressCallback,
-} from './types.js';
-import { MIME_TYPES, FILE_EXTENSIONS } from './types.js';
+} from './types';
+import { MIME_TYPES, FILE_EXTENSIONS } from './types';
 
 /**
  * SVG attributes that can be safely removed for optimization

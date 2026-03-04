@@ -5,7 +5,7 @@
  * @module editor/tools/ToolRegistry
  */
 
-import type { FabricCanvas, ToolType } from '../../types/index.js';
+import type { FabricCanvas, ToolType } from '@/lib/illustration/types';
 
 // ============================================================================
 // Types

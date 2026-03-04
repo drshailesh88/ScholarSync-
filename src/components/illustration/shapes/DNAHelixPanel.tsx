@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { generateDNAHelix, type DNAHelixOptions } from '../../lib/shapes/scientific-shapes';
+import { generateDNAHelix, type DNAHelixOptions } from '@/lib/illustration/lib/shapes/scientific-shapes';
 import { useCanvas } from '../Canvas/CanvasContext';
 
 // ============================================================================

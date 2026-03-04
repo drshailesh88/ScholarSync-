@@ -13,7 +13,7 @@ import type {
   ExportFormat,
   ExportDPI,
   ExportStage,
-} from '../types/index.js';
+} from '@/lib/illustration/types/index';
 
 // ============================================================================
 // Constants

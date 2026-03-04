@@ -16,20 +16,20 @@ import {
   type TikZExportOptions,
   MIME_TYPES,
   FILE_EXTENSIONS,
-} from './types.js';
-import { PNGExporter } from './PNGExporter.js';
-import { SVGExporter } from './SVGExporter.js';
-import { PDFExporter } from './PDFExporter.js';
-import { TikZExporter } from './TikZExporter.js';
+} from './types';
+import { PNGExporter } from './PNGExporter';
+import { SVGExporter } from './SVGExporter';
+import { PDFExporter } from './PDFExporter';
+import { TikZExporter } from './TikZExporter';
 
 // Re-export types
-export * from './types.js';
+export * from './types';
 
 // Re-export individual exporters
-export { PNGExporter } from './PNGExporter.js';
-export { SVGExporter } from './SVGExporter.js';
-export { PDFExporter } from './PDFExporter.js';
-export { TikZExporter } from './TikZExporter.js';
+export { PNGExporter } from './PNGExporter';
+export { SVGExporter } from './SVGExporter';
+export { PDFExporter } from './PDFExporter';
+export { TikZExporter } from './TikZExporter';
 
 /**
  * Exporter factory function

@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import type { UnifiedIconResult } from '../../lib/icons';
-import { createSimpleIconSvg } from '../../lib/icons';
+import type { UnifiedIconResult } from '@/lib/illustration/lib/icons';
+import { createSimpleIconSvg } from '@/lib/illustration/lib/icons';
 
 // =============================================================================
 // TYPES

@@ -11,7 +11,7 @@ export {
   LayerManager,
   layerManager,
   LayerError,
-} from './LayerManager.js';
+} from './LayerManager';
 
 export type {
   Layer,
@@ -19,7 +19,7 @@ export type {
   LayerEvent,
   LayerEventCallback,
   LayerErrorCode,
-} from './LayerManager.js';
+} from './LayerManager';
 
 // =============================================================================
 // AI SERVICES

@@ -52,7 +52,7 @@ export {
   // Utility functions
   getToolsByCategory,
   getAllToolMetadata,
-} from './tools/index.js';
+} from './tools/index';
 
 // Export types
 export type {
@@ -75,4 +75,4 @@ export type {
   TextStyle,
   TextCreatedEvent,
   TextToolOptions,
-} from './tools/index.js';
+} from './tools/index';

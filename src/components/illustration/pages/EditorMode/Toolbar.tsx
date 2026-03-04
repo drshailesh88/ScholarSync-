@@ -6,8 +6,8 @@
  */
 
 import React, { useState } from 'react';
-import { useEditorStore, useActiveTool } from '../../store/editorStore';
-import { ToolType } from '../../types/index';
+import { useEditorStore, useActiveTool } from '@/stores/illustration/editorStore';
+import { ToolType } from '@/lib/illustration/types';
 
 // ============================================================================
 // Types

@@ -40,7 +40,7 @@ export { jsPDF } from 'jspdf';
 
 // svg2pdf.js - Convert SVG elements to PDF using jsPDF
 // @see https://github.com/yWorks/svg2pdf.js
-export { svg2pdf } from 'svg2pdf.js';
+export { svg2pdf } from 'svg2pdf';
 
 // Tabler Icons - Free and open source icons for React
 // @see https://tabler.io/icons

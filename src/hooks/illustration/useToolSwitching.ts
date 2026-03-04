@@ -11,8 +11,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useEditorStore, useCanvas, useActiveTool } from '../store/editorStore.js';
-import { ToolType } from '../types/index.js';
+import { useEditorStore, useCanvas, useActiveTool } from '@/stores/illustration/editorStore';
+import { ToolType } from '@/lib/illustration/types/index';
 import {
   ToolRegistry,
   toolRegistry as globalToolRegistry,
@@ -21,7 +21,7 @@ import {
   type Tool,
   type ToolName,
   TOOL_NAMES,
-} from '../editor/tools/index.js';
+} from '../editor/tools/index';
 
 // ============================================================================
 // Types

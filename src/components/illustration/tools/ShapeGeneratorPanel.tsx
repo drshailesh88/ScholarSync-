@@ -19,7 +19,7 @@ import {
   type PathwayArrowOptions,
   type NeuronOptions,
   type MitochondriaOptions,
-} from '../../lib/shapes/scientific-shapes';
+} from '@/lib/illustration/lib/shapes/scientific-shapes';
 import { useCanvas } from '../Canvas/CanvasContext';
 import { FabricImage } from 'fabric';
 

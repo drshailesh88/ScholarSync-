@@ -14,8 +14,8 @@ import { DiagramGenerator, diagramGenerator as _diagramGenerator } from './Diagr
 import { PromptParser, promptParser as _promptParser } from './PromptParser';
 import { ConversationManager, conversationManager as _conversationManager } from './ConversationManager';
 import { ContextBuilder, contextBuilder as _contextBuilder } from './ContextBuilder';
-import { MermaidBackend, mermaidBackend as _mermaidBackend } from './backends/MermaidBackend';
-import { SVGBackend, svgBackend as _svgBackend } from './backends/SVGBackend';
+import { MermaidBackend, mermaidBackend as _mermaidBackend } from '@/lib/illustration/ai/backends/MermaidBackend';
+import { SVGBackend, svgBackend as _svgBackend } from '@/lib/illustration/ai/backends/SVGBackend';
 
 // =============================================================================
 // CORE SERVICES
@@ -47,8 +47,8 @@ export type {
 // BACKENDS
 // =============================================================================
 
-export { MermaidBackend, mermaidBackend } from './backends/MermaidBackend';
-export { SVGBackend, svgBackend } from './backends/SVGBackend';
+export { MermaidBackend, mermaidBackend } from '@/lib/illustration/ai/backends/MermaidBackend';
+export { SVGBackend, svgBackend } from '@/lib/illustration/ai/backends/SVGBackend';
 
 // =============================================================================
 // PROMPTS

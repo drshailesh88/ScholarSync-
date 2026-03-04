@@ -10,8 +10,8 @@ import type {
   ExportResult,
   ExportProgressCallback,
   DPI,
-} from './types.js';
-import { MIME_TYPES, FILE_EXTENSIONS } from './types.js';
+} from './types';
+import { MIME_TYPES, FILE_EXTENSIONS } from './types';
 
 /**
  * DPI scale factors relative to base 72 DPI

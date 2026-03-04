@@ -1,14 +1,14 @@
 // FINNISH UI Components
 // Re-export all components from this file
 
-export { LayersPanel } from './LayersPanel.js';
-export { LayerItem } from './LayerItem.js';
-export { default as ColorPicker } from './ColorPicker.js';
-export { default as IconPicker } from './IconPicker.js';
-export { default as PropertiesPanel } from './PropertiesPanel.js';
+export { LayersPanel } from './LayersPanel';
+export { LayerItem } from './LayerItem';
+export { default as ColorPicker } from './ColorPicker';
+export { default as IconPicker } from './IconPicker';
+export { default as PropertiesPanel } from './PropertiesPanel';
 
 // Error Handling
-export { ErrorBoundary } from './ErrorBoundary.js';
+export { ErrorBoundary } from './ErrorBoundary';
 
 // Keyboard Shortcuts
 export {
@@ -17,7 +17,7 @@ export {
   type Shortcut,
   type ShortcutCategory,
   type ShortcutsHelpProps,
-} from './ShortcutsHelp.js';
+} from './ShortcutsHelp';
 
 // Loading States
 export {
@@ -31,7 +31,7 @@ export {
   type SpinnerSize,
   type SpinnerVariant,
   type LoadingSpinnerProps,
-} from './LoadingSpinner.js';
+} from './LoadingSpinner';
 
 // Icon Browser
 export {

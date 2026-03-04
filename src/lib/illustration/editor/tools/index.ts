@@ -19,7 +19,7 @@ export {
   type ToolRegistrationOptions,
   type ToolRegistryEvents,
   type ToolRegistryEventCallback,
-} from './ToolRegistry.js';
+} from './ToolRegistry';
 
 // ============================================================================
 // Tool Class Exports
@@ -29,7 +29,7 @@ export {
   SelectTool,
   type SelectToolOptions,
   type SelectionChangedEvent,
-} from './SelectTool.js';
+} from './SelectTool';
 
 export {
   ShapeTool,
@@ -41,7 +41,7 @@ export {
   type BoundingBox,
   type ShapeCreatedEvent,
   type ShapeToolOptions,
-} from './ShapeTool.js';
+} from './ShapeTool';
 
 export {
   TextTool,
@@ -49,16 +49,16 @@ export {
   type TextStyle,
   type TextCreatedEvent,
   type TextToolOptions,
-} from './TextTool.js';
+} from './TextTool';
 
 // ============================================================================
 // Tool Factory Functions
 // ============================================================================
 
-import { ToolRegistry, toolRegistry } from './ToolRegistry.js';
-import { SelectTool } from './SelectTool.js';
-import { RectangleTool, EllipseTool, LineTool, ArrowTool } from './ShapeTool.js';
-import { TextTool, PenTool } from './TextTool.js';
+import { ToolRegistry, toolRegistry } from './ToolRegistry';
+import { SelectTool } from './SelectTool';
+import { RectangleTool, EllipseTool, LineTool, ArrowTool } from './ShapeTool';
+import { TextTool, PenTool } from './TextTool';
 
 /**
  * Create a SelectTool instance with default options

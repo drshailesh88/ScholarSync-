@@ -7,8 +7,8 @@
 
 import { useEffect, useCallback, useRef } from 'react';
 import { FabricObject } from 'fabric';
-import { useEditorStore, useHistoryState } from '../store/editorStore';
-import { ToolType } from '../types/index';
+import { useEditorStore, useHistoryState } from '@/stores/illustration/editorStore';
+import { ToolType } from '@/lib/illustration/types/index';
 
 // ============================================================================
 // Types

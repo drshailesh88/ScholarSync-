@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { generatePathwayArrow, type PathwayArrowOptions } from '../../lib/shapes/scientific-shapes';
+import { generatePathwayArrow, type PathwayArrowOptions } from '@/lib/illustration/lib/shapes/scientific-shapes';
 import { useCanvas } from '../Canvas/CanvasContext';
 
 // ============================================================================

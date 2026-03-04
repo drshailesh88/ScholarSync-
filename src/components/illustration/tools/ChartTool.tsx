@@ -8,7 +8,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import Plot from 'react-plotly.js';
+import Plot from 'react-plotly';
 import { FabricImage } from 'fabric';
 import type { Data, Layout } from 'plotly.js-dist-min';
 import {
@@ -31,13 +31,13 @@ import {
   type HeatmapData,
   type BoxPlotData,
   type PlotlyHTMLElement,
-} from '../../lib/visualization';
+} from '@/lib/illustration/lib/visualization';
 import {
   PRESET_INFO,
   getSampleData,
   getPresetById,
   type PresetType,
-} from '../../lib/visualization/presets';
+} from '@/lib/illustration/lib/visualization/presets';
 import { useCanvas } from '../Canvas/CanvasContext';
 
 // ============================================================================

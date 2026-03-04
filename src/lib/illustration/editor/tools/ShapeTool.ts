@@ -11,8 +11,8 @@
  * @module editor/tools/ShapeTool
  */
 
-import type { FabricCanvas } from '../../types/index.js';
-import type { Tool, ToolMouseEvent, ToolKeyEvent, Point } from './ToolRegistry.js';
+import type { FabricCanvas } from '@/lib/illustration/types';
+import type { Tool, ToolMouseEvent, ToolKeyEvent, Point } from './ToolRegistry';
 
 // ============================================================================
 // Types

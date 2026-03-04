@@ -15,7 +15,7 @@ import {
   CATEGORY_LABELS,
   TemplateCategory,
   Template
-} from '../../stores/useAgentStore';
+} from '@/stores/illustration/useAgentStore';
 
 // Template Icons
 const TemplateIcons: Record<string, React.FC> = {

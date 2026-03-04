@@ -13,7 +13,7 @@
 // @ts-expect-error - save-svg-as-png doesn't have TypeScript definitions
 import { saveSvgAsPng, svgAsPngUri, svgAsDataUri, download } from 'save-svg-as-png';
 import { jsPDF } from 'jspdf';
-import { svg2pdf } from 'svg2pdf.js';
+import { svg2pdf } from 'svg2pdf';
 
 // ExportDialog component available at: @/components/ExportDialog
 // Features: Format selection (PNG, SVG, PDF, LaTeX), Quality/resolution settings,

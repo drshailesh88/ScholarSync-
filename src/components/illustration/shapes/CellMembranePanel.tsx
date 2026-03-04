@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { generateCellMembrane, type CellMembraneOptions, type MembraneProtein } from '../../lib/shapes/scientific-shapes';
+import { generateCellMembrane, type CellMembraneOptions, type MembraneProtein } from '@/lib/illustration/lib/shapes/scientific-shapes';
 import { useCanvas } from '../Canvas/CanvasContext';
 
 // ============================================================================

@@ -12,9 +12,9 @@ import {
   type GenerateOptions,
   type RefineOptions,
   type ExtendedGenerationResult,
-} from '../services/ai/DiagramGenerator';
-import type { ConversationContext } from '../services/ai/ConversationManager';
-import type { ParsedPrompt, DiagramVersion } from '../services/ai/types';
+} from '@/lib/illustration/ai/DiagramGenerator';
+import type { ConversationContext } from '@/lib/illustration/ai/ConversationManager';
+import type { ParsedPrompt, DiagramVersion } from '@/lib/illustration/ai/types';
 
 // =============================================================================
 // TYPES

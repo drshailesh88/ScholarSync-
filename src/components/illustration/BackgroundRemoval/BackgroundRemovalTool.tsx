@@ -14,7 +14,7 @@ import {
   type BackgroundRemovalStage,
   type BackgroundRemovalResult,
   BackgroundRemovalError,
-} from '../../lib/image';
+} from '@/lib/illustration/lib/image';
 import { useCanvas } from '../Canvas/CanvasContext';
 import { FabricImage } from 'fabric';
 

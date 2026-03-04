@@ -18,9 +18,9 @@ import {
   type ClipboardContentType,
   type ImportProgressCallback,
   ImportError,
-} from './types.js';
-import { SVGImporter } from './SVGImporter.js';
-import { ImageImporter } from './ImageImporter.js';
+} from './types';
+import { SVGImporter } from './SVGImporter';
+import { ImageImporter } from './ImageImporter';
 
 /** Event handler type for clipboard paste */
 export type ClipboardPasteHandler = (result: ImportResult) => void;

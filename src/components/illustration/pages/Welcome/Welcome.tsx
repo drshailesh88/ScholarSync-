@@ -1,3 +1,4 @@
+"use client";
 /**
  * Welcome Page
  * Landing page with navigation to AI Agent mode and Editor mode
@@ -6,7 +7,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // ============================================================================
 // Types
@@ -389,7 +391,7 @@ const handleKeyboardActivation = (
 };
 
 export function Welcome(): JSX.Element {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [recentDiagrams, setRecentDiagrams] = useState<RecentDiagram[]>([]);
   const [hoveredAction, setHoveredAction] = useState<string | null>(null);
   const [hoveredRecent, setHoveredRecent] = useState<string | null>(null);
@@ -428,11 +430,11 @@ export function Welcome(): JSX.Element {
   };
 
   const handleTemplateClick = (templateId: string) => {
-    navigate(`/agent?template=${templateId}`);
+    router.push(`/illustrate/agent?template=${templateId}`);
   };
 
   const handleRecentClick = (diagramId: string) => {
-    navigate(`/editor/${diagramId}`);
+    router.push(`/illustrate/editor/${diagramId}`);
   };
 
   return (
@@ -504,7 +506,7 @@ export function Welcome(): JSX.Element {
           <div style={styles.sectionHeader}>
             <h2 style={styles.sectionTitle}>Recent Diagrams</h2>
             {recentDiagrams.length > 0 && (
-              <Link to="/editor" style={styles.sectionLink}>
+              <Link href="/illustrate/editor" style={styles.sectionLink}>
                 View all
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <polyline points="9,18 15,12 9,6" />

@@ -9,8 +9,8 @@ import type {
   TikZExportOptions,
   ExportResult,
   ExportProgressCallback,
-} from './types.js';
-import { MIME_TYPES, FILE_EXTENSIONS } from './types.js';
+} from './types';
+import { MIME_TYPES, FILE_EXTENSIONS } from './types';
 
 /**
  * TikZ preamble packages required for the generated code

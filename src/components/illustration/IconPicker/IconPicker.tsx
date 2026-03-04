@@ -19,8 +19,8 @@ import {
   iconParkList,
   scienceBrandsList,
   type UnifiedIconResult,
-} from '../../lib/icons';
-import { createSimpleIconSvg } from '../../lib/icons';
+} from '@/lib/illustration/lib/icons';
+import { createSimpleIconSvg } from '@/lib/illustration/lib/icons';
 
 // =============================================================================
 // TYPES

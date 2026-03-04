@@ -13,8 +13,8 @@ import type {
   EditorStore,
   PanPosition,
   ToolType,
-} from '../types/index.js';
-import { ToolType as Tool } from '../types/index.js';
+} from '@/lib/illustration/types/index';
+import { ToolType as Tool } from '@/lib/illustration/types/index';
 
 // ============================================================================
 // Constants

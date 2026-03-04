@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { generateNeuron, type NeuronOptions } from '../../lib/shapes/scientific-shapes';
+import { generateNeuron, type NeuronOptions } from '@/lib/illustration/lib/shapes/scientific-shapes';
 import { useCanvas } from '../Canvas/CanvasContext';
 
 // ============================================================================

@@ -1,3 +1,4 @@
+"use client";
 /**
  * EditorMode Component
  * Full editor layout with all editing tools and panels
@@ -13,26 +14,25 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useEditorStore } from '../../store/editorStore';
-import { useToast } from '../../components/Toast';
-import { Canvas, CanvasProvider, CanvasRef } from '../../components/Canvas';
-import { IllustratorToolbar, type IllustratorTool } from '../../components/IllustratorToolbar';
-import { defaultHandDrawnSettings, type HandDrawnSettings } from '../../components/StylePanel';
-import { ExportDialog, type ExportFormat, type ExportSettings } from '../../components/ExportDialog';
-import { exportAsPng, exportAsPdf, exportAsSvg, exportAsPptx } from '../../lib/export';
-import { BackgroundRemovalTool } from '../../components/BackgroundRemoval';
-import { AIGenerationTool } from '../../components/AIGeneration';
-import { ShapeGeneratorPanel, type ShapeType } from '../../components/tools';
-import { LoadingSpinner } from '../../components/LoadingSpinner';
-import { useIllustratorTools } from '../../hooks/useIllustratorTools';
-import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
-import { useCanvas as useCanvasContext } from '../../components/Canvas/CanvasContext';
+import { useEditorStore } from '@/stores/illustration/editorStore';
+import { useToast } from '@/components/illustration/Toast';
+import { Canvas, CanvasProvider, CanvasRef } from '@/components/illustration/Canvas';
+import { IllustratorToolbar, type IllustratorTool } from '@/components/illustration/IllustratorToolbar';
+import { defaultHandDrawnSettings, type HandDrawnSettings } from '@/components/illustration/StylePanel';
+import { ExportDialog, type ExportFormat, type ExportSettings } from '@/components/illustration/ExportDialog';
+import { exportAsPng, exportAsPdf, exportAsSvg, exportAsPptx } from '@/lib/illustration/lib/export';
+import { BackgroundRemovalTool } from '@/components/illustration/BackgroundRemoval';
+import { AIGenerationTool } from '@/components/illustration/AIGeneration';
+import { ShapeGeneratorPanel, type ShapeType } from '@/components/illustration/tools';
+import { LoadingSpinner } from '@/components/illustration/LoadingSpinner';
+import { useIllustratorTools } from '@/hooks/illustration/useIllustratorTools';
+import { useKeyboardShortcuts } from '@/hooks/illustration/useKeyboardShortcuts';
+import { useCanvas as useCanvasContext } from '@/components/illustration/Canvas/CanvasContext';
 import { MenuBar } from './MenuBar';
 import { Toolbar } from './Toolbar';
 import { RightPanel } from './RightPanel';
 import { StatusBar } from './StatusBar';
-import { ToolType } from '../../types/index';
+import { ToolType } from '@/lib/illustration/types';
 
 // ============================================================================
 // Types
@@ -120,9 +120,11 @@ const styles: Record<string, React.CSSProperties> = {
 // EditorMode Component
 // ============================================================================
 
-export function EditorMode(): JSX.Element {
-  const { id } = useParams<{ id?: string }>();
-  const navigate = useNavigate();
+export interface EditorModeProps {
+  id?: string;
+}
+
+export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const { showToast } = useToast();
 
   const canvasRef = useRef<CanvasRef>(null);

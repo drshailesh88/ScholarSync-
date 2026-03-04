@@ -17,7 +17,7 @@ import {
   type FluxModel,
   type GenerationResult,
   type ImageSize,
-} from '../../lib/ai';
+} from '@/lib/illustration/lib/ai';
 import { useCanvas } from '../Canvas/CanvasContext';
 import { FabricImage } from 'fabric';
 

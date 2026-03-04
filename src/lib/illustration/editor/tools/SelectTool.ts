@@ -12,8 +12,8 @@
  * @module editor/tools/SelectTool
  */
 
-import type { FabricCanvas } from '../../types/index.js';
-import type { Tool, ToolMouseEvent, ToolKeyEvent } from './ToolRegistry.js';
+import type { FabricCanvas } from '@/lib/illustration/types';
+import type { Tool, ToolMouseEvent, ToolKeyEvent } from './ToolRegistry';
 
 // ============================================================================
 // Types

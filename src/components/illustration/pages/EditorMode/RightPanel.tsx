@@ -7,13 +7,13 @@
 
 import React, { useState, useCallback } from 'react';
 import { loadSVGFromString, util, FabricObject } from 'fabric';
-import { LayersPanel } from '../../components/LayersPanel';
-import PropertiesPanel from '../../components/PropertiesPanel';
-import IconPicker from '../../components/IconPicker';
-import type { UnifiedIconResult } from '../../lib/icons';
-import { StylePanel, defaultHandDrawnSettings, type HandDrawnSettings } from '../../components/StylePanel';
-import { useEditorStore } from '../../store/editorStore';
-import { useToast } from '../../components/Toast/useToast';
+import { LayersPanel } from '@/components/illustration/LayersPanel';
+import PropertiesPanel from '@/components/illustration/PropertiesPanel';
+import IconPicker from '@/components/illustration/IconPicker';
+import type { UnifiedIconResult } from '@/lib/illustration/lib/icons';
+import { StylePanel, defaultHandDrawnSettings, type HandDrawnSettings } from '@/components/illustration/StylePanel';
+import { useEditorStore } from '@/stores/illustration/editorStore';
+import { useToast } from '@/components/illustration/Toast/useToast';
 
 // ============================================================================
 // Types

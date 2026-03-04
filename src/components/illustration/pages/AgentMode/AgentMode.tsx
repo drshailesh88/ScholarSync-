@@ -1,3 +1,4 @@
+"use client";
 /**
  * AgentMode Component
  *
@@ -12,7 +13,7 @@
  */
 
 import React, { useState, useCallback, useRef } from 'react';
-import { useAgentStore } from '../../stores/useAgentStore';
+import { useAgentStore } from '@/stores/illustration/useAgentStore';
 import { TemplateGallery } from './TemplateGallery';
 import { ChatHistory } from './ChatHistory';
 import { PromptInput } from './PromptInput';

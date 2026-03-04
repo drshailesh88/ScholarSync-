@@ -7,8 +7,8 @@
  */
 
 import { PromptParser } from './PromptParser';
-import { MermaidBackend } from './backends/MermaidBackend';
-import { SVGBackend } from './backends/SVGBackend';
+import { MermaidBackend } from '@/lib/illustration/ai/backends/MermaidBackend';
+import { SVGBackend } from '@/lib/illustration/ai/backends/SVGBackend';
 import { ContextBuilder } from './ContextBuilder';
 import { ConversationManager } from './ConversationManager';
 import type {

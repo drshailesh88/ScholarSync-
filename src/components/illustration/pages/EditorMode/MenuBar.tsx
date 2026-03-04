@@ -6,9 +6,9 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useEditorStore, useHistoryState, useViewport, useGridState } from '../../store/editorStore';
-import { useCanvas } from '../../components/Canvas/CanvasContext';
-import { useToast } from '../../components/Toast/useToast';
+import { useEditorStore, useHistoryState, useViewport, useGridState } from '@/stores/illustration/editorStore';
+import { useCanvas } from '@/components/illustration/Canvas/CanvasContext';
+import { useToast } from '@/components/illustration/Toast/useToast';
 import './MenuBar.css';
 
 // ============================================================================

@@ -23,7 +23,7 @@ import {
   DEFAULT_SVG_OPTIONS,
   MAX_FILE_SIZES,
   SUPPORTED_MIME_TYPES,
-} from './types.js';
+} from './types';
 
 /** System fonts available for fallback */
 const SYSTEM_FONTS = [

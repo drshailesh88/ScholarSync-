@@ -22,8 +22,8 @@ import {
   DEFAULT_IMAGE_OPTIONS,
   MAX_FILE_SIZES,
   SUPPORTED_MIME_TYPES,
-} from './types.js';
-import { ImageTracer } from './ImageTracer.js';
+} from './types';
+import { ImageTracer } from './ImageTracer';
 
 /** Supported image MIME types */
 const SUPPORTED_IMAGE_TYPES = [

@@ -17,7 +17,7 @@ import {
   type ImportProgress,
   ImportError,
   DEFAULT_TRACING_OPTIONS,
-} from './types.js';
+} from './types';
 
 /**
  * Potrace parameters mapped from our detail levels

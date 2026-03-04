@@ -1,3 +1,4 @@
+"use client";
 /**
  * CreditsPage Component
  * Displays credits and attributions for all icon libraries and software used
@@ -6,7 +7,6 @@
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 // ============================================================================
 // Types

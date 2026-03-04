@@ -5,7 +5,7 @@
  * @module services/LayerManager
  */
 
-import type { FabricCanvas } from '../types/index.js';
+import type { FabricCanvas } from '@/lib/illustration/types/index';
 
 // ============================================================================
 // Types

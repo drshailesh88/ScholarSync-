@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import { generateCellLayer, type CellLayerOptions } from '../../lib/shapes/scientific-shapes';
+import { generateCellLayer, type CellLayerOptions } from '@/lib/illustration/lib/shapes/scientific-shapes';
 import { useCanvas } from '../Canvas/CanvasContext';
 
 // ============================================================================

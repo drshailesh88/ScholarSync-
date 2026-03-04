@@ -10,8 +10,8 @@ import type {
   PDFExportOptions,
   ExportResult,
   ExportProgressCallback,
-} from './types.js';
-import { MIME_TYPES, FILE_EXTENSIONS, PAGE_SIZES } from './types.js';
+} from './types';
+import { MIME_TYPES, FILE_EXTENSIONS, PAGE_SIZES } from './types';
 
 /**
  * PDF Exporter class

@@ -6,18 +6,18 @@
  */
 
 import { useEffect, useCallback, useRef } from 'react';
-import { useEditorStore } from '../store/editorStore.js';
+import { useEditorStore } from '@/stores/illustration/editorStore';
 import {
   useLayerStore,
   useActiveLayerId,
   type StoreLayer,
-} from '../store/layerStore.js';
+} from '@/stores/illustration/layerStore';
 import {
   LayerManager,
   layerManager,
   type Layer,
   type LayerEvent,
-} from '../services/LayerManager.js';
+} from '@/lib/illustration/LayerManager';
 
 // ============================================================================
 // Types

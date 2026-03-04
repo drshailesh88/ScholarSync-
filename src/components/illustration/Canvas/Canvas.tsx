@@ -14,8 +14,8 @@ import {
   useState,
 } from 'react';
 import { Canvas as FabricCanvas, FabricObject, Rect, Ellipse, Line, IText, Triangle, Group } from 'fabric';
-import { useEditorStore, useActiveTool, useViewport, useGridState } from '../../store/editorStore';
-import { ToolType } from '../../types/index';
+import { useEditorStore, useActiveTool, useViewport, useGridState } from '@/stores/illustration/editorStore';
+import { ToolType } from '@/lib/illustration/types';
 import { PenToolOverlay } from './PenToolOverlay';
 import './Canvas.css';
 

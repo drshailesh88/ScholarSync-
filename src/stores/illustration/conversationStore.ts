@@ -14,7 +14,7 @@ import type {
   Message,
   DiagramGeneration,
   MessageRole,
-} from '../types/index.js';
+} from '@/lib/illustration/types/index';
 
 // ============================================================================
 // Constants

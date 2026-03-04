@@ -10,7 +10,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { Canvas as FabricCanvas, Path as FabricPath, FabricObject } from 'fabric';
 import paper from 'paper';
-import { PenTool } from '../../lib/paper/PenTool';
+import { PenTool } from '@/lib/illustration/lib/paper/PenTool';
 
 // ============================================================================
 // Types
