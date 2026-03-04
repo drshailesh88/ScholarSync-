@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
-export type EditorMode = "editing" | "suggesting" | "viewing";
+// NOTE: Track Changes ("Suggesting" mode) is planned for post-beta.
+// Requires: @tiptap/extension-track-changes (Tiptap Pro, $200/mo)
+// or prosemirror-changeset (complex, custom implementation).
+// See: docs/quality-parity-audit.md for architecture decision.
+export type EditorMode = "editing" | "viewing";
 
 export interface OutlineItem {
   id: string;

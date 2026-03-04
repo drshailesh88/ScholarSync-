@@ -73,13 +73,13 @@ describe("useEditorStore", () => {
   describe("setMode", () => {
     it("changes mode correctly", () => {
       const store = useEditorStore.getState();
-      store.setMode("suggesting");
-      expect(useEditorStore.getState().mode).toBe("suggesting");
+      store.setMode("viewing");
+      expect(useEditorStore.getState().mode).toBe("viewing");
     });
 
     it("accepts all valid modes", () => {
       const store = useEditorStore.getState();
-      const modes: Array<"editing" | "suggesting" | "viewing"> = ["editing", "suggesting", "viewing"];
+      const modes: Array<"editing" | "viewing"> = ["editing", "viewing"];
       modes.forEach((mode) => {
         store.setMode(mode);
         expect(useEditorStore.getState().mode).toBe(mode);

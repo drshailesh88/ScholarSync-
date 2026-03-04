@@ -13,7 +13,6 @@ import {
   ChatCircle,
   Pencil,
   Eye,
-  ChatTeardropText,
   Question,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
@@ -32,11 +31,6 @@ const MODE_CONFIG: Record<
     label: "Editing",
     icon: Pencil,
     description: "Direct changes to document",
-  },
-  suggesting: {
-    label: "Suggesting",
-    icon: ChatTeardropText,
-    description: "Changes tracked as suggestions",
   },
   viewing: {
     label: "Viewing",
@@ -109,8 +103,6 @@ export function TopBar({ editor }: TopBarProps) {
               "flex items-center gap-1.5 px-2.5 py-1 rounded-md transition-colors",
               mode === "editing"
                 ? "text-ink hover:bg-surface-raised"
-                : mode === "suggesting"
-                ? "text-amber-600 bg-amber-50 dark:text-amber-400 dark:bg-amber-500/10"
                 : "text-ink-muted bg-surface-raised"
             )}
           >
