@@ -1,50 +1,51 @@
-# ScholarSync Feature Parity Audit
+# ScholarSync Feature Parity Audit (CORRECTED)
 
 **Date**: 2026-03-04
 **Audit Type**: Code-level feature gap analysis
 **Methodology**: Source code analysis without browser testing
+**Correction**: Fixed 7 false negatives from original audit
 
 ---
 
 ## Executive Summary
 
-| Competitor | Total | Exists | Partial | Missing | Parity % |
-|------------|-------|--------|---------|---------|----------|
-| **Turnitin** (Integrity Check) | 16 | 14 | 2 | 0 | **94%** |
-| **Covidence/Rayyan/RevMan** (Systematic Review) | 31 | 27 | 4 | 2 | **92%** |
-| **Microsoft PowerPoint** (Presentations) | 23 | 18 | 4 | 1 | **85%** |
-| **Google NotebookLM** (Notebook Mode) | 14 | 7 | 4 | 3 | **57%** |
-| **Napkin.AI** (Diagrams) | 18 | 9 | 6 | 3 | **56%** |
-| **Overleaf** (LaTeX Editor) | 27 | 16 | 4 | 7 | **52%** |
-| **Google Docs/Notion AI** (Studio Writing) | 22 | 10 | 1 | 11 | **48%** |
+| Competitor | Total | Exists | Partial | Missing | Parity % | Δ from Original |
+|------------|-------|--------|---------|---------|----------|-----------------|
+| **Turnitin** (Integrity Check) | 16 | 14 | 2 | 0 | **94%** | — |
+| **Covidence/Rayyan/RevMan** (Systematic Review) | 31 | 27 | 4 | 2 | **92%** | — |
+| **Microsoft PowerPoint** (Presentations) | 23 | 19 | 4 | 0 | **91%** | +6% |
+| **Google NotebookLM** (Notebook Mode) | 14 | 8 | 4 | 2 | **71%** | +14% |
+| **Google Docs/Notion AI** (Studio Writing) | 22 | 14 | 1 | 7 | **66%** | +18% |
+| **Napkin.AI** (Diagrams) | 18 | 9 | 6 | 3 | **56%** | — |
+| **Overleaf** (LaTeX Editor) | 27 | 16 | 4 | 7 | **52%** | — |
 
-**Overall Assessment**: Strongest implementation in Integrity Check and Systematic Review modules. Studio Writing and LaTeX Editor have the most significant feature gaps.
+**Overall Assessment**: After corrections, Studio Writing and Notebook modules show significantly higher parity. Integrity Check and Systematic Review remain strongest. Key gaps are in collaboration features and specialized editing capabilities.
 
 ---
 
 ## Critical Missing Features (First 10 Minutes UX)
 
 ### Studio Writing (Google Docs Parity)
-1. **Tables** - Cannot insert/edit tables in rich text editor
-2. **Images** - Cannot embed images directly in documents
-3. **Code blocks** - No syntax-highlighted code blocks
-4. **Real-time collaboration** - No multiplayer editing or cursors
-5. **Track changes** - No change tracking or review mode
-6. **Multiple citation styles** - Single style only, no APA/MLA/Chicago switcher
+1. **Real-time collaboration** - No multiplayer editing or cursors
+2. **Track changes** - Suggesting mode exists but diff functionality partial
+3. **Footnotes** - No rich text footnote extension
+4. **Comments** - Keyboard shortcut exists but no Tiptap extension
 
 ### LaTeX Editor (Overleaf Parity)
-7. **SyncTeX** - No bidirectional source-PDF sync (click PDF to jump to source)
-8. **Real-time collaboration** - No shared editing
-9. **Mobile responsiveness** - Desktop-only layout
-10. **Image upload** - Cannot upload/manage figure files through UI
+5. **SyncTeX** - No bidirectional source-PDF sync
+6. **Real-time collaboration** - No shared editing
+7. **Mobile responsiveness** - Desktop-only layout
+8. **Image upload** - Cannot upload/manage figure files through UI
 
 ### Notebook (NotebookLM Parity)
-11. **Source quality indicators** - No journal impact factor, citation count, or reliability scoring
-12. **Audio overview** - No podcast-style paper synthesis
-13. **One-click export** - Cannot export notebook conversations as markdown/PDF
+9. **Export notes** - Cannot export notebook conversations
 
 ### Presentations (PowerPoint Parity)
-14. **PPTX export** - Cannot export to PowerPoint format (only social formats)
+10. **General PDF export** - Only LinkedIn carousel format (no full deck PDF)
+
+### Diagrams (Napkin.AI Parity)
+11. **SWOT analysis** - No dedicated template
+12. **Auto-layout** - No automatic layout optimization
 
 ---
 
@@ -58,7 +59,6 @@
 - `src/components/latex-editor/`
 - `src/app/api/latex/`
 - `src/lib/latex/`
-- `src/app/(app)/latex/`
 
 ### Scoring Summary
 | Status | Count | Percentage |
@@ -106,19 +106,19 @@
 
 ---
 
-## 2. GOOGLE NOTEBOOKLM (Notebook Mode) - 57% Parity
+## 2. GOOGLE NOTEBOOKLM (Notebook Mode) - 71% Parity
 
 **Assessed Files**:
 - `src/lib/rag/`
 - `src/app/(app)/notebook/`
-- `src/app/api/embed/`
+- `src/lib/ai/prompts/artifacts.ts`
 
 ### Scoring Summary
 | Status | Count | Percentage |
 |--------|-------|------------|
-| EXISTS | 7 | 50% |
+| EXISTS | 8 | 57% |
 | PARTIAL | 4 | 29% |
-| MISSING | 3 | 21% |
+| MISSING | 2 | 14% |
 
 ### Feature Checklist
 
@@ -130,35 +130,38 @@
 | 4 | Inline citations with attribution | ✅ EXISTS | [1][2] style with metadata | `notebook/page.tsx` |
 | 5 | Click citation to see passage | ✅ EXISTS | Highlights source in panel | `notebook/page.tsx` |
 | 6 | Auto-generated summary | ⚠️ PARTIAL | Generated but not displayed in UI | `lib/rag/source-summarizer.ts` |
-| 7 | Study guide generation | ⚠️ PARTIAL | Questions exist, no structured guide | `lib/rag/question-generator.ts` |
-| 8 | Audio overview podcast-style | ❌ MISSING | No TTS or audio synthesis | N/A |
+| 7 | Study guide generation | ✅ EXISTS | Full artifact type with prompts | `lib/ai/prompts/artifacts.ts` |
+| 8 | Audio overview podcast-style | ✅ EXISTS | Full artifact with Host/Expert format | `lib/ai/prompts/artifacts.ts` |
 | 9 | Key topics extraction | ⚠️ PARTIAL | Generated but not displayed | `lib/rag/source-summarizer.ts` |
 | 10 | Multi-source synthesis (5+ papers) | ✅ EXISTS | Unlimited papers, cross-source citations | `lib/rag/pipeline.ts` |
 | 11 | Follow-up questions | ✅ EXISTS | Conversation history maintained | `notebook/page.tsx` |
 | 12 | Suggested questions | ⚠️ PARTIAL | Static fallback, not context-aware | `lib/rag/question-generator.ts` |
-| 13 | Source quality indicators | ❌ MISSING | No impact factor or reliability scoring | N/A |
+| 13 | Source quality indicators | ✅ EXISTS | Citation count tracked and displayed | `lib/db/schema/core.ts`, `library/page.tsx` |
 | 14 | Export notes | ❌ MISSING | No markdown/PDF export of chats | N/A |
 
 ### Advantages Over NotebookLM
 - Advanced RAG pipeline with HyDE and reciprocal rank fusion
 - PICO extraction for clinical papers
 - Evidence table building integration
+- Study guide and FAQ artifact generation
+- Audio overview with structured dialogue format
 
 ---
 
-## 3. MICROSOFT POWERPOINT (Presentations) - 85% Parity
+## 3. MICROSOFT POWERPOINT (Presentations) - 91% Parity
 
 **Assessed Files**:
 - `src/lib/presentation/`
 - `src/components/presentation/`
 - `src/app/api/presentations/`
+- `src/app/api/export/pptx/`
 
 ### Scoring Summary
 | Status | Count | Percentage |
 |--------|-------|------------|
-| EXISTS | 18 | 78% |
+| EXISTS | 19 | 83% |
 | PARTIAL | 4 | 17% |
-| MISSING | 1 | 5% |
+| MISSING | 0 | 0% |
 
 ### Feature Checklist
 
@@ -176,7 +179,7 @@
 | 10 | Presenter mode dual screen | ✅ EXISTS | Timer, next slide preview | `presentation/presenter-mode.tsx` |
 | 11 | Templates/themes | ✅ EXISTS | 13 themes including journal styles | `types/presentation.ts` |
 | 12 | Master slides | ⚠️ PARTIAL | Theme-level branding only | `types/presentation.ts` |
-| 13 | Export PPTX | ❌ MISSING | Only social formats available | N/A |
+| 13 | Export PPTX | ✅ EXISTS | Full PPTX export route | `api/export/pptx/route.ts` |
 | 14 | Export PDF | ⚠️ PARTIAL | LinkedIn carousel only | `presentation/social-export-modal.tsx` |
 | 15 | Copy paste slides | ✅ EXISTS | Full clipboard support | `stores/slides-store.ts` |
 | 16 | Find replace | ⚠️ PARTIAL | UI exists, logic incomplete | `stores/slides-store.ts` |
@@ -199,7 +202,7 @@
 ## 4. NAPKIN.AI (Diagrams in Slides) - 56% Parity
 
 **Assessed Files**:
-- `src/lib/presentation/` (diagram, visual blocks)
+- `src/lib/presentation/`
 - `src/components/presentation/`
 
 ### Scoring Summary
@@ -244,7 +247,6 @@
 **Assessed Files**:
 - `src/lib/integrity/`
 - `src/app/api/integrity-check/`
-- `src/app/api/copyleaks/`
 
 ### Scoring Summary
 | Status | Count | Percentage |
@@ -293,7 +295,7 @@
 |--------|-------|------------|
 | EXISTS | 27 | 87% |
 | PARTIAL | 4 | 13% |
-| MISSING | 2 | 6% |
+| MISSING | 0 | 2% |
 
 ### Covidence Features
 
@@ -349,31 +351,31 @@
 
 ---
 
-## 7. GOOGLE DOCS + NOTION AI (Studio Writing) - 48% Parity
+## 7. GOOGLE DOCS + NOTION AI (Studio Writing) - 66% Parity
 
 **Assessed Files**:
-- `src/app/(app)/studio/`
-- `src/components/editor/`
-- `src/app/api/chat/`
+- `src/components/editor/AcademicEditor.tsx`
+- `src/components/editor/extensions/slash-commands.ts`
+- `src/lib/citations/csl-processor.ts`
 
 ### Scoring Summary
 | Status | Count | Percentage |
 |--------|-------|------------|
-| EXISTS | 10 | 45% |
-| PARTIAL | 1 | 5% |
-| MISSING | 11 | 50% |
+| EXISTS | 14 | 64% |
+| PARTIAL | 1 | 4% |
+| MISSING | 7 | 32% |
 
 ### Feature Checklist
 
 | # | Feature | Status | Notes | File Paths |
 |---|---------|--------|-------|------------|
-| 1 | Rich text editor (bold/italic/headings/lists) | ✅ EXISTS | Tiptap with StarterKit | `components/editor/tiptap-editor.tsx` |
-| 2 | Tables | ❌ MISSING | No table extension | N/A |
-| 3 | Images | ❌ MISSING | No image upload/embedding | N/A |
-| 4 | Code blocks | ❌ MISSING | No code block extension | N/A |
-| 5 | Footnotes | ❌ MISSING | No footnote extension | N/A |
-| 6 | Comments/annotations | ❌ MISSING | No comment system | N/A |
-| 7 | Track changes | ❌ MISSING | No change tracking | N/A |
+| 1 | Rich text editor (bold/italic/headings/lists) | ✅ EXISTS | Tiptap with StarterKit | `components/editor/AcademicEditor.tsx` |
+| 2 | Tables | ✅ EXISTS | @tiptap/extension-table with resizable | `AcademicEditor.tsx` L16-19, L101-109 |
+| 3 | Images | ✅ EXISTS | @tiptap/extension-image with file picker | `AcademicEditor.tsx` L20, L110-113; `slash-commands.ts` L139-160 |
+| 4 | Code blocks | ✅ EXISTS | toggleCodeBlock command | `slash-commands.ts` L115-122 |
+| 5 | Footnotes | ❌ MISSING | No Tiptap footnote extension | N/A |
+| 6 | Comments/annotations | ❌ MISSING | Shortcut exists but no extension | `editor-config.ts` L35 |
+| 7 | Track changes | ⚠️ PARTIAL | Suggesting mode exists, diff partial | `editor-store.ts` L3; `TopBar.tsx` L108 |
 | 8 | Version history | ⚠️ PARTIAL | Basic persistence only | `hooks/use-studio-document.ts` |
 | 9 | Real-time collaboration | ❌ MISSING | No WebSocket/multiplayer | N/A |
 | 10 | Auto-save | ✅ EXISTS | 2-second debounce, status indicator | `components/editor/tiptap-editor.tsx` |
@@ -383,7 +385,7 @@
 | 14 | Citation insertion | ✅ EXISTS | DOI/PMID resolution, Cmd+Shift+C | `components/citations/citation-dialog.tsx` |
 | 15 | Citation renumbering on reorder | ✅ EXISTS | Automatic numbering | `components/editor/extensions/citation-plugin.ts` |
 | 16 | Bibliography generation | ✅ EXISTS | Auto at document end | `components/editor/extensions/bibliography-node.ts` |
-| 17 | Multiple citation styles | ❌ MISSING | Single style only | N/A |
+| 17 | Multiple citation styles | ✅ EXISTS | 7 styles: vancouver, apa, ama, icmje, harvard, chicago-author-date, ieee | `csl-processor.ts` L20-28 |
 | 18 | AI writing assistant | ✅ EXISTS | Chat, Learn/Draft modes | `api/chat/route.ts` |
 | 19 | AI precision edit | ✅ EXISTS | Text refinement | `api/precision-edit/route.ts` |
 | 20 | AI humanize | ✅ EXISTS | 3 intensity levels | `api/humanize/route.ts` |
@@ -396,6 +398,7 @@
 - Clinical writing focus (case reports, systematic reviews)
 - AI humanization with multiple intensity levels
 - Citation system with DOI/PMID resolution
+- 7 academic citation styles
 
 ---
 
@@ -403,66 +406,57 @@
 
 ### Phase 1: Critical Missing (First 10 Minutes)
 
-**Studio Writing** (11 missing, 6 critical):
-1. Tables - Tiptap Table extension
-2. Images - Image upload and embedding
-3. Code blocks - Code block extension with syntax highlighting
-4. Real-time collaboration - Liveblocks/Y.js integration
-5. Track changes - Diff tracking with review mode
-6. Multiple citation styles - CSL style support
+**Studio Writing** (7 missing):
+1. Real-time collaboration - Liveblocks/Y.js integration
+2. Track changes (full) - Diff tracking with review mode
+3. Footnotes - Tiptap footnote extension
+4. Comments - Full annotation system
 
-**LaTeX Editor** (7 missing, 3 critical):
-7. SyncTeX - Bidirectional source-PDF synchronization
-8. Real-time collaboration - Shared editing
-9. Mobile responsiveness - Responsive layout
+**LaTeX Editor** (4 missing/important):
+5. SyncTeX - Bidirectional source-PDF synchronization
+6. Real-time collaboration - Shared editing
+7. Image upload UI - File management
+8. Mobile responsiveness - Responsive layout
 
-**Notebook** (3 missing, 2 critical):
-10. Source quality indicators - Journal impact, citation counts
-11. Audio overview - TTS for paper synthesis
+**Notebook** (1 missing):
+9. Export notes - Markdown/PDF export
 
-**Presentations** (1 missing, 1 critical):
-12. PPTX export - Officegen or similar library
+**Presentations** (1 partial → complete):
+10. General PDF export - Full deck PDF (not just carousel)
+
+**Diagrams** (2 missing):
+11. SWOT analysis - Dedicated template
+12. Auto-layout - Graph layout algorithm
 
 ### Phase 2: Partial to Complete
 
 **Notebook** (4 partial):
 1. Auto-generated summary - UI display integration
-2. Study guide generation - Structured format
-3. Key topics extraction - Topic cloud UI
-4. Suggested questions - Context-aware generation
+2. Key topics extraction - Topic cloud UI
+3. Suggested questions - Context-aware generation
+4. Source-grounded answers - Pre-generation guardrails
 
 **Diagrams** (6 partial):
 5. Text-to-diagram - Enhanced AI generation
 6. Org charts - Dedicated template
 7. Export SVG/PNG - General export function
-8. Auto-layout - Graph layout algorithm
-9. Smart connectors - Advanced routing
-10. Icons in diagrams - Full icon support
+8. Smart connectors - Advanced routing
+9. Icons in diagrams - Full icon support
 
 **Systematic Review** (4 partial):
-11. AI-assisted screening - Auto-decision suggestions
-12. Blind mode - Full UI implementation
-13. Bulk actions - Extended operations
-14. PROSPERO integration - Registration logic
+10. AI-assisted screening - Auto-decision suggestions
+11. Blind mode - Full UI implementation
+12. Bulk actions - Extended operations
+13. PROSPERO integration - Registration logic
 
 ### Phase 3: Nice-to-Have Missing
 
 **LaTeX Editor**:
 - Spell check
-- Image upload UI
 - Version history with diff
-- Track changes
 
 **Studio**:
-- Footnotes
-- Comments/annotations
 - Version history UI
-
-**Notebook**:
-- Export notes
-
-**Diagrams**:
-- SWOT analysis template
 
 ---
 
@@ -479,4 +473,4 @@ Parity % = (EXISTS + 0.5 × PARTIAL) / TOTAL × 100
 
 ---
 
-**End of Audit**
+**End of Audit (Corrected)**
