@@ -1,11 +1,9 @@
 import type { NextConfig } from "next";
 
-// CSP headers → src/middleware.ts (works with both Next.js and Vinext)
-// Sentry source maps → @sentry/vite-plugin in vite.config.ts
-// Server-side Sentry → @sentry/cloudflare in worker/index.ts
-// output: "standalone" removed (not needed for Workers, Next.js fallback still works)
-
 const nextConfig: NextConfig = {
+  // Required for OpenNext/Cloudflare Workers deployment
+  output: "standalone",
+
   images: {
     remotePatterns: [
       {
@@ -14,11 +12,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
   experimental: {
     serverActions: {
       bodySizeLimit: "5mb",
     },
   },
+
+  // Sentry integration via @sentry/nextjs withSentryConfig wrapper
+  // (added below if SENTRY_AUTH_TOKEN is set)
 };
 
 export default nextConfig;

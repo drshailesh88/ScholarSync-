@@ -28,8 +28,8 @@ declare module '@citation-js/core' {
     style?: string;
   }
 
-  export interface Cite {
-    constructor(data: CSLData | CSLData[] | string);
+  export class Cite {
+    constructor(data: CSLData | CSLData[] | string, options?: { forceType?: string });
     static async(data: CSLData | CSLData[] | string): Promise<Cite>;
     format(type: string, options?: CiteOptions): string;
     get(options: CiteGetOptions): unknown;

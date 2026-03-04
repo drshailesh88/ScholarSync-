@@ -1,25 +1,31 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
   "name": "scholarsync",
-  "compatibility_date": "2025-01-01",
+  "compatibility_date": "2026-03-04",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true
   },
+
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+
+  // Self-reference for internal fetch routing
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "scholarsync"
+    }
+  ],
 
   // R2 bucket — accessed as env.STORAGE in src/lib/storage/r2.ts
   "r2_buckets": [
     {
       "binding": "STORAGE",
       "bucket_name": "scholarsync-files"
-    }
-  ],
-
-  // KV namespace — used by worker/index.ts for Vinext cache
-  "kv_namespaces": [
-    {
-      "binding": "VINEXT_CACHE",
-      "id": "<PASTE_ID: npx wrangler kv namespace create VINEXT_CACHE>"
     }
   ],
 
@@ -32,7 +38,7 @@
     }
   ],
 
-  // Public env vars — bundled into client JS, MUST be vars (not secrets)
+  // Public env vars
   "vars": {
     "NODE_ENV": "production",
     "NEXT_PUBLIC_APP_URL": "https://scholarsync.com",
