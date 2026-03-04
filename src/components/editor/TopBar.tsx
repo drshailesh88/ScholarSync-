@@ -14,9 +14,11 @@ import {
   Pencil,
   Eye,
   ChatTeardropText,
+  Question,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useEditorStore, type EditorMode } from "@/stores/editor-store";
+import { KeyboardShortcutsDialog } from "./KeyboardShortcutsDialog";
 
 interface TopBarProps {
   editor: Editor;
@@ -57,6 +59,7 @@ export function TopBar({ editor }: TopBarProps) {
 
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showWordCountDetail, setShowWordCountDetail] = useState(false);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
 
   const handleModeChange = useCallback(
     (newMode: EditorMode) => {
@@ -74,7 +77,8 @@ export function TopBar({ editor }: TopBarProps) {
   const ModeIcon = MODE_CONFIG[mode].icon;
 
   return (
-    <div className="h-9 flex items-center justify-between px-3 bg-surface-raised/50 border-b border-border text-xs select-none shrink-0">
+    <>
+      <div className="h-9 flex items-center justify-between px-3 bg-surface-raised/50 border-b border-border text-xs select-none shrink-0">
       {/* Left: Undo/Redo */}
       <div className="flex items-center gap-0.5">
         <button
@@ -195,8 +199,24 @@ export function TopBar({ editor }: TopBarProps) {
           <ChatCircle size={13} />
           <span>{commentCount}</span>
         </button>
+
+        {/* Keyboard shortcuts help */}
+        <button
+          onClick={() => setShowKeyboardShortcuts(true)}
+          className="p-1.5 rounded-md text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          title="Keyboard shortcuts (Cmd+/)"
+        >
+          <Question size={14} />
+        </button>
       </div>
     </div>
+
+    {/* Keyboard shortcuts dialog */}
+    <KeyboardShortcutsDialog
+      isOpen={showKeyboardShortcuts}
+      onClose={() => setShowKeyboardShortcuts(false)}
+    />
+    </>
   );
 }
 

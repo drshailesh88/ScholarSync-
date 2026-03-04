@@ -27,6 +27,7 @@ import { TaskItem } from "@tiptap/extension-task-item";
 import { SlashCommandsExtension } from "./extensions/slash-commands";
 import { OutlinePlugin } from "./extensions/outline-plugin";
 import { Footnote } from "./extensions/footnote-node";
+import { AcademicKeyboardShortcuts } from "./extensions/keyboard-shortcuts";
 import { createSlashMenuRenderer } from "./SlashMenu";
 import { SelectionToolbar } from "./SelectionToolbar";
 import { TopBar } from "./TopBar";
@@ -153,6 +154,7 @@ export function AcademicEditor({
         debounceMs: 500,
       }),
       Footnote,
+      AcademicKeyboardShortcuts,
     ],
     content: content || undefined,
     editable: !readOnly && mode !== "viewing",
