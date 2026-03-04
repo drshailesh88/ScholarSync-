@@ -5,7 +5,7 @@
  * @module pages/EditorMode/RightPanel
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { loadSVGFromString, util, FabricObject } from 'fabric';
 import { LayersPanel } from '@/components/illustration/LayersPanel';
 import PropertiesPanel from '@/components/illustration/PropertiesPanel';
@@ -209,9 +209,18 @@ export function RightPanel({
   const setHandDrawnSettings = externalOnChange ?? setLocalSettings;
 
   // Get selection state from store
-  const selectedObjects = useEditorStore((state) => state.selectedObjects);
+  const selectedObjectIds = useEditorStore((state) => state.selectedObjects);
   const canvas = useEditorStore((state) => state.canvas);
-  const hasSelection = selectedObjects.length > 0;
+  const hasSelection = selectedObjectIds.length > 0;
+
+  // Resolve object IDs to actual FabricObjects for PropertiesPanel
+  const selectedObjects = useMemo(() => {
+    if (!canvas || selectedObjectIds.length === 0) return [];
+    const allObjects = canvas.getObjects();
+    return selectedObjectIds
+      .map((id) => allObjects.find((obj: FabricObject) => obj.get('id') === id))
+      .filter((obj): obj is FabricObject => obj !== undefined);
+  }, [canvas, selectedObjectIds]);
 
   // Handle applying hand-drawn style to selection
   const handleApplyToSelection = useCallback(async () => {
@@ -261,7 +270,6 @@ export function RightPanel({
         left: (canvasWidth - targetSize) / 2,
         top: (canvasHeight - targetSize) / 2,
         // Add metadata for identification
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         name: icon.name,
       });
 
@@ -284,7 +292,7 @@ export function RightPanel({
       case 'layers':
         return <LayersPanel />;
       case 'properties':
-        return <PropertiesPanel />;
+        return <PropertiesPanel selectedObjects={selectedObjects} />;
       case 'icons':
         return <IconPicker onSelectIcon={handleIconSelect} />;
       case 'style':
