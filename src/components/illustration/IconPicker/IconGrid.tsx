@@ -248,8 +248,6 @@ export const IconGrid: React.FC<IconGridProps> = ({
   emptyAction,
   error,
   isLoading = false,
-  emptyMessage = 'No icons found',
-  isLoading = false,
   maxVisibleItems = 200,
   className = '',
 }) => {

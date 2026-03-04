@@ -14,6 +14,7 @@ import {
   toggleFavorite,
   getCollectionsContainingIcon,
   addToCollection,
+  getCollections,
   type IconCollection,
 } from '@/lib/illustration/lib/icons/iconStorage';
 

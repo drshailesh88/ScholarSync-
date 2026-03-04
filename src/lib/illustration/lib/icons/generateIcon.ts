@@ -7,7 +7,6 @@
 
 import { config } from '@/lib/illustration/config/env';
 import { AIServiceError } from '@/lib/illustration/ai/types';
-import { vectorizeImage } from '@/lib/illustration/ai/vectorize';
 
 // =============================================================================
 // TYPES
@@ -150,7 +149,7 @@ async function generateIconWithLLM(
   if (!apiKey) {
     throw new AIServiceError(
       'Claude API key not configured',
-      'MISSING_API_KEY'
+      'GENERATION_FAILED'
     );
   }
 
@@ -180,7 +179,7 @@ async function generateIconWithLLM(
       const errorText = await response.text();
       throw new AIServiceError(
         `Claude API error: ${response.status} ${errorText}`,
-        'API_ERROR'
+        'GENERATION_FAILED'
       );
     }
 
@@ -205,7 +204,7 @@ async function generateIconWithLLM(
     if (!isValidSVG(svg)) {
       throw new AIServiceError(
         'LLM generated invalid SVG',
-        'INVALID_OUTPUT'
+        'VALIDATION_FAILED'
       );
     }
 
@@ -233,7 +232,7 @@ async function generateIconWithImageFallback(
   if (!apiKey) {
     throw new AIServiceError(
       'API key not configured for image fallback',
-      'MISSING_API_KEY'
+      'GENERATION_FAILED'
     );
   }
 
@@ -263,7 +262,7 @@ async function generateIconWithImageFallback(
   } catch (error) {
     throw new AIServiceError(
       `Image fallback failed: ${error}`,
-      'FALLBACK_FAILED'
+      'GENERATION_FAILED'
     );
   }
 }
@@ -289,7 +288,7 @@ export async function generateIconFromQuery(
   const trimmedQuery = query.trim();
 
   if (!trimmedQuery) {
-    throw new AIServiceError('Query cannot be empty', 'INVALID_INPUT');
+    throw new AIServiceError('Query cannot be empty', 'GENERATION_FAILED');
   }
 
   // Check cache

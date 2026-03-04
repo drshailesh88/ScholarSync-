@@ -77,11 +77,20 @@ export const ICON_SYNONYMS: Record<string, string[]> = {
  * searching for A returns A, B, and C.
  */
 export function expandWithSynonyms(query: string): string[] {
-  const words = query.toLowerCase().split(/\s+/);
+  const trimmed = query.trim();
+
+  // Handle empty/whitespace-only queries
+  if (!trimmed) {
+    return [];
+  }
+
+  const words = trimmed.toLowerCase().split(/\s+/);
   const expanded = new Set<string>(words);
 
   // First pass: direct matches
   for (const word of words) {
+    // Skip empty strings
+    if (!word) continue;
     // Check if this word IS a key
     if (ICON_SYNONYMS[word]) {
       ICON_SYNONYMS[word].forEach(syn => expanded.add(syn.toLowerCase()));
