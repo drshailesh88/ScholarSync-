@@ -243,3 +243,143 @@ export async function deleteRecording(storagePath: string): Promise<void> {
     // Ignore deletion errors
   }
 }
+
+// ---------------------------------------------------------------------------
+// LaTeX Image helpers (for figure uploads in LaTeX editor)
+// ---------------------------------------------------------------------------
+
+const LOCAL_LATEX_IMAGE_DIR = path.join(process.cwd(), ".data", "latex-images");
+
+/** Supported image types for LaTeX figures */
+export const LATEX_IMAGE_TYPES = ["image/png", "image/jpeg", "image/jpg", "application/pdf"] as const;
+export type LatexImageType = typeof LATEX_IMAGE_TYPES[number];
+
+/** Metadata for a LaTeX image */
+export interface LatexImage {
+  id: string;
+  projectId: string;
+  filename: string;
+  contentType: LatexImageType;
+  sizeBytes: number;
+  storageKey: string;
+  createdAt: Date;
+}
+
+/**
+ * Upload an image for a LaTeX project.
+ * @returns The storage key and image metadata
+ */
+export async function uploadLatexImage(
+  projectId: string,
+  filename: string,
+  buffer: Buffer,
+  contentType: LatexImageType,
+): Promise<{ storageKey: string; id: string }> {
+  const id = crypto.randomUUID();
+  const sanitizedFilename = filename.replace(/[^a-zA-Z0-9._-]/g, "_");
+  const storageKey = `latex-images/${projectId}/${id}/${sanitizedFilename}`;
+
+  if (!isWorkers()) {
+    const dir = path.join(LOCAL_LATEX_IMAGE_DIR, projectId, id);
+    if (!existsSync(dir)) await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, sanitizedFilename), buffer);
+    return { storageKey, id };
+  }
+
+  await getBucket().put(storageKey, buffer, {
+    httpMetadata: {
+      contentType,
+      cacheControl: "private, max-age=3600",
+    },
+  });
+  return { storageKey, id };
+}
+
+/**
+ * Download a LaTeX image from R2 as a Buffer.
+ */
+export async function downloadLatexImage(storageKey: string): Promise<Buffer | null> {
+  if (!isWorkers()) {
+    const filePath = path.join(LOCAL_LATEX_IMAGE_DIR, storageKey.replace("latex-images/", ""));
+    if (!existsSync(filePath)) return null;
+    try {
+      return await readFile(filePath);
+    } catch {
+      return null;
+    }
+  }
+
+  try {
+    const obj = await getBucket().get(storageKey);
+    if (!obj) return null;
+    const ab = await obj.arrayBuffer();
+    return Buffer.from(ab);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Delete a LaTeX image from R2.
+ */
+export async function deleteLatexImage(storageKey: string): Promise<void> {
+  if (!isWorkers()) {
+    const filePath = path.join(LOCAL_LATEX_IMAGE_DIR, storageKey.replace("latex-images/", ""));
+    try {
+      // Delete the parent directory (id folder) to clean up fully
+      const idDir = path.dirname(filePath);
+      await unlink(filePath);
+      // Try to remove empty directory
+      try {
+        await unlink(idDir);
+      } catch {
+        // Ignore if not empty
+      }
+    } catch {
+      // Ignore
+    }
+    return;
+  }
+
+  try {
+    await getBucket().delete(storageKey);
+  } catch {
+    // Ignore deletion errors
+  }
+}
+
+/**
+ * List all images for a LaTeX project.
+ * Returns array of storage keys.
+ */
+export async function listLatexImages(projectId: string): Promise<string[]> {
+  if (!isWorkers()) {
+    const projectDir = path.join(LOCAL_LATEX_IMAGE_DIR, projectId);
+    if (!existsSync(projectDir)) return [];
+
+    const { readdir, stat } = await import("node:fs/promises");
+    const images: string[] = [];
+
+    try {
+      const idDirs = await readdir(projectDir);
+      for (const idDir of idDirs) {
+        const idPath = path.join(projectDir, idDir);
+        const idStat = await stat(idPath);
+        if (idStat.isDirectory()) {
+          const files = await readdir(idPath);
+          for (const file of files) {
+            images.push(`latex-images/${projectId}/${idDir}/${file}`);
+          }
+        }
+      }
+    } catch {
+      // Ignore errors
+    }
+    return images;
+  }
+
+  // R2 doesn't have a native list operation in the basic binding
+  // This would require the S3-compatible API with credentials
+  // For now, return empty - images will be tracked in DB instead
+  return [];
+}

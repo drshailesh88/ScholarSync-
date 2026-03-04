@@ -10,12 +10,15 @@ import { VisualEditor } from "./visual-editor";
 import { PreviewPanel } from "./preview-panel";
 import { AgentPanel } from "./agent-panel";
 import { FileTree } from "./file-tree";
+import { ImageBrowser } from "./image-browser";
 import { ErrorGutterPanel, type CompilationDiagnostic } from "./error-gutter";
 import { InlineAiBar } from "./inline-ai-bar";
 import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
 import {
   SidebarSimple,
   ChatCircle,
+  FolderOpen,
+  Image as ImageIcon,
 } from "@phosphor-icons/react";
 
 type LatexProject = {
@@ -69,6 +72,9 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
   // Editor scroll position for preview sync
   const [editorTopLine, setEditorTopLine] = useState(1);
+
+  // Sidebar tab state (files vs figures)
+  const [sidebarTab, setSidebarTab] = useState<"files" | "figures">("files");
 
   // Error diagnostics from compilation
   const [diagnostics, setDiagnostics] = useState<CompilationDiagnostic[]>([]);
@@ -507,22 +513,57 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
         {/* File Tree Panel (collapsible) */}
         {fileTreeOpen && (
-          <aside className="w-56 shrink-0 border-r border-border-subtle bg-surface/50 overflow-hidden">
-            <FileTree
-              projectId={project.id}
-              files={files}
-              onFilesChange={setFiles}
-              onJumpToLine={handleJumpToLine}
-              onFileSelect={(file) => editorRef.current?.setContent(file.content ?? "")}
-              onDraftSection={(title) => {
-                useLatexEditorStore.getState().setAgentPanelOpen(true);
-                useLatexEditorStore.getState().setAgentTab("draft");
-                // Dispatch event for the Draft tab to pick up the section prompt
-                window.dispatchEvent(
-                  new CustomEvent("latex:draft-section", { detail: { sectionTitle: title } })
-                );
-              }}
-            />
+          <aside className="w-56 shrink-0 border-r border-border-subtle bg-surface/50 overflow-hidden flex flex-col">
+            {/* Tab bar for Files / Figures */}
+            <div className="flex border-b border-border-subtle">
+              <button
+                onClick={() => setSidebarTab("files")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-[10px] font-medium transition-colors",
+                  sidebarTab === "files"
+                    ? "text-brand border-b-2 border-brand -mb-px"
+                    : "text-ink-muted hover:text-ink"
+                )}
+              >
+                <FolderOpen size={12} />
+                Files
+              </button>
+              <button
+                onClick={() => setSidebarTab("figures")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-[10px] font-medium transition-colors",
+                  sidebarTab === "figures"
+                    ? "text-brand border-b-2 border-brand -mb-px"
+                    : "text-ink-muted hover:text-ink"
+                )}
+              >
+                <ImageIcon size={12} />
+                Figures
+              </button>
+            </div>
+
+            {/* Tab content */}
+            {sidebarTab === "files" ? (
+              <FileTree
+                projectId={project.id}
+                files={files}
+                onFilesChange={setFiles}
+                onJumpToLine={handleJumpToLine}
+                onFileSelect={(file) => editorRef.current?.setContent(file.content ?? "")}
+                onDraftSection={(title) => {
+                  useLatexEditorStore.getState().setAgentPanelOpen(true);
+                  useLatexEditorStore.getState().setAgentTab("draft");
+                  window.dispatchEvent(
+                    new CustomEvent("latex:draft-section", { detail: { sectionTitle: title } })
+                  );
+                }}
+              />
+            ) : (
+              <ImageBrowser
+                projectId={project.id}
+                onInsertImage={(latexCode) => editorRef.current?.insertAtCursor(latexCode)}
+              />
+            )}
           </aside>
         )}
 
