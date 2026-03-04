@@ -17,6 +17,8 @@ import { Canvas as FabricCanvas, FabricObject, Rect, Ellipse, Line, IText, Trian
 import { useEditorStore, useActiveTool, useViewport, useGridState } from '@/stores/illustration/editorStore';
 import { ToolType } from '@/lib/illustration/types';
 import { PenToolOverlay } from './PenToolOverlay';
+import { ConnectorManager, ensureObjectId } from '@/lib/illustration/canvas/ConnectorManager';
+import { DEFAULT_CONNECTOR_STYLE } from '@/lib/illustration/canvas/SmartConnector';
 // Note: Canvas.css was removed - using inline styles instead
 
 // ============================================================================
@@ -59,6 +61,8 @@ export interface CanvasRef {
   addObject: (object: FabricObject) => void;
   /** Remove object from canvas */
   removeObject: (object: FabricObject) => void;
+  /** Get the connector manager instance */
+  getConnectorManager: () => ConnectorManager | null;
 }
 
 // ============================================================================
@@ -70,6 +74,7 @@ interface DrawingState {
   startX: number;
   startY: number;
   tempObject: FabricObject | null;
+  connectorSource: string | null;
 }
 
 // ============================================================================
@@ -94,11 +99,13 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const fabricRef = useRef<FabricCanvas | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const connectorManagerRef = useRef<ConnectorManager | null>(null);
     const drawingStateRef = useRef<DrawingState>({
       isDrawing: false,
       startX: 0,
       startY: 0,
       tempObject: null,
+      connectorSource: null,
     });
 
     // Pen tool state
@@ -133,6 +140,10 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       fabricRef.current = canvas;
       setCanvas(canvas);
 
+      // Initialize ConnectorManager
+      connectorManagerRef.current = new ConnectorManager(canvas);
+      connectorManagerRef.current.startListening();
+
       // Save initial state
       pushHistory(JSON.stringify(canvas.toJSON()));
 
@@ -143,6 +154,8 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       // Cleanup
       return () => {
+        connectorManagerRef.current?.stopListening();
+        connectorManagerRef.current = null;
         canvas.dispose();
         fabricRef.current = null;
         setCanvas(null);
@@ -314,6 +327,36 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           return;
         }
 
+        // Handle connector tool
+        if (activeTool === ToolType.CONNECTOR) {
+          // Find the object under the cursor
+          const target = canvas.findTarget(e.e);
+          if (target && target.get('data-type') !== 'connector') {
+            const sourceId = ensureObjectId(target);
+            // Store source object ID in drawing state
+            state.isDrawing = true;
+            state.connectorSource = sourceId;
+
+            // Get source object center point
+            const sourceCenter = target.getCenterPoint();
+
+            // Show a visual indicator line from source center to cursor
+            state.tempObject = new Line(
+              [sourceCenter.x, sourceCenter.y, sourceCenter.x, sourceCenter.y],
+              {
+                stroke: '#6366f1',
+                strokeWidth: 2,
+                strokeDashArray: [6, 4],
+                selectable: false,
+                evented: false,
+              }
+            );
+            canvas.add(state.tempObject);
+            canvas.renderAll();
+          }
+          return;
+        }
+
         // Handle shape drawing
         if (
           activeTool === ToolType.RECTANGLE ||
@@ -373,6 +416,16 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
         if (!state.isDrawing) return;
 
+        // Handle connector tool - update temp line
+        if (activeTool === ToolType.CONNECTOR && state.connectorSource && state.tempObject) {
+          (state.tempObject as Line).set({
+            x2: pointer.x,
+            y2: pointer.y,
+          });
+          canvas.renderAll();
+          return;
+        }
+
         // Handle hand tool panning
         if (activeTool === ToolType.HAND) {
           const vpt = canvas.viewportTransform;
@@ -420,7 +473,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       [activeTool]
     );
 
-    const handleMouseUp = useCallback(() => {
+    const handleMouseUp = useCallback((e?: { e: MouseEvent | TouchEvent }) => {
       const canvas = fabricRef.current;
       if (!canvas) return;
 
@@ -430,6 +483,58 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       if (activeTool === ToolType.HAND) {
         state.isDrawing = false;
         canvas.defaultCursor = 'grab';
+        return;
+      }
+
+      // Finalize connector drawing
+      if (activeTool === ToolType.CONNECTOR && state.isDrawing && state.connectorSource) {
+        // Remove temp line
+        if (state.tempObject) {
+          canvas.remove(state.tempObject);
+        }
+
+        // Find target objects under cursor (excluding connectors and temp objects)
+        // Calculate pointer position from viewport transform
+        const vpt = canvas.viewportTransform;
+        const mouseEvent = e?.e as MouseEvent | undefined;
+        const pointer = {
+          x: (vpt?.[4] || 0) + (mouseEvent?.clientX ?? 0),
+          y: (vpt?.[5] || 0) + (mouseEvent?.clientY ?? 0),
+        };
+        const targets = canvas.getObjects().filter((obj: FabricObject) => {
+          if (obj.get('data-type') === 'connector' || obj === state.tempObject) {
+            return false;
+          }
+          // Check if pointer is within object bounds
+          const bound = obj.getBoundingRect();
+          return (
+            pointer.x >= bound.left &&
+            pointer.x <= bound.left + bound.width &&
+            pointer.y >= bound.top &&
+            pointer.y <= bound.top + bound.height
+          );
+        });
+
+        // Use the topmost target
+        const target = targets[targets.length - 1];
+
+        if (target) {
+          const targetId = ensureObjectId(target);
+
+          // Don't connect to self
+          if (targetId !== state.connectorSource) {
+            connectorManagerRef.current?.addConnector(
+              state.connectorSource,
+              targetId,
+              DEFAULT_CONNECTOR_STYLE
+            );
+          }
+        }
+
+        state.isDrawing = false;
+        state.connectorSource = null;
+        state.tempObject = null;
+        canvas.renderAll();
         return;
       }
 
@@ -644,6 +749,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
             canvas.renderAll();
           }
         },
+        getConnectorManager: () => connectorManagerRef.current,
       }),
       [backgroundColor]
     );

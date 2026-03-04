@@ -18,7 +18,7 @@ import { Canvas as FabricCanvas } from 'fabric';
 // Types
 // ============================================================================
 
-export type IllustratorTool = 'select' | 'pen' | 'brush' | 'rectangle' | 'ellipse' | 'line' | 'text';
+export type IllustratorTool = 'select' | 'pen' | 'brush' | 'rectangle' | 'ellipse' | 'line' | 'connector' | 'text';
 
 export interface IllustratorToolbarProps {
   canvas: FabricCanvas | null;
@@ -182,6 +182,14 @@ const TextIcon = () => (
   </svg>
 );
 
+const ConnectorIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="5" cy="5" r="2.5" fill="currentColor" />
+    <circle cx="19" cy="19" r="2.5" fill="currentColor" />
+    <path d="M7.5 5 L12 5 L12 19 L16.5 19" />
+  </svg>
+);
+
 const SketchyIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 17c3.333-3.333 6.667-5 10-5 2 0 4 .5 6 1.5" />
@@ -239,6 +247,7 @@ const toolConfig: Array<{
   { tool: 'rectangle', icon: <RectangleIcon />, label: 'Rectangle', shortcut: 'R', group: 'shapes' },
   { tool: 'ellipse', icon: <EllipseIcon />, label: 'Ellipse', shortcut: 'E', group: 'shapes' },
   { tool: 'line', icon: <LineIcon />, label: 'Line', shortcut: 'L', group: 'shapes' },
+  { tool: 'connector', icon: <ConnectorIcon />, label: 'Smart Connector', shortcut: 'C', group: 'shapes' },
   { tool: 'text', icon: <TextIcon />, label: 'Text', shortcut: 'T', group: 'text' },
 ];
 

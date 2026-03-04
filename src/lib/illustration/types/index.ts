@@ -37,6 +37,7 @@ export enum ToolType {
   BRACKET = 'bracket',
   CALLOUT = 'callout',
   DIMENSION = 'dimension',
+  CONNECTOR = 'connector',
 
   // Text tools
   TEXT = 'text',
