@@ -25,6 +25,19 @@ import {
   isAIGenerationAvailable,
   type GenerationResult,
 } from '@/lib/illustration/lib/icons/generateIcon';
+import {
+  addToFavorites,
+  removeFromFavorites,
+  toggleFavorite,
+  isFavorite,
+  getFavorites,
+  getRecents,
+  addToRecents,
+  createCollection,
+  addToCollection,
+  getCollections,
+  type IconCollection,
+} from '@/lib/illustration/lib/icons/iconStorage';
 import { createSimpleIconSvg } from '@/lib/illustration/lib/icons';
 
 // =============================================================================
@@ -53,12 +66,18 @@ export interface IconPickerProps {
 const RECENT_ICONS_KEY = 'finnish-recent-icons';
 const MAX_RECENT_ICONS = 20;
 
-const CATEGORIES = [
+const MAIN_CATEGORIES = [
   { id: 'all', name: 'All', color: '#6b7280' },
   { id: 'medical', name: 'Medical', color: '#ef4444' },
   { id: 'science', name: 'Science', color: '#22c55e' },
   { id: 'general', name: 'General', color: '#3b82f6' },
   { id: 'brands', name: 'Brands', color: '#f59e0b' },
+];
+
+const PERSONAL_CATEGORIES = [
+  { id: 'favorites', name: 'Favorites', color: '#ec4899' },
+  { id: 'recent', name: 'Recent', color: '#8b5cf6' },
+  { id: 'collections', name: 'Collections', color: '#06b6d4' },
 ];
 
 // =============================================================================
@@ -207,10 +226,15 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   const [recentIconIds, setRecentIconIds] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
+  const [collections, setCollections] = useState<IconCollection[]>([]);
+  const [selectedCollectionId, setSelectedCollectionId] = useState<string | null>(null);
+  const [favoriteIconIds, setFavoriteIconIds] = useState<string[]>([]);
 
-  // Load recent icons on mount
+  // Load personal data on mount
   useEffect(() => {
-    setRecentIconIds(getRecentIcons());
+    setRecentIconIds(getRecents());
+    setFavoriteIconIds(getFavorites());
+    setCollections(getCollections());
   }, []);
 
   // Get all icons
@@ -221,21 +245,46 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 
   // Filter and search icons
   const displayedIcons = useMemo(() => {
-    // Show recent icons
+    // Search mode overrides everything
+    if (searchQuery.trim()) {
+      return searchAllIcons(searchQuery);
+    }
+
+    // Personal categories
+    if (selectedCategory === 'favorites') {
+      return favoriteIconIds
+        .map((id) => allIcons.find((icon) => icon.id === id))
+        .filter((icon): icon is UnifiedIconResult => icon !== undefined);
+    }
+
+    if (selectedCategory === 'recent') {
+      return recentIconIds
+        .map((id) => allIcons.find((icon) => icon.id === id))
+        .filter((icon): icon is UnifiedIconResult => icon !== undefined);
+    }
+
+    if (selectedCategory === 'collections') {
+      if (selectedCollectionId) {
+        const collection = collections.find((c) => c.id === selectedCollectionId);
+        if (collection) {
+          return collection.iconIds
+            .map((id) => allIcons.find((icon) => icon.id === id))
+            .filter((icon): icon is UnifiedIconResult => icon !== undefined);
+        }
+      }
+      return [];
+    }
+
+    // Legacy recent flag (for backwards compatibility)
     if (showRecent) {
       return recentIconIds
         .map((id) => allIcons.find((icon) => icon.id === id))
         .filter((icon): icon is UnifiedIconResult => icon !== undefined);
     }
 
-    // Search mode
-    if (searchQuery.trim()) {
-      return searchAllIcons(searchQuery);
-    }
-
-    // Category filter
+    // Main category filter
     return filterIconsByCategory(allIcons, selectedCategory);
-  }, [allIcons, searchQuery, selectedCategory, showRecent, recentIconIds]);
+  }, [allIcons, searchQuery, selectedCategory, showRecent, recentIconIds, favoriteIconIds, collections, selectedCollectionId]);
 
   // Handle search
   const handleSearch = useCallback((query: string) => {
@@ -249,6 +298,25 @@ export const IconPicker: React.FC<IconPickerProps> = ({
     setSearchQuery('');
     setShowRecent(false);
     setSelectedIcon(null);
+    setSelectedCollectionId(null);
+  }, []);
+
+  // Handle collection selection
+  const handleCollectionSelect = useCallback((collectionId: string) => {
+    setSelectedCollectionId(collectionId);
+    setSelectedCategory('collections');
+    setSearchQuery('');
+    setSelectedIcon(null);
+  }, []);
+
+  // Check if a category is a personal category
+  const isPersonalCategory = useMemo(() => {
+    return PERSONAL_CATEGORIES.some((c) => c.id === selectedCategory);
+  }, [selectedCategory]);
+
+  // All categories (main + personal)
+  const allCategories = useMemo(() => {
+    return [...MAIN_CATEGORIES, ...PERSONAL_CATEGORIES];
   }, []);
 
   // Handle icon click
@@ -265,13 +333,20 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   const handleInsert = useCallback(async (icon: UnifiedIconResult) => {
     try {
       const svgContent = await extractSvgContent(icon);
-      addRecentIcon(icon.id);
-      setRecentIconIds(getRecentIcons());
+      addToRecents(icon.id);
+      setRecentIconIds(getRecents());
       onSelectIcon(icon, svgContent);
     } catch (error) {
       console.error('Failed to extract SVG:', error);
     }
   }, [onSelectIcon]);
+
+  // Handle favorite toggle
+  const handleToggleFavorite = useCallback((iconId: string) => {
+    const newState = toggleFavorite(iconId);
+    setFavoriteIconIds(getFavorites());
+    return newState;
+  }, []);
 
   // Handle copy SVG
   const handleCopySvg = useCallback((_svg: string) => {
@@ -388,16 +463,105 @@ export const IconPicker: React.FC<IconPickerProps> = ({
       {/* Category Tabs */}
       {!searchQuery && !showRecent && (
         <div className="icon-picker-tabs">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => handleCategoryChange(cat.id)}
-              className={`icon-picker-tab ${selectedCategory === cat.id ? 'active' : ''}`}
-              style={{ '--tab-color': cat.color } as React.CSSProperties}
-            >
-              {cat.name}
-            </button>
-          ))}
+          {allCategories.map((cat) => {
+            const count =
+              cat.id === 'favorites'
+                ? favoriteIconIds.length
+                : cat.id === 'recent'
+                ? recentIconIds.length
+                : cat.id === 'collections'
+                ? collections.length
+                : 0;
+
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleCategoryChange(cat.id)}
+                className={`icon-picker-tab ${selectedCategory === cat.id ? 'active' : ''}`}
+                style={{ '--tab-color': cat.color } as React.CSSProperties}
+              >
+                {cat.name}
+                {count > 0 && <span className="icon-picker-tab-badge">{count}</span>}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Collections Dropdown */}
+      {!searchQuery && !showRecent && selectedCategory === 'collections' && (
+        <div className="icon-picker-collections">
+          {collections.length === 0 ? (
+            <div className="icon-picker-collections-empty">
+              <p>No collections yet. Create one to organize your icons!</p>
+              <button
+                className="icon-picker-create-collection-btn"
+                onClick={() => {
+                  const name = prompt('Enter collection name:');
+                  if (name) {
+                    const id = createCollection(name);
+                    setCollections(getCollections());
+                    handleCollectionSelect(id);
+                  }
+                }}
+              >
+                + Create Collection
+              </button>
+            </div>
+          ) : (
+            <div className="icon-picker-collections-list">
+              <button
+                className={`icon-picker-collection-item ${!selectedCollectionId ? 'active' : ''}`}
+                onClick={() => setSelectedCollectionId(null)}
+              >
+                All Collections
+              </button>
+              {collections.map((collection) => (
+                <button
+                  key={collection.id}
+                  className={`icon-picker-collection-item ${selectedCollectionId === collection.id ? 'active' : ''}`}
+                  onClick={() => handleCollectionSelect(collection.id)}
+                  style={{ '--collection-color': collection.color } as React.CSSProperties}
+                >
+                  <span
+                    className="icon-picker-collection-dot"
+                    style={{ backgroundColor: collection.color }}
+                  />
+                  {collection.name}
+                  <span className="icon-picker-collection-count">{collection.iconIds.length}</span>
+                  <button
+                    className="icon-picker-collection-delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm(`Delete collection "${collection.name}"?`)) {
+                        // Import deleteCollection and use it
+                        const { deleteCollection: delColl } = require('@/lib/illustration/lib/icons/iconStorage');
+                        delColl(collection.id);
+                        setCollections(getCollections());
+                        if (selectedCollectionId === collection.id) {
+                          setSelectedCollectionId(null);
+                        }
+                      }
+                    }}
+                  >
+                    ×
+                  </button>
+                </button>
+              ))}
+              <button
+                className="icon-picker-collection-add"
+                onClick={() => {
+                  const name = prompt('Enter collection name:');
+                  if (name) {
+                    createCollection(name);
+                    setCollections(getCollections());
+                  }
+                }}
+              >
+                + New Collection
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -431,6 +595,14 @@ export const IconPicker: React.FC<IconPickerProps> = ({
               ? 'No recent icons. Select an icon to add it here.'
               : searchQuery
               ? `No icons matching "${searchQuery}"`
+              : selectedCategory === 'favorites'
+              ? 'No favorites yet. Click the heart icon on any icon to save it here.'
+              : selectedCategory === 'recent'
+              ? 'No recent icons. Select an icon to add it here.'
+              : selectedCategory === 'collections'
+              ? selectedCollectionId
+              ? 'This collection is empty.'
+              : 'Select a collection or create a new one.'
               : 'No icons in this category'
           }
           emptyAction={

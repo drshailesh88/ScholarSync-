@@ -465,6 +465,36 @@ export {
   type GenerationOptions,
 } from './generateIcon';
 
+export {
+  // Icon Storage exports
+  addToFavorites,
+  removeFromFavorites,
+  toggleFavorite,
+  isFavorite,
+  getFavorites,
+  getFavoritesCount,
+  addToRecents,
+  removeFromRecents,
+  getRecents,
+  getRecentsCount,
+  clearRecents,
+  createCollection,
+  getCollections,
+  getCollection,
+  updateCollectionName,
+  addToCollection,
+  removeFromCollection,
+  deleteCollection,
+  getCollectionsCount,
+  isInCollection,
+  getCollectionsContainingIcon,
+  clearAllStorage,
+  exportStorageData,
+  importStorageData,
+  getStorageStats,
+  type IconCollection,
+} from './iconStorage';
+
 // Import search functions from each library for unified search
 import { searchHealthIcons, healthIconsList } from './healthIcons';
 import { searchScienceIcons, scienceIconsList } from './scienceIcons';
