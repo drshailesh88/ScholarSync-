@@ -185,6 +185,7 @@ export default function EditorPage() {
         <AcademicEditor
           content={initialContent}
           documentType={documentType}
+          documentId={documentId}
           onUpdate={handleUpdate}
           debounceMs={2000}
         />

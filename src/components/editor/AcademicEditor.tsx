@@ -31,14 +31,18 @@ import { SelectionToolbar } from "./SelectionToolbar";
 import { TopBar } from "./TopBar";
 import { DocumentOutline } from "./DocumentOutline";
 import { LinkPopover } from "./LinkPopover";
+import { CommentSidebar } from "./CommentSidebar";
 import { useEditorStore } from "@/stores/editor-store";
 import { getDocumentWordCount } from "@/lib/editor/word-counter";
+import { getCommentCountLocal } from "@/lib/editor/document-comments-local";
 
 interface AcademicEditorProps {
   /** Initial content (Tiptap JSON format) */
   content?: JSONContent | null;
   /** Document type for placeholder context */
   documentType?: string;
+  /** Unique document identifier for comments storage */
+  documentId?: string;
   /** Called on content changes (debounced) */
   onUpdate?: (data: {
     editor_content: JSONContent;
@@ -54,6 +58,7 @@ interface AcademicEditorProps {
 export function AcademicEditor({
   content,
   documentType: _documentType = "original-article",
+  documentId,
   onUpdate,
   debounceMs = 2000,
   readOnly = false,
@@ -71,6 +76,9 @@ export function AcademicEditor({
     setSaveStatus,
     setActiveSectionPos,
     mode,
+    commentSidebarOpen,
+    toggleCommentSidebar,
+    setCommentCount,
   } = useEditorStore();
 
   const editor = useEditor({
@@ -275,6 +283,50 @@ export function AcademicEditor({
     };
   }, []);
 
+  // Update comment count when documentId changes
+  useEffect(() => {
+    if (!documentId) return;
+    const counts = getCommentCountLocal(documentId);
+    setCommentCount(counts.unresolved);
+  }, [documentId, setCommentCount]);
+
+  // Listen for editor action events (from SelectionToolbar, keyboard shortcuts)
+  useEffect(() => {
+    function handleEditorAction(e: Event) {
+      const detail = (e as CustomEvent).detail;
+      if (!detail) return;
+
+      if (detail.action === "add-comment" && editor) {
+        const { from, to } = editor.state.selection;
+        const selectedText = editor.state.doc.textBetween(from, to, " ");
+
+        // Open sidebar if not open
+        if (!commentSidebarOpen) {
+          toggleCommentSidebar();
+        }
+
+        // Dispatch a custom event to the comment sidebar to start a new comment
+        window.dispatchEvent(
+          new CustomEvent("scholarsync:new-inline-comment", {
+            detail: {
+              textRangeStart: from,
+              textRangeEnd: to,
+              quotedText: selectedText,
+            },
+          })
+        );
+      }
+
+      if (detail.action === "toggle-comment-sidebar") {
+        toggleCommentSidebar();
+      }
+    }
+
+    window.addEventListener("scholarsync:editor-action", handleEditorAction);
+    return () =>
+      window.removeEventListener("scholarsync:editor-action", handleEditorAction);
+  }, [editor, commentSidebarOpen, toggleCommentSidebar]);
+
   if (!editor) return null;
 
   return (
@@ -282,21 +334,33 @@ export function AcademicEditor({
       {/* Fixed top bar */}
       <TopBar editor={editor} />
 
-      {/* Editor area */}
-      <div className="flex-1 overflow-y-auto relative">
-        <div className="academic-editor-wrapper max-w-[720px] mx-auto px-6 py-8">
-          {/* Selection toolbar (floating) */}
-          <SelectionToolbar editor={editor} />
+      {/* Editor area with sidebar */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Main editor */}
+        <div className="flex-1 overflow-y-auto relative">
+          <div className="academic-editor-wrapper max-w-[720px] mx-auto px-6 py-8">
+            {/* Selection toolbar (floating) */}
+            <SelectionToolbar editor={editor} />
 
-          {/* Link popover */}
-          <LinkPopover editor={editor} />
+            {/* Link popover */}
+            <LinkPopover editor={editor} />
 
-          {/* Editor content */}
-          <EditorContent editor={editor} />
+            {/* Editor content */}
+            <EditorContent editor={editor} />
+          </div>
+
+          {/* Document outline (floating right) */}
+          <DocumentOutline editor={editor} />
         </div>
 
-        {/* Document outline (floating right) */}
-        <DocumentOutline editor={editor} />
+        {/* Comment sidebar */}
+        {documentId && commentSidebarOpen && (
+          <CommentSidebar
+            documentId={documentId}
+            editor={editor}
+            onClose={toggleCommentSidebar}
+          />
+        )}
       </div>
     </div>
   );
