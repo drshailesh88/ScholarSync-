@@ -114,9 +114,9 @@ export function generateDNAHelix(options: DNAHelixOptions = {}): string {
   let svg = `<svg viewBox="0 0 ${width + 20} ${length + 20}" xmlns="http://www.w3.org/2000/svg">`;
 
   // Generate the two backbone strands
-  let strand1Points: string[] = [];
-  let strand2Points: string[] = [];
-  let basePairPaths: string[] = [];
+  const strand1Points: string[] = [];
+  const strand2Points: string[] = [];
+  const basePairPaths: string[] = [];
 
   for (let i = 0; i <= basePairs; i++) {
     const y = 10 + i * stepSize;
@@ -1026,12 +1026,8 @@ export function generateER(options: EROptions = {}): string {
     branches = 5,
     stroke = '#4a5568',
     strokeWidth = 2,
-    fill = '#fbbf24',
     opacity = 0.85,
   } = options;
-
-  const cx = size / 2;
-  const cy = size / 2;
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
 
@@ -1088,7 +1084,6 @@ export function generateMicrotubule(options: MicrotubuleOptions = {}): string {
   } = options;
 
   const width = 30;
-  const cx = width / 2;
 
   let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${length}" viewBox="0 0 ${width} ${length}">`;
 
