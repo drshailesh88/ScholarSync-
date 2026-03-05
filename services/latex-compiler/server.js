@@ -4,7 +4,7 @@ import { execFile } from "child_process";
 import { promisify } from "util";
 import { join } from "path";
 import { tmpdir } from "os";
-import { randomUUID, createHash } from "crypto";
+import { randomUUID, _createHash } from "crypto";
 
 const execFileAsync = promisify(execFile);
 
@@ -142,7 +142,7 @@ app.post("/compile", async (req, res) => {
     }
 
     // Parse errors and return them
-    const errors = parseCompilationErrors(log);
+    const _errors = parseCompilationErrors(log);
 
     return res.status(422).json({
       error: "Compilation failed",
@@ -160,7 +160,7 @@ app.post("/compile", async (req, res) => {
 // Error parser (moved from the Next.js route)
 // ---------------------------------------------------------------------------
 function parseCompilationErrors(log) {
-  const errors = [];
+  const _errors = [];
   const lines = log.split("\n");
 
   for (const line of lines) {
@@ -217,7 +217,7 @@ app.delete("/cache/:projectId", async (req, res) => {
   try {
     await rm(dir, { recursive: true, force: true });
     return res.json({ status: "ok", message: `Cache cleared for project ${projectId}` });
-  } catch (error) {
+  } catch {
     return res.json({ status: "ok", message: "No cache to clear" });
   }
 });
@@ -237,7 +237,7 @@ app.get("/cache/stats", async (req, res) => {
 
   try {
     const entries = await readdir(BUILD_CACHE_DIR);
-    let totalSize = 0;
+    let _totalSize = 0;
     let projectCount = 0;
 
     for (const entry of entries) {
@@ -258,7 +258,7 @@ app.get("/cache/stats", async (req, res) => {
       projectCount,
       maxAgeHours: MAX_AGE_MS / (60 * 60 * 1000),
     });
-  } catch (error) {
+  } catch {
     return res.status(500).json({ error: "Failed to get cache stats" });
   }
 });

@@ -7,7 +7,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { type TrackChange } from "@/types/track-changes";
 import { cn } from "@/lib/utils";
 import {
@@ -20,7 +20,7 @@ import {
 } from "@phosphor-icons/react";
 
 interface TrackChangesPanelProps {
-  fileId: string;
+  _fileId: string;
   changes: TrackChange[];
   onAccept: (id: string) => void;
   onReject: (id: string) => void;
@@ -29,7 +29,7 @@ interface TrackChangesPanelProps {
 }
 
 export function TrackChangesPanel({
-  fileId,
+  _fileId,
   changes,
   onAccept,
   onReject,
@@ -62,7 +62,7 @@ export function TrackChangesPanel({
       const preview = change.insertedText.slice(0, 50);
       return (
         <span className="text-emerald-700 dark:text-emerald-400">
-          + "{preview}"
+          + &ldquo;{preview}&rdquo;
           {change.insertedText.length > 50 && "..."}
         </span>
       );
@@ -70,7 +70,7 @@ export function TrackChangesPanel({
       const preview = change.deletedText.slice(0, 50);
       return (
         <span className="text-red-700 dark:text-red-400 line-through">
-          -"{preview}"
+          -&ldquo;{preview}&rdquo;
           {change.deletedText.length > 50 && "..."}
         </span>
       );

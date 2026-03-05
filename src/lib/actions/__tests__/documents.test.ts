@@ -129,10 +129,15 @@ describe("documents actions", () => {
         },
       ];
 
-      // First select returns [doc], second select returns sections
+      // First select returns [doc with innerJoin structure], second select returns sections
       let selectCallIndex = 0;
       mockDb.select.mockImplementation(() => {
-        const results = [[doc], sections];
+        // innerJoin returns { synthesis_documents: {...}, projects: {...} }
+        const joinedDoc = {
+          synthesis_documents: doc,
+          projects: { id: 10, user_id: 'test-user' }
+        };
+        const results = [[joinedDoc], sections];
         const result = results[selectCallIndex] ?? [];
         selectCallIndex++;
         return createQueryBuilder(result);

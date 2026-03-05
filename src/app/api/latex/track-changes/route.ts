@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { latexTrackChanges } from "@/lib/db/schema/editor";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 /**
  * GET /api/latex/track-changes?fileId=xxx
@@ -67,7 +67,6 @@ export async function POST(req: NextRequest) {
       insertedText,
       deletedText,
       authorName,
-      authorColor,
     } = body;
 
     // Validate required fields
