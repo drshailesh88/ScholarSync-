@@ -76,6 +76,25 @@ export default function EditorPage() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
   const [contentKey, setContentKey] = useState(0);
+  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(
+    () => {
+      if (typeof window === "undefined") return null;
+
+      const pending = sessionStorage.getItem("scholarsync_pending_citation");
+      if (!pending) return null;
+
+      sessionStorage.removeItem("scholarsync_pending_citation");
+      try {
+        const parsed = JSON.parse(pending) as { title?: string };
+        const title = parsed.title?.trim();
+        return title
+          ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
+          : "Paper saved to your library. Open Citation Dialog to cite it.";
+      } catch {
+        return "Paper saved to your library. Open Citation Dialog to cite it.";
+      }
+    }
+  );
 
   const handleInsertCitation = useCallback((referenceIds: string[]) => {
     const editor = editorRef.current;
@@ -111,6 +130,12 @@ export default function EditorPage() {
     return () =>
       window.removeEventListener("scholarsync:open-citation-dialog", handler);
   }, [openCitationDialog]);
+
+  useEffect(() => {
+    if (!pendingCitationNotice) return;
+    const timer = setTimeout(() => setPendingCitationNotice(null), 5000);
+    return () => clearTimeout(timer);
+  }, [pendingCitationNotice]);
 
   // Populate citation store with project papers when document changes.
   useEffect(() => {
@@ -317,6 +342,14 @@ export default function EditorPage() {
               Retry
             </button>
           )}
+        </div>
+      )}
+
+      {pendingCitationNotice && (
+        <div className="px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 shrink-0">
+          <span className="text-sm text-blue-700 dark:text-blue-300">
+            {pendingCitationNotice}
+          </span>
         </div>
       )}
 

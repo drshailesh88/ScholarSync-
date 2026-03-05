@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   FolderSimple,
   Star,
@@ -97,6 +98,7 @@ type CitationFormats = {
 type SortOption = "date_added" | "title" | "citation_count" | "year";
 
 export default function LibraryPage() {
+  const router = useRouter();
   const [papers, setPapers] = useState<Paper[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -558,6 +560,23 @@ export default function LibraryPage() {
                   >
                     <BookOpen size={14} />
                     Cite
+                  </button>
+                  <button
+                    onClick={() => {
+                      sessionStorage.setItem(
+                        "scholarsync_pending_citation",
+                        JSON.stringify({
+                          paperId: paper.id,
+                          title: paper.title,
+                        })
+                      );
+                      router.push("/editor/new");
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted bg-surface-raised hover:bg-surface-raised/80 transition-colors"
+                    title="Cite in Editor"
+                  >
+                    <ClipboardText size={14} />
+                    Cite in Editor
                   </button>
                   {(paper.source === "user_upload" || paper.pdf_storage_path || paper.pdf_url) && (
                     <button

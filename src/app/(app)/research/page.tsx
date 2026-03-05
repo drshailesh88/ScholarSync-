@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   MagnifyingGlass,
   ChatCircleDots,
@@ -149,6 +150,7 @@ function writeSession(state: PersistedState) {
 // ── Component ────────────────────────────────────────────────────────
 
 export default function ResearchPage() {
+  const router = useRouter();
   // Restore session state on first render (synchronous to avoid flash)
   const cached = useRef(readSession());
 
@@ -480,6 +482,24 @@ export default function ResearchPage() {
         return next;
       });
     }
+  };
+
+  const handleSaveAndCite = async (result: UnifiedSearchResult) => {
+    await handleSave(result);
+
+    sessionStorage.setItem(
+      "scholarsync_pending_citation",
+      JSON.stringify({
+        title: result.title,
+        authors: result.authors,
+        journal: result.journal,
+        year: result.year,
+        doi: result.doi,
+        pmid: result.pmid,
+      })
+    );
+
+    router.push("/editor/new");
   };
 
   const handleFindSimilar = async (result: UnifiedSearchResult) => {
@@ -913,6 +933,14 @@ export default function ResearchPage() {
                           : savingKeys.has(key)
                             ? "Saving..."
                             : "Save"}
+                      </button>
+
+                      <button
+                        onClick={() => handleSaveAndCite(r)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-ink-muted hover:text-ink transition-colors"
+                      >
+                        <BookmarkSimple size={14} />
+                        Save & Cite
                       </button>
 
                       {/* Find Similar button */}
