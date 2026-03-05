@@ -11,13 +11,22 @@ import { eq, and, desc, isNull } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 
 // ---------------------------------------------------------------------------
-// Load a single document with its sections
+// Load a single document with its sections (with user verification)
 // ---------------------------------------------------------------------------
 export async function getDocument(id: number) {
+  const userId = await getCurrentUserId();
+
   const [doc] = await db
     .select()
     .from(synthesisDocuments)
-    .where(eq(synthesisDocuments.id, id));
+    .innerJoin(projects, eq(synthesisDocuments.project_id, projects.id))
+    .where(
+      and(
+        eq(synthesisDocuments.id, id),
+        eq(projects.user_id, userId),
+        isNull(synthesisDocuments.deleted_at)
+      )
+    );
 
   if (!doc) return null;
 
@@ -27,7 +36,7 @@ export async function getDocument(id: number) {
     .where(eq(synthesisSections.document_id, id))
     .orderBy(synthesisSections.sort_order);
 
-  return { ...doc, sections };
+  return { ...doc.synthesis_documents, sections };
 }
 
 // ---------------------------------------------------------------------------
@@ -296,4 +305,138 @@ export async function listUserProjects() {
     .from(projects)
     .where(and(eq(projects.user_id, userId), isNull(projects.deleted_at)))
     .orderBy(desc(projects.updated_at));
+}
+
+// ---------------------------------------------------------------------------
+// Get document versions for version history
+// ---------------------------------------------------------------------------
+export async function getDocumentVersions(documentId: number) {
+  const userId = await getCurrentUserId();
+
+  const [doc] = await db
+    .select()
+    .from(synthesisDocuments)
+    .innerJoin(projects, eq(synthesisDocuments.project_id, projects.id))
+    .where(
+      and(
+        eq(synthesisDocuments.id, documentId),
+        eq(projects.user_id, userId)
+      )
+    );
+
+  if (!doc) return [];
+
+  return db
+    .select({
+      id: synthesisVersions.id,
+      versionNumber: synthesisVersions.version_number,
+      versionName: synthesisVersions.version_name,
+      autoSaved: synthesisVersions.auto_saved,
+      savedBy: synthesisVersions.saved_by,
+      createdAt: synthesisVersions.created_at,
+    })
+    .from(synthesisVersions)
+    .where(eq(synthesisVersions.document_id, documentId))
+    .orderBy(desc(synthesisVersions.created_at))
+    .limit(50);
+}
+
+// ---------------------------------------------------------------------------
+// Get version content for preview/restore
+// ---------------------------------------------------------------------------
+export async function getVersionContent(versionId: number) {
+  const [version] = await db
+    .select()
+    .from(synthesisVersions)
+    .where(eq(synthesisVersions.id, versionId))
+    .limit(1);
+
+  return version?.content_snapshot || null;
+}
+
+// ---------------------------------------------------------------------------
+// Restore document from version history
+// ---------------------------------------------------------------------------
+export async function restoreDocumentVersion(
+  documentId: number,
+  versionId: number
+) {
+  const userId = await getCurrentUserId();
+
+  const [doc] = await db
+    .select()
+    .from(synthesisDocuments)
+    .innerJoin(projects, eq(synthesisDocuments.project_id, projects.id))
+    .where(
+      and(
+        eq(synthesisDocuments.id, documentId),
+        eq(projects.user_id, userId)
+      )
+    );
+
+  if (!doc) throw new Error("Document not found");
+
+  const [version] = await db
+    .select()
+    .from(synthesisVersions)
+    .where(eq(synthesisVersions.id, versionId))
+    .limit(1);
+
+  if (!version) throw new Error("Version not found");
+
+  const [currentSection] = await db
+    .select()
+    .from(synthesisSections)
+    .where(eq(synthesisSections.document_id, documentId))
+    .orderBy(synthesisSections.sort_order)
+    .limit(1);
+
+  if (currentSection) {
+    await autoSaveVersion(
+      documentId,
+      currentSection.id,
+      currentSection.editor_content as unknown
+    );
+
+    await db
+      .update(synthesisSections)
+      .set({
+        editor_content: version.content_snapshot,
+        updated_at: new Date(),
+      })
+      .where(eq(synthesisSections.id, currentSection.id));
+  }
+
+  return { success: true };
+}
+
+// ---------------------------------------------------------------------------
+// Save a named version manually
+// ---------------------------------------------------------------------------
+export async function saveNamedVersion(
+  documentId: number,
+  sectionId: number,
+  name: string,
+  content: unknown
+) {
+  await db.insert(synthesisVersions).values({
+    document_id: documentId,
+    section_id: sectionId,
+    version_number: Date.now(),
+    version_name: name,
+    content_snapshot: content as Record<string, unknown>,
+    auto_saved: false,
+    saved_by: "user",
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Migration trigger for client-side call
+// ---------------------------------------------------------------------------
+export async function triggerLocalMigration() {
+  // This is a no-op server action that just returns success
+  // The actual migration happens client-side via the migrate-local-documents utility
+  // This action exists to allow client components to call a server function
+  // which can be useful for future server-side migration logic
+  return { success: true, message: "Migration check complete" };
 }

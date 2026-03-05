@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
 import type { JSONContent } from "@tiptap/core";
 import { AcademicEditor } from "@/components/editor/AcademicEditor";
+import { EditorErrorBoundary } from "@/components/editor/EditorErrorBoundary";
 import { ExportDialog } from "@/components/export/ExportDialog";
 import { useEditorStore } from "@/stores/editor-store";
 import { generateTemplateContent } from "@/lib/editor/section-templates";
@@ -107,7 +108,8 @@ export default function EditorPage() {
     "Original Article";
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] -mx-6 -mt-0">
+    <EditorErrorBoundary documentId={documentId}>
+      <div className="flex flex-col h-[calc(100vh-4rem)] -mx-6 -mt-0">
       {/* Document header bar */}
       <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border shrink-0">
         {/* Left: Back + Title */}
@@ -198,6 +200,7 @@ export default function EditorPage() {
         content={currentContent || initialContent || { type: "doc", content: [] }}
         title={documentTitle}
       />
-    </div>
+      </div>
+    </EditorErrorBoundary>
   );
 }
