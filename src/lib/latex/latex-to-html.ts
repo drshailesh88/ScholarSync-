@@ -12,7 +12,45 @@ export function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;");
 }
 
+/**
+ * Convert inline LaTeX commands to HTML (used within table cells, etc.)
+ */
+export function convertInline(latex: string): string {
+  let html = latex;
+  // Bold, italic, underline
+  for (let pass = 0; pass < 4; pass++) {
+    html = html.replace(/\\textbf\{([^{}]*)\}/g, "<strong>$1</strong>");
+    html = html.replace(/\\textit\{([^{}]*)\}/g, "<em>$1</em>");
+    html = html.replace(/\\underline\{([^{}]*)\}/g, "<u>$1</u>");
+    html = html.replace(/\\emph\{([^{}]*)\}/g, "<em>$1</em>");
+  }
+  // Typewriter
+  html = html.replace(/\\texttt\{([^}]*)\}/g, "<code>$1</code>");
+  // Superscript and subscript
+  html = html.replace(/\\textsuperscript\{([^}]*)\}/g, "<sup>$1</sup>");
+  html = html.replace(/\\textsubscript\{([^}]*)\}/g, "<sub>$1</sub>");
+  // Small caps
+  html = html.replace(/\\textsc\{([^}]*)\}/g, '<span style="font-variant:small-caps">$1</span>');
+  // Special characters
+  html = html.replace(/\\&/g, "&amp;");
+  html = html.replace(/\\#/g, "#");
+  html = html.replace(/\\_/g, "_");
+  html = html.replace(/\\\{/g, "{");
+  html = html.replace(/\\\}/g, "}");
+  return html;
+}
+
+/**
+ * Get the line number for a given position in the source text.
+ */
+function _getLineNumber(text: string, position: number): number {
+  return text.substring(0, position).split("\n").length;
+}
+
 export function latexToHtml(tex: string): string {
+  // Store line number mappings for scroll sync
+  const _lineMappings: { element: string; line: number }[] = [];
+
   let html = tex;
 
   // Remove preamble (everything before \begin{document})
