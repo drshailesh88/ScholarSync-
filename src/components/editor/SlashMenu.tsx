@@ -20,6 +20,7 @@ import {
   Hash,
   Paragraph,
   TextSuperscript,
+  GraduationCap,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +46,7 @@ const ICON_MAP: Record<string, typeof Paragraph> = {
   table: Table,
   image: Image,
   footnote: TextSuperscript,
+  academic: GraduationCap,
   ai: Sparkle,
   tools: Hash,
 };

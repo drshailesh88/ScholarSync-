@@ -160,6 +160,75 @@ const structuralCommands: SlashCommandItem[] = [
     },
   },
   {
+    title: "Abstract",
+    description: "Structured abstract (Background, Methods, Results, Conclusion)",
+    icon: "academic",
+    category: "academic",
+    command: (editor) => {
+      editor.chain().focus().insertContent({
+        type: "doc",
+        content: [
+          { type: "heading", attrs: { level: 2 }, content: [{ type: "text", text: "Abstract" }] },
+          { type: "paragraph", content: [{ type: "text", marks: [{ type: "bold" }], text: "Background: " }] },
+          { type: "paragraph", content: [{ type: "text", marks: [{ type: "bold" }], text: "Methods: " }] },
+          { type: "paragraph", content: [{ type: "text", marks: [{ type: "bold" }], text: "Results: " }] },
+          { type: "paragraph", content: [{ type: "text", marks: [{ type: "bold" }], text: "Conclusion: " }] },
+        ],
+      }).run();
+    },
+  },
+  {
+    title: "Figure Caption",
+    description: "Insert a figure caption with numbering",
+    icon: "image",
+    category: "academic",
+    command: (editor) => {
+      // Count existing figure captions to auto-number
+      let figCount = 0;
+      editor.state.doc.descendants((node) => {
+        if (node.type.name === "paragraph") {
+          const text = node.textContent;
+          if (text.startsWith("Figure ") && /^Figure \d+/.test(text)) {
+            figCount++;
+          }
+        }
+      });
+
+      editor.chain().focus().insertContent({
+        type: "paragraph",
+        content: [
+          { type: "text", marks: [{ type: "bold" }], text: `Figure ${figCount + 1}. ` },
+          { type: "text", text: "Caption text here" },
+        ],
+      }).run();
+    },
+  },
+  {
+    title: "Table Caption",
+    description: "Insert a table caption with numbering",
+    icon: "table",
+    category: "academic",
+    command: (editor) => {
+      let tableCount = 0;
+      editor.state.doc.descendants((node) => {
+        if (node.type.name === "paragraph") {
+          const text = node.textContent;
+          if (text.startsWith("Table ") && /^Table \d+/.test(text)) {
+            tableCount++;
+          }
+        }
+      });
+
+      editor.chain().focus().insertContent({
+        type: "paragraph",
+        content: [
+          { type: "text", marks: [{ type: "bold" }], text: `Table ${tableCount + 1}. ` },
+          { type: "text", text: "Caption text here" },
+        ],
+      }).run();
+    },
+  },
+  {
     title: "Footnote",
     description: "Add a footnote reference",
     icon: "footnote",
