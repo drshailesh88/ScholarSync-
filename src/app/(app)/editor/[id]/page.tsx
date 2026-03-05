@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import type { JSONContent } from "@tiptap/core";
 import { AcademicEditor } from "@/components/editor/AcademicEditor";
 import { ExportDialog } from "@/components/export/ExportDialog";
+import { VersionHistory } from "@/components/editor/VersionHistory";
 import { useEditorStore } from "@/stores/editor-store";
 import { generateTemplateContent } from "@/lib/editor/section-templates";
 import { useEditorDocument } from "@/hooks/use-editor-document";
@@ -17,6 +18,7 @@ import {
   Spinner,
   Warning,
   WifiSlash,
+  ClockCounterClockwise,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -53,6 +55,9 @@ export default function EditorPage() {
 
   const [showExport, setShowExport] = useState(false);
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
+  const [contentKey, setContentKey] = useState(0);
 
   // Handle title changes with debounced save
   const handleTitleChange = (newTitle: string) => {
@@ -187,6 +192,14 @@ export default function EditorPage() {
           </div>
 
           <button
+            onClick={() => setShowVersionHistory(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border rounded-lg transition-colors"
+            disabled={isLoading || !editorContent}
+          >
+            <ClockCounterClockwise size={14} />
+            Version History
+          </button>
+          <button
             onClick={() => setShowExport(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border rounded-lg transition-colors"
             disabled={isLoading || !editorContent}
@@ -232,7 +245,8 @@ export default function EditorPage() {
       {!isLoading && (
         <div className="flex-1 overflow-hidden bg-surface">
           <AcademicEditor
-            content={editorContent}
+            key={contentKey}
+            content={restoredContent || editorContent}
             documentType={documentType}
             documentId={dbDocumentId?.toString() || documentId}
             onUpdate={handleEditorUpdate}
@@ -248,6 +262,21 @@ export default function EditorPage() {
         content={dbContent || editorContent || { type: "doc", content: [] }}
         title={documentTitle}
       />
+
+      {/* Version history panel */}
+      {showVersionHistory && dbDocumentId && (
+        <VersionHistory
+          documentId={dbDocumentId}
+          sectionId={0}
+          currentContent={currentContent || restoredContent || editorContent}
+          onRestore={(content) => {
+            setRestoredContent(content);
+            setContentKey((k) => k + 1);
+            setShowVersionHistory(false);
+          }}
+          onClose={() => setShowVersionHistory(false)}
+        />
+      )}
     </div>
   );
 }
