@@ -18,6 +18,7 @@ import { Extension } from "@tiptap/core";
  * - Cmd+Shift+F (footnote)
  * - Cmd+/ (toggle comment sidebar)
  * - Cmd+Shift+C (insert citation — dispatch event)
+ * - Cmd+Shift+R (toggle reference sidebar)
  * - Mod+Shift+1 through Mod+Shift+4 (heading levels)
  * - Cmd+Shift+Enter (horizontal rule)
  */
@@ -71,6 +72,16 @@ export const AcademicKeyboardShortcuts = Extension.create({
         window.dispatchEvent(
           new CustomEvent("scholarsync:editor-action", {
             detail: { action: "insert-citation" },
+          })
+        );
+        return true;
+      },
+
+      // Toggle reference sidebar
+      "Mod-Shift-r": () => {
+        window.dispatchEvent(
+          new CustomEvent("scholarsync:editor-action", {
+            detail: { action: "toggle-reference-sidebar" },
           })
         );
         return true;

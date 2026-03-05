@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import type { JSONContent } from "@tiptap/core";
+import type { Editor } from "@tiptap/react";
 import { AcademicEditor } from "@/components/editor/AcademicEditor";
+import { EditorErrorBoundary } from "@/components/editor/EditorErrorBoundary";
 import { ExportDialog } from "@/components/export/ExportDialog";
 import { VersionHistory } from "@/components/editor/VersionHistory";
+import { CitationDialog } from "@/components/citations/citation-dialog";
+import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { useEditorStore } from "@/stores/editor-store";
+import { useReferenceStore } from "@/stores/reference-store";
 import { generateTemplateContent } from "@/lib/editor/section-templates";
 import { useEditorDocument } from "@/hooks/use-editor-document";
 import {
@@ -32,7 +37,8 @@ const DOCUMENT_TYPES = [
 
 export default function EditorPage() {
   const params = useParams();
-  const documentId = params.id as string;
+  const urlDocumentId = params.id as string;
+  const editorRef = useRef<Editor | null>(null);
 
   const {
     documentTitle,
@@ -51,13 +57,55 @@ export default function EditorPage() {
     handleEditorUpdate,
     setTitle,
     retrySave,
-  } = useEditorDocument(documentId, documentType);
+  } = useEditorDocument(urlDocumentId, documentType);
+
+  const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
+  const openCitationDialog = useReferenceStore((s) => s.openCitationDialog);
+  const closeCitationDialog = useReferenceStore((s) => s.closeCitationDialog);
+  const sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
+  const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
+  const references = useReferenceStore((s) => s.references);
 
   const [showExport, setShowExport] = useState(false);
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
   const [contentKey, setContentKey] = useState(0);
+
+  const handleInsertCitation = useCallback((referenceIds: string[]) => {
+    const editor = editorRef.current;
+    if (!editor || editor.isDestroyed) return;
+
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: "citation",
+        attrs: { referenceIds },
+      })
+      .run();
+
+    let hasBibliography = false;
+    editor.state.doc.descendants((node) => {
+      if (node.type.name === "bibliography") {
+        hasBibliography = true;
+        return false;
+      }
+    });
+
+    if (!hasBibliography) {
+      editor.commands.insertContentAt(editor.state.doc.content.size, {
+        type: "bibliography",
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const handler = () => openCitationDialog();
+    window.addEventListener("scholarsync:open-citation-dialog", handler);
+    return () =>
+      window.removeEventListener("scholarsync:open-citation-dialog", handler);
+  }, [openCitationDialog]);
 
   // Add beforeunload protection to prevent data loss
   useEffect(() => {
@@ -100,6 +148,7 @@ export default function EditorPage() {
   }, [dbContent, documentType]);
 
   return (
+    <EditorErrorBoundary documentId={urlDocumentId}>
     <div className="flex flex-col h-[calc(100vh-4rem)] -mx-6 -mt-0">
       {/* Document header bar */}
       <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border shrink-0">
@@ -255,17 +304,42 @@ export default function EditorPage() {
 
       {/* Editor */}
       {!isLoading && (
-        <div className="flex-1 overflow-hidden bg-surface">
-          <AcademicEditor
-            key={contentKey}
-            content={restoredContent || editorContent}
-            documentType={documentType}
-            documentId={dbDocumentId?.toString() || documentId}
-            onUpdate={handleEditorUpdate}
-            debounceMs={2000}
-          />
+        <div className="flex-1 flex overflow-hidden bg-surface">
+          <div className="flex-1 overflow-hidden">
+            <AcademicEditor
+              key={contentKey}
+              content={restoredContent || editorContent}
+              documentType={documentType}
+              documentId={String(dbDocumentId || urlDocumentId)}
+              onUpdate={handleEditorUpdate}
+              onEditorReady={(editor) => {
+                editorRef.current = editor;
+              }}
+              onOpenCitationDialog={openCitationDialog}
+              onToggleReferenceSidebar={toggleSidebar}
+              referenceCount={references.size}
+              debounceMs={2000}
+            />
+          </div>
+
+          {sidebarOpen && (
+            <div className="w-80 border-l border-border bg-surface shrink-0 overflow-hidden">
+              <ReferenceSidebar
+                open={sidebarOpen}
+                onClose={toggleSidebar}
+                onOpenCitationDialog={openCitationDialog}
+              />
+            </div>
+          )}
         </div>
       )}
+
+      <CitationDialog
+        open={citationDialogOpen}
+        onClose={closeCitationDialog}
+        onInsert={handleInsertCitation}
+        documentId={String(dbDocumentId || "default")}
+      />
 
       {/* Export dialog */}
       <ExportDialog
@@ -290,6 +364,7 @@ export default function EditorPage() {
         />
       )}
     </div>
+    </EditorErrorBoundary>
   );
 }
 
