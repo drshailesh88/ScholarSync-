@@ -566,8 +566,20 @@ export async function searchPapersInLibrary(query: string) {
   const userId = await getCurrentUserId();
   return db
     .select({
-      ref: userReferences,
-      paper: papers,
+      id: papers.id,
+      title: papers.title,
+      authors: papers.authors,
+      journal: papers.journal,
+      year: papers.year,
+      doi: papers.doi,
+      pubmed_id: papers.pubmed_id,
+      abstract: papers.abstract,
+      study_type: papers.study_type,
+      volume: papers.volume,
+      issue: papers.issue,
+      pages: papers.pages,
+      pdf_url: papers.pdf_url,
+      open_access_url: papers.open_access_url,
     })
     .from(userReferences)
     .innerJoin(papers, eq(userReferences.paperId, papers.id))

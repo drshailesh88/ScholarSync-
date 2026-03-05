@@ -19,6 +19,11 @@ import {
 import { cn } from "@/lib/utils";
 import { useReferenceStore } from "@/stores/reference-store";
 import type { Reference } from "@/types/citation";
+import { searchPapersInLibrary } from "@/lib/actions/papers";
+import {
+  paperToReference,
+  type LibraryPaper,
+} from "@/lib/citations/paper-to-reference";
 
 interface CitationDialogProps {
   open: boolean;
@@ -27,7 +32,7 @@ interface CitationDialogProps {
   documentId?: string;
 }
 
-type DialogTab = "search" | "doi" | "manual";
+type DialogTab = "search" | "library" | "doi" | "manual";
 
 export function CitationDialog({
   open,
@@ -45,12 +50,19 @@ export function CitationDialog({
   const [focusedIndex, setFocusedIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const librarySearchInputRef = useRef<HTMLInputElement>(null);
 
   // DOI resolver state
   const [doiInput, setDoiInput] = useState("");
   const [doiLoading, setDoiLoading] = useState(false);
   const [doiError, setDoiError] = useState<string | null>(null);
   const [doiPreview, setDoiPreview] = useState<Reference | null>(null);
+
+  // Library tab state
+  const [libraryQuery, setLibraryQuery] = useState("");
+  const [libraryResults, setLibraryResults] = useState<LibraryPaper[]>([]);
+  const [libraryLoading, setLibraryLoading] = useState(false);
+  const [libraryLoaded, setLibraryLoaded] = useState(false);
 
   // Manual entry state
   const [manualForm, setManualForm] = useState({
@@ -78,9 +90,54 @@ export function CitationDialog({
       setDoiLoading(false);
       setDoiError(null);
       setDoiPreview(null);
+      setLibraryQuery("");
       setTimeout(() => searchInputRef.current?.focus(), 50);
     }
   }, [open]);
+
+  // Load library papers on first library tab open
+  useEffect(() => {
+    if (activeTab !== "library" || libraryLoaded) return;
+
+    let canceled = false;
+    setLibraryLoading(true);
+    searchPapersInLibrary("")
+      .then((papers) => {
+        if (canceled) return;
+        setLibraryResults((papers as LibraryPaper[]) || []);
+        setLibraryLoaded(true);
+      })
+      .finally(() => {
+        if (!canceled) setLibraryLoading(false);
+      });
+
+    return () => {
+      canceled = true;
+    };
+  }, [activeTab, libraryLoaded]);
+
+  // Search within library
+  useEffect(() => {
+    if (activeTab !== "library") return;
+    let canceled = false;
+
+    const timer = setTimeout(async () => {
+      setLibraryLoading(true);
+      try {
+        const papers = await searchPapersInLibrary(libraryQuery);
+        if (!canceled) {
+          setLibraryResults((papers as LibraryPaper[]) || []);
+        }
+      } finally {
+        if (!canceled) setLibraryLoading(false);
+      }
+    }, 300);
+
+    return () => {
+      canceled = true;
+      clearTimeout(timer);
+    };
+  }, [libraryQuery, activeTab]);
 
   // Close on Escape
   useEffect(() => {
@@ -308,12 +365,13 @@ export function CitationDialog({
 
         {/* Tab bar */}
         <div className="flex border-b border-gray-200 dark:border-gray-700 px-4">
-          {(
-            [
-              { key: "search", label: "Your References" },
-              { key: "doi", label: "Paste DOI/PMID" },
-              { key: "manual", label: "Manual Entry" },
-            ] as { key: DialogTab; label: string }[]
+              {(
+                [
+                  { key: "search", label: "Your References" },
+                  { key: "library", label: "Library" },
+                  { key: "doi", label: "Paste DOI/PMID" },
+                  { key: "manual", label: "Manual Entry" },
+                ] as { key: DialogTab; label: string }[]
           ).map((tab) => (
             <button
               key={tab.key}
@@ -457,6 +515,88 @@ export function CitationDialog({
                   })}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Library tab */}
+          {activeTab === "library" && (
+            <div className="p-4 space-y-3">
+              <div className="relative">
+                <MagnifyingGlass
+                  size={14}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                />
+                <input
+                  ref={librarySearchInputRef}
+                  type="text"
+                  value={libraryQuery}
+                  onChange={(e) => setLibraryQuery(e.target.value)}
+                  placeholder="Search your saved papers..."
+                  className="w-full pl-9 pr-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400/40"
+                  autoFocus
+                />
+              </div>
+
+              <div className="max-h-[300px] overflow-y-auto space-y-1">
+                {libraryLoading && (
+                  <div className="flex items-center justify-center py-8">
+                    <SpinnerGap size={20} className="animate-spin text-gray-400" />
+                  </div>
+                )}
+
+                {!libraryLoading && libraryResults.length === 0 && (
+                  <div className="text-center py-8 text-sm text-gray-400 dark:text-gray-500">
+                    {libraryQuery
+                      ? "No papers match your search."
+                      : "No papers in your library yet. Save papers from the Research page."}
+                  </div>
+                )}
+
+                {!libraryLoading &&
+                  libraryResults.map((paper) => {
+                    const refId = `ref-paper-${paper.id}`;
+                    const alreadyAdded = references.has(refId);
+                    const isSelected = selectedIds.includes(refId);
+
+                    return (
+                      <button
+                        key={paper.id}
+                        onClick={() => {
+                          if (alreadyAdded) {
+                            toggleSelection(refId);
+                            return;
+                          }
+
+                          const ref = paperToReference(paper, documentId);
+                          addReference(ref);
+                          toggleSelection(ref.id);
+                        }}
+                        className={cn(
+                          "w-full text-left p-3 rounded-lg border transition-colors",
+                          isSelected
+                            ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30"
+                            : alreadyAdded
+                              ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/20"
+                              : "border-gray-200 dark:border-gray-700 hover:border-blue-400/60 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                        )}
+                      >
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2">
+                          {paper.title}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {formatLibraryAuthors(paper.authors)} -{" "}
+                          {paper.journal || "Unknown journal"} (
+                          {paper.year || "n.d."})
+                        </p>
+                        {alreadyAdded && !isSelected && (
+                          <span className="text-[10px] text-green-600 dark:text-green-400 font-medium">
+                            Already in references
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+              </div>
             </div>
           )}
 
@@ -805,4 +945,35 @@ function formatAuthorsShort(
   if (authors.length === 2)
     return `${authors[0].family} & ${authors[1].family}`;
   return `${authors[0].family} et al.`;
+}
+
+function formatLibraryAuthors(authors: unknown): string {
+  if (!Array.isArray(authors) || authors.length === 0) {
+    return "Unknown authors";
+  }
+
+  const names = authors
+    .map((author) => {
+      if (typeof author === "string") return author;
+      if (author && typeof author === "object") {
+        const obj = author as Record<string, unknown>;
+        const first =
+          (typeof obj.firstName === "string" && obj.firstName) ||
+          (typeof obj.given === "string" && obj.given) ||
+          "";
+        const last =
+          (typeof obj.lastName === "string" && obj.lastName) ||
+          (typeof obj.family === "string" && obj.family) ||
+          (typeof obj.name === "string" && obj.name) ||
+          "";
+        return `${first} ${last}`.trim();
+      }
+      return "";
+    })
+    .filter(Boolean);
+
+  if (names.length === 0) return "Unknown authors";
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return `${names[0]}, ${names[1]}`;
+  return `${names[0]}, ${names[1]} et al.`;
 }
