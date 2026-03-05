@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { Editor } from "@tiptap/react";
 import {
   ArrowUUpLeft,
@@ -217,12 +217,24 @@ function SaveStatusIndicator({
 }: {
   status: { state: string; lastSavedAt?: Date };
 }) {
+  // Tick state to refresh relative time every 30 seconds
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    if (status.state !== "saved" || !status.lastSavedAt) return;
+    const interval = setInterval(() => setTick((t) => t + 1), 30000);
+    return () => clearInterval(interval);
+  }, [status.state, status.lastSavedAt]);
+
   switch (status.state) {
     case "saved":
       return (
-        <span className="flex items-center gap-1 text-ink-muted">
+        <span className="flex items-center gap-1 text-ink-muted" key={tick}>
           <Check size={12} className="text-emerald-500" />
           Saved
+          {status.lastSavedAt
+            ? ` ${status.lastSavedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+            : ""}
         </span>
       );
     case "saving":
