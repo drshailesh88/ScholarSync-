@@ -39,6 +39,15 @@ function parseAuthors(raw: unknown): Author[] {
         return { family: parts[0], given: parts[1] || "" };
       }
 
+      // Common PubMed style: "Family Initials"
+      if (
+        parts.length >= 2 &&
+        /^[A-Za-z][A-Za-z'-]*$/.test(parts[0]) &&
+        /^[A-Z.\-]{1,6}$/.test(parts.slice(1).join(""))
+      ) {
+        return { family: parts[0], given: parts.slice(1).join(" ") };
+      }
+
       // Common "Given Family" fallback
       return {
         family: parts[parts.length - 1] || "",
