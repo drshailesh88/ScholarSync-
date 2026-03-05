@@ -187,6 +187,7 @@ export function useEditorDocument(
     }
 
     const interval = setInterval(async () => {
+      if (!currentSectionIdRef.current) return;
       try {
         await autoSaveVersion(dbDocumentId, currentSectionIdRef.current, content);
         lastVersionSaveRef.current = new Date();
@@ -277,7 +278,7 @@ export function useEditorDocument(
                 editor_content: data.editor_content,
                 plain_text_content: data.plain_text_content,
                 word_count: data.word_count,
-                sectionId: currentSectionIdRef.current || undefined,
+                sectionId: currentSectionIdRef.current ?? undefined,
               });
             },
             {

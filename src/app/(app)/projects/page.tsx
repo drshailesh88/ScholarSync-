@@ -273,7 +273,7 @@ export default function ProjectsPage() {
       setShowNewModal(false);
       resetCreateForm();
       if (created) {
-        router.push(`/studio/${created.id}`);
+        router.push(`/editor/new?project=${created.id}`);
       }
     } catch (err) {
       console.error("Failed to create project:", err);
