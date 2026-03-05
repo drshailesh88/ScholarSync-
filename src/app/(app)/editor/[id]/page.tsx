@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import type { JSONContent } from "@tiptap/core";
 import { AcademicEditor } from "@/components/editor/AcademicEditor";
@@ -53,14 +53,6 @@ export default function EditorPage() {
 
   const [showExport, setShowExport] = useState(false);
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
-  const [currentContent, setCurrentContent] = useState<JSONContent | null>(null);
-
-  // Update current content when dbContent changes
-  useEffect(() => {
-    if (dbContent !== null) {
-      setCurrentContent(dbContent);
-    }
-  }, [dbContent]);
 
   // Handle title changes with debounced save
   const handleTitleChange = (newTitle: string) => {
@@ -83,12 +75,12 @@ export default function EditorPage() {
 
   // Combine DB content with template for new documents
   const editorContent = useMemo(() => {
-    if (currentContent) {
-      return currentContent;
+    if (dbContent) {
+      return dbContent;
     }
     // If no content from DB, generate template
     return generateTemplateContent(documentType);
-  }, [currentContent, documentType]);
+  }, [dbContent, documentType]);
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] -mx-6 -mt-0">
@@ -253,7 +245,7 @@ export default function EditorPage() {
       <ExportDialog
         isOpen={showExport}
         onClose={() => setShowExport(false)}
-        content={currentContent || editorContent || { type: "doc", content: [] }}
+        content={dbContent || editorContent || { type: "doc", content: [] }}
         title={documentTitle}
       />
     </div>
