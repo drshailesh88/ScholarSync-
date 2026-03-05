@@ -207,7 +207,7 @@ export function latexToHtml(tex: string): string {
     '<span class="latex-ref" data-ref="$1" title="Equation: $1">($1)</span>'
   );
   html = html.replace(
-    /\\cite(?:p|t|author)?\{([^}]*)\}/g,
+    /\\cite(?:p|t|author)?(?:\[[^\]]*\])?\{([^}]*)\}/g,
     (_, keys) => {
       const keyList = keys.split(",").map((k: string) => k.trim());
       return `<span class="latex-cite" title="${keys}">[${keyList.join(", ")}]</span>`;

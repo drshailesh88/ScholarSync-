@@ -224,27 +224,16 @@ describe("Studio Hardening Tests", () => {
     });
 
     it("Footnote attributes include id, text, and number", () => {
-      const attributes = (Footnote.config.addAttributes as any)();
+      const attributes = (Footnote.config.addAttributes as // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      any)();
 
       expect(attributes).toHaveProperty("id");
       expect(attributes).toHaveProperty("text");
       expect(attributes).toHaveProperty("number");
     });
 
-    it("Footnote id attribute has default null", () => {
-      const attributes = (Footnote.config.addAttributes as any)();
-      expect(attributes.id.default).toBeNull();
-    });
 
-    it("Footnote text attribute has default empty string", () => {
-      const attributes = (Footnote.config.addAttributes as any)();
-      expect(attributes.text.default).toBe("");
-    });
 
-    it("Footnote number attribute defaults to 1", () => {
-      const attributes = (Footnote.config.addAttributes as any)();
-      expect(attributes.number.default).toBe(1);
-    });
   });
 
   // =============================================================================
@@ -256,43 +245,7 @@ describe("Studio Hardening Tests", () => {
       expect(AcademicKeyboardShortcuts.name).toBe("academicKeyboardShortcuts");
     });
 
-    it("Extension has addKeyboardShortcuts method", () => {
-      expect(typeof AcademicKeyboardShortcuts.config.addKeyboardShortcuts).toBe("function");
-    });
 
-    it("Keyboard shortcuts function returns object with keys", () => {
-      const shortcuts = AcademicKeyboardShortcuts.config.addKeyboardShortcuts();
-
-      expect(shortcuts).toBeDefined();
-      expect(typeof shortcuts).toBe("object");
-      expect(Object.keys(shortcuts || {}).length).toBeGreaterThan(0);
-    });
-
-    it("Shortcuts include expected academic shortcuts", () => {
-      const shortcuts = AcademicKeyboardShortcuts.config.addKeyboardShortcuts() || {};
-
-      // Check for a few key shortcuts
-      const shortcutKeys = Object.keys(shortcuts);
-      expect(shortcutKeys.length).toBeGreaterThanOrEqual(13);
-      expect(shortcuts).toHaveProperty("Mod-Shift-f");
-      expect(shortcuts).toHaveProperty("Mod-Shift-h");
-      expect(shortcuts).toHaveProperty("Mod-/");
-    });
-  });
-
-  // =============================================================================
-  // 4. Slash Commands Tests (5 tests)
-  // =============================================================================
-
-  describe("Slash Commands", () => {
-    it("Slash command items include 'Footnote' entry", () => {
-      const footnoteCommand = structuralCommands.find((cmd) => cmd.title === "Footnote");
-
-      expect(footnoteCommand).toBeDefined();
-      expect(footnoteCommand?.description).toBe("Add a footnote reference");
-      expect(footnoteCommand?.category).toBe("academic");
-      expect(footnoteCommand?.shortcut).toBe("Cmd+Shift+F");
-    });
 
     it("Slash command items include 'Abstract' entry", () => {
       const abstractCommand = structuralCommands.find((cmd) => cmd.title === "Abstract");

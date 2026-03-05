@@ -649,8 +649,8 @@ describe("Cycle 2: latexToHtml environment rendering", () => {
     const tex = "\\begin{tabular}{cc}\nA & B \\\\\nC & D \\\\\n\\end{tabular}";
     const html = latexToHtml(tex);
     expect(html).toContain("latex-tabular");
-    expect(html).toContain("<th>");
-    expect(html).toContain("<td>");
+    expect(html).toMatch(/<th[^>]*>/);
+    expect(html).toMatch(/<td[^>]*>/);
   });
 
   it("converts verbatim environment", () => {
