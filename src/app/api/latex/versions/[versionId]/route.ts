@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { latexFileVersions, latexProjects } from "@/lib/db/schema/editor";
@@ -6,12 +6,12 @@ import { eq, and } from "drizzle-orm";
 
 /** GET — get a specific version's content */
 export async function GET(
-  req: Request,
-  { params }: { params: { versionId: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ versionId: string }> }
 ) {
   try {
     const userId = await getCurrentUserId();
-    const { versionId } = params;
+    const { versionId } = await params;
 
     if (!versionId) {
       return NextResponse.json({ error: "Missing versionId" }, { status: 400 });
@@ -48,12 +48,12 @@ export async function GET(
 
 /** DELETE — delete a version */
 export async function DELETE(
-  req: Request,
-  { params }: { params: { versionId: string } }
+  _req: NextRequest,
+  { params }: { params: Promise<{ versionId: string }> }
 ) {
   try {
     const userId = await getCurrentUserId();
-    const { versionId } = params;
+    const { versionId } = await params;
 
     if (!versionId) {
       return NextResponse.json({ error: "Missing versionId" }, { status: 400 });

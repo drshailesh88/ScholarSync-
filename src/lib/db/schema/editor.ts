@@ -936,7 +936,35 @@ export const latexFiles = pgTable(
 );
 
 // ---------------------------------------------------------------------------
-// 43. latex_compilations
+// 43. latex_file_versions
+// ---------------------------------------------------------------------------
+export const latexFileVersions = pgTable(
+  "latex_file_versions",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    latexFileId: text("latex_file_id")
+      .notNull()
+      .references(() => latexFiles.id, { onDelete: "cascade" }),
+    latexProjectId: text("latex_project_id")
+      .notNull()
+      .references(() => latexProjects.id, { onDelete: "cascade" }),
+    content: text("content").notNull(),
+    description: text("description"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_latex_file_versions_file").on(table.latexFileId),
+    index("idx_latex_file_versions_project").on(table.latexProjectId),
+    index("idx_latex_file_versions_created").on(table.createdAt),
+  ]
+);
+
+// ---------------------------------------------------------------------------
+// 44. latex_compilations
 // ---------------------------------------------------------------------------
 export const latexCompilations = pgTable(
   "latex_compilations",

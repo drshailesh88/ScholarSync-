@@ -5,6 +5,7 @@ import { useSlidesStore } from "@/stores/slides-store";
 import { LearnMode } from "./learn-mode";
 import { DraftMode } from "./draft-mode";
 import { VisualMode } from "./visual-mode";
+import { IllustrationMode } from "./illustration-mode";
 
 export function SlidesAgentPanel() {
   const agentMode = useSlidesStore((s) => s.agentMode);
@@ -51,6 +52,17 @@ export function SlidesAgentPanel() {
           >
             Visual
           </button>
+          <button
+            onClick={() => setAgentMode("illustrate")}
+            className={cn(
+              "flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all",
+              agentMode === "illustrate"
+                ? "bg-brand text-white shadow-sm"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            Illustrate
+          </button>
         </div>
       </div>
 
@@ -59,6 +71,7 @@ export function SlidesAgentPanel() {
         {agentMode === "learn" && <LearnMode />}
         {agentMode === "draft" && <DraftMode />}
         {agentMode === "visual" && <VisualMode />}
+        {agentMode === "illustrate" && <IllustrationMode />}
       </div>
     </div>
   );

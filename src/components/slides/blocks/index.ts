@@ -18,6 +18,7 @@ import { ToggleBlock } from "../gamma-mode/blocks/toggle-block";
 import { EmbedBlock } from "../gamma-mode/blocks/embed-block";
 import { NestedCardBlock } from "../gamma-mode/blocks/nested-card-block";
 import { InfographicBlock } from "./infographic-block";
+import { IllustrationBlock } from "./illustration-block";
 
 // ---------------------------------------------------------------------------
 // Block Registry — maps each content block type to its renderer + metadata
@@ -194,6 +195,19 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
         { label: "Step 3", description: "Third step" },
       ],
       colorScheme: "theme",
+    }),
+    category: "media",
+  },
+  illustration: {
+    render: IllustrationBlock as any,
+    label: "Illustration",
+    iconName: "Atom",
+    defaultData: () => ({
+      svgContent: "",
+      caption: "",
+      sourcePrompt: "",
+      sourceBackend: "svg",
+      alt: "Scientific illustration",
     }),
     category: "media",
   },

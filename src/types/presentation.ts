@@ -145,6 +145,18 @@ export interface InfographicData {
   colorScheme?: "theme" | "blue" | "green" | "purple" | "orange" | "rainbow";
 }
 
+/** Scientific illustration block from FINNISH integration */
+export interface IllustrationData {
+  svgContent: string;
+  width?: number;
+  height?: number;
+  caption?: string;
+  sourcePrompt?: string;
+  sourceBackend?: "mermaid" | "svg" | "ai-image" | "manual";
+  domain?: string;
+  alt?: string;
+}
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
   type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
@@ -192,7 +204,9 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "embed"; data: EmbedData })
   | (ContentBlockBase & { type: "nested_card"; data: NestedCardData })
   // V3: Visual generation blocks
-  | (ContentBlockBase & { type: "infographic"; data: InfographicData; figureLabel?: string });
+  | (ContentBlockBase & { type: "infographic"; data: InfographicData; figureLabel?: string })
+  // V4: Scientific illustration blocks (FINNISH integration)
+  | (ContentBlockBase & { type: "illustration"; data: IllustrationData; figureLabel?: string });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)
