@@ -6,20 +6,42 @@
 
 import { escapeHtml } from "./latex-to-html";
 
+function parseColumnSpec(colSpec: string): string[] {
+  // Parse {|l|c|r|} -> ['left', 'center', 'right']
+  const alignments: string[] = [];
+  for (const char of colSpec) {
+    if (char === 'l' || char === 'L') alignments.push('left');
+    else if (char === 'c' || char === 'C') alignments.push('center');
+    else if (char === 'r' || char === 'R') alignments.push('right');
+  }
+  return alignments;
+}
+
 /** Convert the body of a tabular environment to an HTML table. */
-export function convertTabularBody(body: string): string {
+export function convertTabularBody(body: string, colSpec: string = ""): string {
+  const alignments = parseColumnSpec(colSpec);
   const rows = body
     .split(/\\\\/)
     .map((r) => r.replace(/\\hline/g, "").trim())
     .filter((r) => r.length > 0);
 
-  let table = '<table class="latex-tabular">';
+  let table = '<table class="latex-tabular" style="border-collapse:collapse;width:100%;">';
   for (let i = 0; i < rows.length; i++) {
     const cells = rows[i].split("&").map((c) => c.trim());
     const tag = i === 0 ? "th" : "td";
     table += "<tr>";
-    for (const cell of cells) {
-      table += `<${tag}>${cell}</${tag}>`;
+    for (let j = 0; j < cells.length; j++) {
+      const cell = cells[j];
+      // Handle \multicolumn{N}{align}{content}
+      const multiMatch = cell.match(/\\multicolumn\{(\d+)\}\{([^}]*)\}\{([^}]*)\}/);
+      if (multiMatch) {
+        const colspan = multiMatch[1];
+        const align = multiMatch[2].includes('l') ? 'left' : multiMatch[2].includes('r') ? 'right' : 'center';
+        table += `<${tag} colspan="${colspan}" style="text-align:${align};padding:8px;border:1px solid #ddd;">${escapeHtml(multiMatch[3])}</${tag}>`;
+      } else {
+        const align = alignments[j] || 'left';
+        table += `<${tag} style="text-align:${align};padding:8px;border:1px solid #ddd;">${escapeHtml(cell)}</${tag}>`;
+      }
     }
     table += "</tr>";
   }
@@ -48,10 +70,10 @@ export function convertFigure(inner: string): string {
 export function convertTable(inner: string): string {
   const capMatch = inner.match(/\\caption\{([^}]*)\}/);
   const caption = capMatch ? capMatch[1] : "";
-  const tabMatch = inner.match(/\\begin\{tabular\}\{[^}]*\}([\s\S]*?)\\end\{tabular\}/);
+  const tabMatch = inner.match(/\\begin\{tabular\}\{([^}]*)\}([\s\S]*?)\\end\{tabular\}/);
   let tableHtml = "";
   if (tabMatch) {
-    tableHtml = convertTabularBody(tabMatch[1]);
+    tableHtml = convertTabularBody(tabMatch[2], tabMatch[1]); // Pass colSpec
   }
   let out = '<div class="latex-table">';
   if (caption) {
@@ -79,8 +101,8 @@ export function convertEnvironments(html: string): string {
 
   // Standalone tabular (not inside table environment)
   html = html.replace(
-    /\\begin\{tabular\}\{[^}]*\}([\s\S]*?)\\end\{tabular\}/g,
-    (_, body: string) => convertTabularBody(body),
+    /\\begin\{tabular\}\{([^}]*)\}([\s\S]*?)\\end\{tabular\}/g,
+    (_, colSpec: string, body: string) => convertTabularBody(body, colSpec),
   );
 
   // Verbatim environments

@@ -260,6 +260,21 @@ export function PreviewPanel({ editorTopLine }: PreviewPanelProps) {
           border-top: 1px solid var(--color-border-subtle);
           margin: 1.5rem 0;
         }
+        .latex-ref {
+          color: var(--color-brand);
+          cursor: pointer;
+          border-bottom: 1px dashed var(--color-brand);
+        }
+        .latex-cite {
+          color: var(--color-brand);
+          font-weight: 500;
+        }
+        .latex-image {
+          max-width: 100%;
+          margin: 1rem auto;
+          display: block;
+          border-radius: 4px;
+        }
         /* KaTeX styles import */
         @import url('https://cdn.jsdelivr.net/npm/katex@0.16.33/dist/katex.min.css');
       `}</style>

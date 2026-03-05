@@ -188,8 +188,34 @@ export function latexToHtml(tex: string): string {
 
   // Convert environments (figure, table, verbatim, quote, center)
   html = convertEnvironments(html);
+
+  // Image preview - render actual <img> tags for existing images
+  html = html.replace(
+    /\\includegraphics(?:\[[^\]]*\])?\{([^}]*)\}/g,
+    (_, src) => {
+      return `<img class="latex-image" src="/api/latex/images/serve?path=${encodeURIComponent(src)}" alt="${src}" style="max-width:100%;margin:1rem auto;display:block;border-radius:4px;" />`;
+    }
+  );
+
+  // Cross-reference rendering - render refs and cites as styled spans
+  html = html.replace(
+    /\\ref\{([^}]*)\}/g,
+    '<span class="latex-ref" data-ref="$1" title="Reference: $1">[ref:$1]</span>'
+  );
+  html = html.replace(
+    /\\eqref\{([^}]*)\}/g,
+    '<span class="latex-ref" data-ref="$1" title="Equation: $1">($1)</span>'
+  );
+  html = html.replace(
+    /\\cite(?:p|t|author)?\{([^}]*)\}/g,
+    (_, keys) => {
+      const keyList = keys.split(",").map((k: string) => k.trim());
+      return `<span class="latex-cite" title="${keys}">[${keyList.join(", ")}]</span>`;
+    }
+  );
+
   // Remove remaining known commands that don't render (safely)
-  html = html.replace(/\\(?:usepackage|documentclass|bibliographystyle|bibliography|label|ref|eqref|pageref|cite|citep|citet|citeauthor|autoref|cref|includegraphics|input|include)\b(?:\[[^\]]*\])?\{[^}]*\}(?:\{[^}]*\})?/g, "");
+  html = html.replace(/\\(?:usepackage|documentclass|bibliographystyle|bibliography|label|pageref|autoref|cref|input|include)\b(?:\[[^\]]*\])?\{[^}]*\}(?:\{[^}]*\})?/g, "");
   html = html.replace(/\\(?:usepackage|documentclass)\[[^\]]*\]\{[^}]*\}/g, "");
 
   // \today — replace with current date
