@@ -25,6 +25,8 @@ import { BackgroundRemovalTool } from '@/components/illustration/BackgroundRemov
 import { AIGenerationTool } from '@/components/illustration/AIGeneration';
 import { ShapeGeneratorPanel, type ShapeType } from '@/components/illustration/tools';
 import { LoadingSpinner } from '@/components/illustration/LoadingSpinner';
+import { ScientificTextToolbar } from '@/components/illustration/ScientificTextToolbar';
+import { FigurePanelGenerator } from '@/components/illustration/FigurePanelGenerator';
 import { useIllustratorTools } from '@/hooks/illustration/useIllustratorTools';
 import { useKeyboardShortcuts } from '@/hooks/illustration/useKeyboardShortcuts';
 import { useCanvas as useCanvasContext } from '@/components/illustration/Canvas/CanvasContext';
@@ -39,6 +41,12 @@ import { ToolType } from '@/lib/illustration/types';
 // ============================================================================
 
 interface MouseCoords {
+  x: number;
+  y: number;
+}
+
+interface ScientificToolbarPosition {
+  visible: boolean;
   x: number;
   y: number;
 }
@@ -138,7 +146,14 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const [bgRemovalToolOpen, setBgRemovalToolOpen] = useState(false);
   const [aiGenerationToolOpen, setAIGenerationToolOpen] = useState(false);
   const [shapeGeneratorOpen, setShapeGeneratorOpen] = useState(false);
+  const [figurePanelGeneratorOpen, setFigurePanelGeneratorOpen] = useState(false);
   const [initialShapeType, setInitialShapeType] = useState<ShapeType>('dna');
+  const [scientificToolbar, setScientificToolbar] = useState<ScientificToolbarPosition>({
+    visible: false,
+    x: 100,
+    y: 100,
+  });
+  const canvasAreaRef = useRef<HTMLDivElement>(null);
 
   // Store state
   const isLoading = useEditorStore((state) => state.isLoading);
@@ -194,6 +209,11 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
       setInitialShapeType(shapeType as ShapeType);
     }
     setShapeGeneratorOpen(true);
+  }, []);
+
+  // Handle opening figure panel generator
+  const handleOpenFigurePanelGenerator = useCallback(() => {
+    setFigurePanelGeneratorOpen(true);
   }, []);
 
   // ========================================================================
@@ -422,7 +442,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     } finally {
       setLoading(false);
     }
-  }, [navigate, setLoading, showToast]);
+  }, [setLoading, showToast]);
 
   // ========================================================================
   // Canvas Resize Handler
@@ -475,10 +495,43 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     setMouseCoords(coords);
   }, []);
 
+  const isTextObject = useCallback((obj: any): boolean => {
+    const type = obj?.type;
+    return type === 'i-text' || type === 'textbox' || type === 'text';
+  }, []);
+
+  const updateScientificToolbarPosition = useCallback((selectedObject: any) => {
+    if (!canvasAreaRef.current || !canvas || !selectedObject?.getBoundingRect) return;
+
+    const canvasElement = (canvas as any).lowerCanvasEl as HTMLCanvasElement | undefined;
+    if (!canvasElement) return;
+
+    const areaRect = canvasAreaRef.current.getBoundingClientRect();
+    const canvasRect = canvasElement.getBoundingClientRect();
+    const objectBounds = selectedObject.getBoundingRect();
+
+    const estimatedToolbarWidth = 280;
+    const left =
+      canvasRect.left - areaRect.left + objectBounds.left + objectBounds.width / 2 - estimatedToolbarWidth / 2;
+    const top = canvasRect.top - areaRect.top + objectBounds.top - 12;
+
+    setScientificToolbar({
+      visible: true,
+      x: Math.max(8, left),
+      y: Math.max(8, top),
+    });
+  }, [canvas]);
+
   const handleSelectionChange = useCallback((objects: any[]) => {
     const objectIds = objects.map((obj) => obj.id || `obj-${Math.random().toString(36).substr(2, 9)}`);
     useEditorStore.getState().selectObjects(objectIds);
-  }, []);
+
+    if (objects.length === 1 && isTextObject(objects[0])) {
+      updateScientificToolbarPosition(objects[0]);
+    } else {
+      setScientificToolbar((prev) => ({ ...prev, visible: false }));
+    }
+  }, [isTextObject, updateScientificToolbarPosition]);
 
   const handleObjectModified = useCallback((_object: unknown) => {
     // Object was modified, history is automatically updated in Canvas component
@@ -560,6 +613,12 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
           </div>
         )}
 
+        {/* Figure Panel Generator */}
+        <FigurePanelGenerator
+          isOpen={figurePanelGeneratorOpen}
+          onClose={() => setFigurePanelGeneratorOpen(false)}
+        />
+
         {/* Illustrator Toolbar (Pen, Brush, Shapes, Hand-drawn toggle) */}
         <IllustratorToolbar
           canvas={canvas}
@@ -567,6 +626,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
           onToolChange={handleIllustratorToolChange}
           handDrawnEnabled={handDrawnEnabled}
           onHandDrawnToggle={handleHandDrawnToggle}
+          onOpenFigurePanelGenerator={handleOpenFigurePanelGenerator}
         />
 
         {/* Main Content Area */}
@@ -575,7 +635,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
           <Toolbar onOpenShapeGenerator={handleOpenShapeGenerator} />
 
           {/* Center Canvas Area */}
-          <div style={styles.canvasArea}>
+          <div ref={canvasAreaRef} style={styles.canvasArea}>
             {isLoading && (
               <div style={styles.loadingOverlay}>
                 <LoadingSpinner size="lg" variant="primary" />
@@ -611,6 +671,13 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
                 />
               </div>
             </div>
+
+            <ScientificTextToolbar
+              visible={scientificToolbar.visible}
+              x={scientificToolbar.x}
+              y={scientificToolbar.y}
+              onClose={() => setScientificToolbar((prev) => ({ ...prev, visible: false }))}
+            />
           </div>
 
           {/* Right Panel */}

@@ -533,8 +533,23 @@ describe('AlignmentManager', () => {
   beforeEach(() => {
     mockCanvas = new MockFabricCanvas();
     manager = new AlignmentManager(mockCanvas as any, {
-      grid: { enabled: false },
-      alignment: { enabled: false },
+      grid: {
+        enabled: false,
+        size: 20,
+        snapToGrid: true,
+        color: '#e5e7eb',
+        opacity: 0.5,
+        subdivisions: 4,
+      },
+      alignment: {
+        enabled: false,
+        snapToEdges: true,
+        snapToCenters: true,
+        snapToSpacing: false,
+        snapThreshold: 8,
+        guideColor: '#6366f1',
+        guideWidth: 1,
+      },
     });
   });
 
@@ -624,8 +639,23 @@ describe('Canvas Intelligence Integration', () => {
 
     const labelingManager = new ObjectLabelingManager(mockCanvas as any);
     const alignmentManager = new AlignmentManager(mockCanvas as any, {
-      grid: { enabled: false },
-      alignment: { enabled: false },
+      grid: {
+        enabled: false,
+        size: 20,
+        snapToGrid: true,
+        color: '#e5e7eb',
+        opacity: 0.5,
+        subdivisions: 4,
+      },
+      alignment: {
+        enabled: false,
+        snapToEdges: true,
+        snapToCenters: true,
+        snapToSpacing: false,
+        snapThreshold: 8,
+        guideColor: '#6366f1',
+        guideWidth: 1,
+      },
     });
 
     const obj = new MockFabricObject('obj1', 100, 100, 50, 50);

@@ -11,7 +11,6 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { FabricImage } from 'fabric';
 
 // Stub for react-plotly - full library needs to be installed for chart functionality
-// @ts-expect-error - Plot component stub
 const Plot: React.ComponentType<any> = ({ data, layout }: { data: unknown[]; layout: unknown }) => (
   <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted, #999)' }}>
     <div>Chart Preview</div>

@@ -11,7 +11,7 @@
  * vectorized via imagetracerjs for editable SVG output.
  */
 
-import GoogleGenerativeAI from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 import { CARDIOLOGY_DOMAIN_PROMPT } from '../prompts/cardiology-prompts';
 import { NEUROSCIENCE_DOMAIN_PROMPT } from '../prompts/neuroscience-prompts';
 import { BIOLOGY_DOMAIN_PROMPT } from '../prompts/biology-prompts';
@@ -137,25 +137,27 @@ export async function generateImage(
 
   try {
     // Initialize Gemini client
-    const genAI = new GoogleGenerativeAI(apiKey);
+    const genAI = new GoogleGenAI({ apiKey });
     const selectedModel = MODEL_MAP[model];
-    const generativeModel = genAI.getGenerativeModel({ model: selectedModel });
-
-    // Generate image
     const startTime = Date.now();
-    const response = await generativeModel.generateContent(enhancedPrompt);
+    const response = await genAI.models.generateContent({
+      model: selectedModel,
+      contents: enhancedPrompt,
+    });
     const generationTimeMs = Date.now() - startTime;
 
     // Extract image from response
-    const imagePart = response.response.candidates?.[0]?.content?.parts?.find(
-      part => part.inlineData !== undefined
+    const responseData = response as any;
+    const candidates = responseData.candidates ?? responseData.response?.candidates;
+    const imagePart = candidates?.[0]?.content?.parts?.find(
+      (part: any) => part.inlineData !== undefined
     );
 
     if (!imagePart?.inlineData?.data) {
       throw new GeminiBackendError(
         'No image data in generation response',
         'NO_IMAGE',
-        { response: JSON.stringify(response.response).slice(0, 500) }
+        { response: JSON.stringify(responseData).slice(0, 500), generationTimeMs }
       );
     }
 

@@ -2,6 +2,8 @@
  * Type declarations for FINNISH illustration integration
  */
 
+import type * as React from 'react';
+
 // Environment variable types
 declare global {
   namespace NodeJS {
@@ -11,13 +13,16 @@ declare global {
       // Add other FINNISH env vars as needed
     }
   }
-}
 
-// React 19 compatibility - JSX namespace is available
-// These declarations resolve false positives in tscheck for React 18 components
-declare namespace JSX {
-  interface IntrinsicElements {
-    [elemName: string]: any;
+  // React 19 compatibility shim for legacy `JSX.Element` return annotations.
+  namespace JSX {
+    type Element = React.JSX.Element;
+    interface ElementClass extends React.JSX.ElementClass {}
+    interface ElementAttributesProperty extends React.JSX.ElementAttributesProperty {}
+    interface ElementChildrenAttribute extends React.JSX.ElementChildrenAttribute {}
+    interface IntrinsicAttributes extends React.JSX.IntrinsicAttributes {}
+    interface IntrinsicClassAttributes<T> extends React.JSX.IntrinsicClassAttributes<T> {}
+    interface IntrinsicElements extends React.JSX.IntrinsicElements {}
   }
 }
 

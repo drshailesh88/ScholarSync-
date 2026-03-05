@@ -75,6 +75,21 @@ import { generateImage, isGeminiAvailable } from '@/lib/illustration/ai/backends
 import { pngToEditableSVG, getIconOptions } from '@/lib/illustration/ai/vectorize';
 import { svgBackend } from '@/lib/illustration/ai/backends/SVGBackend';
 
+const mockUsage = {
+  inputTokens: 10,
+  inputTokenDetails: {
+    noCacheTokens: 10,
+    cacheReadTokens: 0,
+    cacheWriteTokens: 0,
+  },
+  outputTokens: 20,
+  outputTokenDetails: {
+    textTokens: 20,
+    reasoningTokens: 0,
+  },
+  totalTokens: 30,
+} as const;
+
 describe('Multi-Backend Illustration Generation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -218,11 +233,11 @@ describe('Multi-Backend Illustration Generation', () => {
   describe('Mermaid Backend', () => {
     beforeEach(() => {
       const mockText = 'flowchart TB\n  A[Start] --> B[End]';
-      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: { totalTokens: 100 } });
+      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
     });
     it('should generate valid Mermaid flowchart syntax', async () => {
       const mockText = 'flowchart TB\n  A[Start] --> B[End]';
-      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: { totalTokens: 100 } });
+      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
       // Simulate the generateWithMermaid function behavior
       const result = mockGenerateWithMermaid('create a flowchart');
@@ -234,7 +249,7 @@ describe('Multi-Backend Illustration Generation', () => {
 
     it('should extract Mermaid syntax from JSON response', async () => {
       const mockText = '{"syntax": "flowchart LR\\n  A --> B"}';
-      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: { totalTokens: 50 } as unknown });
+      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { text } = await vi.mocked(generateText)({} as any);
@@ -246,7 +261,7 @@ describe('Multi-Backend Illustration Generation', () => {
 
     it('should clean Mermaid syntax from code blocks', async () => {
       const mockText = '```mermaid\nflowchart TB\n  A --> B\n```';
-      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: { totalTokens: 75 } as unknown });
+      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { text } = await vi.mocked(generateText)({} as any);
@@ -258,7 +273,7 @@ describe('Multi-Backend Illustration Generation', () => {
 
     it('should handle domain-specific Mermaid generation', async () => {
       const mockText = 'flowchart TB\n  cardiology[Cardiology]';
-      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: { totalTokens: 80 } });
+      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
       const result = mockGenerateWithMermaid('heart disease flow', 'cardiology');
 
@@ -267,7 +282,7 @@ describe('Multi-Backend Illustration Generation', () => {
 
     it('should include slide context when provided', async () => {
       const mockText = 'flowchart TB\n  A[Context]';
-      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: { totalTokens: 90 } });
+      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
       const result = mockGenerateWithMermaid('diagram', undefined, 'Slide about cardiovascular health');
 
@@ -285,7 +300,7 @@ describe('Multi-Backend Illustration Generation', () => {
       vi.mocked(svgBackend.generate).mockResolvedValue({
         svg: mockSVG,
         backend: 'svg',
-      });
+      } as any);
     });
 
     it('should have SVG backend available', async () => {
@@ -299,7 +314,7 @@ describe('Multi-Backend Illustration Generation', () => {
       vi.mocked(svgBackend.generate).mockResolvedValue({
         svg: mockSVG,
         backend: 'svg',
-      });
+      } as any);
 
       const result = await svgBackend.generate({
         prompt: 'circle',
@@ -318,7 +333,7 @@ describe('Multi-Backend Illustration Generation', () => {
       vi.mocked(svgBackend.generate).mockResolvedValue({
         svg: mockSVG,
         backend: 'svg',
-      });
+      } as any);
 
       const result = await svgBackend.generate({
         prompt: 'modify this',
@@ -413,7 +428,7 @@ describe('Multi-Backend Illustration Generation', () => {
       vi.mocked(svgBackend.generate).mockResolvedValue({
         svg: mockSVG,
         backend: 'svg',
-      });
+      } as any);
 
       // Direct test of fallback logic
       const geminiAvailable = vi.mocked(isGeminiAvailable)();
@@ -427,7 +442,7 @@ describe('Multi-Backend Illustration Generation', () => {
       vi.mocked(svgBackend.generate).mockRejectedValue(new Error('SVG generation failed'));
 
       const mockText = 'flowchart TB\n  A[Fallback]';
-      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: { totalTokens: 50 } });
+      vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
       // Direct test of Mermaid fallback
       const result = mockGenerateWithMermaid('test');
@@ -521,7 +536,7 @@ async function mockGenerateWithSVG(_prompt: string, _domain?: string, _existingD
     return vi.mocked(svgBackend.generate).mock.results[0].value;
   }
 
-  vi.mocked(svgBackend.generate).mockResolvedValue(result);
+  vi.mocked(svgBackend.generate).mockResolvedValue(result as any);
   return result;
 }
 

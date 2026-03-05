@@ -31,7 +31,6 @@ export { default as ColorJS } from 'colorjs.io';
 
 // Save SVG as PNG - Export SVG elements as PNG images
 // @see https://github.com/exupero/saveSvgAsPng
-// @ts-expect-error - save-svg-as-png doesn't have TypeScript definitions
 export { saveSvgAsPng, svgAsPngUri, svgAsDataUri, download } from 'save-svg-as-png';
 
 // jsPDF - Client-side JavaScript PDF generation
@@ -41,7 +40,6 @@ export { jsPDF } from 'jspdf';
 // svg2pdf.js - Convert SVG elements to PDF using jsPDF
 // @see https://github.com/yWorks/svg2pdf.js
 // Stub export - full library needs to be installed for SVG to PDF conversion
-// @ts-expect-error - svg2pdf doesn't have TypeScript definitions
 export const svg2pdf = typeof window !== 'undefined' ? async (svg: SVGElement, pdf: unknown, options?: unknown) => {
   console.warn('svg2pdf stub: Full SVG to PDF conversion requires library installation');
   return Promise.resolve();

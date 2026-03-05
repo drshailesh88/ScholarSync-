@@ -193,7 +193,7 @@ export class SVGImporter {
 
     try {
       // Parse SVG using svg-parser
-      const parsed = parseSVG(cleanedSVG);
+      const parsed = parseSVG(cleanedSVG) as RootNode;
 
       this.reportProgress('converting', 50, 'Converting to Fabric objects...');
 

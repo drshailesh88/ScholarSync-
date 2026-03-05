@@ -26,6 +26,7 @@ export interface IllustratorToolbarProps {
   onToolChange: (tool: IllustratorTool) => void;
   handDrawnEnabled?: boolean;
   onHandDrawnToggle?: (enabled: boolean) => void;
+  onOpenFigurePanelGenerator?: () => void;
 }
 
 interface ToolButtonProps {
@@ -198,6 +199,15 @@ const SketchyIcon = () => (
   </svg>
 );
 
+const FigurePanelIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="8" height="8" />
+    <rect x="13" y="3" width="8" height="8" />
+    <rect x="3" y="13" width="8" height="8" />
+    <rect x="13" y="13" width="8" height="8" />
+  </svg>
+);
+
 // ============================================================================
 // Tool Button Component
 // ============================================================================
@@ -261,6 +271,7 @@ export function IllustratorToolbar({
   onToolChange,
   handDrawnEnabled = false,
   onHandDrawnToggle,
+  onOpenFigurePanelGenerator,
 }: IllustratorToolbarProps): JSX.Element {
   const [toggleHovered, setToggleHovered] = useState(false);
 
@@ -348,6 +359,17 @@ export function IllustratorToolbar({
 
       {/* Spacer */}
       <div style={{ flex: 1 }} />
+
+      {/* Figure panels generator */}
+      <button
+        style={styles.toggleButton}
+        onClick={onOpenFigurePanelGenerator}
+        title="Generate multi-panel figure layout"
+        type="button"
+      >
+        <FigurePanelIcon />
+        <span>Figure Panels</span>
+      </button>
 
       {/* Hand-drawn style toggle */}
       <button

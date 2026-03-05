@@ -85,6 +85,8 @@ export const DEFAULT_CONNECTOR_STYLE: ConnectorStyle = {
   labelPosition: 0.5,
 };
 
+type PointLike = { x: number; y: number };
+
 // =============================================================================
 // CONNECTION POINT CALCULATION
 // =============================================================================
@@ -126,7 +128,7 @@ function getBoundingBox(obj: FabricObject): {
 /**
  * Calculate the angle from one point to another in radians
  */
-function calculateAngle(from: Point, to: Point): number {
+function calculateAngle(from: PointLike, to: PointLike): number {
   return Math.atan2(to.y - from.y, to.x - from.x);
 }
 
@@ -173,7 +175,7 @@ function getBestSideFromAngle(angle: number): ConnectorPort['side'] {
  */
 export function getConnectionPoint(
   object: FabricObject,
-  targetCenter: Point,
+  targetCenter: PointLike,
   preferredSide: ConnectorPort['side']
 ): Point {
   const bbox = getBoundingBox(object);
@@ -217,8 +219,8 @@ export function getConnectionPoint(
  * @returns Array of points defining the path
  */
 export function calculateConnectorPath(
-  sourcePoint: Point,
-  targetPoint: Point,
+  sourcePoint: PointLike,
+  targetPoint: PointLike,
   curveType: ConnectorStyle['curveType'],
   waypoints?: Array<{ x: number; y: number }>
 ): Array<{ x: number; y: number }> {
@@ -253,8 +255,8 @@ export function calculateConnectorPath(
  * Uses a 3-segment route with a midpoint bend
  */
 function calculateElbowPath(
-  source: Point,
-  target: Point
+  source: PointLike,
+  target: PointLike
 ): Array<{ x: number; y: number }> {
   // If same Y (horizontal line)
   if (Math.abs(source.y - target.y) < 1) {
@@ -287,7 +289,7 @@ function calculateElbowPath(
  * Calculate a control point for a quadratic bezier curve
  * Creates a smooth curve that bows away from the straight line
  */
-function calculateBezierControlPoint(source: Point, target: Point): { x: number; y: number } {
+function calculateBezierControlPoint(source: PointLike, target: PointLike): { x: number; y: number } {
   // Calculate midpoint
   const midX = (source.x + target.x) / 2;
   const midY = (source.y + target.y) / 2;
@@ -340,7 +342,7 @@ function getStrokeDashArray(lineType: ConnectorStyle['lineType']): number[] | un
  * @returns Fabric.js object for the arrowhead, or null for 'none'
  */
 export function createArrowhead(
-  point: Point,
+  point: PointLike,
   angle: number,
   type: 'none' | 'arrow' | 'tbar' | 'circle' | 'diamond',
   color: string,
@@ -421,7 +423,7 @@ export function createArrowhead(
 /**
  * Calculate the angle from a point along a path direction
  */
-function getAngleAlongPath(from: Point, to: Point): number {
+function getAngleAlongPath(from: PointLike, to: PointLike): number {
   return Math.atan2(to.y - from.y, to.x - from.x);
 }
 
