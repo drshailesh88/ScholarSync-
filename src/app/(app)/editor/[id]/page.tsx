@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import type { JSONContent } from "@tiptap/core";
 import { AcademicEditor } from "@/components/editor/AcademicEditor";
@@ -58,6 +58,18 @@ export default function EditorPage() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
   const [contentKey, setContentKey] = useState(0);
+
+  // Add beforeunload protection to prevent data loss
+  useEffect(() => {
+    function handleBeforeUnload(e: BeforeUnloadEvent) {
+      if (saveStatus === "unsaved" || saveStatus === "saving") {
+        e.preventDefault();
+      }
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [saveStatus]);
 
   // Handle title changes with debounced save
   const handleTitleChange = (newTitle: string) => {
@@ -268,7 +280,7 @@ export default function EditorPage() {
         <VersionHistory
           documentId={dbDocumentId}
           sectionId={0}
-          currentContent={currentContent || restoredContent || editorContent}
+          currentContent={dbContent || restoredContent || editorContent}
           onRestore={(content) => {
             setRestoredContent(content);
             setContentKey((k) => k + 1);
