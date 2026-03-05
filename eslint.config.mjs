@@ -21,6 +21,12 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "*.d.ts",
+    // Additional build directories to prevent memory issues:
+    ".worktrees/**",
+    "**/node_modules/**",
+    ".turbo/**",
+    "dist/**",
+    "**/*.config.js",
   ]),
 ]);
 
