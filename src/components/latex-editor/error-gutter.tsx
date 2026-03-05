@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Warning, WarningCircle, Wrench, CircleNotch, Lightbulb, CaretDown, CaretRight } from "@phosphor-icons/react";
+import { Warning, WarningCircle, Wrench, CircleNotch, Lightbulb, CaretDown, CaretRight, Check } from "@phosphor-icons/react";
 import { enrichError, type EnrichedDiagnostic } from "./error-intelligence";
 
 export interface CompilationDiagnostic {
@@ -12,13 +12,15 @@ export interface CompilationDiagnostic {
 
 interface ErrorGutterPanelProps {
   diagnostics: CompilationDiagnostic[];
+  documentContent?: string;
   onGoToLine?: (line: number) => void;
-  onFixError?: (diagnostic: CompilationDiagnostic) => void;
+  onFixError?: (diagnostic: CompilationDiagnostic, context: { from: number; to: number; content: string }) => void;
 }
 
-export function ErrorGutterPanel({ diagnostics, onGoToLine, onFixError }: ErrorGutterPanelProps) {
+export function ErrorGutterPanel({ diagnostics, documentContent = "", onGoToLine, onFixError }: ErrorGutterPanelProps) {
   const [fixingIndex, setFixingIndex] = useState<number | null>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [fixedIndex, setFixedIndex] = useState<number | null>(null);
 
   // Enrich diagnostics with human-readable explanations
   const enriched = useMemo(
@@ -107,19 +109,38 @@ export function ErrorGutterPanel({ diagnostics, onGoToLine, onFixError }: ErrorG
                 </div>
 
                 <div className="flex items-center gap-1 shrink-0">
-                  {d.severity === "error" && onFixError && (
+                  {d.severity === "error" && onFixError && d.line != null && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setFixingIndex(i);
-                        onFixError(d);
-                        setTimeout(() => setFixingIndex(null), 3000);
+                        // Extract context: error line ± 5 lines
+                        const lines = documentContent.split("\n");
+                        const errorLineIdx = d.line! - 1; // 0-based
+                        const contextStart = Math.max(0, errorLineIdx - 5);
+                        const contextEnd = Math.min(lines.length, errorLineIdx + 6);
+                        const context = lines.slice(contextStart, contextEnd).join("\n");
+
+                        onFixError(d, {
+                          from: contextStart + 1, // 1-based for consistency
+                          to: contextEnd,
+                          content: context
+                        });
+
+                        // Show success state after a delay
+                        setTimeout(() => {
+                          setFixingIndex(null);
+                          setFixedIndex(i);
+                          setTimeout(() => setFixedIndex(null), 2000);
+                        }, 2000);
                       }}
                       className="opacity-0 group-hover:opacity-100 p-1 rounded text-ink-muted hover:text-brand hover:bg-brand/10 transition-all"
                       title="AI fix"
                     >
                       {fixingIndex === i ? (
                         <CircleNotch size={12} className="animate-spin" />
+                      ) : fixedIndex === i ? (
+                        <Check size={12} className="text-emerald-500" />
                       ) : (
                         <Wrench size={12} />
                       )}
