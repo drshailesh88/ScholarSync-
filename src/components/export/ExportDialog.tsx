@@ -10,6 +10,7 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { tiptapToDocx } from "./tiptap-to-docx";
+import { useReferenceStore } from "@/stores/reference-store";
 
 interface ExportDialogProps {
   isOpen: boolean;
@@ -30,6 +31,9 @@ export function ExportDialog({
   const [doubleSpaced, setDoubleSpaced] = useState(true);
   const [includePageNumbers, setIncludePageNumbers] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
+  const references = useReferenceStore((s) => s.references);
+  const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
+  const bibliographyEntries = useReferenceStore((s) => s.bibliographyEntries);
 
   const handleExport = useCallback(async () => {
     setIsExporting(true);
@@ -40,6 +44,9 @@ export function ExportDialog({
           title,
           doubleSpaced,
           includePageNumbers,
+          references,
+          referenceNumberMap,
+          bibliographyEntries,
         });
 
         const blob = new Blob([buffer as BlobPart], {
@@ -64,7 +71,17 @@ export function ExportDialog({
     } finally {
       setIsExporting(false);
     }
-  }, [format, content, title, doubleSpaced, includePageNumbers, onClose]);
+  }, [
+    format,
+    content,
+    title,
+    doubleSpaced,
+    includePageNumbers,
+    references,
+    referenceNumberMap,
+    bibliographyEntries,
+    onClose,
+  ]);
 
   if (!isOpen) return null;
 

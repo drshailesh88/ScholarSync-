@@ -14,11 +14,15 @@ import {
   type IBorderOptions,
 } from "docx";
 import type { JSONContent } from "@tiptap/core";
+import type { FormattedBibliographyEntry, Reference } from "@/types/citation";
 
 interface ExportOptions {
   title?: string;
   doubleSpaced?: boolean;
   includePageNumbers?: boolean;
+  references?: Map<string, Reference>;
+  referenceNumberMap?: Map<string, number>;
+  bibliographyEntries?: FormattedBibliographyEntry[];
 }
 
 const HEADING_LEVEL_MAP: Record<number, (typeof HeadingLevel)[keyof typeof HeadingLevel]> = {
@@ -40,6 +44,11 @@ const solidBorder: IBorderOptions = {
   color: "000000",
 };
 
+interface CollectedCitation {
+  referenceIds: string[];
+  displayText: string;
+}
+
 /**
  * Convert Tiptap JSON content to a DOCX buffer.
  */
@@ -51,8 +60,15 @@ export async function tiptapToDocx(
 
   // Array to collect footnotes during conversion
   const collectedFootnotes: Array<{ number: number; text: string }> = [];
+  const collectedCitations: CollectedCitation[] = [];
 
-  const children = convertNodes(content.content || [], doubleSpaced, collectedFootnotes);
+  const children = convertNodes(
+    content.content || [],
+    doubleSpaced,
+    collectedFootnotes,
+    options.referenceNumberMap,
+    collectedCitations
+  );
 
   // Add footnotes section at the end if any footnotes exist
   if (collectedFootnotes.length > 0) {
@@ -88,6 +104,55 @@ export async function tiptapToDocx(
             }),
           ],
           spacing: { after: 100 },
+        })
+      );
+    }
+  }
+
+  if (options.bibliographyEntries && options.bibliographyEntries.length > 0) {
+    children.push(
+      new Paragraph({
+        children: [],
+        spacing: { before: 400 },
+      }),
+      new Paragraph({
+        children: [
+          new TextRun({
+            text: "References",
+            bold: true,
+            size: 24 * 2,
+            font: "Times New Roman",
+          }),
+        ],
+        spacing: { after: 200 },
+      })
+    );
+
+    const sortedEntries = [...options.bibliographyEntries].sort((a, b) => {
+      const aNum = options.referenceNumberMap?.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+      const bNum = options.referenceNumberMap?.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+      return aNum - bNum;
+    });
+
+    for (const [idx, entry] of sortedEntries.entries()) {
+      const entryNumber = options.referenceNumberMap?.get(entry.id) ?? idx + 1;
+      const plainText = entry.text || entry.html?.replace(/<[^>]+>/g, "") || "";
+      children.push(
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `${entryNumber}. `,
+              font: "Times New Roman",
+              size: 22,
+            }),
+            new TextRun({
+              text: plainText,
+              font: "Times New Roman",
+              size: 22,
+            }),
+          ],
+          spacing: { after: 80 },
+          indent: { left: 360, hanging: 360 },
         })
       );
     }
@@ -163,12 +228,20 @@ export async function tiptapToDocx(
 function convertNodes(
   nodes: JSONContent[],
   doubleSpaced: boolean,
-  collectedFootnotes: Array<{ number: number; text: string }> = []
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
 ): (Paragraph | DocxTable)[] {
   const result: (Paragraph | DocxTable)[] = [];
 
   for (const node of nodes) {
-    const converted = convertNode(node, doubleSpaced, collectedFootnotes);
+    const converted = convertNode(
+      node,
+      doubleSpaced,
+      collectedFootnotes,
+      referenceNumberMap,
+      collectedCitations
+    );
     if (converted) {
       if (Array.isArray(converted)) {
         result.push(...converted);
@@ -184,26 +257,55 @@ function convertNodes(
 function convertNode(
   node: JSONContent,
   doubleSpaced: boolean,
-  collectedFootnotes: Array<{ number: number; text: string }> = []
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
 ): Paragraph | DocxTable | (Paragraph | DocxTable)[] | null {
   switch (node.type) {
     case "paragraph":
-      return createParagraph(node, doubleSpaced);
+      return createParagraph(
+        node,
+        doubleSpaced,
+        referenceNumberMap,
+        collectedCitations
+      );
 
     case "heading":
-      return createHeading(node);
+      return createHeading(node, referenceNumberMap, collectedCitations);
 
     case "bulletList":
-      return createList(node, false, doubleSpaced);
+      return createList(
+        node,
+        false,
+        doubleSpaced,
+        referenceNumberMap,
+        collectedCitations
+      );
 
     case "orderedList":
-      return createList(node, true, doubleSpaced);
+      return createList(
+        node,
+        true,
+        doubleSpaced,
+        referenceNumberMap,
+        collectedCitations
+      );
 
     case "taskList":
-      return createTaskList(node, doubleSpaced);
+      return createTaskList(
+        node,
+        doubleSpaced,
+        referenceNumberMap,
+        collectedCitations
+      );
 
     case "blockquote":
-      return createBlockquote(node, doubleSpaced);
+      return createBlockquote(
+        node,
+        doubleSpaced,
+        referenceNumberMap,
+        collectedCitations
+      );
 
     case "codeBlock":
       return createCodeBlock(node);
@@ -217,7 +319,7 @@ function convertNode(
       });
 
     case "table":
-      return createTable(node);
+      return createTable(node, referenceNumberMap, collectedCitations);
 
     case "image":
       return new Paragraph({
@@ -253,6 +355,9 @@ function convertNode(
       });
     }
 
+    case "bibliography":
+      return null;
+
     default:
       return null;
   }
@@ -260,9 +365,15 @@ function convertNode(
 
 function createParagraph(
   node: JSONContent,
-  doubleSpaced: boolean
+  doubleSpaced: boolean,
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
 ): Paragraph {
-  const runs = extractTextRuns(node.content || []);
+  const runs = extractTextRuns(
+    node.content || [],
+    referenceNumberMap,
+    collectedCitations
+  );
   const alignment = getAlignment(node.attrs?.textAlign);
 
   return new Paragraph({
@@ -275,9 +386,17 @@ function createParagraph(
   });
 }
 
-function createHeading(node: JSONContent): Paragraph {
+function createHeading(
+  node: JSONContent,
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
+): Paragraph {
   const level = (node.attrs?.level as number) || 2;
-  const runs = extractTextRuns(node.content || []);
+  const runs = extractTextRuns(
+    node.content || [],
+    referenceNumberMap,
+    collectedCitations
+  );
   const headingLevel = HEADING_LEVEL_MAP[level] || HeadingLevel.HEADING_2;
 
   return new Paragraph({
@@ -289,7 +408,9 @@ function createHeading(node: JSONContent): Paragraph {
 function createList(
   node: JSONContent,
   ordered: boolean,
-  doubleSpaced: boolean
+  doubleSpaced: boolean,
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
 ): Paragraph[] {
   const paragraphs: Paragraph[] = [];
   const items = node.content || [];
@@ -299,7 +420,11 @@ function createList(
       const content = item.content || [];
       for (const child of content) {
         if (child.type === "paragraph") {
-          const runs = extractTextRuns(child.content || []);
+          const runs = extractTextRuns(
+            child.content || [],
+            referenceNumberMap,
+            collectedCitations
+          );
           const prefix = ordered ? `${index + 1}. ` : "\u2022 ";
           runs.unshift(new TextRun({ text: prefix }));
           paragraphs.push(
@@ -322,7 +447,9 @@ function createList(
 
 function createTaskList(
   node: JSONContent,
-  doubleSpaced: boolean
+  doubleSpaced: boolean,
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
 ): Paragraph[] {
   const paragraphs: Paragraph[] = [];
   const items = node.content || [];
@@ -333,7 +460,11 @@ function createTaskList(
       const content = item.content || [];
       for (const child of content) {
         if (child.type === "paragraph") {
-          const runs = extractTextRuns(child.content || []);
+          const runs = extractTextRuns(
+            child.content || [],
+            referenceNumberMap,
+            collectedCitations
+          );
           runs.unshift(new TextRun({ text: `${checked} ` }));
           paragraphs.push(
             new Paragraph({
@@ -352,14 +483,20 @@ function createTaskList(
 
 function createBlockquote(
   node: JSONContent,
-  doubleSpaced: boolean
+  doubleSpaced: boolean,
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
 ): Paragraph[] {
   const paragraphs: Paragraph[] = [];
   const content = node.content || [];
 
   for (const child of content) {
     if (child.type === "paragraph") {
-      const runs = extractTextRuns(child.content || []);
+      const runs = extractTextRuns(
+        child.content || [],
+        referenceNumberMap,
+        collectedCitations
+      );
       paragraphs.push(
         new Paragraph({
           children: runs,
@@ -405,7 +542,11 @@ function createCodeBlock(node: JSONContent): Paragraph {
   });
 }
 
-function createTable(node: JSONContent): DocxTable {
+function createTable(
+  node: JSONContent,
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
+): DocxTable {
   const rows = (node.content || [])
     .filter((row) => row.type === "tableRow")
     .map((row, rowIdx) => {
@@ -419,11 +560,20 @@ function createTable(node: JSONContent): DocxTable {
           const cellContent = (cell.content || [])
             .map((child) => {
               if (child.type === "paragraph") {
-                const runs = extractTextRuns(child.content || []);
+                const runs = extractTextRuns(
+                  child.content || [],
+                  referenceNumberMap,
+                  collectedCitations
+                );
                 if (isHeader) {
                   // Re-create runs as bold for headers
                   const boldRuns = (child.content || []).map((inline) =>
-                    createTextRunFromInline(inline, true)
+                    createTextRunFromInline(
+                      inline,
+                      true,
+                      referenceNumberMap,
+                      collectedCitations
+                    )
                   );
                   return new Paragraph({
                     children: boldRuns.length > 0 ? boldRuns : [new TextRun({ text: "" })],
@@ -471,10 +621,30 @@ function createTable(node: JSONContent): DocxTable {
  */
 function createTextRunFromInline(
   node: JSONContent,
-  forceBold = false
+  forceBold = false,
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
 ): TextRun {
   if (node.type === "hardBreak") {
     return new TextRun({ break: 1 });
+  }
+
+  if (node.type === "citation") {
+    const referenceIds = (node.attrs?.referenceIds as string[]) || [];
+    const numbers = referenceIds
+      .map((id) => referenceNumberMap?.get(id))
+      .filter((n): n is number => n !== undefined)
+      .sort((a, b) => a - b);
+    const displayText = numbers.length > 0 ? `[${formatCitationNumbers(numbers)}]` : "[?]";
+
+    collectedCitations.push({ referenceIds, displayText });
+
+    return new TextRun({
+      text: displayText,
+      superScript: true,
+      font: "Times New Roman",
+      size: 18,
+    });
   }
 
   // Build mark properties
@@ -535,12 +705,45 @@ function createTextRunFromInline(
   });
 }
 
-function extractTextRuns(content: JSONContent[]): TextRun[] {
+function extractTextRuns(
+  content: JSONContent[],
+  referenceNumberMap?: Map<string, number>,
+  collectedCitations: CollectedCitation[] = []
+): TextRun[] {
   if (content.length === 0) {
     return [new TextRun({ text: "" })];
   }
 
-  return content.map((node) => createTextRunFromInline(node));
+  return content.map((node) =>
+    createTextRunFromInline(node, false, referenceNumberMap, collectedCitations)
+  );
+}
+
+export function formatCitationNumbers(numbers: number[]): string {
+  if (numbers.length === 0) return "?";
+  if (numbers.length === 1) return String(numbers[0]);
+
+  const ranges: string[] = [];
+  let rangeStart = numbers[0];
+  let rangeEnd = numbers[0];
+
+  for (let i = 1; i < numbers.length; i++) {
+    if (numbers[i] === rangeEnd + 1) {
+      rangeEnd = numbers[i];
+    } else {
+      ranges.push(
+        rangeStart === rangeEnd ? String(rangeStart) : `${rangeStart}-${rangeEnd}`
+      );
+      rangeStart = numbers[i];
+      rangeEnd = numbers[i];
+    }
+  }
+
+  ranges.push(
+    rangeStart === rangeEnd ? String(rangeStart) : `${rangeStart}-${rangeEnd}`
+  );
+
+  return ranges.join(",");
 }
 
 function getAlignment(
