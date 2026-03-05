@@ -266,18 +266,25 @@ function convertNode(
       return createParagraph(
         node,
         doubleSpaced,
+        collectedFootnotes,
         referenceNumberMap,
         collectedCitations
       );
 
     case "heading":
-      return createHeading(node, referenceNumberMap, collectedCitations);
+      return createHeading(
+        node,
+        collectedFootnotes,
+        referenceNumberMap,
+        collectedCitations
+      );
 
     case "bulletList":
       return createList(
         node,
         false,
         doubleSpaced,
+        collectedFootnotes,
         referenceNumberMap,
         collectedCitations
       );
@@ -287,6 +294,7 @@ function convertNode(
         node,
         true,
         doubleSpaced,
+        collectedFootnotes,
         referenceNumberMap,
         collectedCitations
       );
@@ -295,6 +303,7 @@ function convertNode(
       return createTaskList(
         node,
         doubleSpaced,
+        collectedFootnotes,
         referenceNumberMap,
         collectedCitations
       );
@@ -303,6 +312,7 @@ function convertNode(
       return createBlockquote(
         node,
         doubleSpaced,
+        collectedFootnotes,
         referenceNumberMap,
         collectedCitations
       );
@@ -319,7 +329,12 @@ function convertNode(
       });
 
     case "table":
-      return createTable(node, referenceNumberMap, collectedCitations);
+      return createTable(
+        node,
+        collectedFootnotes,
+        referenceNumberMap,
+        collectedCitations
+      );
 
     case "image":
       return new Paragraph({
@@ -332,28 +347,8 @@ function convertNode(
         ],
       });
 
-    case "footnote": {
-      // Add a superscript footnote reference in the text
-      // and collect footnote for the endnotes section
-      const number = node.attrs?.number as number | undefined;
-      const text = node.attrs?.text as string | undefined;
-
-      if (number !== undefined && text) {
-        collectedFootnotes.push({ number, text: text || "" });
-      }
-
-      // Return inline superscript reference
-      return new Paragraph({
-        children: [
-          new TextRun({
-            text: String(number ?? "?"),
-            superScript: true,
-            font: "Times New Roman",
-            size: 20,
-          }),
-        ],
-      });
-    }
+    case "footnote":
+      return null;
 
     case "bibliography":
       return null;
@@ -366,11 +361,13 @@ function convertNode(
 function createParagraph(
   node: JSONContent,
   doubleSpaced: boolean,
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): Paragraph {
   const runs = extractTextRuns(
     node.content || [],
+    collectedFootnotes,
     referenceNumberMap,
     collectedCitations
   );
@@ -388,12 +385,14 @@ function createParagraph(
 
 function createHeading(
   node: JSONContent,
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): Paragraph {
   const level = (node.attrs?.level as number) || 2;
   const runs = extractTextRuns(
     node.content || [],
+    collectedFootnotes,
     referenceNumberMap,
     collectedCitations
   );
@@ -409,6 +408,7 @@ function createList(
   node: JSONContent,
   ordered: boolean,
   doubleSpaced: boolean,
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): Paragraph[] {
@@ -422,6 +422,7 @@ function createList(
         if (child.type === "paragraph") {
           const runs = extractTextRuns(
             child.content || [],
+            collectedFootnotes,
             referenceNumberMap,
             collectedCitations
           );
@@ -448,6 +449,7 @@ function createList(
 function createTaskList(
   node: JSONContent,
   doubleSpaced: boolean,
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): Paragraph[] {
@@ -462,6 +464,7 @@ function createTaskList(
         if (child.type === "paragraph") {
           const runs = extractTextRuns(
             child.content || [],
+            collectedFootnotes,
             referenceNumberMap,
             collectedCitations
           );
@@ -484,6 +487,7 @@ function createTaskList(
 function createBlockquote(
   node: JSONContent,
   doubleSpaced: boolean,
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): Paragraph[] {
@@ -494,6 +498,7 @@ function createBlockquote(
     if (child.type === "paragraph") {
       const runs = extractTextRuns(
         child.content || [],
+        collectedFootnotes,
         referenceNumberMap,
         collectedCitations
       );
@@ -544,6 +549,7 @@ function createCodeBlock(node: JSONContent): Paragraph {
 
 function createTable(
   node: JSONContent,
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): DocxTable {
@@ -562,6 +568,7 @@ function createTable(
               if (child.type === "paragraph") {
                 const runs = extractTextRuns(
                   child.content || [],
+                  collectedFootnotes,
                   referenceNumberMap,
                   collectedCitations
                 );
@@ -571,6 +578,7 @@ function createTable(
                     createTextRunFromInline(
                       inline,
                       true,
+                      collectedFootnotes,
                       referenceNumberMap,
                       collectedCitations
                     )
@@ -622,6 +630,7 @@ function createTable(
 function createTextRunFromInline(
   node: JSONContent,
   forceBold = false,
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): TextRun {
@@ -644,6 +653,27 @@ function createTextRunFromInline(
       superScript: true,
       font: "Times New Roman",
       size: 18,
+    });
+  }
+
+  if (node.type === "footnote") {
+    const number = node.attrs?.number as number | undefined;
+    const text = node.attrs?.text as string | undefined;
+
+    if (number !== undefined && text) {
+      const alreadyCollected = collectedFootnotes.some(
+        (footnote) => footnote.number === number
+      );
+      if (!alreadyCollected) {
+        collectedFootnotes.push({ number, text });
+      }
+    }
+
+    return new TextRun({
+      text: String(number ?? "?"),
+      superScript: true,
+      font: "Times New Roman",
+      size: 20,
     });
   }
 
@@ -707,6 +737,7 @@ function createTextRunFromInline(
 
 function extractTextRuns(
   content: JSONContent[],
+  collectedFootnotes: Array<{ number: number; text: string }> = [],
   referenceNumberMap?: Map<string, number>,
   collectedCitations: CollectedCitation[] = []
 ): TextRun[] {
@@ -715,7 +746,13 @@ function extractTextRuns(
   }
 
   return content.map((node) =>
-    createTextRunFromInline(node, false, referenceNumberMap, collectedCitations)
+    createTextRunFromInline(
+      node,
+      false,
+      collectedFootnotes,
+      referenceNumberMap,
+      collectedCitations
+    )
   );
 }
 

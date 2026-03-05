@@ -18,6 +18,7 @@ export interface UseEditorDocumentReturn {
   isLoading: boolean;
   error: string | null;
   dbDocumentId: number | null;
+  sectionId: number | null;
   projectId: number | null;
 
   // Save state
@@ -52,6 +53,7 @@ export function useEditorDocument(
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dbDocumentId, setDbDocumentId] = useState<number | null>(null);
+  const [sectionId, setSectionId] = useState<number | null>(null);
   const [resolvedProjectId, setResolvedProjectId] = useState<number | null>(null);
   const [saveStatus, setSaveStatus] = useState<
     "saved" | "saving" | "unsaved" | "error" | "offline"
@@ -91,12 +93,15 @@ export function useEditorDocument(
           if (result.sections && result.sections.length > 0) {
             const firstSection = result.sections[0];
             currentSectionIdRef.current = firstSection.id;
+            setSectionId(firstSection.id);
             if (firstSection.editor_content) {
               setContent(firstSection.editor_content as JSONContent);
             } else {
               setContent(null); // Will use template
             }
           } else {
+            currentSectionIdRef.current = null;
+            setSectionId(null);
             setContent(null); // Will use template
           }
 
@@ -125,12 +130,15 @@ export function useEditorDocument(
           if (result.sections && result.sections.length > 0) {
             const firstSection = result.sections[0];
             currentSectionIdRef.current = firstSection.id;
+            setSectionId(firstSection.id);
             if (firstSection.editor_content) {
               setContent(firstSection.editor_content as JSONContent);
             } else {
               setContent(null); // Will use template
             }
           } else {
+            currentSectionIdRef.current = null;
+            setSectionId(null);
             setContent(null); // Will use template
           }
 
@@ -154,6 +162,8 @@ export function useEditorDocument(
             }
             setLoadedFromLocalStorage(true);
             setResolvedProjectId(null);
+            currentSectionIdRef.current = null;
+            setSectionId(null);
             setError(
               "Loaded from local storage. Database unavailable. Changes will be saved locally."
             );
@@ -162,6 +172,8 @@ export function useEditorDocument(
             setContent(null);
             setLoadedFromLocalStorage(false);
             setResolvedProjectId(null);
+            currentSectionIdRef.current = null;
+            setSectionId(null);
           }
         } catch (localError) {
           console.error("Failed to load from localStorage:", localError);
@@ -169,6 +181,8 @@ export function useEditorDocument(
           setContent(null);
           setLoadedFromLocalStorage(false);
           setResolvedProjectId(null);
+          currentSectionIdRef.current = null;
+          setSectionId(null);
         }
       } finally {
         if (isMounted) {
@@ -458,6 +472,7 @@ export function useEditorDocument(
     isLoading,
     error,
     dbDocumentId,
+    sectionId,
     projectId: resolvedProjectId,
     saveStatus,
     lastSavedAt,

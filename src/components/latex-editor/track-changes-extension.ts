@@ -4,7 +4,7 @@
  * Implements "Suggesting" mode with inline diff visualization
  */
 
-import { EditorState, Compartment, Transaction } from "@codemirror/state";
+import { Compartment, type Range } from "@codemirror/state";
 import { EditorView, Decoration, DecorationSet, ViewPlugin, ViewUpdate } from "@codemirror/view";
 import { type TrackChange } from "@/types/track-changes";
 
@@ -83,7 +83,7 @@ const trackChangesField = StateField.define<TrackChangesState>({
  * Create decorations for track changes
  */
 function createDecorations(changes: TrackChange[]): DecorationSet {
-  const decorations: any[] = [];
+  const decorations: Range<Decoration>[] = [];
 
   for (const change of changes) {
     if (change.status !== "pending") continue;
@@ -173,8 +173,6 @@ const trackChangesPlugin = ViewPlugin.fromClass(
           // Convert diffs to TrackChange objects
           const newChanges: TrackChange[] = [];
           let pos = 0;
-          let shadowPos = 0;
-
           for (const [operation, text] of diffs) {
             const textLen = text.length;
 
@@ -205,11 +203,9 @@ const trackChangesPlugin = ViewPlugin.fromClass(
                 status: "pending",
               };
               newChanges.push(change);
-              shadowPos += textLen;
             } else {
               // Equal - no change
               pos += textLen;
-              shadowPos += textLen;
             }
           }
 
@@ -285,7 +281,6 @@ export function acceptTrackChange(
   view: EditorView,
   change: TrackChange
 ) {
-  const state = view.state.field(trackChangesField);
   const { from, to, insertedText, type } = change;
 
   if (type === "insert" && insertedText) {

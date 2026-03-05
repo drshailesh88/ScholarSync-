@@ -54,6 +54,7 @@ export default function EditorPage() {
     isLoading,
     error,
     dbDocumentId,
+    sectionId,
     projectId,
     saveStatus,
     lastSavedAt,
@@ -411,10 +412,10 @@ export default function EditorPage() {
       />
 
       {/* Version history panel */}
-      {showVersionHistory && dbDocumentId && (
+      {showVersionHistory && dbDocumentId && sectionId !== null && (
         <VersionHistory
           documentId={dbDocumentId}
-          sectionId={0}
+          sectionId={sectionId}
           currentContent={dbContent || restoredContent || editorContent}
           onRestore={(content) => {
             setRestoredContent(content);
