@@ -214,6 +214,47 @@ export async function getLibraryProjects(): Promise<
     .orderBy(desc(projects.updated_at));
 }
 
+/**
+ * Get all papers linked to a project for citation import.
+ */
+export async function getProjectPapersForCitation(projectId: number) {
+  const userId = await getCurrentUserId();
+
+  const [project] = await db
+    .select({ id: projects.id })
+    .from(projects)
+    .where(
+      and(
+        eq(projects.id, projectId),
+        eq(projects.user_id, userId),
+        isNull(projects.deleted_at)
+      )
+    );
+
+  if (!project) return [];
+
+  return db
+    .select({
+      id: papers.id,
+      title: papers.title,
+      authors: papers.authors,
+      journal: papers.journal,
+      year: papers.year,
+      doi: papers.doi,
+      pubmed_id: papers.pubmed_id,
+      abstract: papers.abstract,
+      study_type: papers.study_type,
+      volume: papers.volume,
+      issue: papers.issue,
+      pages: papers.pages,
+      pdf_url: papers.pdf_url,
+      open_access_url: papers.open_access_url,
+    })
+    .from(projectPapers)
+    .innerJoin(papers, eq(projectPapers.paper_id, papers.id))
+    .where(eq(projectPapers.project_id, projectId));
+}
+
 interface SavePaperData {
   title: string;
   authors?: string[];

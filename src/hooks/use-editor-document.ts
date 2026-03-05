@@ -18,6 +18,7 @@ export interface UseEditorDocumentReturn {
   isLoading: boolean;
   error: string | null;
   dbDocumentId: number | null;
+  projectId: number | null;
 
   // Save state
   saveStatus: "saved" | "saving" | "unsaved" | "error" | "offline";
@@ -51,6 +52,7 @@ export function useEditorDocument(
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dbDocumentId, setDbDocumentId] = useState<number | null>(null);
+  const [resolvedProjectId, setResolvedProjectId] = useState<number | null>(null);
   const [saveStatus, setSaveStatus] = useState<
     "saved" | "saving" | "unsaved" | "error" | "offline"
   >("saved");
@@ -82,6 +84,7 @@ export function useEditorDocument(
           if (!isMounted) return;
 
           setDbDocumentId(result.id);
+          setResolvedProjectId((result as { project_id?: number }).project_id ?? null);
           setDocumentTitle(result.title);
 
           // Extract content from first section if available
@@ -115,6 +118,7 @@ export function useEditorDocument(
           }
 
           setDbDocumentId(result.id);
+          setResolvedProjectId((result as { project_id?: number }).project_id ?? null);
           setDocumentTitle(result.title);
 
           // Extract content from first section if available
@@ -149,6 +153,7 @@ export function useEditorDocument(
               setDocumentTitle(parsed.title);
             }
             setLoadedFromLocalStorage(true);
+            setResolvedProjectId(null);
             setError(
               "Loaded from local storage. Database unavailable. Changes will be saved locally."
             );
@@ -156,12 +161,14 @@ export function useEditorDocument(
             // No local data either - start fresh
             setContent(null);
             setLoadedFromLocalStorage(false);
+            setResolvedProjectId(null);
           }
         } catch (localError) {
           console.error("Failed to load from localStorage:", localError);
           setError("Failed to load document. Please refresh the page.");
           setContent(null);
           setLoadedFromLocalStorage(false);
+          setResolvedProjectId(null);
         }
       } finally {
         if (isMounted) {
@@ -451,6 +458,7 @@ export function useEditorDocument(
     isLoading,
     error,
     dbDocumentId,
+    projectId: resolvedProjectId,
     saveStatus,
     lastSavedAt,
     handleEditorUpdate,

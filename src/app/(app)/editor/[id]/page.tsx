@@ -14,6 +14,8 @@ import { useEditorStore } from "@/stores/editor-store";
 import { useReferenceStore } from "@/stores/reference-store";
 import { generateTemplateContent } from "@/lib/editor/section-templates";
 import { useEditorDocument } from "@/hooks/use-editor-document";
+import { getProjectPapersForCitation } from "@/lib/actions/papers";
+import { paperToReference } from "@/lib/citations/paper-to-reference";
 import {
   ArrowLeft,
   DownloadSimple,
@@ -52,6 +54,7 @@ export default function EditorPage() {
     isLoading,
     error,
     dbDocumentId,
+    projectId,
     saveStatus,
     lastSavedAt,
     handleEditorUpdate,
@@ -65,6 +68,8 @@ export default function EditorPage() {
   const sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
   const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
   const references = useReferenceStore((s) => s.references);
+  const addReferences = useReferenceStore((s) => s.addReferences);
+  const clearReferences = useReferenceStore((s) => s.clearReferences);
 
   const [showExport, setShowExport] = useState(false);
   const [showTypeDropdown, setShowTypeDropdown] = useState(false);
@@ -106,6 +111,29 @@ export default function EditorPage() {
     return () =>
       window.removeEventListener("scholarsync:open-citation-dialog", handler);
   }, [openCitationDialog]);
+
+  // Populate citation store with project papers when document changes.
+  useEffect(() => {
+    clearReferences();
+    if (!dbDocumentId || !projectId) return;
+
+    let canceled = false;
+    getProjectPapersForCitation(projectId)
+      .then((projectPapers) => {
+        if (canceled || projectPapers.length === 0) return;
+        const refs = projectPapers.map((paper) =>
+          paperToReference(paper, String(dbDocumentId))
+        );
+        addReferences(refs);
+      })
+      .catch((err) => {
+        console.error("Failed to load project references:", err);
+      });
+
+    return () => {
+      canceled = true;
+    };
+  }, [dbDocumentId, projectId, addReferences, clearReferences]);
 
   // Add beforeunload protection to prevent data loss
   useEffect(() => {
@@ -149,7 +177,7 @@ export default function EditorPage() {
 
   return (
     <EditorErrorBoundary documentId={urlDocumentId}>
-    <div className="flex flex-col h-[calc(100vh-4rem)] -mx-6 -mt-0">
+      <div className="flex flex-col h-[calc(100vh-4rem)] -mx-6 -mt-0">
       {/* Document header bar */}
       <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-border shrink-0">
         {/* Left: Back + Title */}
@@ -363,7 +391,7 @@ export default function EditorPage() {
           onClose={() => setShowVersionHistory(false)}
         />
       )}
-    </div>
+      </div>
     </EditorErrorBoundary>
   );
 }
