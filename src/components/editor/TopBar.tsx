@@ -21,6 +21,7 @@ import { KeyboardShortcutsDialog } from "./KeyboardShortcutsDialog";
 
 interface TopBarProps {
   editor: Editor;
+  onToggleReferenceSidebar?: () => void;
 }
 
 const MODE_CONFIG: Record<
@@ -39,7 +40,7 @@ const MODE_CONFIG: Record<
   },
 };
 
-export function TopBar({ editor }: TopBarProps) {
+export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
   const {
     mode,
     setMode,
@@ -176,7 +177,13 @@ export function TopBar({ editor }: TopBarProps) {
       {/* Right: Reference & Comment badges */}
       <div className="flex items-center gap-1">
         <button
-          onClick={toggleReferenceSidebar}
+          onClick={() => {
+            if (onToggleReferenceSidebar) {
+              onToggleReferenceSidebar();
+              return;
+            }
+            toggleReferenceSidebar();
+          }}
           className="flex items-center gap-1 px-2 py-1 rounded-md text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           title="References"
         >

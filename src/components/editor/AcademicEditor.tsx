@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
-import type { JSONContent } from "@tiptap/core";
+import type { Editor } from "@tiptap/react";
+import { Extension, type JSONContent } from "@tiptap/core";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Superscript } from "@tiptap/extension-superscript";
 import { Subscript } from "@tiptap/extension-subscript";
@@ -28,6 +29,9 @@ import { SlashCommandsExtension } from "./extensions/slash-commands";
 import { OutlinePlugin } from "./extensions/outline-plugin";
 import { Footnote } from "./extensions/footnote-node";
 import { AcademicKeyboardShortcuts } from "./extensions/keyboard-shortcuts";
+import { CitationNode } from "./extensions/citation-node";
+import { BibliographyNode } from "./extensions/bibliography-node";
+import { createCitationPlugin } from "./extensions/citation-plugin";
 import { createSlashMenuRenderer } from "./SlashMenu";
 import { SelectionToolbar } from "./SelectionToolbar";
 import { TopBar } from "./TopBar";
@@ -38,6 +42,13 @@ import { FootnoteSection } from "./FootnoteSection";
 import { useEditorStore } from "@/stores/editor-store";
 import { getDocumentWordCount } from "@/lib/editor/word-counter";
 import { getCommentCountLocal } from "@/lib/editor/document-comments-local";
+
+const CitationNumbering = Extension.create({
+  name: "citationNumbering",
+  addProseMirrorPlugins() {
+    return [createCitationPlugin()];
+  },
+});
 
 interface AcademicEditorProps {
   /** Initial content (Tiptap JSON format) */
@@ -56,6 +67,14 @@ interface AcademicEditorProps {
   debounceMs?: number;
   /** Whether the editor is read-only */
   readOnly?: boolean;
+  /** Called when user opens the citation dialog (Cmd+Shift+C or slash command) */
+  onOpenCitationDialog?: () => void;
+  /** Called when user toggles the reference sidebar */
+  onToggleReferenceSidebar?: () => void;
+  /** Number of references for badge display */
+  referenceCount?: number;
+  /** Callback to expose the editor instance to parent */
+  onEditorReady?: (editor: Editor) => void;
 }
 
 export function AcademicEditor({
@@ -65,6 +84,10 @@ export function AcademicEditor({
   onUpdate,
   debounceMs = 2000,
   readOnly = false,
+  onOpenCitationDialog,
+  onToggleReferenceSidebar,
+  referenceCount,
+  onEditorReady,
 }: AcademicEditorProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onUpdateRef = useRef(onUpdate);
@@ -81,6 +104,7 @@ export function AcademicEditor({
     mode,
     commentSidebarOpen,
     toggleCommentSidebar,
+    setReferenceCount,
     setCommentCount,
   } = useEditorStore();
 
@@ -155,6 +179,9 @@ export function AcademicEditor({
       }),
       Footnote,
       AcademicKeyboardShortcuts,
+      CitationNode,
+      BibliographyNode,
+      CitationNumbering,
     ],
     content: content || undefined,
     editable: !readOnly && mode !== "viewing",
@@ -243,6 +270,13 @@ export function AcademicEditor({
     }
   }, [editor, mode, readOnly]);
 
+  // Notify parent when editor is ready
+  useEffect(() => {
+    if (editor && !editor.isDestroyed) {
+      onEditorReady?.(editor);
+    }
+  }, [editor, onEditorReady]);
+
   // Set initial content when editor is ready
   useEffect(() => {
     if (editor && content && !editor.isDestroyed) {
@@ -295,6 +329,13 @@ export function AcademicEditor({
     setCommentCount(counts.unresolved);
   }, [documentId, setCommentCount]);
 
+  // Sync reference badge count from external citation store
+  useEffect(() => {
+    if (typeof referenceCount === "number") {
+      setReferenceCount(referenceCount);
+    }
+  }, [referenceCount, setReferenceCount]);
+
   // Listen for editor action events (from SelectionToolbar, keyboard shortcuts)
   useEffect(() => {
     function handleEditorAction(e: Event) {
@@ -325,19 +366,33 @@ export function AcademicEditor({
       if (detail.action === "toggle-comment-sidebar") {
         toggleCommentSidebar();
       }
+
+      if (detail.action === "insert-citation") {
+        onOpenCitationDialog?.();
+      }
+
+      if (detail.action === "toggle-reference-sidebar") {
+        onToggleReferenceSidebar?.();
+      }
     }
 
     window.addEventListener("scholarsync:editor-action", handleEditorAction);
     return () =>
       window.removeEventListener("scholarsync:editor-action", handleEditorAction);
-  }, [editor, commentSidebarOpen, toggleCommentSidebar]);
+  }, [
+    editor,
+    commentSidebarOpen,
+    toggleCommentSidebar,
+    onOpenCitationDialog,
+    onToggleReferenceSidebar,
+  ]);
 
   if (!editor) return null;
 
   return (
     <div className="flex flex-col h-full">
       {/* Fixed top bar */}
-      <TopBar editor={editor} />
+      <TopBar editor={editor} onToggleReferenceSidebar={onToggleReferenceSidebar} />
 
       {/* Editor area with sidebar */}
       <div className="flex-1 flex overflow-hidden">
