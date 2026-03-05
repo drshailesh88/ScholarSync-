@@ -1030,3 +1030,35 @@ export const latexFileComments = pgTable(
     index("idx_latex_file_comments_resolved").on(table.resolved),
   ]
 );
+
+// ---------------------------------------------------------------------------
+// 46. latex_track_changes (Track Changes / Suggesting Mode)
+// ---------------------------------------------------------------------------
+export const latexTrackChanges = pgTable(
+  "latex_track_changes",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    latexFileId: text("latex_file_id")
+      .notNull()
+      .references(() => latexFiles.id, { onDelete: "cascade" }),
+    type: text("type").notNull(), // "insert" | "delete" | "replace"
+    fromPos: integer("from_pos").notNull(),
+    toPos: integer("to_pos").notNull(),
+    insertedText: text("inserted_text"),
+    deletedText: text("deleted_text"),
+    authorId: text("author_id").notNull(),
+    authorName: text("author_name").notNull(),
+    authorColor: text("author_color").notNull().default("#7c3aed"),
+    status: text("status").notNull().default("pending"), // "pending" | "accepted" | "rejected"
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_latex_track_changes_file").on(table.latexFileId),
+    index("idx_latex_track_changes_status").on(table.status),
+    index("idx_latex_track_changes_author").on(table.authorId),
+  ]
+);

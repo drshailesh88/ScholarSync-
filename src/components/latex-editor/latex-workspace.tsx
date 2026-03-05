@@ -47,6 +47,7 @@ interface LatexWorkspaceProps {
 }
 
 export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
+  const documentContent = useLatexEditorStore((s) => s.documentContent);
   const setDocumentContent = useLatexEditorStore((s) => s.setDocumentContent);
   const setSaveState = useLatexEditorStore((s) => s.setSaveState);
   const setLastSavedAt = useLatexEditorStore((s) => s.setLastSavedAt);
@@ -729,6 +730,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           {/* Error gutter below editor */}
           <ErrorGutterPanel
             diagnostics={diagnostics}
+            documentContent={documentContent}
             onFixError={handleFixError}
             onGoToLine={(line) => editorRef.current?.scrollToLine(line)}
           />

@@ -38,6 +38,8 @@ export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExpor
   const setViewMode = useLatexEditorStore((s) => s.setViewMode);
   const previewMode = useLatexEditorStore((s) => s.previewMode);
   const setPreviewMode = useLatexEditorStore((s) => s.setPreviewMode);
+  const editingMode = useLatexEditorStore((s) => s.editingMode);
+  const setEditingMode = useLatexEditorStore((s) => s.setEditingMode);
 
   const [showExport, setShowExport] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
@@ -116,7 +118,44 @@ export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExpor
 
       {/* Center: Mode Toggle */}
       <div className="flex items-center gap-4">
-        {/* Editor mode toggle */}
+        {/* Editing mode toggle (Edit/Suggest/View) */}
+        <div className="flex p-0.5 bg-surface-raised rounded-lg border border-border-subtle">
+          <button
+            onClick={() => setEditingMode("edit")}
+            className={cn(
+              "px-2.5 py-1 rounded-md text-[11px] font-medium transition-all",
+              editingMode === "edit"
+                ? "bg-blue-500 text-white shadow-sm"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => setEditingMode("suggest")}
+            className={cn(
+              "px-2.5 py-1 rounded-md text-[11px] font-medium transition-all",
+              editingMode === "suggest"
+                ? "bg-amber-500 text-white shadow-sm"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            Suggest
+          </button>
+          <button
+            onClick={() => setEditingMode("view")}
+            className={cn(
+              "px-2.5 py-1 rounded-md text-[11px] font-medium transition-all",
+              editingMode === "view"
+                ? "bg-slate-500 text-white shadow-sm"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            View
+          </button>
+        </div>
+
+        {/* Editor mode toggle (Visual/Source) */}
         <div className="flex p-0.5 bg-surface-raised rounded-lg border border-border-subtle">
           <button
             onClick={() => setViewMode("visual")}
