@@ -17,6 +17,7 @@ import {
   FlowArrow,
   Brain,
   Article,
+  Rss,
 } from "@phosphor-icons/react";
 import { Logo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
@@ -42,6 +43,7 @@ const navSections = [
     label: "LIBRARY",
     items: [
       { label: "Papers", href: "/library", icon: Books },
+      { label: "Journal Feed", href: "/feeds", icon: Rss },
       { label: "Archive", href: "/projects", icon: FolderOpen },
     ],
   },

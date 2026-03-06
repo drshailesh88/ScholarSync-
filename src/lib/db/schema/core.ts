@@ -437,6 +437,13 @@ export const conversations = pgTable(
     dataset_id: integer("dataset_id"),
     is_archived: boolean("is_archived").default(false),
     pinned: boolean("pinned").default(false),
+    // Share settings
+    share_token: text("share_token").unique(),
+    share_enabled: boolean("share_enabled").default(false),
+    share_password: text("share_password"),
+    share_expires_at: timestamp("share_expires_at"),
+    // Audio overview cache
+    audio_overview: jsonb("audio_overview"),
     created_at: timestamp("created_at").defaultNow(),
     updated_at: timestamp("updated_at").defaultNow(),
   },

@@ -111,10 +111,14 @@ export const RATE_LIMITS = {
   search: { limit: 120, windowSeconds: 3600 },
   /** Export endpoints: 30 requests per hour */
   export: { limit: 30, windowSeconds: 3600 },
+  /** Audio overview generation: 10 requests per hour */
+  "audio-overview": { limit: 10, windowSeconds: 3600 },
   /** Plagiarism/integrity check: 20 requests per hour */
   analysis: { limit: 20, windowSeconds: 3600 },
   /** Embedding: 60 requests per hour */
   embed: { limit: 60, windowSeconds: 3600 },
   /** Write/save endpoints: 30 requests per hour */
   write: { limit: 30, windowSeconds: 3600 },
+  /** Feed operations: 60 requests per hour */
+  feeds: { limit: 60, windowSeconds: 3600 },
 } as const;
