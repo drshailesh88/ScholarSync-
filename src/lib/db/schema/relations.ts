@@ -97,6 +97,14 @@ import {
   syncLog,
 } from "./platform";
 
+// Feed tables
+import {
+  feedSources,
+  userFeedSubscriptions,
+  feedArticles,
+  userArticleStatus,
+} from "./feeds";
+
 // ============================================================
 // 1. users
 // ============================================================
@@ -124,6 +132,8 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   marketplaceReviews: many(marketplaceReviews),
   institutionMemberships: many(institutionMemberships),
   projectCollaborators: many(projectCollaborators),
+    feedSubscriptions: many(userFeedSubscriptions),
+    articleStatuses: many(userArticleStatus),
 
   // One-to-one relationships
   userProfilePublic: one(userProfilesPublic),
@@ -1276,3 +1286,59 @@ export const srAuditLogRelations = relations(srAuditLog, ({ one }) => ({
     references: [projects.id],
   }),
 }));
+
+// ============================================================
+// 76. feed_sources
+// ============================================================
+export const feedSourcesRelations = relations(feedSources, ({ many }) => ({
+  subscriptions: many(userFeedSubscriptions),
+  articles: many(feedArticles),
+}));
+
+// ============================================================
+// 77. user_feed_subscriptions
+// ============================================================
+export const userFeedSubscriptionsRelations = relations(
+  userFeedSubscriptions,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userFeedSubscriptions.userId],
+      references: [users.id],
+    }),
+    feedSource: one(feedSources, {
+      fields: [userFeedSubscriptions.feedSourceId],
+      references: [feedSources.id],
+    }),
+  })
+);
+
+// ============================================================
+// 78. feed_articles
+// ============================================================
+export const feedArticlesRelations = relations(
+  feedArticles,
+  ({ one, many }) => ({
+    feedSource: one(feedSources, {
+      fields: [feedArticles.feedSourceId],
+      references: [feedSources.id],
+    }),
+    statuses: many(userArticleStatus),
+  })
+);
+
+// ============================================================
+// 79. user_article_status
+// ============================================================
+export const userArticleStatusRelations = relations(
+  userArticleStatus,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [userArticleStatus.userId],
+      references: [users.id],
+    }),
+    article: one(feedArticles, {
+      fields: [userArticleStatus.articleId],
+      references: [feedArticles.id],
+    }),
+  })
+);

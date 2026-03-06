@@ -20,7 +20,7 @@ export const projectTypeEnum = pgEnum("project_type", ["thesis", "review_article
 // ---------------------------------------------------------------------------
 // Papers
 // ---------------------------------------------------------------------------
-export const paperSourceEnum = pgEnum("paper_source", ["pubmed", "semantic_scholar", "openalex", "arxiv", "user_upload", "snowball", "deep_research"]);
+export const paperSourceEnum = pgEnum("paper_source", ["pubmed", "semantic_scholar", "openalex", "arxiv", "user_upload", "snowball", "deep_research", "feed"]);
 
 // ---------------------------------------------------------------------------
 // Paper Chunks / Synthesis Sections
@@ -259,3 +259,9 @@ export const latexCompilationStatusEnum = pgEnum("latex_compilation_status", ["s
 // Institution Memberships
 // ---------------------------------------------------------------------------
 export const membershipRoleEnum = pgEnum("membership_role", ["student", "supervisor", "admin", "faculty"]);
+
+// ---------------------------------------------------------------------------
+// Journal Feed Sources
+// ---------------------------------------------------------------------------
+export const feedTypeEnum = pgEnum("feed_type", ["rss", "atom", "json_feed", "pubmed_search"]);
+export const feedStatusEnum = pgEnum("feed_status", ["active", "paused", "error", "dead"]);

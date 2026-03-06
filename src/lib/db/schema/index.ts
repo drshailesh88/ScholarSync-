@@ -5,5 +5,6 @@ export * from "./billing";
 export * from "./systematic";
 export * from "./institutional";
 export * from "./platform";
+export * from "./feeds";
 export * from "./relations";
 export * from "./illustration";
