@@ -3,7 +3,12 @@
 import { cn } from "@/lib/utils";
 import type { SlideLayout } from "@/types/presentation";
 
-const LAYOUTS: { key: SlideLayout; label: string; icon: string; group?: string }[] = [
+export const LAYOUT_OPTIONS: {
+  key: SlideLayout;
+  label: string;
+  icon: string;
+  group?: string;
+}[] = [
   // Standard
   { key: "title_slide", label: "Title", icon: "T", group: "standard" },
   { key: "title_content", label: "Content", icon: "Tc", group: "standard" },
@@ -32,8 +37,8 @@ interface LayoutPickerProps {
 }
 
 export function LayoutPicker({ active, onChange }: LayoutPickerProps) {
-  const standard = LAYOUTS.filter((l) => l.group === "standard");
-  const academic = LAYOUTS.filter((l) => l.group === "academic");
+  const standard = LAYOUT_OPTIONS.filter((l) => l.group === "standard");
+  const academic = LAYOUT_OPTIONS.filter((l) => l.group === "academic");
 
   return (
     <div className="space-y-3">

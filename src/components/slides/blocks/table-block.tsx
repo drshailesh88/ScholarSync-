@@ -1,10 +1,19 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { ThemeConfig } from "@/types/presentation";
 
 interface TableBlockProps {
   data: { headers: string[]; rows: string[][] };
   theme: ThemeConfig;
+}
+
+const HTML_TAG_PATTERN = /<\/?[a-z][\s\S]*>/i;
+
+function renderCellContent(value: string): ReactNode {
+  if (!value) return null;
+  if (!HTML_TAG_PATTERN.test(value)) return value;
+  return <span dangerouslySetInnerHTML={{ __html: value }} />;
 }
 
 export function TableBlock({ data, theme }: TableBlockProps) {
@@ -27,7 +36,7 @@ export function TableBlock({ data, theme }: TableBlockProps) {
                   backgroundColor: `${theme.primaryColor}08`,
                 }}
               >
-                {h}
+                {renderCellContent(h)}
               </th>
             ))}
           </tr>
@@ -48,7 +57,7 @@ export function TableBlock({ data, theme }: TableBlockProps) {
                   className="px-[0.6em] py-[0.3em]"
                   style={{ color: theme.textColor }}
                 >
-                  {cell}
+                  {renderCellContent(cell)}
                 </td>
               ))}
             </tr>

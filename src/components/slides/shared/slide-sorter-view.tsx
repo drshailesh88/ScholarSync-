@@ -54,6 +54,7 @@ function SortableGridItem({
 
 export function SlideSorterView({ onClose }: { onClose: () => void }) {
   const slides = useSlidesStore((s) => s.slides);
+  const masters = useSlidesStore((s) => s.masters);
   const activeSlideId = useSlidesStore((s) => s.activeSlideId);
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
@@ -117,7 +118,10 @@ export function SlideSorterView({ onClose }: { onClose: () => void }) {
                       title={slide.title}
                       subtitle={slide.subtitle}
                       layout={slide.layout}
+                      masterId={slide.masterId}
+                      masters={masters}
                       contentBlocks={slide.contentBlocks}
+                      cardBackground={slide.cardBackground}
                       themeKey={themeKey}
                       themeConfig={themeConfig}
                       isActive={slide.id === activeSlideId}

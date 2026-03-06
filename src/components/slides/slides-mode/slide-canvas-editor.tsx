@@ -12,6 +12,7 @@ interface SlideCanvasEditorProps {
 
 export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
   const activeSlide = useSlidesStore((s) => s.getActiveSlide());
+  const masters = useSlidesStore((s) => s.masters);
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
@@ -34,7 +35,10 @@ export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
             title={activeSlide.title}
             subtitle={activeSlide.subtitle}
             layout={activeSlide.layout}
+            masterId={activeSlide.masterId}
+            masters={masters}
             contentBlocks={activeSlide.contentBlocks}
+            cardBackground={activeSlide.cardBackground}
             themeKey={themeKey}
             themeConfig={themeConfig}
             scale={1}
@@ -53,7 +57,10 @@ export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
             title={activeSlide.title}
             subtitle={activeSlide.subtitle}
             layout={activeSlide.layout}
+            masterId={activeSlide.masterId}
+            masters={masters}
             contentBlocks={activeSlide.contentBlocks}
+            cardBackground={activeSlide.cardBackground}
             themeKey={themeKey}
             themeConfig={themeConfig}
             scale={1}

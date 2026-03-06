@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 import {
   Export,
   FilePdf,
+  ImageSquare,
   Presentation,
   Robot,
   Target,
@@ -21,22 +22,30 @@ import {
   ArrowUUpRight,
   MagnifyingGlass,
   GridFour,
+  Eye,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore, type RightPanel, type SaveStatus } from "@/stores/slides-store";
 import { ModeSelector } from "../mode-selector";
-import { BLOCK_REGISTRY, createDefaultBlock } from "../blocks";
+import { createDefaultBlock } from "../blocks";
+import { InsertMenu } from "../shared/insert-menu";
 import type { ContentBlock } from "@/types/presentation";
 
 interface SlidesToolbarProps {
   onExportPptx: () => void;
   onExportPdf: () => void;
+  onExportPng: (event?: ReactMouseEvent<HTMLButtonElement>) => void;
+  onExportAllPng: (event?: ReactMouseEvent<HTMLButtonElement>) => void;
+  onExportSvg: () => void;
   exporting: boolean;
 }
 
 export function SlidesToolbar({
   onExportPptx,
   onExportPdf,
+  onExportPng,
+  onExportAllPng,
+  onExportSvg,
   exporting,
 }: SlidesToolbarProps) {
   const mode = useSlidesStore((s) => s.mode);
@@ -55,27 +64,22 @@ export function SlidesToolbar({
   const showFindReplace = useSlidesStore((s) => s.showFindReplace);
   const setShowFindReplace = useSlidesStore((s) => s.setShowFindReplace);
   const setShowSlideSorter = useSlidesStore((s) => s.setShowSlideSorter);
+  const showRulers = useSlidesStore((s) => s.showRulers);
+  const setShowRulers = useSlidesStore((s) => s.setShowRulers);
+  const showGrid = useSlidesStore((s) => s.showGrid);
+  const setShowGrid = useSlidesStore((s) => s.setShowGrid);
+  const snapToGrid = useSlidesStore((s) => s.snapToGrid);
+  const setSnapToGrid = useSlidesStore((s) => s.setSnapToGrid);
   const [showInsertMenu, setShowInsertMenu] = useState(false);
-
-  // Global Ctrl+F / Cmd+F shortcut
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if ((e.ctrlKey || e.metaKey) && e.key === "f") {
-        e.preventDefault();
-        setShowFindReplace(!showFindReplace);
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showFindReplace, setShowFindReplace]);
+  const insertButtonRef = useRef<HTMLButtonElement>(null);
 
   function togglePanel(panel: RightPanel) {
     setRightPanel(rightPanel === panel ? null : panel);
   }
 
-  function handleInsert(type: ContentBlock["type"]) {
+  function handleInsert(type: ContentBlock["type"], dataOverride?: Record<string, unknown>) {
     if (!activeSlide) return;
-    const block = createDefaultBlock(type);
+    const block = createDefaultBlock(type, dataOverride);
     updateSlide(activeSlide.id, {
       contentBlocks: [...activeSlide.contentBlocks, block],
     });
@@ -106,25 +110,19 @@ export function SlidesToolbar({
       {/* Insert menu */}
       <div className="relative">
         <button
+          ref={insertButtonRef}
           onClick={() => setShowInsertMenu(!showInsertMenu)}
           className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
         >
           <Plus size={14} />
           Insert
         </button>
-        {showInsertMenu && (
-          <div className="absolute top-full left-0 mt-1 w-48 bg-surface border border-border rounded-xl shadow-lg z-50 p-1">
-            {Object.entries(BLOCK_REGISTRY).map(([type, entry]) => (
-              <button
-                key={type}
-                onClick={() => handleInsert(type as ContentBlock["type"])}
-                className="w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-ink hover:bg-surface-raised transition-colors text-left"
-              >
-                <span className="text-ink-muted">{entry.label}</span>
-              </button>
-            ))}
-          </div>
-        )}
+        <InsertMenu
+          isOpen={showInsertMenu}
+          anchorRef={insertButtonRef}
+          onInsert={handleInsert}
+          onClose={() => setShowInsertMenu(false)}
+        />
       </div>
 
       {/* Undo/Redo + Find */}
@@ -164,6 +162,50 @@ export function SlidesToolbar({
         >
           <GridFour size={14} />
         </button>
+      </div>
+
+      <div className="relative group/view">
+        <button
+          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
+          title="View options"
+        >
+          <Eye size={14} />
+          View
+        </button>
+        <div className="absolute left-0 top-full mt-1 hidden min-w-44 rounded-xl border border-border bg-surface p-1 shadow-lg z-50 group-hover/view:block">
+          <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-ink hover:bg-surface-raised">
+            <input
+              type="checkbox"
+              checked={showRulers}
+              onChange={() => setShowRulers(!showRulers)}
+            />
+            Rulers
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-ink hover:bg-surface-raised">
+            <input
+              type="checkbox"
+              checked={showGrid}
+              onChange={() => setShowGrid(!showGrid)}
+            />
+            Grid
+          </label>
+          <label
+            className={cn(
+              "flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs",
+              showGrid
+                ? "cursor-pointer text-ink hover:bg-surface-raised"
+                : "cursor-not-allowed text-ink-muted/70"
+            )}
+          >
+            <input
+              type="checkbox"
+              checked={snapToGrid}
+              disabled={!showGrid}
+              onChange={() => setSnapToGrid(!snapToGrid)}
+            />
+            Snap to Grid
+          </label>
+        </div>
       </div>
 
       {/* Save status */}
@@ -262,7 +304,7 @@ export function SlidesToolbar({
           <Export size={14} />
           Export
         </button>
-        <div className="absolute right-0 top-full mt-1 w-40 bg-surface border border-border rounded-xl shadow-lg z-50 p-1 hidden group-hover:block">
+        <div className="absolute right-0 top-full mt-1 w-56 bg-surface border border-border rounded-xl shadow-lg z-50 p-1 hidden group-hover:block">
           <button
             onClick={onExportPptx}
             disabled={exporting}
@@ -276,6 +318,36 @@ export function SlidesToolbar({
             className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-ink hover:bg-surface-raised transition-colors"
           >
             <FilePdf size={12} /> PDF Handout
+          </button>
+          <div className="my-1 h-px bg-border" />
+          <button
+            onClick={(event) => onExportPng(event)}
+            disabled={exporting}
+            className="w-full flex items-start gap-2 px-3 py-2 rounded-lg text-xs text-ink hover:bg-surface-raised transition-colors"
+          >
+            <ImageSquare size={12} className="mt-0.5 shrink-0" />
+            <span className="flex flex-col items-start text-left leading-tight">
+              <span>PNG (Current Slide)</span>
+              <span className="text-[10px] text-ink-muted">HD (Shift+Click)</span>
+            </span>
+          </button>
+          <button
+            onClick={(event) => onExportAllPng(event)}
+            disabled={exporting}
+            className="w-full flex items-start gap-2 px-3 py-2 rounded-lg text-xs text-ink hover:bg-surface-raised transition-colors"
+          >
+            <ImageSquare size={12} className="mt-0.5 shrink-0" />
+            <span className="flex flex-col items-start text-left leading-tight">
+              <span>PNG (All Slides as ZIP)</span>
+              <span className="text-[10px] text-ink-muted">HD (Shift+Click)</span>
+            </span>
+          </button>
+          <button
+            onClick={onExportSvg}
+            disabled={exporting}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-ink hover:bg-surface-raised transition-colors"
+          >
+            <Export size={12} /> SVG (Current Slide)
           </button>
         </div>
       </div>

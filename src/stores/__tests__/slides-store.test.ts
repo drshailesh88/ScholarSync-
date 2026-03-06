@@ -26,6 +26,7 @@ vi.mock("@/lib/actions/presentations", () => ({
 // ---------------------------------------------------------------------------
 import { useSlidesStore } from "../slides-store";
 import type { SlideState } from "../slides-store";
+import { createBuiltInSlideMasters } from "@/components/slides/shared/slide-master-utils";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -37,14 +38,24 @@ function resetStore() {
     description: "",
     audienceType: "general",
     themeKey: "modern",
+    masters: createBuiltInSlideMasters(),
     slides: [],
     activeSlideId: null,
-    selectedBlockIndex: null,
+    selectedBlockIndices: new Set<number>(),
+    allBlocksSelected: false,
+    editingBlockIndex: null,
+    clipboardSlide: null,
+    clipboardBlocks: [],
     mode: "slides",
     rightPanel: "properties",
     agentMode: "draft",
+    transition: "fade",
     isPresenting: false,
     showSharePanel: false,
+    showRulers: false,
+    showGrid: false,
+    gridSize: 5,
+    snapToGrid: false,
     saveStatus: "idle",
     _saveTimer: null,
     _undoStack: [],
@@ -82,6 +93,82 @@ describe("slides-store", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resetStore();
+  });
+
+  // -----------------------------------------------------------------------
+  // Slide masters
+  // -----------------------------------------------------------------------
+  describe("slide masters", () => {
+    it("addMaster appends a new master to store", () => {
+      const newMaster = {
+        id: "custom-master",
+        name: "Custom",
+        layout: "title_content" as const,
+        fixedBlocks: [],
+        placeholders: [],
+      };
+
+      const before = useSlidesStore.getState().masters.length;
+      useSlidesStore.getState().addMaster(newMaster);
+      const after = useSlidesStore.getState().masters.length;
+
+      expect(after).toBe(before + 1);
+      expect(
+        useSlidesStore.getState().masters.find((master) => master.id === "custom-master")
+      ).toBeDefined();
+    });
+
+    it("master updates propagate to all linked slides", () => {
+      const masterId = "shared-master";
+      useSlidesStore.setState({
+        masters: [
+          {
+            id: masterId,
+            name: "Before",
+            layout: "title_content",
+            fixedBlocks: [],
+            placeholders: [],
+          },
+        ],
+        slides: [
+          { ...mockSlide, id: 1, masterId },
+          { ...mockSlide2, id: 2, masterId },
+        ],
+      });
+
+      useSlidesStore.getState().updateMaster(masterId, { name: "After" });
+
+      const state = useSlidesStore.getState();
+      const linkedSlides = state.slides.filter((slide) => slide.masterId === masterId);
+      expect(linkedSlides).toHaveLength(2);
+      expect(state.masters.find((master) => master.id === masterId)?.name).toBe("After");
+    });
+
+    it("deleting a master unlinks slides without deleting them", () => {
+      const masterId = "unlink-master";
+      useSlidesStore.setState({
+        masters: [
+          {
+            id: masterId,
+            name: "Will be deleted",
+            layout: "title_content",
+            fixedBlocks: [],
+            placeholders: [],
+          },
+        ],
+        slides: [
+          { ...mockSlide, id: 1, masterId },
+          { ...mockSlide2, id: 2, masterId },
+        ],
+      });
+
+      useSlidesStore.getState().deleteMaster(masterId);
+
+      const state = useSlidesStore.getState();
+      expect(state.masters.find((master) => master.id === masterId)).toBeUndefined();
+      expect(state.slides).toHaveLength(2);
+      expect(state.slides.every((slide) => slide.masterId === undefined)).toBe(true);
+    });
   });
 
   // -----------------------------------------------------------------------
@@ -184,6 +271,28 @@ describe("slides-store", () => {
         slides: [mockSlide, mockSlide2],
         activeSlideId: 1,
       });
+    });
+
+    it("setting transition on one slide only affects that slide", () => {
+      useSlidesStore.getState().updateSlide(1, { transition: "zoom" });
+      const state = useSlidesStore.getState();
+      const slide1 = state.slides.find((s) => s.id === 1);
+      const slide2 = state.slides.find((s) => s.id === 2);
+      expect(slide1?.transition).toBe("zoom");
+      expect(slide2?.transition).toBeUndefined();
+    });
+
+    it("slides without transition use global transition as fallback", () => {
+      useSlidesStore.setState({ transition: "slide" });
+      expect(useSlidesStore.getState().getEffectiveTransition(1)).toBe("slide");
+      useSlidesStore.getState().updateSlide(1, { transition: "none" });
+      expect(useSlidesStore.getState().getEffectiveTransition(1)).toBe("none");
+    });
+
+    it("applyTransitionToAllSlides sets transition on every slide", () => {
+      useSlidesStore.getState().applyTransitionToAllSlides("fade");
+      const transitions = useSlidesStore.getState().slides.map((s) => s.transition);
+      expect(transitions).toEqual(["fade", "fade"]);
     });
 
     it("setActiveSlide changes active slide", () => {
@@ -361,17 +470,35 @@ describe("slides-store", () => {
       });
     });
 
-    it("selectedBlockIndex starts null", () => {
-      expect(useSlidesStore.getState().selectedBlockIndex).toBeNull();
+    it("selectedBlockIndices starts empty", () => {
+      expect(useSlidesStore.getState().selectedBlockIndices.size).toBe(0);
     });
 
-    it("setSelectedBlockIndex updates selection", () => {
-      useSlidesStore.getState().setSelectedBlockIndex(0);
-      expect(useSlidesStore.getState().selectedBlockIndex).toBe(0);
+    it("selectBlock updates selection", () => {
+      useSlidesStore.getState().selectBlock(0);
+      expect([...useSlidesStore.getState().selectedBlockIndices]).toEqual([0]);
+    });
+
+    it("Shift+click add behavior appends to selection", () => {
+      useSlidesStore.getState().selectBlock(0);
+      useSlidesStore.getState().selectBlock(1, true);
+      expect([...useSlidesStore.getState().selectedBlockIndices].sort((a, b) => a - b)).toEqual([0, 1]);
+    });
+
+    it("Ctrl/Cmd+click toggle behavior removes an already selected block", () => {
+      useSlidesStore.getState().selectBlock(0);
+      useSlidesStore.getState().selectBlock(1, true);
+      useSlidesStore.getState().selectBlock(1, true);
+      expect([...useSlidesStore.getState().selectedBlockIndices]).toEqual([0]);
+    });
+
+    it("selectAllBlocks selects all blocks in the active slide", () => {
+      useSlidesStore.getState().selectAllBlocks();
+      expect([...useSlidesStore.getState().selectedBlockIndices].sort((a, b) => a - b)).toEqual([0, 1]);
     });
 
     it("getSelectedBlock returns the correct block", () => {
-      useSlidesStore.getState().setSelectedBlockIndex(1);
+      useSlidesStore.getState().selectBlock(1);
       const block = useSlidesStore.getState().getSelectedBlock();
       expect(block).not.toBeNull();
       expect(block!.type).toBe("chart");
@@ -381,14 +508,22 @@ describe("slides-store", () => {
       expect(useSlidesStore.getState().getSelectedBlock()).toBeNull();
     });
 
-    it("setActiveSlide clears selectedBlockIndex", () => {
-      useSlidesStore.getState().setSelectedBlockIndex(0);
+    it("getSelectedBlocks returns all selected blocks", () => {
+      useSlidesStore.getState().selectBlock(0);
+      useSlidesStore.getState().selectBlock(1, true);
+      const blocks = useSlidesStore.getState().getSelectedBlocks();
+      expect(blocks).toHaveLength(2);
+      expect(blocks.map((block) => block.type)).toEqual(["text", "chart"]);
+    });
+
+    it("setActiveSlide clears selectedBlockIndices", () => {
+      useSlidesStore.getState().selectBlock(0);
       useSlidesStore.getState().setActiveSlide(2);
-      expect(useSlidesStore.getState().selectedBlockIndex).toBeNull();
+      expect(useSlidesStore.getState().selectedBlockIndices.size).toBe(0);
     });
 
     it("updateBlock modifies a specific block", () => {
-      useSlidesStore.getState().setSelectedBlockIndex(0);
+      useSlidesStore.getState().selectBlock(0);
       useSlidesStore.getState().updateBlock(0, {
         type: "text",
         data: { text: "Updated", style: "body" },
@@ -398,6 +533,208 @@ describe("slides-store", () => {
         type: "text",
         data: { text: "Updated", style: "body" },
       });
+    });
+
+    it("copyBlock copies selected blocks to clipboardBlocks", () => {
+      useSlidesStore.getState().selectBlock(0);
+      useSlidesStore.getState().selectBlock(1, true);
+      useSlidesStore.getState().copyBlock();
+
+      expect(useSlidesStore.getState().clipboardBlocks).toEqual([
+        {
+          type: "text",
+          data: { text: "Hello", style: "body" },
+        },
+        {
+          type: "chart",
+          data: {
+            chartType: "bar",
+            title: "Chart",
+            labels: ["A"],
+            datasets: [{ label: "S", data: [1] }],
+          },
+        },
+      ]);
+    });
+
+    it("copyBlock does nothing when no block is selected", () => {
+      useSlidesStore.setState({
+        selectedBlockIndices: new Set<number>(),
+        clipboardBlocks: [],
+      });
+
+      useSlidesStore.getState().copyBlock();
+      expect(useSlidesStore.getState().clipboardBlocks).toEqual([]);
+    });
+
+    it("cutBlock copies and removes all selected blocks", () => {
+      useSlidesStore.getState().selectBlock(0);
+      useSlidesStore.getState().selectBlock(1, true);
+      useSlidesStore.getState().cutBlock();
+
+      const state = useSlidesStore.getState();
+      const active = state.getActiveSlide();
+      expect(state.clipboardBlocks).toHaveLength(2);
+      expect(active!.contentBlocks).toHaveLength(0);
+    });
+
+    it("delete with multi-select removes all selected blocks", () => {
+      useSlidesStore.getState().selectBlock(0);
+      useSlidesStore.getState().selectBlock(1, true);
+      useSlidesStore.getState().deleteSelectedBlocks();
+
+      const active = useSlidesStore.getState().getActiveSlide();
+      expect(active!.contentBlocks).toHaveLength(0);
+    });
+
+    it("pasteBlock inserts clipboardBlocks after selected index", () => {
+      const blocksToPaste = [
+        {
+          type: "text" as const,
+          data: { text: "Pasted A", style: "body" as const },
+        },
+        {
+          type: "text" as const,
+          data: { text: "Pasted B", style: "body" as const },
+        },
+      ];
+      useSlidesStore.setState({ clipboardBlocks: blocksToPaste });
+      useSlidesStore.getState().selectBlock(0);
+
+      useSlidesStore.getState().pasteBlock();
+
+      const active = useSlidesStore.getState().getActiveSlide();
+      expect(active!.contentBlocks[1]).toEqual(blocksToPaste[0]);
+      expect(active!.contentBlocks[2]).toEqual(blocksToPaste[1]);
+      expect([...useSlidesStore.getState().selectedBlockIndices].sort((a, b) => a - b)).toEqual([1, 2]);
+    });
+
+    it("pasteBlock appends to end when no block is selected", () => {
+      const blocksToPaste = [
+        {
+          type: "text" as const,
+          data: { text: "Tail", style: "body" as const },
+        },
+      ];
+      useSlidesStore.setState({
+        selectedBlockIndices: new Set<number>(),
+        clipboardBlocks: blocksToPaste,
+      });
+
+      useSlidesStore.getState().pasteBlock();
+
+      const active = useSlidesStore.getState().getActiveSlide();
+      expect(active!.contentBlocks[active!.contentBlocks.length - 1]).toEqual(blocksToPaste[0]);
+    });
+
+    it("pasteBlock does nothing when clipboardBlocks is empty", () => {
+      useSlidesStore.setState({ clipboardBlocks: [] });
+      const before = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
+
+      useSlidesStore.getState().pasteBlock();
+
+      const after = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
+      expect(after).toEqual(before);
+    });
+
+    it("pasteBlock creates a deep clone (not same reference)", () => {
+      const blocksToPaste = [{
+        type: "chart" as const,
+        data: {
+          chartType: "bar" as const,
+          title: "Revenue",
+          labels: ["Q1"],
+          datasets: [{ label: "Series A", data: [10] }],
+        },
+      }];
+      useSlidesStore.setState({ clipboardBlocks: blocksToPaste });
+      useSlidesStore.getState().selectBlock(0);
+
+      useSlidesStore.getState().pasteBlock();
+
+      const state = useSlidesStore.getState();
+      const active = state.getActiveSlide();
+      const inserted = active!.contentBlocks[1] as typeof blocksToPaste[0];
+      expect(inserted).toEqual(blocksToPaste[0]);
+      expect(inserted).not.toBe(blocksToPaste[0]);
+
+      inserted.data.labels.push("Q2");
+      expect((state.clipboardBlocks[0] as typeof blocksToPaste[0]).data.labels).toEqual(["Q1"]);
+    });
+  });
+
+  // -----------------------------------------------------------------------
+  // Block z-ordering
+  // -----------------------------------------------------------------------
+  describe("block z-ordering", () => {
+    const makeTextBlock = (label: string, zIndex?: number) => ({
+      type: "text" as const,
+      data: { text: label, style: "body" as const },
+      ...(zIndex !== undefined ? { zIndex } : {}),
+    });
+
+    beforeEach(() => {
+      useSlidesStore.setState({
+        deckId: 1,
+        slides: [
+          {
+            ...mockSlide,
+            contentBlocks: [
+              makeTextBlock("A", 1),
+              makeTextBlock("B", 3),
+              makeTextBlock("C", 5),
+            ],
+          },
+        ],
+        activeSlideId: 1,
+      });
+    });
+
+    it("bringToFront sets highest zIndex", () => {
+      useSlidesStore.getState().bringToFront(1);
+      const blocks = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
+      expect(blocks[1].zIndex).toBe(6);
+    });
+
+    it("sendToBack sets lowest zIndex", () => {
+      useSlidesStore.getState().sendToBack(1);
+      const blocks = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
+      expect(blocks[1].zIndex).toBe(0);
+    });
+
+    it("bringForward swaps zIndex with next highest", () => {
+      useSlidesStore.getState().bringForward(1);
+      const blocks = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
+      expect(blocks[1].zIndex).toBe(5);
+      expect(blocks[2].zIndex).toBe(3);
+    });
+
+    it("sendBackward swaps zIndex with next lowest", () => {
+      useSlidesStore.getState().sendBackward(1);
+      const blocks = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
+      expect(blocks[1].zIndex).toBe(1);
+      expect(blocks[0].zIndex).toBe(3);
+    });
+
+    it("uses array index ordering when blocks have no zIndex", () => {
+      useSlidesStore.setState({
+        slides: [
+          {
+            ...mockSlide,
+            contentBlocks: [
+              makeTextBlock("A"),
+              makeTextBlock("B"),
+              makeTextBlock("C"),
+            ],
+          },
+        ],
+        activeSlideId: 1,
+      });
+
+      useSlidesStore.getState().bringForward(1);
+      const blocks = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
+      expect(blocks[1].zIndex).toBe(2);
+      expect(blocks[2].zIndex).toBe(1);
     });
   });
 

@@ -12,15 +12,19 @@ export function BulletsBlock({ data, theme }: BulletsBlockProps) {
 
   return (
     <Tag
-      className="text-[0.75em] leading-relaxed space-y-[0.3em] pl-[1.2em]"
+      className="text-[0.75em] leading-relaxed pl-[1.2em] [&>li]:mb-[0.3em] [&_ul]:mt-[0.2em] [&_ul]:pl-[1.2em] [&_ul]:list-disc [&_ul_ul]:list-[circle] [&_ul_ul_ul]:list-[square] [&_ol]:mt-[0.2em] [&_ol]:pl-[1.2em] [&_ol]:list-decimal [&_ol_ol]:list-[lower-alpha] [&_ol_ol_ol]:list-[lower-roman]"
       style={{
         color: theme.textColor,
         listStyleType: data.ordered ? "decimal" : "disc",
       }}
     >
-      {data.items.map((item, i) => (
-        <li key={i}>{item}</li>
-      ))}
+      {data.items.map((item, i) => {
+        const hasHtml = /<[a-z][\s\S]*>/i.test(item);
+        if (hasHtml) {
+          return <li key={i} dangerouslySetInnerHTML={{ __html: item }} />;
+        }
+        return <li key={i}>{item}</li>;
+      })}
     </Tag>
   );
 }

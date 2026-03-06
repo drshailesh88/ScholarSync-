@@ -14,6 +14,7 @@ import { BibliographyBlock } from "./bibliography-block";
 import { TimelineBlock } from "./timeline-block";
 import { QuoteBlock } from "./quote-block";
 import { DividerBlock } from "./divider-block";
+import { ShapeBlock } from "./shape-block";
 import { ToggleBlock } from "../gamma-mode/blocks/toggle-block";
 import { EmbedBlock } from "../gamma-mode/blocks/embed-block";
 import { NestedCardBlock } from "../gamma-mode/blocks/nested-card-block";
@@ -58,6 +59,18 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     label: "Quote",
     iconName: "Quotes",
     defaultData: () => ({ text: "Enter quote...", attribution: "Author" }),
+    category: "content",
+  },
+  shape: {
+    render: ShapeBlock as any,
+    label: "Shape",
+    iconName: "Rectangle",
+    defaultData: () => ({
+      shapeType: "rectangle",
+      strokeWidth: 0,
+      opacity: 100,
+      textAlign: "center",
+    }),
     category: "content",
   },
   citation: {
@@ -232,7 +245,8 @@ export function getBlocksByCategory(): Record<string, { type: ContentBlock["type
 /**
  * Creates a new ContentBlock with default data for the given type.
  */
-export function createDefaultBlock(type: ContentBlock["type"]): ContentBlock {
+export function createDefaultBlock(type: ContentBlock["type"], dataOverride?: Record<string, unknown>): ContentBlock {
   const entry = BLOCK_REGISTRY[type];
-  return { type, data: entry.defaultData() } as ContentBlock;
+  const baseData = entry.defaultData();
+  return { type, data: { ...baseData, ...(dataOverride ?? {}) } } as ContentBlock;
 }

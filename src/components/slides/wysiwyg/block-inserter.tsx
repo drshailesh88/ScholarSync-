@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus } from "@phosphor-icons/react";
 import { getBlocksByCategory, createDefaultBlock } from "../blocks";
+import { InsertMenu } from "../shared/insert-menu";
 import type { ContentBlock } from "@/types/presentation";
 
 // ---------------------------------------------------------------------------
@@ -16,63 +17,28 @@ interface BlockInserterProps {
 
 export function BlockInserter({ onInsert, className }: BlockInserterProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [isOpen]);
-
-  const groups = getBlocksByCategory();
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <div className={`relative flex items-center justify-center ${className ?? ""}`}>
-      {/* The "+" button — visible on hover */}
+    <div className={`group/block-inserter relative flex h-5 w-full items-center justify-center ${className ?? ""}`}>
       <button
+        ref={buttonRef}
         onClick={(e) => {
           e.stopPropagation();
           setIsOpen(!isOpen);
         }}
-        className="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity shadow-sm hover:bg-blue-600"
+        className="flex h-5 w-5 items-center justify-center rounded-full border border-border bg-surface text-ink-muted opacity-0 shadow-sm transition-opacity hover:bg-surface-raised hover:text-ink focus:opacity-100 group-hover/block-inserter:opacity-100"
       >
         <Plus size={12} weight="bold" />
       </button>
 
-      {/* Dropdown menu */}
-      {isOpen && (
-        <div
-          ref={menuRef}
-          className="absolute top-7 left-1/2 -translate-x-1/2 z-50 w-56 bg-surface rounded-xl shadow-2xl border border-border py-2 max-h-72 overflow-y-auto"
-        >
-          {Object.entries(groups).map(([category, blocks]) => (
-            <div key={category}>
-              <div className="px-3 py-1 text-[9px] uppercase tracking-wider text-ink-muted font-semibold">
-                {category}
-              </div>
-              {blocks.map(({ type, entry }) => (
-                <button
-                  key={type}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onInsert(createDefaultBlock(type));
-                    setIsOpen(false);
-                  }}
-                  className="w-full px-3 py-1.5 text-left text-sm text-ink hover:bg-surface-raised flex items-center gap-2 transition-colors"
-                >
-                  <span className="text-ink-muted">{entry.label}</span>
-                </button>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
+      <InsertMenu
+        isOpen={isOpen}
+        anchorRef={buttonRef}
+        align="center"
+        onInsert={(type, dataOverride) => onInsert(createDefaultBlock(type, dataOverride))}
+        onClose={() => setIsOpen(false)}
+      />
     </div>
   );
 }
