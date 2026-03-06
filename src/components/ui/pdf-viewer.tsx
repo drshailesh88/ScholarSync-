@@ -23,11 +23,20 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 interface PDFViewerProps {
   url?: string;
   file?: File;
+  initialPage?: number;
+  title?: string;
   onClose?: () => void;
   className?: string;
 }
 
-export function PDFViewer({ url, file, onClose, className }: PDFViewerProps) {
+export function PDFViewer({
+  url,
+  file,
+  initialPage,
+  title,
+  onClose,
+  className,
+}: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
@@ -43,15 +52,28 @@ export function PDFViewer({ url, file, onClose, className }: PDFViewerProps) {
   const onDocumentLoadSuccess = useCallback(
     ({ numPages: total }: { numPages: number }) => {
       setNumPages(total);
-      setPageNumber(1);
+      setPageNumber(
+        initialPage && initialPage >= 1 && initialPage <= total ? initialPage : 1
+      );
       setLoading(false);
       setError(null);
     },
-    []
+    [initialPage]
   );
 
   const onDocumentLoadError = useCallback((err: Error) => {
-    setError(err.message || "Failed to load PDF");
+    const message = err.message || "Failed to load PDF";
+    if (
+      message.includes("404") ||
+      message.includes("Not Found") ||
+      message.includes("Missing")
+    ) {
+      setError(
+        "The original PDF is not available for this paper. It may have been imported from search without a PDF upload."
+      );
+    } else {
+      setError(message);
+    }
     setLoading(false);
   }, []);
 
@@ -109,6 +131,12 @@ export function PDFViewer({ url, file, onClose, className }: PDFViewerProps) {
             <CaretRight size={18} />
           </button>
         </div>
+
+        {title && (
+          <span className="text-xs text-ink-muted truncate max-w-[40%] hidden sm:block">
+            {title}
+          </span>
+        )}
 
         <div className="flex items-center gap-1">
           <button

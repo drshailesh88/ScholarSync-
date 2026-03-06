@@ -14,7 +14,7 @@ import type { EnhancedPaper, ResearchProgressCallback } from "./types";
  * Attempt to extract the Results and Discussion sections from full text.
  * Falls back to the full text if section headers aren't found.
  */
-function extractKeySecions(fullText: string): string {
+export function extractKeySecions(fullText: string): string {
   const normalized = fullText.replace(/\r\n/g, "\n");
 
   // Regex patterns for section boundaries
@@ -71,7 +71,7 @@ const FETCH_TIMEOUT_MS = 15_000;
  * Download a PDF and extract its text using pdf-parse.
  * Uses pdf-parse (v2) which works reliably in Node.js/serverless environments.
  */
-async function downloadAndExtractPdf(url: string): Promise<string | null> {
+export async function downloadAndExtractPdf(url: string): Promise<string | null> {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
