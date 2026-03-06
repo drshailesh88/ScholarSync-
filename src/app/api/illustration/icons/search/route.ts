@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { logger } from "@/lib/logger";
-import { searchAllIcons } from "@/lib/illustration/lib/icons";
 import { expandWithSynonyms } from "@/lib/illustration/data/icon-synonyms";
 
 // ---------------------------------------------------------------------------
@@ -34,14 +33,14 @@ interface IconSearchResult {
 /**
  * Search icons with synonym expansion and scoring
  */
-function searchIcons(
+async function searchIcons(
   query: string,
   category: string,
   limit: number,
   offset: number,
   expandSynonyms: boolean,
   includeScores: boolean
-): { icons: IconSearchResult[]; total: number; expandedTerms: string[] } {
+): Promise<{ icons: IconSearchResult[]; total: number; expandedTerms: string[] }> {
   // Get base search term
   const searchTerm = query.trim();
   if (!searchTerm) {
@@ -55,6 +54,7 @@ function searchIcons(
 
   // Use the unified search function (already does synonym expansion internally)
   // We'll do the search using the expanded query for the actual results
+  const { searchAllIcons } = await import("@/lib/illustration/lib/icons");
   const allResults = searchAllIcons(searchTerm);
 
   // Filter by category if specified
@@ -192,7 +192,7 @@ export async function GET(req: Request) {
 
     const { q, category, limit, offset, expand_synonyms, include_scores } = parseResult.data;
 
-    const { icons, total, expandedTerms } = searchIcons(
+    const { icons, total, expandedTerms } = await searchIcons(
       q || "",
       category || "",
       limit,

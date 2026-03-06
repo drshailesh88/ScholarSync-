@@ -66,6 +66,9 @@ const DEFAULT_SHORTCUTS: Shortcut[] = [
   { id: 'tool-hand', label: 'Hand Tool', keys: ['H'], category: 'tools' },
   { id: 'tool-zoom', label: 'Zoom Tool', keys: ['Z'], category: 'tools' },
   { id: 'tool-eyedropper', label: 'Eyedropper', keys: ['I'], category: 'tools' },
+  { id: 'tool-eraser', label: 'Eraser Tool', keys: ['Shift', 'E'], category: 'tools' },
+  { id: 'tool-scissors', label: 'Scissors Tool', keys: ['C'], category: 'tools' },
+  { id: 'tool-measure', label: 'Measure Tool', keys: ['M'], category: 'tools' },
 
   // Edit
   { id: 'undo', label: 'Undo', keys: ['Ctrl', 'Z'], category: 'edit' },

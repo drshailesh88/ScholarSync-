@@ -32,6 +32,11 @@ export {
 } from './SelectTool';
 
 export {
+  DirectSelectTool,
+  type DirectSelectToolOptions,
+} from './DirectSelectTool';
+
+export {
   ShapeTool,
   RectangleTool,
   EllipseTool,
@@ -51,14 +56,36 @@ export {
   type TextToolOptions,
 } from './TextTool';
 
+export {
+  EraserTool,
+  type EraserToolOptions,
+  type RectBounds as EraserRectBounds,
+} from './EraserTool';
+
+export {
+  ScissorsTool,
+  type ScissorsToolOptions,
+  type SplitLineResult,
+} from './ScissorsTool';
+
+export {
+  MeasureTool,
+  type Measurement,
+  type MeasurePoint,
+} from './MeasureTool';
+
 // ============================================================================
 // Tool Factory Functions
 // ============================================================================
 
 import { ToolRegistry, toolRegistry } from './ToolRegistry';
 import { SelectTool } from './SelectTool';
+import { DirectSelectTool } from './DirectSelectTool';
 import { RectangleTool, EllipseTool, LineTool, ArrowTool } from './ShapeTool';
 import { TextTool, PenTool } from './TextTool';
+import { EraserTool } from './EraserTool';
+import { ScissorsTool } from './ScissorsTool';
+import { MeasureTool } from './MeasureTool';
 
 /**
  * Create a SelectTool instance with default options
@@ -70,6 +97,13 @@ export function createSelectTool(): SelectTool {
     shiftNudgeAmount: 10,
     enableMarquee: true,
   });
+}
+
+/**
+ * Create a DirectSelectTool instance with default options
+ */
+export function createDirectSelectTool(): DirectSelectTool {
+  return new DirectSelectTool();
 }
 
 /**
@@ -137,6 +171,34 @@ export function createPenTool(): PenTool {
   return new PenTool();
 }
 
+/**
+ * Create an EraserTool instance with default options
+ */
+export function createEraserTool(): EraserTool {
+  return new EraserTool({
+    initialSize: 24,
+    minSize: 4,
+    maxSize: 256,
+    step: 2,
+  });
+}
+
+/**
+ * Create a ScissorsTool instance with default options
+ */
+export function createScissorsTool(): ScissorsTool {
+  return new ScissorsTool({
+    hitThreshold: 8,
+  });
+}
+
+/**
+ * Create a MeasureTool instance with default options
+ */
+export function createMeasureTool(): MeasureTool {
+  return new MeasureTool();
+}
+
 // ============================================================================
 // Default Tool Instances
 // ============================================================================
@@ -145,6 +207,11 @@ export function createPenTool(): PenTool {
  * Default SelectTool instance
  */
 export const defaultSelectTool = createSelectTool();
+
+/**
+ * Default DirectSelectTool instance
+ */
+export const defaultDirectSelectTool = createDirectSelectTool();
 
 /**
  * Default RectangleTool instance
@@ -177,16 +244,35 @@ export const defaultTextTool = createTextTool();
 export const defaultPenTool = createPenTool();
 
 /**
+ * Default EraserTool instance
+ */
+export const defaultEraserTool = createEraserTool();
+
+/**
+ * Default ScissorsTool instance
+ */
+export const defaultScissorsTool = createScissorsTool();
+
+/**
+ * Default MeasureTool instance
+ */
+export const defaultMeasureTool = createMeasureTool();
+
+/**
  * Array of all default tool instances
  */
 export const defaultTools = [
   defaultSelectTool,
+  defaultDirectSelectTool,
   defaultRectangleTool,
   defaultEllipseTool,
   defaultLineTool,
   defaultArrowTool,
   defaultTextTool,
   defaultPenTool,
+  defaultEraserTool,
+  defaultScissorsTool,
+  defaultMeasureTool,
 ];
 
 // ============================================================================
@@ -232,12 +318,16 @@ export function createToolRegistry(): ToolRegistry {
 
   // Create fresh tool instances for this registry
   registry.register(createSelectTool());
+  registry.register(createDirectSelectTool());
   registry.register(createRectangleTool());
   registry.register(createEllipseTool());
   registry.register(createLineTool());
   registry.register(createArrowTool());
   registry.register(createTextTool());
   registry.register(createPenTool());
+  registry.register(createEraserTool());
+  registry.register(createScissorsTool());
+  registry.register(createMeasureTool());
 
   return registry;
 }
@@ -251,12 +341,16 @@ export function createToolRegistry(): ToolRegistry {
  */
 export const TOOL_NAMES = {
   SELECT: 'select',
+  DIRECT_SELECT: 'directSelect',
   RECTANGLE: 'rectangle',
   ELLIPSE: 'ellipse',
   LINE: 'line',
   ARROW: 'arrow',
   TEXT: 'text',
   PEN: 'pen',
+  ERASER: 'eraser',
+  SCISSORS: 'scissors',
+  MEASURE: 'measure',
 } as const;
 
 export type ToolName = (typeof TOOL_NAMES)[keyof typeof TOOL_NAMES];
@@ -273,6 +367,7 @@ export const TOOL_CATEGORIES = {
   SHAPES: 'shapes',
   DRAWING: 'drawing',
   TEXT: 'text',
+  UTILITY: 'utility',
 } as const;
 
 export type ToolCategory = (typeof TOOL_CATEGORIES)[keyof typeof TOOL_CATEGORIES];
@@ -290,6 +385,7 @@ export function getToolsByCategory(
     [TOOL_CATEGORIES.SHAPES]: registry.getByCategory(TOOL_CATEGORIES.SHAPES),
     [TOOL_CATEGORIES.DRAWING]: registry.getByCategory(TOOL_CATEGORIES.DRAWING),
     [TOOL_CATEGORIES.TEXT]: registry.getByCategory(TOOL_CATEGORIES.TEXT),
+    [TOOL_CATEGORIES.UTILITY]: registry.getByCategory(TOOL_CATEGORIES.UTILITY),
   };
 }
 

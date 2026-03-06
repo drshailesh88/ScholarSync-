@@ -6,6 +6,7 @@
  */
 
 import type { FabricCanvas } from '@/lib/illustration/types/index';
+import type { FabricObject } from 'fabric';
 
 // ============================================================================
 // Types
@@ -87,6 +88,11 @@ export type LayerErrorCode =
 
 const DEFAULT_LAYER_NAME = 'Layer';
 const DEFAULT_LAYER_ID = 'default';
+
+type LayerCanvasObject = FabricObject & {
+  id?: string;
+  isGrid?: boolean;
+};
 
 /**
  * Generate a unique layer ID
@@ -727,7 +733,7 @@ export class LayerManager {
       layer.objects.forEach((objectId) => {
         const obj = this.getCanvasObject(objectId);
         if (obj) {
-          this.canvas!.moveTo(obj, zIndex);
+          this.canvas!.moveObjectTo(obj, zIndex);
           zIndex++;
         }
       });
@@ -746,14 +752,15 @@ export class LayerManager {
     if (!defaultLayer) return;
 
     const objects = this.canvas.getObjects();
-    objects.forEach((obj: FabricCanvas) => {
+    objects.forEach((obj) => {
+      const layerObject = obj as LayerCanvasObject;
       // Skip grid objects
-      if (obj.isGrid) return;
+      if (layerObject.isGrid) return;
 
-      let objectId = obj.id;
+      let objectId = layerObject.id;
       if (!objectId) {
         objectId = generateObjectId();
-        obj.set('id', objectId);
+        layerObject.set('id', objectId);
       }
 
       // Add to default layer if not already in a layer
@@ -767,11 +774,11 @@ export class LayerManager {
   /**
    * Get a canvas object by ID
    */
-  private getCanvasObject(objectId: string): FabricCanvas | undefined {
+  private getCanvasObject(objectId: string): LayerCanvasObject | undefined {
     if (!this.canvas) return undefined;
 
     const objects = this.canvas.getObjects();
-    return objects.find((obj: FabricCanvas) => obj.id === objectId);
+    return objects.find((obj) => (obj as LayerCanvasObject).id === objectId) as LayerCanvasObject | undefined;
   }
 
   /**

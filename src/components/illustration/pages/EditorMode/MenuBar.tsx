@@ -6,9 +6,17 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useEditorStore, useHistoryState, useViewport, useGridState } from '@/stores/illustration/editorStore';
+import { FabricObject, Line, Path as FabricPath } from 'fabric';
+import { useEditorStore, useHistoryState, useViewport, useGridState, useGuideState } from '@/stores/illustration/editorStore';
 import { useCanvas } from '@/components/illustration/Canvas/CanvasContext';
 import { useToast } from '@/components/illustration/Toast/useToast';
+import {
+  applyBooleanOperationToCanvas,
+  isEmptyResultError,
+  type PathfinderOperation,
+} from '@/lib/illustration/canvas/boolean-operations';
+import { createOffsetLine, createOffsetPath } from '@/lib/illustration/canvas/path-offset';
+import { isClippingMaskGroup } from '@/lib/illustration/canvas/clipping-mask';
 // Note: MenuBar.css was removed - using inline styles instead
 
 // ============================================================================
@@ -39,6 +47,10 @@ interface MenuDefinition {
 interface MenuBarProps {
   /** Callback to open the export dialog */
   onOpenExportDialog?: () => void;
+  /** Callback to open the document settings dialog */
+  onOpenDocumentSettings?: () => void;
+  /** Callback to import/place an image from file picker */
+  onPlaceImage?: () => void;
   /** Callback to open the background removal tool */
   onOpenBackgroundRemoval?: () => void;
   /** Callback to open the AI generation tool */
@@ -51,7 +63,14 @@ interface MenuBarProps {
 // Component
 // ============================================================================
 
-export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIGeneration, onOpenShapeGenerator }: MenuBarProps) {
+export function MenuBar({
+  onOpenExportDialog,
+  onOpenDocumentSettings,
+  onPlaceImage,
+  onOpenBackgroundRemoval,
+  onOpenAIGeneration,
+  onOpenShapeGenerator,
+}: MenuBarProps) {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [_isLoading, setIsLoading] = useState(false); // Used for async operations
   const menuBarRef = useRef<HTMLDivElement>(null);
@@ -62,6 +81,8 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
   const redo = useEditorStore((state) => state.redo);
   const toggleGrid = useEditorStore((state) => state.toggleGrid);
   const toggleSnap = useEditorStore((state) => state.toggleSnap);
+  const toggleRulers = useEditorStore((state) => state.toggleRulers);
+  const toggleGuides = useEditorStore((state) => state.toggleGuides);
   const setZoom = useEditorStore((state) => state.setZoom);
   const resetViewport = useEditorStore((state) => state.resetViewport);
   const clearSelection = useEditorStore((state) => state.clearSelection);
@@ -70,6 +91,7 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
   const { canUndo, canRedo } = useHistoryState();
   const { zoom } = useViewport();
   const { gridVisible, snapToGrid } = useGridState();
+  const { showRulers, showGuides } = useGuideState();
 
   // Canvas context
   const {
@@ -84,12 +106,19 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
     cut,
     groupSelected,
     ungroupSelected,
+    makeClippingMask,
+    releaseClippingMask,
     bringToFront,
     sendToBack,
     bringForward,
     sendBackward,
     zoomToFit,
   } = useCanvas();
+
+  const activeSelection = (canvas?.getActiveObjects() || []) as FabricObject[];
+  const canMakeClippingMask = activeSelection.length >= 2;
+  const canReleaseClippingMask =
+    activeSelection.length === 1 && isClippingMaskGroup(activeSelection[0]);
 
   // ========================================================================
   // Menu Definitions
@@ -115,6 +144,17 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
           label: 'Open...',
           shortcut: 'Ctrl+O',
           action: () => handleOpen(),
+        },
+        {
+          id: 'place-image',
+          label: 'Place Image...',
+          shortcut: 'Ctrl+Shift+P',
+          action: () => onPlaceImage?.(),
+        },
+        {
+          id: 'document-settings',
+          label: 'Document Settings...',
+          action: () => onOpenDocumentSettings?.(),
         },
         { id: 'divider1', label: '', divider: true },
         {
@@ -308,8 +348,15 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
           id: 'show-rulers',
           label: 'Show Rulers',
           shortcut: 'Ctrl+R',
-          checked: false,
-          disabled: true,
+          checked: showRulers,
+          action: () => toggleRulers(),
+        },
+        {
+          id: 'show-guides',
+          label: 'Show Guides',
+          shortcut: 'Ctrl+Shift+R',
+          checked: showGuides,
+          action: () => toggleGuides(),
         },
       ],
     },
@@ -343,6 +390,19 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
         },
         { id: 'divider1', label: '', divider: true },
         {
+          id: 'flip-horizontal',
+          label: 'Flip Horizontal',
+          shortcut: 'Shift+H',
+          action: () => handleFlipSelection('horizontal'),
+        },
+        {
+          id: 'flip-vertical',
+          label: 'Flip Vertical',
+          shortcut: 'Shift+V',
+          action: () => handleFlipSelection('vertical'),
+        },
+        { id: 'divider-flip', label: '', divider: true },
+        {
           id: 'group',
           label: 'Group',
           shortcut: 'Ctrl+G',
@@ -353,6 +413,59 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
           label: 'Ungroup',
           shortcut: 'Ctrl+Shift+G',
           action: () => ungroupSelected(),
+        },
+        {
+          id: 'make-clipping-mask',
+          label: 'Make Clipping Mask',
+          shortcut: 'Ctrl+7',
+          disabled: !canMakeClippingMask,
+          action: () => handleMakeClippingMask(),
+        },
+        {
+          id: 'release-clipping-mask',
+          label: 'Release Clipping Mask',
+          shortcut: 'Ctrl+Alt+7',
+          disabled: !canReleaseClippingMask,
+          action: () => handleReleaseClippingMask(),
+        },
+        { id: 'divider-path', label: '', divider: true },
+        {
+          id: 'path',
+          label: 'Path',
+          submenu: [
+            {
+              id: 'offset-path',
+              label: 'Offset Path...',
+              action: () => handleOffsetPath(),
+            },
+          ],
+        },
+        { id: 'divider2', label: '', divider: true },
+        {
+          id: 'pathfinder',
+          label: 'Pathfinder',
+          submenu: [
+            {
+              id: 'pathfinder-unite',
+              label: 'Unite',
+              action: () => handlePathfinderOperation('unite'),
+            },
+            {
+              id: 'pathfinder-subtract',
+              label: 'Subtract',
+              action: () => handlePathfinderOperation('subtract'),
+            },
+            {
+              id: 'pathfinder-intersect',
+              label: 'Intersect',
+              action: () => handlePathfinderOperation('intersect'),
+            },
+            {
+              id: 'pathfinder-exclude',
+              label: 'Exclude',
+              action: () => handlePathfinderOperation('exclude'),
+            },
+          ],
         },
       ],
     },
@@ -591,9 +704,9 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
 
   const handleShowShortcuts = useCallback(() => {
     toast.info(
-      'Shortcuts: V=Select, H=Hand, R=Rect, E=Ellipse, L=Line, T=Text | ' +
+      'Shortcuts: V=Select, H=Hand, R=Rect, E=Ellipse, Shift+E=Eraser, C=Scissors, M=Measure, L=Line, T=Text | ' +
         'Ctrl+Z=Undo, Ctrl+Y=Redo, Ctrl+C/V/X=Copy/Paste/Cut | ' +
-        'Ctrl+G=Group, +/-=Zoom, Space+Drag=Pan',
+        'Ctrl+G=Group, Shift+H/V=Flip H/V, +/-=Zoom, Space+Drag=Pan',
       10000 // Show for 10 seconds
     );
   }, [toast]);
@@ -605,6 +718,148 @@ export function MenuBar({ onOpenExportDialog, onOpenBackgroundRemoval, onOpenAIG
       8000 // Show for 8 seconds
     );
   }, [toast]);
+
+  const handleFlipSelection = useCallback(
+    (direction: 'horizontal' | 'vertical') => {
+      if (!canvas) {
+        toast.error('Canvas not ready');
+        return;
+      }
+
+      const activeObjects = canvas.getActiveObjects() as FabricObject[];
+      if (activeObjects.length === 0) {
+        toast.warning('Select at least 1 object to flip');
+        return;
+      }
+
+      activeObjects.forEach((object) => {
+        if (direction === 'horizontal') {
+          object.set({ flipX: !Boolean((object as FabricObject & { flipX?: boolean }).flipX) });
+        } else {
+          object.set({ flipY: !Boolean((object as FabricObject & { flipY?: boolean }).flipY) });
+        }
+        object.setCoords();
+      });
+
+      canvas.requestRenderAll();
+      canvas.fire('object:modified', { target: activeObjects[0] });
+    },
+    [canvas, toast]
+  );
+
+  const handlePathfinderOperation = useCallback(
+    (operation: PathfinderOperation) => {
+      if (!canvas) {
+        toast.error('Canvas not ready');
+        return;
+      }
+
+      const selectedObjects = canvas.getActiveObjects() as FabricObject[];
+      if (selectedObjects.length < 2) {
+        toast.warning('Select at least 2 objects for pathfinder operations');
+        return;
+      }
+
+      try {
+        applyBooleanOperationToCanvas(canvas, selectedObjects, operation);
+      } catch (error) {
+        if (isEmptyResultError(error)) {
+          toast.error('Operation produced no result');
+          return;
+        }
+
+        const message = error instanceof Error ? error.message : '';
+        if (/convert|unsupported object type|path-compatible children|invalid radius/i.test(message)) {
+          toast.error('Unable to convert one or more selected objects for pathfinder');
+          return;
+        }
+
+        toast.error(message || 'Pathfinder operation failed');
+      }
+    },
+    [canvas, toast]
+  );
+
+  const handleOffsetPath = useCallback(() => {
+    if (!canvas) {
+      toast.error('Canvas not ready');
+      return;
+    }
+
+    const selected = canvas.getActiveObjects() as FabricObject[];
+    if (selected.length !== 1) {
+      toast.warning('Select exactly 1 path or line');
+      return;
+    }
+
+    const rawValue = prompt('Offset distance in pixels (positive = outward, negative = inward):', '10');
+    if (rawValue === null) {
+      return;
+    }
+
+    const distance = Number.parseFloat(rawValue);
+    if (!Number.isFinite(distance)) {
+      toast.error('Enter a valid numeric offset distance');
+      return;
+    }
+
+    const source = selected[0];
+    let offsetObject: FabricObject | null = null;
+
+    if (source instanceof FabricPath) {
+      offsetObject = createOffsetPath(source, distance) as FabricObject | null;
+    } else if (source instanceof Line) {
+      offsetObject = createOffsetLine(source, distance) as FabricObject | null;
+    } else {
+      toast.warning('Offset Path currently supports Path and Line objects');
+      return;
+    }
+
+    if (!offsetObject) {
+      toast.error('Failed to generate offset path');
+      return;
+    }
+
+    canvas.add(offsetObject);
+    canvas.setActiveObject(offsetObject);
+    canvas.requestRenderAll();
+    canvas.fire('object:modified', { target: offsetObject });
+    toast.success(`Offset path created (${distance}px)`);
+  }, [canvas, toast]);
+
+  const handleMakeClippingMask = useCallback(() => {
+    void (async () => {
+      if (!canvas) {
+        toast.error('Canvas not ready');
+        return;
+      }
+
+      const success = await makeClippingMask();
+      if (!success) {
+        toast.warning('Select at least 2 objects. Topmost object will be used as clip shape.');
+        return;
+      }
+
+      toast.success('Clipping mask created');
+    })();
+  }, [canvas, makeClippingMask, toast]);
+
+  const handleReleaseClippingMask = useCallback(() => {
+    void (async () => {
+      if (!canvas) {
+        toast.error('Canvas not ready');
+        return;
+      }
+
+      const success = await releaseClippingMask();
+      if (!success) {
+        toast.warning('Select a clipped group to release its clipping mask.');
+        return;
+      }
+
+      toast.success('Clipping mask released');
+    })();
+  }, [canvas, releaseClippingMask, toast]);
 
   // ========================================================================
   // Click Outside Handler

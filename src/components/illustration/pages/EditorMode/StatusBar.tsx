@@ -18,8 +18,14 @@ interface MouseCoords {
   y: number;
 }
 
+interface CanvasSize {
+  width: number;
+  height: number;
+}
+
 interface StatusBarProps {
   mouseCoords?: MouseCoords;
+  canvasSize?: CanvasSize;
 }
 
 // ============================================================================
@@ -164,13 +170,16 @@ const toolDisplayNames: Record<ToolType, string> = {
   [ToolType.HAND]: 'Hand',
   [ToolType.ZOOM]: 'Zoom',
   [ToolType.EYEDROPPER]: 'Eyedropper',
+  [ToolType.ERASER]: 'Eraser',
+  [ToolType.SCISSORS]: 'Scissors',
+  [ToolType.MEASURE]: 'Measure',
 };
 
 // ============================================================================
 // StatusBar Component
 // ============================================================================
 
-export function StatusBar({ mouseCoords }: StatusBarProps): JSX.Element {
+export function StatusBar({ mouseCoords, canvasSize }: StatusBarProps): JSX.Element {
   const { zoom } = useViewport();
   const { selectionCount, hasSelection } = useSelection();
   const activeTool = useActiveTool();
@@ -221,6 +230,15 @@ export function StatusBar({ mouseCoords }: StatusBarProps): JSX.Element {
 
       {/* Right Section - Coordinates and Zoom */}
       <div style={styles.rightSection}>
+        <div style={styles.statusItem}>
+          <span style={styles.statusLabel}>Canvas:</span>
+          <span style={styles.statusValue}>
+            {Math.round(canvasSize?.width ?? 0)}x{Math.round(canvasSize?.height ?? 0)}
+          </span>
+        </div>
+
+        <div style={styles.divider} />
+
         {/* Mouse Coordinates */}
         <div style={styles.statusItem}>
           <span style={styles.statusIcon}>
