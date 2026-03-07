@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { useSlidesStore } from "@/stores/slides-store";
 import { VisualOptionCard, type VisualOption } from "./visual-option-card";
 import { VISUAL_TYPE_PRESETS } from "../agent/visual-mode";
+import type { ContentBlock } from "@/types/presentation";
 import type { RefObject } from "react";
 
 const QUICK_PROMPTS = [
@@ -167,7 +168,7 @@ export function VisualizePopover({
 
   function handleInsertHere() {
     if (selectedIndex == null || !activeSlide) return;
-    const block = options[selectedIndex].block;
+    const block = options[selectedIndex].block as ContentBlock;
     updateSlide(activeSlide.id, {
       contentBlocks: [...activeSlide.contentBlocks, block],
     });
@@ -177,7 +178,7 @@ export function VisualizePopover({
   async function handleInsertNewSlide() {
     if (selectedIndex == null) return;
     const opt = options[selectedIndex];
-    const block = opt.block;
+    const block = opt.block as ContentBlock;
     const blockData = block.data as Record<string, unknown>;
     const slideTitle =
       (blockData.title as string) ||

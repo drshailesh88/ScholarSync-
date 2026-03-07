@@ -65,6 +65,28 @@ function fixSvgScaling(container: HTMLDivElement) {
   svgEl.style.maxHeight = "100%";
 }
 
+/** Add <title> elements to Mermaid SVG nodes for native browser tooltips */
+function addMermaidTooltips(container: HTMLDivElement) {
+  const svgEl = container.querySelector("svg");
+  if (!svgEl) return;
+
+  // Mermaid wraps each node in a <g> with class "node" or "actor" etc.
+  const nodes = svgEl.querySelectorAll("g.node, g.actor, g.task, g.section");
+  for (const node of nodes) {
+    // Skip if already has a <title>
+    if (node.querySelector(":scope > title")) continue;
+
+    // Extract text from the node's <text> or <foreignObject> elements
+    const textEl = node.querySelector("text, foreignObject");
+    const text = textEl?.textContent?.trim();
+    if (text) {
+      const titleEl = document.createElementNS("http://www.w3.org/2000/svg", "title");
+      titleEl.textContent = text;
+      node.prepend(titleEl);
+    }
+  }
+}
+
 interface DiagramBlockProps {
   data: DiagramData;
   theme: ThemeConfig;
@@ -94,6 +116,7 @@ export const DiagramBlock = memo(function DiagramBlock({ data, theme }: DiagramB
         ref.current.replaceChildren();
         ref.current.insertAdjacentHTML("afterbegin", svg);
         fixSvgScaling(ref.current);
+        addMermaidTooltips(ref.current);
       } catch {
         if (!cancelled && ref.current) {
           const errDiv = document.createElement("div");

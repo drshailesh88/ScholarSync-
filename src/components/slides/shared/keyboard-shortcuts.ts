@@ -67,6 +67,12 @@ export function registerGlobalShortcuts(store: typeof useSlidesStore) {
       return;
     }
 
+    if (mod && e.shiftKey && key === "v" && !isEditableTarget(e.target)) {
+      e.preventDefault();
+      state.setShowVisualizePopover(!state.showVisualizePopover);
+      return;
+    }
+
     if (e.key === "F5") {
       const sortedSlides = getSortedSlides(state);
       if (sortedSlides.length === 0) return;

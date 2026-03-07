@@ -101,7 +101,7 @@ export function VisualMode() {
 
   function handleInsertHere() {
     if (selectedIndex == null || !activeSlide) return;
-    const block = options[selectedIndex].block;
+    const block = options[selectedIndex].block as ContentBlock;
     updateSlide(activeSlide.id, {
       contentBlocks: [...activeSlide.contentBlocks, block],
     });
@@ -110,8 +110,7 @@ export function VisualMode() {
   async function handleInsertNewSlide() {
     if (selectedIndex == null) return;
     const opt = options[selectedIndex];
-    const block = opt.block;
-    // Derive a meaningful title from the infographic/diagram data or the option label
+    const block = opt.block as ContentBlock;
     const blockData = block.data as Record<string, unknown>;
     const slideTitle =
       (blockData.title as string) ||

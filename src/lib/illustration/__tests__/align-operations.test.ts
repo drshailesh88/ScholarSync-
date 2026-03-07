@@ -4,6 +4,7 @@ import {
   alignCenterH,
   alignLeft,
   alignRight,
+  alignTop,
   distributeH,
   distributeV,
 } from '../canvas/align-operations';
@@ -119,6 +120,21 @@ describe('align operations', () => {
     expect(centerC).toBeCloseTo(120);
   });
 
+  it('alignTop aligns all objects to the minimum top value', () => {
+    const objects = asFabricObjects([
+      new MockFabricObject('a', 10, 50, 20, 20),
+      new MockFabricObject('b', 30, 100, 20, 20),
+      new MockFabricObject('c', 50, 200, 20, 20),
+    ]);
+
+    const positions = alignTop(objects);
+    const byId = positionsById(positions);
+
+    expect(byId.a.top).toBe(50);
+    expect(byId.b.top).toBe(50);
+    expect(byId.c.top).toBe(50);
+  });
+
   it('distributeH with 3 rects creates equal horizontal spacing', () => {
     const rawObjects = [
       new MockFabricObject('a', 0, 10, 20, 20),
@@ -167,5 +183,17 @@ describe('align operations', () => {
 
     expect(byId.a.left).toBe(50);
     expect(byId.b.left).toBe(200);
+  });
+
+  it('alignLeft with a single object is a no-op', () => {
+    const objects = asFabricObjects([
+      new MockFabricObject('solo', 75, 125, 30, 40),
+    ]);
+
+    const positions = alignLeft(objects);
+    const byId = positionsById(positions);
+
+    expect(byId.solo.left).toBe(75);
+    expect(byId.solo.top).toBe(125);
   });
 });

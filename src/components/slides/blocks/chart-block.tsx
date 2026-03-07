@@ -379,7 +379,9 @@ function renderChart(
           aspectRatio={4 / 3}
           stroke="#fff"
           content={<TreemapContent x={0} y={0} width={0} height={0} />}
-        />
+        >
+          <Tooltip />
+        </Treemap>
       );
     }
 
@@ -401,11 +403,14 @@ function renderChart(
 
       return (
         <svg viewBox="0 0 300 180" className="w-full h-full" data-testid="gauge-svg">
+          <title>{`${data.datasets[0]?.label ?? "Value"}: ${value} / ${max}`}</title>
           {/* Background arc */}
           <path d={describeArc(cx, cy, r, endAngle, startAngle)} fill="none" stroke="#e5e7eb" strokeWidth={20} strokeLinecap="round" />
           {/* Value arc */}
           {pct > 0 && (
-            <path d={describeArc(cx, cy, r, startAngle - pct * 180, startAngle)} fill="none" stroke={gaugeColor} strokeWidth={20} strokeLinecap="round" />
+            <path d={describeArc(cx, cy, r, startAngle - pct * 180, startAngle)} fill="none" stroke={gaugeColor} strokeWidth={20} strokeLinecap="round">
+              <title>{`${value} / ${max} (${(pct * 100).toFixed(0)}%)`}</title>
+            </path>
           )}
           {/* Needle */}
           <line
@@ -478,6 +483,7 @@ function renderChart(
 
             return (
               <g key={i} data-testid={`study-row-${i}`}>
+                <title>{`${study}: ${est.toFixed(2)} [${lo.toFixed(2)}, ${hi.toFixed(2)}]`}</title>
                 {/* Study name */}
                 <text x={leftLabelWidth - 8} y={y + 4} textAnchor="end" fontSize="9" fill={theme.textColor}>
                   {study}

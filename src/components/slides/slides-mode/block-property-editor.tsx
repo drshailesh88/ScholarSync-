@@ -2539,6 +2539,9 @@ const INFOGRAPHIC_TYPE_OPTIONS: { value: InfographicType; label: string }[] = [
   { value: "stats_row", label: "Stats Row" },
   { value: "checklist", label: "Checklist" },
   { value: "cause_effect", label: "Cause & Effect" },
+  { value: "icon_array", label: "Icon Array" },
+  { value: "pictograph", label: "Pictograph" },
+  { value: "word_cloud", label: "Word Cloud" },
 ];
 
 const COLOR_SCHEME_OPTIONS = [
@@ -2548,6 +2551,9 @@ const COLOR_SCHEME_OPTIONS = [
   { value: "purple", label: "Purple" },
   { value: "orange", label: "Orange" },
   { value: "rainbow", label: "Rainbow" },
+  { value: "warm", label: "Warm" },
+  { value: "cool", label: "Cool" },
+  { value: "pastel", label: "Pastel" },
 ];
 
 function InfographicEditor({
@@ -2605,7 +2611,18 @@ function InfographicEditor({
 
       {/* Color scheme */}
       <div>
-        <FieldLabel>Color Scheme</FieldLabel>
+        <div className="flex items-center justify-between">
+          <FieldLabel>Color Scheme</FieldLabel>
+          <button
+            onClick={() => {
+              const items = data.items.map(({ color: _c, ...rest }) => rest);
+              updateData({ items });
+            }}
+            className="text-[9px] text-text-secondary hover:text-text-primary hover:underline"
+          >
+            Apply scheme to all
+          </button>
+        </div>
         <FieldSelect
           value={data.colorScheme ?? "theme"}
           onChange={(v) => updateData({ colorScheme: v as InfographicData["colorScheme"] })}
@@ -2627,7 +2644,16 @@ function InfographicEditor({
         <div className="space-y-2">
           {data.items.map((item, i) => (
             <div key={i} className="p-2 rounded-lg bg-surface-raised border border-border space-y-1.5">
-              <div className="flex gap-1">
+              <div className="flex gap-1 items-center">
+                {/* Color swatch */}
+                <label className="relative shrink-0 w-5 h-5 rounded border border-border cursor-pointer overflow-hidden" style={{ backgroundColor: item.color || "#888" }}>
+                  <input
+                    type="color"
+                    value={item.color || "#888888"}
+                    onChange={(e) => updateItem(i, { color: e.target.value })}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
+                </label>
                 <FieldInput
                   value={item.label}
                   onChange={(v) => updateItem(i, { label: v })}
@@ -2656,6 +2682,27 @@ function InfographicEditor({
                   onChange={(v) => updateItem(i, { icon: v })}
                   placeholder="Icon (emoji)"
                 />
+              </div>
+              {/* Style toggles */}
+              <div className="flex items-center gap-2 text-[10px]">
+                <label className="flex items-center gap-1 cursor-pointer text-text-secondary">
+                  <input
+                    type="checkbox"
+                    checked={!!item.highlighted}
+                    onChange={(e) => updateItem(i, { highlighted: e.target.checked })}
+                    className="w-3 h-3"
+                  />
+                  Highlight
+                </label>
+                <label className="flex items-center gap-1 cursor-pointer text-text-secondary">
+                  <input
+                    type="checkbox"
+                    checked={!!item.bold}
+                    onChange={(e) => updateItem(i, { bold: e.target.checked })}
+                    className="w-3 h-3"
+                  />
+                  Bold
+                </label>
               </div>
             </div>
           ))}

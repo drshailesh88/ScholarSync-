@@ -280,41 +280,59 @@ export function InsertMenu({
               const Icon = getBlockIcon(item.iconName);
               const isActive = item.index === activeIndex;
               const isShapeItem = item.type === "shape";
+              const visualizeType = VISUALIZABLE_TYPES[item.type];
 
               return (
                 <div key={item.type}>
-                  <button
-                    ref={(node) => {
-                      itemRefs.current[item.index] = node;
-                    }}
-                    type="button"
-                    role="menuitem"
-                    data-testid="insert-menu-item"
-                    data-type={item.type}
-                    data-category={item.category}
-                    aria-current={isActive || undefined}
-                    onMouseEnter={() => {
-                      setActiveIndex(item.index);
-                      setShapeSubmenuOpen(isShapeItem);
-                    }}
-                    onClick={() => {
-                      if (isShapeItem) {
+                  <div className="flex items-center">
+                    <button
+                      ref={(node) => {
+                        itemRefs.current[item.index] = node;
+                      }}
+                      type="button"
+                      role="menuitem"
+                      data-testid="insert-menu-item"
+                      data-type={item.type}
+                      data-category={item.category}
+                      aria-current={isActive || undefined}
+                      onMouseEnter={() => {
                         setActiveIndex(item.index);
-                        setShapeSubmenuOpen((current) => !current);
-                        return;
-                      }
-                      selectItem(item.type);
-                    }}
-                    className={cn(
-                      "flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
-                      isActive
-                        ? "bg-brand/10 text-brand"
-                        : "text-ink hover:bg-surface-raised"
+                        setShapeSubmenuOpen(isShapeItem);
+                      }}
+                      onClick={() => {
+                        if (isShapeItem) {
+                          setActiveIndex(item.index);
+                          setShapeSubmenuOpen((current) => !current);
+                          return;
+                        }
+                        selectItem(item.type);
+                      }}
+                      className={cn(
+                        "flex flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-xs transition-colors",
+                        isActive
+                          ? "bg-brand/10 text-brand"
+                          : "text-ink hover:bg-surface-raised"
+                      )}
+                    >
+                      <Icon size={14} className={isActive ? "text-brand" : "text-ink-muted"} />
+                      <span>{item.label}</span>
+                    </button>
+                    {visualizeType && onVisualize && (
+                      <button
+                        type="button"
+                        data-testid="insert-menu-visualize"
+                        data-visualize-type={visualizeType}
+                        title={`AI generate ${item.label}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onVisualize(visualizeType);
+                        }}
+                        className="shrink-0 p-1.5 rounded-lg text-ink-muted hover:text-brand hover:bg-brand/10 transition-colors"
+                      >
+                        <Sparkle size={12} weight="fill" />
+                      </button>
                     )}
-                  >
-                    <Icon size={14} className={isActive ? "text-brand" : "text-ink-muted"} />
-                    <span>{item.label}</span>
-                  </button>
+                  </div>
 
                   {isShapeItem && shapeSubmenuOpen && isActive && (
                     <div

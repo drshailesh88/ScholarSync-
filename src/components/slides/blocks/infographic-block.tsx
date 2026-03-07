@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import type { InfographicData, InfographicItem, ThemeConfig } from "@/types/presentation";
+import type { InfographicData, InfographicItem, ThemeConfig, InstitutionKit } from "@/types/presentation";
 import { useSvgTooltip, SvgTooltip } from "../shared/svg-tooltip";
 
 // ---------------------------------------------------------------------------
@@ -14,6 +14,7 @@ interface InfographicBlockProps {
   theme: ThemeConfig;
   scale?: number;
   interactive?: boolean;
+  institutionKit?: Partial<InstitutionKit> | null;
 }
 
 const COLOR_SCHEMES: Record<string, string[]> = {
@@ -22,6 +23,9 @@ const COLOR_SCHEMES: Record<string, string[]> = {
   purple:  ["#7C3AED", "#8B5CF6", "#A78BFA", "#C4B5FD", "#6D28D9", "#5B21B6"],
   orange:  ["#D97706", "#F59E0B", "#FBBF24", "#FCD34D", "#B45309", "#92400E"],
   rainbow: ["#DC2626", "#D97706", "#059669", "#2563EB", "#7C3AED", "#DB2777"],
+  warm:    ["#DC2626", "#EA580C", "#D97706", "#CA8A04", "#65A30D", "#B91C1C"],
+  cool:    ["#0284C7", "#0891B2", "#0D9488", "#059669", "#4F46E5", "#7C3AED"],
+  pastel:  ["#93C5FD", "#A5B4FC", "#C4B5FD", "#F9A8D4", "#FCA5A5", "#FDE68A"],
 };
 
 function getColors(scheme: string | undefined, theme: ThemeConfig): string[] {
@@ -36,6 +40,16 @@ function getColors(scheme: string | undefined, theme: ThemeConfig): string[] {
     theme.accentColor + "CC",
     theme.secondaryColor + "CC",
   ];
+}
+
+/** Return per-item color override or fall back to scheme color */
+export function getItemColor(item: InfographicItem, index: number, colors: string[]): string {
+  return item.color || colors[index % colors.length];
+}
+
+/** CSS filter string for highlighted items */
+function highlightFilter(item: InfographicItem, color: string): string | undefined {
+  return item.highlighted ? `drop-shadow(0 0 4px ${color})` : undefined;
 }
 
 function getItemIcon(item: InfographicItem, fallback: string): string {
@@ -79,7 +93,6 @@ function tooltipAttrs(item: InfographicItem): Record<string, string> {
 
 function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const n = Math.max(items.length, 1);
-  // Dynamic sizing: shrink cards and gaps when items exceed available width
   const maxTotalW = 780;
   const baseCardW = 120;
   const baseGap = 24;
@@ -107,9 +120,9 @@ function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; color
     <svg viewBox="0 0 800 170" className="w-full">
       {items.map((item, i) => {
         const cx = offsetX + i * (cardW + gap) + cardW / 2;
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
             {i > 0 && (
               <line
@@ -120,11 +133,11 @@ function ProcessFlow({ items, colors, theme }: { items: InfographicItem[]; color
               />
             )}
             <circle cx={cx} cy={70} r={r + 6} fill={color} opacity={0.12} />
-            <circle cx={cx} cy={70} r={r} fill={color} />
+            <circle cx={cx} cy={70} r={r} fill={color} stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined} />
             <text x={cx} y={77} textAnchor="middle" fill="white" fontSize={fontIcon} fontWeight="bold">
               {getItemIcon(item, `${i + 1}`)}
             </text>
-            <text x={cx} y={128} textAnchor="middle" fill={theme.textColor} fontSize={fontLabel} fontWeight="700">
+            <text x={cx} y={128} textAnchor="middle" fill={theme.textColor} fontSize={item.fontSize || fontLabel} fontWeight={item.bold ? "bold" : "700"}>
               {item.label.length > descLen + 5 ? item.label.slice(0, descLen + 5) + "…" : item.label}
             </text>
             {item.description && (
@@ -152,14 +165,14 @@ function Comparison({ items, colors, theme }: { items: InfographicItem[]; colors
     <svg viewBox="0 0 800 180" className="w-full">
       {items.map((item, i) => {
         const x = 20 + i * (colW + 16);
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
-            <rect x={x} y={5} width={colW} height={170} rx={10} fill={color} opacity={0.06} />
+            <rect x={x} y={5} width={colW} height={170} rx={10} fill={color} opacity={0.06} stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined} />
             <rect x={x} y={5} width={colW} height={38} rx={10} fill={color} opacity={0.2} />
             <rect x={x} y={28} width={colW} height={15} fill={color} opacity={0.2} />
-            <text x={x + colW / 2} y={30} textAnchor="middle" fill={theme.textColor} fontSize={13} fontWeight="700">
+            <text x={x + colW / 2} y={30} textAnchor="middle" fill={theme.textColor} fontSize={item.fontSize || 13} fontWeight={item.bold ? "bold" : "700"}>
               {getItemIcon(item, "📌")} {item.label}
             </text>
             {item.description && (
@@ -190,24 +203,24 @@ function Hierarchy({ items, colors, theme }: { items: InfographicItem[]; colors:
   return (
     <svg viewBox="0 0 800 170" className="w-full">
       {root && (
-        <g className="infographic-item" {...tooltipAttrs(root)}>
+        <g className="infographic-item" {...tooltipAttrs(root)} opacity={root.opacity != null ? root.opacity / 100 : undefined} filter={highlightFilter(root, getItemColor(root, 0, colors))}>
           <title>{tooltipText(root)}</title>
-          <rect x={280} y={8} width={240} height={42} rx={8} fill={colors[0]} />
-          <text x={400} y={35} textAnchor="middle" fill="white" fontSize={14} fontWeight="700">
+          <rect x={280} y={8} width={240} height={42} rx={8} fill={getItemColor(root, 0, colors)} stroke={root.borderColor} strokeWidth={root.borderColor ? 2 : undefined} />
+          <text x={400} y={35} textAnchor="middle" fill="white" fontSize={root.fontSize || 14} fontWeight={root.bold ? "bold" : "700"}>
             {root.label}
           </text>
         </g>
       )}
       {children.map((child, i) => {
         const cx = 20 + childW * i + childW / 2;
-        const color = colors[(i + 1) % colors.length];
+        const color = getItemColor(child, i + 1, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(child)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(child)} opacity={child.opacity != null ? child.opacity / 100 : undefined} filter={highlightFilter(child, color)}>
             <title>{tooltipText(child)}</title>
             <line x1={400} y1={50} x2={cx} y2={75} stroke={theme.textColor + "30"} strokeWidth={2} />
-            <rect x={cx - 80} y={75} width={160} height={45} rx={6} fill={color} opacity={0.12} />
+            <rect x={cx - 80} y={75} width={160} height={45} rx={6} fill={color} opacity={0.12} stroke={child.borderColor} strokeWidth={child.borderColor ? 2 : undefined} />
             <rect x={cx - 80} y={75} width={4} height={45} rx={2} fill={color} />
-            <text x={cx - 64} y={96} fill={theme.textColor} fontSize={12} fontWeight="600">
+            <text x={cx - 64} y={96} fill={theme.textColor} fontSize={child.fontSize || 12} fontWeight={child.bold ? "bold" : "600"}>
               {child.label}
             </text>
             {child.description && (
@@ -224,7 +237,6 @@ function Hierarchy({ items, colors, theme }: { items: InfographicItem[]; colors:
 
 function Cycle({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
   const n = items.length;
-  // Ultra-wide ellipse to fit widescreen 16:10 slides
   const cxc = 400, cyc = 85;
   const rxc = 300, ryc = 55;
 
@@ -234,7 +246,7 @@ function Cycle({ items, colors, theme }: { items: InfographicItem[]; colors: str
         const angle = (2 * Math.PI * i) / n - Math.PI / 2;
         const x = cxc + rxc * Math.cos(angle);
         const y = cyc + ryc * Math.sin(angle);
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
 
         const nextAngle = (2 * Math.PI * ((i + 1) % n)) / n - Math.PI / 2;
         const nx = cxc + rxc * Math.cos(nextAngle);
@@ -245,14 +257,14 @@ function Cycle({ items, colors, theme }: { items: InfographicItem[]; colors: str
         const labelLines = wrapText(item.label, 12);
 
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
             <path
               d={`M ${x} ${y} Q ${mx} ${my} ${nx} ${ny}`}
               fill="none" stroke={theme.textColor + "30"} strokeWidth={1.5}
               markerEnd="url(#cycle-arrow)"
             />
-            <circle cx={x} cy={y} r={30} fill={color} />
+            <circle cx={x} cy={y} r={30} fill={color} stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined} />
             <text x={x} y={y - 2} textAnchor="middle" fill="white" fontSize={15}>
               {getItemIcon(item, `${i + 1}`)}
             </text>
@@ -260,7 +272,7 @@ function Cycle({ items, colors, theme }: { items: InfographicItem[]; colors: str
               <text
                 key={li}
                 x={x} y={y + 10 + li * 11}
-                textAnchor="middle" fill="white" fontSize={9} fontWeight="600"
+                textAnchor="middle" fill="white" fontSize={item.fontSize || 9} fontWeight={item.bold ? "bold" : "600"}
               >
                 {line}
               </text>
@@ -288,18 +300,19 @@ function Funnel({ items, colors, theme: _theme }: { items: InfographicItem[]; co
         const topW = 720 - (i * 520) / n;
         const botW = 720 - ((i + 1) * 520) / n;
         const y = i * stepH + 6;
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
         const topX = (800 - topW) / 2;
         const botX = (800 - botW) / 2;
 
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
             <polygon
               points={`${topX},${y} ${topX + topW},${y} ${botX + botW},${y + stepH - 2} ${botX},${y + stepH - 2}`}
               fill={color} opacity={0.85}
+              stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined}
             />
-            <text x={400} y={y + stepH / 2 + 4} textAnchor="middle" fill="white" fontSize={13} fontWeight="600">
+            <text x={400} y={y + stepH / 2 + 4} textAnchor="middle" fill="white" fontSize={item.fontSize || 13} fontWeight={item.bold ? "bold" : "600"}>
               {item.label}
               {item.value ? ` — ${item.value}` : ""}
             </text>
@@ -323,18 +336,19 @@ function Pyramid({ items, colors, theme: _theme }: { items: InfographicItem[]; c
         const topW = minW + (i * (maxW - minW)) / n;
         const botW = minW + ((i + 1) * (maxW - minW)) / n;
         const y = i * stepH + 6;
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
         const topX = (800 - topW) / 2;
         const botX = (800 - botW) / 2;
 
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
             <polygon
               points={`${topX},${y} ${topX + topW},${y} ${botX + botW},${y + stepH - 2} ${botX},${y + stepH - 2}`}
               fill={color} opacity={0.85}
+              stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined}
             />
-            <text x={400} y={y + stepH / 2 + 4} textAnchor="middle" fill="white" fontSize={12} fontWeight="600">
+            <text x={400} y={y + stepH / 2 + 4} textAnchor="middle" fill="white" fontSize={item.fontSize || 12} fontWeight={item.bold ? "bold" : "600"}>
               {item.label}
             </text>
           </g>
@@ -356,12 +370,12 @@ function VennDiagram({ items, colors, theme }: { items: InfographicItem[]; color
     <svg viewBox="0 0 800 180" className="w-full">
       {circles.map((item, i) => {
         const pos = positions[i] || positions[0];
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
-            <circle cx={pos.cx} cy={pos.cy} r={70} fill={color} opacity={0.2} stroke={color} strokeWidth={2} />
-            <text x={pos.cx} y={pos.cy + 4} textAnchor="middle" fill={theme.textColor} fontSize={12} fontWeight="600">
+            <circle cx={pos.cx} cy={pos.cy} r={70} fill={color} opacity={0.2} stroke={item.borderColor || color} strokeWidth={2} />
+            <text x={pos.cx} y={pos.cy + 4} textAnchor="middle" fill={theme.textColor} fontSize={item.fontSize || 12} fontWeight={item.bold ? "bold" : "600"}>
               {item.label}
             </text>
             {item.description && (
@@ -392,12 +406,12 @@ function Matrix({ items, colors, theme }: { items: InfographicItem[]; colors: st
 
       {quadrants.map((item, i) => {
         const pos = positions[i];
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
-            <rect x={pos.x} y={pos.y} width={370} height={82} rx={6} fill={color} opacity={0.06} />
-            <text x={pos.x + 10} y={pos.y + 22} fill={color} fontSize={13} fontWeight="700">
+            <rect x={pos.x} y={pos.y} width={370} height={82} rx={6} fill={color} opacity={0.06} stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined} />
+            <text x={pos.x + 10} y={pos.y + 22} fill={color} fontSize={item.fontSize || 13} fontWeight={item.bold ? "bold" : "700"}>
               {getItemIcon(item, "●")} {item.label}
             </text>
             {item.description && (
@@ -423,10 +437,10 @@ function Radial({ items, colors, theme }: { items: InfographicItem[]; colors: st
   return (
     <svg viewBox="0 0 800 175" className="w-full">
       {center && (
-        <g className="infographic-item" {...tooltipAttrs(center)}>
+        <g className="infographic-item" {...tooltipAttrs(center)} opacity={center.opacity != null ? center.opacity / 100 : undefined} filter={highlightFilter(center, getItemColor(center, 0, colors))}>
           <title>{tooltipText(center)}</title>
-          <circle cx={cxr} cy={cyr} r={38} fill={colors[0]} />
-          <text x={cxr} y={cyr + 4} textAnchor="middle" fill="white" fontSize={11} fontWeight="700">
+          <circle cx={cxr} cy={cyr} r={38} fill={getItemColor(center, 0, colors)} stroke={center.borderColor} strokeWidth={center.borderColor ? 2 : undefined} />
+          <text x={cxr} y={cyr + 4} textAnchor="middle" fill="white" fontSize={center.fontSize || 11} fontWeight={center.bold ? "bold" : "700"}>
             {center.label.length > 14 ? center.label.slice(0, 14) + "…" : center.label}
           </text>
         </g>
@@ -435,14 +449,14 @@ function Radial({ items, colors, theme }: { items: InfographicItem[]; colors: st
         const angle = (2 * Math.PI * i) / n - Math.PI / 2;
         const x = cxr + 220 * Math.cos(angle);
         const y = cyr + 60 * Math.sin(angle);
-        const color = colors[(i + 1) % colors.length];
+        const color = getItemColor(item, i + 1, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
             <line x1={cxr} y1={cyr} x2={x} y2={y} stroke={theme.textColor + "20"} strokeWidth={1.5} />
             <circle cx={x} cy={y} r={24} fill={color} opacity={0.12} />
-            <circle cx={x} cy={y} r={21} fill={color} />
-            <text x={x} y={y + 4} textAnchor="middle" fill="white" fontSize={9} fontWeight="600">
+            <circle cx={x} cy={y} r={21} fill={color} stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined} />
+            <text x={x} y={y + 4} textAnchor="middle" fill="white" fontSize={item.fontSize || 9} fontWeight={item.bold ? "bold" : "600"}>
               {item.label.length > 12 ? item.label.slice(0, 12) + "…" : item.label}
             </text>
           </g>
@@ -460,16 +474,16 @@ function StatsRow({ items, colors, theme }: { items: InfographicItem[]; colors: 
     <svg viewBox="0 0 800 160" className="w-full">
       {items.map((item, i) => {
         const x = 20 + i * (cardW + 14);
-        const color = colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
-            <rect x={x} y={8} width={cardW} height={145} rx={10} fill={color} opacity={0.06} />
+            <rect x={x} y={8} width={cardW} height={145} rx={10} fill={color} opacity={0.06} stroke={item.borderColor} strokeWidth={item.borderColor ? 2 : undefined} />
             <rect x={x} y={8} width={cardW} height={4} rx={2} fill={color} />
             <text x={x + cardW / 2} y={65} textAnchor="middle" fill={color} fontSize={30} fontWeight="800">
               {item.value || "—"}
             </text>
-            <text x={x + cardW / 2} y={88} textAnchor="middle" fill={theme.textColor} fontSize={12} fontWeight="600">
+            <text x={x + cardW / 2} y={88} textAnchor="middle" fill={theme.textColor} fontSize={item.fontSize || 12} fontWeight={item.bold ? "bold" : "600"}>
               {item.label}
             </text>
             {item.description && (
@@ -502,14 +516,14 @@ function Checklist({ items, colors, theme }: { items: InfographicItem[]; colors:
         const y = i * rowH + 12;
         const isDone = item.status === "done";
         const isActive = item.status === "active";
-        const color = isDone ? colors[0] : isActive ? colors[1] : theme.textColor + "40";
+        const color = item.color || (isDone ? colors[0] : isActive ? colors[1] : theme.textColor + "40");
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(item)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
             <title>{tooltipText(item)}</title>
             {i % 2 === 0 && (
               <rect x={10} y={y - 3} width={780} height={rowH} rx={4} fill={theme.textColor} opacity={0.03} />
             )}
-            <circle cx={35} cy={y + 10} r={10} fill={color} opacity={isDone ? 0.9 : 0.12} stroke={color} strokeWidth={1.5} />
+            <circle cx={35} cy={y + 10} r={10} fill={color} opacity={isDone ? 0.9 : 0.12} stroke={item.borderColor || color} strokeWidth={1.5} />
             {isDone && (
               <text x={35} y={y + 15} textAnchor="middle" fill="white" fontSize={11} fontWeight="bold">✓</text>
             )}
@@ -519,8 +533,8 @@ function Checklist({ items, colors, theme }: { items: InfographicItem[]; colors:
             <text
               x={58} y={y + 15}
               fill={theme.textColor}
-              fontSize={12}
-              fontWeight={isActive ? "600" : "400"}
+              fontSize={item.fontSize || 12}
+              fontWeight={item.bold ? "bold" : isActive ? "600" : "400"}
               opacity={isDone ? 0.5 : 1}
               textDecoration={isDone ? "line-through" : "none"}
             >
@@ -547,10 +561,10 @@ function CauseEffect({ items, colors, theme }: { items: InfographicItem[]; color
     <svg viewBox="0 0 800 160" className="w-full">
       <line x1={60} y1={80} x2={660} y2={80} stroke={theme.textColor + "40"} strokeWidth={2.5} />
       {effect && (
-        <g className="infographic-item" {...tooltipAttrs(effect)}>
+        <g className="infographic-item" {...tooltipAttrs(effect)} opacity={effect.opacity != null ? effect.opacity / 100 : undefined} filter={highlightFilter(effect, getItemColor(effect, 0, colors))}>
           <title>{tooltipText(effect)}</title>
-          <rect x={660} y={58} width={125} height={44} rx={8} fill={colors[0]} />
-          <text x={722} y={85} textAnchor="middle" fill="white" fontSize={12} fontWeight="700">
+          <rect x={660} y={58} width={125} height={44} rx={8} fill={getItemColor(effect, 0, colors)} stroke={effect.borderColor} strokeWidth={effect.borderColor ? 2 : undefined} />
+          <text x={722} y={85} textAnchor="middle" fill="white" fontSize={effect.fontSize || 12} fontWeight={effect.bold ? "bold" : "700"}>
             {effect.label}
           </text>
         </g>
@@ -559,14 +573,14 @@ function CauseEffect({ items, colors, theme }: { items: InfographicItem[]; color
         const x = 80 + (i * 560) / Math.max(n, 1);
         const isTop = i % 2 === 0;
         const y = isTop ? 12 : 130;
-        const color = colors[(i + 1) % colors.length];
+        const color = getItemColor(cause, i + 1, colors);
         return (
-          <g key={i} className="infographic-item" {...tooltipAttrs(cause)}>
+          <g key={i} className="infographic-item" {...tooltipAttrs(cause)} opacity={cause.opacity != null ? cause.opacity / 100 : undefined} filter={highlightFilter(cause, color)}>
             <title>{tooltipText(cause)}</title>
             <line x1={x + 40} y1={80} x2={x + 50} y2={isTop ? y + 28 : y - 6} stroke={color} strokeWidth={1.5} opacity={0.6} />
-            <rect x={x - 5} y={isTop ? y : y - 24} width={120} height={30} rx={5} fill={color} opacity={0.12} />
+            <rect x={x - 5} y={isTop ? y : y - 24} width={120} height={30} rx={5} fill={color} opacity={0.12} stroke={cause.borderColor} strokeWidth={cause.borderColor ? 2 : undefined} />
             <rect x={x - 5} y={isTop ? y : y - 24} width={3} height={30} rx={2} fill={color} />
-            <text x={x + 55} y={isTop ? y + 20 : y - 5} textAnchor="middle" fill={theme.textColor} fontSize={10} fontWeight="600">
+            <text x={x + 55} y={isTop ? y + 20 : y - 5} textAnchor="middle" fill={theme.textColor} fontSize={cause.fontSize || 10} fontWeight={cause.bold ? "bold" : "600"}>
               {cause.label}
             </text>
           </g>
@@ -577,12 +591,12 @@ function CauseEffect({ items, colors, theme }: { items: InfographicItem[]; color
 }
 
 function IconArray({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
-  // Each item = a category with value = count of icons
   const parsed = items.map((item, i) => ({
     label: item.label,
     count: Math.max(Math.round(Number(item.value) || 1), 0),
     icon: item.icon || "●",
-    color: item.color || colors[i % colors.length],
+    color: getItemColor(item, i, colors),
+    item,
   }));
   const total = parsed.reduce((s, p) => s + p.count, 0);
   const iconsPerRow = 10;
@@ -592,11 +606,10 @@ function IconArray({ items, colors, theme }: { items: InfographicItem[]; colors:
   const legendH = 30;
   const viewH = gridH + legendH + 50;
 
-  // Flatten into a single sequence of icons
-  const flatIcons: { icon: string; color: string; label: string }[] = [];
+  const flatIcons: { icon: string; color: string }[] = [];
   for (const p of parsed) {
     for (let j = 0; j < p.count; j++) {
-      flatIcons.push({ icon: p.icon, color: p.color, label: p.label });
+      flatIcons.push({ icon: p.icon, color: p.color });
     }
   }
 
@@ -610,8 +623,7 @@ function IconArray({ items, colors, theme }: { items: InfographicItem[]; colors:
         const x = gridOffsetX + col * (iconSize + 8) + iconSize / 2;
         const y = 20 + row * (iconSize + 4) + iconSize / 2;
         return (
-          <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="central" fill={fi.color} fontSize={iconSize - 4} className="infographic-item" data-tooltip-label={fi.label}>
-            <title>{fi.label}</title>
+          <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="central" fill={fi.color} fontSize={iconSize - 4}>
             {fi.icon}
           </text>
         );
@@ -620,12 +632,11 @@ function IconArray({ items, colors, theme }: { items: InfographicItem[]; colors:
       {parsed.map((p, i) => {
         const lx = gridOffsetX + i * 140;
         const ly = gridH + 35;
-        const origItem = items[i];
         return (
-          <g key={i} className="infographic-item" {...(origItem ? tooltipAttrs(origItem) : { "data-tooltip-label": p.label })}>
-            <title>{origItem ? tooltipText(origItem) : p.label}</title>
-            <circle cx={lx + 6} cy={ly} r={5} fill={p.color} />
-            <text x={lx + 16} y={ly + 4} fill={theme.textColor} fontSize={11} fontWeight="600">
+          <g key={i} className="infographic-item" {...tooltipAttrs(p.item)} opacity={p.item.opacity != null ? p.item.opacity / 100 : undefined} filter={highlightFilter(p.item, p.color)}>
+            <title>{tooltipText(p.item)}</title>
+            <circle cx={lx + 6} cy={ly} r={5} fill={p.color} stroke={p.item.borderColor} strokeWidth={p.item.borderColor ? 1.5 : undefined} />
+            <text x={lx + 16} y={ly + 4} fill={theme.textColor} fontSize={p.item.fontSize || 11} fontWeight={p.item.bold ? "bold" : "600"}>
               {p.label} ({p.count})
             </text>
           </g>
@@ -655,15 +666,14 @@ function Pictograph({ items, colors, theme }: { items: InfographicItem[]; colors
         const fullCount = Math.floor(val);
         const fractional = val - fullCount;
         const icon = item.icon || "●";
-        const color = item.color || colors[i % colors.length];
+        const color = getItemColor(item, i, colors);
 
         return (
-          <g key={i}>
-            {/* Label */}
-            <text x={20} y={y + iconSize / 2 + 4} fill={theme.textColor} fontSize={12} fontWeight="600">
+          <g key={i} className="infographic-item" {...tooltipAttrs(item)} opacity={item.opacity != null ? item.opacity / 100 : undefined} filter={highlightFilter(item, color)}>
+            <title>{tooltipText(item)}</title>
+            <text x={20} y={y + iconSize / 2 + 4} fill={theme.textColor} fontSize={item.fontSize || 12} fontWeight={item.bold ? "bold" : "600"}>
               {item.label.length > 18 ? item.label.slice(0, 18) + "…" : item.label}
             </text>
-            {/* Full icons */}
             {Array.from({ length: fullCount }).map((_, j) => (
               <text
                 key={`f${j}`}
@@ -676,7 +686,6 @@ function Pictograph({ items, colors, theme }: { items: InfographicItem[]; colors
                 {icon}
               </text>
             ))}
-            {/* Partial icon */}
             {fractional > 0 && (
               <g clipPath="url(#picto-half)">
                 <text
@@ -690,7 +699,6 @@ function Pictograph({ items, colors, theme }: { items: InfographicItem[]; colors
                 </text>
               </g>
             )}
-            {/* Value label */}
             <text
               x={labelW + (fullCount + (fractional > 0 ? 1 : 0)) * (iconSize + iconGap) + 8}
               y={y + iconSize / 2 + 4}
@@ -711,7 +719,6 @@ function WordCloud({ items, colors, theme: _theme }: { items: InfographicItem[];
   const viewW = 800, viewH = 500;
   const cx = viewW / 2, cy = viewH / 2;
 
-  // Parse values and compute font sizes
   const values = items.map((item) => Number(item.value) || 1);
   const minVal = Math.min(...values);
   const maxVal = Math.max(...values);
@@ -720,14 +727,21 @@ function WordCloud({ items, colors, theme: _theme }: { items: InfographicItem[];
   const sized = items
     .map((item, i) => {
       const v = Number(item.value) || 1;
-      const fontSize = 10 + ((v - minVal) / range) * 38; // 10px to 48px
-      return { label: item.label, fontSize, value: v, color: colors[i % colors.length] };
+      const fontSize = item.fontSize || (10 + ((v - minVal) / range) * 38);
+      return {
+        label: item.label,
+        fontSize,
+        value: v,
+        color: getItemColor(item, i, colors),
+        bold: item.bold,
+        opacity: item.opacity,
+        highlighted: item.highlighted,
+      };
     })
     .sort((a, b) => b.value - a.value);
 
-  // Simple spiral placement
   type Rect = { x: number; y: number; w: number; h: number };
-  const placed: { label: string; x: number; y: number; fontSize: number; color: string }[] = [];
+  const placed: { label: string; x: number; y: number; fontSize: number; color: string; bold?: boolean; opacity?: number; highlighted?: boolean }[] = [];
   const rects: Rect[] = [];
 
   function overlaps(r: Rect): boolean {
@@ -744,7 +758,6 @@ function WordCloud({ items, colors, theme: _theme }: { items: InfographicItem[];
     const estH = item.fontSize * 1.3;
     let found = false;
 
-    // Spiral outward from center
     for (let t = 0; t < 600 && !found; t++) {
       const angle = t * 0.15;
       const radius = t * 0.8;
@@ -753,41 +766,47 @@ function WordCloud({ items, colors, theme: _theme }: { items: InfographicItem[];
 
       const rect: Rect = { x, y, w: estW, h: estH };
 
-      // Check bounds
       if (x < 10 || x + estW > viewW - 10 || y < 10 || y + estH > viewH - 10) continue;
 
       if (!overlaps(rect)) {
         rects.push(rect);
-        placed.push({ label: item.label, x: x + estW / 2, y: y + estH * 0.75, fontSize: item.fontSize, color: item.color });
+        placed.push({ label: item.label, x: x + estW / 2, y: y + estH * 0.75, fontSize: item.fontSize, color: item.color, bold: item.bold, opacity: item.opacity, highlighted: item.highlighted });
         found = true;
       }
     }
 
-    // Fallback: deterministic offset based on index if spiral failed
     if (!found) {
       const idx = sized.indexOf(item);
-      const angle = (idx * 2.39996); // golden angle in radians
+      const angle = (idx * 2.39996);
       const x = cx + Math.cos(angle) * 100;
       const y = cy + Math.sin(angle) * 80;
-      placed.push({ label: item.label, x, y, fontSize: item.fontSize, color: item.color });
+      placed.push({ label: item.label, x, y, fontSize: item.fontSize, color: item.color, bold: item.bold, opacity: item.opacity, highlighted: item.highlighted });
     }
   }
 
   return (
     <svg viewBox={`0 0 ${viewW} ${viewH}`} className="w-full">
-      {placed.map((p, i) => (
-        <text
-          key={i}
-          x={p.x}
-          y={p.y}
-          textAnchor="middle"
-          fill={p.color}
-          fontSize={p.fontSize}
-          fontWeight={p.fontSize > 30 ? "800" : p.fontSize > 20 ? "600" : "400"}
-        >
-          {p.label}
-        </text>
-      ))}
+      {placed.map((p, i) => {
+        const origItem = items.find((it) => it.label === p.label);
+        return (
+          <text
+            key={i}
+            x={p.x}
+            y={p.y}
+            textAnchor="middle"
+            fill={p.color}
+            fontSize={p.fontSize}
+            fontWeight={p.bold ? "bold" : p.fontSize > 30 ? "800" : p.fontSize > 20 ? "600" : "400"}
+            opacity={p.opacity != null ? p.opacity / 100 : undefined}
+            filter={p.highlighted ? `drop-shadow(0 0 4px ${p.color})` : undefined}
+            className="infographic-item"
+            {...(origItem ? tooltipAttrs(origItem) : { "data-tooltip-label": p.label })}
+          >
+            <title>{origItem ? tooltipText(origItem) : p.label}</title>
+            {p.label}
+          </text>
+        );
+      })}
     </svg>
   );
 }
@@ -814,9 +833,10 @@ const RENDERERS: Record<string, React.ComponentType<{ items: InfographicItem[]; 
   word_cloud: WordCloud,
 };
 
-export const InfographicBlock = memo(function InfographicBlock({ data, theme }: InfographicBlockProps) {
+export const InfographicBlock = memo(function InfographicBlock({ data, theme, interactive = true }: InfographicBlockProps) {
   const colors = getColors(data.colorScheme, theme);
   const Renderer = RENDERERS[data.infographicType] || ProcessFlow;
+  const { containerRef, tooltip } = useSvgTooltip(interactive);
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -825,8 +845,13 @@ export const InfographicBlock = memo(function InfographicBlock({ data, theme }: 
           {data.title}
         </div>
       )}
-      <div className="w-full">
+      <div className="w-full relative" ref={containerRef}>
+        <style>{`
+          .infographic-item { cursor: pointer; transition: filter 0.15s; }
+          .infographic-item:hover { filter: brightness(1.1); }
+        `}</style>
         <Renderer items={data.items} colors={colors} theme={theme} />
+        {interactive && <SvgTooltip tooltip={tooltip} />}
       </div>
       {data.caption && (
         <div className="text-[0.5em] opacity-50 italic leading-none" style={{ color: theme.textColor }}>

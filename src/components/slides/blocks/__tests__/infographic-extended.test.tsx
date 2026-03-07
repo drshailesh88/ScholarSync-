@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
-import { InfographicBlock } from "../infographic-block";
-import type { ThemeConfig, InfographicData } from "@/types/presentation";
+import { InfographicBlock, getItemColor } from "../infographic-block";
+import type { ThemeConfig, InfographicData, InfographicItem } from "@/types/presentation";
 
 const THEME: ThemeConfig = {
   name: "Test Theme",
@@ -115,9 +115,9 @@ describe("WordCloud", () => {
 
   it("largest item gets biggest font", () => {
     const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
-    // Extract font sizes associated with labels
-    const mlMatch = html.match(/font-size="(\d+)"[^>]*>Machine Learning/);
-    const roboticsMatch = html.match(/font-size="(\d+)"[^>]*>Robotics/);
+    // Extract font sizes associated with labels (accounting for <title> child element)
+    const mlMatch = html.match(/font-size="(\d+)"[^>]*>(?:<title>[^<]*<\/title>)?Machine Learning/);
+    const roboticsMatch = html.match(/font-size="(\d+)"[^>]*>(?:<title>[^<]*<\/title>)?Robotics/);
     expect(mlMatch).not.toBeNull();
     expect(roboticsMatch).not.toBeNull();
     expect(Number(mlMatch![1])).toBeGreaterThan(Number(roboticsMatch![1]));
@@ -163,5 +163,139 @@ describe("All new infographic types render valid SVG", () => {
     };
     const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
     expect(html).toContain("<svg");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// getItemColor
+// ---------------------------------------------------------------------------
+
+describe("getItemColor", () => {
+  const colors = ["#AAA", "#BBB", "#CCC"];
+
+  it("returns item.color when set", () => {
+    const item: InfographicItem = { label: "X", color: "#FF0000" };
+    expect(getItemColor(item, 0, colors)).toBe("#FF0000");
+  });
+
+  it("falls back to scheme color when item.color is not set", () => {
+    const item: InfographicItem = { label: "X" };
+    expect(getItemColor(item, 0, colors)).toBe("#AAA");
+    expect(getItemColor(item, 1, colors)).toBe("#BBB");
+    expect(getItemColor(item, 4, colors)).toBe("#BBB"); // wraps: 4 % 3 = 1
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Per-item style overrides
+// ---------------------------------------------------------------------------
+
+describe("Per-item style overrides", () => {
+  it("opacity applies to SVG element", () => {
+    const data: InfographicData = {
+      infographicType: "process_flow",
+      items: [
+        { label: "Step 1", opacity: 50 },
+        { label: "Step 2" },
+      ],
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain('opacity="0.5"');
+  });
+
+  it("bold applies font-weight", () => {
+    const data: InfographicData = {
+      infographicType: "stats_row",
+      items: [
+        { label: "Metric", value: "42", bold: true },
+      ],
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain('font-weight="bold"');
+  });
+
+  it("highlighted adds drop-shadow filter", () => {
+    const data: InfographicData = {
+      infographicType: "cycle",
+      items: [
+        { label: "A", highlighted: true },
+        { label: "B" },
+        { label: "C" },
+      ],
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain("drop-shadow");
+  });
+
+  it("borderColor applies stroke to primary shape", () => {
+    const data: InfographicData = {
+      infographicType: "process_flow",
+      items: [
+        { label: "Step 1", borderColor: "#FF0000" },
+      ],
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain('stroke="#FF0000"');
+  });
+
+  it("fontSize overrides default label size", () => {
+    const data: InfographicData = {
+      infographicType: "comparison",
+      items: [
+        { label: "Big", fontSize: 24 },
+        { label: "Normal" },
+      ],
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain('font-size="24"');
+  });
+
+  it("per-item color overrides scheme color", () => {
+    const data: InfographicData = {
+      infographicType: "funnel",
+      items: [
+        { label: "Custom", color: "#ABCDEF" },
+        { label: "Default" },
+      ],
+      colorScheme: "blue",
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain("#ABCDEF");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// New color schemes
+// ---------------------------------------------------------------------------
+
+describe("New color schemes", () => {
+  it("warm scheme returns correct colors", () => {
+    const data: InfographicData = {
+      infographicType: "stats_row",
+      items: [{ label: "A", value: "1" }],
+      colorScheme: "warm",
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain("#DC2626");
+  });
+
+  it("cool scheme returns correct colors", () => {
+    const data: InfographicData = {
+      infographicType: "stats_row",
+      items: [{ label: "A", value: "1" }],
+      colorScheme: "cool",
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain("#0284C7");
+  });
+
+  it("pastel scheme returns correct colors", () => {
+    const data: InfographicData = {
+      infographicType: "stats_row",
+      items: [{ label: "A", value: "1" }],
+      colorScheme: "pastel",
+    };
+    const html = renderToStaticMarkup(<InfographicBlock data={data} theme={THEME} />);
+    expect(html).toContain("#93C5FD");
   });
 });

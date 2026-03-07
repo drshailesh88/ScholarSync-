@@ -170,6 +170,10 @@ export interface SlidesStore {
   showFindReplace: boolean;
   setShowFindReplace: (v: boolean) => void;
 
+  // Visualize popover
+  showVisualizePopover: boolean;
+  setShowVisualizePopover: (v: boolean) => void;
+
   // Slide Sorter
   showSlideSorter: boolean;
   setShowSlideSorter: (v: boolean) => void;
@@ -451,6 +455,10 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Find & Replace
   showFindReplace: false,
   setShowFindReplace: (showFindReplace) => set({ showFindReplace }),
+
+  // Visualize popover
+  showVisualizePopover: false,
+  setShowVisualizePopover: (showVisualizePopover) => set({ showVisualizePopover }),
 
   showSlideSorter: false,
   setShowSlideSorter: (showSlideSorter) => set({ showSlideSorter }),

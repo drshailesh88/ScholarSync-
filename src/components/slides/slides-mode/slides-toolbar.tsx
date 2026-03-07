@@ -101,8 +101,9 @@ export function SlidesToolbar({
   const setShowGrid = useSlidesStore((s) => s.setShowGrid);
   const snapToGrid = useSlidesStore((s) => s.snapToGrid);
   const setSnapToGrid = useSlidesStore((s) => s.setSnapToGrid);
+  const showVisualizePopover = useSlidesStore((s) => s.showVisualizePopover);
+  const setShowVisualizePopover = useSlidesStore((s) => s.setShowVisualizePopover);
   const [showInsertMenu, setShowInsertMenu] = useState(false);
-  const [showVisualizePopover, setShowVisualizePopover] = useState(false);
   const [visualizeInitialType, setVisualizeInitialType] = useState<string | null>(null);
   const [bulkGenerationState, setBulkGenerationState] = useState<{
     active: boolean;
