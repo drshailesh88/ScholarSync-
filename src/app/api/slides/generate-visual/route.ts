@@ -29,9 +29,15 @@ const VALID_DIAGRAM_TYPES = [
   "journey", "quadrantChart",
 ] as const;
 
+const VALID_CHART_TYPES = [
+  "bar", "line", "pie", "scatter", "area", "radar",
+  "funnel", "forest_plot", "donut", "stacked_bar", "waterfall", "gauge", "treemap",
+] as const;
+
 const VALID_INFOGRAPHIC_TYPES = [
   "process_flow", "comparison", "hierarchy", "cycle", "funnel",
   "pyramid", "venn", "matrix", "radial", "stats_row", "checklist", "cause_effect",
+  "icon_array", "pictograph", "word_cloud",
 ] as const;
 
 const diagramBlockSchema = z.object({
@@ -40,6 +46,25 @@ const diagramBlockSchema = z.object({
     diagramType: z.enum(VALID_DIAGRAM_TYPES),
     syntax: z.string().min(1),
     caption: z.string().optional(),
+  }),
+});
+
+const chartDatasetSchema = z.object({
+  label: z.string().min(1),
+  data: z.array(z.number()),
+  color: z.string().optional(),
+});
+
+const chartBlockSchema = z.object({
+  type: z.literal("chart"),
+  data: z.object({
+    chartType: z.enum(VALID_CHART_TYPES),
+    title: z.string().optional(),
+    labels: z.array(z.string()).min(1),
+    datasets: z.array(chartDatasetSchema).min(1),
+    xAxisLabel: z.string().optional(),
+    yAxisLabel: z.string().optional(),
+    showLegend: z.boolean().optional(),
   }),
 });
 
@@ -65,7 +90,7 @@ const infographicBlockSchema = z.object({
 const visualOptionSchema = z.object({
   label: z.string().min(1),
   description: z.string().min(1),
-  block: z.union([diagramBlockSchema, infographicBlockSchema]),
+  block: z.union([diagramBlockSchema, infographicBlockSchema, chartBlockSchema]),
 });
 
 const responseSchema = z.object({
@@ -126,7 +151,7 @@ function getVisualGenerationPrompt(preferredType?: string): string {
 Given user text, generate MULTIPLE visual representation options that could appear on a slide.
 Return 4-6 options spanning different visual types.${typeHint}
 
-Each option is a ContentBlock — either a "diagram" (Mermaid) or "infographic" (SVG template).
+Each option is a ContentBlock — a "diagram" (Mermaid), "infographic" (SVG template), or "chart" (Recharts data).
 
 OPTION TYPES YOU CAN GENERATE:
 
@@ -182,10 +207,10 @@ OPTION TYPES YOU CAN GENERATE:
    - Use for prioritization matrices, risk assessments, comparison grids
 
 2. INFOGRAPHIC VISUALS (type: "infographic"):
-   Valid infographicType values: process_flow, comparison, hierarchy, cycle, funnel, pyramid, venn, matrix, radial, stats_row, checklist, cause_effect
+   Valid infographicType values: process_flow, comparison, hierarchy, cycle, funnel, pyramid, venn, matrix, radial, stats_row, checklist, cause_effect, icon_array, pictograph, word_cloud
 
    { "type": "infographic", "data": {
-     "infographicType": "process_flow|comparison|hierarchy|cycle|funnel|pyramid|venn|matrix|radial|stats_row|checklist|cause_effect",
+     "infographicType": "process_flow|comparison|hierarchy|cycle|funnel|pyramid|venn|matrix|radial|stats_row|checklist|cause_effect|icon_array|pictograph|word_cloud",
      "title": "Visual title",
      "items": [
        { "label": "Item name", "description": "Brief description", "value": "Optional metric", "icon": "emoji", "status": "done|active|pending" }
@@ -205,20 +230,57 @@ OPTION TYPES YOU CAN GENERATE:
    Stats Row:
    { "type": "infographic", "data": { "infographicType": "stats_row", "title": "Key Metrics", "items": [{"label": "Participants", "value": "1,200"}, {"label": "Accuracy", "value": "94.2%"}, {"label": "P-value", "value": "<0.001"}], "colorScheme": "green" } }
 
+   Icon Array (when showing proportions of a whole, e.g., "7 out of 10 patients responded"):
+   { "type": "infographic", "data": { "infographicType": "icon_array", "title": "Treatment Response Rate", "items": [{"label": "Responded", "value": "7", "icon": "●", "color": "#3B82F6"}, {"label": "No Response", "value": "2", "icon": "●", "color": "#94A3B8"}, {"label": "Adverse", "value": "1", "icon": "●", "color": "#EF4444"}], "colorScheme": "blue" } }
+
+   Pictograph (when comparing quantities across categories using repeated icons):
+   { "type": "infographic", "data": { "infographicType": "pictograph", "title": "Patient Enrollment by Site", "items": [{"label": "Site A", "value": "5", "icon": "👤"}, {"label": "Site B", "value": "3.5", "icon": "👤"}, {"label": "Site C", "value": "8", "icon": "👤"}], "colorScheme": "green" } }
+
+   Word Cloud (when showing relative frequency or importance of terms/concepts):
+   { "type": "infographic", "data": { "infographicType": "word_cloud", "title": "Key Research Themes", "items": [{"label": "Machine Learning", "value": "10"}, {"label": "Neural Networks", "value": "8"}, {"label": "Data Mining", "value": "6"}, {"label": "NLP", "value": "5"}, {"label": "Computer Vision", "value": "4"}, {"label": "Reinforcement Learning", "value": "3"}], "colorScheme": "rainbow" } }
+
+3. CHART VISUALS (type: "chart"):
+   Valid chartType values: bar, line, pie, scatter, area, radar, funnel, forest_plot, donut, stacked_bar, waterfall, gauge, treemap
+
+   { "type": "chart", "data": {
+     "chartType": "bar|line|pie|donut|scatter|area|radar|stacked_bar|funnel|waterfall|treemap|gauge|forest_plot",
+     "title": "Chart title",
+     "labels": ["Label1", "Label2", ...],
+     "datasets": [{ "label": "Series name", "data": [10, 20, 30] }],
+     "xAxisLabel": "Optional X axis label",
+     "yAxisLabel": "Optional Y axis label",
+     "showLegend": true
+   }}
+
+   WHEN TO USE EACH CHART TYPE:
+   - donut: proportional data with a key total (e.g., budget allocation, market share)
+   - stacked_bar: comparing composition across categories (e.g., survey responses by group)
+   - waterfall: sequential additions/subtractions (e.g., revenue breakdown, profit bridge)
+   - gauge: KPI/progress visualization (datasets[0].data = [currentValue, maxValue])
+   - treemap: hierarchical proportional data (e.g., department budgets, file sizes)
+   - forest_plot: meta-analysis results with confidence intervals. datasets[0]=point estimates, datasets[1]=CI lower, datasets[2]=CI upper. Labels=study names.
+   - funnel: conversion/filtering stages (e.g., recruitment funnel, sales pipeline)
+
+   Examples:
+   { "type": "chart", "data": { "chartType": "donut", "title": "Budget Allocation", "labels": ["R&D", "Marketing", "Operations"], "datasets": [{"label": "Budget", "data": [45, 30, 25]}] } }
+   { "type": "chart", "data": { "chartType": "waterfall", "title": "Profit Bridge", "labels": ["Revenue", "COGS", "OpEx", "Tax", "Net Profit"], "datasets": [{"label": "Amount", "data": [100, -40, -25, -10, 25]}] } }
+   { "type": "chart", "data": { "chartType": "gauge", "title": "Study Completion", "labels": ["Progress"], "datasets": [{"label": "Completion", "data": [73, 100]}] } }
+
 RESPONSE FORMAT — Return valid JSON only, no markdown fences:
 {
   "options": [
     {
       "label": "Short descriptive name for this option (e.g., 'Flowchart', 'Mind Map', 'Process Flow')",
       "description": "One sentence describing what this visual shows",
-      "block": { "type": "diagram|infographic", "data": { ... } }
+      "block": { "type": "diagram|infographic|chart", "data": { ... } }
     }
   ]
 }
 
 RULES:
-- Generate 4-6 diverse options mixing diagram and infographic types
+- Generate 4-6 diverse options mixing diagram, infographic, and chart types
 - Each option should represent the SAME content in a DIFFERENT visual format
+- When the content has numerical data, include at least one chart option
 - Mermaid syntax MUST be valid (escape newlines as \\n in JSON)
 - Infographic items should have 3-8 entries
 - Choose visual types that genuinely fit the content (don't force a pie chart on a process)

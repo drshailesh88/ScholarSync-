@@ -21,7 +21,7 @@ export interface CitationData {
 
 /** Chart with extended chart types */
 export interface ChartData {
-  chartType: "bar" | "line" | "pie" | "scatter" | "area" | "radar" | "funnel" | "forest_plot";
+  chartType: "bar" | "line" | "pie" | "scatter" | "area" | "radar" | "funnel" | "forest_plot" | "donut" | "stacked_bar" | "waterfall" | "gauge" | "treemap";
   title: string;
   labels: string[];
   datasets: { label: string; data: number[]; color?: string }[];
@@ -40,7 +40,7 @@ export interface MathData {
 /** Mermaid diagram block */
 export interface DiagramData {
   syntax: string;
-  diagramType: "flowchart" | "sequence" | "classDiagram" | "stateDiagram" | "erDiagram" | "gantt" | "pie" | "mindmap" | "timeline" | "prisma";
+  diagramType: "flowchart" | "sequence" | "classDiagram" | "stateDiagram" | "erDiagram" | "gantt" | "pie" | "mindmap" | "timeline" | "prisma" | "journey" | "quadrantChart";
   caption?: string;
 }
 
@@ -253,7 +253,10 @@ export type InfographicType =
   | "radial"            // central node with spokes
   | "stats_row"         // horizontal stat cards with icons
   | "checklist"         // visual checklist with status
-  | "cause_effect";     // fishbone/Ishikawa style
+  | "cause_effect"      // fishbone/Ishikawa style
+  | "icon_array"        // grid of repeated icons showing proportions
+  | "pictograph"        // rows of repeated icons for quantity comparison
+  | "word_cloud";       // sized words by frequency/importance
 
 export interface InfographicItem {
   label: string;

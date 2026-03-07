@@ -546,6 +546,219 @@ function CauseEffect({ items, colors, theme }: { items: InfographicItem[]; color
   );
 }
 
+function IconArray({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
+  // Each item = a category with value = count of icons
+  const parsed = items.map((item, i) => ({
+    label: item.label,
+    count: Math.max(Math.round(Number(item.value) || 1), 0),
+    icon: item.icon || "●",
+    color: item.color || colors[i % colors.length],
+  }));
+  const total = parsed.reduce((s, p) => s + p.count, 0);
+  const iconsPerRow = 10;
+  const rows = Math.ceil(total / iconsPerRow);
+  const iconSize = 24;
+  const gridH = rows * (iconSize + 4);
+  const legendH = 30;
+  const viewH = gridH + legendH + 50;
+
+  // Flatten into a single sequence of icons
+  const flatIcons: { icon: string; color: string }[] = [];
+  for (const p of parsed) {
+    for (let j = 0; j < p.count; j++) {
+      flatIcons.push({ icon: p.icon, color: p.color });
+    }
+  }
+
+  const gridOffsetX = (800 - iconsPerRow * (iconSize + 8)) / 2;
+
+  return (
+    <svg viewBox={`0 0 800 ${Math.max(viewH, 120)}`} className="w-full">
+      {flatIcons.map((fi, i) => {
+        const col = i % iconsPerRow;
+        const row = Math.floor(i / iconsPerRow);
+        const x = gridOffsetX + col * (iconSize + 8) + iconSize / 2;
+        const y = 20 + row * (iconSize + 4) + iconSize / 2;
+        return (
+          <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="central" fill={fi.color} fontSize={iconSize - 4}>
+            {fi.icon}
+          </text>
+        );
+      })}
+      {/* Legend */}
+      {parsed.map((p, i) => {
+        const lx = gridOffsetX + i * 140;
+        const ly = gridH + 35;
+        return (
+          <g key={i}>
+            <circle cx={lx + 6} cy={ly} r={5} fill={p.color} />
+            <text x={lx + 16} y={ly + 4} fill={theme.textColor} fontSize={11} fontWeight="600">
+              {p.label} ({p.count})
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function Pictograph({ items, colors, theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
+  const rowH = 50;
+  const labelW = 160;
+  const iconSize = 22;
+  const iconGap = 6;
+  const viewH = items.length * rowH + 40;
+
+  return (
+    <svg viewBox={`0 0 800 ${Math.max(viewH, 80)}`} className="w-full">
+      <defs>
+        <clipPath id="picto-half">
+          <rect x="0" y="0" width="11" height="30" />
+        </clipPath>
+      </defs>
+      {items.map((item, i) => {
+        const y = 20 + i * rowH;
+        const val = Number(item.value) || 0;
+        const fullCount = Math.floor(val);
+        const fractional = val - fullCount;
+        const icon = item.icon || "●";
+        const color = item.color || colors[i % colors.length];
+
+        return (
+          <g key={i}>
+            {/* Label */}
+            <text x={20} y={y + iconSize / 2 + 4} fill={theme.textColor} fontSize={12} fontWeight="600">
+              {item.label.length > 18 ? item.label.slice(0, 18) + "…" : item.label}
+            </text>
+            {/* Full icons */}
+            {Array.from({ length: fullCount }).map((_, j) => (
+              <text
+                key={`f${j}`}
+                x={labelW + j * (iconSize + iconGap)}
+                y={y + iconSize / 2 + 4}
+                fill={color}
+                fontSize={iconSize - 2}
+                textAnchor="start"
+              >
+                {icon}
+              </text>
+            ))}
+            {/* Partial icon */}
+            {fractional > 0 && (
+              <g clipPath="url(#picto-half)">
+                <text
+                  x={labelW + fullCount * (iconSize + iconGap)}
+                  y={y + iconSize / 2 + 4}
+                  fill={color}
+                  fontSize={iconSize - 2}
+                  textAnchor="start"
+                >
+                  {icon}
+                </text>
+              </g>
+            )}
+            {/* Value label */}
+            <text
+              x={labelW + (fullCount + (fractional > 0 ? 1 : 0)) * (iconSize + iconGap) + 8}
+              y={y + iconSize / 2 + 4}
+              fill={theme.textColor}
+              fontSize={10}
+              opacity={0.5}
+            >
+              {item.value}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function WordCloud({ items, colors, theme: _theme }: { items: InfographicItem[]; colors: string[]; theme: ThemeConfig }) {
+  const viewW = 800, viewH = 500;
+  const cx = viewW / 2, cy = viewH / 2;
+
+  // Parse values and compute font sizes
+  const values = items.map((item) => Number(item.value) || 1);
+  const minVal = Math.min(...values);
+  const maxVal = Math.max(...values);
+  const range = maxVal - minVal || 1;
+
+  const sized = items
+    .map((item, i) => {
+      const v = Number(item.value) || 1;
+      const fontSize = 10 + ((v - minVal) / range) * 38; // 10px to 48px
+      return { label: item.label, fontSize, value: v, color: colors[i % colors.length] };
+    })
+    .sort((a, b) => b.value - a.value);
+
+  // Simple spiral placement
+  type Rect = { x: number; y: number; w: number; h: number };
+  const placed: { label: string; x: number; y: number; fontSize: number; color: string }[] = [];
+  const rects: Rect[] = [];
+
+  function overlaps(r: Rect): boolean {
+    for (const pr of rects) {
+      if (r.x < pr.x + pr.w && r.x + r.w > pr.x && r.y < pr.y + pr.h && r.y + r.h > pr.y) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  for (const item of sized) {
+    const estW = item.label.length * item.fontSize * 0.6;
+    const estH = item.fontSize * 1.3;
+    let found = false;
+
+    // Spiral outward from center
+    for (let t = 0; t < 600 && !found; t++) {
+      const angle = t * 0.15;
+      const radius = t * 0.8;
+      const x = cx + radius * Math.cos(angle) - estW / 2;
+      const y = cy + radius * Math.sin(angle) - estH / 2;
+
+      const rect: Rect = { x, y, w: estW, h: estH };
+
+      // Check bounds
+      if (x < 10 || x + estW > viewW - 10 || y < 10 || y + estH > viewH - 10) continue;
+
+      if (!overlaps(rect)) {
+        rects.push(rect);
+        placed.push({ label: item.label, x: x + estW / 2, y: y + estH * 0.75, fontSize: item.fontSize, color: item.color });
+        found = true;
+      }
+    }
+
+    // Fallback: deterministic offset based on index if spiral failed
+    if (!found) {
+      const idx = sized.indexOf(item);
+      const angle = (idx * 2.39996); // golden angle in radians
+      const x = cx + Math.cos(angle) * 100;
+      const y = cy + Math.sin(angle) * 80;
+      placed.push({ label: item.label, x, y, fontSize: item.fontSize, color: item.color });
+    }
+  }
+
+  return (
+    <svg viewBox={`0 0 ${viewW} ${viewH}`} className="w-full">
+      {placed.map((p, i) => (
+        <text
+          key={i}
+          x={p.x}
+          y={p.y}
+          textAnchor="middle"
+          fill={p.color}
+          fontSize={p.fontSize}
+          fontWeight={p.fontSize > 30 ? "800" : p.fontSize > 20 ? "600" : "400"}
+        >
+          {p.label}
+        </text>
+      ))}
+    </svg>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main renderer
 // ---------------------------------------------------------------------------
@@ -563,6 +776,9 @@ const RENDERERS: Record<string, React.ComponentType<{ items: InfographicItem[]; 
   stats_row: StatsRow,
   checklist: Checklist,
   cause_effect: CauseEffect,
+  icon_array: IconArray,
+  pictograph: Pictograph,
+  word_cloud: WordCloud,
 };
 
 export const InfographicBlock = memo(function InfographicBlock({ data, theme }: InfographicBlockProps) {

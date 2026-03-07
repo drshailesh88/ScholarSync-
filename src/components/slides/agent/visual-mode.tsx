@@ -38,6 +38,9 @@ const VISUAL_TYPE_PRESETS = [
   { label: "Matrix", type: "matrix" },
   { label: "Radial", type: "radial" },
   { label: "Venn", type: "venn" },
+  { label: "Icon Array", type: "icon_array" },
+  { label: "Pictograph", type: "pictograph" },
+  { label: "Word Cloud", type: "word_cloud" },
 ] as const;
 
 export function VisualMode() {
