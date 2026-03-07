@@ -5,7 +5,7 @@
  * Features domain tabs, grid display, search functionality, and click-to-insert.
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { IconSearch } from './IconSearch';
 import { IconGrid } from './IconGrid';
 import {
@@ -16,6 +16,7 @@ import {
   getAvailableDomains,
   domainMetadata,
 } from '@/lib/illustration/data/icons';
+import { fuzzySearch } from '@/lib/illustration/lib/icons/fuzzy-search';
 
 // =============================================================================
 // TYPES
@@ -185,6 +186,40 @@ const IconPreview: React.FC<IconPreviewProps> = ({ icon, onInsert }) => {
 // MAIN COMPONENT
 // =============================================================================
 
+const RECENT_ICONS_STORAGE_KEY = 'scholarsync-recent-icons';
+const FAVORITE_ICONS_STORAGE_KEY = 'scholarsync-favorite-icons';
+const MAX_RECENT = 20;
+
+function loadRecentIcons(): string[] {
+  try {
+    const stored = localStorage.getItem(RECENT_ICONS_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch { return []; }
+}
+
+function saveRecentIcon(iconId: string): string[] {
+  const recent = loadRecentIcons().filter(id => id !== iconId);
+  recent.unshift(iconId);
+  const trimmed = recent.slice(0, MAX_RECENT);
+  try { localStorage.setItem(RECENT_ICONS_STORAGE_KEY, JSON.stringify(trimmed)); } catch {}
+  return trimmed;
+}
+
+function loadFavoriteIcons(): string[] {
+  try {
+    const stored = localStorage.getItem(FAVORITE_ICONS_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch { return []; }
+}
+
+function toggleFavoriteIcon(iconId: string): string[] {
+  const favs = loadFavoriteIcons();
+  const idx = favs.indexOf(iconId);
+  if (idx >= 0) { favs.splice(idx, 1); } else { favs.push(iconId); }
+  try { localStorage.setItem(FAVORITE_ICONS_STORAGE_KEY, JSON.stringify(favs)); } catch {}
+  return favs;
+}
+
 export const IconBrowser: React.FC<IconBrowserProps> = ({
   onInsertIcon,
   initialDomain = 'medicine',
@@ -197,26 +232,93 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
   const [selectedDomain, setSelectedDomain] = useState<IconDomain>(initialDomain);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedIcon, setSelectedIcon] = useState<IconDefinition | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [recentIconIds, setRecentIconIds] = useState<string[]>([]);
+  const [favoriteIconIds, setFavoriteIconIds] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'domain' | 'recent' | 'favorites'>('domain');
+
+  // Load persisted state
+  useEffect(() => {
+    setRecentIconIds(loadRecentIcons());
+    setFavoriteIconIds(loadFavoriteIcons());
+  }, []);
 
   // Get available domains with metadata
   const domains = useMemo(() => getAvailableDomains(), []);
 
-  // Get icons based on search and domain
+  // Get categories for current domain with counts
+  const domainCategories = useMemo(() => {
+    const icons = getIconsByDomain(selectedDomain);
+    const catMap = new Map<string, number>();
+    for (const icon of icons) {
+      catMap.set(icon.category, (catMap.get(icon.category) || 0) + 1);
+    }
+    return Array.from(catMap.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [selectedDomain]);
+
+  // All icons for lookup
+  const allDomainIcons = useMemo(() => {
+    const icons: IconDefinition[] = [];
+    for (const d of domains) {
+      icons.push(...getIconsByDomain(d.id));
+    }
+    return icons;
+  }, [domains]);
+
+  // Get icons based on search, domain, category, and view mode
   const displayedIcons = useMemo(() => {
     if (searchQuery.trim()) {
-      // Search across all domains when there's a query
-      return searchIcons(searchQuery, { limit: 50 });
+      // Enhanced search with synonym expansion + fuzzy matching
+      const directResults = searchIcons(searchQuery, { limit: 100 });
+
+      // Also do fuzzy search on icon names for typo tolerance
+      const allNames = allDomainIcons.map(i => i.name);
+      const fuzzyMatches = fuzzySearch(searchQuery, allNames, 30);
+      const fuzzyMatchedIcons = fuzzyMatches
+        .filter(m => m.score > 0.3)
+        .map(m => allDomainIcons.find(i => i.name === m.value))
+        .filter((i): i is IconDefinition => i !== undefined);
+
+      // Merge: direct results first, then fuzzy (dedup)
+      const seen = new Set(directResults.map(i => i.id));
+      const merged = [...directResults];
+      for (const icon of fuzzyMatchedIcons) {
+        if (!seen.has(icon.id)) {
+          seen.add(icon.id);
+          merged.push(icon);
+        }
+      }
+      return merged.slice(0, 50);
     }
-    // Otherwise show icons from selected domain
-    return getIconsByDomain(selectedDomain);
-  }, [searchQuery, selectedDomain]);
+
+    if (viewMode === 'recent') {
+      return recentIconIds
+        .map(id => allDomainIcons.find(i => i.id === id))
+        .filter((i): i is IconDefinition => i !== undefined);
+    }
+
+    if (viewMode === 'favorites') {
+      return favoriteIconIds
+        .map(id => allDomainIcons.find(i => i.id === id))
+        .filter((i): i is IconDefinition => i !== undefined);
+    }
+
+    // Domain + category filter
+    let icons = getIconsByDomain(selectedDomain);
+    if (selectedCategory) {
+      icons = icons.filter(i => i.category === selectedCategory);
+    }
+    return icons;
+  }, [searchQuery, selectedDomain, selectedCategory, viewMode, allDomainIcons, recentIconIds, favoriteIconIds]);
 
   // Handle search
   const handleSearch = useCallback((query: string) => {
     setSearchQuery(query);
-    // Clear selection when searching
     if (query.trim()) {
       setSelectedIcon(null);
+      setViewMode('domain');
     }
   }, []);
 
@@ -224,6 +326,14 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
   const handleDomainChange = useCallback((domain: IconDomain) => {
     setSelectedDomain(domain);
     setSearchQuery('');
+    setSelectedIcon(null);
+    setSelectedCategory(null);
+    setViewMode('domain');
+  }, []);
+
+  // Handle category filter
+  const handleCategoryChange = useCallback((category: string | null) => {
+    setSelectedCategory(category);
     setSelectedIcon(null);
   }, []);
 
@@ -235,6 +345,8 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
   // Handle icon double-click (insert)
   const handleIconDoubleClick = useCallback(
     (icon: IconDefinition) => {
+      const newRecent = saveRecentIcon(icon.id);
+      setRecentIconIds(newRecent);
       onInsertIcon(icon);
     },
     [onInsertIcon]
@@ -243,9 +355,19 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
   // Handle insert button click
   const handleInsert = useCallback(() => {
     if (selectedIcon) {
+      const newRecent = saveRecentIcon(selectedIcon.id);
+      setRecentIconIds(newRecent);
       onInsertIcon(selectedIcon);
     }
   }, [selectedIcon, onInsertIcon]);
+
+  // Handle favorite toggle
+  const handleToggleFavorite = useCallback(() => {
+    if (selectedIcon) {
+      const newFavs = toggleFavoriteIcon(selectedIcon.id);
+      setFavoriteIconIds(newFavs);
+    }
+  }, [selectedIcon]);
 
   // Collapsed state
   if (isCollapsed) {
@@ -289,13 +411,38 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
       <div style={styles.searchContainer}>
         <IconSearch
           onSearch={handleSearch}
-          placeholder="Search icons..."
+          placeholder="Search icons (fuzzy)..."
           debounceMs={250}
+          resultCount={searchQuery ? displayedIcons.length : undefined}
         />
       </div>
 
-      {/* Domain Tabs (hidden when searching) */}
+      {/* Quick Access: Recent & Favorites */}
       {!searchQuery && (
+        <div style={styles.quickAccess}>
+          <button
+            onClick={() => setViewMode(viewMode === 'recent' ? 'domain' : 'recent')}
+            style={{
+              ...styles.quickBtn,
+              ...(viewMode === 'recent' ? styles.quickBtnActive : {}),
+            }}
+          >
+            Recent ({recentIconIds.length})
+          </button>
+          <button
+            onClick={() => setViewMode(viewMode === 'favorites' ? 'domain' : 'favorites')}
+            style={{
+              ...styles.quickBtn,
+              ...(viewMode === 'favorites' ? styles.quickBtnActive : {}),
+            }}
+          >
+            Favorites ({favoriteIconIds.length})
+          </button>
+        </div>
+      )}
+
+      {/* Domain Tabs (hidden when searching or viewing recent/favorites) */}
+      {!searchQuery && viewMode === 'domain' && (
         <DomainTabs
           domains={domains}
           selectedDomain={selectedDomain}
@@ -303,12 +450,31 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
         />
       )}
 
-      {/* Search Results Info */}
-      {searchQuery && (
-        <div style={styles.searchInfo}>
-          <span style={styles.searchCount}>
-            {displayedIcons.length} result{displayedIcons.length !== 1 ? 's' : ''} for "{searchQuery}"
-          </span>
+      {/* Category Filter Chips with counts */}
+      {!searchQuery && viewMode === 'domain' && domainCategories.length > 1 && (
+        <div style={styles.categoryChips}>
+          <button
+            onClick={() => handleCategoryChange(null)}
+            style={{
+              ...styles.categoryChip,
+              ...(selectedCategory === null ? styles.categoryChipActive : {}),
+            }}
+          >
+            All
+          </button>
+          {domainCategories.map(cat => (
+            <button
+              key={cat.name}
+              onClick={() => handleCategoryChange(cat.name)}
+              style={{
+                ...styles.categoryChip,
+                ...(selectedCategory === cat.name ? styles.categoryChipActive : {}),
+              }}
+              title={`${cat.count} icons`}
+            >
+              {cat.name} ({cat.count})
+            </button>
+          ))}
         </div>
       )}
 
@@ -335,6 +501,22 @@ export const IconBrowser: React.FC<IconBrowserProps> = ({
       <div style={styles.previewContainer}>
         <IconPreview icon={selectedIcon} onInsert={handleInsert} />
       </div>
+
+      {/* Favorite Toggle */}
+      {selectedIcon && (
+        <div style={styles.favoriteContainer}>
+          <button
+            onClick={handleToggleFavorite}
+            style={{
+              ...styles.favoriteButton,
+              color: favoriteIconIds.includes(selectedIcon.id) ? '#ec4899' : 'var(--text-muted, #9ca3af)',
+            }}
+            title={favoriteIconIds.includes(selectedIcon.id) ? 'Remove from favorites' : 'Add to favorites'}
+          >
+            {favoriteIconIds.includes(selectedIcon.id) ? '\u2665' : '\u2661'} Favorite
+          </button>
+        </div>
+      )}
 
       {/* Help Text */}
       <div style={styles.helpText}>
@@ -493,8 +675,8 @@ const styles: Record<string, React.CSSProperties> = {
     textTransform: 'uppercase',
   },
   previewIcon: {
-    width: '48px',
-    height: '48px',
+    width: '128px',
+    height: '128px',
     margin: '0 auto',
     color: 'var(--text-secondary, #d1d5db)',
   },
@@ -538,6 +720,72 @@ const styles: Record<string, React.CSSProperties> = {
   insertIcon: {
     width: '16px',
     height: '16px',
+  },
+  quickAccess: {
+    display: 'flex',
+    gap: '8px',
+    padding: '8px 16px',
+    borderBottom: '1px solid var(--border-color, #374151)',
+  },
+  quickBtn: {
+    padding: '4px 10px',
+    fontSize: '11px',
+    fontWeight: 500,
+    color: 'var(--text-secondary, #d1d5db)',
+    background: 'var(--bg-tertiary, #1f2937)',
+    border: '1px solid var(--border-color, #374151)',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    transition: 'all 0.15s ease',
+  },
+  quickBtnActive: {
+    background: 'var(--accent-primary, #3b82f6)',
+    borderColor: 'var(--accent-primary, #3b82f6)',
+    color: 'white',
+  },
+  categoryChips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '4px',
+    padding: '8px 16px',
+    borderBottom: '1px solid var(--border-color, #374151)',
+    maxHeight: '80px',
+    overflowY: 'auto',
+  },
+  categoryChip: {
+    padding: '3px 8px',
+    fontSize: '10px',
+    fontWeight: 500,
+    color: 'var(--text-secondary, #d1d5db)',
+    background: 'var(--bg-tertiary, #1f2937)',
+    border: '1px solid var(--border-color, #374151)',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    transition: 'all 0.15s ease',
+    whiteSpace: 'nowrap',
+  },
+  categoryChipActive: {
+    background: 'var(--accent-primary, #3b82f6)',
+    borderColor: 'var(--accent-primary, #3b82f6)',
+    color: 'white',
+  },
+  favoriteContainer: {
+    padding: '4px 16px',
+    borderTop: '1px solid var(--border-color, #374151)',
+  },
+  favoriteButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '6px 12px',
+    fontSize: '12px',
+    background: 'transparent',
+    border: '1px solid var(--border-color, #374151)',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    width: '100%',
+    justifyContent: 'center',
+    transition: 'all 0.15s ease',
   },
   helpText: {
     padding: '8px 16px',

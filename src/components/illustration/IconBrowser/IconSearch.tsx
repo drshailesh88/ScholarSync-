@@ -24,6 +24,8 @@ export interface IconSearchProps {
   showClear?: boolean;
   /** Whether the search input is disabled */
   disabled?: boolean;
+  /** Number of search results to display */
+  resultCount?: number;
   /** Custom class name for the container */
   className?: string;
 }
@@ -94,6 +96,7 @@ export const IconSearch: React.FC<IconSearchProps> = ({
   initialValue = '',
   showClear = true,
   disabled = false,
+  resultCount,
   className = '',
 }) => {
   const [inputValue, setInputValue] = useState(initialValue);
@@ -137,8 +140,8 @@ export const IconSearch: React.FC<IconSearchProps> = ({
   );
 
   return (
+    <div className={className}>
     <div
-      className={className}
       style={{
         ...styles.container,
         ...(isFocused ? styles.containerFocused : {}),
@@ -174,6 +177,15 @@ export const IconSearch: React.FC<IconSearchProps> = ({
         </button>
       )}
     </div>
+
+    {inputValue && resultCount !== undefined && (
+      <div style={styles.resultInfo}>
+        <span style={styles.resultCount}>
+          {resultCount} result{resultCount !== 1 ? 's' : ''} for &quot;{inputValue}&quot;
+        </span>
+      </div>
+    )}
+  </div>
   );
 };
 
@@ -182,6 +194,13 @@ export const IconSearch: React.FC<IconSearchProps> = ({
 // =============================================================================
 
 const styles: Record<string, React.CSSProperties> = {
+  resultInfo: {
+    padding: '4px 0 0',
+  },
+  resultCount: {
+    fontSize: '11px',
+    color: 'var(--text-muted, #9ca3af)',
+  },
   container: {
     position: 'relative',
     display: 'flex',
