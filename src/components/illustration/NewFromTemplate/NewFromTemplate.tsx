@@ -12,8 +12,10 @@ import {
   domainMetadata,
   DiagramTemplate,
   TemplateDomain,
+  FilledTemplate,
   getAvailableDomains,
 } from '@/lib/illustration/data/templates';
+import { TemplateWizard } from './TemplateWizard';
 
 // ============================================================================
 // Types
@@ -309,6 +311,14 @@ const DomainIcons: Record<TemplateDomain, React.ReactNode> = {
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
     </svg>
   ),
+  general: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </svg>
+  ),
 };
 
 // ============================================================================
@@ -389,6 +399,8 @@ export function NewFromTemplate({
   const [selectedDomain, setSelectedDomain] = useState<TemplateDomain | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTemplate, setSelectedTemplate] = useState<DiagramTemplate | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<DiagramTemplate | null>(null);
+  const [wizardTemplate, setWizardTemplate] = useState<DiagramTemplate | null>(null);
 
   const domains = getAvailableDomains();
 
@@ -397,6 +409,8 @@ export function NewFromTemplate({
     if (!isOpen) {
       setSelectedTemplate(null);
       setSearchQuery('');
+      setPreviewTemplate(null);
+      setWizardTemplate(null);
     }
   }, [isOpen]);
 
@@ -423,10 +437,26 @@ export function NewFromTemplate({
 
   const handleCreate = useCallback(() => {
     if (selectedTemplate) {
-      onSelectTemplate(selectedTemplate);
-      onClose();
+      if (selectedTemplate.placeholders.length > 0) {
+        setWizardTemplate(selectedTemplate);
+      } else {
+        onSelectTemplate(selectedTemplate);
+        onClose();
+      }
     }
   }, [selectedTemplate, onSelectTemplate, onClose]);
+
+  const handleWizardCreate = useCallback(
+    (filled: FilledTemplate) => {
+      onSelectTemplate(filled.template);
+      onClose();
+    },
+    [onSelectTemplate, onClose]
+  );
+
+  const handleWizardBack = useCallback(() => {
+    setWizardTemplate(null);
+  }, []);
 
   // Filter templates
   const filteredTemplates = useMemo(() => {
@@ -446,6 +476,21 @@ export function NewFromTemplate({
 
   if (!isOpen) {
     return null;
+  }
+
+  // If wizard is active, render the wizard inside the dialog
+  if (wizardTemplate) {
+    return (
+      <div style={styles.overlay} onClick={handleOverlayClick} role="dialog" aria-modal="true">
+        <div style={styles.dialog}>
+          <TemplateWizard
+            template={wizardTemplate}
+            onBack={handleWizardBack}
+            onCreate={handleWizardCreate}
+          />
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -597,6 +642,26 @@ export function NewFromTemplate({
                     </div>
                     <div style={styles.templateName}>{template.name}</div>
                     <div style={styles.templateDescription}>{template.description}</div>
+                    {/* Preview button */}
+                    <button
+                      style={{
+                        marginTop: '8px',
+                        padding: '4px 8px',
+                        fontSize: '11px',
+                        backgroundColor: 'transparent',
+                        border: '1px solid var(--border-color, #333)',
+                        borderRadius: '4px',
+                        color: 'var(--text-muted, #666)',
+                        cursor: 'pointer',
+                        transition: 'all 150ms ease',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPreviewTemplate(template);
+                      }}
+                    >
+                      Preview
+                    </button>
                   </button>
                 ))}
               </div>
@@ -647,6 +712,14 @@ export function NewFromTemplate({
             )}
           </div>
           <div style={styles.footerButtons}>
+            {selectedTemplate && (
+              <button
+                style={{ ...styles.button, ...styles.cancelButton }}
+                onClick={() => setPreviewTemplate(selectedTemplate)}
+              >
+                Preview
+              </button>
+            )}
             <button
               style={{ ...styles.button, ...styles.cancelButton }}
               onClick={onClose}
@@ -681,6 +754,163 @@ export function NewFromTemplate({
           </div>
         </div>
       </div>
+
+      {/* Preview Modal */}
+      {previewTemplate && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1001,
+          }}
+          onClick={() => setPreviewTemplate(null)}
+        >
+          <div
+            style={{
+              backgroundColor: 'var(--bg-secondary, #1e1e1e)',
+              borderRadius: '12px',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+              width: '600px',
+              maxWidth: '90vw',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              border: '1px solid var(--border-color, #333)',
+              padding: '24px',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--text-primary, #ffffff)', margin: 0 }}>
+                  {previewTemplate.name}
+                </h3>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted, #666)', margin: '4px 0 0' }}>
+                  {previewTemplate.description}
+                </p>
+                <span style={{
+                  display: 'inline-block',
+                  marginTop: '8px',
+                  padding: '2px 8px',
+                  fontSize: '11px',
+                  borderRadius: '4px',
+                  backgroundColor: `${domainMetadata[previewTemplate.domain].color}20`,
+                  color: domainMetadata[previewTemplate.domain].color,
+                }}>
+                  {domainMetadata[previewTemplate.domain].name}
+                </span>
+              </div>
+              <button
+                style={{ ...styles.closeButton }}
+                onClick={() => setPreviewTemplate(null)}
+                aria-label="Close preview"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            {previewTemplate.placeholders.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted, #666)', textTransform: 'uppercase' as const, marginBottom: '8px' }}>
+                  Placeholders ({previewTemplate.placeholders.length})
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: '6px' }}>
+                  {previewTemplate.placeholders.map((p) => (
+                    <span key={p} style={{
+                      padding: '3px 8px',
+                      fontSize: '12px',
+                      backgroundColor: 'var(--bg-tertiary, #2a2a2a)',
+                      border: '1px solid var(--border-color, #333)',
+                      borderRadius: '4px',
+                      color: 'var(--text-secondary, #9d9d9d)',
+                      fontFamily: 'monospace',
+                    }}>
+                      {`{{${p}}}`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted, #666)', textTransform: 'uppercase' as const, marginBottom: '8px' }}>
+                Prompt Template
+              </div>
+              <pre style={{
+                padding: '12px',
+                backgroundColor: 'var(--bg-tertiary, #2a2a2a)',
+                borderRadius: '6px',
+                border: '1px solid var(--border-color, #333)',
+                fontSize: '12px',
+                lineHeight: 1.5,
+                color: 'var(--text-secondary, #9d9d9d)',
+                whiteSpace: 'pre-wrap' as const,
+                margin: 0,
+                overflow: 'auto',
+                maxHeight: '200px',
+              }}>
+                {previewTemplate.promptTemplate}
+              </pre>
+            </div>
+
+            {previewTemplate.mermaidExample && (
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-muted, #666)', textTransform: 'uppercase' as const, marginBottom: '8px' }}>
+                  Mermaid Example
+                </div>
+                <pre style={{
+                  padding: '12px',
+                  backgroundColor: 'var(--bg-tertiary, #2a2a2a)',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border-color, #333)',
+                  fontSize: '11px',
+                  lineHeight: 1.5,
+                  color: 'var(--text-primary, #ffffff)',
+                  whiteSpace: 'pre-wrap' as const,
+                  margin: 0,
+                  overflow: 'auto',
+                  maxHeight: '200px',
+                }}>
+                  {previewTemplate.mermaidExample}
+                </pre>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button
+                style={{ ...styles.button, ...styles.cancelButton }}
+                onClick={() => setPreviewTemplate(null)}
+              >
+                Close
+              </button>
+              <button
+                style={{ ...styles.button, ...styles.createButton }}
+                onClick={() => {
+                  setSelectedTemplate(previewTemplate);
+                  setPreviewTemplate(null);
+                  if (previewTemplate.placeholders.length > 0) {
+                    setWizardTemplate(previewTemplate);
+                  } else {
+                    onSelectTemplate(previewTemplate);
+                    onClose();
+                  }
+                }}
+              >
+                Use Template
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

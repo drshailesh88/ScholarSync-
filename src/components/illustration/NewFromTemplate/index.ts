@@ -7,3 +7,5 @@
 
 export { NewFromTemplate, default } from './NewFromTemplate';
 export type { NewFromTemplateProps } from './NewFromTemplate';
+export { TemplateWizard } from './TemplateWizard';
+export type { TemplateWizardProps } from './TemplateWizard';

@@ -129,6 +129,8 @@ export { endocrineDrugsTemplates } from './endocrine_drugs';
 export { pharmacologyTemplates } from './pharmacology';
 // Mathematics
 export { mathematicsTemplates } from './mathematics';
+// General-purpose
+export * from './general-purpose';
 
 // =============================================================================
 // TYPE DEFINITIONS
@@ -178,7 +180,8 @@ export type TemplateDomain =
   | 'biology'
   | 'chemistry'
   | 'physics'
-  | 'engineering';
+  | 'engineering'
+  | 'general';
 
 /**
  * Template with filled placeholder values
@@ -286,6 +289,8 @@ import { endocrineDrugsTemplates } from './endocrine_drugs';
 import { pharmacologyTemplates } from './pharmacology';
 // Mathematics
 import { mathematicsTemplates } from './mathematics';
+// General-purpose
+import { generalPurposeTemplates } from './general-purpose';
 
 // =============================================================================
 // AGGREGATED TEMPLATE COLLECTIONS
@@ -368,6 +373,8 @@ export const allTemplates: DiagramTemplate[] = [
   ...pharmacologyTemplates,
   // Mathematics
   ...mathematicsTemplates,
+  // General-purpose
+  ...generalPurposeTemplates,
 ];
 
 /**
@@ -381,6 +388,7 @@ export const templatesByDomain: Record<TemplateDomain, DiagramTemplate[]> = {
   chemistry: [...chemistryTemplates, ...forensicsTemplates, ...biochemistryTemplates, ...organicTemplates, ...inorganicTemplates, ...analyticalTemplates],
   physics: [...physicsTemplates, ...geologyTemplates, ...astronomyTemplates, ...meteorologyTemplates, ...quantumTemplates, ...thermodynamicsTemplates, ...electromagnetismTemplates, ...opticsTemplates, ...nuclearTemplates, ...mechanicsTemplates, ...astrophysicsTemplates, ...mathematicsTemplates],
   engineering: [...engineeringTemplates, ...materialsScienceTemplates, ...aerospaceTemplates, ...mechanicalTemplates, ...electricalTemplates, ...civilTemplates, ...chemicalTemplates, ...computerTemplates, ...biomedicalTemplates],
+  general: [...generalPurposeTemplates],
 };
 
 /**
@@ -494,6 +502,7 @@ export function getTemplateStats(): {
       chemistry: chemistryTemplates.length + forensicsTemplates.length + biochemistryTemplates.length + organicTemplates.length + inorganicTemplates.length + analyticalTemplates.length,
       physics: physicsTemplates.length + geologyTemplates.length + astronomyTemplates.length + meteorologyTemplates.length + quantumTemplates.length + thermodynamicsTemplates.length + electromagnetismTemplates.length + opticsTemplates.length + nuclearTemplates.length + mechanicsTemplates.length + astrophysicsTemplates.length + mathematicsTemplates.length,
       engineering: engineeringTemplates.length + materialsScienceTemplates.length + aerospaceTemplates.length + mechanicalTemplates.length + electricalTemplates.length + civilTemplates.length + chemicalTemplates.length + computerTemplates.length + biomedicalTemplates.length,
+      general: generalPurposeTemplates.length,
     },
   };
 }
@@ -701,6 +710,12 @@ export const domainMetadata: Record<
     description: 'System design, software architecture, and technical diagrams',
     icon: 'cog',
     color: '#d97706',
+  },
+  general: {
+    name: 'General Purpose',
+    description: 'Business analysis, project management, and universal diagram templates',
+    icon: 'grid',
+    color: '#6366f1',
   },
 };
 
