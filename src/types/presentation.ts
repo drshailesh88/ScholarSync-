@@ -91,6 +91,34 @@ export interface TimelineData {
   title?: string;
 }
 
+export interface TableCellMeta {
+  colspan?: number;
+  rowspan?: number;
+  backgroundColor?: string;
+  textColor?: string;
+  textAlign?: "left" | "center" | "right";
+  fontWeight?: "normal" | "bold";
+  borderTop?: string;
+  borderBottom?: string;
+  borderLeft?: string;
+  borderRight?: string;
+}
+
+export interface TableStyleData {
+  borderCollapse?: boolean;
+  stripedRows?: boolean;
+  headerBackground?: string;
+  headerTextColor?: string;
+  borderMode?: "all" | "horizontal" | "none" | "outer";
+}
+
+export interface TableData {
+  headers: string[];
+  rows: string[][];
+  cellMeta?: Record<string, TableCellMeta>;
+  tableStyle?: TableStyleData;
+}
+
 /** Shape block for geometric callouts and visual elements */
 export interface ShapeData {
   shapeType:
@@ -431,7 +459,7 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "bullets"; data: { items: string[]; ordered?: boolean } })
   | (ContentBlockBase & { type: "image"; data: ImageData; figureLabel?: string })
   | (ContentBlockBase & { type: "chart"; data: ChartData; figureLabel?: string; caption?: string })
-  | (ContentBlockBase & { type: "table"; data: { headers: string[]; rows: string[][] }; figureLabel?: string; caption?: string })
+  | (ContentBlockBase & { type: "table"; data: TableData; figureLabel?: string; caption?: string })
   | (ContentBlockBase & { type: "citation"; data: CitationData })
   | (ContentBlockBase & { type: "quote"; data: { text: string; attribution: string } })
   // V2: New content block types

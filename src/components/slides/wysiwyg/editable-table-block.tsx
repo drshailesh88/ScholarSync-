@@ -3,190 +3,358 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
-import type { Editor as TiptapEditor } from "@tiptap/core";
+import { mergeAttributes, type Editor as TiptapEditor } from "@tiptap/core";
+import type { EditorState } from "@tiptap/pm/state";
+import type { ResolvedPos } from "@tiptap/pm/model";
+import { selectedRect } from "@tiptap/pm/tables";
 import StarterKit from "@tiptap/starter-kit";
 import { Table } from "@tiptap/extension-table";
 import { TableRow } from "@tiptap/extension-table-row";
 import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
-import { selectedRect } from "@tiptap/pm/tables";
-import type { ThemeConfig } from "@/types/presentation";
+import { ColorPicker } from "@/components/slides/shared/color-picker";
+import type { ContextMenuItem } from "@/components/slides/shared/context-menu";
+import {
+  getTableCellKey,
+  normalizeTableData,
+  parseTableHtmlToData,
+  sanitizeTableCellMeta,
+  serializeTableCellStyle,
+  tableDataEquals,
+  tableDataToHtml,
+} from "@/components/slides/shared/table-data";
+import { useContextMenu } from "@/hooks/use-context-menu";
+import { useTableEditorStore, type ActiveTableCellState } from "@/stores/table-editor-store";
+import type { TableCellMeta, TableData, TableStyleData, ThemeConfig } from "@/types/presentation";
 import { TableBlock } from "../blocks/table-block";
 
-export interface TableBlockData {
-  headers: string[];
-  rows: string[][];
-}
+export type { TableData };
+export {
+  normalizeTableData,
+  parseTableHtmlToData,
+  tableDataEquals,
+  tableDataToHtml,
+} from "@/components/slides/shared/table-data";
 
 type TableToolbarAction =
   | "add-row"
+  | "insert-row-above"
   | "remove-row"
   | "add-column"
+  | "insert-column-left"
   | "remove-column"
   | "merge-cells"
-  | "split-cell"
-  | "toggle-header-row"
-  | "toggle-bold"
-  | "toggle-italic";
+  | "split-cell";
 
 type FallbackTableAction = "add-row" | "remove-row" | "add-column" | "remove-column";
 
 interface EditableTableBlockProps {
-  data: TableBlockData;
+  blockIndex: number;
+  data: TableData;
   isEditing: boolean;
-  onUpdate: (data: TableBlockData) => void;
+  onUpdate: (data: TableData) => void;
   onBlur: () => void;
   theme: ThemeConfig;
 }
 
-const HTML_TAG_PATTERN = /<\/?[a-z][\s\S]*>/i;
+function buildCellHtmlAttributes(HTMLAttributes: Record<string, unknown>): Record<string, unknown> {
+  const {
+    backgroundColor,
+    textColor,
+    textAlign,
+    fontWeight,
+    borderTop,
+    borderBottom,
+    borderLeft,
+    borderRight,
+    ...rest
+  } = HTMLAttributes;
 
-function looksLikeHtml(value: string): boolean {
-  return HTML_TAG_PATTERN.test(value);
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
-}
-
-function toEditorCellHtml(content: string): string {
-  if (!content.trim()) return "<p></p>";
-  const inner = looksLikeHtml(content) ? content : escapeHtml(content);
-  return `<p>${inner}</p>`;
-}
-
-function fromEditorCellHtml(html: string): string {
-  const trimmed = html.trim();
-  if (!trimmed) return "";
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(`<div>${trimmed}</div>`, "text/html");
-  const root = doc.body.firstElementChild;
-  if (!root) return "";
-
-  const firstChild = root.firstElementChild;
-  if (
-    firstChild &&
-    firstChild.tagName === "P" &&
-    root.children.length === 1 &&
-    root.childNodes.length === 1
-  ) {
-    return (firstChild as HTMLElement).innerHTML.trim();
-  }
-
-  return root.innerHTML.trim();
-}
-
-function makeDefaultHeaders(columnCount: number): string[] {
-  return Array.from({ length: Math.max(1, columnCount) }, (_, index) => `Column ${index + 1}`);
-}
-
-export function normalizeTableData(data: TableBlockData): TableBlockData {
-  const widestRow = Math.max(0, ...data.rows.map((row) => row.length));
-  const columnCount = Math.max(1, data.headers.length, widestRow);
-  const baseHeaders = data.headers.length > 0 ? data.headers : makeDefaultHeaders(columnCount);
-  const headers = Array.from({ length: columnCount }, (_, index) => baseHeaders[index] ?? `Column ${index + 1}`);
-  const rows = data.rows.map((row) =>
-    Array.from({ length: columnCount }, (_, index) => row[index] ?? "")
-  );
-  return { headers, rows };
-}
-
-export function tableDataToHtml(data: TableBlockData): string {
-  const normalized = normalizeTableData(data);
-  const thead = `<thead><tr>${normalized.headers
-    .map((header) => `<th>${toEditorCellHtml(header)}</th>`)
-    .join("")}</tr></thead>`;
-  const tbody = `<tbody>${normalized.rows
-    .map((row) => `<tr>${row.map((cell) => `<td>${toEditorCellHtml(cell)}</td>`).join("")}</tr>`)
-    .join("")}</tbody>`;
-  return `<table>${thead}${tbody}</table>`;
-}
-
-function extractTableRows(table: HTMLTableElement): HTMLTableRowElement[] {
-  return Array.from(table.querySelectorAll("tr"));
-}
-
-function isTableCell(node: Element): node is HTMLTableCellElement {
-  return node.tagName === "TD" || node.tagName === "TH";
-}
-
-export function parseTableHtmlToData(html: string, fallback?: TableBlockData): TableBlockData {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  const table = doc.querySelector("table");
-
-  if (!table) {
-    return normalizeTableData(fallback ?? { headers: [], rows: [] });
-  }
-
-  const rowElements = extractTableRows(table);
-  if (rowElements.length === 0) {
-    return normalizeTableData(fallback ?? { headers: [], rows: [] });
-  }
-
-  const grid: string[][] = [];
-
-  rowElements.forEach((rowElement, rowIndex) => {
-    if (!grid[rowIndex]) grid[rowIndex] = [];
-
-    const cells = Array.from(rowElement.children).filter(isTableCell);
-    let columnIndex = 0;
-
-    cells.forEach((cell) => {
-      while (grid[rowIndex][columnIndex] !== undefined) {
-        columnIndex += 1;
-      }
-
-      const value = fromEditorCellHtml(cell.innerHTML);
-      const colspan = Math.max(1, Number.parseInt(cell.getAttribute("colspan") ?? "1", 10) || 1);
-      const rowspan = Math.max(1, Number.parseInt(cell.getAttribute("rowspan") ?? "1", 10) || 1);
-
-      for (let rowOffset = 0; rowOffset < rowspan; rowOffset += 1) {
-        const targetRowIndex = rowIndex + rowOffset;
-        if (!grid[targetRowIndex]) grid[targetRowIndex] = [];
-
-        for (let columnOffset = 0; columnOffset < colspan; columnOffset += 1) {
-          grid[targetRowIndex][columnIndex + columnOffset] = value;
-        }
-      }
-
-      columnIndex += colspan;
-    });
+  const meta = sanitizeTableCellMeta({
+    backgroundColor: typeof backgroundColor === "string" ? backgroundColor : undefined,
+    textColor: typeof textColor === "string" ? textColor : undefined,
+    textAlign:
+      textAlign === "left" || textAlign === "center" || textAlign === "right"
+        ? textAlign
+        : undefined,
+    fontWeight:
+      fontWeight === "bold" || fontWeight === "normal" ? fontWeight : undefined,
+    borderTop: typeof borderTop === "string" ? borderTop : undefined,
+    borderBottom: typeof borderBottom === "string" ? borderBottom : undefined,
+    borderLeft: typeof borderLeft === "string" ? borderLeft : undefined,
+    borderRight: typeof borderRight === "string" ? borderRight : undefined,
   });
+  const style = [typeof rest.style === "string" ? rest.style : undefined, serializeTableCellStyle(meta)]
+    .filter((value): value is string => Boolean(value))
+    .join("; ");
 
-  const fallbackColumnCount = fallback ? normalizeTableData(fallback).headers.length : 0;
-  const columnCount = Math.max(1, fallbackColumnCount, ...grid.map((row) => row.length));
-  const filledRows = grid.map((row) =>
-    Array.from({ length: columnCount }, (_, index) => row[index] ?? "")
-  );
-
-  if (filledRows.length === 0) {
-    return normalizeTableData(fallback ?? { headers: [], rows: [] });
-  }
-
-  const firstRow = filledRows[0] ?? [];
-  const headers = Array.from({ length: columnCount }, (_, index) => firstRow[index] ?? "");
-  const rows = filledRows.slice(1);
-
-  return normalizeTableData({ headers, rows });
+  return mergeAttributes(rest, style ? { style } : {});
 }
 
-export function tableDataEquals(left: TableBlockData, right: TableBlockData): boolean {
-  const normalizedLeft = normalizeTableData(left);
-  const normalizedRight = normalizeTableData(right);
-  return JSON.stringify(normalizedLeft) === JSON.stringify(normalizedRight);
+const PresentationTable = Table.extend({
+  addAttributes() {
+    return {
+      ...(this.parent?.() ?? {}),
+      borderCollapse: {
+        default: null,
+        parseHTML: (element: HTMLElement) => {
+          const raw = element.getAttribute("data-border-collapse");
+          if (raw === "true") return true;
+          if (raw === "false") return false;
+          return null;
+        },
+        renderHTML: (attributes: Record<string, unknown>) =>
+          typeof attributes.borderCollapse === "boolean"
+            ? { "data-border-collapse": String(attributes.borderCollapse) }
+            : {},
+      },
+      stripedRows: {
+        default: null,
+        parseHTML: (element: HTMLElement) => {
+          const raw = element.getAttribute("data-striped-rows");
+          if (raw === "true") return true;
+          if (raw === "false") return false;
+          return null;
+        },
+        renderHTML: (attributes: Record<string, unknown>) =>
+          typeof attributes.stripedRows === "boolean"
+            ? { "data-striped-rows": String(attributes.stripedRows) }
+            : {},
+      },
+      headerBackground: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.getAttribute("data-header-background"),
+        renderHTML: (attributes: Record<string, unknown>) =>
+          typeof attributes.headerBackground === "string"
+            ? { "data-header-background": attributes.headerBackground }
+            : {},
+      },
+      headerTextColor: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.getAttribute("data-header-text-color"),
+        renderHTML: (attributes: Record<string, unknown>) =>
+          typeof attributes.headerTextColor === "string"
+            ? { "data-header-text-color": attributes.headerTextColor }
+            : {},
+      },
+      borderMode: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.getAttribute("data-border-mode"),
+        renderHTML: (attributes: Record<string, unknown>) =>
+          typeof attributes.borderMode === "string"
+            ? { "data-border-mode": attributes.borderMode }
+            : {},
+      },
+    };
+  },
+});
+
+const PresentationTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      ...(this.parent?.() ?? {}),
+      backgroundColor: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.backgroundColor || null,
+      },
+      textColor: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.color || null,
+      },
+      textAlign: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.textAlign || null,
+      },
+      fontWeight: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.fontWeight || null,
+      },
+      borderTop: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderTop || null,
+      },
+      borderBottom: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderBottom || null,
+      },
+      borderLeft: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderLeft || null,
+      },
+      borderRight: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderRight || null,
+      },
+    };
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["td", buildCellHtmlAttributes(HTMLAttributes), 0];
+  },
+});
+
+const PresentationTableHeader = TableHeader.extend({
+  addAttributes() {
+    return {
+      ...(this.parent?.() ?? {}),
+      backgroundColor: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.backgroundColor || null,
+      },
+      textColor: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.color || null,
+      },
+      textAlign: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.textAlign || null,
+      },
+      fontWeight: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.fontWeight || null,
+      },
+      borderTop: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderTop || null,
+      },
+      borderBottom: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderBottom || null,
+      },
+      borderLeft: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderLeft || null,
+      },
+      borderRight: {
+        default: null,
+        parseHTML: (element: HTMLElement) => element.style.borderRight || null,
+      },
+    };
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ["th", buildCellHtmlAttributes(HTMLAttributes), 0];
+  },
+});
+
+function findSelectedCellPos(state: EditorState): number | null {
+  const selection = state.selection as {
+    $anchorCell?: ResolvedPos;
+  };
+
+  if (selection.$anchorCell) {
+    return selection.$anchorCell.pos;
+  }
+
+  const { $from } = state.selection;
+  for (let depth = $from.depth; depth > 0; depth -= 1) {
+    const node = $from.node(depth);
+    if (node.type.name === "tableCell" || node.type.name === "tableHeader") {
+      return $from.before(depth);
+    }
+  }
+
+  return null;
+}
+
+function getSelectedTableCellState(editor: TiptapEditor): ActiveTableCellState | null {
+  try {
+    const rect = selectedRect(editor.state);
+    const cellPos = findSelectedCellPos(editor.state);
+    const cellNode = cellPos !== null ? editor.state.doc.nodeAt(cellPos) : null;
+    const width = rect.map.width;
+
+    let rowIndex = rect.top;
+    let columnIndex = rect.left;
+
+    if (cellPos !== null) {
+      const mapIndex = rect.map.map.findIndex((relativePos) => rect.tableStart + relativePos === cellPos);
+      if (mapIndex >= 0) {
+        rowIndex = Math.floor(mapIndex / width);
+        columnIndex = mapIndex % width;
+      }
+    }
+
+    const isHeader = rowIndex === 0 || cellNode?.type.name === "tableHeader";
+    const meta = sanitizeTableCellMeta({
+      backgroundColor: typeof cellNode?.attrs.backgroundColor === "string" ? cellNode.attrs.backgroundColor : undefined,
+      textColor: typeof cellNode?.attrs.textColor === "string" ? cellNode.attrs.textColor : undefined,
+      textAlign:
+        cellNode?.attrs.textAlign === "left" ||
+        cellNode?.attrs.textAlign === "center" ||
+        cellNode?.attrs.textAlign === "right"
+          ? cellNode.attrs.textAlign
+          : undefined,
+      fontWeight:
+        cellNode?.attrs.fontWeight === "bold" || cellNode?.attrs.fontWeight === "normal"
+          ? cellNode.attrs.fontWeight
+          : undefined,
+      borderTop: typeof cellNode?.attrs.borderTop === "string" ? cellNode.attrs.borderTop : undefined,
+      borderBottom: typeof cellNode?.attrs.borderBottom === "string" ? cellNode.attrs.borderBottom : undefined,
+      borderLeft: typeof cellNode?.attrs.borderLeft === "string" ? cellNode.attrs.borderLeft : undefined,
+      borderRight: typeof cellNode?.attrs.borderRight === "string" ? cellNode.attrs.borderRight : undefined,
+      colspan: typeof cellNode?.attrs.colspan === "number" ? cellNode.attrs.colspan : undefined,
+      rowspan: typeof cellNode?.attrs.rowspan === "number" ? cellNode.attrs.rowspan : undefined,
+    }) ?? {};
+
+    return {
+      key: getTableCellKey(isHeader ? 0 : rowIndex - 1, columnIndex, isHeader),
+      rowIndex: isHeader ? 0 : rowIndex - 1,
+      columnIndex,
+      isHeader,
+      meta,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function syncTableEditorSelectionState(editor: TiptapEditor): void {
+  useTableEditorStore.getState().setSelectionState({
+    selectedCell: getSelectedTableCellState(editor),
+    canMergeCells: editor.can().mergeCells(),
+    canSplitCell: editor.can().splitCell(),
+  });
+}
+
+function updateTableNodeAttributes(
+  editor: TiptapEditor,
+  attributes: Partial<TableStyleData>
+): boolean {
+  return editor
+    .chain()
+    .focus()
+    .command(({ state, tr, dispatch }) => {
+      const { $from } = state.selection;
+      for (let depth = $from.depth; depth > 0; depth -= 1) {
+        const node = $from.node(depth);
+        if (node.type.name !== "table") continue;
+        if (dispatch) {
+          tr.setNodeMarkup($from.before(depth), undefined, {
+            ...node.attrs,
+            ...attributes,
+          });
+        }
+        return true;
+      }
+      return false;
+    })
+    .run();
+}
+
+function updateSelectedCellAttributes(
+  editor: TiptapEditor,
+  attributes: Partial<TableCellMeta>
+): boolean {
+  return Object.entries(attributes).every(([name, value]) =>
+    editor.chain().focus().setCellAttribute(name, value).run()
+  );
 }
 
 export function applyTableDataOperation(
-  data: TableBlockData,
+  data: TableData,
   action: FallbackTableAction
-): TableBlockData {
+): TableData {
   const normalized = normalizeTableData(data);
   const columnCount = normalized.headers.length;
 
@@ -199,14 +367,34 @@ export function applyTableDataOperation(
 
   if (action === "remove-row") {
     if (normalized.rows.length <= 1) return normalized;
+    const nextRows = normalized.rows.slice(0, -1);
+    const nextRowCount = nextRows.length;
+    const nextCellMetaEntries = Object.entries(normalized.cellMeta ?? {}).flatMap(([key, meta]) => {
+      const match = /^(\d+)-(\d+)$/.exec(key);
+      if (!match) return [[key, meta] as const];
+
+      const rowIndex = Number.parseInt(match[1], 10);
+      if (rowIndex >= nextRowCount) return [];
+
+      const nextMeta = { ...meta };
+      if (nextMeta.rowspan) {
+        nextMeta.rowspan = Math.min(nextMeta.rowspan, nextRowCount - rowIndex);
+        if (nextMeta.rowspan <= 1) delete nextMeta.rowspan;
+      }
+      const sanitized = sanitizeTableCellMeta(nextMeta);
+      return sanitized ? [[key, sanitized] as const] : [];
+    });
+
     return {
       ...normalized,
-      rows: normalized.rows.slice(0, -1),
+      rows: nextRows,
+      cellMeta: nextCellMetaEntries.length > 0 ? Object.fromEntries(nextCellMetaEntries) : undefined,
     };
   }
 
   if (action === "add-column") {
     return {
+      ...normalized,
       headers: [...normalized.headers, `Column ${normalized.headers.length + 1}`],
       rows: normalized.rows.map((row) => [...row, ""]),
     };
@@ -214,9 +402,28 @@ export function applyTableDataOperation(
 
   if (normalized.headers.length <= 1) return normalized;
 
+  const nextHeaders = normalized.headers.slice(0, -1);
+  const nextColumnCount = nextHeaders.length;
+  const nextCellMetaEntries = Object.entries(normalized.cellMeta ?? {}).flatMap(([key, meta]) => {
+    const headerMatch = /^h-(\d+)$/.exec(key);
+    const bodyMatch = /^(\d+)-(\d+)$/.exec(key);
+    const columnIndex = Number.parseInt((headerMatch?.[1] ?? bodyMatch?.[2]) || "-1", 10);
+    if (columnIndex >= nextColumnCount) return [];
+
+    const nextMeta = { ...meta };
+    if (nextMeta.colspan) {
+      nextMeta.colspan = Math.min(nextMeta.colspan, nextColumnCount - columnIndex);
+      if (nextMeta.colspan <= 1) delete nextMeta.colspan;
+    }
+    const sanitized = sanitizeTableCellMeta(nextMeta);
+    return sanitized ? [[key, sanitized] as const] : [];
+  });
+
   return {
-    headers: normalized.headers.slice(0, -1),
+    ...normalized,
+    headers: nextHeaders,
     rows: normalized.rows.map((row) => row.slice(0, -1)),
+    cellMeta: nextCellMetaEntries.length > 0 ? Object.fromEntries(nextCellMetaEntries) : undefined,
   };
 }
 
@@ -227,11 +434,17 @@ export function runTableToolbarCommand(
   if (action === "add-row") {
     return editor.chain().focus().addRowAfter().run();
   }
+  if (action === "insert-row-above") {
+    return editor.chain().focus().addRowBefore().run();
+  }
   if (action === "remove-row") {
     return editor.chain().focus().deleteRow().run();
   }
   if (action === "add-column") {
     return editor.chain().focus().addColumnAfter().run();
+  }
+  if (action === "insert-column-left") {
+    return editor.chain().focus().addColumnBefore().run();
   }
   if (action === "remove-column") {
     return editor.chain().focus().deleteColumn().run();
@@ -239,16 +452,7 @@ export function runTableToolbarCommand(
   if (action === "merge-cells") {
     return editor.chain().focus().mergeCells().run();
   }
-  if (action === "split-cell") {
-    return editor.chain().focus().splitCell().run();
-  }
-  if (action === "toggle-header-row") {
-    return editor.chain().focus().toggleHeaderRow().run();
-  }
-  if (action === "toggle-bold") {
-    return editor.chain().focus().toggleBold().run();
-  }
-  return editor.chain().focus().toggleItalic().run();
+  return editor.chain().focus().splitCell().run();
 }
 
 export function moveSelectionToCellBelow(editor: TiptapEditor): boolean {
@@ -313,6 +517,7 @@ function isFallbackAction(action: TableToolbarAction): action is FallbackTableAc
 }
 
 export function EditableTableBlock({
+  blockIndex,
   data,
   isEditing,
   onUpdate,
@@ -320,9 +525,15 @@ export function EditableTableBlock({
   theme,
 }: EditableTableBlockProps) {
   const updateRef = useRef(onUpdate);
-  const dataRef = useRef<TableBlockData>(normalizeTableData(data));
+  const dataRef = useRef<TableData>(normalizeTableData(data));
   const containerRef = useRef<HTMLDivElement>(null);
   const [editorStateVersion, setEditorStateVersion] = useState(0);
+  const setActiveEditor = useTableEditorStore((state) => state.setActiveEditor);
+  const clearActiveEditor = useTableEditorStore((state) => state.clearActiveEditor);
+  const {
+    openMenu,
+    ContextMenuPortal,
+  } = useContextMenu();
 
   useEffect(() => {
     updateRef.current = onUpdate;
@@ -344,12 +555,12 @@ export function EditableTableBlock({
         orderedList: false,
         listItem: false,
       }),
-      Table.configure({
+      PresentationTable.configure({
         resizable: true,
       }),
       TableRow,
-      TableHeader,
-      TableCell,
+      PresentationTableHeader,
+      PresentationTableCell,
     ],
     content: tableDataToHtml(normalizeTableData(data)),
     editable: isEditing,
@@ -362,14 +573,33 @@ export function EditableTableBlock({
 
   useEffect(() => {
     if (!editor) return;
-    const rerender = () => setEditorStateVersion((version) => version + 1);
+
+    const rerender = () => {
+      setEditorStateVersion((version) => version + 1);
+      syncTableEditorSelectionState(editor);
+    };
+
     editor.on("selectionUpdate", rerender);
     editor.on("transaction", rerender);
+    rerender();
+
     return () => {
       editor.off("selectionUpdate", rerender);
       editor.off("transaction", rerender);
     };
   }, [editor]);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    if (isEditing) {
+      setActiveEditor(blockIndex, editor);
+      syncTableEditorSelectionState(editor);
+      return () => clearActiveEditor(blockIndex);
+    }
+
+    clearActiveEditor(blockIndex);
+  }, [blockIndex, clearActiveEditor, editor, isEditing, setActiveEditor]);
 
   useEffect(() => {
     if (!editor) return;
@@ -382,12 +612,14 @@ export function EditableTableBlock({
   }, [editor, isEditing]);
 
   useEffect(() => {
-    if (!editor || isEditing) return;
+    if (!editor) return;
     const normalized = normalizeTableData(data);
     const current = parseTableHtmlToData(editor.getHTML(), normalized);
     if (tableDataEquals(current, normalized)) return;
     editor.commands.setContent(tableDataToHtml(normalized), { emitUpdate: false });
-  }, [data, editor, isEditing]);
+    dataRef.current = normalized;
+    syncTableEditorSelectionState(editor);
+  }, [data, editor]);
 
   useEffect(() => {
     if (!editor) return;
@@ -401,6 +633,8 @@ export function EditableTableBlock({
       dom.removeEventListener("keydown", handleKeyDown);
     };
   }, [editor, isEditing]);
+
+  useEffect(() => () => clearActiveEditor(blockIndex), [blockIndex, clearActiveEditor]);
 
   const handleBlurCapture = useCallback(() => {
     if (!isEditing) return;
@@ -420,6 +654,7 @@ export function EditableTableBlock({
       dataRef.current = nextData;
       editor.commands.setContent(tableDataToHtml(nextData), { emitUpdate: false });
       updateRef.current(nextData);
+      syncTableEditorSelectionState(editor);
     },
     [editor]
   );
@@ -431,31 +666,115 @@ export function EditableTableBlock({
       if (!didRun && isFallbackAction(action)) {
         runFallbackOperation(action);
       }
+      syncTableEditorSelectionState(editor);
       editor.commands.focus();
     },
     [editor, runFallbackOperation]
   );
 
+  const handleCellMetaUpdate = useCallback(
+    (attributes: Partial<TableCellMeta>) => {
+      if (!editor) return;
+      updateSelectedCellAttributes(editor, attributes);
+      syncTableEditorSelectionState(editor);
+    },
+    [editor]
+  );
+
   const currentData = useMemo(() => {
     if (!editor) return normalizeTableData(data);
     return parseTableHtmlToData(editor.getHTML(), normalizeTableData(data));
-    // editorStateVersion is intentionally included to trigger re-parse on editor changes
+    // editorStateVersion intentionally forces re-parse as editor state changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, editor, editorStateVersion]);
 
-  const canRemoveRow = currentData.rows.length > 1;
-  const canRemoveColumn = currentData.headers.length > 1;
+  const themeColors = useMemo(
+    () => [
+      theme.primaryColor,
+      theme.secondaryColor,
+      theme.accentColor,
+      theme.textColor,
+      theme.backgroundColor,
+    ],
+    [theme]
+  );
+
+  const tableCssVars = {
+    "--table-header-bg": currentData.tableStyle?.headerBackground ?? `${theme.primaryColor}10`,
+    "--table-header-color": currentData.tableStyle?.headerTextColor ?? theme.primaryColor,
+    "--table-text-color": theme.textColor,
+    "--table-border-color": theme.borderColor ?? `${theme.textColor}22`,
+    "--table-border-collapse":
+      currentData.tableStyle?.borderCollapse === false ? "separate" : "collapse",
+    "--table-stripe-bg": theme.surfaceColor ?? theme.backgroundColor,
+  } as CSSProperties;
+
+  const contextItems: ContextMenuItem[] = editor
+    ? [
+        {
+          label: "Merge Cells",
+          disabled: !editor.can().mergeCells(),
+          onClick: () => handleAction("merge-cells"),
+        },
+        {
+          label: "Split Cell",
+          disabled: !editor.can().splitCell(),
+          onClick: () => handleAction("split-cell"),
+        },
+        { label: "divider-cell-color", divider: true, onClick: () => {} },
+        {
+          label: "Cell Background...",
+          submenuContent: (onClose) => (
+            <div className="w-[240px] p-1">
+              <ColorPicker
+                value={useTableEditorStore.getState().selectedCell?.meta.backgroundColor ?? "#FFFFFF"}
+                onChange={(color) => {
+                  handleCellMetaUpdate({ backgroundColor: color });
+                  onClose();
+                }}
+                themeColors={themeColors}
+                placement="right"
+              />
+            </div>
+          ),
+        },
+        { label: "divider-row-actions", divider: true, onClick: () => {} },
+        {
+          label: "Insert Row Above",
+          disabled: !editor.can().addRowBefore(),
+          onClick: () => handleAction("insert-row-above"),
+        },
+        {
+          label: "Insert Row Below",
+          disabled: !editor.can().addRowAfter(),
+          onClick: () => handleAction("add-row"),
+        },
+        {
+          label: "Insert Column Left",
+          disabled: !editor.can().addColumnBefore(),
+          onClick: () => handleAction("insert-column-left"),
+        },
+        {
+          label: "Insert Column Right",
+          disabled: !editor.can().addColumnAfter(),
+          onClick: () => handleAction("add-column"),
+        },
+        {
+          label: "Delete Row",
+          disabled: !editor.can().deleteRow(),
+          onClick: () => handleAction("remove-row"),
+        },
+        {
+          label: "Delete Column",
+          disabled: !editor.can().deleteColumn(),
+          onClick: () => handleAction("remove-column"),
+        },
+      ]
+    : [];
 
   if (!isEditing || !editor) {
     return <TableBlock data={normalizeTableData(data)} theme={theme} />;
   }
-
-  const tableStyle = {
-    "--table-header-bg": `${theme.primaryColor}10`,
-    "--table-header-color": theme.primaryColor,
-    "--table-text-color": theme.textColor,
-    "--table-border-color": theme.borderColor ?? `${theme.textColor}22`,
-  } as CSSProperties;
 
   return (
     <div
@@ -476,27 +795,11 @@ export function EditableTableBlock({
           Add Row
         </button>
         <button
-          className="rounded border border-slate-200 bg-white px-2 py-1 text-[11px] hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={() => handleAction("remove-row")}
-          disabled={!canRemoveRow}
-          type="button"
-        >
-          Remove Row
-        </button>
-        <button
           className="rounded border border-slate-200 bg-white px-2 py-1 text-[11px] hover:bg-slate-50"
           onClick={() => handleAction("add-column")}
           type="button"
         >
           Add Column
-        </button>
-        <button
-          className="rounded border border-slate-200 bg-white px-2 py-1 text-[11px] hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={() => handleAction("remove-column")}
-          disabled={!canRemoveColumn}
-          type="button"
-        >
-          Remove Column
         </button>
         <button
           className="rounded border border-slate-200 bg-white px-2 py-1 text-[11px] hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
@@ -514,46 +817,35 @@ export function EditableTableBlock({
         >
           Split Cell
         </button>
-        <button
-          className="rounded border border-slate-200 bg-white px-2 py-1 text-[11px] hover:bg-slate-50"
-          onClick={() => handleAction("toggle-header-row")}
-          type="button"
-        >
-          Toggle Header Row
-        </button>
-        <button
-          className={`rounded border px-2 py-1 text-[11px] ${
-            editor.isActive("bold")
-              ? "border-blue-400 bg-blue-50 text-blue-700"
-              : "border-slate-200 bg-white hover:bg-slate-50"
-          }`}
-          onClick={() => handleAction("toggle-bold")}
-          type="button"
-        >
-          Bold
-        </button>
-        <button
-          className={`rounded border px-2 py-1 text-[11px] ${
-            editor.isActive("italic")
-              ? "border-blue-400 bg-blue-50 text-blue-700"
-              : "border-slate-200 bg-white hover:bg-slate-50"
-          }`}
-          onClick={() => handleAction("toggle-italic")}
-          type="button"
-        >
-          Italic
-        </button>
       </div>
 
       <div
-        className="h-[calc(100%-2.5rem)] overflow-auto rounded-md border border-slate-200 bg-white/85 p-1 text-[0.65em] [&_.ProseMirror]:min-h-[4.5em] [&_.ProseMirror]:outline-none [&_.ProseMirror_p]:my-0 [&_.selectedCell]:bg-blue-100/60 [&_table]:w-full [&_table]:border-collapse [&_td]:border [&_td]:px-[0.6em] [&_td]:py-[0.35em] [&_th]:border [&_th]:px-[0.6em] [&_th]:py-[0.4em] [&_th]:text-left [&_th]:font-semibold"
-        style={tableStyle}
+        className="h-[calc(100%-2.5rem)] overflow-auto rounded-md border border-slate-200 bg-white/85 p-1 text-[0.65em] [&_.ProseMirror]:min-h-[4.5em] [&_.ProseMirror]:outline-none [&_.ProseMirror_p]:my-0 [&_.selectedCell]:bg-blue-100/60 [&_table]:w-full [&_table]:[border-collapse:var(--table-border-collapse)] [&_td]:border [&_td]:border-[var(--table-border-color)] [&_td]:px-[0.6em] [&_td]:py-[0.35em] [&_td]:text-[var(--table-text-color)] [&_th]:border [&_th]:border-[var(--table-border-color)] [&_th]:bg-[var(--table-header-bg)] [&_th]:px-[0.6em] [&_th]:py-[0.4em] [&_th]:text-left [&_th]:font-semibold [&_th]:text-[var(--table-header-color)]"
+        style={tableCssVars}
+        onContextMenu={(event) => {
+          const target = event.target as HTMLElement;
+          if (!target.closest("td, th")) return;
+          openMenu(event);
+        }}
       >
-        <EditorContent
-          editor={editor}
-          className="[&_td]:border-[var(--table-border-color)] [&_td]:text-[var(--table-text-color)] [&_th]:border-[var(--table-header-color)] [&_th]:bg-[var(--table-header-bg)] [&_th]:text-[var(--table-header-color)]"
-        />
+        <EditorContent editor={editor} />
       </div>
+
+      <ContextMenuPortal items={contextItems} />
     </div>
   );
+}
+
+export function applyTableStyleAttributes(
+  editor: TiptapEditor,
+  attributes: Partial<TableStyleData>
+): boolean {
+  return updateTableNodeAttributes(editor, attributes);
+}
+
+export function applySelectedCellAttributes(
+  editor: TiptapEditor,
+  attributes: Partial<TableCellMeta>
+): boolean {
+  return updateSelectedCellAttributes(editor, attributes);
 }
