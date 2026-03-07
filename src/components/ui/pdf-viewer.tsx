@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import {
   X,
@@ -97,6 +97,16 @@ export function PDFViewer({
     setScale(1.0);
   }, []);
 
+  // Escape key to close
+  useEffect(() => {
+    if (!onClose) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose?.();
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
   if (!pdfFile) {
     return null;
   }
@@ -107,6 +117,9 @@ export function PDFViewer({
         "fixed inset-0 z-50 flex flex-col bg-black/60 backdrop-blur-sm",
         className
       )}
+      role="dialog"
+      aria-label={title ? `PDF Viewer: ${title}` : "PDF Viewer"}
+      aria-modal="true"
     >
       {/* Toolbar */}
       <div className="flex items-center justify-between px-4 py-3 bg-surface border-b border-border">

@@ -952,7 +952,7 @@ export default function NotebookPage(): React.ReactElement {
       {/* Sources Sidebar */}
       <aside className="w-80 shrink-0 glass-panel rounded-2xl p-4 flex flex-col">
         <div className="flex items-center gap-3 mb-4">
-          <Link href="/dashboard" className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors">
+          <Link href="/dashboard" className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors" aria-label="Back to dashboard">
             <ArrowLeft size={18} />
           </Link>
           <div className="flex items-center gap-2">
@@ -962,9 +962,11 @@ export default function NotebookPage(): React.ReactElement {
         </div>
 
         {/* Mode Toggle */}
-        <div className="flex rounded-xl bg-surface-raised p-1 mb-3">
+        <div className="flex rounded-xl bg-surface-raised p-1 mb-3" role="tablist" aria-label="Notebook mode">
           <button
             onClick={() => setNotebookMode("research")}
+            role="tab"
+            aria-selected={notebookMode === "research"}
             className={cn(
               "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
               notebookMode === "research"
@@ -977,6 +979,8 @@ export default function NotebookPage(): React.ReactElement {
           </button>
           <button
             onClick={() => setNotebookMode("learn")}
+            role="tab"
+            aria-selected={notebookMode === "learn"}
             className={cn(
               "flex-1 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
               notebookMode === "learn"
@@ -1093,6 +1097,7 @@ export default function NotebookPage(): React.ReactElement {
                     <button
                       onClick={() => retryEmbed(file.paperId!)}
                       className="flex items-center gap-1 text-[10px] text-amber-500 hover:text-amber-400 mt-0.5"
+                      aria-label={`Retry embedding for ${file.name}`}
                     >
                       <ArrowClockwise size={10} />
                       Click to retry
@@ -1108,6 +1113,7 @@ export default function NotebookPage(): React.ReactElement {
                           onClick={() => setExpandedExtraction(expandedExtraction === file.paperId ? null : (file.paperId ?? null))}
                           className="p-1 rounded text-green-500 hover:bg-green-500/10 transition-colors"
                           title="View extraction"
+                          aria-label={`View extraction for ${file.name}`}
                         >
                           <CheckCircle size={14} />
                         </button>
@@ -1120,6 +1126,7 @@ export default function NotebookPage(): React.ReactElement {
                           onClick={() => handleExtractFacts(file.paperId!)}
                           className="p-1 rounded text-ink-muted hover:text-brand opacity-0 group-hover:opacity-100 transition-all"
                           title="Extract PICO data"
+                          aria-label={`Extract PICO data from ${file.name}`}
                         >
                           <Table size={14} />
                         </button>
@@ -1129,6 +1136,7 @@ export default function NotebookPage(): React.ReactElement {
                   <button
                     onClick={() => setFiles((prev) => prev.filter((f) => f.id !== file.id))}
                     className="p-1 rounded text-ink-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                    aria-label={`Remove ${file.name}`}
                   >
                     <X size={12} />
                   </button>
@@ -1223,7 +1231,7 @@ export default function NotebookPage(): React.ReactElement {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-3">
+        <div className="flex-1 overflow-y-auto space-y-3" role="log" aria-live="polite" aria-label="Chat messages">
           {chatMessages.length === 0 && (
             <GlassPanel className="p-6 text-center">
               <p className="text-sm text-ink mb-2">
@@ -1433,7 +1441,7 @@ export default function NotebookPage(): React.ReactElement {
 
         <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="mt-2">
           <div className="flex items-center gap-2 p-2 rounded-2xl bg-surface border border-border">
-            <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 text-ink-muted hover:text-ink transition-colors">
+            <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 text-ink-muted hover:text-ink transition-colors" aria-label="Upload files">
               <Paperclip size={18} />
             </button>
             <input
@@ -1441,8 +1449,9 @@ export default function NotebookPage(): React.ReactElement {
               onChange={(e) => setInput(e.target.value)}
               placeholder={notebookMode === "learn" ? "What do you want to explore?" : "Ask about your sources..."}
               className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none"
+              aria-label="Chat message input"
             />
-            <button type="submit" disabled={isLoading || !input.trim()} className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50">
+            <button type="submit" disabled={isLoading || !input.trim()} className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50" aria-label="Send message">
               <PaperPlaneRight size={18} />
             </button>
           </div>

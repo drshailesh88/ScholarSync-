@@ -330,9 +330,13 @@ export function SourceNotesPanel({
 
   const handleGenerateAll = useCallback(async () => {
     const missingOverviews = paperNotes.filter((note) => !note.overview);
-    for (const note of missingOverviews) {
-      // Sequential generation avoids AI rate-limit bursts.
-      await handleGenerate(note.paperId);
+    if (missingOverviews.length === 0) return;
+
+    // Process in batches of 3 for controlled concurrency
+    const BATCH_SIZE = 3;
+    for (let i = 0; i < missingOverviews.length; i += BATCH_SIZE) {
+      const batch = missingOverviews.slice(i, i + BATCH_SIZE);
+      await Promise.all(batch.map((note) => handleGenerate(note.paperId)));
     }
   }, [handleGenerate, paperNotes]);
 

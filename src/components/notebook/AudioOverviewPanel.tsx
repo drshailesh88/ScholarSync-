@@ -254,6 +254,15 @@ export function AudioOverviewPanel({
     onClose();
   }, [onClose]);
 
+  // Escape key to close
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") handleClose();
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [handleClose]);
+
   const canControlAudio =
     audioState === "ready" || audioState === "playing" || audioState === "paused";
 
