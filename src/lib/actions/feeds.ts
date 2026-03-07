@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
+import * as dbSchema from "@/lib/db/schema";
 import {
   feedSources,
   userFeedSubscriptions,
@@ -12,7 +13,11 @@ import { eq, and, desc, sql, inArray } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import { discoverFeeds, validateFeedUrl } from "@/lib/feeds/feed-discovery";
 import { createPubMedSearchFeed } from "@/lib/feeds/pubmed-feed";
-import { JOURNAL_FEEDS, FEED_CATEGORIES } from "@/data/journal-feeds";
+import {
+  JOURNAL_FEEDS,
+  FEED_CATEGORIES,
+  FEED_SPECIALTIES,
+} from "@/data/journal-feeds";
 import type { FeedSubscription, FeedArticleWithStatus } from "@/types/feed";
 
 // =====================================================================
@@ -788,10 +793,32 @@ export async function getCuratedFeeds(filters: {
     specialty: string;
     description?: string;
     isSubscribed: boolean;
+    isSuggested: boolean;
   }>;
   categories: string[];
+  specialties: string[];
+  suggestedFeeds: Array<{
+    title: string;
+    feedUrl: string;
+    siteUrl: string;
+    publisher: string;
+    category: string;
+    specialty: string;
+    description?: string;
+    isSubscribed: boolean;
+    isSuggested: boolean;
+  }>;
+  pubmedSuggestion: {
+    query: string;
+    label: string;
+  } | null;
 }> {
   const userId = await getCurrentUserId();
+  const search = filters.search?.trim() ?? "";
+  const shouldSuggestPubMed = search.length >= 3;
+  const shouldPersonalize =
+    !search && !filters.category && !filters.specialty;
+  const usersTable = dbSchema.users;
 
   // Get user's subscribed feed URLs
   const subscribedRows = await db
@@ -801,6 +828,25 @@ export async function getCuratedFeeds(filters: {
     .where(eq(userFeedSubscriptions.userId, userId));
 
   const subscribedUrls = new Set(subscribedRows.map((r) => r.feedUrl));
+  let userSpecialties = new Set<string>();
+
+  if (shouldPersonalize && usersTable) {
+    try {
+      const [user] = await db
+        .select({ specialty: usersTable.specialty })
+        .from(usersTable)
+        .where(eq(usersTable.id, userId));
+
+      userSpecialties = new Set(
+        (user?.specialty ?? "")
+          .split(",")
+          .map((value) => value.trim().toLowerCase())
+          .filter(Boolean)
+      );
+    } catch {
+      userSpecialties = new Set();
+    }
+  }
 
   // Filter JOURNAL_FEEDS
   let filtered = JOURNAL_FEEDS;
@@ -813,11 +859,12 @@ export async function getCuratedFeeds(filters: {
     filtered = filtered.filter((f) => f.specialty === filters.specialty);
   }
 
-  if (filters.search) {
-    const search = filters.search.toLowerCase();
+  if (search) {
+    const normalizedSearch = search.toLowerCase();
     filtered = filtered.filter((f) => {
-      const searchable = `${f.title} ${f.publisher} ${f.description || ""}`.toLowerCase();
-      return searchable.includes(search);
+      const searchable =
+        `${f.title} ${f.publisher} ${f.category} ${f.specialty} ${f.description || ""}`.toLowerCase();
+      return searchable.includes(normalizedSearch);
     });
   }
 
@@ -830,9 +877,36 @@ export async function getCuratedFeeds(filters: {
     specialty: f.specialty,
     description: f.description,
     isSubscribed: subscribedUrls.has(f.feedUrl),
+    isSuggested:
+      shouldPersonalize &&
+      (userSpecialties.has(f.specialty.toLowerCase()) ||
+        userSpecialties.has(f.category.toLowerCase())),
   }));
 
-  return { feeds, categories: [...FEED_CATEGORIES] };
+  const orderedFeeds = shouldPersonalize
+    ? [...feeds].sort((a, b) => {
+        if (a.isSuggested === b.isSuggested) {
+          return a.title.localeCompare(b.title);
+        }
+
+        return a.isSuggested ? -1 : 1;
+      })
+    : feeds;
+
+  const suggestedFeeds = orderedFeeds.filter((feed) => feed.isSuggested);
+
+  return {
+    feeds: orderedFeeds,
+    categories: [...FEED_CATEGORIES],
+    specialties: [...FEED_SPECIALTIES],
+    suggestedFeeds,
+    pubmedSuggestion: shouldSuggestPubMed
+      ? {
+          query: search,
+          label: `PubMed: ${search}`,
+        }
+      : null,
+  };
 }
 
 // =====================================================================

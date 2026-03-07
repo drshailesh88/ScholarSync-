@@ -10,6 +10,7 @@ import {
 } from "@phosphor-icons/react";
 import { useSlidesStore } from "@/stores/slides-store";
 import type { CardBackground } from "@/stores/slides-store";
+import { ColorPicker } from "@/components/slides/shared/color-picker";
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -113,19 +114,22 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
             />
           ))}
           {/* Custom color input */}
-          <label
-            className={`w-6 h-6 rounded-md border-2 border-dashed border-border/50 hover:border-brand/50 cursor-pointer flex items-center justify-center overflow-hidden transition-all`}
-            aria-label="Custom color"
-          >
-            <input
-              type="color"
-              value={bg.color ?? "#ffffff"}
-              onChange={(e) => update({ color: e.target.value })}
-              className="absolute w-0 h-0 opacity-0"
-            />
-            <span className="text-[8px] text-ink-muted font-bold">+</span>
-          </label>
+          <div className="flex h-6 items-center rounded-md border border-dashed border-border/60 px-2 text-[9px] font-semibold uppercase tracking-[0.16em] text-ink-muted">
+            Full
+          </div>
         </div>
+        <ColorPicker
+          value={bg.color ?? themeConfig.backgroundColor}
+          onChange={(color) => update({ color })}
+          themeColors={[
+            themeConfig.primaryColor,
+            themeConfig.secondaryColor,
+            themeConfig.accentColor,
+            themeConfig.textColor,
+            themeConfig.backgroundColor,
+          ]}
+          placement="right"
+        />
       </div>
 
       {/* Image URL */}
@@ -228,15 +232,21 @@ export function CardBackgroundPicker({ slideId }: CardBackgroundPickerProps) {
 
       {/* Overlay color */}
       {bg.imageUrl && showOverlayControls && (
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-1.5">
           <label className="text-xs font-medium text-ink-muted">
             Overlay Color
           </label>
-          <input
-            type="color"
+          <ColorPicker
             value={bg.overlayColor ?? "#000000"}
-            onChange={(e) => update({ overlayColor: e.target.value })}
-            className="w-6 h-6 rounded border border-border cursor-pointer"
+            onChange={(color) => update({ overlayColor: color })}
+            themeColors={[
+              themeConfig.primaryColor,
+              themeConfig.secondaryColor,
+              themeConfig.accentColor,
+              themeConfig.textColor,
+              themeConfig.backgroundColor,
+            ]}
+            placement="right"
           />
         </div>
       )}

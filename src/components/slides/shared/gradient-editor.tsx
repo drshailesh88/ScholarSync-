@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import type { GradientConfig, GradientStop, ThemeConfig } from "@/types/presentation";
 import { buildGradientCSS } from "./slide-background";
+import { ColorPicker } from "./color-picker";
 
 // ---------------------------------------------------------------------------
 // Gradient Presets
@@ -194,11 +195,13 @@ function GradientStopBar({
   onUpdateStop,
   onAddStop,
   onRemoveStop,
+  themeColors,
 }: {
   gradient: GradientConfig;
   onUpdateStop: (index: number, stop: Partial<GradientStop>) => void;
   onAddStop: (position: number, color: string) => void;
   onRemoveStop: (index: number) => void;
+  themeColors: string[];
 }) {
   const barRef = useRef<HTMLDivElement>(null);
   const [selectedStop, setSelectedStop] = useState<number | null>(null);
@@ -292,13 +295,14 @@ function GradientStopBar({
       {/* Color picker for selected stop */}
       {selectedStop !== null && gradient.stops[selectedStop] && (
         <div className="flex items-center gap-2">
-          <input
-            type="color"
-            value={gradient.stops[selectedStop].color}
-            onChange={(e) => onUpdateStop(selectedStop, { color: e.target.value })}
-            className="w-8 h-6 border border-border rounded cursor-pointer"
-            aria-label="Stop color"
-          />
+          <div className="flex-1">
+            <ColorPicker
+              value={gradient.stops[selectedStop].color}
+              onChange={(color) => onUpdateStop(selectedStop, { color })}
+              themeColors={themeColors}
+              placement="right"
+            />
+          </div>
           <span className="text-[10px] text-ink-muted">
             {gradient.stops[selectedStop].color} at {gradient.stops[selectedStop].position}%
           </span>
@@ -372,6 +376,16 @@ interface GradientEditorProps {
 }
 
 export function GradientEditor({ gradient, onChange, themeConfig }: GradientEditorProps) {
+  const themeColors = themeConfig
+    ? [
+        themeConfig.primaryColor,
+        themeConfig.secondaryColor,
+        themeConfig.accentColor,
+        themeConfig.textColor,
+        themeConfig.backgroundColor,
+      ]
+    : [];
+
   const updateStop = (index: number, partial: Partial<GradientStop>) => {
     const nextStops = gradient.stops.map((s, i) =>
       i === index ? { ...s, ...partial } : s
@@ -441,12 +455,13 @@ export function GradientEditor({ gradient, onChange, themeConfig }: GradientEdit
         <label className="text-[10px] text-ink-muted block mb-1">
           Stops ({gradient.stops.length}/{MAX_STOPS})
         </label>
-        <GradientStopBar
-          gradient={gradient}
-          onUpdateStop={updateStop}
-          onAddStop={addStop}
-          onRemoveStop={removeStop}
-        />
+      <GradientStopBar
+        gradient={gradient}
+        onUpdateStop={updateStop}
+        onAddStop={addStop}
+        onRemoveStop={removeStop}
+        themeColors={themeColors}
+      />
         <p className="text-[9px] text-ink-muted mt-1">
           Click bar to add stop. Double-click stop to remove.
         </p>

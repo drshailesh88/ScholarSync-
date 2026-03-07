@@ -3,6 +3,7 @@
 import { useSlidesStore } from "@/stores/slides-store";
 import { PRESET_THEMES, type ThemeConfig } from "@/types/presentation";
 import { Check } from "@phosphor-icons/react";
+import { ColorPicker } from "@/components/slides/shared/color-picker";
 
 // ---------------------------------------------------------------------------
 // Curated font list
@@ -63,26 +64,23 @@ function ColorField({
   label,
   value,
   onChange,
+  themeColors,
 }: {
   label: string;
   value: string;
   onChange: (color: string) => void;
+  themeColors: string[];
 }) {
   return (
-    <label className="flex items-center justify-between gap-2">
-      <span className="text-[11px] text-ink-muted">{label}</span>
-      <div className="flex items-center gap-1.5">
-        <span className="text-[10px] font-mono text-ink-muted uppercase">
-          {value}
-        </span>
-        <input
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="w-6 h-6 rounded border border-border cursor-pointer bg-transparent"
-        />
-      </div>
-    </label>
+    <div className="space-y-1">
+      <span className="block text-[11px] text-ink-muted">{label}</span>
+      <ColorPicker
+        value={value}
+        onChange={onChange}
+        themeColors={themeColors}
+        placement="left"
+      />
+    </div>
   );
 }
 
@@ -163,6 +161,13 @@ export function ThemeCustomizer() {
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const setTheme = useSlidesStore((s) => s.setTheme);
+  const themeColors = [
+    themeConfig.primaryColor,
+    themeConfig.secondaryColor,
+    themeConfig.accentColor,
+    themeConfig.textColor,
+    themeConfig.backgroundColor,
+  ];
 
   // Helper: update a single field on the current theme (marks key as "custom")
   function updateField<K extends keyof ThemeConfig>(
@@ -195,21 +200,25 @@ export function ThemeCustomizer() {
           label="Primary"
           value={themeConfig.primaryColor}
           onChange={(c) => updateField("primaryColor", c)}
+          themeColors={themeColors}
         />
         <ColorField
           label="Background"
           value={themeConfig.backgroundColor}
           onChange={(c) => updateField("backgroundColor", c)}
+          themeColors={themeColors}
         />
         <ColorField
           label="Text"
           value={themeConfig.textColor}
           onChange={(c) => updateField("textColor", c)}
+          themeColors={themeColors}
         />
         <ColorField
           label="Accent"
           value={themeConfig.accentColor}
           onChange={(c) => updateField("accentColor", c)}
+          themeColors={themeColors}
         />
       </div>
 

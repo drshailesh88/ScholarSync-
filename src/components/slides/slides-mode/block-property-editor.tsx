@@ -2,17 +2,15 @@
 
 import { useRef, useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, AnimationTrigger, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, AnimationTrigger, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData, ThemeConfig } from "@/types/presentation";
 import { cn } from "@/lib/utils";
 import { detectMediaType } from "@/components/slides/blocks/media-block";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
 import { SHAPE_TYPE_OPTIONS, renderShapeSvgPrimitive } from "@/components/slides/blocks/shape-utils";
-import {
-  FONT_FAMILY_OPTIONS,
-  FONT_SIZE_OPTIONS,
-  TEXT_COLOR_OPTIONS,
-} from "@/components/slides/wysiwyg/text-formatting-options";
+import { FONT_FAMILY_OPTIONS, FONT_SIZE_OPTIONS } from "@/components/slides/wysiwyg/text-formatting-options";
 import { BlockStyleControls } from "@/components/slides/shared/block-style-controls";
+import { ColorPicker } from "@/components/slides/shared/color-picker";
+import { hexToRGBA, parseHexColor } from "@/lib/utils/color-utils";
 
 // ---------------------------------------------------------------------------
 // BlockPropertyEditor — context-sensitive editor for the selected block.
@@ -44,7 +42,7 @@ export function BlockPropertyEditor() {
 
   switch (selectedBlock.type) {
     case "text":
-      editor = <TextEditor block={selectedBlock} onUpdate={onUpdate} themeTextColor={themeConfig.textColor} />;
+      editor = <TextEditor block={selectedBlock} onUpdate={onUpdate} themeConfig={themeConfig} />;
       break;
     case "chart":
       editor = <ChartEditor block={selectedBlock} onUpdate={onUpdate} />;
@@ -84,8 +82,7 @@ export function BlockPropertyEditor() {
         <ShapeEditor
           block={selectedBlock}
           onUpdate={onUpdate}
-          themePrimaryColor={themeConfig.primaryColor}
-          themeTextColor={themeConfig.textColor}
+          themeConfig={themeConfig}
         />
       );
       break;
@@ -213,17 +210,19 @@ function EditorSection({ title, children }: { title: string; children: React.Rea
   );
 }
 
-function toColorInputValue(color: string): string {
-  const normalized = color.trim();
-  if (/^#[0-9a-fA-F]{6}$/.test(normalized)) return normalized;
-  if (/^#[0-9a-fA-F]{3}$/.test(normalized)) {
-    return `#${normalized
-      .slice(1)
-      .split("")
-      .map((char) => `${char}${char}`)
-      .join("")}`;
-  }
-  return "#000000";
+function getThemeColors(themeConfig: ThemeConfig): string[] {
+  return [
+    themeConfig.primaryColor,
+    themeConfig.secondaryColor,
+    themeConfig.accentColor,
+    themeConfig.textColor,
+    themeConfig.backgroundColor,
+  ];
+}
+
+function toRgbaColor(color: string): string {
+  const parsed = parseHexColor(color);
+  return hexToRGBA(parsed.hex, parsed.alpha);
 }
 
 // ---------------------------------------------------------------------------
@@ -248,20 +247,20 @@ function formatLineSpacingLabel(value: number): string {
 function TextEditor({
   block,
   onUpdate,
-  themeTextColor,
+  themeConfig,
 }: {
   block: TextBlock;
   onUpdate: (b: ContentBlock) => void;
-  themeTextColor: string;
+  themeConfig: ThemeConfig;
 }) {
   const data = block.data;
+  const themeColors = getThemeColors(themeConfig);
 
   const updateData = (partial: Partial<TextBlock["data"]>) => {
     onUpdate({ ...block, data: { ...data, ...partial } });
   };
 
-  const currentColor = data.color ?? themeTextColor;
-  const colorInputValue = toColorInputValue(currentColor);
+  const currentColor = data.color ?? themeConfig.textColor;
 
   return (
     <div className="space-y-3">
@@ -331,39 +330,22 @@ function TextEditor({
 
         <div>
           <FieldLabel>Color</FieldLabel>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={colorInputValue}
-                onChange={(e) => updateData({ color: e.target.value })}
-                className="h-8 w-10 rounded border border-border bg-surface-raised"
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <ColorPicker
+                value={currentColor}
+                onChange={(color) => updateData({ color })}
+                themeColors={themeColors}
+                placement="right"
               />
-              <FieldInput value={currentColor} onChange={(value) => updateData({ color: value })} />
-              <button
-                type="button"
-                onClick={() => updateData({ color: undefined })}
-                className="shrink-0 rounded-md border border-border px-2 py-1.5 text-xs text-ink hover:bg-surface-raised"
-              >
-                Theme Color
-              </button>
             </div>
-            <div className="grid grid-cols-10 gap-1">
-              {TEXT_COLOR_OPTIONS.map((colorValue) => (
-                <button
-                  key={colorValue}
-                  type="button"
-                  onClick={() => updateData({ color: colorValue })}
-                  className={`h-5 w-5 rounded-sm border ${
-                    currentColor.toLowerCase() === colorValue.toLowerCase()
-                      ? "border-ink"
-                      : "border-border"
-                  }`}
-                  style={{ backgroundColor: colorValue }}
-                  title={colorValue}
-                />
-              ))}
-            </div>
+            <button
+              type="button"
+              onClick={() => updateData({ color: undefined })}
+              className="shrink-0 rounded-md border border-border px-2 py-1.5 text-xs text-ink hover:bg-surface-raised"
+            >
+              Theme Color
+            </button>
           </div>
         </div>
       </EditorSection>
@@ -374,6 +356,8 @@ function TextEditor({
         textTransform={data.textTransform}
         letterSpacing={data.letterSpacing}
         onUpdate={(effects) => updateData(effects)}
+        glowColor={themeConfig.accentColor}
+        themeColors={themeColors}
       />
     </div>
   );
@@ -397,6 +381,7 @@ function TextEffectsEditor({
   letterSpacing,
   onUpdate,
   glowColor,
+  themeColors,
 }: {
   textShadow?: TextBlock["data"]["textShadow"];
   textOutline?: TextBlock["data"]["textOutline"];
@@ -404,6 +389,7 @@ function TextEffectsEditor({
   letterSpacing?: TextBlock["data"]["letterSpacing"];
   onUpdate: (partial: Partial<TextBlock["data"]>) => void;
   glowColor?: string;
+  themeColors: string[];
 }) {
   const shadowEnabled = !!textShadow;
   const outlineEnabled = !!textOutline;
@@ -508,14 +494,17 @@ function TextEffectsEditor({
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-ink-muted w-12">Color</span>
-                <input
-                  type="color"
-                  value={toColorInputValue(textShadow!.color)}
-                  onChange={(e) =>
-                    onUpdate({ textShadow: { ...textShadow!, color: e.target.value } })
-                  }
-                  className="h-6 w-8 rounded border border-border bg-surface-raised"
-                />
+                <div className="flex-1">
+                  <ColorPicker
+                    value={textShadow!.color}
+                    onChange={(color) =>
+                      onUpdate({ textShadow: { ...textShadow!, color: toRgbaColor(color) } })
+                    }
+                    showAlpha
+                    themeColors={themeColors}
+                    placement="right"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -560,14 +549,16 @@ function TextEffectsEditor({
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[10px] text-ink-muted w-12">Color</span>
-              <input
-                type="color"
-                value={toColorInputValue(textOutline!.color)}
-                onChange={(e) =>
-                  onUpdate({ textOutline: { ...textOutline!, color: e.target.value } })
-                }
-                className="h-6 w-8 rounded border border-border bg-surface-raised"
-              />
+              <div className="flex-1">
+                <ColorPicker
+                  value={textOutline!.color}
+                  onChange={(color) =>
+                    onUpdate({ textOutline: { ...textOutline!, color } })
+                  }
+                  themeColors={themeColors}
+                  placement="right"
+                />
+              </div>
             </div>
           </div>
         )}
@@ -1554,23 +1545,22 @@ type ShapeBlock = Extract<ContentBlock, { type: "shape" }>;
 function ShapeEditor({
   block,
   onUpdate,
-  themePrimaryColor,
-  themeTextColor,
+  themeConfig,
 }: {
   block: ShapeBlock;
   onUpdate: (b: ContentBlock) => void;
-  themePrimaryColor: string;
-  themeTextColor: string;
+  themeConfig: ThemeConfig;
 }) {
   const data = block.data;
+  const themeColors = getThemeColors(themeConfig);
 
   const updateData = (partial: Partial<ShapeData>) => {
     onUpdate({ ...block, data: { ...data, ...partial } });
   };
 
-  const fillColor = data.fillColor ?? themePrimaryColor;
-  const strokeColor = data.strokeColor ?? themeTextColor;
-  const textColor = data.textColor ?? themeTextColor;
+  const fillColor = data.fillColor ?? themeConfig.primaryColor;
+  const strokeColor = data.strokeColor ?? themeConfig.textColor;
+  const textColor = data.textColor ?? themeConfig.textColor;
   const strokeWidth = data.strokeWidth ?? 0;
   const opacity = data.opacity ?? 100;
 
@@ -1613,13 +1603,14 @@ function ShapeEditor({
         <div>
           <FieldLabel>Fill Color</FieldLabel>
           <div className="flex items-center gap-2">
-            <input
-              type="color"
-              value={toColorInputValue(fillColor)}
-              onChange={(e) => updateData({ fillColor: e.target.value })}
-              className="h-8 w-10 rounded border border-border bg-surface-raised"
-            />
-            <FieldInput value={fillColor} onChange={(value) => updateData({ fillColor: value })} />
+            <div className="flex-1">
+              <ColorPicker
+                value={fillColor}
+                onChange={(color) => updateData({ fillColor: color })}
+                themeColors={themeColors}
+                placement="right"
+              />
+            </div>
             <button
               type="button"
               onClick={() => updateData({ fillColor: undefined })}
@@ -1634,17 +1625,14 @@ function ShapeEditor({
           <FieldLabel>Stroke</FieldLabel>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <input
-                type="color"
-                value={toColorInputValue(strokeColor)}
-                onChange={(e) => updateData({ strokeColor: e.target.value })}
-                className="h-8 w-10 rounded border border-border bg-surface-raised"
-              />
-              <FieldInput
-                value={strokeColor}
-                onChange={(value) => updateData({ strokeColor: value })}
-                placeholder="#000000"
-              />
+              <div className="flex-1">
+                <ColorPicker
+                  value={strokeColor}
+                  onChange={(color) => updateData({ strokeColor: color })}
+                  themeColors={themeColors}
+                  placement="right"
+                />
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <input
@@ -1690,16 +1678,14 @@ function ShapeEditor({
         <div>
           <FieldLabel>Text Color</FieldLabel>
           <div className="flex items-center gap-2">
-            <input
-              type="color"
-              value={toColorInputValue(textColor)}
-              onChange={(e) => updateData({ textColor: e.target.value })}
-              className="h-8 w-10 rounded border border-border bg-surface-raised"
-            />
-            <FieldInput
-              value={textColor}
-              onChange={(value) => updateData({ textColor: value })}
-            />
+            <div className="flex-1">
+              <ColorPicker
+                value={textColor}
+                onChange={(color) => updateData({ textColor: color })}
+                themeColors={themeColors}
+                placement="right"
+              />
+            </div>
           </div>
         </div>
 

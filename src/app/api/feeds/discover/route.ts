@@ -31,7 +31,14 @@ export async function GET(req: NextRequest) {
     if (search) filters.search = search;
 
     const result = await getCuratedFeeds(filters);
-    return NextResponse.json(result);
+    return NextResponse.json({
+      feeds: result.feeds,
+      categories: result.categories,
+      specialties: result.specialties,
+      suggestedFeeds: result.suggestedFeeds,
+      pubmedSuggestion: result.pubmedSuggestion,
+      journals: result.feeds,
+    });
   } catch (error) {
     console.error("GET /api/feeds/discover error", error);
     return NextResponse.json(

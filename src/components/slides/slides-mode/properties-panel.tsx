@@ -8,8 +8,8 @@ import { AiToolsDropdown } from "@/components/presentation/ai-tools-dropdown";
 import { CoachPanel } from "@/components/presentation/coach-panel";
 import { MasterEditor } from "@/components/slides/shared/master-editor";
 import { GradientEditor } from "@/components/slides/shared/gradient-editor";
+import { ColorPicker } from "@/components/slides/shared/color-picker";
 import { BlockPropertyEditor } from "./block-property-editor";
-import { TEXT_COLOR_OPTIONS } from "@/components/slides/wysiwyg/text-formatting-options";
 import { applyAnimationPreset, countRevealSteps } from "@/lib/presentation/animation-presets";
 import type {
   ContentBlock,
@@ -29,8 +29,6 @@ const TRANSITION_OPTIONS: { value: SlideTransition; label: string; tooltip?: str
   { value: "zoom", label: "Zoom" },
   { value: "morph", label: "Morph", tooltip: "Automatically animates matching elements between slides" },
 ];
-
-const HEX_COLOR_PATTERN = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
 
 const IMAGE_POSITION_OPTIONS: { value: NonNullable<CardBackground["imagePosition"]>; label: string }[] = [
   { value: "cover", label: "Cover" },
@@ -73,6 +71,7 @@ export function PropertiesPanel() {
   const deckId = useSlidesStore((s) => s.deckId);
   const masters = useSlidesStore((s) => s.masters);
   const themeKey = useSlidesStore((s) => s.themeKey);
+  const themeConfig = useSlidesStore((s) => s.themeConfig);
   const audienceType = useSlidesStore((s) => s.audienceType);
   const setTheme = useSlidesStore((s) => s.setTheme);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
@@ -82,14 +81,9 @@ export function PropertiesPanel() {
   const transition = useSlidesStore((s) => s.transition);
   const institutionKit = useSlidesStore((s) => s.institutionKit);
   const setInstitutionKit = useSlidesStore((s) => s.setInstitutionKit);
-  const [customHex, setCustomHex] = useState(activeSlide?.cardBackground?.color ?? "");
   const [activeTab, setActiveTab] = useState<"design" | "animation">("design");
   const [animationPreset, setAnimationPreset] = useState<AnimationPresetKey>("sequential_build");
   const [showMasterEditor, setShowMasterEditor] = useState(false);
-
-  useEffect(() => {
-    setCustomHex(activeSlide?.cardBackground?.color ?? "");
-  }, [activeSlide?.id, activeSlide?.cardBackground?.color]);
 
   const animatedBlockCount = useMemo(() => {
     if (!activeSlide) return 0;
@@ -171,13 +165,6 @@ export function PropertiesPanel() {
     if (!activeSlide) return;
     const current = activeSlide.cardBackground ?? {};
     updateSlide(activeSlide.id, { cardBackground: { ...current, ...changes } });
-  };
-
-  const handleCustomHexChange = (value: string) => {
-    setCustomHex(value);
-    if (HEX_COLOR_PATTERN.test(value)) {
-      updateCardBackground({ color: value });
-    }
   };
 
   const selectedCount = selectedBlockIndices.size;
@@ -623,29 +610,17 @@ export function PropertiesPanel() {
               {bgType === "solid" && (
                 <div>
                   <label className="text-[10px] text-ink-muted block mb-1">Color</label>
-                  <div className="grid grid-cols-10 gap-1.5 mb-2">
-                    {TEXT_COLOR_OPTIONS.map((colorValue) => (
-                      <button
-                        key={colorValue}
-                        type="button"
-                        onClick={() => {
-                          setCustomHex(colorValue);
-                          updateCardBackground({ color: colorValue });
-                        }}
-                        className={`h-5 w-5 rounded border ${
-                          background?.color === colorValue ? "ring-2 ring-brand border-brand" : "border-border"
-                        }`}
-                        style={{ backgroundColor: colorValue }}
-                        aria-label={`Select background color ${colorValue}`}
-                      />
-                    ))}
-                  </div>
-                  <input
-                    type="text"
-                    value={customHex}
-                    onChange={(e) => handleCustomHexChange(e.target.value)}
-                    placeholder="#RRGGBB"
-                    className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink placeholder:text-ink-muted/50 focus:outline-none focus:border-brand"
+                  <ColorPicker
+                    value={background?.color ?? themeConfig.backgroundColor}
+                    onChange={(color) => updateCardBackground({ color })}
+                    themeColors={[
+                      themeConfig.primaryColor,
+                      themeConfig.secondaryColor,
+                      themeConfig.accentColor,
+                      themeConfig.textColor,
+                      themeConfig.backgroundColor,
+                    ]}
+                    placement="right"
                   />
                 </div>
               )}
@@ -735,11 +710,17 @@ export function PropertiesPanel() {
                     />
                     <div>
                       <label className="text-[10px] text-ink-muted block mb-0.5">Overlay Color</label>
-                      <input
-                        type="text"
+                      <ColorPicker
                         value={background?.overlayColor ?? "#000000"}
-                        onChange={(e) => updateCardBackground({ overlayColor: e.target.value })}
-                        className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink focus:outline-none focus:border-brand"
+                        onChange={(color) => updateCardBackground({ overlayColor: color })}
+                        themeColors={[
+                          themeConfig.primaryColor,
+                          themeConfig.secondaryColor,
+                          themeConfig.accentColor,
+                          themeConfig.textColor,
+                          themeConfig.backgroundColor,
+                        ]}
+                        placement="right"
                       />
                     </div>
                   </div>

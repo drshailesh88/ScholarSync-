@@ -6,6 +6,7 @@ import { useSlidesStore } from "@/stores/slides-store";
 import type { BlockPosition, ContentBlock, SlideLayout, SlideMaster } from "@/types/presentation";
 import { LAYOUT_OPTIONS } from "@/components/presentation/layout-picker";
 import { SlideRendererV2 } from "./slide-renderer-v2";
+import { ColorPicker } from "./color-picker";
 
 interface MasterEditorProps {
   isOpen: boolean;
@@ -82,6 +83,7 @@ const DEFAULT_PLACEHOLDER_POSITION: BlockPosition = {
 
 export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
   const masters = useSlidesStore((s) => s.masters);
+  const themeConfig = useSlidesStore((s) => s.themeConfig);
   const addMaster = useSlidesStore((s) => s.addMaster);
   const updateMaster = useSlidesStore((s) => s.updateMaster);
   const deleteMaster = useSlidesStore((s) => s.deleteMaster);
@@ -463,18 +465,27 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                     Background
                   </h3>
                   <div className="flex items-center gap-2">
-                    <input
-                      type="color"
-                      value={activeMaster.background?.color ?? "#ffffff"}
-                      onChange={(event) =>
-                        applyMasterUpdate({
-                          background: {
-                            ...(activeMaster.background ?? {}),
-                            color: event.target.value,
-                          },
-                        })
-                      }
-                    />
+                    <div className="flex-1">
+                      <ColorPicker
+                        value={activeMaster.background?.color ?? themeConfig.backgroundColor}
+                        onChange={(color) =>
+                          applyMasterUpdate({
+                            background: {
+                              ...(activeMaster.background ?? {}),
+                              color,
+                            },
+                          })
+                        }
+                        themeColors={[
+                          themeConfig.primaryColor,
+                          themeConfig.secondaryColor,
+                          themeConfig.accentColor,
+                          themeConfig.textColor,
+                          themeConfig.backgroundColor,
+                        ]}
+                        placement="right"
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={() => applyMasterUpdate({ background: undefined })}

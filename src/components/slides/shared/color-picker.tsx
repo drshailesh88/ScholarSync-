@@ -1,281 +1,663 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { CaretDown, Eyedropper } from "@phosphor-icons/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import {
+  colorStringToHex,
+  hexToHSB,
+  hexToRGB,
+  hsbToHex,
+  isValidHex,
+  normalizeHex,
+  parseHexColor,
+  rgbToHex,
+  withHexAlpha,
+} from "@/lib/utils/color-utils";
 
-interface ColorPickerProps {
-  color: string;
+export interface ColorPickerProps {
+  value: string;
   onChange: (color: string) => void;
-  label?: string;
+  showAlpha?: boolean;
+  themeColors?: string[];
+  recentColors?: string[];
+  onRecentColorAdd?: (color: string) => void;
+  placement?: "top" | "bottom" | "left" | "right";
 }
 
-const SWATCH_COLORS = [
-  "#EF4444", "#F97316", "#F59E0B", "#EAB308", "#84CC16",
-  "#22C55E", "#10B981", "#14B8A6", "#06B6D4", "#0EA5E9",
-  "#3B82F6", "#6366F1", "#8B5CF6", "#A855F7", "#D946EF",
-  "#EC4899", "#F43F5E", "#1F2937", "#6B7280", "#FFFFFF",
+type InputMode = "hex" | "rgb";
+type DragMode = "sb" | "hue" | "alpha" | null;
+type EyeDropperResult = { sRGBHex: string };
+type EyeDropperInstance = { open: () => Promise<EyeDropperResult> };
+type EyeDropperConstructor = new () => EyeDropperInstance;
+
+const SB_WIDTH = 220;
+const SB_HEIGHT = 160;
+const STRIP_WIDTH = 220;
+const STRIP_HEIGHT = 16;
+const RECENT_STORAGE_KEY = "slides-recent-colors";
+const STANDARD_PALETTE = [
+  "#000000",
+  "#FFFFFF",
+  "#EF4444",
+  "#F97316",
+  "#EAB308",
+  "#22C55E",
+  "#06B6D4",
+  "#3B82F6",
+  "#8B5CF6",
+  "#EC4899",
 ];
 
-const HEX_PATTERN = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
+const CHECKERBOARD_STYLE = {
+  backgroundImage:
+    "linear-gradient(45deg, rgba(148,163,184,0.18) 25%, transparent 25%, transparent 75%, rgba(148,163,184,0.18) 75%, rgba(148,163,184,0.18)), linear-gradient(45deg, rgba(148,163,184,0.18) 25%, transparent 25%, transparent 75%, rgba(148,163,184,0.18) 75%, rgba(148,163,184,0.18))",
+  backgroundPosition: "0 0, 6px 6px",
+  backgroundSize: "12px 12px",
+};
 
-function hsvToHex(h: number, s: number, v: number): string {
-  const c = v * s;
-  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-  const m = v - c;
-  let r = 0, g = 0, b = 0;
-  if (h < 60) { r = c; g = x; }
-  else if (h < 120) { r = x; g = c; }
-  else if (h < 180) { g = c; b = x; }
-  else if (h < 240) { g = x; b = c; }
-  else if (h < 300) { r = x; b = c; }
-  else { r = c; b = x; }
-  const toHex = (n: number) => Math.round((n + m) * 255).toString(16).padStart(2, "0");
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
+const PLACEMENT_CLASSES: Record<NonNullable<ColorPickerProps["placement"]>, string> = {
+  top: "bottom-full left-0 mb-2",
+  bottom: "top-full left-0 mt-2",
+  left: "right-full top-0 mr-2",
+  right: "left-full top-0 ml-2",
+};
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
-function hexToHsv(hex: string): { h: number; s: number; v: number } {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) return { h: 0, s: 0, v: 0 };
-  const r = parseInt(result[1], 16) / 255;
-  const g = parseInt(result[2], 16) / 255;
-  const b = parseInt(result[3], 16) / 255;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const d = max - min;
-  let h = 0;
-  if (d !== 0) {
-    if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
-    else if (max === g) h = ((b - r) / d + 2) * 60;
-    else h = ((r - g) / d + 4) * 60;
+function sanitizeColors(colors?: string[], fallback: string[] = []): string[] {
+  const source = colors && colors.length > 0 ? colors : fallback;
+  const deduped = new Set<string>();
+  for (const color of source) {
+    if (!color) continue;
+    deduped.add(colorStringToHex(color));
   }
-  const s = max === 0 ? 0 : d / max;
-  return { h, s, v: max };
+  return [...deduped];
 }
 
-function normalizeHex(hex: string): string {
-  if (/^#[0-9A-Fa-f]{3}$/.test(hex)) {
-    const r = hex[1], g = hex[2], b = hex[3];
-    return `#${r}${r}${g}${g}${b}${b}`.toUpperCase();
-  }
-  return hex.toUpperCase();
+function prepareCanvas(
+  canvas: HTMLCanvasElement | null,
+  width: number,
+  height: number,
+): CanvasRenderingContext2D | null {
+  if (!canvas) return null;
+  const context = canvas.getContext("2d");
+  if (!context) return null;
+
+  const ratio = typeof window === "undefined" ? 1 : window.devicePixelRatio || 1;
+  canvas.width = width * ratio;
+  canvas.height = height * ratio;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  context.setTransform(ratio, 0, 0, ratio, 0, 0);
+  context.clearRect(0, 0, width, height);
+  return context;
 }
 
-export function ColorPicker({ color, onChange, label }: ColorPickerProps) {
-  const [open, setOpen] = useState(false);
-  const [hexInput, setHexInput] = useState(color);
-  const [hsv, setHsv] = useState(() => hexToHsv(color));
-  const svCanvasRef = useRef<HTMLCanvasElement>(null);
-  const hueCanvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const draggingSV = useRef(false);
-  const draggingHue = useRef(false);
+function drawSaturationBrightness(canvas: HTMLCanvasElement | null, hue: number): void {
+  const context = prepareCanvas(canvas, SB_WIDTH, SB_HEIGHT);
+  if (!context) return;
 
-  // Sync external color changes
-  useEffect(() => {
-    setHexInput(color);
-    setHsv(hexToHsv(color));
-  }, [color]);
+  const hueColor = hsbToHex(hue, 100, 100);
+  const horizontal = context.createLinearGradient(0, 0, SB_WIDTH, 0);
+  horizontal.addColorStop(0, "#FFFFFF");
+  horizontal.addColorStop(1, hueColor);
+  context.fillStyle = horizontal;
+  context.fillRect(0, 0, SB_WIDTH, SB_HEIGHT);
 
-  // Draw SV canvas
-  useEffect(() => {
-    if (!open) return;
-    const canvas = svCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const w = canvas.width;
-    const h = canvas.height;
+  const vertical = context.createLinearGradient(0, 0, 0, SB_HEIGHT);
+  vertical.addColorStop(0, "rgba(0, 0, 0, 0)");
+  vertical.addColorStop(1, "rgba(0, 0, 0, 1)");
+  context.fillStyle = vertical;
+  context.fillRect(0, 0, SB_WIDTH, SB_HEIGHT);
+}
 
-    // White to hue color (left to right)
-    const hueColor = hsvToHex(hsv.h, 1, 1);
-    const gradH = ctx.createLinearGradient(0, 0, w, 0);
-    gradH.addColorStop(0, "#FFFFFF");
-    gradH.addColorStop(1, hueColor);
-    ctx.fillStyle = gradH;
-    ctx.fillRect(0, 0, w, h);
+function drawHueStrip(canvas: HTMLCanvasElement | null): void {
+  const context = prepareCanvas(canvas, STRIP_WIDTH, STRIP_HEIGHT);
+  if (!context) return;
 
-    // Black overlay (top to bottom)
-    const gradV = ctx.createLinearGradient(0, 0, 0, h);
-    gradV.addColorStop(0, "rgba(0,0,0,0)");
-    gradV.addColorStop(1, "rgba(0,0,0,1)");
-    ctx.fillStyle = gradV;
-    ctx.fillRect(0, 0, w, h);
-  }, [open, hsv.h]);
+  const gradient = context.createLinearGradient(0, 0, STRIP_WIDTH, 0);
+  const stops = [
+    "#FF0000",
+    "#FFFF00",
+    "#00FF00",
+    "#00FFFF",
+    "#0000FF",
+    "#FF00FF",
+    "#FF0000",
+  ];
 
-  // Draw hue strip
-  useEffect(() => {
-    if (!open) return;
-    const canvas = hueCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    const h = canvas.height;
-    const grad = ctx.createLinearGradient(0, 0, 0, h);
-    const steps = [0, 60, 120, 180, 240, 300, 360];
-    const colors = ["#FF0000", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#FF00FF", "#FF0000"];
-    steps.forEach((s, i) => grad.addColorStop(s / 360, colors[i]));
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, canvas.width, h);
-  }, [open]);
+  stops.forEach((color, index) => {
+    gradient.addColorStop(index / (stops.length - 1), color);
+  });
 
-  // Close on click outside
-  useEffect(() => {
-    if (!open) return;
-    const handleClick = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [open]);
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, STRIP_WIDTH, STRIP_HEIGHT);
+}
 
-  const applySV = useCallback((e: React.MouseEvent<HTMLCanvasElement> | MouseEvent) => {
-    const canvas = svCanvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    const newS = x;
-    const newV = 1 - y;
-    const newHsv = { h: hsv.h, s: newS, v: newV };
-    setHsv(newHsv);
-    const hex = hsvToHex(newHsv.h, newHsv.s, newHsv.v);
-    setHexInput(hex);
-    onChange(hex);
-  }, [hsv.h, onChange]);
+function drawAlphaStrip(canvas: HTMLCanvasElement | null, baseHex: string): void {
+  const context = prepareCanvas(canvas, STRIP_WIDTH, STRIP_HEIGHT);
+  if (!context) return;
 
-  const applyHue = useCallback((e: React.MouseEvent<HTMLCanvasElement> | MouseEvent) => {
-    const canvas = hueCanvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const y = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    const newH = y * 360;
-    const newHsv = { ...hsv, h: newH };
-    setHsv(newHsv);
-    const hex = hsvToHex(newHsv.h, newHsv.s, newHsv.v);
-    setHexInput(hex);
-    onChange(hex);
-  }, [hsv, onChange]);
-
-  useEffect(() => {
-    const handleMove = (e: MouseEvent) => {
-      if (draggingSV.current) applySV(e);
-      if (draggingHue.current) applyHue(e);
-    };
-    const handleUp = () => {
-      draggingSV.current = false;
-      draggingHue.current = false;
-    };
-    document.addEventListener("mousemove", handleMove);
-    document.addEventListener("mouseup", handleUp);
-    return () => {
-      document.removeEventListener("mousemove", handleMove);
-      document.removeEventListener("mouseup", handleUp);
-    };
-  }, [applySV, applyHue]);
-
-  const handleHexSubmit = () => {
-    const normalized = normalizeHex(hexInput.trim());
-    if (HEX_PATTERN.test(normalized)) {
-      onChange(normalized);
-      setHsv(hexToHsv(normalized));
-    } else {
-      setHexInput(color);
+  for (let y = 0; y < STRIP_HEIGHT; y += 8) {
+    for (let x = 0; x < STRIP_WIDTH; x += 8) {
+      context.fillStyle = (x + y) % 16 === 0 ? "#CBD5E1" : "#F8FAFC";
+      context.fillRect(x, y, 8, 8);
     }
-  };
+  }
+
+  const gradient = context.createLinearGradient(0, 0, STRIP_WIDTH, 0);
+  gradient.addColorStop(0, withHexAlpha(baseHex, 0));
+  gradient.addColorStop(1, baseHex);
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, STRIP_WIDTH, STRIP_HEIGHT);
+}
+
+function SwatchRow({
+  title,
+  colors,
+  selectedBaseHex,
+  onSelect,
+  columnsClass = "grid-cols-5",
+}: {
+  title: string;
+  colors: string[];
+  selectedBaseHex: string;
+  onSelect: (color: string) => void;
+  columnsClass?: string;
+}) {
+  if (colors.length === 0) return null;
 
   return (
-    <div ref={containerRef} className="relative">
-      {label && (
-        <label className="text-[10px] text-ink-muted mb-0.5 block">{label}</label>
-      )}
+    <div className="space-y-1.5">
+      <div className="text-[10px] font-medium uppercase tracking-[0.18em] text-ink-muted">
+        {title}
+      </div>
+      <div className={cn("grid gap-1.5", columnsClass)}>
+        {colors.map((color) => {
+          const isSelected =
+            colorStringToHex(color).slice(0, 7).toUpperCase() ===
+            selectedBaseHex.toUpperCase();
+          return (
+            <button
+              key={`${title}-${color}`}
+              type="button"
+              onClick={() => onSelect(color)}
+              className={cn(
+                "relative h-7 rounded-md border transition-transform hover:scale-[1.03]",
+                isSelected ? "border-brand ring-1 ring-brand" : "border-border/70",
+              )}
+              style={{
+                ...CHECKERBOARD_STYLE,
+                backgroundColor: color,
+              }}
+              aria-label={`${title} color ${color}`}
+              title={color}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+export function ColorPicker({
+  value,
+  onChange,
+  showAlpha = false,
+  themeColors,
+  recentColors,
+  onRecentColorAdd,
+  placement = "bottom",
+}: ColorPickerProps) {
+  const normalizedExternalValue = colorStringToHex(value);
+  const initialColor = parseHexColor(normalizedExternalValue);
+
+  const [open, setOpen] = useState(false);
+  const [inputMode, setInputMode] = useState<InputMode>("hex");
+  const [hsb, setHsb] = useState(() => hexToHSB(initialColor.hex));
+  const [alpha, setAlpha] = useState(initialColor.alpha);
+  const [hexInput, setHexInput] = useState(
+    showAlpha ? withHexAlpha(initialColor.hex, initialColor.alpha) : initialColor.hex,
+  );
+  const [localRecentColors, setLocalRecentColors] = useState<string[]>([]);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sbCanvasRef = useRef<HTMLCanvasElement>(null);
+  const hueCanvasRef = useRef<HTMLCanvasElement>(null);
+  const alphaCanvasRef = useRef<HTMLCanvasElement>(null);
+  const dragModeRef = useRef<DragMode>(null);
+  const lastDraggedColorRef = useRef<string | null>(null);
+  const hsbRef = useRef(hsb);
+  const alphaRef = useRef(alpha);
+
+  const baseHex = useMemo(() => hsbToHex(hsb.h, hsb.s, hsb.b), [hsb]);
+  const currentValue = useMemo(
+    () => (showAlpha ? withHexAlpha(baseHex, alpha) : baseHex),
+    [alpha, baseHex, showAlpha],
+  );
+  const rgb = useMemo(() => hexToRGB(baseHex), [baseHex]);
+  const themeSwatches = useMemo(
+    () => sanitizeColors(themeColors),
+    [themeColors],
+  );
+  const recentSwatches = useMemo(
+    () => sanitizeColors(recentColors, localRecentColors).slice(0, 8),
+    [localRecentColors, recentColors],
+  );
+  const standardSwatches = useMemo(() => sanitizeColors(STANDARD_PALETTE), []);
+
+  const supportsEyeDropper =
+    typeof window !== "undefined" &&
+    "EyeDropper" in window;
+
+  useEffect(() => {
+    hsbRef.current = hsb;
+  }, [hsb]);
+
+  useEffect(() => {
+    alphaRef.current = alpha;
+  }, [alpha]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem(RECENT_STORAGE_KEY);
+    if (!stored) return;
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) {
+        setLocalRecentColors(sanitizeColors(parsed).slice(0, 8));
+      }
+    } catch {
+      window.localStorage.removeItem(RECENT_STORAGE_KEY);
+    }
+  }, []);
+
+  useEffect(() => {
+    const nextValue = colorStringToHex(value);
+    const parsed = parseHexColor(nextValue);
+    setHsb(hexToHSB(parsed.hex));
+    setAlpha(parsed.alpha);
+    setHexInput(showAlpha ? withHexAlpha(parsed.hex, parsed.alpha) : parsed.hex);
+  }, [showAlpha, value]);
+
+  useEffect(() => {
+    if (!open) return;
+    drawSaturationBrightness(sbCanvasRef.current, hsb.h);
+  }, [hsb.h, open]);
+
+  useEffect(() => {
+    if (!open) return;
+    drawHueStrip(hueCanvasRef.current);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !showAlpha) return;
+    drawAlphaStrip(alphaCanvasRef.current, baseHex);
+  }, [baseHex, open, showAlpha]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!dragModeRef.current) return;
+
+      if (dragModeRef.current === "sb" && sbCanvasRef.current) {
+        const rect = sbCanvasRef.current.getBoundingClientRect();
+        const saturation = clamp(((event.clientX - rect.left) / rect.width) * 100, 0, 100);
+        const brightness = clamp(100 - ((event.clientY - rect.top) / rect.height) * 100, 0, 100);
+        const nextHsb = { h: hsbRef.current.h, s: saturation, b: brightness };
+        const nextHex = hsbToHex(nextHsb.h, nextHsb.s, nextHsb.b);
+        const nextValue = showAlpha ? withHexAlpha(nextHex, alphaRef.current) : nextHex;
+        setHsb(nextHsb);
+        setHexInput(nextValue);
+        lastDraggedColorRef.current = nextValue;
+        onChange(nextValue);
+      }
+
+      if (dragModeRef.current === "hue" && hueCanvasRef.current) {
+        const rect = hueCanvasRef.current.getBoundingClientRect();
+        const nextHue = clamp(((event.clientX - rect.left) / rect.width) * 360, 0, 360);
+        const nextHsb = { ...hsbRef.current, h: nextHue };
+        const nextHex = hsbToHex(nextHsb.h, nextHsb.s, nextHsb.b);
+        const nextValue = showAlpha ? withHexAlpha(nextHex, alphaRef.current) : nextHex;
+        setHsb(nextHsb);
+        setHexInput(nextValue);
+        lastDraggedColorRef.current = nextValue;
+        onChange(nextValue);
+      }
+
+      if (dragModeRef.current === "alpha" && alphaCanvasRef.current) {
+        const rect = alphaCanvasRef.current.getBoundingClientRect();
+        const nextAlpha = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+        const nextValue = withHexAlpha(baseHex, nextAlpha);
+        setAlpha(nextAlpha);
+        setHexInput(showAlpha ? nextValue : baseHex);
+        lastDraggedColorRef.current = showAlpha ? nextValue : baseHex;
+        onChange(showAlpha ? nextValue : baseHex);
+      }
+    };
+
+    const handlePointerUp = () => {
+      if (dragModeRef.current && lastDraggedColorRef.current) {
+        const normalized = colorStringToHex(lastDraggedColorRef.current);
+        onRecentColorAdd?.(normalized);
+        setLocalRecentColors((previous) => {
+          const next = [normalized, ...previous.filter((color) => color !== normalized)].slice(0, 8);
+          if (typeof window !== "undefined") {
+            window.localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(next));
+          }
+          return next;
+        });
+      }
+      dragModeRef.current = null;
+      lastDraggedColorRef.current = null;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [baseHex, onChange, onRecentColorAdd, open, showAlpha]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (containerRef.current?.contains(event.target as Node)) return;
+      setOpen(false);
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
+
+  function addRecentColor(color: string): void {
+    const normalized = colorStringToHex(color);
+    onRecentColorAdd?.(normalized);
+    setLocalRecentColors((previous) => {
+      const next = [normalized, ...previous.filter((item) => item !== normalized)].slice(0, 8);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(RECENT_STORAGE_KEY, JSON.stringify(next));
+      }
+      return next;
+    });
+  }
+
+  function applyColor(nextBaseHex: string, nextAlpha = alphaRef.current, addRecent = false): void {
+    const nextValue = showAlpha ? withHexAlpha(nextBaseHex, nextAlpha) : nextBaseHex;
+    setHexInput(nextValue);
+    onChange(nextValue);
+    if (addRecent) addRecentColor(nextValue);
+  }
+
+  function commitColor(nextColor: string, addRecent = true): void {
+    const normalized = colorStringToHex(nextColor);
+    const parsed = parseHexColor(normalized);
+    setHsb(hexToHSB(parsed.hex));
+    setAlpha(parsed.alpha);
+    applyColor(parsed.hex, parsed.alpha, addRecent);
+  }
+
+  function applyHexInput(): void {
+    const normalized = normalizeHex(hexInput);
+    if (!normalized || !isValidHex(normalized)) {
+      setHexInput(currentValue);
+      return;
+    }
+    commitColor(normalized);
+  }
+
+  async function handleEyeDropper(): Promise<void> {
+    if (!supportsEyeDropper || typeof window === "undefined") return;
+    const Constructor = (window as Window & { EyeDropper?: EyeDropperConstructor }).EyeDropper;
+    if (!Constructor) return;
+
+    try {
+      const result = await new Constructor().open();
+      commitColor(result.sRGBHex);
+      setOpen(false);
+    } catch {
+      // User cancellation should not surface as an error.
+    }
+  }
+
+  return (
+    <div ref={containerRef} className="relative w-full">
       <button
         type="button"
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 w-full rounded-lg border border-border px-2 py-1 hover:border-brand/40 transition-colors"
+        onClick={() => setOpen((previous) => !previous)}
+        className="flex w-full items-center gap-2 rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-left transition-colors hover:border-brand/40"
+        aria-haspopup="dialog"
+        aria-expanded={open}
       >
-        <div
-          className="w-5 h-5 rounded border border-border/50 shrink-0"
-          style={{ backgroundColor: color }}
+        <span
+          className="relative h-6 w-6 shrink-0 overflow-hidden rounded-md border border-border/70"
+          style={CHECKERBOARD_STYLE}
+        >
+          <span
+            className="absolute inset-0"
+            style={{ backgroundColor: showAlpha ? currentValue : baseHex }}
+          />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[11px] font-mono text-ink">
+            {currentValue}
+          </span>
+          <span className="block text-[10px] text-ink-muted">
+            {Math.round(hsb.h)}deg · {Math.round(hsb.s)}% · {Math.round(hsb.b)}%
+            {showAlpha ? ` · ${Math.round(alpha * 100)}%` : ""}
+          </span>
+        </span>
+        <CaretDown
+          size={14}
+          className={cn("shrink-0 text-ink-muted transition-transform", open && "rotate-180")}
         />
-        <span className="text-[11px] text-ink font-mono">{color}</span>
       </button>
 
       {open && (
-        <div className="absolute z-50 top-full mt-1 left-0 glass-panel rounded-xl p-3 shadow-xl border border-border w-[240px]">
-          {/* SV picker + Hue strip */}
-          <div className="flex gap-2 mb-2">
-            <div className="relative">
+        <div
+          className={cn(
+            "absolute z-50 w-[248px] rounded-2xl border border-border bg-surface p-3 shadow-2xl",
+            PLACEMENT_CLASSES[placement],
+          )}
+          role="dialog"
+          aria-label="Color picker"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <div className="space-y-3">
+            <div className="relative overflow-hidden rounded-xl border border-border">
               <canvas
-                ref={svCanvasRef}
-                width={192}
-                height={160}
-                className="rounded cursor-crosshair block"
-                style={{ width: 192, height: 160 }}
-                onMouseDown={(e) => { draggingSV.current = true; applySV(e); }}
+                ref={sbCanvasRef}
+                className="block cursor-crosshair"
+                width={SB_WIDTH}
+                height={SB_HEIGHT}
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  dragModeRef.current = "sb";
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  const saturation = clamp(((event.clientX - rect.left) / rect.width) * 100, 0, 100);
+                  const brightness = clamp(100 - ((event.clientY - rect.top) / rect.height) * 100, 0, 100);
+                  const nextHsb = { h: hsb.h, s: saturation, b: brightness };
+                  const nextHex = hsbToHex(nextHsb.h, nextHsb.s, nextHsb.b);
+                  setHsb(nextHsb);
+                  setHexInput(showAlpha ? withHexAlpha(nextHex, alpha) : nextHex);
+                  lastDraggedColorRef.current = showAlpha ? withHexAlpha(nextHex, alpha) : nextHex;
+                  onChange(showAlpha ? withHexAlpha(nextHex, alpha) : nextHex);
+                }}
               />
-              {/* SV cursor */}
-              <div
-                className="absolute w-3 h-3 rounded-full border-2 border-white shadow pointer-events-none"
+              <span
+                className="pointer-events-none absolute h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-[0_0_0_1px_rgba(15,23,42,0.35)]"
                 style={{
-                  left: `${hsv.s * 192 - 6}px`,
-                  top: `${(1 - hsv.v) * 160 - 6}px`,
+                  left: `${(hsb.s / 100) * SB_WIDTH}px`,
+                  top: `${((100 - hsb.b) / 100) * SB_HEIGHT}px`,
                 }}
               />
             </div>
-            <div className="relative">
+
+            <div className="relative overflow-hidden rounded-full border border-border">
               <canvas
                 ref={hueCanvasRef}
-                width={20}
-                height={160}
-                className="rounded cursor-pointer block"
-                style={{ width: 20, height: 160 }}
-                onMouseDown={(e) => { draggingHue.current = true; applyHue(e); }}
+                className="block cursor-ew-resize"
+                width={STRIP_WIDTH}
+                height={STRIP_HEIGHT}
+                onPointerDown={(event) => {
+                  event.preventDefault();
+                  dragModeRef.current = "hue";
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  const nextHue = clamp(((event.clientX - rect.left) / rect.width) * 360, 0, 360);
+                  const nextHsb = { ...hsb, h: nextHue };
+                  const nextHex = hsbToHex(nextHsb.h, nextHsb.s, nextHsb.b);
+                  setHsb(nextHsb);
+                  setHexInput(showAlpha ? withHexAlpha(nextHex, alpha) : nextHex);
+                  lastDraggedColorRef.current = showAlpha ? withHexAlpha(nextHex, alpha) : nextHex;
+                  onChange(showAlpha ? withHexAlpha(nextHex, alpha) : nextHex);
+                }}
               />
-              {/* Hue cursor */}
-              <div
-                className="absolute left-0 w-5 h-1 bg-white border border-gray-400 rounded-sm pointer-events-none"
-                style={{ top: `${(hsv.h / 360) * 160 - 2}px` }}
+              <span
+                className="pointer-events-none absolute top-1/2 h-5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-black/20 shadow-sm"
+                style={{ left: `${(hsb.h / 360) * STRIP_WIDTH}px` }}
               />
             </div>
-          </div>
 
-          {/* Hex input */}
-          <div className="flex items-center gap-1.5 mb-2">
-            <div
-              className="w-6 h-6 rounded border border-border/50 shrink-0"
-              style={{ backgroundColor: color }}
-            />
-            <input
-              type="text"
-              value={hexInput}
-              onChange={(e) => setHexInput(e.target.value)}
-              onBlur={handleHexSubmit}
-              onKeyDown={(e) => { if (e.key === "Enter") handleHexSubmit(); }}
-              className="flex-1 text-[11px] font-mono bg-surface-raised border border-border rounded px-1.5 py-0.5 text-ink"
-              maxLength={7}
-            />
-          </div>
+            {showAlpha && (
+              <div
+                className="relative overflow-hidden rounded-full border border-border"
+                style={CHECKERBOARD_STYLE}
+              >
+                <canvas
+                  ref={alphaCanvasRef}
+                  className="block cursor-ew-resize"
+                  width={STRIP_WIDTH}
+                  height={STRIP_HEIGHT}
+                  onPointerDown={(event) => {
+                    event.preventDefault();
+                    dragModeRef.current = "alpha";
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    const nextAlpha = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+                    setAlpha(nextAlpha);
+                    const nextValue = withHexAlpha(baseHex, nextAlpha);
+                    setHexInput(nextValue);
+                    lastDraggedColorRef.current = nextValue;
+                    onChange(nextValue);
+                  }}
+                />
+                <span
+                  className="pointer-events-none absolute top-1/2 h-5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-black/20 shadow-sm"
+                  style={{ left: `${alpha * STRIP_WIDTH}px` }}
+                />
+              </div>
+            )}
 
-          {/* Swatches */}
-          <div className="grid grid-cols-10 gap-0.5">
-            {SWATCH_COLORS.map((swatch) => (
-              <button
-                key={swatch}
-                type="button"
-                onClick={() => {
-                  onChange(swatch);
-                  setHsv(hexToHsv(swatch));
-                  setHexInput(swatch);
-                }}
-                className={cn(
-                  "w-5 h-5 rounded border transition-all",
-                  color === swatch ? "border-brand ring-1 ring-brand/40 scale-110" : "border-border/30 hover:scale-110"
-                )}
-                style={{ backgroundColor: swatch }}
-              />
-            ))}
+            <div className="space-y-2 rounded-xl border border-border/70 bg-surface-raised p-2.5">
+              <div className="flex items-center justify-between">
+                <div className="inline-flex rounded-lg border border-border bg-surface">
+                  {(["hex", "rgb"] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setInputMode(mode)}
+                      className={cn(
+                        "px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] transition-colors",
+                        inputMode === mode
+                          ? "bg-brand text-white"
+                          : "text-ink-muted hover:text-ink",
+                      )}
+                    >
+                      {mode}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleEyeDropper();
+                  }}
+                  disabled={!supportsEyeDropper}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[10px] font-medium uppercase tracking-[0.18em]",
+                    supportsEyeDropper
+                      ? "border-border text-ink-muted hover:border-brand/40 hover:text-ink"
+                      : "cursor-not-allowed border-border/60 text-ink-muted/50",
+                  )}
+                >
+                  <Eyedropper size={12} />
+                  Pick
+                </button>
+              </div>
+
+              {inputMode === "hex" ? (
+                <input
+                  type="text"
+                  value={hexInput}
+                  onChange={(event) => setHexInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") applyHexInput();
+                  }}
+                  onBlur={applyHexInput}
+                  placeholder={showAlpha ? "#RRGGBBAA" : "#RRGGBB"}
+                  className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs font-mono text-ink outline-none transition-colors focus:border-brand"
+                />
+              ) : (
+                <div className="grid grid-cols-3 gap-2">
+                  {(["r", "g", "b"] as const).map((channel) => (
+                    <label key={channel} className="space-y-1">
+                      <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-ink-muted">
+                        {channel}
+                      </span>
+                      <input
+                        type="number"
+                        min={0}
+                        max={255}
+                        value={rgb[channel]}
+                        onChange={(event) => {
+                          const nextNumber = Number(event.target.value);
+                          if (!Number.isFinite(nextNumber)) return;
+                          const nextRgb = { ...rgb, [channel]: clamp(nextNumber, 0, 255) };
+                          commitColor(rgbToHex(nextRgb.r, nextRgb.g, nextRgb.b), false);
+                        }}
+                        onBlur={() => addRecentColor(currentValue)}
+                        className="w-full rounded-lg border border-border bg-surface px-2 py-1.5 text-xs text-ink outline-none transition-colors focus:border-brand"
+                      />
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <SwatchRow
+              title="Theme"
+              colors={themeSwatches}
+              selectedBaseHex={baseHex}
+              onSelect={(color) => commitColor(color)}
+            />
+            <SwatchRow
+              title="Recent"
+              colors={recentSwatches}
+              selectedBaseHex={baseHex}
+              onSelect={(color) => commitColor(color)}
+              columnsClass="grid-cols-4"
+            />
+            <SwatchRow
+              title="Standard"
+              colors={standardSwatches}
+              selectedBaseHex={baseHex}
+              onSelect={(color) => commitColor(color)}
+              columnsClass="grid-cols-10"
+            />
           </div>
         </div>
       )}

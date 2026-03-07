@@ -87,6 +87,30 @@ function fontDisplayName(font: string): string {
   return font.split(",")[0].trim();
 }
 
+function ThemeColorField({
+  label,
+  value,
+  onChange,
+  themeColors,
+}: {
+  label: string;
+  value: string;
+  onChange: (color: string) => void;
+  themeColors: string[];
+}) {
+  return (
+    <div className="space-y-1">
+      <label className="text-[10px] text-ink-muted block">{label}</label>
+      <ColorPicker
+        value={value}
+        onChange={onChange}
+        themeColors={themeColors}
+        placement="bottom"
+      />
+    </div>
+  );
+}
+
 export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
   const setTheme = useSlidesStore((s) => s.setTheme);
   const addCustomTheme = useSlidesStore((s) => s.addCustomTheme);
@@ -100,6 +124,22 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
   const themeIdCounter = useRef(0);
 
   const presetEntries = useMemo(() => Object.entries(PRESET_THEMES), []);
+  const themeColors = useMemo(
+    () => [
+      config.primaryColor,
+      config.secondaryColor,
+      config.accentColor,
+      config.textColor,
+      config.backgroundColor,
+    ],
+    [
+      config.accentColor,
+      config.backgroundColor,
+      config.primaryColor,
+      config.secondaryColor,
+      config.textColor,
+    ],
+  );
 
   const updateField = <K extends keyof ThemeConfig>(key: K, value: ThemeConfig[K]) => {
     setConfig((prev) => ({ ...prev, [key]: value }));
@@ -185,12 +225,12 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
           <section>
             <h3 className="text-xs font-semibold text-ink mb-2 uppercase tracking-wider">Colors</h3>
             <div className="grid grid-cols-2 gap-2">
-              <ColorPicker label="Primary" color={config.primaryColor} onChange={(c) => updateField("primaryColor", c)} />
-              <ColorPicker label="Secondary" color={config.secondaryColor} onChange={(c) => updateField("secondaryColor", c)} />
-              <ColorPicker label="Background" color={config.backgroundColor} onChange={(c) => updateField("backgroundColor", c)} />
-              <ColorPicker label="Text" color={config.textColor} onChange={(c) => updateField("textColor", c)} />
-              <ColorPicker label="Accent" color={config.accentColor} onChange={(c) => updateField("accentColor", c)} />
-              <ColorPicker label="Surface" color={config.surfaceColor ?? config.backgroundColor} onChange={(c) => updateField("surfaceColor", c)} />
+              <ThemeColorField label="Primary" value={config.primaryColor} onChange={(c) => updateField("primaryColor", c)} themeColors={themeColors} />
+              <ThemeColorField label="Secondary" value={config.secondaryColor} onChange={(c) => updateField("secondaryColor", c)} themeColors={themeColors} />
+              <ThemeColorField label="Background" value={config.backgroundColor} onChange={(c) => updateField("backgroundColor", c)} themeColors={themeColors} />
+              <ThemeColorField label="Text" value={config.textColor} onChange={(c) => updateField("textColor", c)} themeColors={themeColors} />
+              <ThemeColorField label="Accent" value={config.accentColor} onChange={(c) => updateField("accentColor", c)} themeColors={themeColors} />
+              <ThemeColorField label="Surface" value={config.surfaceColor ?? config.backgroundColor} onChange={(c) => updateField("surfaceColor", c)} themeColors={themeColors} />
             </div>
           </section>
 
@@ -325,11 +365,11 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
             </button>
             {showAdvanced && (
               <div className="grid grid-cols-2 gap-2 mt-2">
-                <ColorPicker label="Code Background" color={config.codeBackground ?? "#1E1E2E"} onChange={(c) => updateField("codeBackground", c)} />
-                <ColorPicker label="Callout Background" color={config.calloutBackground ?? "#F1F5F9"} onChange={(c) => updateField("calloutBackground", c)} />
-                <ColorPicker label="Gradient From" color={config.gradientFrom ?? config.primaryColor} onChange={(c) => updateField("gradientFrom", c)} />
-                <ColorPicker label="Gradient To" color={config.gradientTo ?? config.secondaryColor} onChange={(c) => updateField("gradientTo", c)} />
-                <ColorPicker label="Border Color" color={config.borderColor ?? "#E2E8F0"} onChange={(c) => updateField("borderColor", c)} />
+                <ThemeColorField label="Code Background" value={config.codeBackground ?? "#1E1E2E"} onChange={(c) => updateField("codeBackground", c)} themeColors={themeColors} />
+                <ThemeColorField label="Callout Background" value={config.calloutBackground ?? "#F1F5F9"} onChange={(c) => updateField("calloutBackground", c)} themeColors={themeColors} />
+                <ThemeColorField label="Gradient From" value={config.gradientFrom ?? config.primaryColor} onChange={(c) => updateField("gradientFrom", c)} themeColors={themeColors} />
+                <ThemeColorField label="Gradient To" value={config.gradientTo ?? config.secondaryColor} onChange={(c) => updateField("gradientTo", c)} themeColors={themeColors} />
+                <ThemeColorField label="Border Color" value={config.borderColor ?? "#E2E8F0"} onChange={(c) => updateField("borderColor", c)} themeColors={themeColors} />
                 <div>
                   <label className="text-[10px] text-ink-muted mb-0.5 block">Border Style</label>
                   <div className="flex gap-1">

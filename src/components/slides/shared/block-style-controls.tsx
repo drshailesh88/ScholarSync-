@@ -3,6 +3,9 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Lock, LockOpen } from "@phosphor-icons/react";
 import type { ContentBlock, BlockShadow, BlockBorder } from "@/types/presentation";
+import { useSlidesStore } from "@/stores/slides-store";
+import { ColorPicker } from "@/components/slides/shared/color-picker";
+import { hexToRGBA, parseHexColor } from "@/lib/utils/color-utils";
 
 const SHADOW_PRESETS: { label: string; value: BlockShadow | undefined }[] = [
   { label: "None", value: undefined },
@@ -49,6 +52,14 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps) {
   const debouncedUpdate = useDebouncedUpdate(onUpdate);
+  const themeConfig = useSlidesStore((s) => s.themeConfig);
+  const themeColors = [
+    themeConfig.primaryColor,
+    themeConfig.secondaryColor,
+    themeConfig.accentColor,
+    themeConfig.textColor,
+    themeConfig.backgroundColor,
+  ];
 
   const [localOpacity, setLocalOpacity] = useState(block.opacity ?? 100);
   const [shadowEnabled, setShadowEnabled] = useState(!!block.shadow);
@@ -244,12 +255,18 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
             </div>
             <div className="flex items-center gap-2">
               <span className="w-8 text-[10px] text-ink-muted">Color</span>
-              <input
-                type="color"
-                value={localShadow.color.startsWith("rgba") ? "#000000" : localShadow.color}
-                onChange={(e) => updateShadowField("color", e.target.value)}
-                className="h-6 w-8 rounded border border-border bg-surface-raised"
-              />
+              <div className="flex-1">
+                <ColorPicker
+                  value={localShadow.color}
+                  onChange={(color) => {
+                    const parsed = parseHexColor(color);
+                    updateShadowField("color", hexToRGBA(parsed.hex, parsed.alpha));
+                  }}
+                  showAlpha
+                  themeColors={themeColors}
+                  placement="right"
+                />
+              </div>
             </div>
           </div>
         )}
@@ -286,12 +303,14 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
             </div>
             <div className="flex items-center gap-2">
               <span className="w-10 text-[10px] text-ink-muted">Color</span>
-              <input
-                type="color"
-                value={localBorder.color}
-                onChange={(e) => updateBorderField("color", e.target.value)}
-                className="h-6 w-8 rounded border border-border bg-surface-raised"
-              />
+              <div className="flex-1">
+                <ColorPicker
+                  value={localBorder.color}
+                  onChange={(color) => updateBorderField("color", color)}
+                  themeColors={themeColors}
+                  placement="right"
+                />
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-10 text-[10px] text-ink-muted">Style</span>

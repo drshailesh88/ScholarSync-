@@ -39,9 +39,9 @@ import type { ThemeConfig, TextEffects } from "@/types/presentation";
 import {
   FONT_FAMILY_OPTIONS,
   FONT_SIZE_OPTIONS,
-  TEXT_COLOR_OPTIONS,
   getPrimaryFontFamily,
 } from "./text-formatting-options";
+import { ColorPicker } from "@/components/slides/shared/color-picker";
 
 // ---------------------------------------------------------------------------
 // EditableTextBlock — TipTap editor that activates on click inside a slide
@@ -379,7 +379,13 @@ export function EditableTextBlock({
     textStyleAttributes.fontSize ?? fontSize ?? null;
   const currentColor =
     textStyleAttributes.color ?? color ?? theme.textColor;
-  const colorRows = [TEXT_COLOR_OPTIONS.slice(0, 10), TEXT_COLOR_OPTIONS.slice(10, 20)];
+  const themeColors = [
+    theme.primaryColor,
+    theme.secondaryColor,
+    theme.accentColor,
+    theme.textColor,
+    theme.backgroundColor,
+  ];
   const hasTextSelection = !editor.state.selection.empty;
   const isOnLink = editor.isActive("link");
 
@@ -709,10 +715,12 @@ export function EditableTextBlock({
                 />
               </button>
               {openMenu === "color" && (
-                <div className="absolute right-0 top-full z-50 mt-1 w-56 rounded-md border border-gray-700 bg-gray-900 p-2 shadow-2xl">
+                <div
+                  className="absolute right-0 top-full z-50 mt-1 w-[272px] rounded-md border border-gray-700 bg-gray-900 p-2 shadow-2xl"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
                   <button
                     type="button"
-                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => {
                       editor.chain().focus().setColor(theme.textColor).run();
                       setOpenMenu(null);
@@ -721,29 +729,15 @@ export function EditableTextBlock({
                   >
                     Theme Color
                   </button>
-                  <div className="space-y-1">
-                    {colorRows.map((row, rowIndex) => (
-                      <div key={rowIndex} className="grid grid-cols-10 gap-1">
-                        {row.map((colorValue) => (
-                          <button
-                            key={colorValue}
-                            type="button"
-                            onMouseDown={(e) => e.preventDefault()}
-                            onClick={() => {
-                              editor.chain().focus().setColor(colorValue).run();
-                              setOpenMenu(null);
-                            }}
-                            className={`h-4 w-4 rounded-sm border ${
-                              currentColor.toLowerCase() === colorValue.toLowerCase()
-                                ? "border-white"
-                                : "border-gray-600"
-                            }`}
-                            style={{ backgroundColor: colorValue }}
-                            title={colorValue}
-                          />
-                        ))}
-                      </div>
-                    ))}
+                  <div className="rounded-lg bg-gray-950/40 p-1">
+                    <ColorPicker
+                      value={currentColor}
+                      onChange={(nextColor) => {
+                        editor.chain().focus().setColor(nextColor).run();
+                      }}
+                      themeColors={themeColors}
+                      placement="left"
+                    />
                   </div>
                 </div>
               )}

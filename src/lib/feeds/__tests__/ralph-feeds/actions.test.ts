@@ -76,6 +76,7 @@ vi.mock("@/lib/db/schema", () => ({
   feedArticles: { id: "id", feedSourceId: "feed_source_id", guid: "guid", title: "title", publishedAt: "published_at", doi: "doi", pubmedId: "pubmed_id", authors: "authors", abstractSnippet: "abstract_snippet", journal: "journal", volume: "volume", issue: "issue", link: "link", imageUrl: "image_url", contentHtml: "content_html", createdAt: "created_at" },
   userArticleStatus: { userId: "user_id", articleId: "article_id", isRead: "is_read", isStarred: "is_starred", isSavedToLibrary: "is_saved_to_library", savedPaperId: "saved_paper_id", readAt: "read_at", starredAt: "starred_at" },
   papers: { id: "id", title: "title", doi: "doi", pubmed_id: "pubmed_id", source: "source", authors: "authors", abstract: "abstract", journal: "journal", volume: "volume", issue: "issue", publication_date: "publication_date" },
+  users: { id: "id", specialty: "specialty" },
 }));
 
 // ── Import AFTER mocks ──────────────────────────────────────────────
