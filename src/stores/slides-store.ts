@@ -22,6 +22,7 @@ import {
   createBuiltInSlideMasters,
   mergeSlideMasters,
 } from "@/components/slides/shared/slide-master-utils";
+import type { RegenerateTone } from "@/lib/slides/regenerate";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -93,6 +94,12 @@ export interface SlidesStore {
   slides: SlideState[];
   masters: SlideMaster[];
   activeSlideId: number | null;
+  selectedSlideIds: Set<number>;
+  selectSingleSlide: (id: number) => void;
+  toggleSlideSelection: (id: number) => void;
+  clearSlideSelection: () => void;
+  isSlideSelected: (id: number) => boolean;
+  regeneratingSlideIds: Set<number>;
 
   // Block selection (shared so properties panel can see it)
   selectedBlockIndices: Set<number>;
@@ -172,6 +179,11 @@ export interface SlidesStore {
   deleteSlide: (id: number) => Promise<void>;
   duplicateSlide: (id: number) => Promise<void>;
   reorderSlides: (ids: number[]) => Promise<void>;
+  regenerateSlide: (
+    slideId: number,
+    instruction: string,
+    tone: RegenerateTone
+  ) => Promise<boolean>;
 
   // Clipboard (copy/paste slides)
   clipboardSlide: Omit<SlideState, "id" | "sortOrder"> | null;
@@ -288,6 +300,18 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   slides: [],
   masters: createBuiltInSlideMasters(),
   activeSlideId: null,
+  selectedSlideIds: new Set<number>(),
+  selectSingleSlide: (id) => set({ selectedSlideIds: new Set([id]) }),
+  toggleSlideSelection: (id) =>
+    set((state) => {
+      const next = new Set(state.selectedSlideIds);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return { selectedSlideIds: next };
+    }),
+  clearSlideSelection: () => set({ selectedSlideIds: new Set<number>() }),
+  isSlideSelected: (id) => get().selectedSlideIds.has(id),
+  regeneratingSlideIds: new Set<number>(),
 
   // Block selection
   selectedBlockIndices: new Set<number>(),
@@ -449,7 +473,11 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
           ...s,
           sortOrder: i,
         }));
-        return { slides: reordered, activeSlideId: mergedSlide.id };
+        return {
+          slides: reordered,
+          activeSlideId: mergedSlide.id,
+          selectedSlideIds: new Set([mergedSlide.id]),
+        };
       });
     } catch (e) {
       console.error("pasteSlide failed", e);
@@ -652,6 +680,7 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
         ),
         slides,
         activeSlideId: slides.length > 0 ? slides[0].id : null,
+        selectedSlideIds: slides.length > 0 ? new Set([slides[0].id]) : new Set<number>(),
         selectedBlockIndices: new Set<number>(),
         allBlocksSelected: false,
         editingBlockIndex: null,
@@ -898,7 +927,11 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
           ...s,
           sortOrder: i,
         }));
-        return { slides: reordered, activeSlideId: newSlide.id };
+        return {
+          slides: reordered,
+          activeSlideId: newSlide.id,
+          selectedSlideIds: new Set([newSlide.id]),
+        };
       });
 
       return newSlide;
@@ -912,6 +945,7 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   deleteSlide: async (id) => {
     const previousSlides = get().slides;
     const previousActiveSlideId = get().activeSlideId;
+    const previousSelectedSlideIds = get().selectedSlideIds;
 
     // Optimistic update
     set((state) => {
@@ -920,14 +954,25 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
       if (state.activeSlideId === id) {
         newActiveId = filtered.length > 0 ? filtered[0].id : null;
       }
-      return { slides: filtered, activeSlideId: newActiveId };
+      const selectedSlideIds = new Set(
+        [...state.selectedSlideIds].filter((slideId) => slideId !== id)
+      );
+      if (selectedSlideIds.size === 0 && newActiveId !== null) {
+        selectedSlideIds.add(newActiveId);
+      }
+      return { slides: filtered, activeSlideId: newActiveId, selectedSlideIds };
     });
 
     try {
       await deleteSlideAction(id);
     } catch (e) {
       console.error("deleteSlide failed", e);
-      set({ slides: previousSlides, activeSlideId: previousActiveSlideId, saveStatus: "error" });
+      set({
+        slides: previousSlides,
+        activeSlideId: previousActiveSlideId,
+        selectedSlideIds: previousSelectedSlideIds,
+        saveStatus: "error",
+      });
     }
   },
 
@@ -971,7 +1016,11 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
           ...s,
           sortOrder: i,
         }));
-        return { slides: reordered, activeSlideId: mergedSlide.id };
+        return {
+          slides: reordered,
+          activeSlideId: mergedSlide.id,
+          selectedSlideIds: new Set([mergedSlide.id]),
+        };
       });
     } catch (e) {
       console.error("duplicateSlide failed", e);
@@ -997,6 +1046,63 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
       console.error("reorderSlides failed", e);
       // Revert on failure
       set({ slides, saveStatus: "error" });
+    }
+  },
+
+  regenerateSlide: async (slideId, instruction, tone) => {
+    const state = get();
+    if (!state.deckId) return false;
+
+    const sortedSlides = [...state.slides].sort((a, b) => a.sortOrder - b.sortOrder);
+    const targetIndex = sortedSlides.findIndex((slide) => slide.id === slideId);
+    if (targetIndex === -1) return false;
+
+    set((current) => ({
+      regeneratingSlideIds: new Set(current.regeneratingSlideIds).add(slideId),
+    }));
+
+    try {
+      const response = await fetch("/api/slides/regenerate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          deckId: state.deckId,
+          slideId,
+          instruction,
+          tone,
+          context: {
+            prevSlideTitle: sortedSlides[targetIndex - 1]?.title,
+            nextSlideTitle: sortedSlides[targetIndex + 1]?.title,
+            deckTitle: state.title,
+            audienceType: state.audienceType,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        set({ saveStatus: "error" });
+        return false;
+      }
+
+      const generated = (await response.json()) as Partial<SlideState>;
+      get().updateSlide(slideId, {
+        title: generated.title ?? "",
+        subtitle: generated.subtitle ?? "",
+        layout: generated.layout ?? "title_content",
+        contentBlocks: generated.contentBlocks ?? [],
+        speakerNotes: generated.speakerNotes ?? "",
+      });
+      return true;
+    } catch (error) {
+      console.error("regenerateSlide failed", error);
+      set({ saveStatus: "error" });
+      return false;
+    } finally {
+      set((current) => {
+        const next = new Set(current.regeneratingSlideIds);
+        next.delete(slideId);
+        return { regeneratingSlideIds: next };
+      });
     }
   },
 
@@ -1093,6 +1199,13 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
           ? slides.find((s) => s.id === state.activeSlideId)?.id ??
             slides[0].id
           : null,
+      selectedSlideIds:
+        slides.length > 0
+          ? new Set([
+              slides.find((s) => s.id === state.activeSlideId)?.id ??
+                slides[0].id,
+            ])
+          : new Set<number>(),
       selectedBlockIndices: new Set<number>(),
       allBlocksSelected: false,
       editingBlockIndex: null,

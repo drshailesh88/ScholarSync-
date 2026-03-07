@@ -34,6 +34,7 @@ import {
 import { GridOverlay } from "../shared/grid-overlay";
 import { CanvasRulers, type RulerUnit } from "../shared/canvas-rulers";
 import { Lock, LockOpen } from "@phosphor-icons/react";
+import { ArrowCounterClockwise } from "@phosphor-icons/react";
 import { BLOCK_REGISTRY, createDefaultBlock } from "../blocks";
 import { ImageBlock } from "../blocks/image-block";
 import { BlockSelectionWrapper } from "./block-selection-wrapper";
@@ -46,6 +47,8 @@ import {
   getSlideMasterById,
   masterPlaceholderPrompt,
 } from "../shared/slide-master-utils";
+import { SlideRegenerateDialog } from "../shared/slide-regenerate-dialog";
+import type { RegenerateTone } from "@/lib/slides/regenerate";
 
 const BLOCK_ANIMATION_STYLESHEET = buildBlockAnimationStylesheet();
 
@@ -73,6 +76,7 @@ export function SlideCanvasWYSIWYG() {
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
   const addSlide = useSlidesStore((s) => s.addSlide);
+  const regenerateSlide = useSlidesStore((s) => s.regenerateSlide);
   const setRightPanel = useSlidesStore((s) => s.setRightPanel);
   const clipboardBlocks = useSlidesStore((s) => s.clipboardBlocks);
   const copyBlock = useSlidesStore((s) => s.copyBlock);
@@ -111,6 +115,7 @@ export function SlideCanvasWYSIWYG() {
   const [editingTitle, setEditingTitle] = useState(false);
   const [editingSubtitle, setEditingSubtitle] = useState(false);
   const [contextBlockIndex, setContextBlockIndex] = useState<number | null>(null);
+  const [showRegenerateDialog, setShowRegenerateDialog] = useState(false);
   const [marqueeRect, setMarqueeRect] = useState<DragSelection | null>(null);
   const [mouseRulerPosition, setMouseRulerPosition] = useState<{
     x: number;
@@ -652,6 +657,11 @@ export function SlideCanvasWYSIWYG() {
         onClick: pasteBlockToCanvas,
       },
       {
+        label: "Regenerate with AI...",
+        icon: <ArrowCounterClockwise size={13} />,
+        onClick: () => setShowRegenerateDialog(true),
+      },
+      {
         label: "Select All",
         onClick: selectAllBlocks,
       },
@@ -677,6 +687,14 @@ export function SlideCanvasWYSIWYG() {
       setRightPanel,
     ]
   );
+
+  async function handleRegenerateSubmit(
+    instruction: string,
+    tone: RegenerateTone,
+  ): Promise<boolean> {
+    if (!activeSlide) return false;
+    return regenerateSlide(activeSlide.id, instruction, tone);
+  }
 
   const blockContextItems = useMemo<ContextMenuItem[]>(() => {
     if (contextBlockIndex === null || !activeSlide) return [];
@@ -1322,6 +1340,14 @@ export function SlideCanvasWYSIWYG() {
       </div>
       <CanvasContextMenuPortal items={canvasContextItems} />
       <BlockContextMenuPortal items={blockContextItems} />
+      <SlideRegenerateDialog
+        open={showRegenerateDialog}
+        title="Regenerate This Slide"
+        slideTitles={[activeSlide.title || "Untitled slide"]}
+        submitLabel="Regenerate"
+        onClose={() => setShowRegenerateDialog(false)}
+        onSubmit={handleRegenerateSubmit}
+      />
     </div>
   );
 }
@@ -1580,6 +1606,7 @@ function EditableBlockDispatcher({
         contentStyle={contentStyle}
       >
         <EditableTableBlock
+          blockIndex={blockIndex}
           data={block.data}
           isEditing={isEditing}
           onUpdate={(nextData) => {

@@ -140,6 +140,25 @@ function openContextMenu(slideId: number) {
   });
 }
 
+function clickSlide(slideId: number, options?: { shiftKey?: boolean }) {
+  const slide = document.querySelector(
+    `[data-testid="filmstrip-slide-${slideId}"] button`
+  );
+  if (!(slide instanceof HTMLButtonElement)) {
+    throw new Error(`Slide button not found: ${slideId}`);
+  }
+
+  act(() => {
+    slide.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        shiftKey: options?.shiftKey ?? false,
+      })
+    );
+  });
+}
+
 function clickMenuItem(label: string) {
   const menu = document.querySelector('[data-testid="context-menu"]');
   if (!(menu instanceof HTMLElement)) {
@@ -229,6 +248,18 @@ describe("SlideFilmstrip context menu", () => {
 
     expect(copySlide).toHaveBeenCalledWith(2);
     expect(deleteSlide).toHaveBeenCalledWith(2);
+    cleanup();
+  });
+
+  it("shows batch regenerate when multiple slides are selected", () => {
+    const { cleanup } = renderFilmstrip();
+
+    clickSlide(1);
+    clickSlide(2, { shiftKey: true });
+    openContextMenu(2);
+
+    const menu = document.querySelector('[data-testid="context-menu"]');
+    expect(menu?.textContent).toContain("Regenerate Selected Slides");
     cleanup();
   });
 });

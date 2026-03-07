@@ -5,6 +5,8 @@ import { PaperPlaneRight, CircleNotch, ArrowRight, Plus } from "@phosphor-icons/
 import { cn } from "@/lib/utils";
 import { useSlidesStore } from "@/stores/slides-store";
 import type { ContentBlock } from "@/types/presentation";
+import { SlideRegenerateForm } from "../shared/slide-regenerate-form";
+import type { RegenerateTone } from "@/lib/slides/regenerate";
 
 interface DraftMessage {
   role: "user" | "agent";
@@ -19,10 +21,16 @@ export function DraftMode() {
   const audienceType = useSlidesStore((s) => s.audienceType);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
   const addSlide = useSlidesStore((s) => s.addSlide);
+  const regenerateSlide = useSlidesStore((s) => s.regenerateSlide);
+  const regeneratingSlideIds = useSlidesStore((s) => s.regeneratingSlideIds);
 
   const [messages, setMessages] = useState<DraftMessage[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [regenerateInstruction, setRegenerateInstruction] = useState("");
+  const [regenerateTone, setRegenerateTone] =
+    useState<RegenerateTone>("keep_similar");
+  const [regenerateError, setRegenerateError] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -98,8 +106,48 @@ export function DraftMode() {
     }
   }
 
+  async function handleRegenerateCurrentSlide() {
+    if (!activeSlide) {
+      setRegenerateError("Select a slide before regenerating.");
+      return;
+    }
+
+    setRegenerateError("");
+    const ok = await regenerateSlide(
+      activeSlide.id,
+      regenerateInstruction.trim(),
+      regenerateTone,
+    );
+    if (!ok) {
+      setRegenerateError("Regeneration failed. The slide was left unchanged.");
+      return;
+    }
+    setRegenerateInstruction("");
+  }
+
   return (
     <div className="flex flex-col h-full">
+      <div className="border-b border-border p-4">
+        <div className="mb-3">
+          <h4 className="text-xs font-semibold text-ink">Regenerate current slide</h4>
+          <p className="mt-1 text-[11px] text-ink-muted">
+            Refresh the active slide without changing the rest of the deck.
+          </p>
+        </div>
+        <SlideRegenerateForm
+          slideTitles={[activeSlide?.title || "No slide selected"]}
+          instruction={regenerateInstruction}
+          tone={regenerateTone}
+          error={regenerateError}
+          disabled={!activeSlide}
+          loading={activeSlide ? regeneratingSlideIds.has(activeSlide.id) : false}
+          submitLabel="Regenerate current slide"
+          onInstructionChange={setRegenerateInstruction}
+          onToneChange={setRegenerateTone}
+          onSubmit={handleRegenerateCurrentSlide}
+        />
+      </div>
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
