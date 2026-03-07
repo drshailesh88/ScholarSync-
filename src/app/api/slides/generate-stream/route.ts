@@ -10,6 +10,12 @@ import {
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
+import {
+  collectMissingImageBlocks,
+  mergeGeneratedImageData,
+  updateBlockAtPath,
+} from "@/lib/slides/image-blocks";
+import { generateSlideImage } from "@/lib/slides/image-generation";
 import type {
   GeneratedSlide,
   ContentBlock,
@@ -37,6 +43,21 @@ const generateSchema = z.object({
   themeKey: z.string().optional(),
   slideCount: z.number().int().positive().max(30).optional(),
 });
+
+type StreamEvent =
+  | { type: "status"; message: string }
+  | { type: "images"; current: number; total: number; message: string }
+  | { type: "complete"; slideCount: number; generatedImages: number }
+  | { type: "error"; error: string };
+
+const encoder = new TextEncoder();
+
+function writeEvent(
+  controller: ReadableStreamDefaultController<Uint8Array>,
+  event: StreamEvent
+) {
+  controller.enqueue(encoder.encode(`${JSON.stringify(event)}\n`));
+}
 
 export async function POST(req: Request) {
   const log = logger.withRequestId();
@@ -70,67 +91,160 @@ export async function POST(req: Request) {
 
     await updateDeck(body.deckId, { generationStatus: "processing" });
 
-    try {
-      const systemPrompt = getSlideGeneratorSystemPrompt({
-        audienceType: body.audienceType ?? "general",
-        slideCount: body.slideCount,
-        themeKey: body.themeKey ?? "modern",
-      });
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        void (async () => {
+          try {
+            writeEvent(controller, {
+              type: "status",
+              message: "Generating your presentation...",
+            });
 
-      const userPrompt = `Generate slides for: "${body.title}"\n\nDescription: ${body.description}`;
+            const systemPrompt = getSlideGeneratorSystemPrompt({
+              audienceType: body.audienceType ?? "general",
+              slideCount: body.slideCount,
+              themeKey: body.themeKey ?? "modern",
+            });
 
-      const trace = traceGeneration({
-        tier: "standard",
-        modelId: "claude-sonnet-4-20250514",
-        feature: "slides-generate",
-        userId,
-      });
+            const userPrompt = `Generate slides for: "${body.title}"\n\nDescription: ${body.description}`;
 
-      const { text, usage } = await generateText({
-        model: getModel(),
-        system: systemPrompt,
-        prompt: userPrompt.slice(0, 30000),
-      });
-      trace.end(usage);
+            const trace = traceGeneration({
+              tier: "standard",
+              modelId: "claude-sonnet-4-20250514",
+              feature: "slides-generate",
+              userId,
+            });
 
-      const cleanText = text
-        .replace(/```json\n?/g, "")
-        .replace(/```\n?/g, "")
-        .trim();
-      const generated: { slides: GeneratedSlide[] } = JSON.parse(cleanText);
+            const { text, usage } = await generateText({
+              model: getModel(),
+              system: systemPrompt,
+              prompt: userPrompt.slice(0, 30000),
+            });
+            trace.end(usage);
 
-      // Create slides in DB (skip the first which is the title slide created in the page)
-      const slidesToCreate = generated.slides ?? [];
-      for (let i = 0; i < slidesToCreate.length; i++) {
-        const s = slidesToCreate[i];
-        await createSlide({
-          deckId: body.deckId,
-          sortOrder: i + 1, // +1 because title slide is at 0
-          layout: (s.layout as SlideLayout) ?? "title_content",
-          title: s.title ?? `Slide ${i + 2}`,
-          subtitle: s.subtitle,
-          contentBlocks: (s.contentBlocks as ContentBlock[]) ?? [],
-          speakerNotes: s.speakerNotes,
-        });
-      }
+            const cleanText = text
+              .replace(/```json\n?/g, "")
+              .replace(/```\n?/g, "")
+              .trim();
+            const generated: { slides: GeneratedSlide[] } = JSON.parse(cleanText);
 
-      await updateDeck(body.deckId, {
-        generationStatus: "completed",
-        theme: body.themeKey ?? "modern",
-      });
+            const slidesToCreate = generated.slides ?? [];
+            const totalImages = slidesToCreate.reduce((count, slide) => {
+              const blocks = (slide.contentBlocks as ContentBlock[]) ?? [];
+              return count + collectMissingImageBlocks(blocks).length;
+            }, 0);
 
-      return NextResponse.json({
-        success: true,
-        slideCount: slidesToCreate.length,
-      });
-    } catch (genError) {
-      log.error("Generation LLM error", genError);
-      await updateDeck(body.deckId, { generationStatus: "failed" });
-      return NextResponse.json(
-        { error: "Slide generation failed" },
-        { status: 500 }
-      );
-    }
+            let processedImages = 0;
+            if (totalImages > 0) {
+              writeEvent(controller, {
+                type: "images",
+                current: 0,
+                total: totalImages,
+                message: `Generating images... (0/${totalImages})`,
+              });
+            }
+
+            const hydratedSlides = [];
+            for (const slide of slidesToCreate) {
+              let contentBlocks = (slide.contentBlocks as ContentBlock[]) ?? [];
+              const missingImages = collectMissingImageBlocks(contentBlocks);
+
+              for (const imageRef of missingImages) {
+                const prompt = imageRef.block.data.suggestion?.trim();
+                if (!prompt) continue;
+
+                try {
+                  const generatedImage = await generateSlideImage({
+                    prompt,
+                    style: "illustration",
+                    aspectRatio: "16:9",
+                  });
+
+                  contentBlocks = updateBlockAtPath(
+                    contentBlocks,
+                    imageRef.path,
+                    (block) => {
+                      if (block.type !== "image") return block;
+                      return {
+                        ...block,
+                        data: mergeGeneratedImageData(block.data, {
+                          imageUrl: generatedImage.imageUrl,
+                          attribution: generatedImage.attribution,
+                          prompt,
+                        }),
+                      };
+                    }
+                  );
+                } catch (imageError) {
+                  log.warn("Slide image generation failed", {
+                    error: imageError instanceof Error ? imageError.message : String(imageError),
+                    prompt,
+                  });
+                } finally {
+                  processedImages += 1;
+                  writeEvent(controller, {
+                    type: "images",
+                    current: processedImages,
+                    total: totalImages,
+                    message: `Generating images... (${processedImages}/${totalImages})`,
+                  });
+                }
+              }
+
+              hydratedSlides.push({
+                ...slide,
+                contentBlocks,
+              });
+            }
+
+            writeEvent(controller, {
+              type: "status",
+              message: "Saving your deck...",
+            });
+
+            for (let i = 0; i < hydratedSlides.length; i++) {
+              const slide = hydratedSlides[i];
+              await createSlide({
+                deckId: body.deckId,
+                sortOrder: i + 1,
+                layout: (slide.layout as SlideLayout) ?? "title_content",
+                title: slide.title ?? `Slide ${i + 2}`,
+                subtitle: slide.subtitle,
+                contentBlocks: (slide.contentBlocks as ContentBlock[]) ?? [],
+                speakerNotes: slide.speakerNotes,
+              });
+            }
+
+            await updateDeck(body.deckId, {
+              generationStatus: "completed",
+              theme: body.themeKey ?? "modern",
+            });
+
+            writeEvent(controller, {
+              type: "complete",
+              slideCount: hydratedSlides.length,
+              generatedImages: processedImages,
+            });
+            controller.close();
+          } catch (genError) {
+            log.error("Generation LLM error", genError);
+            await updateDeck(body.deckId, { generationStatus: "failed" });
+            writeEvent(controller, {
+              type: "error",
+              error: "Slide generation failed",
+            });
+            controller.close();
+          }
+        })();
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "application/x-ndjson; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+      },
+    });
   } catch (error) {
     log.error("Generate stream error", error);
     return NextResponse.json(

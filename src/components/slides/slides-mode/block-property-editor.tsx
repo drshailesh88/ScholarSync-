@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
 import { useTableEditorStore } from "@/stores/table-editor-store";
 import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, AnimationTrigger, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData, ThemeConfig, TableCellMeta } from "@/types/presentation";
 import { cn } from "@/lib/utils";
 import { detectMediaType } from "@/components/slides/blocks/media-block";
-import { Trash, Plus, Upload } from "@phosphor-icons/react";
+import { CircleNotch, Plus, Trash, Upload } from "@phosphor-icons/react";
 import { SHAPE_CATEGORIES, getShapesByCategory, renderShapeSvgPrimitive, isLineShape, isConnectorShape } from "@/components/slides/blocks/shape-utils";
 import { FONT_FAMILY_OPTIONS, FONT_SIZE_OPTIONS } from "@/components/slides/wysiwyg/text-formatting-options";
 import { BlockStyleControls } from "@/components/slides/shared/block-style-controls";
@@ -16,6 +16,8 @@ import {
   applySelectedCellAttributes,
   applyTableStyleAttributes,
 } from "@/components/slides/wysiwyg/editable-table-block";
+import { requestGeneratedSlideImage } from "@/lib/slides/image-generation-client";
+import { mergeGeneratedImageData } from "@/lib/slides/image-blocks";
 
 // ---------------------------------------------------------------------------
 // BlockPropertyEditor — context-sensitive editor for the selected block.
@@ -993,10 +995,22 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [generationPrompt, setGenerationPrompt] = useState(data.suggestion ?? data.alt);
+  const [generating, setGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const [selectedVersionIndex, setSelectedVersionIndex] = useState("0");
 
   const update = (partial: Partial<typeof data>) => {
     onUpdate({ ...block, data: { ...data, ...partial } });
   };
+
+  useEffect(() => {
+    setGenerationPrompt(data.suggestion ?? data.alt);
+  }, [data.alt, data.suggestion]);
+
+  useEffect(() => {
+    setSelectedVersionIndex("0");
+  }, [data.versions?.length]);
 
   const handleFileUpload = async (file: File) => {
     if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
@@ -1007,6 +1021,7 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
     setUploading(true);
     setUploadProgress(0);
     setUploadError(null);
+    setGenerationError(null);
 
     try {
       const { url } = await new Promise<{ url: string }>((resolve, reject) => {
@@ -1077,6 +1092,65 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
 
   const triggerFilePicker = () => {
     fileInputRef.current?.click();
+  };
+
+  const runGeneration = async () => {
+    const prompt = generationPrompt.trim();
+    if (!prompt) {
+      setGenerationError("Enter a prompt before generating.");
+      return;
+    }
+
+    setGenerating(true);
+    setGenerationError(null);
+    try {
+      const payload = await requestGeneratedSlideImage({
+        prompt,
+        style: "illustration",
+        aspectRatio: "16:9",
+      });
+
+      onUpdate({
+        ...block,
+        data: mergeGeneratedImageData(data, {
+          imageUrl: payload.imageUrl,
+          attribution: payload.attribution,
+          prompt,
+        }),
+      });
+    } catch (error) {
+      setGenerationError(error instanceof Error ? error.message : "Image generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const restoreVersion = () => {
+    const selected = data.versions?.[Number(selectedVersionIndex)];
+    if (!selected) return;
+
+    const remainingVersions = (data.versions ?? []).filter(
+      (_version, index) => index !== Number(selectedVersionIndex)
+    );
+    const nextVersions = data.url
+      ? [
+          {
+            url: data.url,
+            prompt: data.suggestion,
+            attribution: data.attribution,
+            createdAt: new Date().toISOString(),
+          },
+          ...remainingVersions,
+        ]
+      : remainingVersions;
+
+    update({
+      url: selected.url,
+      attribution: selected.attribution,
+      suggestion: selected.prompt ?? data.suggestion,
+      versions: nextVersions,
+      crop: undefined,
+    });
   };
 
   return (
@@ -1169,6 +1243,56 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
             placeholder="Figure caption"
           />
         </div>
+        <div>
+          <FieldLabel>Generation Prompt</FieldLabel>
+          <FieldTextarea
+            value={generationPrompt}
+            onChange={(value) => {
+              setGenerationPrompt(value);
+              update({ suggestion: value || undefined });
+            }}
+            placeholder="Describe the image you want the AI to generate"
+            rows={3}
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => void runGeneration()}
+          disabled={generating || !generationPrompt.trim()}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md border border-brand/30 bg-brand/10 py-1.5 text-xs text-brand disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          {generating ? <CircleNotch size={14} className="animate-spin" /> : null}
+          {data.url ? "Regenerate Image" : "Generate Image"}
+        </button>
+        {generationError && (
+          <p className="text-xs text-red-600">{generationError}</p>
+        )}
+        {data.versions && data.versions.length > 0 && (
+          <div className="space-y-2">
+            <FieldLabel>Previous Versions</FieldLabel>
+            <select
+              value={selectedVersionIndex}
+              onChange={(e) => setSelectedVersionIndex(e.target.value)}
+              className="w-full rounded-md border border-border bg-surface px-2 py-1.5 text-xs text-ink"
+            >
+              {data.versions.map((version, index) => (
+                <option key={`${version.url}-${index}`} value={String(index)}>
+                  {new Date(version.createdAt).toLocaleString()} {version.prompt ? `- ${version.prompt.slice(0, 48)}` : ""}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={restoreVersion}
+              className="w-full rounded-md border border-border py-1.5 text-xs text-ink hover:bg-surface-raised"
+            >
+              Restore Selected Version
+            </button>
+          </div>
+        )}
+        {data.attribution && (
+          <p className="text-[11px] text-ink-muted">{data.attribution}</p>
+        )}
         <label className="flex items-center gap-2">
           <input
             type="checkbox"

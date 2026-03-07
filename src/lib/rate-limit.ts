@@ -121,4 +121,6 @@ export const RATE_LIMITS = {
   write: { limit: 30, windowSeconds: 3600 },
   /** Feed operations: 60 requests per hour */
   feeds: { limit: 60, windowSeconds: 3600 },
+  /** Slide image generation: 20 requests per hour */
+  "slide-images": { limit: 20, windowSeconds: 3600 },
 } as const;

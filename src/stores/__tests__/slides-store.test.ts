@@ -41,9 +41,11 @@ function resetStore() {
     masters: createBuiltInSlideMasters(),
     slides: [],
     activeSlideId: null,
+    selectedSlideIds: new Set<number>(),
     selectedBlockIndices: new Set<number>(),
     allBlocksSelected: false,
     editingBlockIndex: null,
+    regeneratingSlideIds: new Set<number>(),
     clipboardSlide: null,
     clipboardBlocks: [],
     mode: "slides",
@@ -735,6 +737,94 @@ describe("slides-store", () => {
       const blocks = useSlidesStore.getState().getActiveSlide()!.contentBlocks;
       expect(blocks[1].zIndex).toBe(2);
       expect(blocks[2].zIndex).toBe(1);
+    });
+  });
+
+  describe("slide regeneration", () => {
+    const originalFetch = globalThis.fetch;
+
+    beforeEach(() => {
+      globalThis.fetch = vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            title: "Regenerated Slide",
+            subtitle: "Sharper subtitle",
+            layout: "two_column",
+            contentBlocks: [
+              {
+                type: "bullets",
+                data: { items: ["Updated takeaway", "Follow-up detail"] },
+              },
+            ],
+            speakerNotes: "Fresh notes",
+          }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          }
+        )
+      ) as typeof fetch;
+
+      useSlidesStore.setState({
+        deckId: 42,
+        title: "Deck Title",
+        audienceType: "conference",
+        slides: [mockSlide, mockSlide2],
+        activeSlideId: 1,
+        selectedSlideIds: new Set([1]),
+      });
+    });
+
+    afterEach(() => {
+      globalThis.fetch = originalFetch;
+    });
+
+    it("tracks slide selection independently", () => {
+      useSlidesStore.getState().selectSingleSlide(1);
+      useSlidesStore.getState().toggleSlideSelection(2);
+
+      expect(useSlidesStore.getState().selectedSlideIds).toEqual(new Set([1, 2]));
+      expect(useSlidesStore.getState().isSlideSelected(2)).toBe(true);
+    });
+
+    it("regenerateSlide updates only the targeted slide and preserves id/sortOrder", async () => {
+      const ok = await useSlidesStore.getState().regenerateSlide(2, "Make it tighter", "more_concise");
+
+      expect(ok).toBe(true);
+      const state = useSlidesStore.getState();
+      expect(state.regeneratingSlideIds.size).toBe(0);
+
+      const untouched = state.slides.find((slide) => slide.id === 1);
+      const regenerated = state.slides.find((slide) => slide.id === 2);
+      expect(untouched?.title).toBe("Test Slide");
+      expect(regenerated).toMatchObject({
+        id: 2,
+        sortOrder: 1,
+        title: "Regenerated Slide",
+        subtitle: "Sharper subtitle",
+        layout: "two_column",
+        speakerNotes: "Fresh notes",
+      });
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        "/api/slides/regenerate",
+        expect.objectContaining({
+          method: "POST",
+        })
+      );
+    });
+
+    it("regenerateSlide returns false and leaves the slide unchanged on failure", async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ error: "Nope" }), { status: 500 })
+      ) as typeof fetch;
+
+      const before = useSlidesStore.getState().slides.find((slide) => slide.id === 2);
+      const ok = await useSlidesStore.getState().regenerateSlide(2, "Retry", "keep_similar");
+      const after = useSlidesStore.getState().slides.find((slide) => slide.id === 2);
+
+      expect(ok).toBe(false);
+      expect(after).toEqual(before);
+      expect(useSlidesStore.getState().saveStatus).toBe("error");
     });
   });
 

@@ -221,11 +221,20 @@ export interface ImageFilters {
   opacity?: number;      // 0-100, default 100
 }
 
+export interface ImageVersion {
+  url: string;
+  prompt?: string;
+  attribution?: string;
+  createdAt: string;
+}
+
 export interface ImageData {
   url?: string;
   alt: string;
   caption?: string;
   suggestion?: string;
+  attribution?: string;
+  versions?: ImageVersion[];
   lockAspectRatio?: boolean;
   crop?: ImageCrop;
   filters?: ImageFilters;

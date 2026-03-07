@@ -22,9 +22,11 @@ interface SlideThumbnailProps {
   cardBackground?: CardBackground;
   transition?: SlideTransition;
   isActive?: boolean;
+  isSelected?: boolean;
+  statusLabel?: string;
   slideNumber?: number;
   commentCount?: number;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   onContextMenu?: (e: React.MouseEvent) => void;
 }
 
@@ -40,6 +42,8 @@ export const SlideThumbnail = memo(function SlideThumbnail({
   cardBackground,
   transition,
   isActive,
+  isSelected,
+  statusLabel,
   slideNumber,
   commentCount,
   onClick,
@@ -53,7 +57,9 @@ export const SlideThumbnail = memo(function SlideThumbnail({
       className={`w-full text-left relative group transition-all rounded-lg overflow-hidden ${
         isActive
           ? "ring-2 ring-brand shadow-md"
-          : "ring-1 ring-border hover:ring-brand/40"
+          : isSelected
+            ? "ring-2 ring-brand/50 shadow-sm"
+            : "ring-1 ring-border hover:ring-brand/40"
       }`}
     >
       {/* Mini slide preview */}
@@ -95,6 +101,12 @@ export const SlideThumbnail = memo(function SlideThumbnail({
           M
         </div>
       )}
+
+      {statusLabel ? (
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/45 text-[10px] font-medium text-white animate-pulse">
+          {statusLabel}
+        </div>
+      ) : null}
     </button>
   );
 });

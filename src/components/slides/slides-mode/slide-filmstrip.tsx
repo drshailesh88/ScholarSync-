@@ -32,16 +32,19 @@ import {
   Selection,
   ImageSquare,
   Export,
+  ArrowCounterClockwise,
 } from "@phosphor-icons/react";
 import { useSlidesStore } from "@/stores/slides-store";
 import { cn } from "@/lib/utils";
 import { useContextMenu } from "@/hooks/use-context-menu";
 import { LAYOUT_OPTIONS } from "@/components/presentation/layout-picker";
 import type { SlideLayout } from "@/types/presentation";
+import type { RegenerateTone } from "@/lib/slides/regenerate";
 import type { ContextMenuItem } from "../shared/context-menu";
 import { SlideThumbnail } from "../shared/slide-thumbnail";
 import { SlideRendererV2 } from "../shared/slide-renderer-v2";
 import { PresenceDotsSlot } from "../shared/collaboration-slots";
+import { SlideRegenerateDialog } from "../shared/slide-regenerate-dialog";
 import {
   downloadBlob,
   exportSlideAsPNG,
@@ -112,10 +115,13 @@ export function SlideFilmstrip() {
   const slides = useSlidesStore((s) => s.slides);
   const masters = useSlidesStore((s) => s.masters);
   const activeSlideId = useSlidesStore((s) => s.activeSlideId);
+  const selectedSlideIds = useSlidesStore((s) => s.selectedSlideIds);
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const deckTitle = useSlidesStore((s) => s.title);
   const setActiveSlide = useSlidesStore((s) => s.setActiveSlide);
+  const selectSingleSlide = useSlidesStore((s) => s.selectSingleSlide);
+  const toggleSlideSelection = useSlidesStore((s) => s.toggleSlideSelection);
   const addSlide = useSlidesStore((s) => s.addSlide);
   const deleteSlide = useSlidesStore((s) => s.deleteSlide);
   const reorderSlides = useSlidesStore((s) => s.reorderSlides);
@@ -124,7 +130,11 @@ export function SlideFilmstrip() {
   const duplicateSlide = useSlidesStore((s) => s.duplicateSlide);
   const clipboardSlide = useSlidesStore((s) => s.clipboardSlide);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
+  const regenerateSlide = useSlidesStore((s) => s.regenerateSlide);
+  const regeneratingSlideIds = useSlidesStore((s) => s.regeneratingSlideIds);
   const [contextSlideId, setContextSlideId] = useState<number | null>(null);
+  const [regenerateTargetIds, setRegenerateTargetIds] = useState<number[]>([]);
+  const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
   const {
     openMenu,
     closeMenu,
@@ -141,6 +151,15 @@ export function SlideFilmstrip() {
   const sortedSlides = [...slides].sort((a, b) => a.sortOrder - b.sortOrder);
   const slideIds = sortedSlides.map((s) => s.id);
   const contextSlide = slides.find((s) => s.id === contextSlideId) ?? null;
+  const selectedContextSlideIds = useMemo(
+    () =>
+      selectedSlideIds.has(contextSlideId ?? -1)
+        ? slideIds.filter((id) => selectedSlideIds.has(id))
+        : contextSlideId !== null
+          ? [contextSlideId]
+          : [],
+    [contextSlideId, selectedSlideIds, slideIds]
+  );
   const standardLayouts = LAYOUT_OPTIONS.filter(
     (layout) => layout.group === "standard"
   );
@@ -231,6 +250,34 @@ export function SlideFilmstrip() {
     }
   }, [closeMenu, contextSlideId, slides]);
 
+  useEffect(() => {
+    if (!regenerateDialogOpen) return;
+    const validIds = regenerateTargetIds.filter((id) => slides.some((slide) => slide.id === id));
+    if (validIds.length === 0) {
+      setRegenerateDialogOpen(false);
+      setRegenerateTargetIds([]);
+    }
+  }, [regenerateDialogOpen, regenerateTargetIds, slides]);
+
+  async function handleRegenerateSubmit(
+    instruction: string,
+    tone: RegenerateTone,
+  ): Promise<boolean> {
+    if (regenerateTargetIds.length === 0) return false;
+
+    for (const slideId of regenerateTargetIds) {
+      const ok = await regenerateSlide(slideId, instruction, tone);
+      if (!ok) return false;
+    }
+    return true;
+  }
+
+  const openRegenerateDialogFor = useCallback((ids: number[]) => {
+    if (ids.length === 0) return;
+    setRegenerateTargetIds(ids);
+    setRegenerateDialogOpen(true);
+  }, []);
+
   const contextItems = useMemo<ContextMenuItem[]>(() => {
     if (!contextSlide) return [];
 
@@ -300,6 +347,22 @@ export function SlideFilmstrip() {
         },
       },
       { label: "divider-main-3", divider: true },
+      selectedContextSlideIds.length > 1
+        ? {
+            label: "Regenerate Selected Slides...",
+            icon: <ArrowCounterClockwise size={13} />,
+            onClick: () => {
+              openRegenerateDialogFor(selectedContextSlideIds);
+            },
+          }
+        : {
+            label: "Regenerate with AI...",
+            icon: <ArrowCounterClockwise size={13} />,
+            onClick: () => {
+              openRegenerateDialogFor([contextSlide.id]);
+            },
+          },
+      { label: "divider-main-regen", divider: true },
       {
         label: "Hide Slide",
         icon: <EyeSlash size={13} />,
@@ -418,8 +481,23 @@ export function SlideFilmstrip() {
     standardLayouts,
     masters,
     exportSlideFromContextMenu,
+    openRegenerateDialogFor,
+    selectedContextSlideIds,
     updateSlide,
   ]);
+
+  function handleSlideClick(
+    slideId: number,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) {
+    if (event.shiftKey) {
+      toggleSlideSelection(slideId);
+      setActiveSlide(slideId);
+      return;
+    }
+    selectSingleSlide(slideId);
+    setActiveSlide(slideId);
+  }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -469,9 +547,16 @@ export function SlideFilmstrip() {
                     themeConfig={themeConfig}
                     transition={slide.transition}
                     isActive={slide.id === activeSlideId}
+                    isSelected={selectedSlideIds.has(slide.id)}
+                    statusLabel={
+                      regeneratingSlideIds.has(slide.id) ? "Regenerating..." : undefined
+                    }
                     slideNumber={index + 1}
-                    onClick={() => setActiveSlide(slide.id)}
+                    onClick={(event) => handleSlideClick(slide.id, event)}
                     onContextMenu={(e) => {
+                      if (!selectedSlideIds.has(slide.id)) {
+                        selectSingleSlide(slide.id);
+                      }
                       setContextSlideId(slide.id);
                       openMenu(e);
                     }}
@@ -501,6 +586,22 @@ export function SlideFilmstrip() {
         </button>
       </div>
       <ContextMenuPortal items={contextItems} />
+      <SlideRegenerateDialog
+        open={regenerateDialogOpen}
+        title={
+          regenerateTargetIds.length > 1
+            ? "Regenerate Selected Slides"
+            : "Regenerate This Slide"
+        }
+        slideTitles={regenerateTargetIds
+          .map((id) => slides.find((slide) => slide.id === id)?.title ?? "Untitled slide")}
+        submitLabel="Regenerate"
+        onClose={() => {
+          setRegenerateDialogOpen(false);
+          setRegenerateTargetIds([]);
+        }}
+        onSubmit={handleRegenerateSubmit}
+      />
     </div>
   );
 }
