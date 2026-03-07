@@ -9,6 +9,9 @@ import {
   Prohibit,
   Check,
   CircleNotch,
+  ArrowsOutLineHorizontal,
+  MagnifyingGlassPlus,
+  FilmSlate,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { ANIMATION_PRESETS } from "@/lib/presentation/animation-presets";
@@ -39,6 +42,9 @@ const PRESET_ICONS: Record<AnimationPresetKey, React.ReactNode> = {
   fade_all: <Eye size={16} weight="bold" />,
   stagger: <Rows size={16} weight="bold" />,
   results_reveal: <Play size={16} weight="bold" />,
+  slide_cascade: <ArrowsOutLineHorizontal size={16} weight="bold" />,
+  zoom_focus: <MagnifyingGlassPlus size={16} weight="bold" />,
+  dramatic_reveal: <FilmSlate size={16} weight="bold" />,
   none: <Prohibit size={16} weight="bold" />,
 };
 

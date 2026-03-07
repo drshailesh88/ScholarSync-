@@ -60,6 +60,37 @@ function resultsReveal(blockCount: number): BlockAnimation[] {
   return animations;
 }
 
+/** "Slide Cascade" - slideRight with staggered delays */
+function slideCascade(blockCount: number): BlockAnimation[] {
+  return Array.from({ length: blockCount }, (_, i) => ({
+    type: "slideRight" as const,
+    delay: i * 0.2,
+    duration: 0.5,
+    order: i + 1,
+  }));
+}
+
+/** "Zoom Focus" - first block zoomIn, rest fadeIn */
+function zoomFocus(blockCount: number): BlockAnimation[] {
+  if (blockCount === 0) return [];
+  return Array.from({ length: blockCount }, (_, i) => ({
+    type: (i === 0 ? "zoomIn" : "fadeIn") as BlockAnimation["type"],
+    delay: i === 0 ? 0 : 0.3 + (i - 1) * 0.2,
+    duration: i === 0 ? 0.6 : 0.4,
+    order: i + 1,
+  }));
+}
+
+/** "Dramatic Reveal" - wipeDown for even blocks (images/charts), dissolve for odd (text) */
+function dramaticReveal(blockCount: number): BlockAnimation[] {
+  return Array.from({ length: blockCount }, (_, i) => ({
+    type: (i % 2 === 0 ? "wipeDown" : "dissolve") as BlockAnimation["type"],
+    delay: i * 0.4,
+    duration: 0.6,
+    order: i + 1,
+  }));
+}
+
 /** "None" - no animations */
 function none(blockCount: number): BlockAnimation[] {
   return Array.from({ length: blockCount }, () => ({
@@ -94,6 +125,24 @@ export const ANIMATION_PRESETS: AnimationPreset[] = [
     label: "Results Reveal",
     description: "Title first, then data blocks one by one",
     generate: resultsReveal,
+  },
+  {
+    key: "slide_cascade",
+    label: "Slide Cascade",
+    description: "Blocks slide in from the right with staggered delays",
+    generate: slideCascade,
+  },
+  {
+    key: "zoom_focus",
+    label: "Zoom Focus",
+    description: "First block zooms in, rest fade in",
+    generate: zoomFocus,
+  },
+  {
+    key: "dramatic_reveal",
+    label: "Dramatic Reveal",
+    description: "Alternating wipe and dissolve effects",
+    generate: dramaticReveal,
   },
   {
     key: "none",

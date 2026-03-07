@@ -24,8 +24,17 @@ describe("block animation CSS", () => {
 
     expect(stylesheet).toContain("translateY(20px)");
     expect(stylesheet).toContain("translateX(-24px)");
-    expect(stylesheet).toContain("scale(0.88)");
+    expect(stylesheet).toContain("scale(0)");
     expect(stylesheet).toContain("max-width: 0");
+
+    // New animation types
+    expect(stylesheet).toContain(`@keyframes ${BLOCK_ANIMATION_KEYFRAME_BY_TYPE.slideDown}`);
+    expect(stylesheet).toContain(`@keyframes ${BLOCK_ANIMATION_KEYFRAME_BY_TYPE.slideRight}`);
+    expect(stylesheet).toContain(`@keyframes ${BLOCK_ANIMATION_KEYFRAME_BY_TYPE.bounceIn}`);
+    expect(stylesheet).toContain(`@keyframes ${BLOCK_ANIMATION_KEYFRAME_BY_TYPE.flipInX}`);
+    expect(stylesheet).toContain(`@keyframes ${BLOCK_ANIMATION_KEYFRAME_BY_TYPE.dissolve}`);
+    expect(stylesheet).toContain(`@keyframes ${BLOCK_ANIMATION_KEYFRAME_BY_TYPE.wipeRight}`);
+    expect(stylesheet).toContain(`@keyframes ${BLOCK_ANIMATION_KEYFRAME_BY_TYPE.wipeDown}`);
   });
 
   it("keeps blocks without animation immediately visible", () => {

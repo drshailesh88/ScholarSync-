@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData } from "@/types/presentation";
+import { cn } from "@/lib/utils";
 import { detectMediaType } from "@/components/slides/blocks/media-block";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
 import { SHAPE_TYPE_OPTIONS, renderShapeSvgPrimitive } from "@/components/slides/blocks/shape-utils";
@@ -1958,16 +1959,62 @@ function NestedCardEditor({ block, onUpdate }: { block: NestedCardBlock; onUpdat
 
 // ---------------------------------------------------------------------------
 // Animation Section — shown below every block editor
+// Three tabs: Entrance, Emphasis, Exit
 // ---------------------------------------------------------------------------
 
-const ANIMATION_TYPES: { value: string; label: string }[] = [
-  { value: "none", label: "None" },
-  { value: "fadeIn", label: "Fade In" },
-  { value: "slideUp", label: "Slide Up" },
-  { value: "slideLeft", label: "Slide Left" },
-  { value: "scaleIn", label: "Scale In" },
-  { value: "typewriter", label: "Typewriter" },
+const ENTRANCE_TYPE_GROUPS: { group: string; options: { value: string; label: string }[] }[] = [
+  { group: "", options: [{ value: "none", label: "None" }] },
+  { group: "Fade", options: [
+    { value: "fadeIn", label: "Fade In" },
+    { value: "dissolve", label: "Dissolve" },
+  ]},
+  { group: "Slide", options: [
+    { value: "slideUp", label: "Slide Up" },
+    { value: "slideDown", label: "Slide Down" },
+    { value: "slideLeft", label: "Slide Left" },
+    { value: "slideRight", label: "Slide Right" },
+  ]},
+  { group: "Scale", options: [
+    { value: "scaleIn", label: "Scale In" },
+    { value: "scaleUp", label: "Scale Up" },
+    { value: "zoomIn", label: "Zoom In" },
+    { value: "bounceIn", label: "Bounce In" },
+  ]},
+  { group: "Rotate", options: [
+    { value: "rotateIn", label: "Rotate In" },
+    { value: "flipInX", label: "Flip X" },
+    { value: "flipInY", label: "Flip Y" },
+  ]},
+  { group: "Reveal", options: [
+    { value: "wipeRight", label: "Wipe Right" },
+    { value: "wipeDown", label: "Wipe Down" },
+    { value: "typewriter", label: "Typewriter" },
+  ]},
 ];
+
+const EXIT_TYPE_OPTIONS: { value: string; label: string }[] = [
+  { value: "none", label: "None" },
+  { value: "fadeOut", label: "Fade Out" },
+  { value: "slideUp", label: "Slide Up" },
+  { value: "slideDown", label: "Slide Down" },
+  { value: "slideLeft", label: "Slide Left" },
+  { value: "slideRight", label: "Slide Right" },
+  { value: "scaleOut", label: "Scale Out" },
+  { value: "shrinkOut", label: "Shrink Out" },
+  { value: "zoomOut", label: "Zoom Out" },
+  { value: "dissolveOut", label: "Dissolve Out" },
+];
+
+const EMPHASIS_TYPE_OPTIONS: { value: string; label: string }[] = [
+  { value: "none", label: "None" },
+  { value: "pulse", label: "Pulse" },
+  { value: "bounce", label: "Bounce" },
+  { value: "shake", label: "Shake" },
+  { value: "grow", label: "Grow" },
+  { value: "spin", label: "Spin" },
+];
+
+type AnimationTab = "entrance" | "emphasis" | "exit";
 
 function AnimationSection({
   block,
@@ -1976,58 +2023,238 @@ function AnimationSection({
   block: ContentBlock;
   onUpdate: (b: ContentBlock) => void;
 }) {
+  const [tab, setTab] = useState<AnimationTab>("entrance");
   const anim: BlockAnimation = block.animation ?? { type: "none", delay: 0, duration: 0.4, order: 0 };
 
   function updateAnimation(partial: Partial<BlockAnimation>) {
     const updated = { ...anim, ...partial };
-    onUpdate({ ...block, animation: updated.type === "none" ? undefined : updated });
+    onUpdate({ ...block, animation: updated.type === "none" && !updated.exit && !updated.emphasis ? undefined : updated });
   }
+
+  const tabs: { key: AnimationTab; label: string }[] = [
+    { key: "entrance", label: "Entrance" },
+    { key: "emphasis", label: "Emphasis" },
+    { key: "exit", label: "Exit" },
+  ];
 
   return (
     <div className="px-3 py-3 border-t border-border">
       <div className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider mb-2">
         Animation
       </div>
+
+      {/* Tab bar */}
+      <div className="flex gap-0.5 mb-2 p-0.5 rounded-md bg-surface-raised border border-border">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={cn(
+              "flex-1 text-[10px] font-medium py-1 rounded transition-colors",
+              tab === t.key
+                ? "bg-brand text-white"
+                : "text-ink-muted hover:text-ink"
+            )}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       <div className="space-y-2">
-        <div>
-          <FieldLabel>Effect</FieldLabel>
-          <FieldSelect
-            value={anim.type}
-            onChange={(v) => updateAnimation({ type: v as BlockAnimation["type"] })}
-            options={ANIMATION_TYPES}
-          />
-        </div>
-        {anim.type !== "none" && (
+        {tab === "entrance" && (
           <>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <FieldLabel>Duration (s)</FieldLabel>
-                <FieldInput
-                  type="number"
-                  value={String(anim.duration)}
-                  onChange={(v) => updateAnimation({ duration: parseFloat(v) || 0.4 })}
-                  placeholder="0.4"
-                />
-              </div>
-              <div>
-                <FieldLabel>Delay (s)</FieldLabel>
-                <FieldInput
-                  type="number"
-                  value={String(anim.delay)}
-                  onChange={(v) => updateAnimation({ delay: parseFloat(v) || 0 })}
-                  placeholder="0"
-                />
-              </div>
-            </div>
             <div>
-              <FieldLabel>Order</FieldLabel>
-              <FieldInput
-                type="number"
-                value={String(anim.order)}
-                onChange={(v) => updateAnimation({ order: parseInt(v) || 0 })}
-                placeholder="0"
-              />
+              <FieldLabel>Effect</FieldLabel>
+              <select
+                value={anim.type}
+                onChange={(e) => updateAnimation({ type: e.target.value as BlockAnimation["type"] })}
+                className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
+              >
+                {ENTRANCE_TYPE_GROUPS.map((g) =>
+                  g.group ? (
+                    <optgroup key={g.group} label={g.group}>
+                      {g.options.map((o) => (
+                        <option key={o.value} value={o.value}>{o.label}</option>
+                      ))}
+                    </optgroup>
+                  ) : (
+                    g.options.map((o) => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))
+                  )
+                )}
+              </select>
             </div>
+            {anim.type !== "none" && (
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <FieldLabel>Duration (s)</FieldLabel>
+                    <FieldInput
+                      type="number"
+                      value={String(anim.duration)}
+                      onChange={(v) => updateAnimation({ duration: parseFloat(v) || 0.4 })}
+                      placeholder="0.4"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel>Delay (s)</FieldLabel>
+                    <FieldInput
+                      type="number"
+                      value={String(anim.delay)}
+                      onChange={(v) => updateAnimation({ delay: parseFloat(v) || 0 })}
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <FieldLabel>Order</FieldLabel>
+                  <FieldInput
+                    type="number"
+                    value={String(anim.order)}
+                    onChange={(v) => updateAnimation({ order: parseInt(v) || 0 })}
+                    placeholder="0"
+                  />
+                </div>
+              </>
+            )}
+          </>
+        )}
+
+        {tab === "emphasis" && (
+          <>
+            <div>
+              <FieldLabel>Effect</FieldLabel>
+              <select
+                value={anim.emphasis?.type ?? "none"}
+                onChange={(e) => {
+                  const emphType = e.target.value as EmphasisAnimationType;
+                  if (emphType === "none") {
+                    updateAnimation({ emphasis: undefined });
+                  } else {
+                    updateAnimation({
+                      emphasis: {
+                        type: emphType,
+                        delay: anim.emphasis?.delay ?? 0,
+                        duration: anim.emphasis?.duration ?? 0.4,
+                        repeat: anim.emphasis?.repeat ?? 1,
+                      },
+                    });
+                  }
+                }}
+                className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
+              >
+                {EMPHASIS_TYPE_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+            {anim.emphasis && anim.emphasis.type !== "none" && (
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <FieldLabel>Duration (s)</FieldLabel>
+                    <FieldInput
+                      type="number"
+                      value={String(anim.emphasis.duration)}
+                      onChange={(v) =>
+                        updateAnimation({
+                          emphasis: { ...anim.emphasis!, duration: parseFloat(v) || 0.4 },
+                        })
+                      }
+                      placeholder="0.4"
+                    />
+                  </div>
+                  <div>
+                    <FieldLabel>Delay (s)</FieldLabel>
+                    <FieldInput
+                      type="number"
+                      value={String(anim.emphasis.delay)}
+                      onChange={(v) =>
+                        updateAnimation({
+                          emphasis: { ...anim.emphasis!, delay: parseFloat(v) || 0 },
+                        })
+                      }
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <FieldLabel>Repeat</FieldLabel>
+                  <FieldInput
+                    type="number"
+                    value={String(anim.emphasis.repeat ?? 1)}
+                    onChange={(v) =>
+                      updateAnimation({
+                        emphasis: { ...anim.emphasis!, repeat: parseInt(v) || 1 },
+                      })
+                    }
+                    placeholder="1"
+                  />
+                </div>
+              </>
+            )}
+          </>
+        )}
+
+        {tab === "exit" && (
+          <>
+            <div>
+              <FieldLabel>Effect</FieldLabel>
+              <select
+                value={anim.exit?.type ?? "none"}
+                onChange={(e) => {
+                  const exitType = e.target.value as ExitAnimationType;
+                  if (exitType === "none") {
+                    updateAnimation({ exit: undefined });
+                  } else {
+                    updateAnimation({
+                      exit: {
+                        type: exitType,
+                        delay: anim.exit?.delay ?? 0,
+                        duration: anim.exit?.duration ?? 0.4,
+                      },
+                    });
+                  }
+                }}
+                className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
+              >
+                {EXIT_TYPE_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+            {anim.exit && anim.exit.type !== "none" && (
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <FieldLabel>Duration (s)</FieldLabel>
+                  <FieldInput
+                    type="number"
+                    value={String(anim.exit.duration)}
+                    onChange={(v) =>
+                      updateAnimation({
+                        exit: { ...anim.exit!, duration: parseFloat(v) || 0.4 },
+                      })
+                    }
+                    placeholder="0.4"
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Delay (s)</FieldLabel>
+                  <FieldInput
+                    type="number"
+                    value={String(anim.exit.delay)}
+                    onChange={(v) =>
+                      updateAnimation({
+                        exit: { ...anim.exit!, delay: parseFloat(v) || 0 },
+                      })
+                    }
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

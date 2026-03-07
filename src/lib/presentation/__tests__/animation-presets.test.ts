@@ -20,11 +20,14 @@ describe("ANIMATION_PRESETS", () => {
     expect(keys).toContain("fade_all");
     expect(keys).toContain("stagger");
     expect(keys).toContain("results_reveal");
+    expect(keys).toContain("slide_cascade");
+    expect(keys).toContain("zoom_focus");
+    expect(keys).toContain("dramatic_reveal");
     expect(keys).toContain("none");
   });
 
-  it("has 5 presets total", () => {
-    expect(ANIMATION_PRESETS).toHaveLength(5);
+  it("has 8 presets total", () => {
+    expect(ANIMATION_PRESETS).toHaveLength(8);
   });
 
   describe("each preset", () => {
@@ -153,6 +156,70 @@ describe("ANIMATION_PRESETS", () => {
     });
   });
 
+  describe("slide_cascade", () => {
+    const preset = ANIMATION_PRESETS.find((p) => p.key === "slide_cascade")!;
+
+    it("uses slideRight type", () => {
+      const result = preset.generate(3);
+      result.forEach((anim) => expect(anim.type).toBe("slideRight"));
+    });
+
+    it("assigns staggered delays (0.2s apart)", () => {
+      const result = preset.generate(3);
+      expect(result[0].delay).toBe(0);
+      expect(result[1].delay).toBeCloseTo(0.2);
+      expect(result[2].delay).toBeCloseTo(0.4);
+    });
+
+    it("assigns sequential orders", () => {
+      const result = preset.generate(3);
+      expect(result[0].order).toBe(1);
+      expect(result[1].order).toBe(2);
+      expect(result[2].order).toBe(3);
+    });
+  });
+
+  describe("zoom_focus", () => {
+    const preset = ANIMATION_PRESETS.find((p) => p.key === "zoom_focus")!;
+
+    it("first block uses zoomIn, rest use fadeIn", () => {
+      const result = preset.generate(3);
+      expect(result[0].type).toBe("zoomIn");
+      expect(result[1].type).toBe("fadeIn");
+      expect(result[2].type).toBe("fadeIn");
+    });
+
+    it("first block has longer duration", () => {
+      const result = preset.generate(2);
+      expect(result[0].duration).toBe(0.6);
+      expect(result[1].duration).toBe(0.4);
+    });
+
+    it("handles empty block count", () => {
+      const result = preset.generate(0);
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe("dramatic_reveal", () => {
+    const preset = ANIMATION_PRESETS.find((p) => p.key === "dramatic_reveal")!;
+
+    it("alternates between wipeDown and dissolve", () => {
+      const result = preset.generate(4);
+      expect(result[0].type).toBe("wipeDown");
+      expect(result[1].type).toBe("dissolve");
+      expect(result[2].type).toBe("wipeDown");
+      expect(result[3].type).toBe("dissolve");
+    });
+
+    it("assigns staggered delays (0.4s apart)", () => {
+      const result = preset.generate(3);
+      expect(result[0].delay).toBe(0);
+      expect(result[1].delay).toBeCloseTo(0.4);
+      expect(result[2].delay).toBeCloseTo(0.8);
+    });
+  });
+
   describe("none", () => {
     const preset = ANIMATION_PRESETS.find((p) => p.key === "none")!;
 
@@ -185,6 +252,9 @@ describe("ANIMATION_PRESETS_MAP", () => {
     expect(keys).toContain("fade_all");
     expect(keys).toContain("stagger");
     expect(keys).toContain("results_reveal");
+    expect(keys).toContain("slide_cascade");
+    expect(keys).toContain("zoom_focus");
+    expect(keys).toContain("dramatic_reveal");
     expect(keys).toContain("none");
   });
 

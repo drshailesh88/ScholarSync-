@@ -126,8 +126,8 @@ interface SocialFormatDims {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 describe("Cycle 19: Animation Presets", () => {
-  test("all 5 preset keys are registered", () => {
-    const expectedKeys = ["sequential_build", "fade_all", "stagger", "results_reveal", "none"];
+  test("all 8 preset keys are registered", () => {
+    const expectedKeys = ["sequential_build", "fade_all", "stagger", "results_reveal", "slide_cascade", "zoom_focus", "dramatic_reveal", "none"];
     expect(ANIMATION_PRESETS.map((p) => p.key)).toEqual(expectedKeys);
   });
 
@@ -3141,7 +3141,12 @@ describe("Cycle 26: Edge Case Regression", () => {
   });
 
   test("all animations have valid type strings", () => {
-    const validTypes = ["fadeIn", "slideUp", "slideLeft", "scaleIn", "typewriter", "none"];
+    const validTypes = [
+      "fadeIn", "slideUp", "slideDown", "slideLeft", "slideRight",
+      "scaleIn", "scaleUp", "bounceIn", "flipInX", "flipInY",
+      "rotateIn", "zoomIn", "dissolve", "wipeRight", "wipeDown",
+      "typewriter", "none",
+    ];
     for (const preset of ANIMATION_PRESETS) {
       const anims = preset.generate(5);
       for (const a of anims) {

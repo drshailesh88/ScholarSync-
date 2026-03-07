@@ -224,15 +224,42 @@ export interface IllustrationData {
   alt?: string;
 }
 
+/** Exit animation types */
+export type ExitAnimationType =
+  | "fadeOut" | "slideUp" | "slideDown" | "slideLeft" | "slideRight"
+  | "scaleOut" | "shrinkOut" | "zoomOut" | "dissolveOut" | "none";
+
+/** Emphasis animation types */
+export type EmphasisAnimationType =
+  | "pulse" | "bounce" | "shake" | "grow" | "spin" | "none";
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
-  type: "fadeIn" | "slideUp" | "slideLeft" | "scaleIn" | "typewriter" | "none";
+  type:
+    // Entrance (build-in)
+    | "fadeIn" | "slideUp" | "slideDown" | "slideLeft" | "slideRight"
+    | "scaleIn" | "scaleUp" | "bounceIn" | "flipInX" | "flipInY"
+    | "rotateIn" | "zoomIn" | "dissolve" | "wipeRight" | "wipeDown"
+    | "typewriter"
+    // None
+    | "none";
   delay: number;      // seconds delay before this block animates in
   duration: number;    // seconds for the animation
   order: number;       // sequential order (1, 2, 3...)
+  exit?: {
+    type: ExitAnimationType;
+    delay: number;     // delay after entrance completes
+    duration: number;
+  };
+  emphasis?: {
+    type: EmphasisAnimationType;
+    delay: number;     // delay after entrance completes
+    duration: number;
+    repeat?: number;   // how many times to repeat (default 1)
+  };
 }
 
-export type AnimationPresetKey = "sequential_build" | "fade_all" | "stagger" | "results_reveal" | "none";
+export type AnimationPresetKey = "sequential_build" | "fade_all" | "stagger" | "results_reveal" | "slide_cascade" | "zoom_focus" | "dramatic_reveal" | "none";
 
 /** Positioning data for freeform layout blocks */
 export interface BlockPosition {
