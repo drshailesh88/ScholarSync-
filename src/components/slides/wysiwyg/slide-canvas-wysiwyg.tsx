@@ -1757,67 +1757,67 @@ function ImageCropOverlay({ crop, onChange, onConfirm, onCancel }: ImageCropOver
     };
   };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const drag = dragRef.current;
-    const overlayRect = overlayRef.current?.getBoundingClientRect();
-    if (!drag || !overlayRect || overlayRect.width <= 0 || overlayRect.height <= 0) return;
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const drag = dragRef.current;
+      const overlayRect = overlayRef.current?.getBoundingClientRect();
+      if (!drag || !overlayRect || overlayRect.width <= 0 || overlayRect.height <= 0) return;
 
-    const deltaXPct = ((e.clientX - drag.startClientX) / overlayRect.width) * 100;
-    const deltaYPct = ((e.clientY - drag.startClientY) / overlayRect.height) * 100;
-    const start = drag.startCrop;
+      const deltaXPct = ((e.clientX - drag.startClientX) / overlayRect.width) * 100;
+      const deltaYPct = ((e.clientY - drag.startClientY) / overlayRect.height) * 100;
+      const start = drag.startCrop;
 
-    if (drag.mode === "move") {
+      if (drag.mode === "move") {
+        onChange(
+          clampCrop({
+            x: Math.max(0, Math.min(100 - start.width, start.x + deltaXPct)),
+            y: Math.max(0, Math.min(100 - start.height, start.y + deltaYPct)),
+            width: start.width,
+            height: start.height,
+          })
+        );
+        return;
+      }
+
+      let left = start.x;
+      let top = start.y;
+      let right = start.x + start.width;
+      let bottom = start.y + start.height;
+
+      if (drag.mode.includes("left")) {
+        left = Math.max(0, Math.min(right - CROP_MIN_SIZE_PERCENT, start.x + deltaXPct));
+      }
+      if (drag.mode.includes("right")) {
+        right = Math.min(100, Math.max(left + CROP_MIN_SIZE_PERCENT, start.x + start.width + deltaXPct));
+      }
+      if (drag.mode.includes("top")) {
+        top = Math.max(0, Math.min(bottom - CROP_MIN_SIZE_PERCENT, start.y + deltaYPct));
+      }
+      if (drag.mode.includes("bottom")) {
+        bottom = Math.min(100, Math.max(top + CROP_MIN_SIZE_PERCENT, start.y + start.height + deltaYPct));
+      }
+
       onChange(
         clampCrop({
-          x: Math.max(0, Math.min(100 - start.width, start.x + deltaXPct)),
-          y: Math.max(0, Math.min(100 - start.height, start.y + deltaYPct)),
-          width: start.width,
-          height: start.height,
+          x: left,
+          y: top,
+          width: right - left,
+          height: bottom - top,
         })
       );
-      return;
-    }
+    };
 
-    let left = start.x;
-    let top = start.y;
-    let right = start.x + start.width;
-    let bottom = start.y + start.height;
+    const handleMouseUp = () => {
+      dragRef.current = null;
+    };
 
-    if (drag.mode.includes("left")) {
-      left = Math.max(0, Math.min(right - CROP_MIN_SIZE_PERCENT, start.x + deltaXPct));
-    }
-    if (drag.mode.includes("right")) {
-      right = Math.min(100, Math.max(left + CROP_MIN_SIZE_PERCENT, start.x + start.width + deltaXPct));
-    }
-    if (drag.mode.includes("top")) {
-      top = Math.max(0, Math.min(bottom - CROP_MIN_SIZE_PERCENT, start.y + deltaYPct));
-    }
-    if (drag.mode.includes("bottom")) {
-      bottom = Math.min(100, Math.max(top + CROP_MIN_SIZE_PERCENT, start.y + start.height + deltaYPct));
-    }
-
-    onChange(
-      clampCrop({
-        x: left,
-        y: top,
-        width: right - left,
-        height: bottom - top,
-      })
-    );
-  }, [onChange]);
-
-  const handleMouseUp = useCallback(() => {
-    dragRef.current = null;
-  }, []);
-
-  useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [handleMouseMove, handleMouseUp]);
+  }, [onChange]);
 
   const handles: { mode: CropDragMode; cursor: string; style: React.CSSProperties }[] = [
     { mode: "top-left", cursor: "nwse-resize", style: { top: -4, left: -4 } },

@@ -44,7 +44,8 @@ describe("block-registry", () => {
 
     it("every entry has a render component", () => {
       for (const [, entry] of Object.entries(BLOCK_REGISTRY)) {
-        expect(typeof entry.render).toBe("function");
+        // React.memo wraps produce objects with $$typeof, plain components are functions
+        expect(typeof entry.render === "function" || typeof entry.render === "object").toBe(true);
       }
     });
 

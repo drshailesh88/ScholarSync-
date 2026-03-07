@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type {
   ContentBlock,
   SlideLayout,
@@ -26,7 +27,7 @@ interface SlideThumbnailProps {
   onContextMenu?: (e: React.MouseEvent) => void;
 }
 
-export function SlideThumbnail({
+export const SlideThumbnail = memo(function SlideThumbnail({
   title,
   subtitle,
   layout,
@@ -84,4 +85,4 @@ export function SlideThumbnail({
       )}
     </button>
   );
-}
+});

@@ -1,10 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useId } from "react";
+import { memo, useEffect, useRef, useId } from "react";
 import type { DiagramData, ThemeConfig } from "@/types/presentation";
-import mermaid from "mermaid";
 
-mermaid.initialize({ startOnLoad: false, theme: "default" });
+// Lazy-load mermaid to avoid ~800KB in the initial bundle
+let mermaidPromise: Promise<typeof import("mermaid")> | null = null;
+function getMermaid() {
+  if (!mermaidPromise) {
+    mermaidPromise = import("mermaid").then((m) => {
+      m.default.initialize({ startOnLoad: false, theme: "default" });
+      return m;
+    });
+  }
+  return mermaidPromise;
+}
 
 // ---------------------------------------------------------------------------
 // Mermaid render queue — serializes all renders to prevent race conditions.
@@ -20,9 +29,10 @@ function queueMermaidRender(
   return new Promise((resolve, reject) => {
     renderQueue = renderQueue.then(async () => {
       try {
+        const m = await getMermaid();
         // Clean up any leftover temp element from a prior render with this id
         document.querySelector(`#d${id}`)?.remove();
-        const { svg } = await mermaid.render(id, syntax);
+        const { svg } = await m.default.render(id, syntax);
         resolve(svg);
       } catch (err) {
         reject(err);
@@ -60,7 +70,7 @@ interface DiagramBlockProps {
   theme: ThemeConfig;
 }
 
-export function DiagramBlock({ data, theme }: DiagramBlockProps) {
+export const DiagramBlock = memo(function DiagramBlock({ data, theme }: DiagramBlockProps) {
   const ref = useRef<HTMLDivElement>(null);
   const uid = useId().replace(/:/g, "_");
 
@@ -111,4 +121,4 @@ export function DiagramBlock({ data, theme }: DiagramBlockProps) {
       )}
     </div>
   );
-}
+});

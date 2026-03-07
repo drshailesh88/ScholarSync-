@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { ThemeConfig } from "@/types/presentation";
 
 interface DividerBlockProps {
@@ -7,7 +8,7 @@ interface DividerBlockProps {
   theme: ThemeConfig;
 }
 
-export function DividerBlock({ data, theme }: DividerBlockProps) {
+export const DividerBlock = memo(function DividerBlock({ data, theme }: DividerBlockProps) {
   const dividerStyle = data.style ?? "solid";
 
   if (dividerStyle === "gradient") {
@@ -34,4 +35,4 @@ export function DividerBlock({ data, theme }: DividerBlockProps) {
       }}
     />
   );
-}
+});

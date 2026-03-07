@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import {
   BarChart,
   Bar,
@@ -49,7 +50,7 @@ function getChartColor(index: number, theme: ThemeConfig): string {
   return CHART_PALETTE[index % CHART_PALETTE.length];
 }
 
-export function ChartBlock({ data, theme }: ChartBlockProps) {
+export const ChartBlock = memo(function ChartBlock({ data, theme }: ChartBlockProps) {
   if (!data.datasets || data.datasets.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-[0.7em] opacity-40">
@@ -89,7 +90,7 @@ export function ChartBlock({ data, theme }: ChartBlockProps) {
       </div>
     </div>
   );
-}
+});
 
 function renderChart(
   data: ChartData,

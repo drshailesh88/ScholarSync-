@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { CodeData, ThemeConfig } from "@/types/presentation";
 
 interface CodeBlockProps {
@@ -7,7 +8,7 @@ interface CodeBlockProps {
   theme: ThemeConfig;
 }
 
-export function CodeBlock({ data, theme }: CodeBlockProps) {
+export const CodeBlock = memo(function CodeBlock({ data, theme }: CodeBlockProps) {
   return (
     <div className="flex flex-col gap-[0.2em]">
       {data.language && (
@@ -31,4 +32,4 @@ export function CodeBlock({ data, theme }: CodeBlockProps) {
       )}
     </div>
   );
-}
+});

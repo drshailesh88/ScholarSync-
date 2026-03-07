@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { TimelineData, ThemeConfig } from "@/types/presentation";
 
 interface TimelineBlockProps {
@@ -13,7 +14,7 @@ const STATUS_COLORS: Record<string, string> = {
   upcoming: "#94A3B8",
 };
 
-export function TimelineBlock({ data, theme }: TimelineBlockProps) {
+export const TimelineBlock = memo(function TimelineBlock({ data, theme }: TimelineBlockProps) {
   if (!data.entries || data.entries.length === 0) {
     return <div className="text-[0.6em] opacity-40">No timeline entries</div>;
   }
@@ -65,4 +66,4 @@ export function TimelineBlock({ data, theme }: TimelineBlockProps) {
       })}
     </div>
   );
-}
+});

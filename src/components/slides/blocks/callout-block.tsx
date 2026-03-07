@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { CalloutData, ThemeConfig } from "@/types/presentation";
 
 interface CalloutBlockProps {
@@ -17,7 +18,7 @@ const CALLOUT_CONFIG: Record<CalloutData["type"], { border: string; bg: string; 
   clinical: { border: "#14B8A6", bg: "#F0FDFA", icon: "+" },
 };
 
-export function CalloutBlock({ data, theme: _theme }: CalloutBlockProps) {
+export const CalloutBlock = memo(function CalloutBlock({ data, theme: _theme }: CalloutBlockProps) {
   const config = CALLOUT_CONFIG[data.type] ?? CALLOUT_CONFIG.info;
 
   return (
@@ -46,4 +47,4 @@ export function CalloutBlock({ data, theme: _theme }: CalloutBlockProps) {
       </div>
     </div>
   );
-}
+});

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { InfographicData, InfographicItem, ThemeConfig } from "@/types/presentation";
 
 // ---------------------------------------------------------------------------
@@ -564,7 +565,7 @@ const RENDERERS: Record<string, React.ComponentType<{ items: InfographicItem[]; 
   cause_effect: CauseEffect,
 };
 
-export function InfographicBlock({ data, theme }: InfographicBlockProps) {
+export const InfographicBlock = memo(function InfographicBlock({ data, theme }: InfographicBlockProps) {
   const colors = getColors(data.colorScheme, theme);
   const Renderer = RENDERERS[data.infographicType] || ProcessFlow;
 
@@ -585,4 +586,4 @@ export function InfographicBlock({ data, theme }: InfographicBlockProps) {
       )}
     </div>
   );
-}
+});

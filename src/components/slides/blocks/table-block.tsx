@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { memo, type ReactNode } from "react";
 import type { ThemeConfig } from "@/types/presentation";
 
 interface TableBlockProps {
@@ -16,7 +16,7 @@ function renderCellContent(value: string): ReactNode {
   return <span dangerouslySetInnerHTML={{ __html: value }} />;
 }
 
-export function TableBlock({ data, theme }: TableBlockProps) {
+export const TableBlock = memo(function TableBlock({ data, theme }: TableBlockProps) {
   if (!data.headers || data.headers.length === 0) {
     return <div className="text-[0.65em] opacity-40">Empty table</div>;
   }
@@ -66,4 +66,4 @@ export function TableBlock({ data, theme }: TableBlockProps) {
       </table>
     </div>
   );
-}
+});

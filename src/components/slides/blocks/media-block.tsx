@@ -1,7 +1,7 @@
 "use client";
 
 import { PlayCircle, Pause, Play, Upload, SpeakerHigh } from "@phosphor-icons/react";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { memo, useRef, useState, useCallback, useEffect } from "react";
 import type { MediaData, ThemeConfig } from "@/types/presentation";
 
 interface MediaBlockProps {
@@ -253,7 +253,7 @@ function AudioPlayer({
 
 const MEDIA_ACCEPT = "video/*,audio/*";
 
-export function MediaBlock({
+export const MediaBlock = memo(function MediaBlock({
   data,
   theme,
   scale = 1,
@@ -451,4 +451,4 @@ export function MediaBlock({
       />
     </div>
   );
-}
+});

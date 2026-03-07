@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Upload } from "@phosphor-icons/react";
-import { useMemo, useRef, useState } from "react";
+import { memo, useMemo, useRef, useState } from "react";
 import type { ImageData, ThemeConfig } from "@/types/presentation";
 
 interface ImageBlockProps {
@@ -25,7 +25,7 @@ function clampPercent(value: number): number {
   return Math.max(0, Math.min(100, value));
 }
 
-export function ImageBlock({ data, theme, onDataChange, showFullImage = false }: ImageBlockProps) {
+export const ImageBlock = memo(function ImageBlock({ data, theme, onDataChange, showFullImage = false }: ImageBlockProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -152,4 +152,4 @@ export function ImageBlock({ data, theme, onDataChange, showFullImage = false }:
       )}
     </figure>
   );
-}
+});

@@ -658,7 +658,9 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
         saveStatus: "idle",
       });
       return true;
-    } catch {
+    } catch (e) {
+      console.error("loadDeck failed", e);
+      set({ saveStatus: "error" });
       return false;
     }
   },

@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { ShapeData, ThemeConfig } from "@/types/presentation";
 import { renderShapeSvgPrimitive } from "./shape-utils";
 
@@ -12,7 +13,7 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-export function ShapeBlock({ data, theme }: ShapeBlockProps) {
+export const ShapeBlock = memo(function ShapeBlock({ data, theme }: ShapeBlockProps) {
   const shapeType = data.shapeType ?? "rectangle";
   const fill = data.fillColor ?? theme.primaryColor;
   const baseStroke = data.strokeColor ?? theme.textColor;
@@ -71,4 +72,4 @@ export function ShapeBlock({ data, theme }: ShapeBlockProps) {
       </svg>
     </div>
   );
-}
+});

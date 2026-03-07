@@ -1,31 +1,48 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import type { MathData, ThemeConfig } from "@/types/presentation";
-import katex from "katex";
-import "katex/dist/katex.min.css";
+
+// Lazy-load KaTeX to avoid ~300KB in the initial bundle
+let katexPromise: Promise<typeof import("katex")> | null = null;
+function getKatex() {
+  if (!katexPromise) {
+    katexPromise = Promise.all([
+      import("katex"),
+      import("katex/dist/katex.min.css"),
+    ]).then(([k]) => k);
+  }
+  return katexPromise;
+}
 
 interface MathBlockProps {
   data: MathData;
   theme: ThemeConfig;
 }
 
-export function MathBlock({ data, theme }: MathBlockProps) {
+export const MathBlock = memo(function MathBlock({ data, theme }: MathBlockProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!ref.current || !data.expression) return;
-    try {
-      katex.render(data.expression, ref.current, {
-        displayMode: data.displayMode ?? true,
-        throwOnError: false,
-        errorColor: "#EF4444",
-      });
-    } catch {
-      if (ref.current) {
-        ref.current.textContent = `Invalid LaTeX: ${data.expression}`;
+    let cancelled = false;
+
+    getKatex().then((katexModule) => {
+      if (cancelled || !ref.current) return;
+      try {
+        katexModule.default.render(data.expression, ref.current, {
+          displayMode: data.displayMode ?? true,
+          throwOnError: false,
+          errorColor: "#EF4444",
+        });
+      } catch {
+        if (ref.current) {
+          ref.current.textContent = `Invalid LaTeX: ${data.expression}`;
+        }
       }
-    }
+    });
+
+    return () => { cancelled = true; };
   }, [data.expression, data.displayMode]);
 
   return (
@@ -42,4 +59,4 @@ export function MathBlock({ data, theme }: MathBlockProps) {
       )}
     </div>
   );
-}
+});

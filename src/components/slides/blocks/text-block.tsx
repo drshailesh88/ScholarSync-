@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
+import { memo, useRef, useLayoutEffect } from "react";
 import type { ThemeConfig } from "@/types/presentation";
 
 interface TextBlockProps {
@@ -25,7 +25,7 @@ const STYLE_CLASSES: Record<string, string> = {
 
 const MIN_SCALE = 0.5;
 
-export function TextBlock({ data, theme, scale: _scale }: TextBlockProps) {
+export const TextBlock = memo(function TextBlock({ data, theme, scale: _scale }: TextBlockProps) {
   const style = data.style ?? "body";
   const isHeading = style === "title" || style === "subtitle";
   const hasHtml = /<[a-z][\s\S]*>/i.test(data.text);
@@ -65,4 +65,4 @@ export function TextBlock({ data, theme, scale: _scale }: TextBlockProps) {
         : { children: data.text })}
     />
   );
-}
+});

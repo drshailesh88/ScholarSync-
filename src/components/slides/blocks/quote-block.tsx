@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { ThemeConfig } from "@/types/presentation";
 
 interface QuoteBlockProps {
@@ -7,7 +8,7 @@ interface QuoteBlockProps {
   theme: ThemeConfig;
 }
 
-export function QuoteBlock({ data, theme }: QuoteBlockProps) {
+export const QuoteBlock = memo(function QuoteBlock({ data, theme }: QuoteBlockProps) {
   return (
     <blockquote className="flex flex-col items-center text-center px-[1em]">
       <div
@@ -32,4 +33,4 @@ export function QuoteBlock({ data, theme }: QuoteBlockProps) {
       )}
     </blockquote>
   );
-}
+});

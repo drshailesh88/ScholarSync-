@@ -134,6 +134,7 @@ export function SlidesToolbar({
           disabled={!undoAvailable}
           className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           title="Undo (Ctrl+Z)"
+          aria-label="Undo"
         >
           <ArrowUUpLeft size={14} />
         </button>
@@ -142,6 +143,7 @@ export function SlidesToolbar({
           disabled={!redoAvailable}
           className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           title="Redo (Ctrl+Y)"
+          aria-label="Redo"
         >
           <ArrowUUpRight size={14} />
         </button>
@@ -154,6 +156,7 @@ export function SlidesToolbar({
               : "text-ink-muted hover:text-ink hover:bg-surface-raised"
           )}
           title="Find & Replace (Ctrl+F)"
+          aria-label="Find and replace"
         >
           <MagnifyingGlass size={14} />
         </button>
@@ -161,6 +164,7 @@ export function SlidesToolbar({
           onClick={() => setShowSlideSorter(true)}
           className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           title="Slide Sorter View"
+          aria-label="Slide sorter view"
         >
           <GridFour size={14} />
         </button>
@@ -170,6 +174,7 @@ export function SlidesToolbar({
         <button
           className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
           title="View options"
+          aria-label="View options"
         >
           <Eye size={14} />
           View

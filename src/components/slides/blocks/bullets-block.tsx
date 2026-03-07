@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { ThemeConfig } from "@/types/presentation";
 
 interface BulletsBlockProps {
@@ -7,7 +8,7 @@ interface BulletsBlockProps {
   theme: ThemeConfig;
 }
 
-export function BulletsBlock({ data, theme }: BulletsBlockProps) {
+export const BulletsBlock = memo(function BulletsBlock({ data, theme }: BulletsBlockProps) {
   const Tag = data.ordered ? "ol" : "ul";
 
   return (
@@ -27,4 +28,4 @@ export function BulletsBlock({ data, theme }: BulletsBlockProps) {
       })}
     </Tag>
   );
-}
+});

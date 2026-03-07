@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { BibliographyData, ThemeConfig } from "@/types/presentation";
 
 interface BibliographyBlockProps {
@@ -7,7 +8,7 @@ interface BibliographyBlockProps {
   theme: ThemeConfig;
 }
 
-export function BibliographyBlock({ data, theme }: BibliographyBlockProps) {
+export const BibliographyBlock = memo(function BibliographyBlock({ data, theme }: BibliographyBlockProps) {
   if (!data.entries || data.entries.length === 0) {
     return <div className="text-[0.6em] opacity-40">No references</div>;
   }
@@ -33,4 +34,4 @@ export function BibliographyBlock({ data, theme }: BibliographyBlockProps) {
       ))}
     </div>
   );
-}
+});

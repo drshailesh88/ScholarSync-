@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { StatResultData, ThemeConfig } from "@/types/presentation";
 
 interface StatBlockProps {
@@ -7,7 +8,7 @@ interface StatBlockProps {
   theme: ThemeConfig;
 }
 
-export function StatBlock({ data, theme }: StatBlockProps) {
+export const StatBlock = memo(function StatBlock({ data, theme }: StatBlockProps) {
   return (
     <div
       className="rounded-[0.3em] p-[0.6em] text-center"
@@ -39,4 +40,4 @@ export function StatBlock({ data, theme }: StatBlockProps) {
       )}
     </div>
   );
-}
+});

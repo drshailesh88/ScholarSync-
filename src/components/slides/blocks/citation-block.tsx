@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { CitationData, ThemeConfig } from "@/types/presentation";
 
 interface CitationBlockProps {
@@ -7,7 +8,7 @@ interface CitationBlockProps {
   theme: ThemeConfig;
 }
 
-export function CitationBlock({ data, theme }: CitationBlockProps) {
+export const CitationBlock = memo(function CitationBlock({ data, theme }: CitationBlockProps) {
   return (
     <div
       className="inline-flex items-baseline gap-[0.3em] text-[0.65em] leading-relaxed"
@@ -22,4 +23,4 @@ export function CitationBlock({ data, theme }: CitationBlockProps) {
       </span>
     </div>
   );
-}
+});
