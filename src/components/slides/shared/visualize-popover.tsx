@@ -45,6 +45,7 @@ export function VisualizePopover({
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const setRightPanel = useSlidesStore((s) => s.setRightPanel);
   const setAgentMode = useSlidesStore((s) => s.setAgentMode);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -150,6 +151,11 @@ export function VisualizePopover({
               })
             : "",
           audienceType,
+          brandColors: institutionKit?.primaryColor ? {
+            primary: institutionKit.primaryColor,
+            secondary: institutionKit.secondaryColor || "",
+            accent: institutionKit.accentColor || "",
+          } : undefined,
         }),
       });
 
@@ -241,6 +247,12 @@ export function VisualizePopover({
             )}
           </button>
         </form>
+        {institutionKit?.primaryColor && (
+          <p className="text-[9px] text-brand mt-1.5 flex items-center gap-1">
+            <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: institutionKit.primaryColor }} />
+            Using institutional colors
+          </p>
+        )}
       </div>
 
       {/* Type Chips */}

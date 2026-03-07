@@ -17,6 +17,11 @@ const requestSchema = z.object({
   slideContent: z.string().nullish(),
   preferredType: z.string().nullish(), // "flowchart", "comparison", etc.
   audienceType: z.string().nullish(),
+  brandColors: z.object({
+    primary: z.string(),
+    secondary: z.string(),
+    accent: z.string(),
+  }).nullish(),
 });
 
 // ---------------------------------------------------------------------------
@@ -142,14 +147,18 @@ function validateVisualResponse(raw: unknown): { options: z.infer<typeof visualO
   throw new Error("No valid visual options in LLM response");
 }
 
-function getVisualGenerationPrompt(preferredType?: string): string {
+function getVisualGenerationPrompt(preferredType?: string, brandColors?: { primary: string; secondary: string; accent: string }): string {
   const typeHint = preferredType
     ? `\nThe user specifically wants a "${preferredType}" visual. Generate MOST options as that type with variations, but also include 1-2 alternatives.`
     : "";
 
+  const brandHint = brandColors
+    ? `\nIMPORTANT: The user has institutional brand colors. Use these hex colors in your infographic colorScheme (set to "brand") and chart dataset colors: primary=${brandColors.primary}, secondary=${brandColors.secondary}, accent=${brandColors.accent}. For charts, set the "color" field on each dataset to one of these brand colors.`
+    : "";
+
   return `You are an expert visual designer for academic presentations.
 Given user text, generate MULTIPLE visual representation options that could appear on a slide.
-Return 4-6 options spanning different visual types.${typeHint}
+Return 4-6 options spanning different visual types.${typeHint}${brandHint}
 
 Each option is a ContentBlock — a "diagram" (Mermaid), "infographic" (SVG template), or "chart" (Recharts data).
 
@@ -315,9 +324,9 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const { prompt, slideContent, preferredType, audienceType } = parseResult.data;
+    const { prompt, slideContent, preferredType, audienceType, brandColors } = parseResult.data;
 
-    const systemPrompt = getVisualGenerationPrompt(preferredType ?? undefined);
+    const systemPrompt = getVisualGenerationPrompt(preferredType ?? undefined, brandColors ?? undefined);
     let userPrompt = prompt;
     if (slideContent) {
       userPrompt += `\n\nCurrent slide content for context:\n${slideContent}`;

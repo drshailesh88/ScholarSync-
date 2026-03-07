@@ -30,11 +30,12 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { PieLabelRenderProps } from "recharts";
-import type { ChartData, ThemeConfig } from "@/types/presentation";
+import type { ChartData, ThemeConfig, InstitutionKit } from "@/types/presentation";
 
 interface ChartBlockProps {
   data: ChartData;
   theme: ThemeConfig;
+  institutionKit?: Partial<InstitutionKit> | null;
 }
 
 function renderPieLabel(props: PieLabelRenderProps): string {
@@ -48,13 +49,19 @@ const CHART_PALETTE = [
   "#EF4444", "#8B5CF6", "#EC4899", "#14B8A6",
 ];
 
-function getChartColor(index: number, theme: ThemeConfig): string {
+export function getChartColor(index: number, theme: ThemeConfig, institutionKit?: Partial<InstitutionKit> | null): string {
+  if (institutionKit?.primaryColor) {
+    if (index === 0) return institutionKit.primaryColor;
+    if (index === 1) return institutionKit.secondaryColor || theme.accentColor;
+    if (index === 2) return institutionKit.accentColor || CHART_PALETTE[2];
+    return CHART_PALETTE[index % CHART_PALETTE.length];
+  }
   if (index === 0) return theme.primaryColor;
   if (index === 1) return theme.accentColor;
   return CHART_PALETTE[index % CHART_PALETTE.length];
 }
 
-export const ChartBlock = memo(function ChartBlock({ data, theme }: ChartBlockProps) {
+export const ChartBlock = memo(function ChartBlock({ data, theme, institutionKit }: ChartBlockProps) {
   if (!data.datasets || data.datasets.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-[0.7em] opacity-40">
@@ -89,10 +96,10 @@ export const ChartBlock = memo(function ChartBlock({ data, theme }: ChartBlockPr
       )}
       <div className="flex-1 min-h-0">
         {data.chartType === "forest_plot" || data.chartType === "gauge" ? (
-          renderChart(data, commonProps, theme)
+          renderChart(data, commonProps, theme, institutionKit)
         ) : (
           <ResponsiveContainer width="100%" height="100%">
-            {renderChart(data, commonProps, theme)}
+            {renderChart(data, commonProps, theme, institutionKit)}
           </ResponsiveContainer>
         )}
       </div>
@@ -183,7 +190,8 @@ function TreemapContent({ x, y, width, height, name, color }: TreemapContentProp
 function renderChart(
   data: ChartData,
   commonProps: { data: Record<string, string | number>[]; margin: Record<string, number> },
-  theme: ThemeConfig
+  theme: ThemeConfig,
+  institutionKit?: Partial<InstitutionKit> | null,
 ): React.ReactElement {
   const axisStyle = { fontSize: "0.6em", fill: theme.textColor };
 
@@ -197,7 +205,7 @@ function renderChart(
           <Tooltip />
           {data.showLegend !== false && <Legend wrapperStyle={{ fontSize: "0.6em" }} />}
           {data.datasets.map((ds, i) => (
-            <Bar key={ds.label} dataKey={ds.label} fill={ds.color ?? getChartColor(i, theme)} />
+            <Bar key={ds.label} dataKey={ds.label} fill={ds.color ?? getChartColor(i, theme, institutionKit)} />
           ))}
         </BarChart>
       );
@@ -211,7 +219,7 @@ function renderChart(
           <Tooltip />
           {data.showLegend !== false && <Legend wrapperStyle={{ fontSize: "0.6em" }} />}
           {data.datasets.map((ds, i) => (
-            <Line key={ds.label} type="monotone" dataKey={ds.label} stroke={ds.color ?? getChartColor(i, theme)} strokeWidth={2} dot={{ r: 3 }} />
+            <Line key={ds.label} type="monotone" dataKey={ds.label} stroke={ds.color ?? getChartColor(i, theme, institutionKit)} strokeWidth={2} dot={{ r: 3 }} />
           ))}
         </LineChart>
       );
@@ -234,7 +242,7 @@ function renderChart(
             style={{ fontSize: "0.5em" }}
           >
             {pieData.map((_, i) => (
-              <Cell key={i} fill={getChartColor(i, theme)} />
+              <Cell key={i} fill={getChartColor(i, theme, institutionKit)} />
             ))}
           </Pie>
           <Tooltip />
@@ -262,7 +270,7 @@ function renderChart(
             style={{ fontSize: "0.5em" }}
           >
             {donutData.map((_, i) => (
-              <Cell key={i} fill={getChartColor(i, theme)} />
+              <Cell key={i} fill={getChartColor(i, theme, institutionKit)} />
             ))}
           </Pie>
           <Tooltip />
@@ -281,7 +289,7 @@ function renderChart(
           <YAxis tick={axisStyle} />
           <Tooltip />
           {data.datasets.map((ds, i) => (
-            <Scatter key={ds.label} name={ds.label} data={commonProps.data} fill={ds.color ?? getChartColor(i, theme)} />
+            <Scatter key={ds.label} name={ds.label} data={commonProps.data} fill={ds.color ?? getChartColor(i, theme, institutionKit)} />
           ))}
         </ScatterChart>
       );
@@ -295,7 +303,7 @@ function renderChart(
           <Tooltip />
           {data.showLegend !== false && <Legend wrapperStyle={{ fontSize: "0.6em" }} />}
           {data.datasets.map((ds, i) => (
-            <Area key={ds.label} type="monotone" dataKey={ds.label} fill={ds.color ?? getChartColor(i, theme)} fillOpacity={0.3} stroke={ds.color ?? getChartColor(i, theme)} />
+            <Area key={ds.label} type="monotone" dataKey={ds.label} fill={ds.color ?? getChartColor(i, theme, institutionKit)} fillOpacity={0.3} stroke={ds.color ?? getChartColor(i, theme, institutionKit)} />
           ))}
         </AreaChart>
       );
@@ -307,7 +315,7 @@ function renderChart(
           <PolarAngleAxis dataKey="name" tick={{ fontSize: "0.5em", fill: theme.textColor }} />
           <PolarRadiusAxis tick={{ fontSize: "0.5em" }} />
           {data.datasets.map((ds, i) => (
-            <Radar key={ds.label} name={ds.label} dataKey={ds.label} stroke={ds.color ?? getChartColor(i, theme)} fill={ds.color ?? getChartColor(i, theme)} fillOpacity={0.2} />
+            <Radar key={ds.label} name={ds.label} dataKey={ds.label} stroke={ds.color ?? getChartColor(i, theme, institutionKit)} fill={ds.color ?? getChartColor(i, theme, institutionKit)} fillOpacity={0.2} />
           ))}
           {data.showLegend !== false && <Legend wrapperStyle={{ fontSize: "0.6em" }} />}
         </RadarChart>
@@ -323,7 +331,7 @@ function renderChart(
           <Tooltip />
           {data.showLegend !== false && <Legend wrapperStyle={{ fontSize: "0.6em" }} />}
           {data.datasets.map((ds, i) => (
-            <Bar key={ds.label} dataKey={ds.label} stackId="stack" fill={ds.color ?? getChartColor(i, theme)} />
+            <Bar key={ds.label} dataKey={ds.label} stackId="stack" fill={ds.color ?? getChartColor(i, theme, institutionKit)} />
           ))}
         </BarChart>
       );
@@ -332,7 +340,7 @@ function renderChart(
       const funnelData = data.labels.map((label, i) => ({
         name: label,
         value: data.datasets[0]?.data[i] ?? 0,
-        fill: getChartColor(i, theme),
+        fill: getChartColor(i, theme, institutionKit),
       }));
       return (
         <FunnelChart>
@@ -370,7 +378,7 @@ function renderChart(
       const treemapData = data.labels.map((label, i) => ({
         name: label,
         size: data.datasets[0]?.data[i] ?? 0,
-        color: getChartColor(i, theme),
+        color: getChartColor(i, theme, institutionKit),
       }));
       return (
         <Treemap
@@ -538,7 +546,7 @@ function renderChart(
           <YAxis tick={axisStyle} />
           <Tooltip />
           {data.datasets.map((ds, i) => (
-            <Bar key={ds.label} dataKey={ds.label} fill={ds.color ?? getChartColor(i, theme)} />
+            <Bar key={ds.label} dataKey={ds.label} fill={ds.color ?? getChartColor(i, theme, institutionKit)} />
           ))}
         </BarChart>
       );

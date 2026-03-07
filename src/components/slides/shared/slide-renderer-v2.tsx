@@ -8,6 +8,7 @@ import type {
   SlideMaster,
   ThemeConfig,
   BlockAnimation,
+  InstitutionKit,
 } from "@/types/presentation";
 import type { CardBackground } from "@/stores/slides-store";
 import { PRESET_THEMES } from "@/types/presentation";
@@ -69,6 +70,8 @@ export interface SlideRendererV2Props {
   morphTitleId?: string;
   /** layoutId for the subtitle element during morph */
   morphSubtitleId?: string;
+  /** Institution branding kit for brand colors/fonts */
+  institutionKit?: Partial<InstitutionKit> | null;
 }
 
 export function SlideRendererV2({
@@ -95,6 +98,7 @@ export function SlideRendererV2({
   morphIds,
   morphTitleId,
   morphSubtitleId,
+  institutionKit,
 }: SlideRendererV2Props) {
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
   const resolvedMaster =
@@ -279,6 +283,7 @@ export function SlideRendererV2({
                         data={block.data as Record<string, unknown>}
                         theme={theme}
                         scale={scale}
+                        institutionKit={institutionKit}
                       />
                     );
 
@@ -418,6 +423,7 @@ export function SlideRendererV2({
               data={block.data as Record<string, unknown>}
               theme={theme}
               scale={scale}
+              institutionKit={institutionKit}
             />
           </div>
         );

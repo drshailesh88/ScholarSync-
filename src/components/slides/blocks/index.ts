@@ -1,4 +1,4 @@
-import type { ContentBlock, ThemeConfig } from "@/types/presentation";
+import type { ContentBlock, ThemeConfig, InstitutionKit } from "@/types/presentation";
 import { TextBlock } from "./text-block";
 import { BulletsBlock } from "./bullets-block";
 import { ChartBlock } from "./chart-block";
@@ -33,7 +33,7 @@ export interface BlockRegistryEntry {
    * enforced at call sites via the ContentBlock discriminated union.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  render: React.ComponentType<{ data: any; theme: ThemeConfig; scale?: number }>;
+  render: React.ComponentType<{ data: any; theme: ThemeConfig; scale?: number; institutionKit?: Partial<InstitutionKit> | null }>;
   /** Human-readable label */
   label: string;
   /** Icon name (Phosphor icon) */

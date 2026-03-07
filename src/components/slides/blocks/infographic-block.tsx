@@ -26,10 +26,21 @@ const COLOR_SCHEMES: Record<string, string[]> = {
   warm:    ["#DC2626", "#EA580C", "#D97706", "#CA8A04", "#65A30D", "#B91C1C"],
   cool:    ["#0284C7", "#0891B2", "#0D9488", "#059669", "#4F46E5", "#7C3AED"],
   pastel:  ["#93C5FD", "#A5B4FC", "#C4B5FD", "#F9A8D4", "#FCA5A5", "#FDE68A"],
+  brand:   [], // populated dynamically from institutionKit
 };
 
-function getColors(scheme: string | undefined, theme: ThemeConfig): string[] {
-  if (scheme && scheme !== "theme" && COLOR_SCHEMES[scheme]) {
+function buildBrandColors(kit: Partial<InstitutionKit>): string[] {
+  const p = kit.primaryColor || "#4F46E5";
+  const s = kit.secondaryColor || "#06B6D4";
+  const a = kit.accentColor || "#10B981";
+  return [p, s, a, p + "CC", s + "CC", a + "CC"];
+}
+
+export function getColors(scheme: string | undefined, theme: ThemeConfig, institutionKit?: Partial<InstitutionKit> | null): string[] {
+  if ((scheme === "brand" || scheme === "theme") && institutionKit?.primaryColor) {
+    return buildBrandColors(institutionKit);
+  }
+  if (scheme && scheme !== "theme" && COLOR_SCHEMES[scheme] && COLOR_SCHEMES[scheme].length > 0) {
     return COLOR_SCHEMES[scheme];
   }
   return [
@@ -833,15 +844,17 @@ const RENDERERS: Record<string, React.ComponentType<{ items: InfographicItem[]; 
   word_cloud: WordCloud,
 };
 
-export const InfographicBlock = memo(function InfographicBlock({ data, theme, interactive = true }: InfographicBlockProps) {
-  const colors = getColors(data.colorScheme, theme);
+export const InfographicBlock = memo(function InfographicBlock({ data, theme, interactive = true, institutionKit }: InfographicBlockProps) {
+  const colors = getColors(data.colorScheme, theme, institutionKit);
+  const brandFont = institutionKit?.fontFamily || undefined;
+  const fontFamily = brandFont || theme.fontFamily || "Inter, sans-serif";
   const Renderer = RENDERERS[data.infographicType] || ProcessFlow;
   const { containerRef, tooltip } = useSvgTooltip(interactive);
 
   return (
     <div className="flex flex-col items-center w-full">
       {data.title && (
-        <div className="text-[0.7em] font-semibold tracking-tight leading-none mb-[0.15em]" style={{ color: theme.textColor }}>
+        <div className="text-[0.7em] font-semibold tracking-tight leading-none mb-[0.15em]" style={{ color: theme.textColor, fontFamily }}>
           {data.title}
         </div>
       )}
@@ -849,12 +862,13 @@ export const InfographicBlock = memo(function InfographicBlock({ data, theme, in
         <style>{`
           .infographic-item { cursor: pointer; transition: filter 0.15s; }
           .infographic-item:hover { filter: brightness(1.1); }
+          .infographic-item text { font-family: ${fontFamily}; }
         `}</style>
         <Renderer items={data.items} colors={colors} theme={theme} />
         {interactive && <SvgTooltip tooltip={tooltip} />}
       </div>
       {data.caption && (
-        <div className="text-[0.5em] opacity-50 italic leading-none" style={{ color: theme.textColor }}>
+        <div className="text-[0.5em] opacity-50 italic leading-none" style={{ color: theme.textColor, fontFamily }}>
           {data.caption}
         </div>
       )}

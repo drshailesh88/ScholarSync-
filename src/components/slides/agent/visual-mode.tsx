@@ -45,6 +45,7 @@ export function VisualMode() {
   const updateSlide = useSlidesStore((s) => s.updateSlide);
   const addSlide = useSlidesStore((s) => s.addSlide);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
 
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -83,6 +84,11 @@ export function VisualMode() {
               })
             : "",
           audienceType,
+          brandColors: institutionKit?.primaryColor ? {
+            primary: institutionKit.primaryColor,
+            secondary: institutionKit.secondaryColor || "",
+            accent: institutionKit.accentColor || "",
+          } : undefined,
         }),
       });
 
@@ -137,6 +143,12 @@ export function VisualMode() {
         <p className="text-[10px] text-ink-muted mb-2">
           Describe what you want to visualize
         </p>
+        {institutionKit?.primaryColor && (
+          <p className="text-[9px] text-brand mb-1.5 flex items-center gap-1">
+            <span className="inline-block w-2 h-2 rounded-full" style={{ backgroundColor: institutionKit.primaryColor }} />
+            Using institutional colors
+          </p>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
