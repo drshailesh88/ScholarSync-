@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback, Fragment } from "react";
 import {
   ArrowLeft,
+  ArrowBendDownRight,
   FileText,
   LinkSimple,
   PaperPlaneRight,
@@ -20,10 +21,17 @@ import {
   GraduationCap,
   Lightning,
   ClockCounterClockwise,
+  Notebook,
+  ShareNetwork,
+  Headphones,
 } from "@phosphor-icons/react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { SourceNotesPanel } from "@/components/notebook/SourceNotesPanel";
+import { NotebookShareDialog } from "@/components/notebook/NotebookShareDialog";
+import { AudioOverviewPanel } from "@/components/notebook/AudioOverviewPanel";
 import {
   createConversation,
   addMessage,
@@ -34,6 +42,8 @@ import {
 import { getUserPapers, savePaper } from "@/lib/actions/papers";
 import { getExtractionForPaper, verifyExtraction } from "@/lib/actions/extraction";
 import { extractUploadedPdf } from "@/lib/actions/pdf-advanced";
+import { getFollowUpSuggestions } from "@/lib/actions/follow-up-suggestions";
+import type { FollowUpSuggestion } from "@/lib/ai/prompts/follow-up-suggestions";
 
 interface ChatMessage {
   id: string;
@@ -100,6 +110,11 @@ const suggestions: Record<NotebookMode, string[]> = {
     "Help me find gaps in this research",
   ],
 };
+
+const PDFViewer = dynamic(
+  () => import("@/components/ui/pdf-viewer").then((mod) => mod.PDFViewer),
+  { ssr: false }
+);
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -218,6 +233,11 @@ export default function NotebookPage(): React.ReactElement {
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [urlValue, setUrlValue] = useState("");
   const [highlightedSource, setHighlightedSource] = useState<number | null>(null);
+  const [pdfViewerState, setPdfViewerState] = useState<{
+    paperId: number;
+    pageNumber: number;
+    paperTitle: string;
+  } | null>(null);
   const [showSourcesPanel, setShowSourcesPanel] = useState(false);
   const [currentSources, setCurrentSources] = useState<SourceMetadata[]>([]);
   const [extractingPapers, setExtractingPapers] = useState<Set<number>>(new Set());
@@ -226,9 +246,16 @@ export default function NotebookPage(): React.ReactElement {
   const [notebookMode, setNotebookMode] = useState<NotebookMode>("research");
   const [pastConversations, setPastConversations] = useState<ConversationSummary[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [showSourceNotes, setShowSourceNotes] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [showAudioOverview, setShowAudioOverview] = useState(false);
+  const [followUpSuggestions, setFollowUpSuggestions] = useState<FollowUpSuggestion[]>([]);
+  const [suggestionsForMessageId, setSuggestionsForMessageId] = useState<string | null>(null);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const conversationIdRef = useRef<number | null>(null);
+  const suggestionRequestIdRef = useRef(0);
 
   // Load user's papers from library and past conversations on mount
   useEffect(() => {
@@ -298,6 +325,16 @@ export default function NotebookPage(): React.ReactElement {
       }));
       setChatMessages(loaded);
 
+      // Clear all Sprint 1-5 overlay/feature states
+      setFollowUpSuggestions([]);
+      setSuggestionsForMessageId(null);
+      setSuggestionsLoading(false);
+      setPdfViewerState(null);
+      setShowSourceNotes(false);
+      setShowAudioOverview(false);
+      setShowShareDialog(false);
+      setHighlightedSource(null);
+
       // Restore sources panel from last assistant message with sources
       const lastWithSources = [...loaded]
         .reverse()
@@ -305,6 +342,9 @@ export default function NotebookPage(): React.ReactElement {
       if (lastWithSources?.sources) {
         setCurrentSources(lastWithSources.sources);
         setShowSourcesPanel(true);
+      } else {
+        setCurrentSources([]);
+        setShowSourcesPanel(false);
       }
 
       // If conversation had paper_ids stored, select those papers
@@ -337,6 +377,13 @@ export default function NotebookPage(): React.ReactElement {
     setCurrentSources([]);
     setShowSourcesPanel(false);
     setHighlightedSource(null);
+    setFollowUpSuggestions([]);
+    setSuggestionsForMessageId(null);
+    setSuggestionsLoading(false);
+    setPdfViewerState(null);
+    setShowSourceNotes(false);
+    setShowShareDialog(false);
+    setShowAudioOverview(false);
   }, []);
 
   const handleExtractFacts = useCallback(async (paperId: number) => {
@@ -428,9 +475,36 @@ export default function NotebookPage(): React.ReactElement {
     }
   }, []);
 
+  const handleCitationClick = useCallback(
+    (sourceIdx: number) => {
+      setHighlightedSource(sourceIdx);
+
+      const source = currentSources[sourceIdx - 1];
+      if (!source) return;
+
+      // Close other overlays to prevent z-index conflicts
+      setShowSourceNotes(false);
+      setShowShareDialog(false);
+
+      setPdfViewerState({
+        paperId: source.paperId,
+        pageNumber: source.pageNumber ?? 1,
+        paperTitle: source.paperTitle,
+      });
+    },
+    [currentSources]
+  );
+
   const sendMessage = useCallback(async (text?: string) => {
     const msg = text || input.trim();
     if (!msg || isLoading) return;
+
+    // Clear previous suggestions when sending a new message.
+    suggestionRequestIdRef.current += 1;
+    setFollowUpSuggestions([]);
+    setSuggestionsForMessageId(null);
+    setSuggestionsLoading(false);
+
     const userMsg: ChatMessage = { id: `msg_${Date.now()}`, role: "user", content: msg };
     const newMessages = [...chatMessages, userMsg];
     setChatMessages(newMessages);
@@ -522,6 +596,33 @@ export default function NotebookPage(): React.ReactElement {
           content: assistantMsg.content,
           retrieved_chunks: sources.length > 0 ? sources : undefined,
         }).catch(() => {});
+      }
+
+      const trimmedResponse = assistantMsg.content.trim();
+      if (trimmedResponse.length >= 100) {
+        const suggestionRequestId = suggestionRequestIdRef.current;
+        setSuggestionsForMessageId(assistantMsg.id);
+        setSuggestionsLoading(true);
+
+        // Non-blocking suggestion generation so chat stays responsive.
+        getFollowUpSuggestions({
+          responseText: trimmedResponse,
+          sourceTitles: sources.map((s) => s.paperTitle).filter(Boolean),
+          userQuery: msg,
+          mode: notebookMode,
+        })
+          .then((generated) => {
+            if (suggestionRequestIdRef.current !== suggestionRequestId) return;
+            setFollowUpSuggestions(generated);
+          })
+          .catch(() => {
+            if (suggestionRequestIdRef.current !== suggestionRequestId) return;
+            setFollowUpSuggestions([]);
+          })
+          .finally(() => {
+            if (suggestionRequestIdRef.current !== suggestionRequestId) return;
+            setSuggestionsLoading(false);
+          });
       }
     } catch {
       setChatMessages((prev) => [
@@ -639,7 +740,51 @@ export default function NotebookPage(): React.ReactElement {
     setShowUrlInput(false);
   };
 
+  const handleOpenAudioOverview = useCallback(async () => {
+    const selectedPaperIds = files
+      .filter((file) => file.selected && file.paperId)
+      .map((file) => file.paperId as number);
+
+    if (selectedPaperIds.length === 0) return;
+
+    // Close other overlays to prevent z-index conflicts
+    setPdfViewerState(null);
+    setShowSourceNotes(false);
+    setShowShareDialog(false);
+
+    try {
+      if (!conversationIdRef.current) {
+        const mode = notebookMode === "learn" ? "learn" as const : "notebook" as const;
+        const convo = await createConversation({
+          mode,
+          title: "Audio Overview",
+          paper_ids: selectedPaperIds,
+        });
+        conversationIdRef.current = convo.id;
+
+        setPastConversations((prev) => [
+          {
+            id: convo.id,
+            title: convo.title,
+            mode: convo.mode,
+            updatedAt: convo.updated_at,
+          },
+          ...prev.filter((c) => c.id !== convo.id),
+        ].slice(0, 20));
+      } else {
+        updateConversationPaperIds(conversationIdRef.current, selectedPaperIds).catch(() => {});
+      }
+
+      setShowAudioOverview(true);
+    } catch (err) {
+      console.error("Failed to open audio overview:", err);
+    }
+  }, [files, notebookMode]);
+
   const selectedCount = files.filter((f) => f.selected).length;
+  const selectedPaperIds = files
+    .filter((f) => f.selected && f.paperId)
+    .map((f) => f.paperId as number);
   const activeSuggestions = suggestions[notebookMode];
 
   return (
@@ -831,15 +976,52 @@ export default function NotebookPage(): React.ReactElement {
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col">
-        <div className="flex items-center gap-3 mb-4">
-          <h2 className="text-lg font-semibold text-ink">
-            {notebookMode === "learn" ? "Learn Mode" : "Notebook Chat"}
-          </h2>
-          {notebookMode === "learn" && (
-            <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-[10px] text-amber-600 font-medium">
-              Socratic tutoring
-            </span>
-          )}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold text-ink">
+              {notebookMode === "learn" ? "Learn Mode" : "Notebook Chat"}
+            </h2>
+            {notebookMode === "learn" && (
+              <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-[10px] text-amber-600 font-medium">
+                Socratic tutoring
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setPdfViewerState(null);
+                setShowShareDialog(false);
+                setShowSourceNotes(true);
+              }}
+              className="text-xs font-medium text-ink-muted hover:text-brand flex items-center gap-1.5 transition-colors"
+            >
+              <Notebook size={14} />
+              View Source Notes
+            </button>
+            <button
+              onClick={() => { void handleOpenAudioOverview(); }}
+              disabled={selectedPaperIds.length === 0}
+              className="p-2 text-ink-muted hover:text-ink hover:bg-surface-raised rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Audio Overview"
+              aria-label="Audio Overview"
+            >
+              <Headphones size={18} />
+            </button>
+            <button
+              onClick={() => {
+                setPdfViewerState(null);
+                setShowSourceNotes(false);
+                setShowShareDialog(true);
+              }}
+              disabled={!conversationIdRef.current}
+              className="p-2 text-ink-muted hover:text-ink hover:bg-surface-raised rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Share notebook"
+              aria-label="Share notebook"
+            >
+              <ShareNetwork size={18} />
+            </button>
+          </div>
         </div>
 
         <div className="flex-1 overflow-y-auto space-y-3">
@@ -865,20 +1047,56 @@ export default function NotebookPage(): React.ReactElement {
             </GlassPanel>
           )}
 
-          {chatMessages.map((msg) => (
-            <div key={msg.id} className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
-              {msg.role === "assistant" && (
-                <div className="w-7 h-7 rounded-full bg-brand/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <Sparkle size={14} className="text-brand" />
+          {chatMessages.map((msg, msgIndex) => (
+            <div key={msg.id}>
+              <div className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
+                {msg.role === "assistant" && (
+                  <div className="w-7 h-7 rounded-full bg-brand/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <Sparkle size={14} className="text-brand" />
+                  </div>
+                )}
+                <div className={cn("max-w-[75%] px-4 py-3 rounded-2xl text-sm", msg.role === "user" ? "bg-surface-raised text-ink" : "bg-brand/5 text-ink")}>
+                  <p className="whitespace-pre-wrap leading-relaxed">
+                    {msg.role === "assistant" && msg.sources && msg.sources.length > 0
+                      ? renderCitedText(msg.content, msg.sources, handleCitationClick)
+                      : msg.content}
+                  </p>
                 </div>
-              )}
-              <div className={cn("max-w-[75%] px-4 py-3 rounded-2xl text-sm", msg.role === "user" ? "bg-surface-raised text-ink" : "bg-brand/5 text-ink")}>
-                <p className="whitespace-pre-wrap leading-relaxed">
-                  {msg.role === "assistant" && msg.sources && msg.sources.length > 0
-                    ? renderCitedText(msg.content, msg.sources, setHighlightedSource)
-                    : msg.content}
-                </p>
               </div>
+
+              {msg.role === "assistant" &&
+                msg.id === suggestionsForMessageId &&
+                msgIndex === chatMessages.length - 1 &&
+                !isLoading && (
+                  <div className="flex flex-wrap gap-2 mt-2 ml-10">
+                    {suggestionsLoading ? (
+                      <div className="flex gap-1 px-3 py-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand/30 animate-bounce" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand/30 animate-bounce [animation-delay:100ms]" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand/30 animate-bounce [animation-delay:200ms]" />
+                      </div>
+                    ) : (
+                      followUpSuggestions.map((suggestion, i) => (
+                        <button
+                          key={`suggestion-${msg.id}-${i}`}
+                          onClick={() => sendMessage(suggestion.text)}
+                          className={cn(
+                            "text-xs border text-ink px-4 py-2 rounded-full transition-all font-medium flex items-center gap-1.5",
+                            notebookMode === "learn"
+                              ? "bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10 hover:border-amber-500/40"
+                              : "bg-surface-raised/50 border-border hover:bg-surface-raised hover:border-brand/30"
+                          )}
+                        >
+                          <ArrowBendDownRight
+                            size={10}
+                            className={cn("shrink-0", notebookMode === "learn" ? "text-amber-500" : "text-brand")}
+                          />
+                          {suggestion.text}
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
             </div>
           ))}
 
@@ -937,6 +1155,15 @@ export default function NotebookPage(): React.ReactElement {
           </div>
         )}
 
+        {showAudioOverview && (
+          <AudioOverviewPanel
+            conversationId={conversationIdRef.current}
+            paperIds={selectedPaperIds}
+            mode={notebookMode}
+            onClose={() => setShowAudioOverview(false)}
+          />
+        )}
+
         <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="mt-2">
           <div className="flex items-center gap-2 p-2 rounded-2xl bg-surface border border-border">
             <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 text-ink-muted hover:text-ink transition-colors">
@@ -955,6 +1182,43 @@ export default function NotebookPage(): React.ReactElement {
           <p className="text-[10px] text-ink-muted text-center mt-2">AI can make mistakes. Check important info.</p>
         </form>
       </div>
+
+      {/* Source Notes Panel */}
+      <SourceNotesPanel
+        open={showSourceNotes}
+        onClose={() => setShowSourceNotes(false)}
+        files={files}
+        extractions={extractions}
+        renderExtractionCard={(paperId) => {
+          const extraction = extractions.get(paperId);
+          if (!extraction) return null;
+          return (
+            <ExtractionCard
+              extraction={extraction}
+              onVerify={() => handleVerifyExtraction(paperId, extraction.id)}
+            />
+          );
+        }}
+        onSendMessage={sendMessage}
+      />
+
+      {/* PDF Viewer for citation jump-to-source */}
+      {pdfViewerState && (
+        <PDFViewer
+          url={`/api/papers/${pdfViewerState.paperId}/pdf`}
+          initialPage={pdfViewerState.pageNumber}
+          title={pdfViewerState.paperTitle}
+          onClose={() => setPdfViewerState(null)}
+        />
+      )}
+
+      {/* Share Dialog */}
+      {showShareDialog && conversationIdRef.current && (
+        <NotebookShareDialog
+          conversationId={conversationIdRef.current}
+          onClose={() => setShowShareDialog(false)}
+        />
+      )}
     </div>
   );
 }
