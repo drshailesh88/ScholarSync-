@@ -7,11 +7,36 @@ import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 
 const agentSchema = z.object({
-  mode: z.enum(["learn", "draft"]),
+  mode: z.enum(["learn", "draft", "chat"]),
   prompt: z.string().min(1).max(4000),
   deckId: z.number().int().positive().optional(),
   slideContent: z.string().optional(),
   audienceType: z.string().optional(),
+  // Chat mode fields
+  slides: z
+    .array(
+      z.object({
+        id: z.number().int(),
+        title: z.string().nullish(),
+        contentBlocks: z.array(z.any()).optional(),
+        speakerNotes: z.string().nullish(),
+      })
+    )
+    .max(100)
+    .optional(),
+  activeSlideId: z.number().int().nullish(),
+  selectedBlockIndex: z.number().int().min(0).nullish(),
+  selectedBlockType: z.string().nullish(),
+  selectedBlockContent: z.string().nullish(),
+  chatHistory: z
+    .array(
+      z.object({
+        role: z.enum(["user", "assistant"]),
+        content: z.string(),
+      })
+    )
+    .max(20)
+    .optional(),
 });
 
 function getLearnSystemPrompt(audienceType: string): string {
@@ -77,6 +102,54 @@ RESPONSE FORMAT — Return valid JSON only, no markdown fences:
 }`;
 }
 
+function getChatSystemPrompt(audienceType: string): string {
+  return `You are an expert AI presentation assistant for academic and scientific presentations, operating in chat mode.
+Target audience: ${audienceType}
+
+The user can ask you to modify individual blocks, entire slides, or the whole deck.
+When the user has selected a specific block, focus your changes on that block unless they ask for broader changes.
+
+VALID CONTENT BLOCK TYPES:
+- text: { "text": "...", "style": "title" | "subtitle" | "body" | "caption" }
+- bullets: { "items": ["..."], "ordered": false }
+- chart: { "chartType": "bar"|"line"|"pie"|"scatter"|"area"|"radar", "title": "...", "labels": [...], "datasets": [{"label":"...","data":[...]}] }
+- table: { "headers": [...], "rows": [[...]], "caption": "..." }
+- citation: { "text": "...", "source": "Author et al., Year", "doi": "..." }
+- math: { "expression": "LaTeX", "displayMode": true }
+- callout: { "type": "finding"|"limitation"|"methodology"|"clinical"|"warning"|"important"|"note", "text": "...", "title": "..." }
+- stat_result: { "label": "...", "value": "...", "ci": "...", "pValue": "...", "interpretation": "..." }
+- timeline: { "entries": [{"label":"...","description":"...","date":"...","status":"completed"|"in_progress"|"upcoming"}] }
+- quote: { "text": "...", "attribution": "..." }
+- image: { "url": "", "alt": "...", "caption": "..." }
+- code: { "code": "...", "language": "python" }
+- divider: { "style": "solid"|"dashed"|"gradient" }
+- diagram: { "syntax": "graph TD\\n  A-->B", "diagramType": "flowchart", "caption": "..." }
+- infographic: { "infographicType": "process_flow", "title": "...", "items": [...], "colorScheme": "theme" }
+
+VALID LAYOUTS: title_slide, title_content, two_column, three_column, section_header, image_text, chart_slide, table_slide, quote_slide, comparison, blank, bibliography_slide, methodology, results_summary, key_findings, timeline_slide, stat_overview, big_number
+
+RESPONSE FORMAT — Return valid JSON only, no markdown fences:
+{
+  "message": "<conversational explanation of what you did or suggest>",
+  "suggestedChanges": [
+    {
+      "slideId": <slide ID to modify>,
+      "blockIndex": <optional: specific block index to modify>,
+      "changes": { <Partial slide or block fields> }
+    }
+  ]
+}
+
+RULES:
+1. "message" is always required — explain what you're suggesting.
+2. "suggestedChanges" is optional — omit it for purely conversational responses.
+3. When modifying a specific block, include "blockIndex" and put block fields in "changes" (e.g., {"type": "text", "data": {...}}).
+4. When modifying a slide, omit "blockIndex" and put slide fields in "changes" (e.g., {"title": "...", "contentBlocks": [...]}).
+5. Only include changes for things that actually need to change.
+6. Prefer specific, data-rich content over vague placeholders.
+7. For commands like /learn, /draft, /visual, /illustrate, adapt your behavior accordingly.`;
+}
+
 export async function POST(req: Request) {
   const log = logger.withRequestId();
 
@@ -100,6 +173,66 @@ export async function POST(req: Request) {
     }
     const body = parseResult.data;
 
+    if (body.mode === "chat") {
+      // Chat mode — structured response with suggested changes
+      const systemPrompt = getChatSystemPrompt(body.audienceType ?? "general");
+
+      const slideSummary = (body.slides ?? [])
+        .map(
+          (s) =>
+            `Slide ID ${s.id}: "${s.title ?? "Untitled"}"\nContent: ${JSON.stringify(s.contentBlocks ?? [])}\nSpeaker Notes: ${s.speakerNotes ?? "None"}`
+        )
+        .join("\n\n");
+
+      let contextNote = "";
+      if (body.activeSlideId) {
+        contextNote += `\nThe user is currently viewing slide ID ${body.activeSlideId}.`;
+      }
+      if (body.selectedBlockIndex != null && body.selectedBlockType) {
+        contextNote += `\nThe user has selected block index ${body.selectedBlockIndex} (type: ${body.selectedBlockType}).`;
+        if (body.selectedBlockContent) {
+          contextNote += `\nSelected block content: ${body.selectedBlockContent}`;
+        }
+      }
+
+      // Build conversation messages from history
+      const conversationMessages = (body.chatHistory ?? []).map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      }));
+
+      const fullPrompt = `User message: ${body.prompt}${contextNote}\n\nCurrent deck (${(body.slides ?? []).length} slides):\n\n${slideSummary}`.slice(
+        0,
+        60000
+      );
+
+      const trace = traceGeneration({
+        tier: "standard",
+        modelId: "claude-sonnet-4-20250514",
+        feature: "slides-agent-chat",
+        userId,
+      });
+
+      const { text, usage } = await generateText({
+        model: getModel(),
+        system: systemPrompt,
+        messages: [
+          ...conversationMessages,
+          { role: "user", content: fullPrompt },
+        ],
+      });
+      trace.end(usage);
+
+      const cleanText = text
+        .replace(/```json\n?/g, "")
+        .replace(/```\n?/g, "")
+        .trim();
+      const result = JSON.parse(cleanText);
+
+      return NextResponse.json(result);
+    }
+
+    // Legacy learn/draft modes
     const systemPrompt =
       body.mode === "learn"
         ? getLearnSystemPrompt(body.audienceType ?? "general")

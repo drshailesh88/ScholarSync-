@@ -62,6 +62,28 @@ export type AgentMode = "learn" | "draft" | "visual" | "illustrate";
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 // ---------------------------------------------------------------------------
+// Agent Chat types
+// ---------------------------------------------------------------------------
+
+export interface AgentChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: number;
+  suggestedChanges?: SuggestedChange[];
+  /** Whether changes from this message have been applied */
+  applied?: boolean;
+}
+
+export interface SuggestedChange {
+  slideId: number;
+  blockIndex?: number;
+  changes: Partial<SlideState> | Partial<ContentBlock>;
+}
+
+const MAX_CHAT_HISTORY = 50;
+
+// ---------------------------------------------------------------------------
 // Undo/Redo — snapshot-based history per slide
 // ---------------------------------------------------------------------------
 
@@ -123,6 +145,12 @@ export interface SlidesStore {
   // Agent
   agentMode: AgentMode;
   setAgentMode: (mode: AgentMode) => void;
+
+  // Agent chat
+  agentChatHistory: AgentChatMessage[];
+  addAgentChatMessage: (msg: AgentChatMessage) => void;
+  markChatMessageApplied: (msgId: string) => void;
+  clearAgentChatHistory: () => void;
 
   // Presentation settings
   transition: SlideTransition;
@@ -384,6 +412,20 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Agent
   agentMode: "draft",
   setAgentMode: (agentMode) => set({ agentMode }),
+
+  // Agent chat
+  agentChatHistory: [],
+  addAgentChatMessage: (msg) =>
+    set((state) => ({
+      agentChatHistory: [...state.agentChatHistory, msg].slice(-MAX_CHAT_HISTORY),
+    })),
+  markChatMessageApplied: (msgId) =>
+    set((state) => ({
+      agentChatHistory: state.agentChatHistory.map((m) =>
+        m.id === msgId ? { ...m, applied: true } : m
+      ),
+    })),
+  clearAgentChatHistory: () => set({ agentChatHistory: [] }),
 
   // Presentation settings
   transition: "fade",
@@ -685,6 +727,7 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
         allBlocksSelected: false,
         editingBlockIndex: null,
         saveStatus: "idle",
+        agentChatHistory: [],
       });
       return true;
     } catch (e) {

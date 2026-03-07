@@ -16,9 +16,21 @@ export async function generateMetadata({
   if (!deck) {
     return { title: "Not Found - ScholarSync" };
   }
+  const description = deck.description || "Shared presentation";
   return {
     title: `${deck.title} - ScholarSync`,
-    description: deck.description || "Shared presentation",
+    description,
+    openGraph: {
+      title: deck.title,
+      description,
+      type: "article",
+      siteName: "ScholarSync",
+    },
+    twitter: {
+      card: "summary",
+      title: deck.title,
+      description,
+    },
   };
 }
 

@@ -38,7 +38,7 @@ const BLOCK_ANIMATION_STYLESHEET = buildBlockAnimationStylesheet();
 // SlideRendererV2 — modular, block-registry-based renderer
 // ---------------------------------------------------------------------------
 
-interface SlideRendererV2Props {
+export interface SlideRendererV2Props {
   title?: string | null;
   subtitle?: string | null;
   layout?: SlideLayout | null;
@@ -494,6 +494,82 @@ function AutoFitRegion({ children }: { children: ReactNode }) {
         }}
       >
         {children}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Responsive scaling utilities
+// ---------------------------------------------------------------------------
+
+/** Reference slide dimensions (16:9) for consistent rendering */
+export const SLIDE_REF_WIDTH = 960;
+export const SLIDE_REF_HEIGHT = 540;
+
+/**
+ * Compute the scale factor to fit a slide in a container.
+ * @returns ratio of containerWidth / referenceWidth
+ */
+export function computeScaleFactor(
+  containerWidth: number,
+  referenceWidth: number = SLIDE_REF_WIDTH
+): number {
+  if (containerWidth <= 0 || referenceWidth <= 0) return 1;
+  return containerWidth / referenceWidth;
+}
+
+/**
+ * Responsive wrapper for SlideRendererV2.
+ * Renders the slide at a fixed reference size (960x540) and scales it
+ * to fit the container using CSS transform, preserving visual proportions.
+ */
+export function ResponsiveSlide(
+  props: Omit<SlideRendererV2Props, "scale" | "className"> & {
+    className?: string;
+  }
+) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scaleFactor, setScaleFactor] = useState(1);
+
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width = entry.contentRect.width;
+        if (width > 0) {
+          setScaleFactor(computeScaleFactor(width));
+        }
+      }
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const { className, ...rendererProps } = props;
+
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        height: SLIDE_REF_HEIGHT * scaleFactor,
+      }}
+    >
+      <div
+        style={{
+          width: SLIDE_REF_WIDTH,
+          height: SLIDE_REF_HEIGHT,
+          transform: `scale(${scaleFactor})`,
+          transformOrigin: "top left",
+        }}
+      >
+        <SlideRendererV2 {...rendererProps} className="w-full h-full" />
       </div>
     </div>
   );
