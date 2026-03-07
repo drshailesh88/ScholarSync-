@@ -258,14 +258,14 @@ describe("PresenterMode", () => {
     const getCounter = () => document.querySelector('[data-testid="slide-counter"]');
 
     expect(getCurrentPanel()?.textContent).toContain("Visible:1");
-    expect(getProgress()?.textContent).toContain("Click 1 of 2");
+    expect(getProgress()?.textContent).toContain("Build 1 of 2");
     expect(getCounter()?.textContent).toContain("1");
 
     act(() => {
       getCurrentPanel()?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
     expect(getCurrentPanel()?.textContent).toContain("Visible:2");
-    expect(getProgress()?.textContent).toContain("Click 2 of 2");
+    expect(getProgress()?.textContent).toContain("Build 2 of 2");
 
     dispatchKey(" ");
     expect(getCurrentPanel()?.textContent).toContain("Visible:3");

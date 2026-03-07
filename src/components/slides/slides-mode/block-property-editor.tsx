@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, AnimationTrigger, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData } from "@/types/presentation";
 import { cn } from "@/lib/utils";
 import { detectMediaType } from "@/components/slides/blocks/media-block";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
@@ -1962,6 +1962,13 @@ function NestedCardEditor({ block, onUpdate }: { block: NestedCardBlock; onUpdat
 // Three tabs: Entrance, Emphasis, Exit
 // ---------------------------------------------------------------------------
 
+const TRIGGER_OPTIONS: { value: AnimationTrigger; label: string }[] = [
+  { value: "onClick", label: "On Click" },
+  { value: "withPrevious", label: "With Previous" },
+  { value: "afterPrevious", label: "After Previous" },
+  { value: "auto", label: "Auto" },
+];
+
 const ENTRANCE_TYPE_GROUPS: { group: string; options: { value: string; label: string }[] }[] = [
   { group: "", options: [{ value: "none", label: "None" }] },
   { group: "Fade", options: [
@@ -2088,6 +2095,18 @@ function AnimationSection({
             </div>
             {anim.type !== "none" && (
               <>
+                <div>
+                  <FieldLabel>Trigger</FieldLabel>
+                  <select
+                    value={anim.trigger ?? "onClick"}
+                    onChange={(e) => updateAnimation({ trigger: e.target.value as AnimationTrigger })}
+                    className="w-full text-sm px-2 py-1.5 rounded-md border border-border bg-surface-raised text-ink focus:outline-none focus:ring-1 focus:ring-brand"
+                  >
+                    {TRIGGER_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <FieldLabel>Duration (s)</FieldLabel>
@@ -2099,7 +2118,11 @@ function AnimationSection({
                     />
                   </div>
                   <div>
-                    <FieldLabel>Delay (s)</FieldLabel>
+                    <FieldLabel>
+                      {(anim.trigger === "afterPrevious") ? "Delay after prev (s)" :
+                       (anim.trigger === "auto") ? "Delay from entry (s)" :
+                       "Delay (s)"}
+                    </FieldLabel>
                     <FieldInput
                       type="number"
                       value={String(anim.delay)}

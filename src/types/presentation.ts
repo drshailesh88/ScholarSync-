@@ -233,6 +233,9 @@ export type ExitAnimationType =
 export type EmphasisAnimationType =
   | "pulse" | "bounce" | "shake" | "grow" | "spin" | "none";
 
+/** Trigger type for animation start — matches PowerPoint's model */
+export type AnimationTrigger = "onClick" | "withPrevious" | "afterPrevious" | "auto";
+
 /** Animation config for per-block reveal in presenter mode */
 export interface BlockAnimation {
   type:
@@ -246,6 +249,7 @@ export interface BlockAnimation {
   delay: number;      // seconds delay before this block animates in
   duration: number;    // seconds for the animation
   order: number;       // sequential order (1, 2, 3...)
+  trigger?: AnimationTrigger; // default: "onClick"
   exit?: {
     type: ExitAnimationType;
     delay: number;     // delay after entrance completes

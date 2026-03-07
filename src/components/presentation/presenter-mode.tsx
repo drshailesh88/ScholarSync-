@@ -13,6 +13,11 @@ import type {
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 import { getMaxRevealOrder } from "@/lib/presentation/block-animations";
+import {
+  computeAnimationSequence,
+  countClickSteps,
+  type AnimationStep,
+} from "@/lib/presentation/animation-sequencer";
 import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
@@ -213,6 +218,7 @@ export function PresenterMode({
   const [jumpValue, setJumpValue] = useState("");
   const [revealedOrder, setRevealedOrder] = useState(0);
   const [activeRevealOrder, setActiveRevealOrder] = useState<number | null>(null);
+  const [currentStepIndex, setCurrentStepIndex] = useState(-1);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const notesRef = useRef<HTMLDivElement>(null);
@@ -220,6 +226,7 @@ export function PresenterMode({
   const jumpBufferTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentIndexRef = useRef(currentIndex);
   const channelRef = useRef<BroadcastChannel | null>(null);
+  const autoStepTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const timer = useTimer();
 
@@ -228,6 +235,17 @@ export function PresenterMode({
     if (!slide) return 0;
     return getMaxRevealOrder(slide.contentBlocks);
   }, [currentIndex, visibleSlides]);
+
+  const animationSteps = useMemo(() => {
+    const slide = visibleSlides[currentIndex];
+    if (!slide) return [] as AnimationStep[];
+    return computeAnimationSequence(slide.contentBlocks);
+  }, [currentIndex, visibleSlides]);
+
+  const totalClickSteps = useMemo(
+    () => countClickSteps(animationSteps),
+    [animationSteps],
+  );
 
   // Sync ref with current index
   useEffect(() => {
@@ -240,7 +258,16 @@ export function PresenterMode({
     setPrevIndexForReveal(currentIndex);
     setRevealedOrder(0);
     setActiveRevealOrder(null);
+    setCurrentStepIndex(-1);
   }
+
+  // Clear auto-step timers when slide changes
+  useEffect(() => {
+    return () => {
+      for (const t of autoStepTimersRef.current) clearTimeout(t);
+      autoStepTimersRef.current = [];
+    };
+  }, [currentIndex]);
 
   // Clamp index when total slides change (render-time state adjustment)
   const [prevTotalSlides, setPrevTotalSlides] = useState(totalSlides);
@@ -248,6 +275,35 @@ export function PresenterMode({
     setPrevTotalSlides(totalSlides);
     setCurrentIndex((prev) => Math.max(0, Math.min(prev, Math.max(totalSlides - 1, 0))));
   }
+
+  // Schedule auto-triggered steps that follow the current step
+  useEffect(() => {
+    if (currentStepIndex < 0 || animationSteps.length === 0) return;
+
+    // Clear any previously scheduled auto timers
+    for (const t of autoStepTimersRef.current) clearTimeout(t);
+    autoStepTimersRef.current = [];
+
+    // Find consecutive auto-triggered steps following the current step
+    let nextIdx = currentStepIndex + 1;
+    while (nextIdx < animationSteps.length && !animationSteps[nextIdx].isClickTriggered) {
+      const step = animationSteps[nextIdx];
+      const currentStep = animationSteps[currentStepIndex];
+      // Delay is relative to current step's start
+      const relativeDelay = Math.max(0, (step.startTime - currentStep.startTime)) * 1000;
+      const capturedIdx = nextIdx;
+      const timerId = setTimeout(() => {
+        setCurrentStepIndex(capturedIdx);
+      }, relativeDelay);
+      autoStepTimersRef.current.push(timerId);
+      nextIdx++;
+    }
+
+    return () => {
+      for (const t of autoStepTimersRef.current) clearTimeout(t);
+      autoStepTimersRef.current = [];
+    };
+  }, [currentStepIndex, animationSteps]);
 
   const goToSlide = useCallback(
     (index: number) => {
@@ -261,6 +317,29 @@ export function PresenterMode({
   );
 
   const goNext = useCallback(() => {
+    // Sequencer-based advancement: find next click-triggered step
+    if (animationSteps.length > 0) {
+      // Find the next click-triggered step after currentStepIndex
+      let nextClickIdx = -1;
+      for (let i = currentStepIndex + 1; i < animationSteps.length; i++) {
+        if (animationSteps[i].isClickTriggered) {
+          nextClickIdx = i;
+          break;
+        }
+      }
+      if (nextClickIdx >= 0) {
+        setCurrentStepIndex(nextClickIdx);
+        // Also update the order-based system for backward compat with SlideRenderer
+        const nextOrder = revealedOrder + 1;
+        if (nextOrder <= maxRevealOrder) {
+          setRevealedOrder(nextOrder);
+          setActiveRevealOrder(nextOrder);
+        }
+        return;
+      }
+    }
+
+    // Fallback: order-based advancement for slides without trigger metadata
     if (maxRevealOrder > 0 && revealedOrder < maxRevealOrder) {
       const nextOrder = revealedOrder + 1;
       setRevealedOrder(nextOrder);
@@ -274,7 +353,7 @@ export function PresenterMode({
       setDirection(1);
       return prev + 1;
     });
-  }, [maxRevealOrder, revealedOrder, totalSlides]);
+  }, [animationSteps, currentStepIndex, maxRevealOrder, revealedOrder, totalSlides]);
 
   const goPrev = useCallback(() => {
     setActiveRevealOrder(null);
@@ -506,11 +585,17 @@ export function PresenterMode({
   const currentSlide = visibleSlides[currentIndex] ?? null;
   const nextSlide = currentIndex < totalSlides - 1 ? visibleSlides[currentIndex + 1] : null;
   const currentSlideNumber = totalSlides > 0 ? currentIndex + 1 : 0;
-  const clickProgressTotal = maxRevealOrder > 0 ? maxRevealOrder : 1;
-  const clickProgressCurrent = maxRevealOrder > 0
-    ? Math.min(revealedOrder + 1, clickProgressTotal)
-    : 1;
-  const revealSequenceComplete = maxRevealOrder > 0 && revealedOrder >= maxRevealOrder;
+  const clickProgressTotal = animationSteps.length > 0
+    ? animationSteps.length
+    : maxRevealOrder > 0 ? maxRevealOrder : 1;
+  const clickProgressCurrent = animationSteps.length > 0
+    ? Math.min(currentStepIndex + 2, clickProgressTotal)
+    : maxRevealOrder > 0
+      ? Math.min(revealedOrder + 1, clickProgressTotal)
+      : 1;
+  const revealSequenceComplete = animationSteps.length > 0
+    ? currentStepIndex >= animationSteps.length - 1
+    : maxRevealOrder > 0 && revealedOrder >= maxRevealOrder;
 
   const currentTransition = currentSlide?.transition ?? transition;
   const variant = slideVariants[currentTransition];
@@ -719,7 +804,10 @@ export function PresenterMode({
                     Speaker Notes
                   </h2>
                   <p data-testid="presenter-animation-progress" className="mt-1 text-[11px] text-white/45">
-                    Click {clickProgressCurrent} of {clickProgressTotal}
+                    Build {clickProgressCurrent} of {clickProgressTotal}
+                    {totalClickSteps > 0 && totalClickSteps < animationSteps.length
+                      ? ` (${totalClickSteps} click, ${animationSteps.length - totalClickSteps} auto)`
+                      : ""}
                     {revealSequenceComplete ? " • Next click advances slide" : ""}
                   </p>
                 </div>
