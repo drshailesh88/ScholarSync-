@@ -1,12 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { FileText, TextT, BookOpen, BookBookmark, Globe, CircleNotch, Trash, Plus } from "@phosphor-icons/react";
+import { useRef, useState } from "react";
+import type { ReactNode } from "react";
+import {
+  FileText,
+  TextT,
+  BookOpen,
+  BookBookmark,
+  Globe,
+  CircleNotch,
+  Trash,
+  Plus,
+  Presentation,
+  UploadSimple,
+  WarningCircle,
+} from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { ReferenceImportPanel } from "./reference-import-panel";
 import type { ParsedReference } from "@/lib/references/types";
+import type { PptxPreviewData } from "@/lib/slides/pptx-import";
 
-export type SourceType = "papers" | "document" | "text" | "deep_research" | "references" | "url";
+export type SourceType =
+  | "papers"
+  | "document"
+  | "text"
+  | "deep_research"
+  | "references"
+  | "url"
+  | "import_deck";
 
 export interface UrlSource {
   url: string;
@@ -18,6 +39,10 @@ export interface UrlSource {
   error?: string;
 }
 
+export interface ImportedDeckSource extends PptxPreviewData {
+  fileName: string;
+}
+
 interface SourceSelectorProps {
   sourceType: SourceType;
   onSourceTypeChange: (type: SourceType) => void;
@@ -27,16 +52,15 @@ interface SourceSelectorProps {
   onDocumentIdChange: (id: number | null) => void;
   rawText: string;
   onRawTextChange: (text: string) => void;
-  /** Callback when references are selected from the import panel */
   onReferencesSelected?: (refs: ParsedReference[]) => void;
-  /** Currently selected imported references */
   selectedReferences?: ParsedReference[];
-  /** URL sources for "url" source type */
   urlSources?: UrlSource[];
   onUrlSourcesChange?: (sources: UrlSource[]) => void;
+  importedDeck?: ImportedDeckSource | null;
+  onImportedDeckChange?: (deck: ImportedDeckSource | null) => void;
 }
 
-const SOURCE_OPTIONS: { key: SourceType; label: string; description: string; icon: React.ReactNode }[] = [
+const SOURCE_OPTIONS: { key: SourceType; label: string; description: string; icon: ReactNode }[] = [
   {
     key: "papers",
     label: "From Papers",
@@ -67,6 +91,12 @@ const SOURCE_OPTIONS: { key: SourceType; label: string; description: string; ico
     description: "Paste a link to any web page",
     icon: <Globe size={20} />,
   },
+  {
+    key: "import_deck",
+    label: "Import Deck",
+    description: "Upload an existing PowerPoint",
+    icon: <Presentation size={20} />,
+  },
 ];
 
 export function SourceSelector({
@@ -82,11 +112,12 @@ export function SourceSelector({
   selectedReferences,
   urlSources,
   onUrlSourcesChange,
+  importedDeck,
+  onImportedDeckChange,
 }: SourceSelectorProps) {
   return (
     <div className="space-y-4">
-      {/* Source type selector */}
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         {SOURCE_OPTIONS.map((opt) => (
           <button
             key={opt.key}
@@ -105,22 +136,18 @@ export function SourceSelector({
         ))}
       </div>
 
-      {/* Source-specific input */}
       {sourceType === "papers" && (
         <div>
           <label className="text-sm font-medium text-ink block mb-2">
-            Paper IDs{" "}
-            <span className="text-ink-muted font-normal">
-              (comma-separated)
-            </span>
+            Paper IDs <span className="text-ink-muted font-normal">(comma-separated)</span>
           </label>
           <input
             value={selectedPaperIds.join(", ")}
             onChange={(e) => {
               const ids = e.target.value
                 .split(",")
-                .map((s) => parseInt(s.trim(), 10))
-                .filter((n) => !isNaN(n));
+                .map((value) => parseInt(value.trim(), 10))
+                .filter((value) => !Number.isNaN(value));
               onPaperIdsChange(ids);
             }}
             placeholder="e.g., 1, 2, 3"
@@ -134,15 +161,11 @@ export function SourceSelector({
 
       {sourceType === "document" && (
         <div>
-          <label className="text-sm font-medium text-ink block mb-2">
-            Document ID
-          </label>
+          <label className="text-sm font-medium text-ink block mb-2">Document ID</label>
           <input
             type="number"
             value={selectedDocumentId ?? ""}
-            onChange={(e) =>
-              onDocumentIdChange(e.target.value ? parseInt(e.target.value, 10) : null)
-            }
+            onChange={(e) => onDocumentIdChange(e.target.value ? parseInt(e.target.value, 10) : null)}
             placeholder="Enter document ID"
             className="w-full px-4 py-3 rounded-xl bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30"
           />
@@ -154,9 +177,7 @@ export function SourceSelector({
 
       {sourceType === "text" && (
         <div>
-          <label className="text-sm font-medium text-ink block mb-2">
-            Content
-          </label>
+          <label className="text-sm font-medium text-ink block mb-2">Content</label>
           <textarea
             value={rawText}
             onChange={(e) => onRawTextChange(e.target.value)}
@@ -164,16 +185,19 @@ export function SourceSelector({
             rows={8}
             className="w-full px-4 py-3 rounded-xl bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/30 resize-none"
           />
-          <p className="text-[10px] text-ink-muted mt-1">
-            {rawText.length} characters
-          </p>
+          <p className="text-[10px] text-ink-muted mt-1">{rawText.length} characters</p>
         </div>
       )}
 
       {sourceType === "url" && onUrlSourcesChange && (
-        <UrlSourceInput
-          sources={urlSources ?? []}
-          onChange={onUrlSourcesChange}
+        <UrlSourceInput sources={urlSources ?? []} onChange={onUrlSourcesChange} />
+      )}
+
+      {sourceType === "import_deck" && onImportedDeckChange && (
+        <ImportDeckInput
+          importedDeck={importedDeck ?? null}
+          onImportedDeckChange={onImportedDeckChange}
+          onRawTextChange={onRawTextChange}
         />
       )}
 
@@ -220,10 +244,144 @@ export function SourceSelector({
   );
 }
 
-function isValidUrl(str: string): boolean {
+function ImportDeckInput({
+  importedDeck,
+  onImportedDeckChange,
+  onRawTextChange,
+}: {
+  importedDeck: ImportedDeckSource | null;
+  onImportedDeckChange: (deck: ImportedDeckSource | null) => void;
+  onRawTextChange: (text: string) => void;
+}) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleFile(file: File) {
+    setLoading(true);
+    setError("");
+
+    try {
+      const { extractPptxPreview, isPptxFile } = await import("@/lib/slides/pptx-import");
+      if (!isPptxFile(file.name, file.type)) {
+        throw new Error("Please upload a .pptx file");
+      }
+
+      const parsed = await extractPptxPreview(await file.arrayBuffer(), {
+        fileName: file.name,
+      });
+      const nextValue: ImportedDeckSource = {
+        fileName: file.name,
+        ...parsed,
+      };
+
+      onImportedDeckChange(nextValue);
+      onRawTextChange(parsed.sourceText);
+    } catch (err) {
+      if (err instanceof Error && err.message === "PASSWORD_PROTECTED_PPTX") {
+        setError("Password-protected files are not supported");
+      } else if (err instanceof Error && err.message === "Please upload a .pptx file") {
+        setError(err.message);
+      } else {
+        setError("Could not read this file. Is it a valid PowerPoint presentation?");
+      }
+      onImportedDeckChange(null);
+      onRawTextChange("");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        className="hidden"
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file) void handleFile(file);
+          event.target.value = "";
+        }}
+      />
+
+      <button
+        type="button"
+        onClick={() => fileInputRef.current?.click()}
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-dashed border-border bg-surface-raised text-sm text-ink hover:border-brand/40 transition-colors"
+      >
+        {loading ? <CircleNotch size={16} className="animate-spin" /> : <UploadSimple size={16} />}
+        {loading ? "Parsing presentation..." : "Choose .pptx file"}
+      </button>
+
+      {error && (
+        <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+          <WarningCircle size={16} />
+          {error}
+        </div>
+      )}
+
+      {importedDeck && (
+        <div className="rounded-2xl border border-border bg-surface p-4 space-y-3">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium text-ink">{importedDeck.title}</p>
+              <p className="text-xs text-ink-muted">
+                {importedDeck.slideCount} slides from {importedDeck.fileName}
+                {importedDeck.themeName ? ` - Theme: ${importedDeck.themeName}` : ""}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                onImportedDeckChange(null);
+                onRawTextChange("");
+              }}
+              className="text-xs text-ink-muted hover:text-ink transition-colors"
+            >
+              Clear
+            </button>
+          </div>
+
+          <div className="max-h-56 space-y-2 overflow-y-auto">
+            {importedDeck.slides.slice(0, 6).map((slide) => (
+              <div key={slide.index} className="rounded-xl bg-surface-raised px-3 py-2">
+                <div className="flex items-center gap-2 text-xs text-ink-muted">
+                  <span>Slide {slide.index}</span>
+                  <span>&middot;</span>
+                  <span className="capitalize">{slide.layout.replace(/_/g, " ")}</span>
+                </div>
+                <p className="mt-1 text-sm font-medium text-ink">{slide.title}</p>
+                {slide.previewText && (
+                  <p className="mt-1 text-xs text-ink-muted line-clamp-2">{slide.previewText}</p>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {importedDeck.slides.length > 6 && (
+            <p className="text-[11px] text-ink-muted">
+              Showing 6 of {importedDeck.slides.length} imported slide previews.
+            </p>
+          )}
+
+          {importedDeck.warnings.length > 0 && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+              {importedDeck.warnings[0]}
+              {importedDeck.warnings.length > 1 ? ` (+${importedDeck.warnings.length - 1} more)` : ""}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function isValidUrl(value: string): boolean {
   try {
-    const u = new URL(str);
-    return u.protocol === "http:" || u.protocol === "https:";
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
   } catch {
     return false;
   }
@@ -283,7 +441,7 @@ function UrlSourceInput({
   }
 
   function removeUrl(index: number) {
-    onChange(sources.filter((_, i) => i !== index));
+    onChange(sources.filter((_, sourceIndex) => sourceIndex !== index));
   }
 
   return (
@@ -292,9 +450,9 @@ function UrlSourceInput({
         Paste a URL to any article, blog post, or documentation page
       </p>
 
-      {sources.map((source, i) => (
+      {sources.map((source, index) => (
         <div
-          key={i}
+          key={index}
           className="flex items-start gap-2 p-3 rounded-xl bg-surface-raised border border-border"
         >
           <Globe size={16} className="text-brand shrink-0 mt-0.5" />
@@ -304,27 +462,25 @@ function UrlSourceInput({
               <div>
                 <p className="text-xs font-medium text-ink">{source.title}</p>
                 <p className="text-[10px] text-ink-muted line-clamp-2">{source.excerpt}</p>
-                <p className="text-[10px] text-ink-muted mt-0.5">{source.wordCount?.toLocaleString()} words</p>
+                <p className="text-[10px] text-ink-muted mt-0.5">
+                  {source.wordCount?.toLocaleString()} words
+                </p>
               </div>
             )}
-            {source.error && (
-              <p className="text-[10px] text-red-500">{source.error}</p>
-            )}
+            {source.error && <p className="text-[10px] text-red-500">{source.error}</p>}
           </div>
           <div className="flex items-center gap-1 shrink-0">
             {!source.fetched && !source.fetching && (
               <button
-                onClick={() => fetchPreview(i)}
+                onClick={() => fetchPreview(index)}
                 className="px-2 py-1 rounded-lg bg-brand/10 text-brand text-[10px] font-medium hover:bg-brand/20 transition-colors"
               >
                 Fetch Preview
               </button>
             )}
-            {source.fetching && (
-              <CircleNotch size={14} className="text-brand animate-spin" />
-            )}
+            {source.fetching && <CircleNotch size={14} className="text-brand animate-spin" />}
             <button
-              onClick={() => removeUrl(i)}
+              onClick={() => removeUrl(index)}
               className="p-1 rounded-lg text-ink-muted hover:text-red-500 transition-colors"
             >
               <Trash size={14} />

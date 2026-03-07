@@ -14,7 +14,11 @@ import {
   CaretUp,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { SourceSelector, type SourceType } from "@/components/presentation/source-selector";
+import {
+  SourceSelector,
+  type SourceType,
+  type ImportedDeckSource,
+} from "@/components/presentation/source-selector";
 import { PRESET_THEMES } from "@/types/presentation";
 import type { PosterSize, PosterGridLayout } from "@/types/poster";
 import { POSTER_SIZES, POSTER_GRID_LAYOUTS, POSTER_TEMPLATES } from "@/types/poster";
@@ -39,6 +43,7 @@ function NewPosterContent() {
   const [documentId, setDocumentId] = useState<number | null>(null);
   const [rawText, setRawText] = useState("");
   const [deepResearchSessionId, setDeepResearchSessionId] = useState<number | null>(null);
+  const [importedDeck, setImportedDeck] = useState<ImportedDeckSource | null>(null);
 
   // Step 1: Size & Template
   const [posterSize, setPosterSize] = useState<PosterSize>("a0_portrait");
@@ -65,7 +70,8 @@ function NewPosterContent() {
     (sourceType === "papers" && paperIds.length > 0) ||
     (sourceType === "document" && documentId != null) ||
     (sourceType === "text" && rawText.trim().length > 50) ||
-    (sourceType === "deep_research" && deepResearchSessionId != null);
+    (sourceType === "deep_research" && deepResearchSessionId != null) ||
+    (sourceType === "import_deck" && importedDeck != null);
 
   const canProceedStep2 = title.trim().length > 0;
 
@@ -75,15 +81,16 @@ function NewPosterContent() {
     setPreprocessing(true);
     setError("");
     try {
+      const effectiveSourceType = sourceType === "import_deck" ? "text" : sourceType;
       const res = await fetch("/api/presentations/preprocess", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          sourceType,
-          paperIds: sourceType === "papers" ? paperIds : undefined,
-          documentId: sourceType === "document" ? documentId : undefined,
-          rawText: sourceType === "text" ? rawText : undefined,
-          deepResearchSessionId: sourceType === "deep_research" ? deepResearchSessionId : undefined,
+          sourceType: effectiveSourceType,
+          paperIds: effectiveSourceType === "papers" ? paperIds : undefined,
+          documentId: effectiveSourceType === "document" ? documentId : undefined,
+          rawText: effectiveSourceType === "text" ? (importedDeck?.sourceText ?? rawText) : undefined,
+          deepResearchSessionId: effectiveSourceType === "deep_research" ? deepResearchSessionId : undefined,
         }),
       });
 
@@ -218,6 +225,13 @@ function NewPosterContent() {
             onDocumentIdChange={setDocumentId}
             rawText={rawText}
             onRawTextChange={setRawText}
+            importedDeck={importedDeck}
+            onImportedDeckChange={(deck) => {
+              setImportedDeck(deck);
+              if (deck && !title.trim()) {
+                setTitle(deck.title);
+              }
+            }}
           />
 
           {/* Deep Research source option */}

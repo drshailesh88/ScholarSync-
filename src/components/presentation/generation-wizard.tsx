@@ -13,7 +13,12 @@ import {
   CaretUp,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { SourceSelector, type SourceType, type UrlSource } from "./source-selector";
+import {
+  SourceSelector,
+  type SourceType,
+  type UrlSource,
+  type ImportedDeckSource,
+} from "./source-selector";
 import { TemplateSelector } from "./template-selector";
 import { PRESET_THEMES, ACADEMIC_TEMPLATES } from "@/types/presentation";
 import type { AudienceType } from "@/types/presentation";
@@ -55,6 +60,7 @@ export function GenerationWizard() {
   const [deepResearchSessionId, setDeepResearchSessionId] = useState<number | null>(null);
   const [selectedReferences, setSelectedReferences] = useState<ParsedReference[]>([]);
   const [urlSources, setUrlSources] = useState<UrlSource[]>([]);
+  const [importedDeck, setImportedDeck] = useState<ImportedDeckSource | null>(null);
 
   // Step 1: Template & Audience
   const [templateId, setTemplateId] = useState<string | null>(null);
@@ -85,7 +91,8 @@ export function GenerationWizard() {
     (sourceType === "text" && rawText.trim().length > 50) ||
     (sourceType === "deep_research" && deepResearchSessionId != null) ||
     (sourceType === "references" && selectedReferences.length > 0) ||
-    (sourceType === "url" && urlSources.length > 0 && urlSources.some((s) => s.fetched));
+    (sourceType === "url" && urlSources.length > 0 && urlSources.some((s) => s.fetched)) ||
+    (sourceType === "import_deck" && importedDeck != null);
 
   const canProceedStep2 = title.trim().length > 0;
 
@@ -120,6 +127,11 @@ export function GenerationWizard() {
           }
         }
         effectiveRawText = parts.join("\n\n");
+      }
+
+      if (sourceType === "import_deck" && importedDeck) {
+        effectiveSourceType = "text";
+        effectiveRawText = importedDeck.sourceText;
       }
 
       const res = await fetch("/api/presentations/preprocess", {
@@ -266,6 +278,13 @@ export function GenerationWizard() {
             selectedReferences={selectedReferences}
             urlSources={urlSources}
             onUrlSourcesChange={setUrlSources}
+            importedDeck={importedDeck}
+            onImportedDeckChange={(deck) => {
+              setImportedDeck(deck);
+              if (deck && !title.trim()) {
+                setTitle(deck.title);
+              }
+            }}
           />
 
           {/* Deep Research source option */}
