@@ -1580,6 +1580,7 @@ function EditableBlockDispatcher({
         contentStyle={contentStyle}
       >
         <EditableTableBlock
+          blockIndex={blockIndex}
           data={block.data}
           isEditing={isEditing}
           onUpdate={(nextData) => {

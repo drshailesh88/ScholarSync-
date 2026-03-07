@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, AnimationTrigger, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData, ThemeConfig } from "@/types/presentation";
+import { useTableEditorStore } from "@/stores/table-editor-store";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, AnimationTrigger, ExitAnimationType, EmphasisAnimationType, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData, ThemeConfig, TableCellMeta } from "@/types/presentation";
 import { cn } from "@/lib/utils";
 import { detectMediaType } from "@/components/slides/blocks/media-block";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
@@ -11,6 +12,10 @@ import { FONT_FAMILY_OPTIONS, FONT_SIZE_OPTIONS } from "@/components/slides/wysi
 import { BlockStyleControls } from "@/components/slides/shared/block-style-controls";
 import { ColorPicker } from "@/components/slides/shared/color-picker";
 import { hexToRGBA, parseHexColor } from "@/lib/utils/color-utils";
+import {
+  applySelectedCellAttributes,
+  applyTableStyleAttributes,
+} from "@/components/slides/wysiwyg/editable-table-block";
 
 // ---------------------------------------------------------------------------
 // BlockPropertyEditor — context-sensitive editor for the selected block.
@@ -48,7 +53,14 @@ export function BlockPropertyEditor() {
       editor = <ChartEditor block={selectedBlock} onUpdate={onUpdate} />;
       break;
     case "table":
-      editor = <TableEditor block={selectedBlock} onUpdate={onUpdate} />;
+      editor = (
+        <TableEditor
+          block={selectedBlock}
+          onUpdate={onUpdate}
+          themeConfig={themeConfig}
+          selectedBlockIndex={selectedBlockIndex}
+        />
+      );
       break;
     case "stat_result":
       editor = <StatEditor block={selectedBlock} onUpdate={onUpdate} />;
@@ -724,121 +736,183 @@ function ChartEditor({ block, onUpdate }: { block: ChartBlock; onUpdate: (b: Con
 
 type TableBlock = Extract<ContentBlock, { type: "table" }>;
 
-function TableEditor({ block, onUpdate }: { block: TableBlock; onUpdate: (b: ContentBlock) => void }) {
+function TableEditor({
+  block,
+  onUpdate,
+  themeConfig,
+  selectedBlockIndex,
+}: {
+  block: TableBlock;
+  onUpdate: (b: ContentBlock) => void;
+  themeConfig: ThemeConfig;
+  selectedBlockIndex: number;
+}) {
   const data = block.data;
+  const editingBlockIndex = useSlidesStore((s) => s.editingBlockIndex);
+  const activeTableBlockIndex = useTableEditorStore((s) => s.activeBlockIndex);
+  const tableEditor = useTableEditorStore((s) => s.editor);
+  const selectedCell = useTableEditorStore((s) => s.selectedCell);
+  const canMergeCells = useTableEditorStore((s) => s.canMergeCells);
+  const canSplitCell = useTableEditorStore((s) => s.canSplitCell);
+  const themeColors = getThemeColors(themeConfig);
+  const isLiveTableSelection =
+    editingBlockIndex === selectedBlockIndex &&
+    activeTableBlockIndex === selectedBlockIndex &&
+    tableEditor !== null;
 
-  const updateCell = (rowIdx: number, colIdx: number, value: string) => {
-    const newRows = data.rows.map((row, ri) =>
-      ri === rowIdx ? row.map((cell, ci) => (ci === colIdx ? value : cell)) : row
-    );
-    onUpdate({ ...block, data: { ...data, rows: newRows } });
+  const updateData = (partial: Partial<TableBlock["data"]>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
   };
 
-  const updateHeader = (colIdx: number, value: string) => {
-    const newHeaders = data.headers.map((h, i) => (i === colIdx ? value : h));
-    onUpdate({ ...block, data: { ...data, headers: newHeaders } });
-  };
+  const updateTableStyle = (partial: NonNullable<TableBlock["data"]["tableStyle"]>) => {
+    if (isLiveTableSelection && tableEditor) {
+      if (applyTableStyleAttributes(tableEditor, partial)) {
+        return;
+      }
+    }
 
-  const addRow = () => {
-    const newRow = data.headers.map(() => "");
-    onUpdate({ ...block, data: { ...data, rows: [...data.rows, newRow] } });
-  };
-
-  const addColumn = () => {
-    onUpdate({
-      ...block,
-      data: {
-        ...data,
-        headers: [...data.headers, `Col ${data.headers.length + 1}`],
-        rows: data.rows.map((row) => [...row, ""]),
+    updateData({
+      tableStyle: {
+        ...data.tableStyle,
+        ...partial,
       },
     });
   };
 
-  const deleteRow = (idx: number) => {
-    onUpdate({ ...block, data: { ...data, rows: data.rows.filter((_, i) => i !== idx) } });
-  };
-
-  const deleteColumn = (idx: number) => {
-    onUpdate({
-      ...block,
-      data: {
-        ...data,
-        headers: data.headers.filter((_, i) => i !== idx),
-        rows: data.rows.map((row) => row.filter((_, i) => i !== idx)),
-      },
-    });
+  const updateSelectedCell = (partial: Partial<TableCellMeta>) => {
+    if (!tableEditor) return;
+    applySelectedCellAttributes(tableEditor, partial);
   };
 
   return (
     <div className="space-y-3">
-      <EditorSection title="Table">
-        <div className="max-h-64 overflow-auto border border-border rounded-md">
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="bg-surface-raised">
-                {data.headers.map((h, ci) => (
-                  <th key={ci} className="p-0 border-b border-r border-border">
-                    <div className="flex items-center">
-                      <input
-                        value={h}
-                        onChange={(e) => updateHeader(ci, e.target.value)}
-                        className="w-full px-1.5 py-1 text-xs font-semibold bg-transparent focus:outline-none focus:bg-blue-50"
-                      />
-                      {data.headers.length > 1 && (
-                        <button
-                          onClick={() => deleteColumn(ci)}
-                          className="p-0.5 text-red-400 hover:text-red-600 shrink-0"
-                        >
-                          <Trash size={10} />
-                        </button>
-                      )}
-                    </div>
-                  </th>
-                ))}
-                <th className="w-6 border-b border-border" />
-              </tr>
-            </thead>
-            <tbody>
-              {data.rows.map((row, ri) => (
-                <tr key={ri} className="hover:bg-surface-raised/50">
-                  {row.map((cell, ci) => (
-                    <td key={ci} className="p-0 border-b border-r border-border">
-                      <input
-                        value={cell}
-                        onChange={(e) => updateCell(ri, ci, e.target.value)}
-                        className="w-full px-1.5 py-1 text-xs bg-transparent focus:outline-none focus:bg-blue-50"
-                      />
-                    </td>
-                  ))}
-                  <td className="w-6 border-b border-border text-center">
-                    {data.rows.length > 1 && (
-                      <button
-                        onClick={() => deleteRow(ri)}
-                        className="p-0.5 text-red-400 hover:text-red-600"
-                      >
-                        <Trash size={10} />
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <EditorSection title="Table Style">
+        <div>
+          <FieldLabel>Header Background</FieldLabel>
+          <ColorPicker
+            value={data.tableStyle?.headerBackground ?? `${themeConfig.primaryColor}10`}
+            onChange={(color) => updateTableStyle({ headerBackground: color })}
+            themeColors={themeColors}
+            placement="right"
+          />
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={addRow}
-            className="flex-1 text-xs py-1.5 rounded-md border border-dashed border-border text-ink-muted hover:border-brand hover:text-brand transition-colors flex items-center justify-center gap-1"
-          >
-            <Plus size={12} /> Row
-          </button>
-          <button
-            onClick={addColumn}
-            className="flex-1 text-xs py-1.5 rounded-md border border-dashed border-border text-ink-muted hover:border-brand hover:text-brand transition-colors flex items-center justify-center gap-1"
-          >
-            <Plus size={12} /> Column
-          </button>
+
+        <div>
+          <FieldLabel>Header Text Color</FieldLabel>
+          <ColorPicker
+            value={data.tableStyle?.headerTextColor ?? themeConfig.primaryColor}
+            onChange={(color) => updateTableStyle({ headerTextColor: color })}
+            themeColors={themeColors}
+            placement="right"
+          />
+        </div>
+
+        <label className="flex items-center justify-between rounded-md border border-border px-2 py-2 text-xs text-ink">
+          <span>Striped Rows</span>
+          <input
+            type="checkbox"
+            checked={data.tableStyle?.stripedRows ?? true}
+            onChange={(event) => updateTableStyle({ stripedRows: event.target.checked })}
+          />
+        </label>
+
+        <div>
+          <FieldLabel>Border Style</FieldLabel>
+          <FieldSelect
+            value={data.tableStyle?.borderMode ?? "horizontal"}
+            onChange={(value) =>
+              updateTableStyle({
+                borderMode: value as "all" | "horizontal" | "none" | "outer",
+              })
+            }
+            options={[
+              { value: "all", label: "All Borders" },
+              { value: "horizontal", label: "Horizontal Only" },
+              { value: "none", label: "No Borders" },
+              { value: "outer", label: "Outer Only" },
+            ]}
+          />
+        </div>
+      </EditorSection>
+
+      <EditorSection title="Cell Formatting">
+        {isLiveTableSelection && selectedCell ? (
+          <>
+            <div className="rounded-md border border-border bg-surface-raised px-2 py-1.5 text-[11px] text-ink-muted">
+              {selectedCell.isHeader
+                ? `Header cell ${selectedCell.columnIndex + 1}`
+                : `Cell ${selectedCell.rowIndex + 1}, ${selectedCell.columnIndex + 1}`}
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => tableEditor.chain().focus().mergeCells().run()}
+                disabled={!canMergeCells}
+                className="flex-1 rounded-md border border-border px-2 py-1.5 text-xs text-ink hover:bg-surface-raised disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Merge Cells
+              </button>
+              <button
+                type="button"
+                onClick={() => tableEditor.chain().focus().splitCell().run()}
+                disabled={!canSplitCell}
+                className="flex-1 rounded-md border border-border px-2 py-1.5 text-xs text-ink hover:bg-surface-raised disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Split Cell
+              </button>
+            </div>
+
+            <div>
+              <FieldLabel>Cell Background</FieldLabel>
+              <ColorPicker
+                value={selectedCell.meta.backgroundColor ?? "#FFFFFF"}
+                onChange={(color) => updateSelectedCell({ backgroundColor: color })}
+                themeColors={themeColors}
+                placement="right"
+              />
+            </div>
+
+            <div>
+              <FieldLabel>Text Alignment</FieldLabel>
+              <FieldSelect
+                value={selectedCell.meta.textAlign ?? "left"}
+                onChange={(value) =>
+                  updateSelectedCell({
+                    textAlign: value as "left" | "center" | "right",
+                  })
+                }
+                options={[
+                  { value: "left", label: "Left" },
+                  { value: "center", label: "Center" },
+                  { value: "right", label: "Right" },
+                ]}
+              />
+            </div>
+
+            <label className="flex items-center justify-between rounded-md border border-border px-2 py-2 text-xs text-ink">
+              <span>Bold</span>
+              <input
+                type="checkbox"
+                checked={selectedCell.meta.fontWeight === "bold"}
+                onChange={(event) =>
+                  updateSelectedCell({
+                    fontWeight: event.target.checked ? "bold" : "normal",
+                  })
+                }
+              />
+            </label>
+          </>
+        ) : (
+          <div className="rounded-md border border-dashed border-border px-2 py-2 text-xs text-ink-muted">
+            Double-click the table on the canvas and place the cursor in a cell to enable merge, split, and per-cell formatting.
+          </div>
+        )}
+      </EditorSection>
+
+      <EditorSection title="Table">
+        <div className="rounded-md border border-dashed border-border px-2 py-2 text-xs text-ink-muted">
+          Edit content directly on the canvas. Right-click a cell for row, column, merge, split, and background actions.
         </div>
       </EditorSection>
     </div>
