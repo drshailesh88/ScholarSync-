@@ -91,6 +91,30 @@ export interface TimelineData {
   title?: string;
 }
 
+/** Shape block for geometric callouts and visual elements */
+export interface ShapeData {
+  shapeType:
+    | "rectangle"
+    | "rounded_rectangle"
+    | "circle"
+    | "ellipse"
+    | "triangle"
+    | "arrow"
+    | "line"
+    | "star"
+    | "diamond"
+    | "pentagon"
+    | "hexagon";
+  fillColor?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
+  text?: string;
+  textAlign?: "left" | "center" | "right";
+  textColor?: string;
+  opacity?: number;
+  rotation?: number;
+}
+
 /** Toggle/accordion block for expandable content sections */
 export interface ToggleData {
   title: string;
@@ -111,6 +135,34 @@ export interface NestedCardData {
   title: string;
   contentBlocks: ContentBlock[];
   collapsed?: boolean;
+}
+
+export interface ImageCrop {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface ImageFilters {
+  brightness?: number;   // 0-200, default 100 (percentage)
+  contrast?: number;     // 0-200, default 100
+  saturation?: number;   // 0-200, default 100
+  blur?: number;         // 0-20, default 0 (px)
+  grayscale?: number;    // 0-100, default 0 (percentage)
+  sepia?: number;        // 0-100, default 0 (percentage)
+  hueRotate?: number;    // 0-360, default 0 (degrees)
+  opacity?: number;      // 0-100, default 100
+}
+
+export interface ImageData {
+  url?: string;
+  alt: string;
+  caption?: string;
+  suggestion?: string;
+  lockAspectRatio?: boolean;
+  crop?: ImageCrop;
+  filters?: ImageFilters;
 }
 
 /** SVG infographic block — Napkin-style visual generation */
@@ -175,18 +227,61 @@ export interface BlockPosition {
   height: number; // percentage of slide height
 }
 
+export interface CardBackground {
+  color?: string;
+  gradientEnabled?: boolean;
+  gradientFrom?: string;
+  gradientTo?: string;
+  gradientDirection?: "top-to-bottom" | "left-to-right" | "diagonal";
+  imageUrl?: string;
+  imagePosition?:
+    | "cover"
+    | "contain"
+    | "top"
+    | "center"
+    | "bottom"
+    | "none"
+    | "left"
+    | "right"
+    | "background";
+  overlayType?: "none" | "frosted" | "faded" | "clear";
+  overlayIntensity?: number; // 0-100
+  overlayColor?: string;
+}
+
 type ContentBlockBase = {
   animation?: BlockAnimation;
   /** Optional positioning for freeform layout */
   position?: BlockPosition;
   /** Z-index for layering in freeform layout */
   zIndex?: number;
+  /** Placeholder binding when the block was inserted from a slide master placeholder */
+  placeholderId?: string;
+  /** Optional fixed-key identifier for master-level fixed elements */
+  masterFixedKey?: string;
+  /** Rotation in degrees (0-360) */
+  rotation?: number;
+  /** Horizontal transform scale (set to -1 for horizontal flip) */
+  scaleX?: number;
+  /** Vertical transform scale (set to -1 for vertical flip) */
+  scaleY?: number;
 };
 
 export type ContentBlock =
-  | (ContentBlockBase & { type: "text"; data: { text: string; style?: "title" | "subtitle" | "body" | "caption" } })
+  | (ContentBlockBase & {
+      type: "text";
+      data: {
+        text: string;
+        style?: "title" | "subtitle" | "body" | "caption";
+        fontFamily?: string;
+        fontSize?: string;
+        color?: string;
+        lineHeight?: number;
+        paragraphSpacing?: number;
+      };
+    })
   | (ContentBlockBase & { type: "bullets"; data: { items: string[]; ordered?: boolean } })
-  | (ContentBlockBase & { type: "image"; data: { url?: string; alt: string; caption?: string; suggestion?: string }; figureLabel?: string })
+  | (ContentBlockBase & { type: "image"; data: ImageData; figureLabel?: string })
   | (ContentBlockBase & { type: "chart"; data: ChartData; figureLabel?: string; caption?: string })
   | (ContentBlockBase & { type: "table"; data: { headers: string[]; rows: string[][] }; figureLabel?: string; caption?: string })
   | (ContentBlockBase & { type: "citation"; data: CitationData })
@@ -199,6 +294,7 @@ export type ContentBlock =
   | (ContentBlockBase & { type: "stat_result"; data: StatResultData })
   | (ContentBlockBase & { type: "bibliography"; data: BibliographyData })
   | (ContentBlockBase & { type: "timeline"; data: TimelineData })
+  | (ContentBlockBase & { type: "shape"; data: ShapeData })
   | (ContentBlockBase & { type: "divider"; data: { style?: "solid" | "dashed" | "gradient" } })
   | (ContentBlockBase & { type: "toggle"; data: ToggleData })
   | (ContentBlockBase & { type: "embed"; data: EmbedData })
@@ -467,6 +563,22 @@ export type SlideLayout =
   | "big_number"
   // V3: Freeform layout — blocks use their position field
   | "freeform";
+
+export interface SlideMaster {
+  id: string;
+  name: string;
+  layout: SlideLayout;
+  fixedBlocks: ContentBlock[]; // Blocks that appear on every slide using this master
+  placeholders: {
+    id: string;
+    label: string;
+    position: BlockPosition;
+    defaultType: ContentBlock["type"];
+  }[];
+  background?: CardBackground;
+  showSlideNumber?: boolean;
+  showFooter?: boolean;
+}
 
 // V2: Extended audience types
 export type AudienceType =

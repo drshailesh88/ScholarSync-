@@ -33,7 +33,7 @@ RULES:
 1. Analyze all slides holistically before making changes.
 2. Only return slides that were actually modified — do NOT return unmodified slides.
 3. Preserve the content block structure. Each content block has a "type" and "data" field.
-4. Valid content block types: text, bullets, image, chart, table, citation, quote, math, diagram, code, callout, stat_result, bibliography, timeline, divider.
+4. Valid content block types: text, bullets, shape, image, chart, table, citation, quote, math, diagram, code, callout, stat_result, bibliography, timeline, divider.
 5. When shortening, reduce word count by ~30% while preserving key information and citations.
 6. When adding citations, insert citation-type content blocks with proper academic formatting.
 7. When improving flow, adjust transitions, reorder points for logical progression, and ensure narrative coherence.

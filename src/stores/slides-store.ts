@@ -5,6 +5,8 @@ import type {
   ThemeConfig,
   AudienceType,
   InstitutionKit,
+  SlideMaster,
+  CardBackground as PresentationCardBackground,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 import {
@@ -15,29 +17,31 @@ import {
   deleteSlide as deleteSlideAction,
   reorderSlides as reorderSlidesAction,
 } from "@/lib/actions/presentations";
+import {
+  createBuiltInSlideMasters,
+  mergeSlideMasters,
+} from "@/components/slides/shared/slide-master-utils";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-export interface CardBackground {
-  color?: string;
-  imageUrl?: string;
-  imagePosition?: "none" | "top" | "left" | "right" | "background";
-  overlayType?: "none" | "frosted" | "faded" | "clear";
-  overlayIntensity?: number; // 0-100
-  overlayColor?: string;
-}
+export type CardBackground = PresentationCardBackground;
+
+export type SlideTransition = "none" | "fade" | "slide" | "zoom";
 
 export interface SlideState {
   id: number;
   sortOrder: number;
   layout: SlideLayout;
+  masterId?: string;
   title: string;
   subtitle: string;
   contentBlocks: ContentBlock[];
   speakerNotes: string;
   cardBackground?: CardBackground;
+  transition?: SlideTransition;
+  hidden?: boolean;
 }
 
 export type WorkspaceMode = "slides" | "create";
@@ -78,11 +82,19 @@ export interface SlidesStore {
 
   // Slides
   slides: SlideState[];
+  masters: SlideMaster[];
   activeSlideId: number | null;
 
   // Block selection (shared so properties panel can see it)
-  selectedBlockIndex: number | null;
-  setSelectedBlockIndex: (idx: number | null) => void;
+  selectedBlockIndices: Set<number>;
+  selectBlock: (index: number, addToSelection?: boolean) => void;
+  selectAllBlocks: () => void;
+  deselectAll: () => void;
+  isBlockSelected: (index: number) => boolean;
+  allBlocksSelected: boolean;
+  setAllBlocksSelected: (v: boolean) => void;
+  editingBlockIndex: number | null;
+  setEditingBlockIndex: (idx: number | null) => void;
 
   // Workspace mode
   mode: WorkspaceMode;
@@ -97,8 +109,10 @@ export interface SlidesStore {
   setAgentMode: (mode: AgentMode) => void;
 
   // Presentation settings
-  transition: "none" | "fade" | "slide" | "zoom";
-  setTransition: (t: "none" | "fade" | "slide" | "zoom") => void;
+  transition: SlideTransition;
+  setTransition: (t: SlideTransition) => void;
+  getEffectiveTransition: (slideId: number) => SlideTransition;
+  applyTransitionToAllSlides: (transition: SlideTransition) => void;
 
   // UI state
   isPresenting: boolean;
@@ -115,6 +129,14 @@ export interface SlidesStore {
   // Slide Sorter
   showSlideSorter: boolean;
   setShowSlideSorter: (v: boolean) => void;
+  showRulers: boolean;
+  setShowRulers: (v: boolean) => void;
+  showGrid: boolean;
+  setShowGrid: (v: boolean) => void;
+  gridSize: number;
+  setGridSize: (v: number) => void;
+  snapToGrid: boolean;
+  setSnapToGrid: (v: boolean) => void;
 
   // Save status
   saveStatus: SaveStatus;
@@ -122,12 +144,17 @@ export interface SlidesStore {
   // Computed
   getActiveSlide: () => SlideState | null;
   getSelectedBlock: () => ContentBlock | null;
+  getSelectedBlocks: () => ContentBlock[];
+  getPrimarySelectedBlockIndex: () => number | null;
 
   // Deck actions
   loadDeck: (deckId: number) => Promise<boolean>;
   setTitle: (title: string) => void;
   setTheme: (key: string, config: ThemeConfig) => void;
   setAudienceType: (type: AudienceType) => void;
+  addMaster: (master: SlideMaster) => void;
+  updateMaster: (id: string, updates: Partial<SlideMaster>) => void;
+  deleteMaster: (id: string) => void;
 
   // Slide actions
   setActiveSlide: (id: number | null) => void;
@@ -141,9 +168,18 @@ export interface SlidesStore {
   clipboardSlide: Omit<SlideState, "id" | "sortOrder"> | null;
   copySlide: (id: number) => void;
   pasteSlide: () => Promise<void>;
+  clipboardBlocks: ContentBlock[];
+  copyBlock: () => void;
+  cutBlock: () => void;
+  pasteBlock: () => void;
+  deleteSelectedBlocks: () => void;
 
   // Block-level update (convenience)
   updateBlock: (blockIndex: number, block: ContentBlock) => void;
+  bringToFront: (blockIndex: number) => void;
+  sendToBack: (blockIndex: number) => void;
+  bringForward: (blockIndex: number) => void;
+  sendBackward: (blockIndex: number) => void;
 
   // Undo / Redo
   undo: () => void;
@@ -170,16 +206,24 @@ export interface SlidesStore {
 // ---------------------------------------------------------------------------
 
 function normalizeSlide(raw: Record<string, unknown>): SlideState {
+  const hiddenRaw = raw.hidden;
   return {
     id: raw.id as number,
     sortOrder: (raw.sortOrder as number) ?? 0,
     layout: (raw.layout as SlideLayout) ?? "title_content",
+    masterId: (raw.masterId as string) ?? undefined,
     title: (raw.title as string) ?? "",
     subtitle: (raw.subtitle as string) ?? "",
     contentBlocks: (raw.contentBlocks as ContentBlock[]) ?? [],
     speakerNotes: (raw.speakerNotes as string) ?? "",
     cardBackground: raw.cardBackground as CardBackground | undefined,
+    transition: raw.transition as SlideTransition | undefined,
+    hidden: typeof hiddenRaw === "boolean" ? hiddenRaw : undefined,
   };
+}
+
+function getBlockLayerOrder(block: ContentBlock, index: number): number {
+  return block.zIndex ?? index;
 }
 
 // ---------------------------------------------------------------------------
@@ -201,11 +245,68 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
 
   // Slides
   slides: [],
+  masters: createBuiltInSlideMasters(),
   activeSlideId: null,
 
   // Block selection
-  selectedBlockIndex: null,
-  setSelectedBlockIndex: (idx) => set({ selectedBlockIndex: idx }),
+  selectedBlockIndices: new Set<number>(),
+  selectBlock: (index, addToSelection = false) => {
+    const slide = get().getActiveSlide();
+    if (!slide || index < 0 || index >= slide.contentBlocks.length) return;
+
+    set((state) => {
+      const next = addToSelection
+        ? new Set(state.selectedBlockIndices)
+        : new Set<number>();
+
+      if (addToSelection) {
+        if (next.has(index)) next.delete(index);
+        else next.add(index);
+      } else {
+        next.add(index);
+      }
+
+      return {
+        selectedBlockIndices: next,
+        allBlocksSelected:
+          slide.contentBlocks.length > 0 &&
+          next.size === slide.contentBlocks.length,
+      };
+    });
+  },
+  selectAllBlocks: () => {
+    const slide = get().getActiveSlide();
+    if (!slide || slide.contentBlocks.length === 0) {
+      set({
+        selectedBlockIndices: new Set<number>(),
+        allBlocksSelected: false,
+      });
+      return;
+    }
+
+    set({
+      selectedBlockIndices: new Set(
+        slide.contentBlocks.map((_block, index) => index)
+      ),
+      allBlocksSelected: true,
+    });
+  },
+  deselectAll: () =>
+    set({
+      selectedBlockIndices: new Set<number>(),
+      allBlocksSelected: false,
+    }),
+  isBlockSelected: (index) => get().selectedBlockIndices.has(index),
+  allBlocksSelected: false,
+  setAllBlocksSelected: (allBlocksSelected) => {
+    if (allBlocksSelected) {
+      get().selectAllBlocks();
+      return;
+    }
+    get().deselectAll();
+  },
+  editingBlockIndex: null,
+  setEditingBlockIndex: (editingBlockIndex) => set({ editingBlockIndex }),
 
   // Mode
   mode: "slides",
@@ -222,6 +323,15 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   // Presentation settings
   transition: "fade",
   setTransition: (transition) => set({ transition }),
+  getEffectiveTransition: (slideId) => {
+    const state = get();
+    const slide = state.slides.find((s) => s.id === slideId);
+    return slide?.transition ?? state.transition;
+  },
+  applyTransitionToAllSlides: (transition) =>
+    set((state) => ({
+      slides: state.slides.map((slide) => ({ ...slide, transition })),
+    })),
 
   // UI
   isPresenting: false,
@@ -237,9 +347,19 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
 
   showSlideSorter: false,
   setShowSlideSorter: (showSlideSorter) => set({ showSlideSorter }),
+  showRulers: false,
+  setShowRulers: (showRulers) => set({ showRulers }),
+  showGrid: false,
+  setShowGrid: (showGrid) => set({ showGrid }),
+  gridSize: 5,
+  setGridSize: (gridSize) =>
+    set({ gridSize: Math.min(Math.max(Number.isFinite(gridSize) ? gridSize : 5, 1), 100) }),
+  snapToGrid: false,
+  setSnapToGrid: (snapToGrid) => set({ snapToGrid }),
 
   // Clipboard
   clipboardSlide: null,
+  clipboardBlocks: [],
   copySlide: (id) => {
     const slide = get().slides.find((s) => s.id === id);
     if (!slide) return;
@@ -262,22 +382,109 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
         contentBlocks: clipboardSlide.contentBlocks,
         speakerNotes: clipboardSlide.speakerNotes,
       });
-      const newSlide = normalizeSlide(
+      const newSlideRaw = normalizeSlide(
         created as unknown as Record<string, unknown>
       );
+      const mergedSlide: SlideState = {
+        ...newSlideRaw,
+        ...(clipboardSlide.transition
+          ? { transition: clipboardSlide.transition }
+          : {}),
+        ...(typeof clipboardSlide.hidden === "boolean"
+          ? { hidden: clipboardSlide.hidden }
+          : {}),
+        ...(clipboardSlide.cardBackground
+          ? { cardBackground: clipboardSlide.cardBackground }
+          : {}),
+        ...(clipboardSlide.masterId
+          ? { masterId: clipboardSlide.masterId }
+          : {}),
+      };
 
       set((state) => {
         const updated = [...state.slides];
-        updated.splice(sortOrder, 0, newSlide);
+        updated.splice(sortOrder, 0, mergedSlide);
         const reordered = updated.map((s, i) => ({
           ...s,
           sortOrder: i,
         }));
-        return { slides: reordered, activeSlideId: newSlide.id };
+        return { slides: reordered, activeSlideId: mergedSlide.id };
       });
     } catch {
       // ignore
     }
+  },
+
+  copyBlock: () => {
+    const selectedBlocks = get().getSelectedBlocks();
+    if (selectedBlocks.length === 0) return;
+    set({
+      clipboardBlocks: selectedBlocks.map(
+        (block) => JSON.parse(JSON.stringify(block)) as ContentBlock
+      ),
+    });
+  },
+
+  deleteSelectedBlocks: () => {
+    const slide = get().getActiveSlide();
+    if (!slide) return;
+
+    const selectedIndices = [...get().selectedBlockIndices]
+      .filter((idx) => idx >= 0 && idx < slide.contentBlocks.length)
+      .sort((a, b) => a - b);
+
+    if (selectedIndices.length === 0) return;
+
+    const selectedIndexSet = new Set(selectedIndices);
+    const newBlocks = slide.contentBlocks.filter(
+      (_block, idx) => !selectedIndexSet.has(idx)
+    );
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+    set({
+      selectedBlockIndices: new Set<number>(),
+      allBlocksSelected: false,
+      editingBlockIndex: null,
+    });
+  },
+
+  cutBlock: () => {
+    if (get().getSelectedBlocks().length === 0) return;
+    get().copyBlock();
+    get().deleteSelectedBlocks();
+  },
+
+  pasteBlock: () => {
+    const slide = get().getActiveSlide();
+    const clipboardBlocks = get().clipboardBlocks;
+    if (!slide || clipboardBlocks.length === 0) return;
+
+    const selectedIndices = [...get().selectedBlockIndices]
+      .filter((idx) => idx >= 0 && idx < slide.contentBlocks.length)
+      .sort((a, b) => a - b);
+
+    const insertIndex =
+      selectedIndices.length > 0
+        ? selectedIndices[selectedIndices.length - 1] + 1
+        : slide.contentBlocks.length;
+
+    const newBlocks = [...slide.contentBlocks];
+    const clonedBlocks = clipboardBlocks.map(
+      (block) => JSON.parse(JSON.stringify(block)) as ContentBlock
+    );
+    newBlocks.splice(
+      insertIndex,
+      0,
+      ...clonedBlocks
+    );
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+    const nextSelection = new Set<number>(
+      clonedBlocks.map((_block, offset) => insertIndex + offset)
+    );
+    set({
+      selectedBlockIndices: nextSelection,
+      allBlocksSelected:
+        newBlocks.length > 0 && nextSelection.size === newBlocks.length,
+    });
   },
 
   // Save
@@ -350,10 +557,30 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   },
 
   getSelectedBlock: () => {
+    const selectedBlocks = get().getSelectedBlocks();
+    return selectedBlocks.length > 0 ? selectedBlocks[0] : null;
+  },
+
+  getSelectedBlocks: () => {
     const slide = get().getActiveSlide();
-    const idx = get().selectedBlockIndex;
-    if (!slide || idx === null || idx < 0 || idx >= slide.contentBlocks.length) return null;
-    return slide.contentBlocks[idx];
+    if (!slide) return [];
+
+    const validIndices = [...get().selectedBlockIndices]
+      .filter((idx) => idx >= 0 && idx < slide.contentBlocks.length)
+      .sort((a, b) => a - b);
+
+    return validIndices.map((idx) => slide.contentBlocks[idx]);
+  },
+
+  getPrimarySelectedBlockIndex: () => {
+    const slide = get().getActiveSlide();
+    if (!slide) return null;
+
+    const validIndices = [...get().selectedBlockIndices]
+      .filter((idx) => idx >= 0 && idx < slide.contentBlocks.length)
+      .sort((a, b) => a - b);
+
+    return validIndices.length > 0 ? validIndices[0] : null;
   },
 
   // Load deck from server
@@ -376,8 +603,14 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
           (data.themeConfig as ThemeConfig) ??
           PRESET_THEMES[data.theme ?? "modern"] ??
           PRESET_THEMES.modern,
+        masters: mergeSlideMasters(
+          (data as Record<string, unknown>).masters
+        ),
         slides,
         activeSlideId: slides.length > 0 ? slides[0].id : null,
+        selectedBlockIndices: new Set<number>(),
+        allBlocksSelected: false,
+        editingBlockIndex: null,
         saveStatus: "idle",
       });
       return true;
@@ -404,8 +637,36 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
     if (deckId) updateDeck(deckId, { audienceType });
   },
 
+  addMaster: (master) => {
+    const clonedMaster = JSON.parse(JSON.stringify(master)) as SlideMaster;
+    set((state) => ({ masters: [...state.masters, clonedMaster] }));
+  },
+
+  updateMaster: (id, updates) => {
+    set((state) => ({
+      masters: state.masters.map((master) =>
+        master.id === id ? { ...master, ...updates } : master
+      ),
+    }));
+  },
+
+  deleteMaster: (id) => {
+    set((state) => ({
+      masters: state.masters.filter((master) => master.id !== id),
+      slides: state.slides.map((slide) =>
+        slide.masterId === id ? { ...slide, masterId: undefined } : slide
+      ),
+    }));
+  },
+
   // Slide actions
-  setActiveSlide: (id) => set({ activeSlideId: id, selectedBlockIndex: null }),
+  setActiveSlide: (id) =>
+    set({
+      activeSlideId: id,
+      selectedBlockIndices: new Set<number>(),
+      allBlocksSelected: false,
+      editingBlockIndex: null,
+    }),
 
   updateSlide: (id, data) => {
     // Capture before state for undo
@@ -431,6 +692,106 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
     if (!slide) return;
     const newBlocks = [...slide.contentBlocks];
     newBlocks[blockIndex] = block;
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+  },
+
+  bringToFront: (blockIndex) => {
+    const slide = get().getActiveSlide();
+    if (!slide || blockIndex < 0 || blockIndex >= slide.contentBlocks.length) return;
+
+    const block = slide.contentBlocks[blockIndex];
+    const maxLayer = slide.contentBlocks.reduce(
+      (max, candidate, index) => Math.max(max, getBlockLayerOrder(candidate, index)),
+      Number.NEGATIVE_INFINITY
+    );
+
+    const newBlocks = [...slide.contentBlocks];
+    newBlocks[blockIndex] = { ...block, zIndex: maxLayer + 1 };
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+  },
+
+  sendToBack: (blockIndex) => {
+    const slide = get().getActiveSlide();
+    if (!slide || blockIndex < 0 || blockIndex >= slide.contentBlocks.length) return;
+
+    const block = slide.contentBlocks[blockIndex];
+    const minLayer = slide.contentBlocks.reduce(
+      (min, candidate, index) => Math.min(min, getBlockLayerOrder(candidate, index)),
+      Number.POSITIVE_INFINITY
+    );
+
+    const newBlocks = [...slide.contentBlocks];
+    newBlocks[blockIndex] = { ...block, zIndex: minLayer - 1 };
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+  },
+
+  bringForward: (blockIndex) => {
+    const slide = get().getActiveSlide();
+    if (!slide || blockIndex < 0 || blockIndex >= slide.contentBlocks.length) return;
+
+    const currentLayer = getBlockLayerOrder(
+      slide.contentBlocks[blockIndex],
+      blockIndex
+    );
+    let nextHigher: { index: number; layer: number } | null = null;
+
+    for (let index = 0; index < slide.contentBlocks.length; index += 1) {
+      if (index === blockIndex) continue;
+      const layer = getBlockLayerOrder(slide.contentBlocks[index], index);
+      if (layer <= currentLayer) continue;
+
+      if (
+        !nextHigher ||
+        layer < nextHigher.layer ||
+        (layer === nextHigher.layer && index < nextHigher.index)
+      ) {
+        nextHigher = { index, layer };
+      }
+    }
+
+    const nextHigherTarget = nextHigher;
+    if (!nextHigherTarget) return;
+
+    const newBlocks = [...slide.contentBlocks];
+    const currentBlock = newBlocks[blockIndex];
+    const swapBlock = newBlocks[nextHigherTarget.index];
+    newBlocks[blockIndex] = { ...currentBlock, zIndex: nextHigherTarget.layer };
+    newBlocks[nextHigherTarget.index] = { ...swapBlock, zIndex: currentLayer };
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+  },
+
+  sendBackward: (blockIndex) => {
+    const slide = get().getActiveSlide();
+    if (!slide || blockIndex < 0 || blockIndex >= slide.contentBlocks.length) return;
+
+    const currentLayer = getBlockLayerOrder(
+      slide.contentBlocks[blockIndex],
+      blockIndex
+    );
+    let nextLower: { index: number; layer: number } | null = null;
+
+    for (let index = 0; index < slide.contentBlocks.length; index += 1) {
+      if (index === blockIndex) continue;
+      const layer = getBlockLayerOrder(slide.contentBlocks[index], index);
+      if (layer >= currentLayer) continue;
+
+      if (
+        !nextLower ||
+        layer > nextLower.layer ||
+        (layer === nextLower.layer && index > nextLower.index)
+      ) {
+        nextLower = { index, layer };
+      }
+    }
+
+    const nextLowerTarget = nextLower;
+    if (!nextLowerTarget) return;
+
+    const newBlocks = [...slide.contentBlocks];
+    const currentBlock = newBlocks[blockIndex];
+    const swapBlock = newBlocks[nextLowerTarget.index];
+    newBlocks[blockIndex] = { ...currentBlock, zIndex: nextLowerTarget.layer };
+    newBlocks[nextLowerTarget.index] = { ...swapBlock, zIndex: currentLayer };
     get().updateSlide(slide.id, { contentBlocks: newBlocks });
   },
 
@@ -509,18 +870,29 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
         contentBlocks: source.contentBlocks,
         speakerNotes: source.speakerNotes,
       });
-      const newSlide = normalizeSlide(
+      const newSlideRaw = normalizeSlide(
         created as unknown as Record<string, unknown>
       );
+      const mergedSlide: SlideState = {
+        ...newSlideRaw,
+        ...(source.transition ? { transition: source.transition } : {}),
+        ...(typeof source.hidden === "boolean"
+          ? { hidden: source.hidden }
+          : {}),
+        ...(source.cardBackground
+          ? { cardBackground: source.cardBackground }
+          : {}),
+        ...(source.masterId ? { masterId: source.masterId } : {}),
+      };
 
       set((state) => {
         const updated = [...state.slides];
-        updated.splice(sortOrder, 0, newSlide);
+        updated.splice(sortOrder, 0, mergedSlide);
         const reordered = updated.map((s, i) => ({
           ...s,
           sortOrder: i,
         }));
-        return { slides: reordered, activeSlideId: newSlide.id };
+        return { slides: reordered, activeSlideId: mergedSlide.id };
       });
     } catch {
       // ignore
@@ -640,6 +1012,9 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
           ? slides.find((s) => s.id === state.activeSlideId)?.id ??
             slides[0].id
           : null,
+      selectedBlockIndices: new Set<number>(),
+      allBlocksSelected: false,
+      editingBlockIndex: null,
     }));
   },
 

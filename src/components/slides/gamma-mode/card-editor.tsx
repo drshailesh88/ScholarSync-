@@ -188,7 +188,13 @@ function CardBlock({
 }: CardBlockProps) {
   // Text blocks: use Tiptap inline editing
   if (block.type === "text" && isCardActive) {
-    const textData = block.data as { text: string; style?: string };
+    const textData = block.data as {
+      text: string;
+      style?: string;
+      fontFamily?: string;
+      fontSize?: string;
+      color?: string;
+    };
     return (
       <EditableTextBlock
         content={textData.text}
@@ -201,6 +207,9 @@ function CardBlock({
           (textData.style as "title" | "subtitle" | "body" | "caption") ??
           "body"
         }
+        fontFamily={textData.fontFamily}
+        fontSize={textData.fontSize}
+        color={textData.color}
       />
     );
   }

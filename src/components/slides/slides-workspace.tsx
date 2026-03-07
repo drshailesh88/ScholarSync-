@@ -33,6 +33,16 @@ export function SlidesWorkspace({ deckId }: SlidesWorkspaceProps) {
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const transition = useSlidesStore((s) => s.transition);
+  const masters = useSlidesStore((s) => s.masters);
+  const presenterSlides = useMemo(
+    () => slides.filter((slide) => !slide.hidden),
+    [slides]
+  );
+  const presenterStartIndex = useMemo(() => {
+    if (presenterSlides.length === 0 || activeSlideId === null) return 0;
+    const idx = presenterSlides.findIndex((slide) => slide.id === activeSlideId);
+    return idx >= 0 ? idx : 0;
+  }, [activeSlideId, presenterSlides]);
 
   useEffect(() => {
     let cancelled = false;
@@ -114,19 +124,18 @@ export function SlidesWorkspace({ deckId }: SlidesWorkspaceProps) {
             }
           >
             <PresenterMode
-              slides={slides.map((s) => ({
+              slides={presenterSlides.map((s) => ({
                 id: s.id,
                 title: s.title,
                 subtitle: s.subtitle,
                 layout: s.layout,
+                masterId: s.masterId,
                 contentBlocks: s.contentBlocks,
                 speakerNotes: s.speakerNotes,
+                transition: s.transition,
               }))}
-              startIndex={
-                slides.findIndex((s) => s.id === activeSlideId) >= 0
-                  ? slides.findIndex((s) => s.id === activeSlideId)
-                  : 0
-              }
+              masters={masters}
+              startIndex={presenterStartIndex}
               onExit={() => setIsPresenting(false)}
               themeKey={themeKey}
               themeConfig={themeConfig}

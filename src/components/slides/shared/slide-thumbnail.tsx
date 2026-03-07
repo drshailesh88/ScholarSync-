@@ -1,15 +1,24 @@
 "use client";
 
-import type { ContentBlock, SlideLayout, ThemeConfig } from "@/types/presentation";
+import type {
+  ContentBlock,
+  SlideLayout,
+  SlideMaster,
+  ThemeConfig,
+} from "@/types/presentation";
+import type { CardBackground } from "@/stores/slides-store";
 import { SlideRendererV2 } from "./slide-renderer-v2";
 
 interface SlideThumbnailProps {
   title?: string | null;
   subtitle?: string | null;
   layout?: SlideLayout | null;
+  masterId?: string;
+  masters?: SlideMaster[];
   contentBlocks?: ContentBlock[];
   themeKey?: string;
   themeConfig?: ThemeConfig;
+  cardBackground?: CardBackground;
   isActive?: boolean;
   slideNumber?: number;
   commentCount?: number;
@@ -21,9 +30,12 @@ export function SlideThumbnail({
   title,
   subtitle,
   layout,
+  masterId,
+  masters,
   contentBlocks = [],
   themeKey,
   themeConfig,
+  cardBackground,
   isActive,
   slideNumber,
   commentCount,
@@ -46,9 +58,12 @@ export function SlideThumbnail({
           title={title}
           subtitle={subtitle}
           layout={layout}
+          masterId={masterId}
+          masters={masters}
           contentBlocks={contentBlocks}
           themeKey={themeKey}
           themeConfig={themeConfig}
+          cardBackground={cardBackground}
           scale={0.15}
         />
       </div>

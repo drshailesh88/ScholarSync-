@@ -1,21 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, InfographicData, InfographicType, InfographicItem } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, InfographicData, InfographicType, InfographicItem, ShapeData } from "@/types/presentation";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
+import { SHAPE_TYPE_OPTIONS, renderShapeSvgPrimitive } from "@/components/slides/blocks/shape-utils";
+import {
+  FONT_FAMILY_OPTIONS,
+  FONT_SIZE_OPTIONS,
+  TEXT_COLOR_OPTIONS,
+} from "@/components/slides/wysiwyg/text-formatting-options";
 
 // ---------------------------------------------------------------------------
 // BlockPropertyEditor — context-sensitive editor for the selected block.
-// Shows in the properties panel when a non-text block is selected.
+// Shows in the properties panel when a block is selected.
 // ---------------------------------------------------------------------------
 
 export function BlockPropertyEditor() {
   const selectedBlock = useSlidesStore((s) => s.getSelectedBlock());
-  const selectedBlockIndex = useSlidesStore((s) => s.selectedBlockIndex);
+  const selectedBlockIndices = useSlidesStore((s) => s.selectedBlockIndices);
+  const selectedBlockIndex = useSlidesStore((s) => s.getPrimarySelectedBlockIndex());
   const updateBlock = useSlidesStore((s) => s.updateBlock);
+  const themeConfig = useSlidesStore((s) => s.themeConfig);
 
-  if (selectedBlock === null || selectedBlockIndex === null) {
+  if (
+    selectedBlock === null ||
+    selectedBlockIndex === null ||
+    selectedBlockIndices.size !== 1
+  ) {
     return (
       <div className="px-3 py-4 text-center text-xs text-ink-muted">
         Select a block on the canvas to edit its properties.
@@ -28,6 +40,9 @@ export function BlockPropertyEditor() {
   let editor: React.ReactNode;
 
   switch (selectedBlock.type) {
+    case "text":
+      editor = <TextEditor block={selectedBlock} onUpdate={onUpdate} themeTextColor={themeConfig.textColor} />;
+      break;
     case "chart":
       editor = <ChartEditor block={selectedBlock} onUpdate={onUpdate} />;
       break;
@@ -60,6 +75,16 @@ export function BlockPropertyEditor() {
       break;
     case "divider":
       editor = <DividerEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
+    case "shape":
+      editor = (
+        <ShapeEditor
+          block={selectedBlock}
+          onUpdate={onUpdate}
+          themePrimaryColor={themeConfig.primaryColor}
+          themeTextColor={themeConfig.textColor}
+        />
+      );
       break;
     case "bibliography":
       editor = <BibliographyEditor block={selectedBlock} onUpdate={onUpdate} />;
@@ -177,6 +202,164 @@ function EditorSection({ title, children }: { title: string; children: React.Rea
     <div className="space-y-2">
       <h4 className="text-xs font-semibold text-ink uppercase tracking-wider">{title}</h4>
       {children}
+    </div>
+  );
+}
+
+function toColorInputValue(color: string): string {
+  const normalized = color.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(normalized)) return normalized;
+  if (/^#[0-9a-fA-F]{3}$/.test(normalized)) {
+    return `#${normalized
+      .slice(1)
+      .split("")
+      .map((char) => `${char}${char}`)
+      .join("")}`;
+  }
+  return "#000000";
+}
+
+// ---------------------------------------------------------------------------
+// Text Editor
+// ---------------------------------------------------------------------------
+
+type TextBlock = Extract<ContentBlock, { type: "text" }>;
+const LINE_SPACING_OPTIONS = [1.0, 1.15, 1.5, 2.0, 2.5, 3.0] as const;
+const PARAGRAPH_SPACING_OPTIONS = [
+  { value: 0, label: "None (0)" },
+  { value: 4, label: "Tight (4px)" },
+  { value: 8, label: "Normal (8px)" },
+  { value: 12, label: "Relaxed (12px)" },
+  { value: 16, label: "Loose (16px)" },
+  { value: 24, label: "Extra (24px)" },
+] as const;
+
+function formatLineSpacingLabel(value: number): string {
+  return Number.isInteger(value) ? value.toFixed(1) : String(value);
+}
+
+function TextEditor({
+  block,
+  onUpdate,
+  themeTextColor,
+}: {
+  block: TextBlock;
+  onUpdate: (b: ContentBlock) => void;
+  themeTextColor: string;
+}) {
+  const data = block.data;
+
+  const updateData = (partial: Partial<TextBlock["data"]>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  const currentColor = data.color ?? themeTextColor;
+  const colorInputValue = toColorInputValue(currentColor);
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Text">
+        <div>
+          <FieldLabel>Font Family</FieldLabel>
+          <FieldSelect
+            value={data.fontFamily ?? "__theme__"}
+            onChange={(value) => updateData({ fontFamily: value === "__theme__" ? undefined : value })}
+            options={[
+              { value: "__theme__", label: "Theme Default" },
+              ...FONT_FAMILY_OPTIONS.map((font) => ({ value: font, label: font })),
+            ]}
+          />
+        </div>
+
+        <div>
+          <FieldLabel>Font Size</FieldLabel>
+          <FieldSelect
+            value={data.fontSize ?? "__theme__"}
+            onChange={(value) => updateData({ fontSize: value === "__theme__" ? undefined : value })}
+            options={[
+              { value: "__theme__", label: "Theme Default" },
+              ...FONT_SIZE_OPTIONS.map((size) => ({ value: `${size}px`, label: `${size}px` })),
+            ]}
+          />
+        </div>
+
+        <div>
+          <FieldLabel>Line Spacing</FieldLabel>
+          <FieldSelect
+            value={data.lineHeight !== undefined ? String(data.lineHeight) : "__default__"}
+            onChange={(value) =>
+              updateData({ lineHeight: value === "__default__" ? undefined : Number(value) })
+            }
+            options={[
+              { value: "__default__", label: "Default" },
+              ...LINE_SPACING_OPTIONS.map((lineHeight) => ({
+                value: String(lineHeight),
+                label: formatLineSpacingLabel(lineHeight),
+              })),
+            ]}
+          />
+        </div>
+
+        <div>
+          <FieldLabel>Paragraph Spacing</FieldLabel>
+          <FieldSelect
+            value={
+              data.paragraphSpacing !== undefined ? String(data.paragraphSpacing) : "__default__"
+            }
+            onChange={(value) =>
+              updateData({
+                paragraphSpacing:
+                  value === "__default__" ? undefined : Number.parseInt(value, 10),
+              })
+            }
+            options={[
+              { value: "__default__", label: "Default" },
+              ...PARAGRAPH_SPACING_OPTIONS.map((option) => ({
+                value: String(option.value),
+                label: option.label,
+              })),
+            ]}
+          />
+        </div>
+
+        <div>
+          <FieldLabel>Color</FieldLabel>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={colorInputValue}
+                onChange={(e) => updateData({ color: e.target.value })}
+                className="h-8 w-10 rounded border border-border bg-surface-raised"
+              />
+              <FieldInput value={currentColor} onChange={(value) => updateData({ color: value })} />
+              <button
+                type="button"
+                onClick={() => updateData({ color: undefined })}
+                className="shrink-0 rounded-md border border-border px-2 py-1.5 text-xs text-ink hover:bg-surface-raised"
+              >
+                Theme Color
+              </button>
+            </div>
+            <div className="grid grid-cols-10 gap-1">
+              {TEXT_COLOR_OPTIONS.map((colorValue) => (
+                <button
+                  key={colorValue}
+                  type="button"
+                  onClick={() => updateData({ color: colorValue })}
+                  className={`h-5 w-5 rounded-sm border ${
+                    currentColor.toLowerCase() === colorValue.toLowerCase()
+                      ? "border-ink"
+                      : "border-border"
+                  }`}
+                  style={{ backgroundColor: colorValue }}
+                  title={colorValue}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </EditorSection>
     </div>
   );
 }
@@ -478,10 +661,21 @@ function StatEditor({ block, onUpdate }: { block: StatBlock; onUpdate: (b: Conte
 // ---------------------------------------------------------------------------
 
 type ImageBlock = Extract<ContentBlock, { type: "image" }>;
+const IMAGE_ACCEPT = ".jpg,.jpeg,.png,.gif,.webp,.svg,image/jpeg,image/png,image/gif,image/webp,image/svg+xml";
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/svg+xml",
+]);
 
 function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: ContentBlock) => void }) {
   const data = block.data;
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
 
   const update = (partial: Partial<typeof data>) => {
@@ -489,19 +683,59 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
   };
 
   const handleFileUpload = async (file: File) => {
-    if (!file.type.startsWith("image/")) return;
+    if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+      setUploadError("Unsupported format. Use JPG, PNG, GIF, WEBP, or SVG.");
+      return;
+    }
+
     setUploading(true);
+    setUploadProgress(0);
+    setUploadError(null);
+
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/slides/upload-image", { method: "POST", body: formData });
-      if (!res.ok) throw new Error("Upload failed");
-      const { url } = await res.json();
+      const { url } = await new Promise<{ url: string }>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/slides/upload-image");
+
+        xhr.upload.onprogress = (event) => {
+          if (!event.lengthComputable) return;
+          const progress = Math.round((event.loaded / event.total) * 100);
+          setUploadProgress(progress);
+        };
+
+        xhr.onload = () => {
+          if (xhr.status < 200 || xhr.status >= 300) {
+            reject(new Error(`Upload failed (${xhr.status})`));
+            return;
+          }
+
+          try {
+            const parsed = JSON.parse(xhr.responseText) as { url?: string };
+            if (!parsed.url) {
+              reject(new Error("Upload response did not include a URL"));
+              return;
+            }
+            resolve({ url: parsed.url });
+          } catch {
+            reject(new Error("Failed to parse upload response"));
+          }
+        };
+
+        xhr.onerror = () => reject(new Error("Upload failed"));
+
+        const formData = new FormData();
+        formData.append("file", file);
+        xhr.send(formData);
+      });
+
       update({ url });
     } catch (err) {
       console.error("Image upload failed:", err);
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
+      setUploadProgress(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -525,9 +759,24 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
     if (file) handleFileUpload(file);
   };
 
+  const triggerFilePicker = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="space-y-3">
       <EditorSection title="Image">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept={IMAGE_ACCEPT}
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void handleFileUpload(file);
+          }}
+        />
+
         {/* Upload area — click or drag-and-drop */}
         <div
           className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
@@ -535,16 +784,7 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
               ? "border-brand bg-brand/5"
               : "border-border hover:border-brand"
           }`}
-          onClick={() => {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.accept = "image/*";
-            input.onchange = (e) => {
-              const file = (e.target as HTMLInputElement).files?.[0];
-              if (file) handleFileUpload(file);
-            };
-            input.click();
-          }}
+          onClick={triggerFilePicker}
           onDragOver={handleDragOver}
           onDragEnter={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -556,7 +796,9 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
           ) : (
             <div className="space-y-1">
               {uploading ? (
-                <p className="text-xs text-ink-muted">Uploading...</p>
+                <p className="text-xs text-ink-muted">
+                  Uploading{uploadProgress !== null ? ` (${uploadProgress}%)` : "..."}
+                </p>
               ) : dragOver ? (
                 <p className="text-xs text-brand font-medium">Drop image here</p>
               ) : (
@@ -569,8 +811,30 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
           )}
         </div>
 
+        {uploadProgress !== null && (
+          <div className="h-1.5 rounded bg-surface-raised overflow-hidden">
+            <div
+              className="h-full bg-brand transition-[width] duration-150"
+              style={{ width: `${uploadProgress}%` }}
+            />
+          </div>
+        )}
+
+        {uploadError && (
+          <p className="text-xs text-red-600">{uploadError}</p>
+        )}
+
+        <button
+          type="button"
+          onClick={triggerFilePicker}
+          disabled={uploading}
+          className="w-full text-xs py-1.5 rounded-md border border-border text-ink hover:bg-surface-raised disabled:opacity-60 disabled:cursor-not-allowed"
+        >
+          Upload Image
+        </button>
+
         <div>
-          <FieldLabel>Image URL</FieldLabel>
+          <FieldLabel>URL</FieldLabel>
           <FieldInput
             value={data.url ?? ""}
             onChange={(v) => update({ url: v || undefined })}
@@ -589,7 +853,105 @@ function ImageEditor({ block, onUpdate }: { block: ImageBlock; onUpdate: (b: Con
             placeholder="Figure caption"
           />
         </div>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={data.lockAspectRatio ?? false}
+            onChange={(e) => update({ lockAspectRatio: e.target.checked })}
+            className="rounded border-border"
+          />
+          <span className="text-xs text-ink">Lock aspect ratio</span>
+        </label>
+        <button
+          type="button"
+          onClick={() => update({ url: undefined, crop: undefined })}
+          className="w-full text-xs py-1.5 rounded-md border border-red-300 text-red-700 hover:bg-red-50"
+        >
+          Remove Image
+        </button>
       </EditorSection>
+
+      {data.url && (
+        <EditorSection title="Filters">
+          <ImageFilterSlider label="Brightness" value={data.filters?.brightness ?? 100} min={0} max={200} defaultValue={100} unit="%" onChange={(v) => updateFilter("brightness", v, 100)} />
+          <ImageFilterSlider label="Contrast" value={data.filters?.contrast ?? 100} min={0} max={200} defaultValue={100} unit="%" onChange={(v) => updateFilter("contrast", v, 100)} />
+          <ImageFilterSlider label="Saturation" value={data.filters?.saturation ?? 100} min={0} max={200} defaultValue={100} unit="%" onChange={(v) => updateFilter("saturation", v, 100)} />
+          <ImageFilterSlider label="Blur" value={data.filters?.blur ?? 0} min={0} max={20} defaultValue={0} unit="px" onChange={(v) => updateFilter("blur", v, 0)} />
+          <ImageFilterSlider label="Grayscale" value={data.filters?.grayscale ?? 0} min={0} max={100} defaultValue={0} unit="%" onChange={(v) => updateFilter("grayscale", v, 0)} />
+          <ImageFilterSlider label="Sepia" value={data.filters?.sepia ?? 0} min={0} max={100} defaultValue={0} unit="%" onChange={(v) => updateFilter("sepia", v, 0)} />
+          <ImageFilterSlider label="Hue Rotate" value={data.filters?.hueRotate ?? 0} min={0} max={360} defaultValue={0} unit="°" onChange={(v) => updateFilter("hueRotate", v, 0)} />
+          <ImageFilterSlider label="Opacity" value={data.filters?.opacity ?? 100} min={0} max={100} defaultValue={100} unit="%" onChange={(v) => updateFilter("opacity", v, 100)} />
+          <button
+            type="button"
+            onClick={() => update({ filters: undefined })}
+            className="w-full text-xs py-1 rounded-md border border-border text-ink-muted hover:bg-surface-raised"
+          >
+            Reset All Filters
+          </button>
+        </EditorSection>
+      )}
+    </div>
+  );
+
+  function updateFilter(key: string, value: number, defaultValue: number) {
+    const current = data.filters ?? {};
+    const next = { ...current, [key]: value };
+    // Remove filter key if it's at default to keep data clean
+    if (value === defaultValue) {
+      delete (next as Record<string, unknown>)[key];
+    }
+    // If all values are default, remove the filters object entirely
+    const hasNonDefault = Object.keys(next).length > 0;
+    update({ filters: hasNonDefault ? next : undefined });
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Image Filter Slider
+// ---------------------------------------------------------------------------
+
+function ImageFilterSlider({
+  label,
+  value,
+  min,
+  max,
+  defaultValue,
+  unit,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  defaultValue: number;
+  unit: string;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <div className="space-y-0.5">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-semibold text-ink-muted uppercase tracking-wider">{label}</span>
+        <span className="text-[10px] text-ink-muted tabular-nums">{value}{unit}</span>
+      </div>
+      <div className="flex items-center gap-1.5">
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="flex-1 h-1 accent-brand cursor-pointer"
+        />
+        <button
+          type="button"
+          title={`Reset to ${defaultValue}`}
+          onClick={() => onChange(defaultValue)}
+          className="text-[10px] text-ink-muted hover:text-ink px-1 shrink-0"
+          disabled={value === defaultValue}
+        >
+          &times;
+        </button>
+      </div>
     </div>
   );
 }
@@ -925,6 +1287,181 @@ function DiagramEditor({ block, onUpdate }: { block: DiagramBlock; onUpdate: (b:
           <FieldInput
             value={data.caption ?? ""}
             onChange={(v) => update({ caption: v || undefined })}
+          />
+        </div>
+      </EditorSection>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Shape Editor
+// ---------------------------------------------------------------------------
+
+type ShapeBlock = Extract<ContentBlock, { type: "shape" }>;
+
+function ShapeEditor({
+  block,
+  onUpdate,
+  themePrimaryColor,
+  themeTextColor,
+}: {
+  block: ShapeBlock;
+  onUpdate: (b: ContentBlock) => void;
+  themePrimaryColor: string;
+  themeTextColor: string;
+}) {
+  const data = block.data;
+
+  const updateData = (partial: Partial<ShapeData>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  const fillColor = data.fillColor ?? themePrimaryColor;
+  const strokeColor = data.strokeColor ?? themeTextColor;
+  const textColor = data.textColor ?? themeTextColor;
+  const strokeWidth = data.strokeWidth ?? 0;
+  const opacity = data.opacity ?? 100;
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Shape">
+        <div>
+          <FieldLabel>Shape Type</FieldLabel>
+          <div className="grid grid-cols-3 gap-1.5">
+            {SHAPE_TYPE_OPTIONS.map((shape) => {
+              const isSelected = data.shapeType === shape.type;
+              const previewStroke = shape.type === "line" ? strokeColor : strokeWidth > 0 ? strokeColor : "#94a3b8";
+              const previewStrokeWidth = shape.type === "line" ? Math.max(2, strokeWidth || 0) : Math.max(1, strokeWidth || 0);
+
+              return (
+                <button
+                  key={shape.type}
+                  type="button"
+                  onClick={() => updateData({ shapeType: shape.type })}
+                  className={`rounded-md border px-1 py-1 text-[9px] transition-colors ${
+                    isSelected
+                      ? "border-brand bg-brand/10 text-brand"
+                      : "border-border bg-surface-raised text-ink-muted hover:border-brand/50 hover:text-ink"
+                  }`}
+                >
+                  <svg className="mx-auto h-6 w-full" viewBox="0 0 100 100" aria-hidden="true">
+                    {renderShapeSvgPrimitive(shape.type, {
+                      fill: shape.type === "line" ? "none" : fillColor,
+                      stroke: previewStroke,
+                      strokeWidth: previewStrokeWidth,
+                    })}
+                  </svg>
+                  <span className="block mt-0.5 leading-tight">{shape.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <FieldLabel>Fill Color</FieldLabel>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={toColorInputValue(fillColor)}
+              onChange={(e) => updateData({ fillColor: e.target.value })}
+              className="h-8 w-10 rounded border border-border bg-surface-raised"
+            />
+            <FieldInput value={fillColor} onChange={(value) => updateData({ fillColor: value })} />
+            <button
+              type="button"
+              onClick={() => updateData({ fillColor: undefined })}
+              className="shrink-0 rounded-md border border-border px-2 py-1.5 text-xs text-ink hover:bg-surface-raised"
+            >
+              Theme
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <FieldLabel>Stroke</FieldLabel>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={toColorInputValue(strokeColor)}
+                onChange={(e) => updateData({ strokeColor: e.target.value })}
+                className="h-8 w-10 rounded border border-border bg-surface-raised"
+              />
+              <FieldInput
+                value={strokeColor}
+                onChange={(value) => updateData({ strokeColor: value })}
+                placeholder="#000000"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="range"
+                min={0}
+                max={12}
+                step={1}
+                value={strokeWidth}
+                onChange={(e) => updateData({ strokeWidth: Number.parseInt(e.target.value, 10) })}
+                className="w-full"
+              />
+              <span className="w-10 text-right text-xs text-ink-muted">{strokeWidth}px</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <FieldLabel>Opacity</FieldLabel>
+          <div className="flex items-center gap-2">
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={1}
+              value={opacity}
+              onChange={(e) => updateData({ opacity: Number.parseInt(e.target.value, 10) })}
+              className="w-full"
+            />
+            <span className="w-10 text-right text-xs text-ink-muted">{opacity}%</span>
+          </div>
+        </div>
+
+        <div>
+          <FieldLabel>Text</FieldLabel>
+          <FieldTextarea
+            value={data.text ?? ""}
+            onChange={(value) => updateData({ text: value })}
+            placeholder="Optional text inside shape"
+            rows={2}
+          />
+        </div>
+
+        <div>
+          <FieldLabel>Text Color</FieldLabel>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={toColorInputValue(textColor)}
+              onChange={(e) => updateData({ textColor: e.target.value })}
+              className="h-8 w-10 rounded border border-border bg-surface-raised"
+            />
+            <FieldInput
+              value={textColor}
+              onChange={(value) => updateData({ textColor: value })}
+            />
+          </div>
+        </div>
+
+        <div>
+          <FieldLabel>Text Alignment</FieldLabel>
+          <FieldSelect
+            value={data.textAlign ?? "center"}
+            onChange={(value) => updateData({ textAlign: value as ShapeData["textAlign"] })}
+            options={[
+              { value: "left", label: "Left" },
+              { value: "center", label: "Center" },
+              { value: "right", label: "Right" },
+            ]}
           />
         </div>
       </EditorSection>

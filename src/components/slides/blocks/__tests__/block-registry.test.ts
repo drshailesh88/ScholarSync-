@@ -13,6 +13,7 @@ describe("block-registry", () => {
     const expectedTypes: ContentBlock["type"][] = [
       "text",
       "bullets",
+      "shape",
       "chart",
       "table",
       "image",
@@ -33,8 +34,8 @@ describe("block-registry", () => {
       "illustration",
     ];
 
-    it("has entries for all 20 content block types", () => {
-      expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(20);
+    it("has entries for all 21 content block types", () => {
+      expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(21);
       for (const type of expectedTypes) {
         expect(BLOCK_REGISTRY[type]).toBeDefined();
       }
@@ -93,11 +94,12 @@ describe("block-registry", () => {
       expect(groups).toHaveProperty("academic");
     });
 
-    it("content category includes text, bullets, quote, citation, divider, toggle, nested_card", () => {
+    it("content category includes text, bullets, shape, quote, citation, divider, toggle, nested_card", () => {
       const groups = getBlocksByCategory();
       const contentTypes = groups.content.map((b) => b.type);
       expect(contentTypes).toContain("text");
       expect(contentTypes).toContain("bullets");
+      expect(contentTypes).toContain("shape");
       expect(contentTypes).toContain("quote");
       expect(contentTypes).toContain("divider");
       expect(contentTypes).toContain("toggle");
@@ -128,8 +130,8 @@ describe("block-registry", () => {
     it("all blocks are assigned exactly once", () => {
       const groups = getBlocksByCategory();
       const allTypes = Object.values(groups).flatMap((g) => g.map((b) => b.type));
-      expect(allTypes).toHaveLength(20);
-      expect(new Set(allTypes).size).toBe(20);
+      expect(allTypes).toHaveLength(21);
+      expect(new Set(allTypes).size).toBe(21);
     });
   });
 
@@ -149,6 +151,13 @@ describe("block-registry", () => {
       expect(block.type).toBe("bullets");
       expect(block.data).toHaveProperty("items");
       expect(Array.isArray((block.data as Record<string, unknown>).items)).toBe(true);
+    });
+
+    it("creates a shape block with rectangle defaults", () => {
+      const block = createDefaultBlock("shape");
+      expect(block.type).toBe("shape");
+      expect(block.data).toHaveProperty("shapeType", "rectangle");
+      expect(block.data).toHaveProperty("strokeWidth", 0);
     });
 
     it("creates a chart block with default chart data", () => {
