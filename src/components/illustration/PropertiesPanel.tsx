@@ -8,7 +8,7 @@
  */
 
 /* eslint-disable react/no-children-prop */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -46,6 +46,7 @@ import {
   type PathfinderOperation,
 } from '@/lib/illustration/canvas/boolean-operations';
 import { isClippingMaskGroup } from '@/lib/illustration/canvas/clipping-mask';
+import { isCompoundPath } from '@/lib/illustration/canvas/compound-path';
 import {
   createFabricGradient,
   createDefaultGradientState,
@@ -1604,12 +1605,18 @@ export default function PropertiesPanel({ selectedObjects = [] }: PropertiesPane
 
     const isLocked = activeObject.lockMovementX && activeObject.lockMovementY;
     const showClippingMaskIndicator = isClippingMaskGroup(activeObject);
+    const showCompoundPathIndicator = isCompoundPath(activeObject);
 
     return (
       <>
         {showClippingMaskIndicator && (
           <PropertySection title="Clipping">
             <div style={styles.helperText}>Clipping Mask</div>
+          </PropertySection>
+        )}
+        {showCompoundPathIndicator && (
+          <PropertySection title="Compound">
+            <div style={styles.helperText}>Compound Path (Even-Odd Fill)</div>
           </PropertySection>
         )}
         <PropertySection title="Actions">

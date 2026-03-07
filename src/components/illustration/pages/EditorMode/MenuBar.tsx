@@ -18,6 +18,7 @@ import {
 } from '@/lib/illustration/canvas/boolean-operations';
 import { createOffsetLine, createOffsetPath } from '@/lib/illustration/canvas/path-offset';
 import { isClippingMaskGroup } from '@/lib/illustration/canvas/clipping-mask';
+import { isCompoundPath } from '@/lib/illustration/canvas/compound-path';
 // Note: MenuBar.css was removed - using inline styles instead
 
 // ============================================================================
@@ -109,6 +110,8 @@ export function MenuBar({
     ungroupSelected,
     makeClippingMask,
     releaseClippingMask,
+    makeCompoundPath,
+    releaseCompoundPath,
     bringToFront,
     sendToBack,
     bringForward,
@@ -120,6 +123,9 @@ export function MenuBar({
   const canMakeClippingMask = activeSelection.length >= 2;
   const canReleaseClippingMask =
     activeSelection.length === 1 && isClippingMaskGroup(activeSelection[0]);
+  const canMakeCompoundPath = activeSelection.length >= 2;
+  const canReleaseCompoundPath =
+    activeSelection.length === 1 && isCompoundPath(activeSelection[0]);
 
   // ========================================================================
   // Menu Definitions
@@ -428,6 +434,20 @@ export function MenuBar({
           shortcut: 'Ctrl+Alt+7',
           disabled: !canReleaseClippingMask,
           action: () => handleReleaseClippingMask(),
+        },
+        {
+          id: 'make-compound-path',
+          label: 'Make Compound Path',
+          shortcut: 'Ctrl+8',
+          disabled: !canMakeCompoundPath,
+          action: () => handleMakeCompoundPath(),
+        },
+        {
+          id: 'release-compound-path',
+          label: 'Release Compound Path',
+          shortcut: 'Ctrl+Alt+8',
+          disabled: !canReleaseCompoundPath,
+          action: () => handleReleaseCompoundPath(),
         },
         { id: 'divider-path', label: '', divider: true },
         {
@@ -860,6 +880,36 @@ export function MenuBar({
       toast.success('Clipping mask released');
     })();
   }, [canvas, releaseClippingMask, toast]);
+
+  const handleMakeCompoundPath = useCallback(() => {
+    if (!canvas) {
+      toast.error('Canvas not ready');
+      return;
+    }
+
+    const success = makeCompoundPath();
+    if (!success) {
+      toast.warning('Select at least 2 paths to create a compound path.');
+      return;
+    }
+
+    toast.success('Compound path created');
+  }, [canvas, makeCompoundPath, toast]);
+
+  const handleReleaseCompoundPath = useCallback(() => {
+    if (!canvas) {
+      toast.error('Canvas not ready');
+      return;
+    }
+
+    const success = releaseCompoundPath();
+    if (!success) {
+      toast.warning('Select a compound path to release it.');
+      return;
+    }
+
+    toast.success('Compound path released');
+  }, [canvas, releaseCompoundPath, toast]);
 
   // ========================================================================
   // Click Outside Handler
