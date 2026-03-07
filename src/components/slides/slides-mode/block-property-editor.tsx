@@ -642,12 +642,22 @@ function ChartEditor({ block, onUpdate }: { block: ChartBlock; onUpdate: (b: Con
             value={data.chartType}
             onChange={(v) => updateData({ chartType: v as ChartData["chartType"] })}
             options={[
+              // Basic
               { value: "bar", label: "Bar" },
               { value: "line", label: "Line" },
               { value: "pie", label: "Pie" },
-              { value: "scatter", label: "Scatter" },
+              { value: "donut", label: "Donut" },
               { value: "area", label: "Area" },
+              // Comparison
+              { value: "stacked_bar", label: "Stacked Bar" },
               { value: "radar", label: "Radar" },
+              { value: "scatter", label: "Scatter" },
+              // Specialized
+              { value: "funnel", label: "Funnel" },
+              { value: "waterfall", label: "Waterfall" },
+              { value: "treemap", label: "Treemap" },
+              { value: "gauge", label: "Gauge" },
+              { value: "forest_plot", label: "Forest Plot" },
             ]}
           />
         </div>
