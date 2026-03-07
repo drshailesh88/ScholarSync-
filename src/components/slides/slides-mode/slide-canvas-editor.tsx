@@ -15,6 +15,7 @@ export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
   const masters = useSlidesStore((s) => s.masters);
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
 
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
@@ -41,6 +42,7 @@ export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
             cardBackground={activeSlide.cardBackground}
             themeKey={themeKey}
             themeConfig={themeConfig}
+            institutionKit={institutionKit}
             scale={1}
           />
         </div>
@@ -63,6 +65,7 @@ export function SlideCanvasEditor({ isEditing }: SlideCanvasEditorProps) {
             cardBackground={activeSlide.cardBackground}
             themeKey={themeKey}
             themeConfig={themeConfig}
+            institutionKit={institutionKit}
             scale={1}
           />
         </div>

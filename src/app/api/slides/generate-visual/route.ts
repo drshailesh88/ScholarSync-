@@ -224,7 +224,7 @@ OPTION TYPES YOU CAN GENERATE:
      "items": [
        { "label": "Item name", "description": "Brief description", "value": "Optional metric", "icon": "emoji", "status": "done|active|pending" }
      ],
-     "colorScheme": "theme|blue|green|purple|orange|rainbow",
+     "colorScheme": "theme|brand|blue|green|purple|orange|rainbow",
      "caption": "Optional caption"
    }}
 

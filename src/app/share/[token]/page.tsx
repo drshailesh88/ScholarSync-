@@ -2,6 +2,7 @@ import { getDeckByShareToken } from "@/lib/actions/share";
 import { notFound } from "next/navigation";
 import { SharedPresentationViewer } from "@/components/presentation/shared-presentation-viewer";
 import { SharePasswordGate } from "@/components/presentation/share-password-gate";
+import type { InstitutionKit } from "@/types/presentation";
 import type { Metadata } from "next";
 
 interface SharePageProps {
@@ -43,7 +44,7 @@ export default async function SharePage({ params }: SharePageProps) {
   }
 
   if (deck.hasPassword) {
-    return <SharePasswordGate token={token} deck={deck} />;
+    return <SharePasswordGate token={token} deck={{ ...deck, institutionKit: deck.institutionKit as Partial<InstitutionKit> | null }} />;
   }
 
   return (
@@ -52,6 +53,7 @@ export default async function SharePage({ params }: SharePageProps) {
       slides={deck.slides}
       theme={deck.theme}
       themeConfig={deck.themeConfig}
+      institutionKit={deck.institutionKit as Partial<InstitutionKit> | null}
     />
   );
 }

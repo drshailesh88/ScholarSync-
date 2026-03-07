@@ -58,6 +58,7 @@ export function SlideSorterView({ onClose }: { onClose: () => void }) {
   const activeSlideId = useSlidesStore((s) => s.activeSlideId);
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
   const setActiveSlide = useSlidesStore((s) => s.setActiveSlide);
   const reorderSlides = useSlidesStore((s) => s.reorderSlides);
 
@@ -124,6 +125,7 @@ export function SlideSorterView({ onClose }: { onClose: () => void }) {
                       cardBackground={slide.cardBackground}
                       themeKey={themeKey}
                       themeConfig={themeConfig}
+                      institutionKit={institutionKit}
                       isActive={slide.id === activeSlideId}
                       slideNumber={index + 1}
                       onClick={() => {

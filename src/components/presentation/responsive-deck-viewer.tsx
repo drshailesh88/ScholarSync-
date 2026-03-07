@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import type {
   ContentBlock,
+  InstitutionKit,
   SlideLayout,
   ThemeConfig,
 } from "@/types/presentation";
@@ -43,6 +44,7 @@ export interface ResponsiveDeckViewerProps {
   slides: SlideData[];
   theme: string | null;
   themeConfig: unknown;
+  institutionKit?: Partial<InstitutionKit> | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -99,6 +101,7 @@ export function ResponsiveDeckViewer({
   slides,
   theme,
   themeConfig,
+  institutionKit,
 }: ResponsiveDeckViewerProps) {
   const { isMobile, isDesktop } = useMediaQuery();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -383,6 +386,7 @@ export function ResponsiveDeckViewer({
                   }
                   themeKey={themeKey}
                   themeConfig={resolvedTheme}
+                  institutionKit={institutionKit}
                   className="w-full h-full rounded-lg shadow-2xl"
                   showSlideNumber
                   slideNumber={currentIndex + 1}

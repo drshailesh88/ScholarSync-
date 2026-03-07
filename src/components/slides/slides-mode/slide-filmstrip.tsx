@@ -119,6 +119,7 @@ export function SlideFilmstrip() {
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const deckTitle = useSlidesStore((s) => s.title);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
   const setActiveSlide = useSlidesStore((s) => s.setActiveSlide);
   const selectSingleSlide = useSlidesStore((s) => s.selectSingleSlide);
   const toggleSlideSelection = useSlidesStore((s) => s.toggleSlideSelection);
@@ -195,6 +196,7 @@ export function SlideFilmstrip() {
               themeKey={themeKey}
               themeConfig={themeConfig}
               cardBackground={contextSlide.cardBackground}
+              institutionKit={institutionKit}
               showSlideNumber
               slideNumber={contextSlide.sortOrder + 1}
               className="w-full"
@@ -240,7 +242,7 @@ export function SlideFilmstrip() {
         container.remove();
       }
     },
-    [contextSlide, deckTitle, masters, themeConfig, themeKey],
+    [contextSlide, deckTitle, institutionKit, masters, themeConfig, themeKey],
   );
 
   useEffect(() => {
@@ -545,6 +547,7 @@ export function SlideFilmstrip() {
                     cardBackground={slide.cardBackground}
                     themeKey={themeKey}
                     themeConfig={themeConfig}
+                    institutionKit={institutionKit}
                     transition={slide.transition}
                     isActive={slide.id === activeSlideId}
                     isSelected={selectedSlideIds.has(slide.id)}

@@ -144,6 +144,7 @@ export async function getDeckByShareToken(token: string) {
     description: deck.description,
     theme: deck.theme,
     themeConfig: deck.themeConfig,
+    institutionKit: deck.institutionKit,
     hasPassword: !!deck.sharePassword,
     slides: deckSlides,
   };

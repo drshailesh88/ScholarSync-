@@ -228,6 +228,7 @@ export function SlidesModeLayout() {
                 themeKey={themeKey}
                 themeConfig={themeConfig}
                 cardBackground={slide.cardBackground}
+                institutionKit={institutionKit}
                 showSlideNumber
                 slideNumber={index + 1}
                 className="w-full"

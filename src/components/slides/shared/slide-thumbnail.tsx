@@ -3,6 +3,7 @@
 import { memo } from "react";
 import type {
   ContentBlock,
+  InstitutionKit,
   SlideLayout,
   SlideMaster,
   ThemeConfig,
@@ -20,6 +21,7 @@ interface SlideThumbnailProps {
   themeKey?: string;
   themeConfig?: ThemeConfig;
   cardBackground?: CardBackground;
+  institutionKit?: Partial<InstitutionKit> | null;
   transition?: SlideTransition;
   isActive?: boolean;
   isSelected?: boolean;
@@ -40,6 +42,7 @@ export const SlideThumbnail = memo(function SlideThumbnail({
   themeKey,
   themeConfig,
   cardBackground,
+  institutionKit,
   transition,
   isActive,
   isSelected,
@@ -74,6 +77,7 @@ export const SlideThumbnail = memo(function SlideThumbnail({
           themeKey={themeKey}
           themeConfig={themeConfig}
           cardBackground={cardBackground}
+          institutionKit={institutionKit}
           scale={0.15}
         />
       </div>

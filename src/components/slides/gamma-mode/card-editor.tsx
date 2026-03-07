@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
 import type { SlideState } from "@/stores/slides-store";
-import type { ContentBlock, ThemeConfig } from "@/types/presentation";
+import type { ContentBlock, ThemeConfig, InstitutionKit } from "@/types/presentation";
 import { BLOCK_REGISTRY } from "@/components/slides/blocks";
 import {
   EditableTextBlock,
@@ -23,6 +23,7 @@ interface CardEditorProps {
 export function CardEditor({ slide, isActive }: CardEditorProps) {
   const themeConfig = useSlidesStore((s) => s.themeConfig);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
   const [editingBlockIndex, setEditingBlockIndex] = useState<number | null>(
     null,
   );
@@ -134,6 +135,7 @@ export function CardEditor({ slide, isActive }: CardEditorProps) {
             onBlur={() => setEditingBlockIndex(null)}
             onUpdate={(data) => handleBlockUpdate(blockIndex, data)}
             theme={themeConfig}
+            institutionKit={institutionKit}
           />
         ))}
       </div>
@@ -173,6 +175,7 @@ interface CardBlockProps {
   onBlur: () => void;
   onUpdate: (data: Record<string, unknown>) => void;
   theme: ThemeConfig;
+  institutionKit?: Partial<InstitutionKit> | null;
 }
 
 function CardBlock({
@@ -185,6 +188,7 @@ function CardBlock({
   onBlur,
   onUpdate,
   theme,
+  institutionKit,
 }: CardBlockProps) {
   // Text blocks: use Tiptap inline editing
   if (block.type === "text" && isCardActive) {
@@ -256,6 +260,7 @@ function CardBlock({
         data={block.data as Record<string, unknown>}
         theme={theme}
         scale={1}
+        institutionKit={institutionKit}
       />
     </div>
   );

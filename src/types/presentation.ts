@@ -277,7 +277,7 @@ export interface InfographicData {
   title?: string;
   items: InfographicItem[];
   caption?: string;
-  colorScheme?: "theme" | "blue" | "green" | "purple" | "orange" | "rainbow" | "warm" | "cool" | "pastel";
+  colorScheme?: "theme" | "brand" | "blue" | "green" | "purple" | "orange" | "rainbow" | "warm" | "cool" | "pastel";
 }
 
 /** Audio/video media block */

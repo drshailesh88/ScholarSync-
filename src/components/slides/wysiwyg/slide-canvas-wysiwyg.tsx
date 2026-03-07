@@ -74,6 +74,7 @@ export function SlideCanvasWYSIWYG() {
   const masters = useSlidesStore((s) => s.masters);
   const themeKey = useSlidesStore((s) => s.themeKey);
   const themeConfig = useSlidesStore((s) => s.themeConfig);
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
   const updateSlide = useSlidesStore((s) => s.updateSlide);
   const addSlide = useSlidesStore((s) => s.addSlide);
   const regenerateSlide = useSlidesStore((s) => s.regenerateSlide);
@@ -1244,6 +1245,7 @@ export function SlideCanvasWYSIWYG() {
                   <Renderer
                     data={block.data as Record<string, unknown>}
                     theme={theme}
+                    institutionKit={institutionKit}
                   />
                 </div>
               );
@@ -1400,6 +1402,7 @@ function EditableBlockDispatcher({
   contentClassName,
   contentStyle,
 }: EditableBlockDispatcherProps) {
+  const institutionKit = useSlidesStore((s) => s.institutionKit);
   const [isCropMode, setIsCropMode] = useState(false);
   const [draftCrop, setDraftCrop] = useState<ImageCrop | null>(null);
 
@@ -1724,6 +1727,7 @@ function EditableBlockDispatcher({
         data={block.data as Record<string, unknown>}
         theme={theme}
         scale={1}
+        institutionKit={institutionKit}
       />
     </BlockSelectionWrapper>
   );
