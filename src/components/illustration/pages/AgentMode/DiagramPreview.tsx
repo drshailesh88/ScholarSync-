@@ -52,11 +52,14 @@ const LoadingSkeleton: React.FC<LoadingSkeletonProps> = () => (
 interface DiagramPreviewProps {
   svg?: string;
   showControls?: boolean;
+  /** Partial SVG content during streaming generation */
+  streamingSvg?: string;
 }
 
 export const DiagramPreview: React.FC<DiagramPreviewProps> = ({
   svg,
-  showControls = true
+  showControls = true,
+  streamingSvg,
 }) => {
   const [zoom, setZoom] = useState(100);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -131,7 +134,7 @@ export const DiagramPreview: React.FC<DiagramPreviewProps> = ({
     );
   }
 
-  if (isLoading && !svg) {
+  if (isLoading && !svg && !streamingSvg) {
     return (
       <div style={styles.container}>
         <LoadingSkeleton />
@@ -139,20 +142,28 @@ export const DiagramPreview: React.FC<DiagramPreviewProps> = ({
     );
   }
 
-  const sanitizedSvg = svg ? sanitizeSvg(svg) : '';
+  // Use streaming SVG during generation, final SVG when complete
+  const displaySvg = svg || streamingSvg || '';
+  const sanitizedSvg = displaySvg ? sanitizeSvg(displaySvg) : '';
+  const isStreaming = isLoading && !svg && !!streamingSvg;
 
   return (
     <div style={styles.wrapper}>
       <div
         ref={containerRef}
-        style={styles.container}
+        style={{
+          ...styles.container,
+          ...(isStreaming ? styles.streamingContainer : {}),
+        }}
       >
+        {isStreaming && <div style={styles.streamingBadge}>Generating...</div>}
         <div
           ref={contentRef}
           style={{
             ...styles.content,
             transform: `scale(${zoom / 100})`,
-            transformOrigin: 'center center'
+            transformOrigin: 'center center',
+            ...(isStreaming ? styles.streamingContent : {}),
           }}
           dangerouslySetInnerHTML={{ __html: sanitizedSvg }}
         />
@@ -282,6 +293,28 @@ const styles: Record<string, React.CSSProperties> = {
     animation: 'shimmer 1.5s infinite',
     borderRadius: '4px'
   },
+  streamingContainer: {
+    position: 'relative' as const,
+    border: '2px solid var(--accent-primary, #3b82f6)',
+    borderRadius: '8px',
+  },
+  streamingBadge: {
+    position: 'absolute' as const,
+    top: '8px',
+    right: '8px',
+    padding: '2px 8px',
+    fontSize: '11px',
+    fontWeight: 500,
+    color: '#ffffff',
+    background: 'var(--accent-primary, #3b82f6)',
+    borderRadius: '4px',
+    zIndex: 1,
+    animation: 'pulse 1.5s infinite',
+  },
+  streamingContent: {
+    opacity: 0.85,
+    transition: 'opacity 0.3s ease',
+  },
   skeletonCircle: {
     width: '60px',
     height: '60px',
@@ -300,6 +333,10 @@ if (typeof window !== 'undefined') {
     @keyframes shimmer {
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
     }
   `;
   document.head.appendChild(shimmerStyle);
