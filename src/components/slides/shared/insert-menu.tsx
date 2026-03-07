@@ -8,7 +8,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type RefObject,
 } from "react";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlass, Sparkle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { getBlocksByCategory } from "@/components/slides/blocks";
 import { SHAPE_TYPE_OPTIONS, SHAPE_CATEGORIES, getShapesByCategory, renderShapeSvgPrimitive, isLineShape } from "@/components/slides/blocks/shape-utils";
@@ -24,11 +24,18 @@ const CATEGORY_LABELS: Record<CategoryKey, string> = {
   academic: "Academic",
 };
 
+const VISUALIZABLE_TYPES: Record<string, string> = {
+  diagram: "flowchart",
+  infographic: "process_flow",
+  chart: "bar",
+};
+
 interface InsertMenuProps {
   isOpen: boolean;
   anchorRef: RefObject<HTMLElement | null>;
   onInsert: (type: ContentBlock["type"], dataOverride?: Record<string, unknown>) => void;
   onClose: () => void;
+  onVisualize?: (preferredType: string) => void;
   align?: "start" | "center";
 }
 export function InsertMenu({
@@ -36,6 +43,7 @@ export function InsertMenu({
   anchorRef,
   onInsert,
   onClose,
+  onVisualize,
   align = "start",
 }: InsertMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);

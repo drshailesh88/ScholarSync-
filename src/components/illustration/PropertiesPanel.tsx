@@ -99,7 +99,7 @@ interface SelectProps {
   disabled?: boolean;
 }
 
-export type TransformField = 'x' | 'y' | 'w' | 'h' | 'r';
+export type TransformField = 'x' | 'y' | 'w' | 'h' | 'r' | 'o';
 
 export interface TransformObjectLike {
   left?: number;
@@ -109,6 +109,7 @@ export interface TransformObjectLike {
   scaleX?: number;
   scaleY?: number;
   angle?: number;
+  opacity?: number;
   set: (key: string, value: unknown) => unknown;
   setCoords?: () => void;
   getScaledWidth?: () => number;
@@ -126,6 +127,7 @@ export interface TransformPanelValues {
   w: TransformFieldValue;
   h: TransformFieldValue;
   r: TransformFieldValue;
+  o: TransformFieldValue;
 }
 
 export interface CanvasEventSourceLike {
@@ -151,6 +153,7 @@ const EMPTY_TRANSFORM_VALUES: TransformPanelValues = {
   w: { value: null, mixed: false },
   h: { value: null, mixed: false },
   r: { value: null, mixed: false },
+  o: { value: null, mixed: false },
 };
 
 function roundToPrecision(value: number, digits = DECIMAL_PRECISION): number {
@@ -184,6 +187,7 @@ function getObjectTransformMetrics(object: TransformObjectLike): Record<Transfor
     w: width,
     h: height,
     r: object.angle ?? 0,
+    o: Math.max(0, Math.min(100, (object.opacity ?? 1) * 100)),
   };
 }
 
@@ -209,6 +213,7 @@ export function computeMixedTransformValues(objects: TransformObjectLike[]): Tra
     w: [],
     h: [],
     r: [],
+    o: [],
   };
 
   objects.forEach((object) => {
@@ -218,6 +223,7 @@ export function computeMixedTransformValues(objects: TransformObjectLike[]): Tra
     fieldValues.w.push(metrics.w);
     fieldValues.h.push(metrics.h);
     fieldValues.r.push(metrics.r);
+    fieldValues.o.push(metrics.o);
   });
 
   return {
@@ -226,6 +232,7 @@ export function computeMixedTransformValues(objects: TransformObjectLike[]): Tra
     w: getCommonValue(fieldValues.w),
     h: getCommonValue(fieldValues.h),
     r: getCommonValue(fieldValues.r),
+    o: getCommonValue(fieldValues.o),
   };
 }
 
@@ -284,6 +291,8 @@ export function applyTransformChange(
       object.set('top', value);
     } else if (field === 'r') {
       object.set('angle', value);
+    } else if (field === 'o') {
+      object.set('opacity', Math.max(0, Math.min(1, value / 100)));
     } else if (field === 'w') {
       let nextHeight: number | null = null;
       if (lockAspectRatio && metrics.h > 0) {
@@ -486,6 +495,11 @@ const styles: Record<string, React.CSSProperties> = {
     gridTemplateColumns: '1fr 24px 1fr',
     gap: '6px',
     alignItems: 'end',
+  },
+  transformActionsRow: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: '6px',
   },
   transformField: {
     display: 'flex',
@@ -1411,16 +1425,36 @@ export default function PropertiesPanel({ selectedObjects = [] }: PropertiesPane
 
         <div style={styles.transformTwoCol}>
           <TransformInput
-            label="R"
+            label="Rotation"
             value={getInputValue('r')}
             onFocus={() => handleTransformInputFocus('r')}
             onBlur={() => clearDraftValue('r')}
             onChange={(value) => handleTransformInputChange('r', value)}
           />
-          <div style={styles.transformField}>
-            <span style={styles.transformLabel}>&nbsp;</span>
-            <div style={styles.transformEmptyCell} />
-          </div>
+          <TransformInput
+            label="Opacity"
+            value={getInputValue('o')}
+            onFocus={() => handleTransformInputFocus('o')}
+            onBlur={() => clearDraftValue('o')}
+            onChange={(value) => handleTransformInputChange('o', value)}
+          />
+        </div>
+
+        <div style={styles.transformActionsRow}>
+          <button
+            type="button"
+            style={styles.button}
+            onClick={() => flipSelectedObjects('horizontal')}
+          >
+            Flip H
+          </button>
+          <button
+            type="button"
+            style={styles.button}
+            onClick={() => flipSelectedObjects('vertical')}
+          >
+            Flip V
+          </button>
         </div>
       </div>
     </div>
@@ -1597,22 +1631,6 @@ export default function PropertiesPanel({ selectedObjects = [] }: PropertiesPane
           >
             {isLocked ? '🔒 Unlock' : '🔓 Lock'}
           </button>
-          <div style={styles.actionButtonsGrid}>
-            <button
-              type="button"
-              style={styles.button}
-              onClick={() => flipSelectedObjects('horizontal')}
-            >
-              Flip Horizontal
-            </button>
-            <button
-              type="button"
-              style={styles.button}
-              onClick={() => flipSelectedObjects('vertical')}
-            >
-              Flip Vertical
-            </button>
-          </div>
         </PropertySection>
       </>
     );

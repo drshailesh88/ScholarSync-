@@ -9,6 +9,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { FabricObject, Line, Path as FabricPath } from 'fabric';
 import { useEditorStore, useHistoryState, useViewport, useGridState, useGuideState } from '@/stores/illustration/editorStore';
 import { useCanvas } from '@/components/illustration/Canvas/CanvasContext';
+import { toggleObjectFlip } from '@/components/illustration/PropertiesPanel';
 import { useToast } from '@/components/illustration/Toast/useToast';
 import {
   applyBooleanOperationToCanvas,
@@ -733,11 +734,10 @@ export function MenuBar({
       }
 
       activeObjects.forEach((object) => {
-        if (direction === 'horizontal') {
-          object.set({ flipX: !Boolean((object as FabricObject & { flipX?: boolean }).flipX) });
-        } else {
-          object.set({ flipY: !Boolean((object as FabricObject & { flipY?: boolean }).flipY) });
-        }
+        toggleObjectFlip(
+          object as FabricObject & { set: (values: Record<string, unknown>) => unknown; flipX?: boolean; flipY?: boolean },
+          direction
+        );
         object.setCoords();
       });
 

@@ -265,6 +265,11 @@ export interface InfographicItem {
   icon?: string;          // emoji or icon keyword
   color?: string;         // hex color override
   status?: "done" | "active" | "pending";
+  fontSize?: number;      // override default font size (px)
+  bold?: boolean;         // bold label text
+  opacity?: number;       // 0-100 for this item
+  borderColor?: string;   // outline/border for this item's shape
+  highlighted?: boolean;  // visual emphasis (glow/ring)
 }
 
 export interface InfographicData {
@@ -272,7 +277,7 @@ export interface InfographicData {
   title?: string;
   items: InfographicItem[];
   caption?: string;
-  colorScheme?: "theme" | "blue" | "green" | "purple" | "orange" | "rainbow";
+  colorScheme?: "theme" | "blue" | "green" | "purple" | "orange" | "rainbow" | "warm" | "cool" | "pastel";
 }
 
 /** Audio/video media block */

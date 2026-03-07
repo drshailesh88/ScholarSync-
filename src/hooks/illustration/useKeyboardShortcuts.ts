@@ -7,6 +7,7 @@
 
 import { useEffect, useCallback, useRef } from 'react';
 import { FabricObject } from 'fabric';
+import { toggleObjectFlip } from '@/components/illustration/PropertiesPanel';
 import { useEditorStore, useHistoryState } from '@/stores/illustration/editorStore';
 import { ToolType } from '@/lib/illustration/types/index';
 import {
@@ -240,8 +241,12 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
     if (activeObjects.length === 0) return;
 
     activeObjects.forEach((object: unknown) => {
-      const obj = object as FabricObject & { flipX?: boolean };
-      obj.set({ flipX: !Boolean(obj.flipX) });
+      const obj = object as FabricObject & {
+        set: (values: Record<string, unknown>) => unknown;
+        flipX?: boolean;
+        flipY?: boolean;
+      };
+      toggleObjectFlip(obj, 'horizontal');
       obj.setCoords();
     });
 
@@ -255,8 +260,12 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
     if (activeObjects.length === 0) return;
 
     activeObjects.forEach((object: unknown) => {
-      const obj = object as FabricObject & { flipY?: boolean };
-      obj.set({ flipY: !Boolean(obj.flipY) });
+      const obj = object as FabricObject & {
+        set: (values: Record<string, unknown>) => unknown;
+        flipX?: boolean;
+        flipY?: boolean;
+      };
+      toggleObjectFlip(obj, 'vertical');
       obj.setCoords();
     });
 

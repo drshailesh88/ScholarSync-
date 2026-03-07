@@ -6,26 +6,21 @@ import {
   CircleNotch,
   ArrowRight,
   Plus,
-  Check,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore } from "@/stores/slides-store";
 import type { ContentBlock } from "@/types/presentation";
-import { BLOCK_REGISTRY } from "../blocks";
-import type { ThemeConfig } from "@/types/presentation";
+import {
+  VisualOptionCard,
+  type VisualOption,
+} from "../shared/visual-option-card";
 
 // ---------------------------------------------------------------------------
 // Visual Mode — Napkin-style visual generation palette
 // User types prompt → AI returns 4-6 visual options → user picks one → insert
 // ---------------------------------------------------------------------------
 
-interface VisualOption {
-  label: string;
-  description: string;
-  block: ContentBlock;
-}
-
-const VISUAL_TYPE_PRESETS = [
+export const VISUAL_TYPE_PRESETS = [
   { label: "Flowchart", type: "flowchart" },
   { label: "Mind Map", type: "mindmap" },
   { label: "Process", type: "process_flow" },
@@ -237,7 +232,6 @@ export function VisualMode() {
               <VisualOptionCard
                 key={i}
                 option={opt}
-                index={i}
                 selected={selectedIndex === i}
                 theme={themeConfig}
                 onSelect={() => setSelectedIndex(i)}
@@ -282,68 +276,3 @@ export function VisualMode() {
   );
 }
 
-// ---------------------------------------------------------------------------
-// VisualOptionCard — renders a preview of one visual option
-// ---------------------------------------------------------------------------
-
-function VisualOptionCard({
-  option,
-  index: _index,
-  selected,
-  theme,
-  onSelect,
-}: {
-  option: VisualOption;
-  index: number;
-  selected: boolean;
-  theme: ThemeConfig | null;
-  onSelect: () => void;
-}) {
-  const fallbackTheme: ThemeConfig = theme ?? {
-    name: "default",
-    primaryColor: "#3B82F6",
-    secondaryColor: "#6366F1",
-    backgroundColor: "#FFFFFF",
-    textColor: "#1E293B",
-    accentColor: "#10B981",
-  };
-
-  const entry = BLOCK_REGISTRY[option.block.type as keyof typeof BLOCK_REGISTRY];
-  if (!entry) return null;
-  const Renderer = entry.render;
-
-  return (
-    <button
-      onClick={onSelect}
-      className={cn(
-        "w-full text-left rounded-xl border-2 overflow-hidden transition-all",
-        selected
-          ? "border-brand shadow-md ring-2 ring-brand/20"
-          : "border-border hover:border-brand/30"
-      )}
-    >
-      {/* Preview */}
-      <div
-        className="relative aspect-video overflow-hidden p-2"
-        style={{ backgroundColor: fallbackTheme.backgroundColor, fontSize: "12px" }}
-      >
-        <Renderer
-          data={option.block.data as Record<string, unknown>}
-          theme={fallbackTheme}
-          scale={0.5}
-        />
-        {selected && (
-          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-brand flex items-center justify-center">
-            <Check size={10} weight="bold" className="text-white" />
-          </div>
-        )}
-      </div>
-
-      {/* Label */}
-      <div className="px-3 py-2 border-t border-border bg-surface-raised">
-        <div className="text-[10px] font-semibold text-ink">{option.label}</div>
-        <div className="text-[9px] text-ink-muted mt-0.5">{option.description}</div>
-      </div>
-    </button>
-  );
-}

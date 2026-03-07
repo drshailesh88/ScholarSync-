@@ -24,12 +24,14 @@ import {
   GridFour,
   Eye,
   Eyeglasses,
+  Sparkle,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore, type RightPanel, type SaveStatus } from "@/stores/slides-store";
 import { ModeSelector } from "../mode-selector";
 import { createDefaultBlock } from "../blocks";
 import { InsertMenu } from "../shared/insert-menu";
+import { VisualizePopover } from "../shared/visualize-popover";
 import { AvatarsSlot as CollaborationAvatarsSlot } from "../shared/collaboration-slots";
 import type { ContentBlock } from "@/types/presentation";
 import { requestGeneratedSlideImage } from "@/lib/slides/image-generation-client";
@@ -100,6 +102,8 @@ export function SlidesToolbar({
   const snapToGrid = useSlidesStore((s) => s.snapToGrid);
   const setSnapToGrid = useSlidesStore((s) => s.setSnapToGrid);
   const [showInsertMenu, setShowInsertMenu] = useState(false);
+  const [showVisualizePopover, setShowVisualizePopover] = useState(false);
+  const [visualizeInitialType, setVisualizeInitialType] = useState<string | null>(null);
   const [bulkGenerationState, setBulkGenerationState] = useState<{
     active: boolean;
     current: number;
@@ -112,6 +116,7 @@ export function SlidesToolbar({
     error: null,
   });
   const insertButtonRef = useRef<HTMLButtonElement>(null);
+  const visualizeButtonRef = useRef<HTMLButtonElement>(null);
 
   function togglePanel(panel: RightPanel) {
     setRightPanel(rightPanel === panel ? null : panel);
@@ -235,6 +240,33 @@ export function SlidesToolbar({
           anchorRef={insertButtonRef}
           onInsert={handleInsert}
           onClose={() => setShowInsertMenu(false)}
+          onVisualize={(type) => {
+            setShowInsertMenu(false);
+            setVisualizeInitialType(type);
+            setShowVisualizePopover(true);
+          }}
+        />
+      </div>
+
+      {/* Visualize button */}
+      <div className="relative">
+        <button
+          ref={visualizeButtonRef}
+          onClick={() => {
+            setVisualizeInitialType(null);
+            setShowVisualizePopover(!showVisualizePopover);
+          }}
+          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-brand to-indigo-500 text-white hover:opacity-90 transition-opacity"
+          title="Visualize (Ctrl+Shift+V)"
+        >
+          <Sparkle size={14} weight="fill" />
+          Visualize
+        </button>
+        <VisualizePopover
+          isOpen={showVisualizePopover}
+          anchorRef={visualizeButtonRef}
+          onClose={() => setShowVisualizePopover(false)}
+          initialType={visualizeInitialType}
         />
       </div>
 

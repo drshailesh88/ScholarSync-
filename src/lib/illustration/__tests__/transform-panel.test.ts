@@ -3,7 +3,9 @@ import {
   applyTransformChange,
   computeMixedTransformValues,
   formatTransformDisplayValue,
+  setObjectAspectLock,
   subscribeToTransformEvents,
+  toggleObjectFlip,
   type CanvasEventSourceLike,
   type TransformObjectLike,
 } from '@/components/illustration/PropertiesPanel';
@@ -16,13 +18,22 @@ class MockTransformObject implements TransformObjectLike {
   scaleX = 1;
   scaleY = 1;
   angle = 0;
+  opacity = 1;
+  flipX = false;
+  flipY = false;
+  lockUniScaling = false;
 
   constructor(overrides: Partial<MockTransformObject> = {}) {
     Object.assign(this, overrides);
   }
 
-  set(key: string, value: unknown) {
-    (this as unknown as Record<string, unknown>)[key] = value;
+  set(keyOrValues: string | Record<string, unknown>, value?: unknown) {
+    if (typeof keyOrValues === 'string') {
+      (this as unknown as Record<string, unknown>)[keyOrValues] = value;
+      return this;
+    }
+
+    Object.assign(this, keyOrValues);
     return this;
   }
 
@@ -94,6 +105,32 @@ describe('Transform panel helpers', () => {
     expect(rect.angle).toBe(45);
   });
 
+  it('Setting opacity to 50 updates object.opacity to 0.5', () => {
+    const rect = new MockTransformObject({ opacity: 1 });
+
+    applyTransformChange([rect], 'o', 50, false);
+
+    expect(rect.opacity).toBe(0.5);
+  });
+
+  it('Flip horizontal toggles flipX and a second flip restores it', () => {
+    const rect = new MockTransformObject({ flipX: false });
+
+    toggleObjectFlip(rect, 'horizontal');
+    expect(rect.flipX).toBe(true);
+
+    toggleObjectFlip(rect, 'horizontal');
+    expect(rect.flipX).toBe(false);
+  });
+
+  it('Aspect lock helper sets lockUniScaling to true', () => {
+    const rect = new MockTransformObject({ lockUniScaling: false });
+
+    setObjectAspectLock(rect, true);
+
+    expect(rect.lockUniScaling).toBe(true);
+  });
+
   it('Selecting 2 objects with different X shows "—"', () => {
     const objA = new MockTransformObject({ left: 10, top: 20 });
     const objB = new MockTransformObject({ left: 30, top: 20 });
@@ -112,6 +149,16 @@ describe('Transform panel helpers', () => {
 
     expect(values.y.mixed).toBe(false);
     expect(formatTransformDisplayValue(values.y)).toBe('20.0');
+  });
+
+  it('Selecting 2 objects with different opacity shows "—"', () => {
+    const objA = new MockTransformObject({ opacity: 1 });
+    const objB = new MockTransformObject({ opacity: 0.6 });
+
+    const values = computeMixedTransformValues([objA, objB]);
+
+    expect(values.o.mixed).toBe(true);
+    expect(formatTransformDisplayValue(values.o)).toBe('—');
   });
 
   it('Dragging object on canvas updates X/Y fields in real-time', () => {
