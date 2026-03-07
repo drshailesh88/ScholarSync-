@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>DOI Extraction Test</title>
+    <link>https://www.example.com</link>
+    <description>Feed where DOI must be extracted from URLs</description>
+    <item>
+      <title>Article where DOI is only in the link</title>
+      <link>https://doi.org/10.1001/jama.2025.12345</link>
+      <guid>doi-in-link-001</guid>
+      <description>Test DOI extraction from link URL</description>
+      <pubDate>Mon, 03 Mar 2026 08:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Article with DOI in dc:identifier</title>
+      <link>https://www.example.com/article2</link>
+      <guid>doi-in-link-002</guid>
+      <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">doi:10.1016/j.jacc.2025.09.001</dc:identifier>
+      <description>Test DOI extraction from dc:identifier</description>
+    </item>
+  </channel>
+</rss>

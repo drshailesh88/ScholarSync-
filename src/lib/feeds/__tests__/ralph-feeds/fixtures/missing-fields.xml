@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Incomplete Feed</title>
+    <link>https://www.example.com</link>
+    <description>Feed with items that have missing fields</description>
+    <item>
+      <title>Article with only a title</title>
+    </item>
+    <item>
+      <description>Item with no title — should be SKIPPED</description>
+      <link>https://www.example.com/no-title</link>
+    </item>
+    <item>
+      <title>Article with no guid and no link</title>
+      <description>This item has neither guid nor link</description>
+    </item>
+    <item>
+      <title>Article with guid object</title>
+      <link>https://www.example.com/guid-test</link>
+      <guid isPermaLink="false">custom-id-12345</guid>
+    </item>
+  </channel>
+</rss>

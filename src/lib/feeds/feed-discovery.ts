@@ -1,5 +1,11 @@
+/**
+ * RALPH Journal Feed — Sprint 3: Feed Discovery + URL Validation
+ *
+ * Auto-discovers RSS/Atom feeds from any URL and validates feed URLs.
+ */
 import { resilientFetch } from "@/lib/http/resilient-fetch";
 import { parseFeed } from "./feed-parser";
+import type { ParsedFeed } from "./types";
 
 // ── Types ───────────────────────────────────────────────────────────
 
@@ -9,141 +15,227 @@ export interface DiscoveredFeed {
   feedType: "rss" | "atom";
 }
 
-export interface ValidatedFeed {
-  feedUrl: string;
-  title: string;
-  description: string | null;
-  siteUrl: string | null;
-  feedType: "rss" | "atom";
-}
+// ── Constants ───────────────────────────────────────────────────────
+
+const COMMON_FEED_PATHS = [
+  "/feed",
+  "/rss",
+  "/rss.xml",
+  "/atom.xml",
+  "/feed.xml",
+  "/feed/rss",
+  "/index.xml",
+];
 
 // ── Public API ──────────────────────────────────────────────────────
 
 /**
- * Validate that a URL points to a valid RSS/Atom feed.
- * Fetches the URL and tries to parse it as a feed.
+ * Given any URL, discover RSS/Atom feed(s) associated with it.
+ * NEVER throws. Returns empty array on failure.
  */
-export async function validateFeedUrl(feedUrl: string): Promise<ValidatedFeed> {
-  const response = await resilientFetch(
-    feedUrl,
-    {
-      headers: {
-        Accept:
-          "application/rss+xml, application/atom+xml, application/xml, text/xml",
-      },
-    },
-    { service: "FeedValidation", timeout: 15000, maxRetries: 1 }
-  );
+export async function discoverFeeds(url: string): Promise<DiscoveredFeed[]> {
+  try {
+    // 1. Normalize URL
+    const normalized = normalizeUrl(url);
+    if (!normalized) return [];
 
-  const xml = await response.text();
-  if (!xml.trim()) {
-    throw new Error("Empty response body");
+    // 2. Fetch the URL
+    let response: Response;
+    try {
+      response = await resilientFetch(normalized, {}, {
+        service: "RSS-Discovery",
+        timeout: 10000,
+        maxRetries: 1,
+      });
+    } catch {
+      return [];
+    }
+
+    // 3. Read response body
+    const body = await response.text();
+
+    // 4. Check if the response IS a feed
+    const contentType = response.headers.get("content-type");
+    if (isXmlContentType(contentType) || body.trimStart().startsWith("<?xml")) {
+      try {
+        const parsed = parseFeed(body);
+        return [
+          {
+            feedUrl: normalized,
+            title: parsed.title,
+            feedType: parsed.feedType === "atom" ? "atom" : "rss",
+          },
+        ];
+      } catch {
+        // XML but not a valid feed — continue to HTML parsing
+      }
+    }
+
+    // 5. Treat as HTML — extract feed <link> tags
+    const feedLinks = extractFeedLinks(body, normalized);
+    if (feedLinks.length > 0) {
+      return feedLinks;
+    }
+
+    // 6. Try common feed paths
+    const baseUrl = getBaseUrl(normalized);
+    const discovered: DiscoveredFeed[] = [];
+
+    for (const path of COMMON_FEED_PATHS) {
+      const candidateUrl = baseUrl + path;
+      try {
+        const pathResponse = await resilientFetch(candidateUrl, {}, {
+          service: "RSS-Discovery",
+          timeout: 10000,
+          maxRetries: 1,
+        });
+        const pathBody = await pathResponse.text();
+        const parsed = parseFeed(pathBody);
+        discovered.push({
+          feedUrl: candidateUrl,
+          title: parsed.title,
+          feedType: parsed.feedType === "atom" ? "atom" : "rss",
+        });
+      } catch {
+        // Skip failed paths
+      }
+    }
+
+    return discovered;
+  } catch {
+    // Catch-all: discoverFeeds NEVER throws
+    return [];
   }
-
-  const parsed = parseFeed(xml);
-  const isAtom = xml.includes("<feed") && xml.includes("xmlns");
-
-  return {
-    feedUrl,
-    title: parsed.title,
-    description: parsed.description,
-    siteUrl: parsed.siteUrl,
-    feedType: isAtom ? "atom" : "rss",
-  };
 }
 
 /**
- * Discover RSS/Atom feeds from a URL.
- *
- * If the URL directly serves a feed, returns it.
- * Otherwise, fetches the HTML page and looks for <link> tags
- * pointing to RSS/Atom feeds.
+ * Validate that a URL points to a parseable RSS/Atom feed.
+ * THROWS if the URL is not a valid feed.
  */
-export async function discoverFeeds(url: string): Promise<DiscoveredFeed[]> {
-  const response = await resilientFetch(
-    url,
-    {
-      headers: {
-        Accept:
-          "application/rss+xml, application/atom+xml, application/xml, text/xml, text/html",
-      },
-    },
-    { service: "FeedDiscovery", timeout: 15000, maxRetries: 1 }
-  );
+export async function validateFeedUrl(feedUrl: string): Promise<ParsedFeed> {
+  // 1. Fetch the URL
+  let response: Response;
+  try {
+    response = await resilientFetch(feedUrl, {}, {
+      service: "RSS-Validate",
+      timeout: 15000,
+      maxRetries: 2,
+    });
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : String(error);
+    throw new Error(`Feed validation failed: ${message}`);
+  }
 
-  const contentType = response.headers.get("content-type") || "";
+  // 2. Read response body
   const body = await response.text();
-
-  // If it's directly a feed, parse and return it
-  if (
-    contentType.includes("xml") ||
-    contentType.includes("rss") ||
-    contentType.includes("atom")
-  ) {
-    try {
-      const parsed = parseFeed(body);
-      const isAtom = body.includes("<feed") && body.includes("xmlns");
-      return [
-        {
-          feedUrl: url,
-          title: parsed.title,
-          feedType: isAtom ? "atom" : "rss",
-        },
-      ];
-    } catch {
-      // Not a valid feed, try HTML discovery below
-    }
+  if (!body.trim()) {
+    throw new Error("Feed validation failed: empty response");
   }
 
-  // Try to parse as feed anyway (some servers serve XML as text/html)
-  if (body.trimStart().startsWith("<?xml") || body.trimStart().startsWith("<rss") || body.trimStart().startsWith("<feed")) {
-    try {
-      const parsed = parseFeed(body);
-      const isAtom = body.includes("<feed") && body.includes("xmlns");
-      return [
-        {
-          feedUrl: url,
-          title: parsed.title,
-          feedType: isAtom ? "atom" : "rss",
-        },
-      ];
-    } catch {
-      // Not a valid feed
-    }
+  // 3. Parse
+  try {
+    return parseFeed(body);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : String(error);
+    throw new Error(`Feed validation failed: ${message}`);
+  }
+}
+
+// ── Internal Helpers ────────────────────────────────────────────────
+
+/**
+ * Normalize a URL: add https:// if missing, trim whitespace.
+ * Returns null if the result is not a valid URL.
+ */
+function normalizeUrl(input: string): string | null {
+  const trimmed = input.trim();
+  if (!trimmed) return null;
+
+  let urlStr = trimmed;
+  if (!/^https?:\/\//i.test(urlStr)) {
+    urlStr = "https://" + urlStr;
   }
 
-  // Parse HTML to find <link rel="alternate" type="application/rss+xml">
+  try {
+    const parsed = new URL(urlStr);
+    return parsed.href;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Get the base URL (protocol + hostname) from a URL string.
+ */
+function getBaseUrl(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return parsed.origin;
+  } catch {
+    return url;
+  }
+}
+
+/**
+ * Resolve a potentially relative URL against a base URL.
+ */
+function resolveUrl(relative: string, base: string): string {
+  try {
+    return new URL(relative, base).href;
+  } catch {
+    return relative;
+  }
+}
+
+/**
+ * Check if a Content-Type header indicates XML content.
+ */
+function isXmlContentType(contentType: string | null): boolean {
+  if (!contentType) return false;
+  return (
+    contentType.includes("application/rss+xml") ||
+    contentType.includes("application/atom+xml") ||
+    contentType.includes("application/xml") ||
+    contentType.includes("text/xml")
+  );
+}
+
+/**
+ * Extract feed <link> tags from an HTML string using regex.
+ * Handles attributes in any order and both single/double quotes.
+ */
+function extractFeedLinks(html: string, baseUrl: string): DiscoveredFeed[] {
   const feeds: DiscoveredFeed[] = [];
-  const linkRegex =
-    /<link[^>]+rel=["']alternate["'][^>]*>/gi;
-  let match;
 
-  while ((match = linkRegex.exec(body)) !== null) {
+  const linkRegex = /<link[^>]*>/gi;
+  let match: RegExpExecArray | null;
+
+  while ((match = linkRegex.exec(html)) !== null) {
     const tag = match[0];
-    const typeMatch = tag.match(/type=["']([^"']+)["']/);
-    const hrefMatch = tag.match(/href=["']([^"']+)["']/);
-    const titleMatch = tag.match(/title=["']([^"']+)["']/);
 
-    if (hrefMatch && typeMatch) {
-      const type = typeMatch[1];
-      if (
-        type.includes("rss") ||
-        type.includes("atom") ||
-        type.includes("xml")
-      ) {
-        let feedUrl = hrefMatch[1];
-        // Resolve relative URLs
-        if (feedUrl.startsWith("/")) {
-          const base = new URL(url);
-          feedUrl = `${base.origin}${feedUrl}`;
-        }
-        feeds.push({
-          feedUrl,
-          title: titleMatch?.[1] || "Feed",
-          feedType: type.includes("atom") ? "atom" : "rss",
-        });
-      }
-    }
+    // Check for rel="alternate"
+    if (!/rel=["']alternate["']/i.test(tag)) continue;
+
+    // Check for RSS or Atom type
+    const typeMatch = tag.match(
+      /type=["']application\/(rss\+xml|atom\+xml)["']/i
+    );
+    if (!typeMatch) continue;
+
+    // Extract href
+    const hrefMatch = tag.match(/href=["']([^"']+)["']/i);
+    if (!hrefMatch) continue;
+
+    // Extract title (optional)
+    const titleMatch = tag.match(/title=["']([^"']+)["']/i);
+
+    const feedType = typeMatch[1].toLowerCase() === "rss+xml" ? "rss" : "atom";
+    const feedUrl = resolveUrl(hrefMatch[1], baseUrl);
+    const title = titleMatch ? titleMatch[1] : "Untitled Feed";
+
+    feeds.push({ feedUrl, title, feedType });
   }
 
   return feeds;

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Duplicate Test</title>
+    <link>https://www.example.com</link>
+    <description>Feed with duplicate GUIDs</description>
+    <item>
+      <title>First version of article</title>
+      <link>https://www.example.com/article-1</link>
+      <guid>duplicate-guid-001</guid>
+      <description>This is the first version</description>
+    </item>
+    <item>
+      <title>Updated version of same article</title>
+      <link>https://www.example.com/article-1-v2</link>
+      <guid>duplicate-guid-001</guid>
+      <description>This is an updated version with the same GUID</description>
+    </item>
+    <item>
+      <title>Unique article</title>
+      <link>https://www.example.com/article-2</link>
+      <guid>unique-guid-002</guid>
+      <description>This has a unique GUID</description>
+    </item>
+  </channel>
+</rss>

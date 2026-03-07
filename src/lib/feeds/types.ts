@@ -20,5 +20,6 @@ export interface ParsedFeed {
   title: string;
   description: string | null;
   siteUrl: string | null;
+  feedType: "rss" | "atom" | "json_feed" | "pubmed_search";
   articles: ParsedArticle[];
 }
