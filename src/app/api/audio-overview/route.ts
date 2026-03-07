@@ -20,6 +20,8 @@ const audioOverviewRequestSchema = z.object({
   conversationId: z.number().int().positive(),
   paperIds: z.array(z.number().int().positive()).min(1).max(25),
   mode: z.enum(["research", "learn"]).optional(),
+  customPrompt: z.string().max(500).optional(),
+  length: z.enum(["brief", "default", "detailed"]).optional(),
 });
 
 interface CachedAudioOverview {
@@ -116,7 +118,9 @@ export async function POST(req: NextRequest) {
 
     const mode: AudioOverviewMode = parsed.data.mode ?? "research";
     const paperIds = [...new Set(parsed.data.paperIds)].sort((a, b) => a - b);
-    const paperIdsHash = `${mode}:${paperIds.join(",")}`;
+    const customPrompt = parsed.data.customPrompt?.trim() || "";
+    const length = parsed.data.length ?? "default";
+    const paperIdsHash = `${mode}:${length}:${customPrompt.slice(0, 50)}:${paperIds.join(",")}`;
 
     const [convo] = await db
       .select({
@@ -191,6 +195,8 @@ export async function POST(req: NextRequest) {
     const script = await generateAudioScript({
       paperOverviews,
       mode,
+      customPrompt: customPrompt || undefined,
+      length,
     });
 
     log.info("Synthesizing audio", {

@@ -13,7 +13,7 @@ import type { TTSProvider, TTSOptions, TTSResult } from "./types";
 
 const OPENAI_TTS_URL = "https://api.openai.com/v1/audio/speech";
 const DEFAULT_VOICE = "nova";
-const DEFAULT_MODEL = "tts-1";
+const DEFAULT_MODEL = "tts-1-hd";
 const MAX_CHARS = 4096;
 
 const MIME_TYPES: Record<string, string> = {

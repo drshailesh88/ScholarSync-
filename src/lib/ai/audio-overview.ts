@@ -12,6 +12,8 @@ import type { SourceOverview } from "@/lib/rag/source-summarizer";
 
 export type AudioOverviewMode = "research" | "learn";
 
+export type AudioLength = "brief" | "default" | "detailed";
+
 export interface AudioScriptInput {
   paperOverviews: Array<{
     title: string;
@@ -19,6 +21,10 @@ export interface AudioScriptInput {
     overview: SourceOverview;
   }>;
   mode: AudioOverviewMode;
+  /** Optional user prompt to focus the audio on specific topics */
+  customPrompt?: string;
+  /** Audio length: brief (~1 min), default (~2-3 min), detailed (~5 min) */
+  length?: AudioLength;
 }
 
 export interface AudioScript {
@@ -74,6 +80,19 @@ export async function generateAudioScript(
       ? "The listener is a medical student studying these papers. Be educational, explain concepts clearly, and use occasional rhetorical questions to keep attention."
       : "The listener is a researcher reviewing these papers. Focus on methodology, key findings, and how the papers connect or disagree.";
 
+  // Length targets based on user selection
+  const lengthTargets: Record<AudioLength, { words: string; tokens: number }> = {
+    brief: { words: "200-350 words (about 1-2 minutes)", tokens: 600 },
+    default: { words: "500-800 words (about 2-3 minutes)", tokens: 1400 },
+    detailed: { words: "1000-1500 words (about 5-7 minutes)", tokens: 2500 },
+  };
+  const selectedLength = lengthTargets[input.length ?? "default"];
+
+  // Custom prompt instruction
+  const focusInstruction = input.customPrompt
+    ? `\n11. FOCUS AREA: The user has requested you focus specifically on: "${input.customPrompt}". Prioritize this topic throughout the overview while still covering the key findings from each paper.`
+    : "";
+
   const systemPrompt = `You are creating a spoken audio summary for a research notebook. Write a script that will be read aloud by a text-to-speech system.
 
 CRITICAL RULES:
@@ -81,12 +100,12 @@ CRITICAL RULES:
 2. NEVER include citation numbers like [1] or [2].
 3. NEVER include markdown formatting, headers, bullet points, or numbered lists.
 4. Refer to papers by short title cues or key author names, not by paper numbers.
-5. Length target: 500-800 words.
+5. Length target: ${selectedLength.words}.
 6. Structure: opening hook -> per-paper highlights -> connections/contrasts -> clear takeaway.
 7. Use smooth transitions such as "Now turning to...", "What's interesting here is...", and "Building on that...".
 8. If there is only one paper, go deeper into methods and findings rather than comparing.
 9. End with one clear takeaway sentence.
-10. ${modeContext}`;
+10. ${modeContext}${focusInstruction}`;
 
   const userPrompt = `Generate an audio overview script for ${paperCount} research paper${paperCount > 1 ? "s" : ""}:
 
@@ -96,7 +115,7 @@ ${overviewContext}`;
     model: getSmallModel(),
     system: systemPrompt,
     prompt: userPrompt,
-    maxOutputTokens: 1400,
+    maxOutputTokens: selectedLength.tokens,
   });
 
   const text = sanitizeScript(result.text);

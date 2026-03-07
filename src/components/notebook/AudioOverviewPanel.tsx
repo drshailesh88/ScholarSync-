@@ -14,6 +14,7 @@ import {
 
 type AudioState = "idle" | "generating" | "ready" | "playing" | "paused" | "error";
 type NotebookAudioMode = "research" | "learn";
+type AudioLength = "brief" | "default" | "detailed";
 
 interface AudioOverviewPanelProps {
   conversationId: number | null;
@@ -53,6 +54,9 @@ export function AudioOverviewPanel({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showTranscript, setShowTranscript] = useState(false);
   const [isCachedResult, setIsCachedResult] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState("");
+  const [audioLength, setAudioLength] = useState<AudioLength>("default");
+  const [showOptions, setShowOptions] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -87,6 +91,8 @@ export function AudioOverviewPanel({
           conversationId,
           paperIds: normalizedPaperIds,
           mode,
+          ...(customPrompt.trim() ? { customPrompt: customPrompt.trim() } : {}),
+          ...(audioLength !== "default" ? { length: audioLength } : {}),
         }),
       });
 
@@ -115,7 +121,7 @@ export function AudioOverviewPanel({
       );
       setAudioState("error");
     }
-  }, [conversationId, mode, normalizedPaperIds]);
+  }, [conversationId, mode, normalizedPaperIds, customPrompt, audioLength]);
 
   useEffect(() => {
     setAudioState("idle");
@@ -126,7 +132,10 @@ export function AudioOverviewPanel({
     setShowTranscript(false);
     setErrorMessage(null);
     setIsCachedResult(false);
-  }, [conversationId, paperIdsKey, mode]);
+  }, [conversationId, paperIdsKey, mode, customPrompt, audioLength]);
+
+  // Auto-generate on first mount only (not on option changes)
+  const hasTriggeredRef = useRef(false);
 
   useEffect(() => {
     if (!conversationId || normalizedPaperIds.length === 0) {
@@ -135,8 +144,12 @@ export function AudioOverviewPanel({
       return;
     }
 
-    void handleGenerate();
-  }, [conversationId, normalizedPaperIds.length, handleGenerate]);
+    if (!hasTriggeredRef.current) {
+      hasTriggeredRef.current = true;
+      void handleGenerate();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversationId, normalizedPaperIds.length]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -351,6 +364,66 @@ export function AudioOverviewPanel({
               </div>
             )}
           </>
+        )}
+
+        {/* Options — shown before generating or when toggled */}
+        {(audioState === "idle" || showOptions) && (
+          <div className="space-y-3 py-2">
+            {/* Length selector */}
+            <div>
+              <label className="text-[10px] font-medium text-ink-muted block mb-1">Length</label>
+              <div className="flex gap-1.5">
+                {(["brief", "default", "detailed"] as const).map((len) => (
+                  <button
+                    key={len}
+                    onClick={() => setAudioLength(len)}
+                    className={`px-3 py-1 rounded-lg text-[10px] font-medium transition-colors ${
+                      audioLength === len
+                        ? "bg-brand text-white"
+                        : "bg-surface-raised text-ink-muted hover:text-ink"
+                    }`}
+                  >
+                    {len === "brief" ? "Brief (~1 min)" : len === "default" ? "Standard (~3 min)" : "Detailed (~5 min)"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Custom focus prompt */}
+            <div>
+              <label className="text-[10px] font-medium text-ink-muted block mb-1">
+                Focus on (optional)
+              </label>
+              <input
+                type="text"
+                value={customPrompt}
+                onChange={(e) => setCustomPrompt(e.target.value)}
+                placeholder="e.g., primary endpoint results, methodology comparison..."
+                className="w-full px-3 py-1.5 bg-surface-raised border border-border-subtle rounded-lg text-xs text-ink placeholder-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/50"
+                maxLength={500}
+              />
+            </div>
+
+            {/* Generate / Regenerate button */}
+            {audioState !== "idle" && (
+              <button
+                onClick={() => { setShowOptions(false); void handleGenerate(); }}
+                className="w-full py-1.5 bg-brand hover:bg-brand-hover text-white text-xs font-medium rounded-lg transition-colors"
+              >
+                Regenerate with new settings
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Options toggle — when audio is ready */}
+        {canControlAudio && !showOptions && (
+          <button
+            onClick={() => setShowOptions(true)}
+            className="text-[10px] text-ink-muted hover:text-brand transition-colors mr-3"
+          >
+            Options
+          </button>
         )}
 
         {audioState === "generating" && (
