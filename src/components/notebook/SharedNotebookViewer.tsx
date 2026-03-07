@@ -56,7 +56,7 @@ function renderCitedTextReadOnly(
         <span
           key={i}
           className="inline-flex items-center gap-1 mx-0.5 px-2 py-0.5 bg-[#6366f1]/10 border border-[#6366f1]/20 text-[#818cf8] rounded-md text-[10px] font-semibold align-baseline"
-          title={source.paperTitle}
+          title={`${source.paperTitle}${source.pageNumber ? ` — Page ${source.pageNumber}` : ""}${source.sectionType ? ` (${source.sectionType})` : ""}`}
         >
           {shortTitle}{pageLabel}
         </span>
