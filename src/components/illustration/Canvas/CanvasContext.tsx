@@ -14,6 +14,10 @@ import {
   ReactNode,
 } from 'react';
 import { Canvas as FabricCanvas, FabricObject, loadSVGFromString, util, Point, Group, ActiveSelection } from 'fabric';
+import {
+  makeClippingMask as applyClippingMask,
+  releaseClippingMask as releaseClippingMaskOperation,
+} from '@/lib/illustration/canvas/clipping-mask';
 
 // ============================================================================
 // Types
@@ -54,6 +58,12 @@ export interface CanvasContextValue {
   /** Get selected objects */
   getSelectedObjects: () => FabricObject[];
 
+  /** Subscribe to multiple canvas events; returns an unsubscribe function */
+  subscribeToCanvasEvents: (
+    eventNames: string[],
+    handler: (event?: unknown) => void
+  ) => () => void;
+
   /** Delete selected objects */
   deleteSelected: () => void;
 
@@ -77,6 +87,12 @@ export interface CanvasContextValue {
 
   /** Ungroup selected group */
   ungroupSelected: () => void;
+
+  /** Create a clipping mask from selected objects */
+  makeClippingMask: () => Promise<boolean>;
+
+  /** Release clipping mask from selected clipped group */
+  releaseClippingMask: () => Promise<boolean>;
 
   /** Bring selected object to front */
   bringToFront: () => void;
@@ -217,6 +233,25 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
     return canvas.getActiveObjects();
   }, [canvas]);
 
+  const subscribeToCanvasEvents = useCallback(
+    (eventNames: string[], handler: (event?: unknown) => void) => {
+      if (!canvas) {
+        return () => {};
+      }
+
+      eventNames.forEach((eventName) => {
+        canvas.on(eventName as never, handler as never);
+      });
+
+      return () => {
+        eventNames.forEach((eventName) => {
+          canvas.off(eventName as never, handler as never);
+        });
+      };
+    },
+    [canvas]
+  );
+
   // Delete selected
   const deleteSelected = useCallback(() => {
     if (!canvas) return;
@@ -343,6 +378,37 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
     canvas.renderAll();
   }, [canvas]);
 
+  // Make clipping mask
+  const makeClippingMask = useCallback(async () => {
+    if (!canvas) return false;
+
+    const result = await applyClippingMask(canvas);
+    if (!result.success || !result.group) {
+      return false;
+    }
+
+    canvas.requestRenderAll();
+    canvas.fire('object:modified', { target: result.group });
+    return true;
+  }, [canvas]);
+
+  // Release clipping mask
+  const releaseClippingMask = useCallback(async () => {
+    if (!canvas) return false;
+
+    const result = await releaseClippingMaskOperation(canvas);
+    if (!result.success) {
+      return false;
+    }
+
+    canvas.requestRenderAll();
+    const historyTarget = result.clipShape ?? result.releasedObjects?.[0];
+    if (historyTarget) {
+      canvas.fire('object:modified', { target: historyTarget });
+    }
+    return true;
+  }, [canvas]);
+
   // Bring to front
   const bringToFront = useCallback(() => {
     if (!canvas) return;
@@ -460,6 +526,7 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
       importSVG,
       getObjects,
       getSelectedObjects,
+      subscribeToCanvasEvents,
       deleteSelected,
       selectAll,
       deselectAll,
@@ -468,6 +535,8 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
       cut,
       groupSelected,
       ungroupSelected,
+      makeClippingMask,
+      releaseClippingMask,
       bringToFront,
       sendToBack,
       bringForward,
@@ -488,6 +557,7 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
       importSVG,
       getObjects,
       getSelectedObjects,
+      subscribeToCanvasEvents,
       deleteSelected,
       selectAll,
       deselectAll,
@@ -496,6 +566,8 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
       cut,
       groupSelected,
       ungroupSelected,
+      makeClippingMask,
+      releaseClippingMask,
       bringToFront,
       sendToBack,
       bringForward,

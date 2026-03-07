@@ -26,6 +26,13 @@ const MIN_ZOOM = 0.1;
 const MAX_ZOOM = 10;
 const DEFAULT_GRID_SIZE = 20;
 
+const normalizeGuidePosition = (position: number): number => {
+  if (!Number.isFinite(position)) {
+    return 0;
+  }
+  return Math.max(0, Math.round(position * 100) / 100);
+};
+
 // ============================================================================
 // Initial State
 // ============================================================================
@@ -39,6 +46,9 @@ const initialState: EditorState = {
 
   // Active tool - default to select
   activeTool: Tool.SELECT,
+  lastSampledColor: null,
+  polygonSides: 6,
+  starPoints: 5,
 
   // Viewport state
   zoom: DEFAULT_ZOOM,
@@ -48,6 +58,16 @@ const initialState: EditorState = {
   gridVisible: true,
   snapToGrid: false,
   gridSize: DEFAULT_GRID_SIZE,
+  showRulers: true,
+  showGuides: true,
+  guides: {
+    horizontal: [],
+    vertical: [],
+  },
+  guideSnapIndicator: {
+    horizontal: null,
+    vertical: null,
+  },
 
   // History state
   history: {
@@ -109,6 +129,17 @@ export const useEditorStore = create<EditorStore>()(
        */
       setActiveTool: (tool: ToolType) => {
         set({ activeTool: tool }, false, 'setActiveTool');
+      },
+      setLastSampledColor: (color: string) => {
+        set({ lastSampledColor: color }, false, 'setLastSampledColor');
+      },
+      setPolygonSides: (sides: number) => {
+        const clampedSides = Math.min(Math.max(Math.round(sides), 3), 24);
+        set({ polygonSides: clampedSides }, false, 'setPolygonSides');
+      },
+      setStarPoints: (points: number) => {
+        const clampedPoints = Math.min(Math.max(Math.round(points), 3), 24);
+        set({ starPoints: clampedPoints }, false, 'setStarPoints');
       },
 
       // ========================================================================
@@ -262,6 +293,108 @@ export const useEditorStore = create<EditorStore>()(
         if (size > 0) {
           set({ gridSize: size }, false, 'setGridSize');
         }
+      },
+
+      toggleRulers: () => {
+        set(
+          (state) => ({ showRulers: !state.showRulers }),
+          false,
+          'toggleRulers'
+        );
+      },
+
+      toggleGuides: () => {
+        set(
+          (state) => ({ showGuides: !state.showGuides }),
+          false,
+          'toggleGuides'
+        );
+      },
+
+      addGuide: (orientation: 'horizontal' | 'vertical', position: number) => {
+        const normalized = normalizeGuidePosition(position);
+        set(
+          (state) => {
+            const axisGuides = state.guides[orientation];
+            if (axisGuides.includes(normalized)) {
+              return {};
+            }
+
+            return {
+              guides: {
+                ...state.guides,
+                [orientation]: [...axisGuides, normalized].sort((a, b) => a - b),
+              },
+            };
+          },
+          false,
+          'addGuide'
+        );
+      },
+
+      updateGuide: (orientation: 'horizontal' | 'vertical', index: number, position: number) => {
+        const normalized = normalizeGuidePosition(position);
+        set(
+          (state) => {
+            const axisGuides = [...state.guides[orientation]];
+            if (index < 0 || index >= axisGuides.length) {
+              return {};
+            }
+
+            axisGuides[index] = normalized;
+            axisGuides.sort((a, b) => a - b);
+
+            return {
+              guides: {
+                ...state.guides,
+                [orientation]: axisGuides,
+              },
+            };
+          },
+          false,
+          'updateGuide'
+        );
+      },
+
+      removeGuide: (orientation: 'horizontal' | 'vertical', index: number) => {
+        set(
+          (state) => {
+            const axisGuides = state.guides[orientation];
+            if (index < 0 || index >= axisGuides.length) {
+              return {};
+            }
+
+            return {
+              guides: {
+                ...state.guides,
+                [orientation]: axisGuides.filter((_, currentIndex) => currentIndex !== index),
+              },
+            };
+          },
+          false,
+          'removeGuide'
+        );
+      },
+
+      clearGuides: () => {
+        set(
+          {
+            guides: {
+              horizontal: [],
+              vertical: [],
+            },
+            guideSnapIndicator: {
+              horizontal: null,
+              vertical: null,
+            },
+          },
+          false,
+          'clearGuides'
+        );
+      },
+
+      setGuideSnapIndicator: (indicator) => {
+        set({ guideSnapIndicator: indicator }, false, 'setGuideSnapIndicator');
       },
 
       // ========================================================================
@@ -420,6 +553,15 @@ export const useCanvas = () => useEditorStore((state) => state.canvas);
 export const useActiveTool = () => useEditorStore((state) => state.activeTool);
 
 /**
+ * Hook to get polygon/star tool settings
+ */
+export const useShapeToolSettings = () =>
+  useEditorStore((state) => ({
+    polygonSides: state.polygonSides,
+    starPoints: state.starPoints,
+  }));
+
+/**
  * Hook to get viewport state
  */
 export const useViewport = () =>
@@ -446,6 +588,17 @@ export const useGridState = () =>
     gridVisible: state.gridVisible,
     snapToGrid: state.snapToGrid,
     gridSize: state.gridSize,
+  }));
+
+/**
+ * Hook to get guide/ruler state
+ */
+export const useGuideState = () =>
+  useEditorStore((state) => ({
+    showRulers: state.showRulers,
+    showGuides: state.showGuides,
+    guides: state.guides,
+    guideSnapIndicator: state.guideSnapIndicator,
   }));
 
 /**

@@ -425,6 +425,9 @@ export function toolTypeToName(toolType: ToolType): ToolName | string {
     [ToolType.HAND]: 'hand',
     [ToolType.ZOOM]: 'zoom',
     [ToolType.EYEDROPPER]: 'eyedropper',
+    [ToolType.ERASER]: 'eraser',
+    [ToolType.SCISSORS]: 'scissors',
+    [ToolType.MEASURE]: 'measure',
   };
 
   return mapping[toolType] || toolType;
@@ -436,14 +439,17 @@ export function toolTypeToName(toolType: ToolType): ToolName | string {
 export function getToolShortcut(toolType: ToolType): string | undefined {
   const shortcuts: Partial<Record<ToolType, string>> = {
     [ToolType.SELECT]: 'V',
+    [ToolType.DIRECT_SELECT]: 'A',
     [ToolType.PEN]: 'P',
     [ToolType.LINE]: 'L',
     [ToolType.RECTANGLE]: 'R',
     [ToolType.ELLIPSE]: 'E',
-    [ToolType.ARROW]: 'A',
     [ToolType.TEXT]: 'T',
     [ToolType.HAND]: 'H',
     [ToolType.ZOOM]: 'Z',
+    [ToolType.ERASER]: 'Shift+E',
+    [ToolType.SCISSORS]: 'C',
+    [ToolType.MEASURE]: 'M',
   };
 
   return shortcuts[toolType];

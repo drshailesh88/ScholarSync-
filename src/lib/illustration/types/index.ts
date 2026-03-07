@@ -5,9 +5,10 @@
  * @module types
  */
 
-// Fabric.js Canvas type - using interface declaration for better compatibility
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type FabricCanvas = any;
+import type { Canvas } from 'fabric';
+
+// Fabric.js Canvas type
+export type FabricCanvas = Canvas;
 
 // ============================================================================
 // Tool Types
@@ -47,6 +48,9 @@ export enum ToolType {
   HAND = 'hand',
   ZOOM = 'zoom',
   EYEDROPPER = 'eyedropper',
+  ERASER = 'eraser',
+  SCISSORS = 'scissors',
+  MEASURE = 'measure',
 }
 
 /**
@@ -102,6 +106,16 @@ export interface PanPosition {
 export interface ViewportState {
   zoom: number;
   pan: PanPosition;
+}
+
+export interface GuidesState {
+  horizontal: number[];
+  vertical: number[];
+}
+
+export interface GuideSnapIndicator {
+  horizontal: number | null;
+  vertical: number | null;
 }
 
 /**
@@ -348,6 +362,9 @@ export interface EditorState {
 
   // Active tool
   activeTool: ToolType;
+  lastSampledColor: string | null;
+  polygonSides: number;
+  starPoints: number;
 
   // Viewport state
   zoom: number;
@@ -357,6 +374,10 @@ export interface EditorState {
   gridVisible: boolean;
   snapToGrid: boolean;
   gridSize: number;
+  showRulers: boolean;
+  showGuides: boolean;
+  guides: GuidesState;
+  guideSnapIndicator: GuideSnapIndicator;
 
   // History state
   history: HistoryState;
@@ -374,6 +395,9 @@ export interface EditorActions {
 
   // Tool management
   setActiveTool: (tool: ToolType) => void;
+  setLastSampledColor: (color: string) => void;
+  setPolygonSides: (sides: number) => void;
+  setStarPoints: (points: number) => void;
 
   // Viewport management
   setZoom: (zoom: number) => void;
@@ -390,6 +414,13 @@ export interface EditorActions {
   toggleGrid: () => void;
   toggleSnap: () => void;
   setGridSize: (size: number) => void;
+  toggleRulers: () => void;
+  toggleGuides: () => void;
+  addGuide: (orientation: 'horizontal' | 'vertical', position: number) => void;
+  updateGuide: (orientation: 'horizontal' | 'vertical', index: number, position: number) => void;
+  removeGuide: (orientation: 'horizontal' | 'vertical', index: number) => void;
+  clearGuides: () => void;
+  setGuideSnapIndicator: (indicator: GuideSnapIndicator) => void;
 
   // History management
   undo: () => Promise<void>;

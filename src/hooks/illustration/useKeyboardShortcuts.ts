@@ -9,6 +9,10 @@ import { useEffect, useCallback, useRef } from 'react';
 import { FabricObject } from 'fabric';
 import { useEditorStore, useHistoryState } from '@/stores/illustration/editorStore';
 import { ToolType } from '@/lib/illustration/types/index';
+import {
+  makeClippingMask as applyClippingMask,
+  releaseClippingMask as applyReleaseClippingMask,
+} from '@/lib/illustration/canvas/clipping-mask';
 
 // ============================================================================
 // Types
@@ -57,8 +61,14 @@ export interface UseKeyboardShortcutsOptions {
   onOpenBackgroundRemoval?: () => void;
   /** Callback for opening AI generation (Ctrl+Shift+A) */
   onOpenAIGeneration?: () => void;
+  /** Callback for placing/importing an image (Ctrl+Shift+P) */
+  onPlaceImage?: () => void;
   /** Callback for zoom to fit (Ctrl+1) */
   onZoomToFit?: () => void;
+  /** Callback for toggling rulers (Ctrl+R) */
+  onToggleRulers?: () => void;
+  /** Callback for toggling guides (Ctrl+Shift+R) */
+  onToggleGuides?: () => void;
 }
 
 // ============================================================================
@@ -78,7 +88,10 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
     onExport,
     onOpenBackgroundRemoval,
     onOpenAIGeneration,
+    onPlaceImage,
     onZoomToFit: _onZoomToFit,
+    onToggleRulers,
+    onToggleGuides,
   } = options;
   // Wrap in a stable reference to satisfy TypeScript unused variable check
   const onZoomToFit = _onZoomToFit;
@@ -94,6 +107,8 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
   const resetViewport = useEditorStore((state) => state.resetViewport);
   const toggleGrid = useEditorStore((state) => state.toggleGrid);
   const toggleSnap = useEditorStore((state) => state.toggleSnap);
+  const toggleRulers = useEditorStore((state) => state.toggleRulers);
+  const toggleGuides = useEditorStore((state) => state.toggleGuides);
   const canvas = useEditorStore((state) => state.canvas);
 
   const { canUndo, canRedo } = useHistoryState();
@@ -107,14 +122,14 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
   // ========================================================================
 
   const deleteSelected = useCallback(() => {
-    if (!canvas) return;
+    if (!canvas || activeTool === ToolType.DIRECT_SELECT) return;
     const activeObjects = canvas.getActiveObjects();
     if (activeObjects.length > 0) {
       activeObjects.forEach((obj: unknown) => canvas.remove(obj as FabricObject));
       canvas.discardActiveObject();
       canvas.renderAll();
     }
-  }, [canvas]);
+  }, [activeTool, canvas]);
 
   const selectAll = useCallback(() => {
     if (!canvas) return;
@@ -192,6 +207,63 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
     canvas.renderAll();
   }, [canvas]);
 
+  const makeClippingMask = useCallback(() => {
+    if (!canvas) return;
+
+    void (async () => {
+      const result = await applyClippingMask(canvas);
+      if (!result.success || !result.group) return;
+
+      canvas.requestRenderAll();
+      canvas.fire('object:modified', { target: result.group });
+    })();
+  }, [canvas]);
+
+  const releaseClippingMask = useCallback(() => {
+    if (!canvas) return;
+
+    void (async () => {
+      const result = await applyReleaseClippingMask(canvas);
+      if (!result.success) return;
+
+      const historyTarget = result.clipShape ?? result.releasedObjects?.[0];
+      canvas.requestRenderAll();
+      if (historyTarget) {
+        canvas.fire('object:modified', { target: historyTarget });
+      }
+    })();
+  }, [canvas]);
+
+  const flipHorizontal = useCallback(() => {
+    if (!canvas) return;
+    const activeObjects = canvas.getActiveObjects();
+    if (activeObjects.length === 0) return;
+
+    activeObjects.forEach((object: unknown) => {
+      const obj = object as FabricObject & { flipX?: boolean };
+      obj.set({ flipX: !Boolean(obj.flipX) });
+      obj.setCoords();
+    });
+
+    canvas.requestRenderAll();
+    canvas.fire('object:modified', { target: activeObjects[0] as FabricObject });
+  }, [canvas]);
+
+  const flipVertical = useCallback(() => {
+    if (!canvas) return;
+    const activeObjects = canvas.getActiveObjects();
+    if (activeObjects.length === 0) return;
+
+    activeObjects.forEach((object: unknown) => {
+      const obj = object as FabricObject & { flipY?: boolean };
+      obj.set({ flipY: !Boolean(obj.flipY) });
+      obj.setCoords();
+    });
+
+    canvas.requestRenderAll();
+    canvas.fire('object:modified', { target: activeObjects[0] as FabricObject });
+  }, [canvas]);
+
   // ========================================================================
   // Default Shortcuts
   // ========================================================================
@@ -256,6 +328,15 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
       handler: () => onOpenAIGeneration?.(),
       description: 'AI Generate Image',
       category: 'edit',
+      preventDefault: true,
+    },
+    {
+      key: 'p',
+      ctrlOrCmd: true,
+      shift: true,
+      handler: () => onPlaceImage?.(),
+      description: 'Place Image',
+      category: 'file',
       preventDefault: true,
     },
     // Edit shortcuts
@@ -355,6 +436,13 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
       category: 'tool',
     },
     {
+      key: 'e',
+      shift: true,
+      handler: () => setActiveTool(ToolType.ERASER),
+      description: 'Eraser Tool',
+      category: 'tool',
+    },
+    {
       key: 'l',
       handler: () => setActiveTool(ToolType.LINE),
       description: 'Line Tool',
@@ -362,6 +450,13 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
     },
     {
       key: 'a',
+      handler: () => setActiveTool(ToolType.DIRECT_SELECT),
+      description: 'Direct Select Tool',
+      category: 'tool',
+    },
+    {
+      key: 'a',
+      shift: true,
       handler: () => setActiveTool(ToolType.ARROW),
       description: 'Arrow Tool',
       category: 'tool',
@@ -376,6 +471,24 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
       key: 't',
       handler: () => setActiveTool(ToolType.TEXT),
       description: 'Text Tool',
+      category: 'tool',
+    },
+    {
+      key: 'i',
+      handler: () => setActiveTool(ToolType.EYEDROPPER),
+      description: 'Eyedropper Tool',
+      category: 'tool',
+    },
+    {
+      key: 'c',
+      handler: () => setActiveTool(ToolType.SCISSORS),
+      description: 'Scissors Tool',
+      category: 'tool',
+    },
+    {
+      key: 'm',
+      handler: () => setActiveTool(ToolType.MEASURE),
+      description: 'Measure Tool',
       category: 'tool',
     },
     {
@@ -479,6 +592,35 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
       category: 'view',
       preventDefault: true,
     },
+    {
+      key: 'r',
+      ctrlOrCmd: true,
+      handler: () => {
+        if (onToggleRulers) {
+          onToggleRulers();
+          return;
+        }
+        toggleRulers();
+      },
+      description: 'Toggle Rulers',
+      category: 'view',
+      preventDefault: true,
+    },
+    {
+      key: 'r',
+      ctrlOrCmd: true,
+      shift: true,
+      handler: () => {
+        if (onToggleGuides) {
+          onToggleGuides();
+          return;
+        }
+        toggleGuides();
+      },
+      description: 'Toggle Guides',
+      category: 'view',
+      preventDefault: true,
+    },
 
     // Object shortcuts
     {
@@ -495,6 +637,39 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
       shift: true,
       handler: ungroupSelected,
       description: 'Ungroup',
+      category: 'object',
+      preventDefault: true,
+    },
+    {
+      key: '7',
+      ctrlOrCmd: true,
+      handler: makeClippingMask,
+      description: 'Make Clipping Mask',
+      category: 'object',
+      preventDefault: true,
+    },
+    {
+      key: '7',
+      ctrlOrCmd: true,
+      alt: true,
+      handler: releaseClippingMask,
+      description: 'Release Clipping Mask',
+      category: 'object',
+      preventDefault: true,
+    },
+    {
+      key: 'h',
+      shift: true,
+      handler: flipHorizontal,
+      description: 'Flip Horizontal',
+      category: 'object',
+      preventDefault: true,
+    },
+    {
+      key: 'v',
+      shift: true,
+      handler: flipVertical,
+      description: 'Flip Vertical',
       category: 'object',
       preventDefault: true,
     },

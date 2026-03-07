@@ -14,7 +14,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useEditorStore } from '@/stores/illustration/editorStore';
+import { useEditorStore, useGuideState, useViewport } from '@/stores/illustration/editorStore';
 import { useToast } from '@/components/illustration/Toast';
 import { Canvas, CanvasProvider, CanvasRef } from '@/components/illustration/Canvas';
 import { IllustratorToolbar, type IllustratorTool } from '@/components/illustration/IllustratorToolbar';
@@ -27,14 +27,34 @@ import { ShapeGeneratorPanel, type ShapeType } from '@/components/illustration/t
 import { LoadingSpinner } from '@/components/illustration/LoadingSpinner';
 import { ScientificTextToolbar } from '@/components/illustration/ScientificTextToolbar';
 import { FigurePanelGenerator } from '@/components/illustration/FigurePanelGenerator';
+import { DocumentSettings } from '@/components/illustration/DocumentSettings';
 import { useIllustratorTools } from '@/hooks/illustration/useIllustratorTools';
 import { useKeyboardShortcuts } from '@/hooks/illustration/useKeyboardShortcuts';
 import { useCanvas as useCanvasContext } from '@/components/illustration/Canvas/CanvasContext';
+import {
+  GuideOverlay,
+  HorizontalRuler,
+  VerticalRuler,
+  RULER_STRIP_SIZE,
+  type CreateGuideRequest,
+  type RulerUnit,
+} from '@/components/illustration/Rulers';
 import { MenuBar } from './MenuBar';
 import { Toolbar } from './Toolbar';
 import { RightPanel } from './RightPanel';
 import { StatusBar } from './StatusBar';
 import { ToolType } from '@/lib/illustration/types';
+import {
+  applyDocumentSettingsToCanvas,
+  clampCanvasDimension,
+  DEFAULT_CANVAS_BACKGROUND,
+  type DocumentSettingsValue,
+} from '@/lib/illustration/document-settings';
+import {
+  importImageToCanvas,
+  isSupportedImageFile,
+  readImageFileAsDataUrl,
+} from '@/lib/illustration/image-import';
 
 // ============================================================================
 // Types
@@ -78,6 +98,9 @@ const styles: Record<string, React.CSSProperties> = {
     overflow: 'hidden',
     position: 'relative',
   },
+  canvasAreaDragActive: {
+    boxShadow: 'inset 0 0 0 2px var(--accent-primary)',
+  },
   canvasWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -90,6 +113,41 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '4px',
     overflow: 'hidden',
     position: 'relative',
+  },
+  rulerFrame: {
+    position: 'relative',
+  },
+  rulerCorner: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: `${RULER_STRIP_SIZE}px`,
+    height: `${RULER_STRIP_SIZE}px`,
+    border: 'none',
+    borderRight: '1px solid var(--border-primary)',
+    borderBottom: '1px solid var(--border-primary)',
+    backgroundColor: 'var(--bg-secondary)',
+    color: 'var(--text-muted)',
+    fontSize: '10px',
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    cursor: 'pointer',
+    zIndex: 15,
+  },
+  rulerHorizontal: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
+  rulerVertical: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+  },
+  canvasWithRulers: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
   },
   loadingOverlay: {
     position: 'absolute',
@@ -139,6 +197,9 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const paperCanvasRef = useRef<HTMLCanvasElement>(null);
   const [mouseCoords, setMouseCoords] = useState<MouseCoords>({ x: 0, y: 0 });
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
+  const [canvasBackgroundColor, setCanvasBackgroundColor] = useState(DEFAULT_CANVAS_BACKGROUND);
+  const [documentSettingsOpen, setDocumentSettingsOpen] = useState(false);
+  const [isCanvasDragActive, setIsCanvasDragActive] = useState(false);
   const [illustratorTool, setIllustratorTool] = useState<IllustratorTool>('select');
   const [handDrawnEnabled, setHandDrawnEnabled] = useState(false);
   const [handDrawnSettings, setHandDrawnSettings] = useState<HandDrawnSettings>(defaultHandDrawnSettings);
@@ -148,12 +209,15 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const [shapeGeneratorOpen, setShapeGeneratorOpen] = useState(false);
   const [figurePanelGeneratorOpen, setFigurePanelGeneratorOpen] = useState(false);
   const [initialShapeType, setInitialShapeType] = useState<ShapeType>('dna');
+  const [rulerUnit, setRulerUnit] = useState<RulerUnit>('px');
+  const [createGuideRequest, setCreateGuideRequest] = useState<CreateGuideRequest | null>(null);
   const [scientificToolbar, setScientificToolbar] = useState<ScientificToolbarPosition>({
     visible: false,
     x: 100,
     y: 100,
   });
   const canvasAreaRef = useRef<HTMLDivElement>(null);
+  const createGuideRequestIdRef = useRef(0);
 
   // Store state
   const isLoading = useEditorStore((state) => state.isLoading);
@@ -161,6 +225,11 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const setCanvas = useEditorStore((state) => state.setCanvas);
   const canvas = useEditorStore((state) => state.canvas);
   const setActiveTool = useEditorStore((state) => state.setActiveTool);
+  const addGuide = useEditorStore((state) => state.addGuide);
+  const updateGuide = useEditorStore((state) => state.updateGuide);
+  const removeGuide = useEditorStore((state) => state.removeGuide);
+  const { zoom, pan } = useViewport();
+  const { showRulers, showGuides, guides, guideSnapIndicator } = useGuideState();
 
   // Map illustrator tool to editor tool type
   const mapIllustratorToolToEditorTool = useCallback((tool: IllustratorTool): ToolType => {
@@ -215,6 +284,72 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const handleOpenFigurePanelGenerator = useCallback(() => {
     setFigurePanelGeneratorOpen(true);
   }, []);
+
+  const handleOpenDocumentSettings = useCallback(() => {
+    setDocumentSettingsOpen(true);
+  }, []);
+
+  const handleApplyDocumentSettings = useCallback((settings: DocumentSettingsValue) => {
+    const normalized = {
+      width: clampCanvasDimension(settings.width, canvasSize.width),
+      height: clampCanvasDimension(settings.height, canvasSize.height),
+      backgroundColor: settings.backgroundColor || canvasBackgroundColor,
+    };
+
+    if (canvas) {
+      applyDocumentSettingsToCanvas(canvas, normalized);
+    }
+
+    setCanvasSize({ width: normalized.width, height: normalized.height });
+    setCanvasBackgroundColor(normalized.backgroundColor);
+    setDocumentSettingsOpen(false);
+
+    showToast({
+      type: 'success',
+      message: `Canvas updated to ${normalized.width}x${normalized.height}`,
+    });
+  }, [canvas, canvasBackgroundColor, canvasSize.height, canvasSize.width, showToast]);
+
+  const importImageFile = useCallback(async (file: File, source: 'drop' | 'picker' | 'clipboard') => {
+    if (!canvas) {
+      showToast({ type: 'error', message: 'Canvas not ready' });
+      return;
+    }
+
+    if (!isSupportedImageFile(file)) {
+      showToast({ type: 'error', message: 'Unsupported image file. Use PNG, JPG, or SVG.' });
+      return;
+    }
+
+    try {
+      const dataUrl = await readImageFileAsDataUrl(file);
+      await importImageToCanvas(canvas, dataUrl, { maxCanvasWidthRatio: 0.5 });
+      showToast({
+        type: 'success',
+        message: source === 'drop'
+          ? `Placed image: ${file.name}`
+          : source === 'clipboard'
+            ? 'Pasted image from clipboard'
+            : `Placed image: ${file.name}`,
+      });
+    } catch (error) {
+      console.error('Image import failed:', error);
+      showToast({ type: 'error', message: 'Failed to import image' });
+    }
+  }, [canvas, showToast]);
+
+  const handlePlaceImage = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml';
+    input.onchange = (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        void importImageFile(file, 'picker');
+      }
+    };
+    input.click();
+  }, [importImageFile]);
 
   // ========================================================================
   // File Operation Handlers (for keyboard shortcuts)
@@ -303,6 +438,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     onExport: handleOpenExportDialog,
     onOpenBackgroundRemoval: handleOpenBackgroundRemoval,
     onOpenAIGeneration: handleOpenAIGeneration,
+    onPlaceImage: handlePlaceImage,
     onZoomToFit: zoomToFit,
   });
 
@@ -449,29 +585,22 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   // ========================================================================
 
   useEffect(() => {
-    const updateCanvasSize = () => {
-      const toolbar = document.querySelector('[role="toolbar"]');
-      const rightPanel = document.querySelector('aside:last-of-type');
+    // Initialize document size once. After that, user-controlled document settings own the size.
+    const toolbar = document.querySelector('[role="toolbar"]');
+    const rightPanel = document.querySelector('aside:last-of-type');
 
-      const toolbarWidth = toolbar?.clientWidth || 48;
-      const rightPanelWidth = rightPanel?.clientWidth || 280;
-      const menuBarHeight = 40;
-      const statusBarHeight = 24;
+    const toolbarWidth = toolbar?.clientWidth || 48;
+    const rightPanelWidth = rightPanel?.clientWidth || 280;
+    const menuBarHeight = 40;
+    const statusBarHeight = 24;
 
-      const availableWidth = window.innerWidth - toolbarWidth - rightPanelWidth - 48; // padding
-      const availableHeight = window.innerHeight - menuBarHeight - statusBarHeight - 48; // padding
+    const availableWidth = window.innerWidth - toolbarWidth - rightPanelWidth - 48;
+    const availableHeight = window.innerHeight - menuBarHeight - statusBarHeight - 48;
 
-      // Set canvas to a reasonable default size
-      const newWidth = Math.max(600, Math.min(1200, availableWidth));
-      const newHeight = Math.max(400, Math.min(900, availableHeight));
+    const newWidth = Math.max(600, Math.min(1200, availableWidth));
+    const newHeight = Math.max(400, Math.min(900, availableHeight));
 
-      setCanvasSize({ width: newWidth, height: newHeight });
-    };
-
-    updateCanvasSize();
-    window.addEventListener('resize', updateCanvasSize);
-
-    return () => window.removeEventListener('resize', updateCanvasSize);
+    setCanvasSize({ width: newWidth, height: newHeight });
   }, []);
 
   // ========================================================================
@@ -537,9 +666,94 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     // Object was modified, history is automatically updated in Canvas component
   }, []);
 
+  const handleCanvasDragEnter = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsCanvasDragActive(true);
+  }, []);
+
+  const handleCanvasDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+  }, []);
+
+  const handleCanvasDragLeave = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    if (event.currentTarget.contains(event.relatedTarget as Node | null)) {
+      return;
+    }
+
+    setIsCanvasDragActive(false);
+  }, []);
+
+  const handleCanvasDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsCanvasDragActive(false);
+
+    const files = Array.from(event.dataTransfer.files);
+    const imageFile = files.find((file) => isSupportedImageFile(file));
+    if (!imageFile) {
+      showToast({ type: 'error', message: 'Drop a PNG, JPG, or SVG image file.' });
+      return;
+    }
+
+    void importImageFile(imageFile, 'drop');
+  }, [importImageFile, showToast]);
+
+  const handleStartHorizontalGuideDrag = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (!showGuides) {
+      return;
+    }
+
+    event.preventDefault();
+    createGuideRequestIdRef.current += 1;
+    setCreateGuideRequest({
+      id: createGuideRequestIdRef.current,
+      orientation: 'horizontal',
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+  }, [showGuides]);
+
+  const handleStartVerticalGuideDrag = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (!showGuides) {
+      return;
+    }
+
+    event.preventDefault();
+    createGuideRequestIdRef.current += 1;
+    setCreateGuideRequest({
+      id: createGuideRequestIdRef.current,
+      orientation: 'vertical',
+      clientX: event.clientX,
+      clientY: event.clientY,
+    });
+  }, [showGuides]);
+
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      const items = Array.from(event.clipboardData?.items ?? []);
+      const imageItem = items.find((item) => item.kind === 'file' && item.type.startsWith('image/'));
+      if (!imageItem) {
+        return;
+      }
+
+      const file = imageItem.getAsFile();
+      if (!file || !isSupportedImageFile(file)) {
+        return;
+      }
+
+      event.preventDefault();
+      void importImageFile(file, 'clipboard');
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, [importImageFile]);
+
   // ========================================================================
   // Render
   // ========================================================================
+
+  const rulerOffset = showRulers ? RULER_STRIP_SIZE : 0;
 
   return (
     <CanvasProvider>
@@ -547,9 +761,20 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
         {/* Top Menu Bar */}
         <MenuBar
           onOpenExportDialog={handleOpenExportDialog}
+          onOpenDocumentSettings={handleOpenDocumentSettings}
+          onPlaceImage={handlePlaceImage}
           onOpenBackgroundRemoval={handleOpenBackgroundRemoval}
           onOpenAIGeneration={handleOpenAIGeneration}
           onOpenShapeGenerator={handleOpenShapeGenerator}
+        />
+
+        <DocumentSettings
+          isOpen={documentSettingsOpen}
+          initialWidth={canvasSize.width}
+          initialHeight={canvasSize.height}
+          initialBackgroundColor={canvasBackgroundColor}
+          onConfirm={handleApplyDocumentSettings}
+          onCancel={() => setDocumentSettingsOpen(false)}
         />
 
         {/* Export Dialog */}
@@ -635,7 +860,17 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
           <Toolbar onOpenShapeGenerator={handleOpenShapeGenerator} />
 
           {/* Center Canvas Area */}
-          <div ref={canvasAreaRef} style={styles.canvasArea}>
+          <div
+            ref={canvasAreaRef}
+            style={{
+              ...styles.canvasArea,
+              ...(isCanvasDragActive ? styles.canvasAreaDragActive : {}),
+            }}
+            onDragEnter={handleCanvasDragEnter}
+            onDragOver={handleCanvasDragOver}
+            onDragLeave={handleCanvasDragLeave}
+            onDrop={handleCanvasDrop}
+          >
             {isLoading && (
               <div style={styles.loadingOverlay}>
                 <LoadingSpinner size="lg" variant="primary" />
@@ -644,31 +879,94 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
             )}
 
             <div style={styles.canvasWrapper}>
-              <div style={styles.canvasShadow}>
-                <Canvas
-                  ref={canvasRef}
-                  width={canvasSize.width}
-                  height={canvasSize.height}
-                  backgroundColor="#ffffff"
-                  onReady={handleCanvasReady}
-                  onMouseMove={handleMouseMove}
-                  onSelectionChange={handleSelectionChange}
-                  onObjectModified={handleObjectModified}
-                />
-                {/* Paper.js overlay canvas for Pen Tool - always rendered for ref availability */}
-                <canvas
-                  ref={paperCanvasRef}
-                  width={canvasSize.width}
-                  height={canvasSize.height}
+              <div
+                style={{
+                  ...styles.rulerFrame,
+                  width: canvasSize.width + rulerOffset,
+                  height: canvasSize.height + rulerOffset,
+                }}
+              >
+                {showRulers && (
+                  <>
+                    <button
+                      type="button"
+                      style={styles.rulerCorner}
+                      title={`Ruler units: ${rulerUnit.toUpperCase()} (click to toggle)`}
+                      onClick={() => setRulerUnit((unit) => (unit === 'px' ? 'pt' : 'px'))}
+                    >
+                      {rulerUnit}
+                    </button>
+
+                    <div style={styles.rulerHorizontal}>
+                      <HorizontalRuler
+                        width={canvasSize.width}
+                        zoom={zoom}
+                        panX={pan.x}
+                        unit={rulerUnit}
+                        onStartGuideDrag={handleStartHorizontalGuideDrag}
+                      />
+                    </div>
+
+                    <div style={styles.rulerVertical}>
+                      <VerticalRuler
+                        height={canvasSize.height}
+                        zoom={zoom}
+                        panY={pan.y}
+                        unit={rulerUnit}
+                        onStartGuideDrag={handleStartVerticalGuideDrag}
+                      />
+                    </div>
+                  </>
+                )}
+
+                <div
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    pointerEvents: illustratorTool === 'pen' ? 'auto' : 'none',
-                    zIndex: illustratorTool === 'pen' ? 10 : -1,
-                    visibility: illustratorTool === 'pen' ? 'visible' : 'hidden',
+                    ...styles.canvasShadow,
+                    ...styles.canvasWithRulers,
+                    width: canvasSize.width,
+                    height: canvasSize.height,
                   }}
-                />
+                >
+                  <Canvas
+                    ref={canvasRef}
+                    width={canvasSize.width}
+                    height={canvasSize.height}
+                    backgroundColor={canvasBackgroundColor}
+                    onReady={handleCanvasReady}
+                    onMouseMove={handleMouseMove}
+                    onSelectionChange={handleSelectionChange}
+                    onObjectModified={handleObjectModified}
+                  />
+
+                  <GuideOverlay
+                    width={canvasSize.width}
+                    height={canvasSize.height}
+                    zoom={zoom}
+                    pan={pan}
+                    guides={guides}
+                    showGuides={showGuides}
+                    snapIndicator={guideSnapIndicator}
+                    createGuideRequest={createGuideRequest}
+                    onAddGuide={addGuide}
+                    onUpdateGuide={updateGuide}
+                    onRemoveGuide={removeGuide}
+                  />
+
+                  {/* Paper.js overlay canvas for Pen Tool - always rendered for ref availability */}
+                  <canvas
+                    ref={paperCanvasRef}
+                    width={canvasSize.width}
+                    height={canvasSize.height}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      pointerEvents: illustratorTool === 'pen' ? 'auto' : 'none',
+                      zIndex: illustratorTool === 'pen' ? 20 : -1,
+                      visibility: illustratorTool === 'pen' ? 'visible' : 'hidden',
+                    }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -689,7 +987,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
         </div>
 
         {/* Bottom Status Bar */}
-        <StatusBar mouseCoords={mouseCoords} />
+        <StatusBar mouseCoords={mouseCoords} canvasSize={canvasSize} />
       </div>
     </CanvasProvider>
   );

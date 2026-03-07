@@ -25,6 +25,9 @@ export {
   ArrowTool,
   TextTool,
   PenTool,
+  EraserTool,
+  ScissorsTool,
+  MeasureTool,
 
   // Factory functions
   createSelectTool,
@@ -34,6 +37,9 @@ export {
   createArrowTool,
   createTextTool,
   createPenTool,
+  createEraserTool,
+  createScissorsTool,
+  createMeasureTool,
 
   // Default tool instances
   defaultSelectTool,
@@ -43,6 +49,9 @@ export {
   defaultArrowTool,
   defaultTextTool,
   defaultPenTool,
+  defaultEraserTool,
+  defaultScissorsTool,
+  defaultMeasureTool,
   defaultTools,
 
   // Constants
@@ -75,4 +84,9 @@ export type {
   TextStyle,
   TextCreatedEvent,
   TextToolOptions,
+  EraserToolOptions,
+  ScissorsToolOptions,
+  SplitLineResult,
+  Measurement,
+  MeasurePoint,
 } from './tools/index';

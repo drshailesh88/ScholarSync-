@@ -178,7 +178,7 @@ export class SelectTool implements Tool {
     if (!this.isActive || !this.canvas) return;
 
     // Update cursor based on target
-    const target = this.canvas.findTarget(e.e, false);
+    const target = this.canvas.findTarget(e.e);
 
     if (target) {
       if (this.isOverTransformControl(e)) {

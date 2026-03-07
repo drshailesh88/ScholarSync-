@@ -13,12 +13,29 @@ import {
   useImperativeHandle,
   useState,
 } from 'react';
-import { Canvas as FabricCanvas, FabricObject, Rect, Ellipse, Line, IText, Triangle, Group } from 'fabric';
-import { useEditorStore, useActiveTool, useViewport, useGridState } from '@/stores/illustration/editorStore';
+import { Canvas as FabricCanvas, FabricObject, Rect, Ellipse, Line, Textbox, Triangle, Group, Polygon, Path as FabricPath, util } from 'fabric';
+import { useEditorStore, useActiveTool, useViewport, useGridState, useShapeToolSettings } from '@/stores/illustration/editorStore';
 import { ToolType } from '@/lib/illustration/types';
+import { useToast } from '@/components/illustration/Toast/useToast';
 import { PenToolOverlay } from './PenToolOverlay';
+import { PointEditingOverlay } from './PointEditingOverlay';
 import { ConnectorManager, ensureObjectId } from '@/lib/illustration/canvas/ConnectorManager';
 import { DEFAULT_CONNECTOR_STYLE } from '@/lib/illustration/canvas/SmartConnector';
+import { generatePolygonPoints, generateStarPoints } from '@/lib/illustration/canvas/shape-generators';
+import { sampleCanvasBackgroundColor, sampleObjectFillColor, type Point2D } from '@/lib/illustration/canvas/eyedropper-utils';
+import { snapAxisToGuides } from '@/components/illustration/Rulers/GuideOverlay';
+import {
+  isGridObject,
+  filterGridFromSerializedState,
+  getCanvasWrapperStyle,
+  getConnectorPointer,
+  drawGridOverlay,
+  shouldPushHistoryForEvent,
+  type SerializedCanvasState,
+} from '@/lib/illustration/canvas/editorBugfixUtils';
+import { EraserTool } from '@/lib/illustration/editor/tools/EraserTool';
+import { ScissorsTool } from '@/lib/illustration/editor/tools/ScissorsTool';
+import { MeasureTool, type Measurement } from '@/lib/illustration/editor/tools/MeasureTool';
 // Note: Canvas.css was removed - using inline styles instead
 
 // ============================================================================
@@ -77,6 +94,77 @@ interface DrawingState {
   connectorSource: string | null;
 }
 
+type DrawingFlagCanvas = FabricCanvas & {
+  _isDrawing?: boolean;
+};
+
+type SelectionCarrier = FabricObject & {
+  type?: string;
+  getObjects?: () => FabricObject[];
+};
+
+function getSelectionTargets(activeObject: FabricObject | null): FabricObject[] {
+  if (!activeObject) {
+    return [];
+  }
+
+  const candidate = activeObject as SelectionCarrier;
+  if (candidate.type === 'activeSelection' && typeof candidate.getObjects === 'function') {
+    return candidate.getObjects();
+  }
+
+  return [activeObject];
+}
+
+function getClientCoordinates(event: MouseEvent | TouchEvent): Point2D | null {
+  if ('clientX' in event && 'clientY' in event) {
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  if ('touches' in event && event.touches.length > 0) {
+    return {
+      x: event.touches[0].clientX,
+      y: event.touches[0].clientY,
+    };
+  }
+
+  if ('changedTouches' in event && event.changedTouches.length > 0) {
+    return {
+      x: event.changedTouches[0].clientX,
+      y: event.changedTouches[0].clientY,
+    };
+  }
+
+  return null;
+}
+
+function mapScenePointToScreen(canvas: FabricCanvas, point: Point2D): Point2D {
+  const viewportTransform = canvas.viewportTransform ?? [1, 0, 0, 1, 0, 0];
+  const transformed = util.transformPoint(point, viewportTransform);
+  return { x: transformed.x, y: transformed.y };
+}
+
+const withGridExcludedFromExport = <T,>(canvas: FabricCanvas, exporter: () => T): T => {
+  const gridObjects = canvas.getObjects().filter((obj) => isGridObject(obj as FabricObject));
+  if (gridObjects.length === 0) {
+    return exporter();
+  }
+
+  const previousExcludeFlags = new Map<FabricObject, boolean | undefined>();
+  gridObjects.forEach((obj) => {
+    previousExcludeFlags.set(obj as FabricObject, (obj as FabricObject).excludeFromExport);
+    obj.set('excludeFromExport', true);
+  });
+
+  try {
+    return exporter();
+  } finally {
+    gridObjects.forEach((obj) => {
+      obj.set('excludeFromExport', previousExcludeFlags.get(obj as FabricObject));
+    });
+  }
+};
+
 // ============================================================================
 // Component
 // ============================================================================
@@ -107,16 +195,89 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       tempObject: null,
       connectorSource: null,
     });
+    const eraserToolRef = useRef(new EraserTool({ initialSize: 24, minSize: 4, maxSize: 256, step: 2 }));
+    const scissorsToolRef = useRef(new ScissorsTool({ hitThreshold: 8 }));
+    const measureToolRef = useRef(new MeasureTool());
+    const eraserObjectCountAtDownRef = useRef<number | null>(null);
 
     // Pen tool state
     const [penToolActive, setPenToolActive] = useState(false);
+    const [pointEditingPath, setPointEditingPath] = useState<FabricPath | null>(null);
+    const [measurementOverlay, setMeasurementOverlay] = useState<Measurement | null>(null);
+    const [measureDismissArmed, setMeasureDismissArmed] = useState(false);
+    const [eraserCursor, setEraserCursor] = useState({
+      visible: false,
+      x: 0,
+      y: 0,
+      size: eraserToolRef.current.getSize(),
+    });
+    const [eyedropperPreview, setEyedropperPreview] = useState({
+      visible: false,
+      x: 0,
+      y: 0,
+      color: '#ffffff',
+    });
+    const previousSelectionRef = useRef<FabricObject[] | null>(null);
+    const toast = useToast();
 
     // Store hooks
     const setCanvas = useEditorStore((state) => state.setCanvas);
+    const setActiveTool = useEditorStore((state) => state.setActiveTool);
+    const setLastSampledColor = useEditorStore((state) => state.setLastSampledColor);
+    const setPan = useEditorStore((state) => state.setPan);
+    const setGuideSnapIndicator = useEditorStore((state) => state.setGuideSnapIndicator);
+    const showGuides = useEditorStore((state) => state.showGuides);
+    const guides = useEditorStore((state) => state.guides);
     const pushHistory = useEditorStore((state) => state.pushHistory);
     const activeTool = useActiveTool();
     const { zoom } = useViewport();
     const { gridVisible, gridSize, snapToGrid } = useGridState();
+    const { polygonSides, starPoints } = useShapeToolSettings();
+
+    const serializeCanvasState = useCallback((canvas: FabricCanvas): string => {
+      const state = filterGridFromSerializedState(canvas.toJSON() as SerializedCanvasState);
+      return JSON.stringify(state);
+    }, []);
+
+    const setCanvasDrawingFlag = useCallback((isDrawing: boolean) => {
+      drawingStateRef.current.isDrawing = isDrawing;
+      const canvas = fabricRef.current as DrawingFlagCanvas | null;
+      if (canvas) {
+        canvas._isDrawing = isDrawing;
+      }
+    }, []);
+
+    const exitPointEditingMode = useCallback(() => {
+      const canvas = fabricRef.current;
+      setPointEditingPath(null);
+      if (canvas) {
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+      }
+    }, []);
+
+    const sampleColorAtPointer = useCallback(
+      (canvas: FabricCanvas, pointer: Point2D, event: MouseEvent | TouchEvent): string => {
+        const target = canvas.findTarget(event);
+        if (target && !isGridObject(target as FabricObject)) {
+          const sampledObjectColor = sampleObjectFillColor(target as FabricObject, pointer);
+          if (sampledObjectColor) {
+            return sampledObjectColor;
+          }
+        }
+
+        return sampleCanvasBackgroundColor(
+          canvas.backgroundColor,
+          pointer,
+          {
+            width: canvas.getWidth(),
+            height: canvas.getHeight(),
+          },
+          '#ffffff'
+        );
+      },
+      []
+    );
 
     // ========================================================================
     // Canvas Initialization
@@ -138,6 +299,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       });
 
       fabricRef.current = canvas;
+      (canvas as DrawingFlagCanvas)._isDrawing = false;
       setCanvas(canvas);
 
       // Initialize ConnectorManager
@@ -145,7 +307,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       connectorManagerRef.current.startListening();
 
       // Save initial state
-      pushHistory(JSON.stringify(canvas.toJSON()));
+      pushHistory(serializeCanvasState(canvas));
 
       // Notify parent that canvas is ready
       if (onReady) {
@@ -191,18 +353,17 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       // Object modification
       const handleObjectModified = (e: { target?: FabricObject }) => {
+        if (!shouldPushHistoryForEvent('object:modified', (canvas as DrawingFlagCanvas)._isDrawing === true)) {
+          return;
+        }
+
         if (e.target) {
           // Save state for undo
-          pushHistory(JSON.stringify(canvas.toJSON()));
+          pushHistory(serializeCanvasState(canvas));
           if (onObjectModified) {
             onObjectModified(e.target);
           }
         }
-      };
-
-      // Object added/removed
-      const handleObjectAdded = () => {
-        pushHistory(JSON.stringify(canvas.toJSON()));
       };
 
       // Mouse events
@@ -217,7 +378,6 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       canvas.on('selection:updated', handleSelectionUpdated);
       canvas.on('selection:cleared', handleSelectionCleared);
       canvas.on('object:modified', handleObjectModified);
-      canvas.on('object:added', handleObjectAdded);
       canvas.on('mouse:move', handleMouseMove);
 
       // Cleanup
@@ -226,10 +386,9 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         canvas.off('selection:updated', handleSelectionUpdated);
         canvas.off('selection:cleared', handleSelectionCleared);
         canvas.off('object:modified', handleObjectModified);
-        canvas.off('object:added', handleObjectAdded);
         canvas.off('mouse:move', handleMouseMove);
       };
-    }, [onSelectionChange, onObjectModified, onMouseMove, pushHistory]);
+    }, [onSelectionChange, onObjectModified, onMouseMove, pushHistory, serializeCanvasState]);
 
     // ========================================================================
     // Tool-specific Behavior
@@ -238,6 +397,37 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
     useEffect(() => {
       const canvas = fabricRef.current;
       if (!canvas) return;
+
+      if (activeTool !== ToolType.DIRECT_SELECT) {
+        setPointEditingPath(null);
+      }
+
+      if (activeTool !== ToolType.MEASURE) {
+        setMeasurementOverlay(null);
+        setMeasureDismissArmed(false);
+      }
+
+      if (activeTool !== ToolType.ERASER) {
+        setEraserCursor((previous) => ({ ...previous, visible: false }));
+      }
+
+      if (activeTool === ToolType.ERASER) {
+        eraserToolRef.current.activate(canvas);
+      } else {
+        eraserToolRef.current.deactivate(canvas);
+      }
+
+      if (activeTool === ToolType.SCISSORS) {
+        scissorsToolRef.current.activate(canvas);
+      } else {
+        scissorsToolRef.current.deactivate(canvas);
+      }
+
+      if (activeTool === ToolType.MEASURE) {
+        measureToolRef.current.activate(canvas);
+      } else {
+        measureToolRef.current.deactivate(canvas);
+      }
 
       // Configure canvas based on active tool
       if (activeTool === ToolType.SELECT) {
@@ -249,6 +439,37 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           obj.evented = true;
         });
         setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      } else if (activeTool === ToolType.ERASER) {
+        canvas.selection = false;
+        canvas.defaultCursor = 'none';
+        canvas.hoverCursor = 'none';
+        canvas.forEachObject((obj) => {
+          obj.selectable = false;
+          obj.evented = true;
+        });
+        setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      } else if (activeTool === ToolType.SCISSORS) {
+        canvas.selection = false;
+        canvas.defaultCursor = 'crosshair';
+        canvas.hoverCursor = 'crosshair';
+        canvas.forEachObject((obj) => {
+          obj.selectable = false;
+          obj.evented = true;
+        });
+        setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      } else if (activeTool === ToolType.MEASURE) {
+        canvas.selection = false;
+        canvas.defaultCursor = 'crosshair';
+        canvas.hoverCursor = 'crosshair';
+        canvas.forEachObject((obj) => {
+          obj.selectable = false;
+          obj.evented = false;
+        });
+        setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
       } else if (activeTool === ToolType.HAND) {
         canvas.selection = false;
         canvas.defaultCursor = 'grab';
@@ -258,10 +479,23 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           obj.evented = false;
         });
         setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
       } else if (activeTool === ToolType.TEXT) {
         canvas.selection = false;
         canvas.defaultCursor = 'text';
         canvas.hoverCursor = 'text';
+        setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      } else if (activeTool === ToolType.EYEDROPPER) {
+        previousSelectionRef.current = getSelectionTargets(canvas.getActiveObject() as FabricObject | null);
+        canvas.discardActiveObject();
+        canvas.selection = false;
+        canvas.defaultCursor = 'crosshair';
+        canvas.hoverCursor = 'crosshair';
+        canvas.forEachObject((obj) => {
+          obj.selectable = false;
+          obj.evented = true;
+        });
         setPenToolActive(false);
       } else if (activeTool === ToolType.PEN) {
         // Pen tool - use Paper.js overlay
@@ -273,6 +507,27 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           obj.evented = false;
         });
         setPenToolActive(true);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      } else if (activeTool === ToolType.DIRECT_SELECT) {
+        canvas.selection = false;
+        canvas.defaultCursor = 'default';
+        canvas.hoverCursor = 'default';
+        canvas.forEachObject((obj) => {
+          obj.selectable = false;
+          obj.evented = true;
+        });
+        setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      } else if (activeTool === ToolType.POLYGON || activeTool === ToolType.STAR) {
+        canvas.selection = false;
+        canvas.defaultCursor = 'crosshair';
+        canvas.hoverCursor = 'crosshair';
+        canvas.forEachObject((obj) => {
+          obj.selectable = false;
+          obj.evented = false;
+        });
+        setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
       } else {
         // Drawing tools (shapes)
         canvas.selection = false;
@@ -283,9 +538,39 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           obj.evented = false;
         });
         setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
       }
 
       canvas.renderAll();
+    }, [activeTool]);
+
+    useEffect(() => {
+      if (activeTool !== ToolType.ERASER) {
+        return;
+      }
+
+      const handleEraserSizeKeys = (event: KeyboardEvent) => {
+        const target = event.target as HTMLElement | null;
+        if (
+          target &&
+          (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+        ) {
+          return;
+        }
+
+        if (event.key === '[') {
+          const nextSize = eraserToolRef.current.decreaseSize();
+          setEraserCursor((previous) => ({ ...previous, size: nextSize }));
+          event.preventDefault();
+        } else if (event.key === ']') {
+          const nextSize = eraserToolRef.current.increaseSize();
+          setEraserCursor((previous) => ({ ...previous, size: nextSize }));
+          event.preventDefault();
+        }
+      };
+
+      window.addEventListener('keydown', handleEraserSizeKeys);
+      return () => window.removeEventListener('keydown', handleEraserSizeKeys);
     }, [activeTool]);
 
     // ========================================================================
@@ -302,7 +587,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
         // Handle hand tool panning
         if (activeTool === ToolType.HAND) {
-          state.isDrawing = true;
+          setCanvasDrawingFlag(true);
           const mouseEvent = e.e as MouseEvent;
           state.startX = mouseEvent.clientX;
           state.startY = mouseEvent.clientY;
@@ -310,20 +595,109 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           return;
         }
 
+        if (activeTool === ToolType.ERASER) {
+          eraserObjectCountAtDownRef.current = canvas.getObjects().length;
+          eraserToolRef.current.onMouseDown({
+            e: e.e as MouseEvent,
+            target: canvas.findTarget(e.e),
+            pointer,
+          });
+
+          const client = getClientCoordinates(e.e);
+          if (client) {
+            setEraserCursor({
+              visible: true,
+              x: client.x,
+              y: client.y,
+              size: eraserToolRef.current.getSize(),
+            });
+          }
+          return;
+        }
+
+        if (activeTool === ToolType.SCISSORS) {
+          const objectCountBefore = canvas.getObjects().length;
+          scissorsToolRef.current.onMouseDown({
+            e: e.e as MouseEvent,
+            target: canvas.findTarget(e.e),
+            pointer,
+          });
+
+          if (canvas.getObjects().length !== objectCountBefore) {
+            pushHistory(serializeCanvasState(canvas));
+          }
+          return;
+        }
+
+        if (activeTool === ToolType.MEASURE) {
+          if (measureDismissArmed && measurementOverlay) {
+            measureToolRef.current.clear();
+            setMeasurementOverlay(null);
+            setMeasureDismissArmed(false);
+            return;
+          }
+
+          setCanvasDrawingFlag(true);
+          measureToolRef.current.onMouseDown({
+            e: e.e as MouseEvent,
+            pointer,
+            target: canvas.findTarget(e.e),
+          });
+          setMeasurementOverlay(measureToolRef.current.getMeasurement());
+          return;
+        }
+
+        if (activeTool === ToolType.DIRECT_SELECT) {
+          const target = canvas.findTarget(e.e);
+          if (target instanceof FabricPath) {
+            setPointEditingPath(target);
+            canvas.setActiveObject(target);
+            canvas.requestRenderAll();
+          }
+          return;
+        }
+
+        if (activeTool === ToolType.EYEDROPPER) {
+          const sampledColor = sampleColorAtPointer(canvas, pointer, e.e);
+          setLastSampledColor(sampledColor);
+
+          const previousSelection = previousSelectionRef.current ?? [];
+          if (previousSelection.length > 0) {
+            const canvasObjects = new Set(canvas.getObjects());
+            previousSelection.forEach((obj) => {
+              if (canvasObjects.has(obj)) {
+                obj.set('fill', sampledColor);
+              }
+            });
+            canvas.requestRenderAll();
+            pushHistory(serializeCanvasState(canvas));
+          }
+
+          toast.info(`Color sampled: ${sampledColor.toUpperCase()}`);
+          previousSelectionRef.current = null;
+          setEyedropperPreview((prev) => ({ ...prev, visible: false, color: sampledColor }));
+          setActiveTool(ToolType.SELECT);
+          return;
+        }
+
         // Handle text tool
         if (activeTool === ToolType.TEXT) {
-          const text = new IText('Double-click to edit', {
+          const text = new Textbox('Type here', {
             left: pointer.x,
             top: pointer.y,
+            width: 200,
             fontFamily: 'Arial',
             fontSize: 16,
             fill: '#333333',
+            lineHeight: 1.16,
+            charSpacing: 0,
           });
           canvas.add(text);
           canvas.setActiveObject(text);
           text.enterEditing();
           text.selectAll();
           canvas.renderAll();
+          pushHistory(serializeCanvasState(canvas));
           return;
         }
 
@@ -334,7 +708,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           if (target && target.get('data-type') !== 'connector') {
             const sourceId = ensureObjectId(target);
             // Store source object ID in drawing state
-            state.isDrawing = true;
+            setCanvasDrawingFlag(true);
             state.connectorSource = sourceId;
 
             // Get source object center point
@@ -362,9 +736,11 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           activeTool === ToolType.RECTANGLE ||
           activeTool === ToolType.ELLIPSE ||
           activeTool === ToolType.LINE ||
-          activeTool === ToolType.ARROW
+          activeTool === ToolType.ARROW ||
+          activeTool === ToolType.POLYGON ||
+          activeTool === ToolType.STAR
         ) {
-          state.isDrawing = true;
+          setCanvasDrawingFlag(true);
           state.startX = pointer.x;
           state.startY = pointer.y;
 
@@ -395,6 +771,22 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
               ...commonOptions,
               fill: undefined,
             });
+          } else if (activeTool === ToolType.POLYGON) {
+            state.tempObject = new Polygon(generatePolygonPoints(0, 0, 0, polygonSides), {
+              ...commonOptions,
+              left: pointer.x,
+              top: pointer.y,
+              originX: 'center',
+              originY: 'center',
+            });
+          } else if (activeTool === ToolType.STAR) {
+            state.tempObject = new Polygon(generateStarPoints(0, 0, 0, 0, starPoints), {
+              ...commonOptions,
+              left: pointer.x,
+              top: pointer.y,
+              originX: 'center',
+              originY: 'center',
+            });
           }
 
           if (state.tempObject) {
@@ -403,7 +795,20 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           }
         }
       },
-      [activeTool]
+      [
+        activeTool,
+        measureDismissArmed,
+        measurementOverlay,
+        polygonSides,
+        pushHistory,
+        sampleColorAtPointer,
+        serializeCanvasState,
+        setActiveTool,
+        setCanvasDrawingFlag,
+        setLastSampledColor,
+        starPoints,
+        toast,
+      ]
     );
 
     const handleMouseMove = useCallback(
@@ -413,6 +818,49 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
         const pointer = e.pointer;
         const state = drawingStateRef.current;
+
+        if (activeTool === ToolType.EYEDROPPER) {
+          const sampledColor = sampleColorAtPointer(canvas, pointer, e.e);
+          const clientPosition = getClientCoordinates(e.e);
+
+          if (clientPosition) {
+            setEyedropperPreview({
+              visible: true,
+              x: clientPosition.x + 12,
+              y: clientPosition.y + 12,
+              color: sampledColor,
+            });
+          }
+          return;
+        }
+
+        if (activeTool === ToolType.ERASER) {
+          eraserToolRef.current.onMouseMove({
+            e: e.e as MouseEvent,
+            target: canvas.findTarget(e.e),
+            pointer,
+          });
+
+          const client = getClientCoordinates(e.e);
+          if (client) {
+            setEraserCursor({
+              visible: true,
+              x: client.x,
+              y: client.y,
+              size: eraserToolRef.current.getSize(),
+            });
+          }
+          return;
+        }
+
+        if (activeTool === ToolType.MEASURE && measureToolRef.current.isMeasuring()) {
+          measureToolRef.current.onMouseMove({
+            e: e.e as MouseEvent,
+            pointer,
+          });
+          setMeasurementOverlay(measureToolRef.current.getMeasurement());
+          return;
+        }
 
         if (!state.isDrawing) return;
 
@@ -431,12 +879,15 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           const vpt = canvas.viewportTransform;
           if (vpt) {
             const mouseEvent = e.e as MouseEvent;
-            vpt[4] += mouseEvent.clientX - state.startX;
-            vpt[5] += mouseEvent.clientY - state.startY;
+            const deltaX = mouseEvent.clientX - state.startX;
+            const deltaY = mouseEvent.clientY - state.startY;
+            const nextPan = {
+              x: vpt[4] + deltaX,
+              y: vpt[5] + deltaY,
+            };
             state.startX = mouseEvent.clientX;
             state.startY = mouseEvent.clientY;
-            canvas.setViewportTransform(vpt);
-            canvas.requestRenderAll();
+            setPan(nextPan);
           }
           return;
         }
@@ -465,13 +916,40 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
               x2: pointer.x,
               y2: pointer.y,
             });
+          } else if (
+            (activeTool === ToolType.POLYGON || activeTool === ToolType.STAR) &&
+            state.tempObject instanceof Polygon
+          ) {
+            const deltaX = pointer.x - state.startX;
+            const deltaY = pointer.y - state.startY;
+            const isShiftConstrained = 'shiftKey' in e.e && Boolean((e.e as MouseEvent).shiftKey);
+            const radius = isShiftConstrained
+              ? Math.max(Math.abs(deltaX), Math.abs(deltaY))
+              : Math.hypot(deltaX, deltaY);
+
+            const points = activeTool === ToolType.POLYGON
+              ? generatePolygonPoints(0, 0, radius, polygonSides)
+              : generateStarPoints(0, 0, radius, radius * 0.5, starPoints);
+
+            state.tempObject.set({
+              points,
+              left: state.startX,
+              top: state.startY,
+            });
           }
 
           canvas.renderAll();
         }
       },
-      [activeTool]
+      [activeTool, polygonSides, sampleColorAtPointer, setPan, starPoints]
     );
+
+    const handleMouseOut = useCallback(() => {
+      setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      if (activeTool === ToolType.ERASER) {
+        setEraserCursor((previous) => ({ ...previous, visible: false }));
+      }
+    }, [activeTool]);
 
     const handleMouseUp = useCallback((e?: { e: MouseEvent | TouchEvent }) => {
       const canvas = fabricRef.current;
@@ -481,8 +959,34 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       // Reset hand tool
       if (activeTool === ToolType.HAND) {
-        state.isDrawing = false;
+        setCanvasDrawingFlag(false);
         canvas.defaultCursor = 'grab';
+        return;
+      }
+
+      if (activeTool === ToolType.ERASER) {
+        eraserToolRef.current.onMouseUp({
+          e: (e?.e ?? ({ clientX: 0, clientY: 0 } as unknown as MouseEvent)) as MouseEvent,
+        });
+        setCanvasDrawingFlag(false);
+
+        const countAtDown = eraserObjectCountAtDownRef.current;
+        const countNow = canvas.getObjects().length;
+        if (countAtDown !== null && countNow < countAtDown) {
+          pushHistory(serializeCanvasState(canvas));
+        }
+        eraserObjectCountAtDownRef.current = null;
+        return;
+      }
+
+      if (activeTool === ToolType.MEASURE) {
+        measureToolRef.current.onMouseUp({
+          e: (e?.e ?? ({ clientX: 0, clientY: 0 } as unknown as MouseEvent)) as MouseEvent,
+          pointer: e?.e ? canvas.getPointer(e.e as MouseEvent) : undefined,
+        });
+        setMeasurementOverlay(measureToolRef.current.getMeasurement());
+        setMeasureDismissArmed(true);
+        setCanvasDrawingFlag(false);
         return;
       }
 
@@ -493,31 +997,26 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           canvas.remove(state.tempObject);
         }
 
-        // Find target objects under cursor (excluding connectors and temp objects)
-        // Calculate pointer position from viewport transform
-        const vpt = canvas.viewportTransform;
-        const mouseEvent = e?.e as MouseEvent | undefined;
-        const pointer = {
-          x: (vpt?.[4] || 0) + (mouseEvent?.clientX ?? 0),
-          y: (vpt?.[5] || 0) + (mouseEvent?.clientY ?? 0),
-        };
-        const targets = canvas.getObjects().filter((obj: FabricObject) => {
-          if (obj.get('data-type') === 'connector' || obj === state.tempObject) {
-            return false;
-          }
-          // Check if pointer is within object bounds
-          const bound = obj.getBoundingRect();
-          return (
-            pointer.x >= bound.left &&
-            pointer.x <= bound.left + bound.width &&
-            pointer.y >= bound.top &&
-            pointer.y <= bound.top + bound.height
-          );
-        });
+        const pointer = e?.e ? getConnectorPointer(canvas, e.e) : null;
+        const targets = pointer
+          ? canvas.getObjects().filter((obj: FabricObject) => {
+              if (obj.get('data-type') === 'connector' || obj === state.tempObject) {
+                return false;
+              }
+              const bound = obj.getBoundingRect();
+              return (
+                pointer.x >= bound.left &&
+                pointer.x <= bound.left + bound.width &&
+                pointer.y >= bound.top &&
+                pointer.y <= bound.top + bound.height
+              );
+            })
+          : [];
 
         // Use the topmost target
         const target = targets[targets.length - 1];
 
+        let connectorCreated = false;
         if (target) {
           const targetId = ensureObjectId(target);
 
@@ -528,13 +1027,17 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
               targetId,
               DEFAULT_CONNECTOR_STYLE
             );
+            connectorCreated = true;
           }
         }
 
-        state.isDrawing = false;
+        setCanvasDrawingFlag(false);
         state.connectorSource = null;
         state.tempObject = null;
         canvas.renderAll();
+        if (connectorCreated) {
+          pushHistory(serializeCanvasState(canvas));
+        }
         return;
       }
 
@@ -579,12 +1082,12 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         }
 
         canvas.renderAll();
-        pushHistory(JSON.stringify(canvas.toJSON()));
+        pushHistory(serializeCanvasState(canvas));
       }
 
-      state.isDrawing = false;
+      setCanvasDrawingFlag(false);
       state.tempObject = null;
-    }, [activeTool, pushHistory]);
+    }, [activeTool, pushHistory, serializeCanvasState, setCanvasDrawingFlag]);
 
     // Register drawing event handlers
     useEffect(() => {
@@ -594,13 +1097,46 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       canvas.on('mouse:down', handleMouseDown);
       canvas.on('mouse:move', handleMouseMove);
       canvas.on('mouse:up', handleMouseUp);
+      canvas.on('mouse:out', handleMouseOut);
 
       return () => {
         canvas.off('mouse:down', handleMouseDown);
         canvas.off('mouse:move', handleMouseMove);
         canvas.off('mouse:up', handleMouseUp);
+        canvas.off('mouse:out', handleMouseOut);
       };
-    }, [handleMouseDown, handleMouseMove, handleMouseUp]);
+    }, [handleMouseDown, handleMouseMove, handleMouseOut, handleMouseUp]);
+
+    useEffect(() => {
+      const canvas = fabricRef.current;
+      if (!canvas) return;
+
+      const handleDoubleClick = (event: { target?: FabricObject }) => {
+        if (activeTool !== ToolType.DIRECT_SELECT) {
+          return;
+        }
+
+        if (!event.target) {
+          exitPointEditingMode();
+        }
+      };
+
+      canvas.on('mouse:dblclick', handleDoubleClick);
+
+      return () => {
+        canvas.off('mouse:dblclick', handleDoubleClick);
+      };
+    }, [activeTool, exitPointEditingMode]);
+
+    useEffect(() => {
+      const canvas = fabricRef.current;
+      if (!canvas || !pointEditingPath) return;
+
+      const objects = canvas.getObjects();
+      if (!objects.includes(pointEditingPath)) {
+        setPointEditingPath(null);
+      }
+    }, [pointEditingPath]);
 
     // ========================================================================
     // Zoom Effect
@@ -611,8 +1147,12 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       if (!canvas) return;
 
       canvas.setZoom(zoom);
+      const vpt = canvas.viewportTransform;
+      if (vpt) {
+        setPan({ x: vpt[4], y: vpt[5] });
+      }
       canvas.renderAll();
-    }, [zoom]);
+    }, [setPan, zoom]);
 
     // ========================================================================
     // Grid Drawing
@@ -622,40 +1162,39 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       const canvas = fabricRef.current;
       if (!canvas) return;
 
-      // Remove existing grid
-      const existingGrid = canvas.getObjects().filter((obj) => (obj as FabricObject & { isGrid?: boolean }).isGrid);
-      existingGrid.forEach((obj) => canvas.remove(obj));
+      // Remove stale grid objects from older sessions as a one-time safety cleanup.
+      const staleGridObjects = canvas.getObjects().filter((obj) => isGridObject(obj as FabricObject));
+      staleGridObjects.forEach((obj) => canvas.remove(obj));
 
-      if (gridVisible) {
-        // Draw grid lines
-        const gridColor = 'rgba(200, 200, 200, 0.3)';
-
-        for (let i = 0; i <= width / gridSize; i++) {
-          const line = new Line([i * gridSize, 0, i * gridSize, height], {
-            stroke: gridColor,
-            strokeWidth: 1,
-            selectable: false,
-            evented: false,
-          });
-          (line as unknown as FabricObject & { isGrid: boolean }).isGrid = true;
-          canvas.add(line);
-          canvas.sendObjectToBack(line);
+      const drawGrid = () => {
+        if (!gridVisible) {
+          return;
         }
 
-        for (let i = 0; i <= height / gridSize; i++) {
-          const line = new Line([0, i * gridSize, width, i * gridSize], {
-            stroke: gridColor,
-            strokeWidth: 1,
-            selectable: false,
-            evented: false,
-          });
-          (line as unknown as FabricObject & { isGrid: boolean }).isGrid = true;
-          canvas.add(line);
-          canvas.sendObjectToBack(line);
+        const context = canvas.getContext();
+        if (!context) {
+          return;
         }
-      }
 
-      canvas.renderAll();
+        const vpt = canvas.viewportTransform ?? [1, 0, 0, 1, 0, 0];
+        const zoomLevel = canvas.getZoom() || 1;
+
+        drawGridOverlay(context, {
+          width: canvas.getWidth(),
+          height: canvas.getHeight(),
+          gridSize,
+          zoom: zoomLevel,
+          translateX: vpt[4],
+          translateY: vpt[5],
+        });
+      };
+
+      canvas.on('after:render', drawGrid);
+      canvas.requestRenderAll();
+
+      return () => {
+        canvas.off('after:render', drawGrid);
+      };
     }, [gridVisible, gridSize, width, height]);
 
     // ========================================================================
@@ -666,21 +1205,96 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       const canvas = fabricRef.current;
       if (!canvas) return;
 
+      const clearIndicator = () => {
+        setGuideSnapIndicator({ horizontal: null, vertical: null });
+      };
+
       const handleObjectMoving = (e: { target?: FabricObject }) => {
-        if (!snapToGrid || !e.target) return;
+        if (!e.target) return;
 
         const obj = e.target;
-        const left = Math.round((obj.left || 0) / gridSize) * gridSize;
-        const top = Math.round((obj.top || 0) / gridSize) * gridSize;
-        obj.set({ left, top });
+        let left = obj.left || 0;
+        let top = obj.top || 0;
+        let snappedHorizontal: number | null = null;
+        let snappedVertical: number | null = null;
+
+        if (snapToGrid) {
+          left = Math.round(left / gridSize) * gridSize;
+          top = Math.round(top / gridSize) * gridSize;
+          obj.set({ left, top });
+          obj.setCoords();
+        }
+
+        if (showGuides) {
+          const bounds = obj.getBoundingRect();
+
+          const verticalSnap = snapAxisToGuides({
+            position: bounds.left,
+            size: bounds.width,
+            guides: guides.vertical,
+            threshold: 5,
+          });
+
+          if (verticalSnap.snappedGuide !== null) {
+            left += verticalSnap.snappedPosition - bounds.left;
+            obj.set({ left });
+            obj.setCoords();
+            snappedVertical = verticalSnap.snappedGuide;
+          }
+
+          const updatedBounds = obj.getBoundingRect();
+          const horizontalSnap = snapAxisToGuides({
+            position: updatedBounds.top,
+            size: updatedBounds.height,
+            guides: guides.horizontal,
+            threshold: 5,
+          });
+
+          if (horizontalSnap.snappedGuide !== null) {
+            top += horizontalSnap.snappedPosition - updatedBounds.top;
+            obj.set({ top });
+            obj.setCoords();
+            snappedHorizontal = horizontalSnap.snappedGuide;
+          }
+        }
+
+        if (snappedHorizontal !== null || snappedVertical !== null) {
+          setGuideSnapIndicator({
+            horizontal: snappedHorizontal,
+            vertical: snappedVertical,
+          });
+          return;
+        }
+
+        clearIndicator();
+      };
+
+      const handleObjectModified = () => {
+        clearIndicator();
+      };
+
+      const handleMouseUp = () => {
+        clearIndicator();
       };
 
       canvas.on('object:moving', handleObjectMoving);
+      canvas.on('object:modified', handleObjectModified);
+      canvas.on('mouse:up', handleMouseUp);
 
       return () => {
         canvas.off('object:moving', handleObjectMoving);
+        canvas.off('object:modified', handleObjectModified);
+        canvas.off('mouse:up', handleMouseUp);
+        clearIndicator();
       };
-    }, [snapToGrid, gridSize]);
+    }, [
+      gridSize,
+      guides.horizontal,
+      guides.vertical,
+      setGuideSnapIndicator,
+      showGuides,
+      snapToGrid,
+    ]);
 
     // ========================================================================
     // Resize Handler
@@ -694,6 +1308,14 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       canvas.renderAll();
     }, [width, height]);
 
+    useEffect(() => {
+      const canvas = fabricRef.current;
+      if (!canvas) return;
+
+      canvas.backgroundColor = backgroundColor;
+      canvas.renderAll();
+    }, [backgroundColor]);
+
     // ========================================================================
     // Imperative Handle
     // ========================================================================
@@ -704,20 +1326,23 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         getCanvas: () => fabricRef.current,
         toSVG: () => {
           const canvas = fabricRef.current;
-          return canvas ? canvas.toSVG() : '';
+          return canvas ? withGridExcludedFromExport(canvas, () => canvas.toSVG()) : '';
         },
         toPNG: (multiplier = 2) => {
           const canvas = fabricRef.current;
           return canvas
-            ? canvas.toDataURL({
-                format: 'png',
-                multiplier,
-              })
+            ? withGridExcludedFromExport(canvas, () =>
+                canvas.toDataURL({
+                  format: 'png',
+                  multiplier,
+                  filter: (obj) => !isGridObject(obj as FabricObject),
+                })
+              )
             : '';
         },
         toJSON: () => {
           const canvas = fabricRef.current;
-          return canvas ? canvas.toJSON() : {};
+          return canvas ? filterGridFromSerializedState(canvas.toJSON() as SerializedCanvasState) : {};
         },
         loadFromJSON: async (json: object | string) => {
           const canvas = fabricRef.current;
@@ -764,28 +1389,120 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         // Path has been added to canvas, save history
         const canvas = fabricRef.current;
         if (canvas) {
-          pushHistory(JSON.stringify(canvas.toJSON()));
+          pushHistory(serializeCanvasState(canvas));
         }
         if (onObjectModified) {
           onObjectModified(fabricPath);
         }
       },
-      [pushHistory, onObjectModified]
+      [onObjectModified, pushHistory, serializeCanvasState]
     );
 
     return (
       <div ref={containerRef} className={`canvas-container ${className}`}>
         <div
           className="canvas-wrapper"
-          style={{
-            width,
-            height,
-            transform: `scale(${zoom})`,
-            transformOrigin: 'center center',
-            position: 'relative',
-          }}
+          style={getCanvasWrapperStyle(width, height)}
         >
           <canvas ref={canvasRef} id="finnish-canvas" />
+          {activeTool === ToolType.MEASURE && measurementOverlay && (() => {
+            const canvas = fabricRef.current;
+            if (!canvas) return null;
+
+            const start = mapScenePointToScreen(canvas, measurementOverlay.start);
+            const end = mapScenePointToScreen(canvas, measurementOverlay.end);
+            const midpoint = {
+              x: (start.x + end.x) / 2,
+              y: (start.y + end.y) / 2,
+            };
+
+            return (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: 'none',
+                  zIndex: 1100,
+                }}
+              >
+                <svg width={width} height={height} style={{ position: 'absolute', inset: 0 }}>
+                  <line
+                    x1={start.x}
+                    y1={start.y}
+                    x2={end.x}
+                    y2={end.y}
+                    stroke="#0ea5e9"
+                    strokeWidth={1.5}
+                    strokeDasharray="4 3"
+                  />
+                  <circle cx={start.x} cy={start.y} r={3} fill="#0ea5e9" />
+                  <circle cx={end.x} cy={end.y} r={3} fill="#0ea5e9" />
+                </svg>
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: `${midpoint.x + 10}px`,
+                    top: `${midpoint.y + 10}px`,
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    color: '#f8fafc',
+                    fontSize: '11px',
+                    fontFamily: 'var(--font-mono, monospace)',
+                    borderRadius: '4px',
+                    padding: '6px 8px',
+                    whiteSpace: 'nowrap',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.35)',
+                  }}
+                >
+                  <div>{measurementOverlay.displayLabel}</div>
+                  <div>
+                    ΔX: {measurementOverlay.deltaX.toFixed(1)} px | ΔY: {measurementOverlay.deltaY.toFixed(1)} px
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+          {activeTool === ToolType.EYEDROPPER && eyedropperPreview.visible && (
+            <div
+              style={{
+                position: 'fixed',
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                border: '1px solid rgba(0, 0, 0, 0.45)',
+                boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.85)',
+                pointerEvents: 'none',
+                zIndex: 1200,
+                left: `${eyedropperPreview.x}px`,
+                top: `${eyedropperPreview.y}px`,
+                backgroundColor: eyedropperPreview.color,
+              }}
+            />
+          )}
+          {activeTool === ToolType.ERASER && eraserCursor.visible && (
+            <div
+              style={{
+                position: 'fixed',
+                width: `${eraserCursor.size}px`,
+                height: `${eraserCursor.size}px`,
+                borderRadius: '50%',
+                border: '1px solid rgba(15, 23, 42, 0.75)',
+                backgroundColor: 'rgba(148, 163, 184, 0.18)',
+                boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.65)',
+                pointerEvents: 'none',
+                zIndex: 1200,
+                left: `${eraserCursor.x - eraserCursor.size / 2}px`,
+                top: `${eraserCursor.y - eraserCursor.size / 2}px`,
+              }}
+            />
+          )}
+          <PointEditingOverlay
+            fabricCanvas={fabricRef.current}
+            pathObject={pointEditingPath}
+            isActive={activeTool === ToolType.DIRECT_SELECT && pointEditingPath !== null}
+            width={width}
+            height={height}
+            onExit={exitPointEditingMode}
+          />
           {/* Paper.js Pen Tool Overlay */}
           <PenToolOverlay
             fabricCanvas={fabricRef.current}
