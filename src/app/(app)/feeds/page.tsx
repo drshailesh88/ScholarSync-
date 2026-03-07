@@ -1,7 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Checks, Export, Upload } from "@phosphor-icons/react";
+import {
+  Plus,
+  Checks,
+  Export,
+  Upload,
+  List,
+  SquaresFour,
+  Rows,
+  SortAscending,
+  SortDescending,
+  MagnifyingGlass,
+} from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 import { useFeedStore } from "@/stores/feed-store";
 import { FeedSidebar } from "@/components/feeds/feed-sidebar";
 import { ArticleList } from "@/components/feeds/article-list";
@@ -21,10 +33,14 @@ export default function FeedsPage() {
     totalUnread,
     error,
     copilotOpen,
+    sortBy,
+    layout,
     loadSubscriptions,
     loadArticles,
     markAllRead,
     setSelectedArticle,
+    setSortBy,
+    setLayout,
     openCopilot,
     clearError,
   } = useFeedStore();
@@ -158,6 +174,47 @@ export default function FeedsPage() {
             <Checks size={16} />
             Mark all read
           </button>
+          <div className="flex items-center bg-surface-raised rounded-xl p-0.5">
+            {([
+              { key: "newest", icon: SortDescending, label: "Newest" },
+              { key: "oldest", icon: SortAscending, label: "Oldest" },
+              { key: "relevance", icon: MagnifyingGlass, label: "Relevance" },
+            ] as const).map(({ key, icon: Icon, label }) => (
+              <button
+                key={key}
+                onClick={() => setSortBy(key)}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors",
+                  sortBy === key
+                    ? "bg-surface text-ink shadow-sm"
+                    : "text-ink-muted hover:text-ink"
+                )}
+              >
+                <Icon size={16} />
+                {label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center bg-surface-raised rounded-lg p-0.5">
+            {([
+              { key: "list", icon: Rows, label: "List" },
+              { key: "card", icon: SquaresFour, label: "Card" },
+              { key: "magazine", icon: List, label: "Magazine" },
+            ] as const).map(({ key, icon: Icon, label }) => (
+              <button
+                key={key}
+                onClick={() => setLayout(key)}
+                className={cn(
+                  "p-1.5 rounded-md transition-colors",
+                  layout === key ? "bg-surface text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+                )}
+                title={label}
+                aria-label={label}
+              >
+                <Icon size={16} />
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => setShowAddModal(true)}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors"

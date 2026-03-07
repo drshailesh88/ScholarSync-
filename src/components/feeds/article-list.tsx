@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
 import { useFeedStore } from "@/stores/feed-store";
 import { ArticleCard } from "@/components/feeds/article-card";
+import { ArticleCardList } from "@/components/feeds/article-card-list";
+import { ArticleCardMagazine } from "@/components/feeds/article-card-magazine";
 import { ArticleSearchBar } from "@/components/feeds/article-search-bar";
 import { SkeletonCard } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -17,6 +20,7 @@ export function ArticleList({ onCite, onAI }: ArticleListProps) {
   const articles = useFeedStore((s) => s.articles);
   const isLoading = useFeedStore((s) => s.isLoadingArticles);
   const hasMore = useFeedStore((s) => s.hasMore);
+  const layout = useFeedStore((s) => s.layout);
   const selectedArticleId = useFeedStore((s) => s.selectedArticleId);
   const setSelectedArticle = useFeedStore((s) => s.setSelectedArticle);
   const loadMore = useFeedStore((s) => s.loadMore);
@@ -48,17 +52,31 @@ export function ArticleList({ onCite, onAI }: ArticleListProps) {
   return (
     <div className="flex flex-col h-full">
       <ArticleSearchBar />
-      <div className="flex-1 overflow-y-auto space-y-1">
-        {articles.map((article) => (
-          <ArticleCard
-            key={article.id}
-            article={article}
-            isSelected={article.id === selectedArticleId}
-            onClick={() => setSelectedArticle(article.id)}
-            onCite={onCite ? () => onCite(article.id) : undefined}
-            onAI={onAI ? () => onAI(article.id) : undefined}
-          />
-        ))}
+      <div
+        className={cn(
+          "flex-1 overflow-y-auto",
+          layout === "magazine" ? "space-y-4" : "space-y-1"
+        )}
+      >
+        {articles.map((article) => {
+          const Card =
+            layout === "list"
+              ? ArticleCardList
+              : layout === "magazine"
+                ? ArticleCardMagazine
+                : ArticleCard;
+
+          return (
+            <Card
+              key={article.id}
+              article={article}
+              isSelected={article.id === selectedArticleId}
+              onClick={() => setSelectedArticle(article.id)}
+              onCite={onCite ? () => onCite(article.id) : undefined}
+              onAI={onAI ? () => onAI(article.id) : undefined}
+            />
+          );
+        })}
       </div>
 
       {hasMore && (

@@ -62,6 +62,7 @@ export interface FeedArticleWithStatus extends FeedArticle {
   savedPaperId: number | null;
   feedSourceTitle: string;
   feedSourceFaviconUrl: string | null;
+  feedSourceSiteUrl?: string | null;
 }
 
 export interface JournalDirectoryEntry {

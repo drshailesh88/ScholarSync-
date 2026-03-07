@@ -42,7 +42,14 @@ export async function GET(req: NextRequest) {
     const journal = searchParams.get("journal");
     if (journal) filters.journal = journal;
 
-    const sortBy = searchParams.get("sortBy") as "published" | "added" | "title" | null;
+    const sortBy = (searchParams.get("sortBy") || undefined) as
+      | "newest"
+      | "oldest"
+      | "relevance"
+      | "published"
+      | "added"
+      | "title"
+      | undefined;
     if (sortBy) filters.sortBy = sortBy;
 
     const sortDir = searchParams.get("sortDir") as "asc" | "desc" | null;

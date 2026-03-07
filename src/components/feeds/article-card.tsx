@@ -1,7 +1,10 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { Star, BookmarkSimple, ArrowSquareOut, Quotes, Sparkle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { getFaviconUrl } from "@/lib/feeds/favicon";
+import { estimateReadingTime } from "@/lib/feeds/reading-time";
 import { useFeedStore } from "@/stores/feed-store";
 import type { FeedArticleWithStatus } from "@/types/feed";
 
@@ -31,6 +34,9 @@ interface ArticleCardProps {
 export function ArticleCard({ article, isSelected, onClick, onCite, onAI }: ArticleCardProps) {
   const toggleStar = useFeedStore((s) => s.toggleStar);
   const saveToLibrary = useFeedStore((s) => s.saveToLibrary);
+  const faviconSrc =
+    article.feedSourceFaviconUrl ||
+    getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? "");
 
   const snippet = article.abstractSnippet
     ? article.abstractSnippet.length > 120
@@ -53,12 +59,27 @@ export function ArticleCard({ article, isSelected, onClick, onCite, onAI }: Arti
         {!article.isRead && (
           <span className="w-2 h-2 rounded-full bg-brand shrink-0" />
         )}
+        {faviconSrc && (
+          <img
+            src={faviconSrc}
+            alt=""
+            className="w-4 h-4 rounded shrink-0"
+            loading="lazy"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+        )}
         <span className="text-xs text-ink-muted truncate">
           {article.feedSourceTitle}
         </span>
         <span className="text-xs text-ink-muted/50">·</span>
         <span className="text-xs text-ink-muted whitespace-nowrap">
           {formatRelativeTime(article.publishedAt)}
+        </span>
+        <span className="text-xs text-ink-muted/50">·</span>
+        <span className="text-xs text-ink-muted whitespace-nowrap">
+          {estimateReadingTime(article.abstractSnippet)}
         </span>
       </div>
 

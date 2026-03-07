@@ -1,8 +1,12 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
-import { Rss, Star, Circle, FunnelSimple } from "@phosphor-icons/react";
+import { useState } from "react";
+import { Rss, Star, Circle, FunnelSimple, Bell, BellSlash } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { getFaviconUrl } from "@/lib/feeds/favicon";
 import { useFeedStore, type ViewFilter } from "@/stores/feed-store";
+import type { FeedSubscription } from "@/types/feed";
 
 const viewFilters: { key: ViewFilter; label: string }[] = [
   { key: "all", label: "All Articles" },
@@ -11,6 +15,7 @@ const viewFilters: { key: ViewFilter; label: string }[] = [
 ];
 
 export function FeedSidebar() {
+  const [pendingMuteId, setPendingMuteId] = useState<number | null>(null);
   const subscriptions = useFeedStore((s) => s.subscriptions);
   const viewFilter = useFeedStore((s) => s.viewFilter);
   const selectedFeedId = useFeedStore((s) => s.selectedFeedId);
@@ -91,10 +96,23 @@ export function FeedSidebar() {
             {subs.map((sub) => (
               <FeedItem
                 key={sub.id}
-                name={sub.displayName || sub.feedSource.title}
-                unreadCount={sub.unreadCount}
+                sub={sub}
                 isSelected={selectedFeedId === sub.feedSourceId}
                 onClick={() => setSelectedFeed(sub.feedSourceId)}
+                onToggleMute={async () => {
+                  try {
+                    setPendingMuteId(sub.id);
+                    await fetch(`/api/feeds/${sub.id}`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ isMuted: !sub.isMuted }),
+                    });
+                    await useFeedStore.getState().loadSubscriptions();
+                  } finally {
+                    setPendingMuteId(null);
+                  }
+                }}
+                isPending={pendingMuteId === sub.id}
               />
             ))}
           </div>
@@ -110,10 +128,23 @@ export function FeedSidebar() {
           {ungrouped.map((sub) => (
             <FeedItem
               key={sub.id}
-              name={sub.displayName || sub.feedSource.title}
-              unreadCount={sub.unreadCount}
+              sub={sub}
               isSelected={selectedFeedId === sub.feedSourceId}
               onClick={() => setSelectedFeed(sub.feedSourceId)}
+              onToggleMute={async () => {
+                try {
+                  setPendingMuteId(sub.id);
+                  await fetch(`/api/feeds/${sub.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ isMuted: !sub.isMuted }),
+                  });
+                  await useFeedStore.getState().loadSubscriptions();
+                } finally {
+                  setPendingMuteId(null);
+                }
+              }}
+              isPending={pendingMuteId === sub.id}
             />
           ))}
         </div>
@@ -123,32 +154,65 @@ export function FeedSidebar() {
 }
 
 function FeedItem({
-  name,
-  unreadCount,
+  sub,
   isSelected,
   onClick,
+  onToggleMute,
+  isPending,
 }: {
-  name: string;
-  unreadCount: number;
+  sub: FeedSubscription;
   isSelected: boolean;
   onClick: () => void;
+  onToggleMute: () => void | Promise<void>;
+  isPending: boolean;
 }) {
+  const name = sub.displayName || sub.feedSource.title;
+  const faviconSrc =
+    sub.feedSource.faviconUrl ||
+    getFaviconUrl(sub.feedSource.siteUrl ?? sub.feedSource.feedUrl);
+
   return (
-    <button
-      onClick={onClick}
+    <div
       className={cn(
-        "flex items-center justify-between w-full px-3 py-1.5 rounded-lg text-sm transition-colors",
+        "flex items-center justify-between w-full px-3 py-1.5 rounded-lg text-sm transition-colors group",
+        sub.isMuted && "opacity-50",
         isSelected
           ? "bg-surface-raised text-ink font-medium"
           : "text-ink-muted hover:text-ink hover:bg-surface-raised/50"
       )}
     >
-      <span className="truncate">{name}</span>
-      {unreadCount > 0 && (
-        <span className="ml-2 text-[10px] font-medium tabular-nums px-1.5 py-0.5 rounded-full bg-brand/10 text-brand shrink-0">
-          {unreadCount}
-        </span>
-      )}
-    </button>
+      <button onClick={onClick} className="flex items-center gap-2 min-w-0 flex-1 text-left">
+        {faviconSrc && (
+          <img
+            src={faviconSrc}
+            alt=""
+            className="w-4 h-4 rounded shrink-0"
+            loading="lazy"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+        )}
+        <span className="truncate">{name}</span>
+      </button>
+      <span className="flex items-center gap-1.5 ml-2 shrink-0">
+        {sub.unreadCount > 0 && (
+          <span className="text-[10px] font-medium tabular-nums px-1.5 py-0.5 rounded-full bg-brand/10 text-brand shrink-0">
+            {sub.unreadCount}
+          </span>
+        )}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            void onToggleMute();
+          }}
+          disabled={isPending}
+          className="opacity-0 group-hover:opacity-100 p-1 rounded text-ink-muted hover:text-ink transition-all disabled:opacity-40"
+          title={sub.isMuted ? "Unmute" : "Mute"}
+        >
+          {sub.isMuted ? <BellSlash size={14} /> : <Bell size={14} />}
+        </button>
+      </span>
+    </div>
   );
 }

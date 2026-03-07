@@ -2,6 +2,7 @@
 
 import { Star, BookmarkSimple, ArrowSquareOut, Quotes, Sparkle } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
+import { estimateReadingTime } from "@/lib/feeds/reading-time";
 import { useFeedStore } from "@/stores/feed-store";
 
 interface ArticleReaderProps {
@@ -47,11 +48,13 @@ export function ArticleReader({ onCite, onOpenCopilot }: ArticleReaderProps) {
       )}
 
       {/* Published date */}
-      {article.publishedAt && (
-        <p className="text-xs text-ink-muted/70 mb-4">
-          Published {new Date(article.publishedAt).toLocaleDateString()}
-        </p>
-      )}
+      <p className="text-xs text-ink-muted/70 mb-4">
+        {article.publishedAt
+          ? `Published ${new Date(article.publishedAt).toLocaleDateString()}`
+          : "Publication date unavailable"}
+        {" · "}
+        {estimateReadingTime(article.abstractSnippet)}
+      </p>
 
       {/* Actions */}
       <div className="flex items-center gap-2 mb-5 pb-4 border-b border-border-subtle">

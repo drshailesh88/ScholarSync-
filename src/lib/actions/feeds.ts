@@ -334,7 +334,7 @@ export async function getArticles(filters: {
   dateFrom?: string;
   dateTo?: string;
   journal?: string;
-  sortBy?: "published" | "added" | "title";
+  sortBy?: "newest" | "oldest" | "relevance" | "published" | "added" | "title";
   sortDir?: "asc" | "desc";
   doi?: string;
   pmid?: string;
@@ -396,6 +396,37 @@ export async function getArticles(filters: {
     starredCondition = sql`uas.is_starred = true`;
   }
 
+  const normalizedSortBy =
+    filters.sortBy === "oldest"
+      ? "oldest"
+      : filters.sortBy === "relevance" || filters.sortBy === "title"
+        ? "relevance"
+        : filters.sortBy === "added"
+          ? "added"
+          : filters.sortDir === "asc"
+            ? "oldest"
+            : "newest";
+
+  const orderClause =
+    normalizedSortBy === "relevance" && filters.search
+      ? sql`
+          CASE
+            WHEN LOWER(fa.title) = LOWER(${filters.search}) THEN 0
+            WHEN LOWER(fa.title) LIKE LOWER(${`${filters.search}%`}) THEN 1
+            WHEN LOWER(fa.title) LIKE LOWER(${`%${filters.search}%`}) THEN 2
+            ELSE 3
+          END ASC,
+          fa.published_at DESC NULLS LAST,
+          fa.created_at DESC
+        `
+      : normalizedSortBy === "added"
+        ? filters.sortDir === "asc"
+          ? sql`fa.created_at ASC`
+          : sql`fa.created_at DESC`
+        : normalizedSortBy === "oldest"
+          ? sql`fa.published_at ASC NULLS LAST, fa.created_at ASC`
+          : sql`fa.published_at DESC NULLS LAST, fa.created_at DESC`;
+
   // Use raw SQL for the complex query with filters
   const articlesResult = await db.execute(sql`
     SELECT
@@ -408,7 +439,8 @@ export async function getArticles(filters: {
       COALESCE(uas.is_saved_to_library, false) as is_saved_to_library,
       uas.saved_paper_id,
       fs.title as feed_source_title,
-      fs.favicon_url as feed_source_favicon_url
+      fs.favicon_url as feed_source_favicon_url,
+      fs.site_url as feed_source_site_url
     FROM feed_articles fa
     INNER JOIN feed_sources fs ON fs.id = fa.feed_source_id
     LEFT JOIN user_article_status uas
@@ -423,13 +455,7 @@ export async function getArticles(filters: {
       ${filters.pmid ? sql`AND fa.pubmed_id = ${filters.pmid}` : sql``}
       AND ${readCondition}
       AND ${starredCondition}
-    ORDER BY ${
-      filters.sortBy === "title"
-        ? (filters.sortDir === "asc" ? sql`fa.title ASC` : sql`fa.title DESC`)
-        : filters.sortBy === "added"
-        ? (filters.sortDir === "asc" ? sql`fa.created_at ASC` : sql`fa.created_at DESC`)
-        : (filters.sortDir === "asc" ? sql`fa.published_at ASC NULLS LAST` : sql`fa.published_at DESC NULLS LAST`)
-    }, fa.created_at DESC
+    ORDER BY ${orderClause}
     LIMIT ${perPage}
     OFFSET ${page * perPage}
   `);
@@ -477,6 +503,7 @@ export async function getArticles(filters: {
     savedPaperId: (row.saved_paper_id as number) ?? null,
     feedSourceTitle: row.feed_source_title as string,
     feedSourceFaviconUrl: (row.feed_source_favicon_url as string) ?? null,
+    feedSourceSiteUrl: (row.feed_source_site_url as string) ?? null,
   }));
 
   return {

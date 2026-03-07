@@ -63,11 +63,14 @@ interface FeedStore {
   /** Advanced filter: specific journal */
   filterJournal: string | null;
 
-  /** Sort field */
-  sortBy: "published" | "added" | "title";
+  /** Article sort order */
+  sortBy: "newest" | "oldest" | "relevance";
 
-  /** Sort direction */
+  /** Compatibility sort direction for advanced search controls */
   sortDir: "asc" | "desc";
+
+  /** Article list layout */
+  layout: "list" | "card" | "magazine";
 
   /** Whether the advanced filter panel is expanded */
   showAdvancedFilters: boolean;
@@ -181,8 +184,17 @@ interface FeedStore {
   /** Set journal filter */
   setFilterJournal: (journal: string | null) => void;
 
+  /** Set article sort order */
+  setSortBy: (sortBy: "newest" | "oldest" | "relevance") => void;
+
   /** Set sort options */
-  setSort: (sortBy: "published" | "added" | "title", sortDir: "asc" | "desc") => void;
+  setSort: (
+    sortBy: "published" | "added" | "title" | "newest" | "oldest" | "relevance",
+    sortDir: "asc" | "desc"
+  ) => void;
+
+  /** Set article list layout */
+  setLayout: (layout: "list" | "card" | "magazine") => void;
 
   /** Toggle advanced filters panel visibility */
   toggleAdvancedFilters: () => void;
@@ -240,8 +252,9 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
   filterDateFrom: null,
   filterDateTo: null,
   filterJournal: null,
-  sortBy: "published",
+  sortBy: "newest",
   sortDir: "desc",
+  layout: "card",
   showAdvancedFilters: false,
   availableJournals: [],
   error: null,
@@ -307,7 +320,7 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
       if (filterDateFrom) params.set("dateFrom", filterDateFrom);
       if (filterDateTo) params.set("dateTo", filterDateTo);
       if (filterJournal) params.set("journal", filterJournal);
-      params.set("sortBy", sortBy);
+      if (sortBy !== "newest") params.set("sortBy", sortBy);
       params.set("sortDir", sortDir);
       params.set("page", String(page));
       params.set("perPage", "30");
@@ -564,9 +577,29 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
     get().loadArticles();
   },
 
-  setSort: (sortBy, sortDir) => {
-    set({ sortBy, sortDir, page: 0 });
+  setSortBy: (sortBy) => {
+    set({
+      sortBy,
+      sortDir: sortBy === "oldest" ? "asc" : "desc",
+      page: 0,
+    });
     get().loadArticles();
+  },
+
+  setSort: (sortBy, sortDir) => {
+    const normalizedSortBy =
+      sortBy === "title" || sortBy === "relevance"
+        ? "relevance"
+        : sortBy === "oldest" || sortDir === "asc"
+          ? "oldest"
+          : "newest";
+
+    set({ sortBy: normalizedSortBy, sortDir, page: 0 });
+    get().loadArticles();
+  },
+
+  setLayout: (layout) => {
+    set({ layout });
   },
 
   toggleAdvancedFilters: () => {

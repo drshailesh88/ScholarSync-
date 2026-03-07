@@ -23,12 +23,14 @@ export function ArticleSearchBar() {
     toggleAdvancedFilters,
     setDateRange,
     setFilterJournal,
+    setSortBy,
     setSort,
     clearFilters,
     availableJournals,
   } = useFeedStore();
 
   const hasActiveFilters = !!(filterDateFrom || filterDateTo || filterJournal);
+  const currentLegacySort = sortBy === "relevance" ? "title" : "published";
 
   return (
     <div className="space-y-2 mb-3">
@@ -76,13 +78,13 @@ export function ArticleSearchBar() {
 
         {/* Sort toggle */}
         <button
-          onClick={() => setSort(sortBy, sortDir === "desc" ? "asc" : "desc")}
+          onClick={() => setSortBy(sortBy === "oldest" ? "newest" : "oldest")}
           className="flex items-center gap-1 px-3 py-2 rounded-xl text-xs font-medium bg-surface-raised text-ink-muted border border-border hover:text-ink transition-colors"
         >
-          {sortDir === "desc" ? (
-            <SortDescending size={14} />
-          ) : (
+          {sortBy === "oldest" ? (
             <SortAscending size={14} />
+          ) : (
+            <SortDescending size={14} />
           )}
         </button>
       </div>
@@ -153,7 +155,7 @@ export function ArticleSearchBar() {
                   onClick={() => setSort(s, sortDir)}
                   className={cn(
                     "flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                    sortBy === s
+                    currentLegacySort === s
                       ? "bg-brand/10 text-brand border border-brand/20"
                       : "bg-surface-raised text-ink-muted border border-border hover:text-ink"
                   )}
