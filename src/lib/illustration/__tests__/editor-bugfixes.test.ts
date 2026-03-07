@@ -9,6 +9,7 @@ import {
   drawGridOverlay,
   getCanvasWrapperStyle,
   getConnectorPointer,
+  registerGridOverlay,
   shouldPushHistoryForEvent,
 } from '@/lib/illustration/canvas/editorBugfixUtils';
 
@@ -33,8 +34,10 @@ describe('Editor bug fixes', () => {
       expect(filtered.objects).toEqual([{ type: 'rect', id: 'shape-1' }]);
     });
 
-    it('uses after:render grid overlay and does not add grid lines as canvas objects', () => {
-      expect(canvasSource).toContain("canvas.on('after:render'");
+    it('registers grid overlay rendering without adding grid lines as objects', () => {
+      expect(typeof registerGridOverlay).toBe('function');
+      expect(canvasSource).toContain('registerGridOverlay(canvas');
+      expect(canvasSource).not.toContain('canvas.getContext()');
       expect(canvasSource).not.toContain('canvas.add(line)');
     });
 
@@ -63,12 +66,12 @@ describe('Editor bug fixes', () => {
   });
 
   describe('Bug 3 - double zoom', () => {
-    it('canvas wrapper style has no CSS scale transform', () => {
+    it('canvas wrapper style disables CSS scaling', () => {
       const style = getCanvasWrapperStyle(800, 600);
       expect(style.width).toBe(800);
       expect(style.height).toBe(600);
       expect(style.position).toBe('relative');
-      expect('transform' in style).toBe(false);
+      expect(style.transform).toBe('none');
     });
   });
 

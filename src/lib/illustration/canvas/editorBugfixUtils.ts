@@ -15,6 +15,18 @@ export type GridOverlayContext = Pick<
 
 export type HistoryEventType = 'object:added' | 'object:modified' | 'shape:finalized' | 'explicit';
 
+type GridOverlayCanvas<TContext extends GridOverlayContext> = {
+  viewportTransform?: number[];
+  getTopContext: () => TContext;
+  clearContext: (context: TContext) => void;
+  getZoom: () => number;
+  getWidth: () => number;
+  getHeight: () => number;
+  on: (eventName: 'before:render' | 'after:render', handler: () => void) => void;
+  off: (eventName: 'before:render' | 'after:render', handler: () => void) => void;
+  requestRenderAll: () => void;
+};
+
 export const isGridObject = (obj: unknown): boolean => {
   if (!obj || typeof obj !== 'object') {
     return false;
@@ -39,7 +51,63 @@ export const getCanvasWrapperStyle = (width: number, height: number): CSSPropert
   width,
   height,
   position: 'relative',
+  transform: 'none',
 });
+
+export const removeGridObjects = <T>(canvas: {
+  getObjects: () => T[];
+  remove: (...objects: T[]) => unknown;
+}): number => {
+  const staleGridObjects = canvas.getObjects().filter((object) => isGridObject(object));
+  if (staleGridObjects.length > 0) {
+    canvas.remove(...staleGridObjects);
+  }
+  return staleGridObjects.length;
+};
+
+export const registerGridOverlay = <T, TContext extends GridOverlayContext>(
+  canvas: GridOverlayCanvas<TContext> & {
+    getObjects: () => T[];
+    remove: (...objects: T[]) => unknown;
+  },
+  options: {
+    enabled: boolean;
+    gridSize: number;
+  }
+) => {
+  const clearOverlay = () => {
+    canvas.clearContext(canvas.getTopContext());
+  };
+
+  const drawOverlay = () => {
+    clearOverlay();
+
+    if (!options.enabled) {
+      return;
+    }
+
+    const viewportTransform = canvas.viewportTransform ?? [1, 0, 0, 1, 0, 0];
+    drawGridOverlay(canvas.getTopContext(), {
+      width: canvas.getWidth(),
+      height: canvas.getHeight(),
+      gridSize: options.gridSize,
+      zoom: canvas.getZoom() || 1,
+      translateX: viewportTransform[4],
+      translateY: viewportTransform[5],
+    });
+  };
+
+  removeGridObjects(canvas);
+  canvas.on('before:render', clearOverlay);
+  canvas.on('after:render', drawOverlay);
+  canvas.requestRenderAll();
+
+  return () => {
+    canvas.off('before:render', clearOverlay);
+    canvas.off('after:render', drawOverlay);
+    clearOverlay();
+  };
+};
 
 export const shouldPushHistoryForEvent = (event: HistoryEventType, isDrawing: boolean): boolean => {
   if (event === 'object:added') {

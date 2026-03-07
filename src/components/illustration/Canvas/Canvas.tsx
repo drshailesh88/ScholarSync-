@@ -29,7 +29,8 @@ import {
   filterGridFromSerializedState,
   getCanvasWrapperStyle,
   getConnectorPointer,
-  drawGridOverlay,
+  registerGridOverlay,
+  removeGridObjects,
   shouldPushHistoryForEvent,
   type SerializedCanvasState,
 } from '@/lib/illustration/canvas/editorBugfixUtils';
@@ -1162,39 +1163,10 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       const canvas = fabricRef.current;
       if (!canvas) return;
 
-      // Remove stale grid objects from older sessions as a one-time safety cleanup.
-      const staleGridObjects = canvas.getObjects().filter((obj) => isGridObject(obj as FabricObject));
-      staleGridObjects.forEach((obj) => canvas.remove(obj));
-
-      const drawGrid = () => {
-        if (!gridVisible) {
-          return;
-        }
-
-        const context = canvas.getContext();
-        if (!context) {
-          return;
-        }
-
-        const vpt = canvas.viewportTransform ?? [1, 0, 0, 1, 0, 0];
-        const zoomLevel = canvas.getZoom() || 1;
-
-        drawGridOverlay(context, {
-          width: canvas.getWidth(),
-          height: canvas.getHeight(),
-          gridSize,
-          zoom: zoomLevel,
-          translateX: vpt[4],
-          translateY: vpt[5],
-        });
-      };
-
-      canvas.on('after:render', drawGrid);
-      canvas.requestRenderAll();
-
-      return () => {
-        canvas.off('after:render', drawGrid);
-      };
+      return registerGridOverlay(canvas, {
+        enabled: gridVisible,
+        gridSize,
+      });
     }, [gridVisible, gridSize, width, height]);
 
     // ========================================================================
@@ -1350,6 +1322,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
           const jsonData = typeof json === 'string' ? JSON.parse(json) : json;
           await canvas.loadFromJSON(jsonData);
+          removeGridObjects(canvas);
           canvas.renderAll();
         },
         clear: () => {
