@@ -492,7 +492,7 @@ describe("P30: Article search (Sprint 16)", () => {
     ).toMatch(/search\??: string/);
   });
   it("uses ILIKE for text matching", () => {
-    expect(readFileSync("src/lib/actions/feeds.ts", "utf-8")).toContain("ilike");
+    expect(readFileSync("src/lib/actions/feeds.ts", "utf-8")).toMatch(/ilike/i);
   });
   it("articles route passes search param", () => {
     expect(

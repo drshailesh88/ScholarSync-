@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextFetchEvent, NextResponse } from "next/server";
 
 // Security headers
 const csp = [
@@ -62,14 +63,14 @@ const clerkProxy = clerkMiddleware(async (auth, request) => {
   return applySecurityHeaders(response);
 });
 
-export default async function proxy(request: Request) {
+export default async function middleware(request: NextRequest, event: NextFetchEvent) {
   // Important: bypass before invoking clerkMiddleware to avoid any auth/session
   // network work during local Playwright automation.
   if (isPlaywrightDevRequest(request)) {
     return applySecurityHeaders(NextResponse.next());
   }
 
-  return clerkProxy(request);
+  return clerkProxy(request, event);
 }
 
 export const config = {
