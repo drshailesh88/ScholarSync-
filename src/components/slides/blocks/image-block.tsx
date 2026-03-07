@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Upload } from "@phosphor-icons/react";
+import { CircleNotch, Upload } from "@phosphor-icons/react";
 import { memo, useMemo, useRef, useState } from "react";
 import type { ImageData, ThemeConfig } from "@/types/presentation";
+import { requestGeneratedSlideImage } from "@/lib/slides/image-generation-client";
 
 interface ImageBlockProps {
   data: ImageData;
@@ -28,6 +29,8 @@ function clampPercent(value: number): number {
 export const ImageBlock = memo(function ImageBlock({ data, theme, onDataChange, showFullImage = false }: ImageBlockProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
   const clipPath = useMemo(() => {
     if (!data.crop || showFullImage) return undefined;
@@ -60,6 +63,7 @@ export const ImageBlock = memo(function ImageBlock({ data, theme, onDataChange, 
   const uploadFile = async (file: File) => {
     if (!onDataChange || !ALLOWED_IMAGE_TYPES.has(file.type)) return;
     setUploading(true);
+    setGenerationError(null);
     try {
       const formData = new FormData();
       formData.append("file", file);
@@ -76,6 +80,32 @@ export const ImageBlock = memo(function ImageBlock({ data, theme, onDataChange, 
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const generateImage = async () => {
+    if (!onDataChange) return;
+    const prompt = data.suggestion?.trim() || data.alt.trim();
+    if (!prompt) return;
+
+    setGenerating(true);
+    setGenerationError(null);
+    try {
+      const payload = await requestGeneratedSlideImage({
+        prompt,
+        style: "illustration",
+        aspectRatio: "16:9",
+      });
+      onDataChange({
+        url: payload.imageUrl,
+        attribution: payload.attribution,
+        suggestion: prompt,
+        crop: undefined,
+      });
+    } catch (error) {
+      setGenerationError(error instanceof Error ? error.message : "Image generation failed");
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -111,17 +141,36 @@ export const ImageBlock = memo(function ImageBlock({ data, theme, onDataChange, 
         <div className="text-[0.7em] opacity-60">
           {data.suggestion ?? data.alt ?? "Image placeholder"}
         </div>
-        <button
-          type="button"
-          disabled={!onDataChange || uploading}
-          className="mt-[0.7em] rounded border border-border bg-surface-raised px-2 py-1 text-[0.65em] text-ink disabled:opacity-60"
-          onClick={(e) => {
-            e.stopPropagation();
-            inputRef.current?.click();
-          }}
-        >
-          {uploading ? "Uploading..." : "Upload Image"}
-        </button>
+        <div className="mt-[0.7em] flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            disabled={!onDataChange || uploading}
+            className="rounded border border-border bg-surface-raised px-2 py-1 text-[0.65em] text-ink disabled:opacity-60"
+            onClick={(e) => {
+              e.stopPropagation();
+              inputRef.current?.click();
+            }}
+          >
+            {uploading ? "Uploading..." : "Upload Image"}
+          </button>
+          <button
+            type="button"
+            disabled={!onDataChange || generating || !(data.suggestion?.trim() || data.alt.trim())}
+            className="inline-flex items-center gap-1 rounded border border-brand/30 bg-brand/10 px-2 py-1 text-[0.65em] text-brand disabled:opacity-60"
+            onClick={(e) => {
+              e.stopPropagation();
+              void generateImage();
+            }}
+          >
+            {generating ? <CircleNotch size={12} className="animate-spin" /> : null}
+            {generating ? "Generating..." : "Generate Image"}
+          </button>
+        </div>
+        {generationError && (
+          <div className="mt-[0.5em] text-[0.6em] text-red-600">
+            {generationError}
+          </div>
+        )}
       </div>
     );
   }

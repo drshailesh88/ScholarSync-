@@ -36,6 +36,12 @@ interface OutlineCard {
 
 type WizardStep = "prompt" | "outline" | "theme" | "generating";
 
+interface GenerationStreamEvent {
+  type: "status" | "images" | "complete" | "error";
+  message?: string;
+  error?: string;
+}
+
 // ---------------------------------------------------------------------------
 // Audience options
 // ---------------------------------------------------------------------------
@@ -356,6 +362,34 @@ export function OutlineGenerator() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error ?? "Failed to generate slides");
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) {
+        throw new Error("Generation stream was unavailable");
+      }
+
+      const decoder = new TextDecoder();
+      let buffered = "";
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+
+        buffered += decoder.decode(value, { stream: true });
+        const lines = buffered.split("\n");
+        buffered = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          const event = JSON.parse(line) as GenerationStreamEvent;
+          if (event.type === "error") {
+            throw new Error(event.error ?? "Generation failed");
+          }
+          if (event.message) {
+            setGenerationProgress(event.message);
+          }
+        }
       }
 
       setGenerationProgress("Loading your deck...");

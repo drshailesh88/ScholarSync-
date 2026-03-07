@@ -32,6 +32,32 @@ import { createDefaultBlock } from "../blocks";
 import { InsertMenu } from "../shared/insert-menu";
 import { AvatarsSlot as CollaborationAvatarsSlot } from "../shared/collaboration-slots";
 import type { ContentBlock } from "@/types/presentation";
+import { requestGeneratedSlideImage } from "@/lib/slides/image-generation-client";
+import {
+  collectImageBlocks,
+  mergeGeneratedImageData,
+  updateBlockAtPath,
+} from "@/lib/slides/image-blocks";
+
+async function runWithConcurrency<T>(
+  items: T[],
+  limit: number,
+  worker: (item: T, index: number) => Promise<void>
+) {
+  let nextIndex = 0;
+
+  async function runWorker() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex;
+      nextIndex += 1;
+      await worker(items[currentIndex], currentIndex);
+    }
+  }
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, () => runWorker())
+  );
+}
 
 interface SlidesToolbarProps {
   onExportPptx: () => void;
@@ -57,6 +83,7 @@ export function SlidesToolbar({
   const setIsPresenting = useSlidesStore((s) => s.setIsPresenting);
   const setShowSharePanel = useSlidesStore((s) => s.setShowSharePanel);
   const saveStatus = useSlidesStore((s) => s.saveStatus);
+  const slides = useSlidesStore((s) => s.slides);
   const activeSlide = useSlidesStore((s) => s.getActiveSlide());
   const updateSlide = useSlidesStore((s) => s.updateSlide);
   const undo = useSlidesStore((s) => s.undo);
@@ -73,6 +100,17 @@ export function SlidesToolbar({
   const snapToGrid = useSlidesStore((s) => s.snapToGrid);
   const setSnapToGrid = useSlidesStore((s) => s.setSnapToGrid);
   const [showInsertMenu, setShowInsertMenu] = useState(false);
+  const [bulkGenerationState, setBulkGenerationState] = useState<{
+    active: boolean;
+    current: number;
+    total: number;
+    error: string | null;
+  }>({
+    active: false,
+    current: 0,
+    total: 0,
+    error: null,
+  });
   const insertButtonRef = useRef<HTMLButtonElement>(null);
 
   function togglePanel(panel: RightPanel) {
@@ -86,6 +124,79 @@ export function SlidesToolbar({
       contentBlocks: [...activeSlide.contentBlocks, block],
     });
     setShowInsertMenu(false);
+  }
+
+  async function handleGenerateAllImages() {
+    const tasks = slides.flatMap((slide) =>
+      collectImageBlocks(slide.contentBlocks)
+        .filter(({ block }) => !block.data.url)
+        .map(({ path, block }) => ({
+          slideId: slide.id,
+          path,
+          prompt: block.data.suggestion?.trim() || block.data.alt.trim(),
+        }))
+    );
+
+    if (tasks.length === 0) {
+      setBulkGenerationState({
+        active: false,
+        current: 0,
+        total: 0,
+        error: "No empty image placeholders found.",
+      });
+      return;
+    }
+
+    const slideBlocks = new Map(slides.map((slide) => [slide.id, slide.contentBlocks]));
+    let completed = 0;
+
+    setBulkGenerationState({
+      active: true,
+      current: 0,
+      total: tasks.length,
+      error: null,
+    });
+
+    await runWithConcurrency(tasks, 5, async (task) => {
+      try {
+        if (!task.prompt) return;
+
+        const payload = await requestGeneratedSlideImage({
+          prompt: task.prompt,
+          style: "illustration",
+          aspectRatio: "16:9",
+        });
+
+        const currentBlocks = slideBlocks.get(task.slideId) ?? [];
+        const nextBlocks = updateBlockAtPath(currentBlocks, task.path, (block) => {
+          if (block.type !== "image") return block;
+          return {
+            ...block,
+            data: mergeGeneratedImageData(block.data, {
+              imageUrl: payload.imageUrl,
+              attribution: payload.attribution,
+              prompt: task.prompt,
+            }),
+          };
+        });
+
+        slideBlocks.set(task.slideId, nextBlocks);
+        updateSlide(task.slideId, { contentBlocks: nextBlocks });
+      } catch (error) {
+        console.error("Bulk slide image generation failed", error);
+      } finally {
+        completed += 1;
+        setBulkGenerationState((state) => ({
+          ...state,
+          current: completed,
+        }));
+      }
+    });
+
+    setBulkGenerationState((state) => ({
+      ...state,
+      active: false,
+    }));
   }
 
   return (
@@ -236,6 +347,36 @@ export function SlidesToolbar({
         <Robot size={14} />
         Agent
       </button>
+
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => void handleGenerateAllImages()}
+          disabled={bulkGenerationState.active}
+          className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-medium text-ink-muted transition-colors hover:bg-surface-raised hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <ImageSquare size={14} />
+          {bulkGenerationState.active ? "Generating..." : "Generate All Images"}
+        </button>
+        {(bulkGenerationState.active || bulkGenerationState.total > 0 || bulkGenerationState.error) && (
+          <div className="min-w-44">
+            <div className="text-[11px] text-ink-muted">
+              {bulkGenerationState.error
+                ? bulkGenerationState.error
+                : `Generating images... (${bulkGenerationState.current}/${bulkGenerationState.total})`}
+            </div>
+            {bulkGenerationState.total > 0 && !bulkGenerationState.error && (
+              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-raised">
+                <div
+                  className="h-full bg-brand transition-[width] duration-200"
+                  style={{
+                    width: `${(bulkGenerationState.current / bulkGenerationState.total) * 100}%`,
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       <button
         onClick={() => togglePanel("defense")}
