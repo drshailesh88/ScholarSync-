@@ -331,6 +331,7 @@ export function useToolSwitching(
     getTool,
     isToolActive,
     registry,
+    // eslint-disable-next-line react-hooks/refs -- intentional: exposing init status
     isInitialized: isInitializedRef.current,
   };
 }
@@ -386,12 +387,14 @@ export function useIsolatedToolRegistry(
 ): UseToolSwitchingReturn {
   const registryRef = useRef<ToolRegistry | null>(null);
 
-  if (!registryRef.current) {
+   
+  if (registryRef.current == null) {
     registryRef.current = createToolRegistry();
   }
 
   return useToolSwitching({
     ...options,
+    // eslint-disable-next-line react-hooks/refs -- stable ref value after init
     registry: registryRef.current,
     autoInitialize: false, // Already initialized via createToolRegistry
   });
@@ -410,6 +413,7 @@ export function toolTypeToName(toolType: ToolType): ToolName | string {
     [ToolType.DIRECT_SELECT]: 'directSelect',
     [ToolType.PEN]: TOOL_NAMES.PEN,
     [ToolType.PENCIL]: 'pencil',
+    [ToolType.BRUSH]: 'brush',
     [ToolType.LINE]: TOOL_NAMES.LINE,
     [ToolType.RECTANGLE]: TOOL_NAMES.RECTANGLE,
     [ToolType.ELLIPSE]: TOOL_NAMES.ELLIPSE,

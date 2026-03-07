@@ -155,6 +155,7 @@ const toolDisplayNames: Record<ToolType, string> = {
   [ToolType.DIRECT_SELECT]: 'Direct Select',
   [ToolType.PEN]: 'Pen',
   [ToolType.PENCIL]: 'Pencil',
+  [ToolType.BRUSH]: 'Brush',
   [ToolType.LINE]: 'Line',
   [ToolType.RECTANGLE]: 'Rectangle',
   [ToolType.ELLIPSE]: 'Ellipse',

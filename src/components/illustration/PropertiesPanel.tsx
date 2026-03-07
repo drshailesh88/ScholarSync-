@@ -8,7 +8,7 @@
  */
 
 /* eslint-disable react/no-children-prop */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -55,6 +55,11 @@ import {
   type FillStyleMode,
   type GradientEditorState,
 } from '@/lib/illustration/gradient/gradient-utils';
+import { useActiveTool } from '@/stores/illustration/editorStore';
+import { ToolType } from '@/lib/illustration/types';
+import { strokePresets } from '@/lib/illustration/lib/freehand/index';
+import type { BrushPreset, FreehandSettings } from '@/lib/illustration/canvas/freehand-canvas';
+import { defaultFreehandSettings } from '@/lib/illustration/canvas/freehand-canvas';
 
 // ============================================================================
 // TYPES
@@ -62,6 +67,8 @@ import {
 
 export interface PropertiesPanelProps {
   selectedObjects?: FabricObject[];
+  freehandSettings?: FreehandSettings;
+  onFreehandSettingsChange?: (settings: FreehandSettings) => void;
 }
 
 interface PropertySectionProps {
@@ -1046,10 +1053,35 @@ function PathfinderExcludeIcon(): JSX.Element {
 // MAIN COMPONENT
 // ============================================================================
 
-export default function PropertiesPanel({ selectedObjects = [] }: PropertiesPanelProps): JSX.Element {
+export default function PropertiesPanel({
+  selectedObjects = [],
+  freehandSettings: externalFreehandSettings,
+  onFreehandSettingsChange,
+}: PropertiesPanelProps): JSX.Element {
   const { canvas, subscribeToCanvasEvents } = useCanvas();
   const toast = useToast();
+  const activeTool = useActiveTool();
   const activeObject = selectedObjects[0] ?? null;
+  const [localFreehandSettings, setLocalFreehandSettings] = useState<FreehandSettings>({ ...defaultFreehandSettings });
+  const freehandSettings = externalFreehandSettings ?? localFreehandSettings;
+
+  const updateFreehandSetting = useCallback(<K extends keyof FreehandSettings>(key: K, value: FreehandSettings[K]) => {
+    const updated = { ...freehandSettings, [key]: value };
+    if (key === 'preset') {
+      const preset = strokePresets[value as BrushPreset];
+      if (preset) {
+        updated.size = preset.size ?? updated.size;
+        updated.thinning = preset.thinning ?? updated.thinning;
+        updated.smoothing = preset.smoothing ?? updated.smoothing;
+        updated.streamline = preset.streamline ?? updated.streamline;
+      }
+    }
+    if (onFreehandSettingsChange) {
+      onFreehandSettingsChange(updated);
+    } else {
+      setLocalFreehandSettings(updated);
+    }
+  }, [freehandSettings, onFreehandSettingsChange]);
   const objectType = activeObject?.type;
   const isMultiple = selectedObjects.length > 1;
   const [isAspectLocked, setIsAspectLocked] = useState(false);
@@ -2017,6 +2049,85 @@ export default function PropertiesPanel({ selectedObjects = [] }: PropertiesPane
   };
 
   // ============================================================================
+  // BRUSH SETTINGS
+  // ============================================================================
+
+  const renderBrushSettings = () => {
+    if (activeTool !== ToolType.BRUSH) return null;
+
+    const presetOptions = [
+      { value: 'pen', label: 'Pen' },
+      { value: 'marker', label: 'Marker' },
+      { value: 'highlighter', label: 'Highlighter' },
+      { value: 'brush', label: 'Brush' },
+      { value: 'calligraphy', label: 'Calligraphy' },
+    ];
+
+    return (
+      <PropertySection title="Brush Settings">
+        <PropertyRow label="Preset">
+          <SelectInput
+            value={freehandSettings.preset}
+            onChange={(v) => updateFreehandSetting('preset', v as BrushPreset)}
+            options={presetOptions}
+          />
+        </PropertyRow>
+        <PropertyRow label="Size">
+          <NumberInput
+            value={freehandSettings.size}
+            onChange={(v) => updateFreehandSetting('size', v)}
+            min={1}
+            max={100}
+            step={1}
+          />
+        </PropertyRow>
+        <PropertyRow label="Thinning">
+          <SliderInput
+            value={freehandSettings.thinning}
+            onChange={(v) => updateFreehandSetting('thinning', v)}
+            min={0}
+            max={1}
+            step={0.05}
+          />
+        </PropertyRow>
+        <PropertyRow label="Smoothing">
+          <SliderInput
+            value={freehandSettings.smoothing}
+            onChange={(v) => updateFreehandSetting('smoothing', v)}
+            min={0}
+            max={1}
+            step={0.05}
+          />
+        </PropertyRow>
+        <PropertyRow label="Streamline">
+          <SliderInput
+            value={freehandSettings.streamline}
+            onChange={(v) => updateFreehandSetting('streamline', v)}
+            min={0}
+            max={1}
+            step={0.05}
+          />
+        </PropertyRow>
+        <PropertyRow label="Color">
+          <ColorInput
+            value={freehandSettings.color}
+            onChange={(v) => updateFreehandSetting('color', v)}
+          />
+        </PropertyRow>
+        <PropertyRow label="Opacity">
+          <SliderInput
+            value={freehandSettings.opacity}
+            onChange={(v) => updateFreehandSetting('opacity', v)}
+            min={0}
+            max={1}
+            step={0.05}
+          />
+        </PropertyRow>
+      </PropertySection>
+    );
+  };
+
+  // ============================================================================
   // RENDER CONTENT
   // ============================================================================
 
@@ -2118,5 +2229,10 @@ export default function PropertiesPanel({ selectedObjects = [] }: PropertiesPane
     }
   };
 
-  return <div style={styles.panel}>{renderContent()}</div>;
+  return (
+    <div style={styles.panel}>
+      {renderBrushSettings()}
+      {renderContent()}
+    </div>
+  );
 }

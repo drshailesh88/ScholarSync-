@@ -25,6 +25,7 @@ export enum ToolType {
   // Drawing tools
   PEN = 'pen',
   PENCIL = 'pencil',
+  BRUSH = 'brush',
   LINE = 'line',
 
   // Shape tools
