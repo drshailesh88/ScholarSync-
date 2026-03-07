@@ -29,7 +29,7 @@ import {
 
 export type CardBackground = PresentationCardBackground;
 
-export type SlideTransition = "none" | "fade" | "slide" | "zoom";
+export type SlideTransition = "none" | "fade" | "slide" | "zoom" | "morph";
 
 export interface SlideState {
   id: number;

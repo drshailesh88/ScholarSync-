@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useLayoutEffect, useState, type ReactNode } from "react";
+import { motion } from "framer-motion";
 import type {
   ContentBlock,
   SlideLayout,
@@ -62,6 +63,12 @@ interface SlideRendererV2Props {
   cardBackground?: CardBackground;
   showMasterPlaceholders?: boolean;
   onMasterPlaceholderClick?: (placeholderId: string) => void;
+  /** Map of block index → morphId for morph transitions (layoutId) */
+  morphIds?: Map<number, string>;
+  /** layoutId for the title element during morph */
+  morphTitleId?: string;
+  /** layoutId for the subtitle element during morph */
+  morphSubtitleId?: string;
 }
 
 export function SlideRendererV2({
@@ -85,6 +92,9 @@ export function SlideRendererV2({
   cardBackground,
   showMasterPlaceholders = false,
   onMasterPlaceholderClick,
+  morphIds,
+  morphTitleId,
+  morphSubtitleId,
 }: SlideRendererV2Props) {
   const theme = themeConfig ?? PRESET_THEMES[themeKey] ?? PRESET_THEMES.modern;
   const resolvedMaster =
@@ -124,16 +134,40 @@ export function SlideRendererV2({
         {/* Title area */}
         {!resolvedMaster && !layoutResult.hasBuiltInTitle && title && (
           <div className="mb-[0.5em] shrink-0">
-            <h2
-              className="text-[1.3em] font-bold leading-tight"
-              style={{
-                color: theme.primaryColor,
-                fontFamily: theme.headingFontFamily ?? theme.fontFamily,
-              }}
-            >
-              {title}
-            </h2>
-            {subtitle && <p className="text-[0.75em] opacity-60 mt-[0.15em]">{subtitle}</p>}
+            {morphTitleId ? (
+              <motion.h2
+                layoutId={morphTitleId}
+                className="text-[1.3em] font-bold leading-tight"
+                style={{
+                  color: theme.primaryColor,
+                  fontFamily: theme.headingFontFamily ?? theme.fontFamily,
+                }}
+                transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+              >
+                {title}
+              </motion.h2>
+            ) : (
+              <h2
+                className="text-[1.3em] font-bold leading-tight"
+                style={{
+                  color: theme.primaryColor,
+                  fontFamily: theme.headingFontFamily ?? theme.fontFamily,
+                }}
+              >
+                {title}
+              </h2>
+            )}
+            {subtitle && (morphSubtitleId ? (
+              <motion.p
+                layoutId={morphSubtitleId}
+                className="text-[0.75em] opacity-60 mt-[0.15em]"
+                transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+              >
+                {subtitle}
+              </motion.p>
+            ) : (
+              <p className="text-[0.75em] opacity-60 mt-[0.15em]">{subtitle}</p>
+            ))}
           </div>
         )}
 
@@ -142,16 +176,40 @@ export function SlideRendererV2({
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-[0.5em]">
             <AutoFitRegion>
               <div className="flex flex-col items-center gap-[0.5em]">
-                <h1
-                  className="text-[2em] font-bold leading-tight"
-                  style={{
-                    color: theme.primaryColor,
-                    fontFamily: theme.headingFontFamily ?? theme.fontFamily,
-                  }}
-                >
-                  {title}
-                </h1>
-                {subtitle && <p className="text-[1em] opacity-70">{subtitle}</p>}
+                {morphTitleId ? (
+                  <motion.h1
+                    layoutId={morphTitleId}
+                    className="text-[2em] font-bold leading-tight"
+                    style={{
+                      color: theme.primaryColor,
+                      fontFamily: theme.headingFontFamily ?? theme.fontFamily,
+                    }}
+                    transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+                  >
+                    {title}
+                  </motion.h1>
+                ) : (
+                  <h1
+                    className="text-[2em] font-bold leading-tight"
+                    style={{
+                      color: theme.primaryColor,
+                      fontFamily: theme.headingFontFamily ?? theme.fontFamily,
+                    }}
+                  >
+                    {title}
+                  </h1>
+                )}
+                {subtitle && (morphSubtitleId ? (
+                  <motion.p
+                    layoutId={morphSubtitleId}
+                    className="text-[1em] opacity-70"
+                    transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+                  >
+                    {subtitle}
+                  </motion.p>
+                ) : (
+                  <p className="text-[1em] opacity-70">{subtitle}</p>
+                ))}
               </div>
             </AutoFitRegion>
           </div>
@@ -163,16 +221,40 @@ export function SlideRendererV2({
               className="w-[3em] h-[0.15em] mb-[0.8em] rounded-full"
               style={{ backgroundColor: theme.accentColor }}
             />
-            <h1
-              className="text-[1.8em] font-bold"
-              style={{
-                color: theme.primaryColor,
-                fontFamily: theme.headingFontFamily ?? theme.fontFamily,
-              }}
-            >
-              {title}
-            </h1>
-            {subtitle && <p className="text-[0.85em] mt-[0.4em] opacity-60">{subtitle}</p>}
+            {morphTitleId ? (
+              <motion.h1
+                layoutId={morphTitleId}
+                className="text-[1.8em] font-bold"
+                style={{
+                  color: theme.primaryColor,
+                  fontFamily: theme.headingFontFamily ?? theme.fontFamily,
+                }}
+                transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+              >
+                {title}
+              </motion.h1>
+            ) : (
+              <h1
+                className="text-[1.8em] font-bold"
+                style={{
+                  color: theme.primaryColor,
+                  fontFamily: theme.headingFontFamily ?? theme.fontFamily,
+                }}
+              >
+                {title}
+              </h1>
+            )}
+            {subtitle && (morphSubtitleId ? (
+              <motion.p
+                layoutId={morphSubtitleId}
+                className="text-[0.85em] mt-[0.4em] opacity-60"
+                transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+              >
+                {subtitle}
+              </motion.p>
+            ) : (
+              <p className="text-[0.85em] mt-[0.4em] opacity-60">{subtitle}</p>
+            ))}
           </div>
         )}
 
@@ -186,6 +268,11 @@ export function SlideRendererV2({
                     const entry = BLOCK_REGISTRY[block.type];
                     if (!entry) return null;
                     const Renderer = entry.render;
+
+                    // Resolve morphId for this block by finding its original index
+                    const originalIdx = morphIds ? contentBlocks.indexOf(block) : -1;
+                    const blockMorphId = originalIdx >= 0 ? morphIds!.get(originalIdx) : undefined;
+
                     const rendered = (
                       <Renderer
                         key={`${block.type}-${i}`}
@@ -195,8 +282,19 @@ export function SlideRendererV2({
                       />
                     );
 
+                    // Wrap with morph layoutId if present
+                    const morphWrapped = blockMorphId ? (
+                      <motion.div
+                        key={`${block.type}-${i}`}
+                        layoutId={blockMorphId}
+                        transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+                      >
+                        {rendered}
+                      </motion.div>
+                    ) : rendered;
+
                     if (!hasRevealAnimation(block.animation)) {
-                      return rendered;
+                      return morphWrapped;
                     }
 
                     const order = normalizeAnimationOrder(block.animation);
@@ -216,7 +314,7 @@ export function SlideRendererV2({
                         ? "animate"
                         : "visible";
 
-                    return (
+                    const animatedContent = (
                       <AnimatedBlockWrapper
                         key={`${block.type}-${i}`}
                         animation={block.animation}
@@ -226,6 +324,21 @@ export function SlideRendererV2({
                         {rendered}
                       </AnimatedBlockWrapper>
                     );
+
+                    // Wrap animated block with morph layoutId if present
+                    if (blockMorphId) {
+                      return (
+                        <motion.div
+                          key={`${block.type}-${i}`}
+                          layoutId={blockMorphId}
+                          transition={{ type: "spring", stiffness: 200, damping: 25, duration: 0.6 }}
+                        >
+                          {animatedContent}
+                        </motion.div>
+                      );
+                    }
+
+                    return animatedContent;
                   })}
                 </AutoFitRegion>
               </div>

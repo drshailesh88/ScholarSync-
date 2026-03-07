@@ -467,6 +467,7 @@ export function SlideFilmstrip() {
                     cardBackground={slide.cardBackground}
                     themeKey={themeKey}
                     themeConfig={themeConfig}
+                    transition={slide.transition}
                     isActive={slide.id === activeSlideId}
                     slideNumber={index + 1}
                     onClick={() => setActiveSlide(slide.id)}

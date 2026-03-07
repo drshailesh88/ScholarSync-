@@ -7,7 +7,7 @@ import type {
   SlideMaster,
   ThemeConfig,
 } from "@/types/presentation";
-import type { CardBackground } from "@/stores/slides-store";
+import type { CardBackground, SlideTransition } from "@/stores/slides-store";
 import { SlideRendererV2 } from "./slide-renderer-v2";
 
 interface SlideThumbnailProps {
@@ -20,6 +20,7 @@ interface SlideThumbnailProps {
   themeKey?: string;
   themeConfig?: ThemeConfig;
   cardBackground?: CardBackground;
+  transition?: SlideTransition;
   isActive?: boolean;
   slideNumber?: number;
   commentCount?: number;
@@ -37,6 +38,7 @@ export const SlideThumbnail = memo(function SlideThumbnail({
   themeKey,
   themeConfig,
   cardBackground,
+  transition,
   isActive,
   slideNumber,
   commentCount,
@@ -81,6 +83,16 @@ export const SlideThumbnail = memo(function SlideThumbnail({
       {commentCount != null && commentCount > 0 && (
         <div className="absolute top-1 right-1 text-[8px] font-bold text-white bg-brand rounded-full w-4 h-4 flex items-center justify-center">
           {commentCount}
+        </div>
+      )}
+
+      {/* Morph transition badge */}
+      {transition === "morph" && (
+        <div
+          className="absolute bottom-1 right-1 text-[8px] font-bold text-white bg-violet-600 rounded px-1"
+          title="Morph transition active"
+        >
+          M
         </div>
       )}
     </button>

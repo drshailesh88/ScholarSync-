@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { SlideRendererV2 as SlideRenderer } from "@/components/slides/shared/slide-renderer-v2";
@@ -20,6 +20,11 @@ import {
 } from "@/lib/presentation/animation-sequencer";
 import { cn } from "@/lib/utils";
 import {
+  computeMorphIds,
+  MORPH_TITLE_ID,
+  MORPH_SUBTITLE_ID,
+} from "@/lib/presentation/morph-matcher";
+import {
   ArrowLeft,
   ArrowRight,
   Clock,
@@ -36,7 +41,7 @@ import {
 // Types
 // ---------------------------------------------------------------------------
 
-type SlideTransition = "none" | "fade" | "slide" | "zoom";
+type SlideTransition = "none" | "fade" | "slide" | "zoom" | "morph";
 type NotesFontSize = "small" | "medium" | "large";
 type ScreenMode = "normal" | "black" | "white";
 
@@ -105,6 +110,14 @@ const slideVariants = {
     animate: {},
     exit: {},
     transition: { duration: 0 },
+  },
+  // Morph uses crossfade as the container transition — individual blocks
+  // animate via framer-motion layoutId (handled in the render section).
+  morph: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.3 },
   },
 };
 
@@ -599,6 +612,13 @@ export function PresenterMode({
 
   const currentTransition = currentSlide?.transition ?? transition;
   const variant = slideVariants[currentTransition];
+  const isMorph = currentTransition === "morph";
+
+  // Compute morph IDs for current slide when morph transition is active
+  const currentMorphIds = useMemo(() => {
+    if (!isMorph || !currentSlide) return undefined;
+    return computeMorphIds(currentSlide);
+  }, [isMorph, currentSlide]);
 
   const notesFontSizeClass =
     notesFontSize === "small"
@@ -636,67 +656,73 @@ export function PresenterMode({
             showPresenterPanel ? "w-[70%]" : "w-full"
           )}
         >
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={currentIndex}
-              custom={direction}
-              initial={
-                typeof variant.initial === "function"
-                  ? (variant.initial as (d: number) => object)(direction)
-                  : variant.initial
-              }
-              animate={variant.animate}
-              exit={
-                typeof variant.exit === "function"
-                  ? (variant.exit as (d: number) => object)(direction)
-                  : variant.exit
-              }
-              transition={variant.transition}
-              className="h-full w-full p-4"
-            >
-              <div
-                data-testid="current-slide-panel"
-                className="relative h-full w-full rounded-xl overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/10"
-                onClick={goNext}
+          <LayoutGroup>
+            <AnimatePresence mode={isMorph ? "sync" : "wait"} custom={direction}>
+              <motion.div
+                key={currentIndex}
+                custom={direction}
+                initial={
+                  typeof variant.initial === "function"
+                    ? (variant.initial as (d: number) => object)(direction)
+                    : variant.initial
+                }
+                animate={variant.animate}
+                exit={
+                  typeof variant.exit === "function"
+                    ? (variant.exit as (d: number) => object)(direction)
+                    : variant.exit
+                }
+                transition={variant.transition}
+                className="h-full w-full p-4"
+                style={isMorph ? { position: "absolute", inset: 0 } : undefined}
               >
-                <div className="absolute inset-0 overflow-y-auto">
-                  <SlideRenderer
-                    title={currentSlide.title}
-                    subtitle={currentSlide.subtitle}
-                    layout={currentSlide.layout as SlideLayout}
-                    masterId={currentSlide.masterId}
-                    masters={masters}
-                    contentBlocks={currentSlide.contentBlocks}
-                    themeKey={themeKey}
-                    themeConfig={themeConfig}
-                    showSlideNumber
-                    slideNumber={currentSlideNumber}
-                    scale={1.4}
-                    animateBlocks
-                    revealOrder={revealedOrder}
-                    activeRevealOrder={activeRevealOrder}
-                    hideUnrevealedAnimated={maxRevealOrder > 0}
-                  />
-                </div>
-
-                {screenMode !== "normal" && (
-                  <div
-                    data-testid={
-                      screenMode === "black"
-                        ? "presenter-black-screen"
-                        : "presenter-white-screen"
-                    }
-                    className={cn(
-                      "absolute inset-0 z-20 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.2em]",
-                      screenMode === "black" ? "bg-black text-white/50" : "bg-white text-black/50"
-                    )}
-                  >
-                    {screenMode === "black" ? "Black Screen" : "White Screen"}
+                <div
+                  data-testid="current-slide-panel"
+                  className="relative h-full w-full rounded-xl overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/10"
+                  onClick={goNext}
+                >
+                  <div className="absolute inset-0 overflow-y-auto">
+                    <SlideRenderer
+                      title={currentSlide.title}
+                      subtitle={currentSlide.subtitle}
+                      layout={currentSlide.layout as SlideLayout}
+                      masterId={currentSlide.masterId}
+                      masters={masters}
+                      contentBlocks={currentSlide.contentBlocks}
+                      themeKey={themeKey}
+                      themeConfig={themeConfig}
+                      showSlideNumber
+                      slideNumber={currentSlideNumber}
+                      scale={1.4}
+                      animateBlocks
+                      revealOrder={revealedOrder}
+                      activeRevealOrder={activeRevealOrder}
+                      hideUnrevealedAnimated={maxRevealOrder > 0}
+                      morphIds={currentMorphIds}
+                      morphTitleId={isMorph && currentSlide.title ? MORPH_TITLE_ID : undefined}
+                      morphSubtitleId={isMorph && currentSlide.subtitle ? MORPH_SUBTITLE_ID : undefined}
+                    />
                   </div>
-                )}
-              </div>
-            </motion.div>
-          </AnimatePresence>
+
+                  {screenMode !== "normal" && (
+                    <div
+                      data-testid={
+                        screenMode === "black"
+                          ? "presenter-black-screen"
+                          : "presenter-white-screen"
+                      }
+                      className={cn(
+                        "absolute inset-0 z-20 flex items-center justify-center text-sm font-semibold uppercase tracking-[0.2em]",
+                        screenMode === "black" ? "bg-black text-white/50" : "bg-white text-black/50"
+                      )}
+                    >
+                      {screenMode === "black" ? "Black Screen" : "White Screen"}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </LayoutGroup>
 
           <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
             <button

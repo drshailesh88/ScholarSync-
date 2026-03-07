@@ -22,11 +22,12 @@ import type {
 } from "@/types/presentation";
 import type { CardBackground, SlideTransition } from "@/stores/slides-store";
 
-const TRANSITION_OPTIONS: { value: SlideTransition; label: string }[] = [
+const TRANSITION_OPTIONS: { value: SlideTransition; label: string; tooltip?: string }[] = [
   { value: "none", label: "None" },
   { value: "fade", label: "Fade" },
   { value: "slide", label: "Slide" },
   { value: "zoom", label: "Zoom" },
+  { value: "morph", label: "Morph", tooltip: "Automatically animates matching elements between slides" },
 ];
 
 const HEX_COLOR_PATTERN = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
@@ -873,6 +874,7 @@ export function PropertiesPanel() {
                     if (!activeSlide) return;
                     updateSlide(activeSlide.id, { transition: opt.value });
                   }}
+                  title={opt.tooltip}
                   className={`px-2.5 py-1.5 text-xs rounded-md border transition-colors ${
                     effectiveTransition === opt.value
                       ? "border-brand bg-brand/10 text-brand font-medium"
