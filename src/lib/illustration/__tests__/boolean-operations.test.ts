@@ -223,6 +223,16 @@ describe('boolean operations', () => {
     expect(moveCount(data)).toBeGreaterThanOrEqual(2);
   });
 
+  it('throws when fewer than 2 objects are selected', () => {
+    initializePathfinderPaperScope(createMockCanvasElement());
+    const single = createRect(0, 0, 100, 100);
+
+    expect(() => booleanUnite([single])).toThrow('Select at least 2 objects');
+    expect(() => booleanSubtract([single])).toThrow('Select at least 2 objects');
+    expect(() => booleanIntersect([single])).toThrow('Select at least 2 objects');
+    expect(() => booleanExclude([single])).toThrow('Select at least 2 objects');
+  });
+
   it('operating on non-overlapping objects returns a valid compound path', () => {
     const scope = initializePathfinderPaperScope(createMockCanvasElement());
     const a = createRect(0, 0, 100, 100);
