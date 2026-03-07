@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { estimateReadingTime } from "@/lib/feeds/reading-time";
 import { useFeedStore } from "@/stores/feed-store";
 import { ArticleNotes } from "./article-notes";
+import { RelatedPapers } from "./related-papers";
 
 interface ArticleReaderProps {
   onCite?: (articleId: number) => void;
@@ -115,6 +116,9 @@ export function ArticleReader({ onCite, onOpenCopilot }: ArticleReaderProps) {
           )}
         </div>
         <ArticleNotes articleId={article.id} />
+        <div className="mt-4">
+          <RelatedPapers articleId={article.id} />
+        </div>
       </div>
 
       {/* Abstract */}

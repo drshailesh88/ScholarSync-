@@ -103,6 +103,16 @@ beforeEach(() => {
     page: 0,
     selectedArticleId: null,
     articleNotes: {},
+    copilotOpen: false,
+    copilotSourceTier: null,
+    copilotSourceLabel: null,
+    copilotMessages: [],
+    copilotLoading: false,
+    copilotSuggestions: [],
+    copilotSummaryCache: {},
+    relatedPapers: [],
+    relatedPapersLoading: false,
+    relatedPapersSource: null,
     error: null,
   });
 });
@@ -265,6 +275,74 @@ describe("JF-203: loadMore", () => {
     await useFeedStore.getState().loadMore();
 
     expect(useFeedStore.getState().page).toBe(1);
+  });
+});
+
+// =====================================================================
+// JF-943: Copilot related-papers intent
+// =====================================================================
+describe("JF-943: Copilot related papers intent", () => {
+  it("routes a related-papers query to the article related endpoint", async () => {
+    useFeedStore.setState({
+      articles: [createMockArticle(1)],
+      selectedArticleId: 1,
+    });
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          papers: [
+            {
+              title: "Related Result",
+              authors: ["Author A"],
+              journal: "Test Journal",
+              year: 2025,
+              doi: "10.1234/related",
+              citationCount: 12,
+              publicationTypes: [],
+              source: "semantic_scholar",
+              isOpenAccess: false,
+            },
+          ],
+          source: "s2_recommendations",
+          query: "10.1234/source",
+        }),
+    });
+
+    await useFeedStore.getState().sendCopilotMessage("find related papers");
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch).toHaveBeenCalledWith("/api/feeds/articles/1/related");
+    expect(useFeedStore.getState().copilotMessages).toHaveLength(2);
+    expect(
+      useFeedStore.getState().copilotMessages[1].relatedPapers
+    ).toHaveLength(1);
+    expect(useFeedStore.getState().copilotLoading).toBe(false);
+  });
+
+  it("adds a related-papers suggestion after summary generation", async () => {
+    useFeedStore.setState({
+      articles: [createMockArticle(1)],
+      selectedArticleId: 1,
+    });
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          sourceTier: "abstract_only",
+          sourceLabel: "Abstract only",
+          suggestedQuestions: ["What was studied?"],
+          summary: "Summary text",
+        }),
+    });
+
+    await useFeedStore.getState().summarizeArticle();
+
+    expect(useFeedStore.getState().copilotSuggestions).toContain(
+      "Find related papers"
+    );
   });
 });
 

@@ -10,10 +10,71 @@ import type {
   FeedSubscription,
   FeedArticleWithStatus,
 } from "@/types/feed";
+import type {
+  RelatedPaper,
+  RelatedPapersResult,
+} from "@/lib/feeds/related-papers";
 
 // ── Types ───────────────────────────────────────────────────────────
 
 export type ViewFilter = "all" | "unread" | "starred";
+
+interface CopilotMessage {
+  id: string;
+  role: "user" | "assistant" | "system";
+  content: string;
+  relatedPapers?: RelatedPaper[];
+  relatedPapersSource?: RelatedPapersResult["source"];
+}
+
+const RELATED_PAPERS_SUGGESTION = "Find related papers";
+const RELATED_PAPERS_INTENT =
+  /\b(related papers|similar papers|similar articles|more like this|find related)\b/i;
+
+function withRelatedSuggestion(suggestions: string[]): string[] {
+  if (
+    suggestions.some((suggestion) =>
+      RELATED_PAPERS_INTENT.test(suggestion)
+    )
+  ) {
+    return suggestions;
+  }
+
+  return [...suggestions, RELATED_PAPERS_SUGGESTION];
+}
+
+function formatRelatedPapersSummary(
+  result: RelatedPapersResult
+): CopilotMessage {
+  const sourceLabel =
+    result.source === "s2_recommendations"
+      ? "Semantic Scholar recommendations"
+      : result.source === "s2_search"
+        ? "Semantic Scholar search"
+        : "PubMed search";
+
+  return {
+    id: `related-${Date.now()}`,
+    role: "assistant",
+    content:
+      result.papers.length > 0
+        ? `I found ${result.papers.length} related papers via ${sourceLabel}.`
+        : "I couldn't find related papers for this article. Try a broader topic search.",
+    relatedPapers: result.papers,
+    relatedPapersSource: result.source,
+  };
+}
+
+async function fetchRelatedPapersForArticle(
+  articleId: number
+): Promise<RelatedPapersResult> {
+  const response = await fetch(`/api/feeds/articles/${articleId}/related`);
+  if (!response.ok) {
+    throw new Error("Failed to find related papers");
+  }
+
+  return response.json();
+}
 
 interface FeedStore {
   // ── State ──────────────────────────────────────────────────────────
@@ -96,11 +157,7 @@ interface FeedStore {
   copilotSourceLabel: string | null;
 
   /** Chat messages for the copilot */
-  copilotMessages: Array<{
-    id: string;
-    role: "user" | "assistant" | "system";
-    content: string;
-  }>;
+  copilotMessages: CopilotMessage[];
 
   /** Whether the copilot is generating a response */
   copilotLoading: boolean;
@@ -112,24 +169,13 @@ interface FeedStore {
   copilotSummaryCache: Record<number, string>;
 
   /** Related papers for the current article */
-  relatedPapers: Array<{
-    title: string;
-    authors: string[];
-    journal: string;
-    year: number;
-    doi: string | null;
-    pmid: string | null;
-    abstract: string | null;
-    citationCount: number;
-    isOpenAccess: boolean;
-    openAccessPdfUrl: string | null;
-  }>;
+  relatedPapers: RelatedPaper[];
 
   /** Whether related papers are loading */
   relatedPapersLoading: boolean;
 
-  /** Source message for related papers */
-  relatedPapersSource: string | null;
+  /** Source used to fetch related papers */
+  relatedPapersSource: RelatedPapersResult["source"] | null;
 
   // ── Actions ────────────────────────────────────────────────────────
 
@@ -773,7 +819,9 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
         copilotLoading: false,
         copilotSourceTier: data.sourceTier,
         copilotSourceLabel: data.sourceLabel,
-        copilotSuggestions: data.suggestedQuestions || [],
+        copilotSuggestions: withRelatedSuggestion(
+          data.suggestedQuestions || []
+        ),
         copilotMessages: [
           ...s.copilotMessages,
           {
@@ -829,8 +877,29 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
         { id: userMsgId, role: "user" as const, content: question },
       ],
       copilotLoading: true,
+      relatedPapersLoading: RELATED_PAPERS_INTENT.test(question),
       copilotSuggestions: [],
     }));
+
+    if (RELATED_PAPERS_INTENT.test(question)) {
+      try {
+        const result = await fetchRelatedPapersForArticle(articleId);
+
+        set((s) => ({
+          copilotMessages: [
+            ...s.copilotMessages,
+            formatRelatedPapersSummary(result),
+          ],
+          relatedPapers: result.papers,
+          relatedPapersSource: result.source,
+          relatedPapersLoading: false,
+          copilotLoading: false,
+        }));
+        return;
+      } catch {
+        set({ relatedPapersLoading: false });
+      }
+    }
 
     try {
       // Build messages history (exclude system messages)
@@ -894,68 +963,34 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
   },
 
   findRelatedPapers: async () => {
-    const { articles, selectedArticleId } = get();
-    const article = articles.find((a) => a.id === selectedArticleId);
-    if (!article) return;
+    const articleId = get().selectedArticleId;
+    if (!articleId) return;
 
-    set({ relatedPapersLoading: true, relatedPapers: [], relatedPapersSource: null });
+    set({
+      copilotLoading: true,
+      relatedPapersLoading: true,
+      relatedPapers: [],
+      relatedPapersSource: null,
+    });
 
     try {
-      const res = await fetch("/api/feeds/copilot/related", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: article.title,
-          doi: article.doi,
-          pubmedId: article.pubmedId,
-        }),
-      });
+      const result = await fetchRelatedPapersForArticle(articleId);
 
-      if (!res.ok) throw new Error("Failed to find related papers");
-      const data = await res.json();
-
-      set({
-        relatedPapers: data.papers,
-        relatedPapersSource: data.sourceMessage,
+      set((s) => ({
+        relatedPapers: result.papers,
+        relatedPapersSource: result.source,
         relatedPapersLoading: false,
-      });
-
-      // Inject as a copilot message so it appears in the chat flow
-      if (data.papers.length > 0) {
-        const summaryMsg =
-          `${data.sourceMessage}\n\n` +
-          data.papers
-            .slice(0, 5)
-            .map(
-              (
-                p: {
-                  title: string;
-                  authors: string[];
-                  journal: string;
-                  year: number;
-                  citationCount: number;
-                },
-                i: number
-              ) =>
-                `${i + 1}. **${p.title}**\n   ${p.authors.slice(0, 3).join(", ")}${p.authors.length > 3 ? " et al." : ""} · ${p.journal} (${p.year}) · ${p.citationCount} citations`
-            )
-            .join("\n\n");
-
-        set((s) => ({
-          copilotMessages: [
-            ...s.copilotMessages,
-            {
-              id: `related-${Date.now()}`,
-              role: "assistant" as const,
-              content: summaryMsg,
-            },
-          ],
-        }));
-      }
+        copilotLoading: false,
+        copilotMessages: [
+          ...s.copilotMessages,
+          formatRelatedPapersSummary(result),
+        ],
+      }));
     } catch {
       set({
+        copilotLoading: false,
         relatedPapersLoading: false,
-        relatedPapersSource: "Failed to find related papers",
+        relatedPapersSource: null,
       });
     }
   },

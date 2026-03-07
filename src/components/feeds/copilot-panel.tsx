@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useFeedStore } from "@/stores/feed-store";
 import type { FeedArticleWithStatus } from "@/types/feed";
+import { RelatedPaperCards } from "./related-papers";
 
 // ── Compact Article Header ──────────────────────────────────────────
 
@@ -243,15 +244,23 @@ export function CopilotPanel() {
             )}
             <div
               className={cn(
-                "max-w-[85%] px-3 py-2 rounded-xl text-sm",
+                "rounded-xl px-3 py-2 text-sm",
+                msg.relatedPapers?.length ? "max-w-[95%]" : "max-w-[85%]",
                 msg.role === "user"
                   ? "bg-surface-raised text-ink"
                   : "bg-brand/5 text-ink"
               )}
             >
-              <p className="whitespace-pre-wrap text-xs leading-relaxed">
-                {msg.content}
-              </p>
+              {msg.content ? (
+                <p className="whitespace-pre-wrap text-xs leading-relaxed">
+                  {msg.content}
+                </p>
+              ) : null}
+              {msg.relatedPapers?.length ? (
+                <div className={cn(msg.content ? "mt-3" : "")}>
+                  <RelatedPaperCards papers={msg.relatedPapers} dense />
+                </div>
+              ) : null}
             </div>
           </div>
         ))}
