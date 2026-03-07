@@ -120,6 +120,7 @@ export const userArticleStatus = pgTable(
     isStarred: boolean("is_starred").default(false),
     isSavedToLibrary: boolean("is_saved_to_library").default(false),
     savedPaperId: integer("saved_paper_id"),
+    notes: text("notes"),
     readAt: timestamp("read_at"),
     starredAt: timestamp("starred_at"),
   },

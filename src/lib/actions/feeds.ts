@@ -582,7 +582,55 @@ export async function toggleArticleStar(articleId: number): Promise<{ isStarred:
 }
 
 // =====================================================================
-// 9. saveArticleToLibrary
+// 9. saveArticleNote
+// =====================================================================
+
+/**
+ * Save a note on an article for the current user.
+ * Passing empty or whitespace-only notes clears the note.
+ */
+export async function saveArticleNote(articleId: number, notes: string | null): Promise<void> {
+  const userId = await getCurrentUserId();
+  const trimmed = notes?.trim() || null;
+
+  await db
+    .insert(userArticleStatus)
+    .values({
+      userId,
+      articleId,
+      notes: trimmed,
+    })
+    .onConflictDoUpdate({
+      target: [userArticleStatus.userId, userArticleStatus.articleId],
+      set: { notes: trimmed },
+    });
+}
+
+// =====================================================================
+// 10. getArticleNote
+// =====================================================================
+
+/**
+ * Get the saved note for an article for the current user.
+ */
+export async function getArticleNote(articleId: number): Promise<string | null> {
+  const userId = await getCurrentUserId();
+
+  const [row] = await db
+    .select({ notes: userArticleStatus.notes })
+    .from(userArticleStatus)
+    .where(
+      and(
+        eq(userArticleStatus.userId, userId),
+        eq(userArticleStatus.articleId, articleId)
+      )
+    );
+
+  return row?.notes ?? null;
+}
+
+// =====================================================================
+// 11. saveArticleToLibrary
 // =====================================================================
 
 /**
@@ -668,7 +716,7 @@ async function insertPaperFromArticle(article: typeof feedArticles.$inferSelect)
 }
 
 // =====================================================================
-// 10. markAllRead
+// 12. markAllRead
 // =====================================================================
 
 /**
@@ -720,7 +768,7 @@ export async function markAllRead(feedSourceId?: number): Promise<{ markedCount:
 }
 
 // =====================================================================
-// 11. getCuratedFeeds
+// 13. getCuratedFeeds
 // =====================================================================
 
 /**
@@ -788,7 +836,7 @@ export async function getCuratedFeeds(filters: {
 }
 
 // =====================================================================
-// 12. getArticleJournals
+// 14. getArticleJournals
 // =====================================================================
 
 /**
@@ -822,7 +870,7 @@ export async function getArticleJournals(): Promise<string[]> {
 }
 
 // =====================================================================
-// 13. detectFeedFromUrl
+// 15. detectFeedFromUrl
 // =====================================================================
 
 /**

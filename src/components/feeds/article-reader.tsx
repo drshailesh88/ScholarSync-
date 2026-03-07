@@ -4,6 +4,7 @@ import { Star, BookmarkSimple, ArrowSquareOut, Quotes, Sparkle } from "@phosphor
 import { cn } from "@/lib/utils";
 import { estimateReadingTime } from "@/lib/feeds/reading-time";
 import { useFeedStore } from "@/stores/feed-store";
+import { ArticleNotes } from "./article-notes";
 
 interface ArticleReaderProps {
   onCite?: (articleId: number) => void;
@@ -57,60 +58,63 @@ export function ArticleReader({ onCite, onOpenCopilot }: ArticleReaderProps) {
       </p>
 
       {/* Actions */}
-      <div className="flex items-center gap-2 mb-5 pb-4 border-b border-border-subtle">
-        <button
-          onClick={() => toggleStar(article.id)}
-          className={cn(
-            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
-            article.isStarred
-              ? "bg-yellow-500/10 text-yellow-500"
-              : "bg-surface-raised text-ink-muted hover:text-ink"
-          )}
-        >
-          <Star size={14} weight={article.isStarred ? "fill" : "regular"} />
-          {article.isStarred ? "Starred" : "Star"}
-        </button>
-        <button
-          onClick={() => saveToLibrary(article.id)}
-          className={cn(
-            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
-            article.isSavedToLibrary
-              ? "bg-brand/10 text-brand"
-              : "bg-surface-raised text-ink-muted hover:text-ink"
-          )}
-        >
-          <BookmarkSimple size={14} weight={article.isSavedToLibrary ? "fill" : "regular"} />
-          {article.isSavedToLibrary ? "Saved" : "Save"}
-        </button>
-        {onCite && (
+      <div className="mb-5 pb-4 border-b border-border-subtle">
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => onCite(article.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-ink-muted hover:text-ink transition-colors"
+            onClick={() => toggleStar(article.id)}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+              article.isStarred
+                ? "bg-yellow-500/10 text-yellow-500"
+                : "bg-surface-raised text-ink-muted hover:text-ink"
+            )}
           >
-            <Quotes size={14} />
-            Cite
+            <Star size={14} weight={article.isStarred ? "fill" : "regular"} />
+            {article.isStarred ? "Starred" : "Star"}
           </button>
-        )}
-        {onOpenCopilot && (
           <button
-            onClick={onOpenCopilot}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-brand/10 text-brand hover:bg-brand/15 border border-brand/20 transition-colors"
+            onClick={() => saveToLibrary(article.id)}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+              article.isSavedToLibrary
+                ? "bg-brand/10 text-brand"
+                : "bg-surface-raised text-ink-muted hover:text-ink"
+            )}
           >
-            <Sparkle size={14} weight="fill" />
-            AI
+            <BookmarkSimple size={14} weight={article.isSavedToLibrary ? "fill" : "regular"} />
+            {article.isSavedToLibrary ? "Saved" : "Save"}
           </button>
-        )}
-        {article.link && (
-          <a
-            href={article.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-ink-muted hover:text-ink transition-colors"
-          >
-            <ArrowSquareOut size={14} />
-            Open Original
-          </a>
-        )}
+          {onCite && (
+            <button
+              onClick={() => onCite(article.id)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-ink-muted hover:text-ink transition-colors"
+            >
+              <Quotes size={14} />
+              Cite
+            </button>
+          )}
+          {onOpenCopilot && (
+            <button
+              onClick={onOpenCopilot}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-brand/10 text-brand hover:bg-brand/15 border border-brand/20 transition-colors"
+            >
+              <Sparkle size={14} weight="fill" />
+              AI
+            </button>
+          )}
+          {article.link && (
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-raised text-ink-muted hover:text-ink transition-colors"
+            >
+              <ArrowSquareOut size={14} />
+              Open Original
+            </a>
+          )}
+        </div>
+        <ArticleNotes articleId={article.id} />
       </div>
 
       {/* Abstract */}

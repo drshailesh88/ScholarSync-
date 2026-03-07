@@ -102,6 +102,7 @@ beforeEach(() => {
     hasMore: false,
     page: 0,
     selectedArticleId: null,
+    articleNotes: {},
     error: null,
   });
 });
@@ -479,7 +480,12 @@ describe("JF-211: setSelectedArticle", () => {
       articles: [createMockArticle(1, { isRead: false })],
       totalUnread: 1,
     });
-    mockFetch.mockResolvedValueOnce({ ok: true });
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ notes: null }),
+      })
+      .mockResolvedValueOnce({ ok: true });
 
     useFeedStore.getState().setSelectedArticle(1);
 
@@ -491,7 +497,12 @@ describe("JF-211: setSelectedArticle", () => {
       articles: [createMockArticle(1, { isRead: false })],
       totalUnread: 1,
     });
-    mockFetch.mockResolvedValueOnce({ ok: true });
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ notes: null }),
+      })
+      .mockResolvedValueOnce({ ok: true });
 
     useFeedStore.getState().setSelectedArticle(1);
 
@@ -503,10 +514,14 @@ describe("JF-211: setSelectedArticle", () => {
       articles: [createMockArticle(1, { isRead: true })],
       totalUnread: 0,
     });
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ notes: null }),
+    });
 
     useFeedStore.getState().setSelectedArticle(1);
 
-    expect(mockFetch).not.toHaveBeenCalled();
+    expect(mockFetch).toHaveBeenCalledWith("/api/feeds/articles/1/notes");
   });
 
   it("clears selection when null", () => {

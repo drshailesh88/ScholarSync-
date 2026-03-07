@@ -51,6 +51,9 @@ interface FeedStore {
   /** Currently selected article (for reading pane) */
   selectedArticleId: number | null;
 
+  /** Cached notes by article ID */
+  articleNotes: Record<number, string>;
+
   /** Current search query for articles */
   searchQuery: string;
 
@@ -160,6 +163,12 @@ interface FeedStore {
   /** Mark all articles as read (optionally for a specific feed) */
   markAllRead: (feedSourceId?: number) => Promise<void>;
 
+  /** Load the current user's note for an article */
+  loadArticleNote: (articleId: number) => Promise<void>;
+
+  /** Save a note for an article */
+  saveArticleNote: (articleId: number, notes: string) => Promise<void>;
+
   /** Set the selected feed (triggers article reload) */
   setSelectedFeed: (feedId: number | null) => void;
 
@@ -248,6 +257,7 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
   hasMore: false,
   page: 0,
   selectedArticleId: null,
+  articleNotes: {},
   searchQuery: "",
   filterDateFrom: null,
   filterDateTo: null,
@@ -540,6 +550,55 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
     }
   },
 
+  loadArticleNote: async (articleId) => {
+    try {
+      const res = await fetch(`/api/feeds/articles/${articleId}/notes`);
+      if (!res.ok) return;
+
+      const data = await res.json();
+      set((s) => {
+        const articleNotes = { ...s.articleNotes };
+        const nextNotes = typeof data.notes === "string" ? data.notes : "";
+
+        if (nextNotes) {
+          articleNotes[articleId] = nextNotes;
+        } else {
+          delete articleNotes[articleId];
+        }
+
+        return { articleNotes };
+      });
+    } catch {
+      // Silently fail — notes can be reloaded the next time the article opens
+    }
+  },
+
+  saveArticleNote: async (articleId, notes) => {
+    const trimmedNotes = notes.trim();
+
+    set((s) => {
+      const articleNotes = { ...s.articleNotes };
+
+      if (trimmedNotes) {
+        articleNotes[articleId] = trimmedNotes;
+      } else {
+        delete articleNotes[articleId];
+      }
+
+      return { articleNotes };
+    });
+
+    try {
+      await fetch(`/api/feeds/articles/${articleId}/notes`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: trimmedNotes || null }),
+      });
+    } catch {
+      // Silently fail — optimistic cache refreshes when the article is reopened
+    }
+  },
+
   // ── Filter setters (trigger article reload) ────────────────────────
 
   setSelectedFeed: (feedId) => {
@@ -637,6 +696,8 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
     }
 
     if (articleId) {
+      void get().loadArticleNote(articleId);
+
       const article = get().articles.find((a) => a.id === articleId);
       if (article && !article.isRead) {
         get().markRead(articleId);
