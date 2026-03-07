@@ -12,6 +12,7 @@ import PropertiesPanel from '@/components/illustration/PropertiesPanel';
 import IconPicker from '@/components/illustration/IconPicker';
 import type { UnifiedIconResult } from '@/lib/illustration/lib/icons';
 import { StylePanel, defaultHandDrawnSettings, type HandDrawnSettings } from '@/components/illustration/StylePanel';
+import { JournalFigurePanel } from '@/components/illustration/JournalFigurePanel';
 import { useEditorStore } from '@/stores/illustration/editorStore';
 import { useToast } from '@/components/illustration/Toast/useToast';
 
@@ -19,7 +20,7 @@ import { useToast } from '@/components/illustration/Toast/useToast';
 // Types
 // ============================================================================
 
-type TabId = 'layers' | 'properties' | 'icons' | 'style';
+type TabId = 'layers' | 'properties' | 'icons' | 'style' | 'journal';
 
 interface Tab {
   id: TabId;
@@ -147,6 +148,15 @@ const StyleIcon = () => (
   </svg>
 );
 
+const JournalIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    <line x1="8" y1="7" x2="16" y2="7" />
+    <line x1="8" y1="11" x2="13" y2="11" />
+  </svg>
+);
+
 // ============================================================================
 // Tabs Configuration
 // ============================================================================
@@ -156,6 +166,7 @@ const tabs: Tab[] = [
   { id: 'properties', label: 'Properties', icon: <PropertiesIcon /> },
   { id: 'icons', label: 'Icons', icon: <IconsIcon /> },
   { id: 'style', label: 'Style', icon: <StyleIcon /> },
+  { id: 'journal', label: 'Journal', icon: <JournalIcon /> },
 ];
 
 // ============================================================================
@@ -306,6 +317,8 @@ export function RightPanel({
             />
           </div>
         );
+      case 'journal':
+        return <JournalFigurePanel />;
       default:
         return null;
     }
