@@ -154,7 +154,7 @@ export function MenuBar({
         },
         {
           id: 'document-settings',
-          label: 'Document Settings...',
+          label: 'Canvas Size...',
           action: () => onOpenDocumentSettings?.(),
         },
         { id: 'divider1', label: '', divider: true },
