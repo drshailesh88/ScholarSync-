@@ -168,7 +168,7 @@ describe("InsertMenu", () => {
     });
 
     const shapeItems = document.querySelectorAll("[data-testid='insert-menu-shape-item']");
-    expect(shapeItems).toHaveLength(11);
+    expect(shapeItems).toHaveLength(36);
 
     const starButton = document.querySelector("[data-shape-type='star']");
     if (!(starButton instanceof HTMLButtonElement)) {

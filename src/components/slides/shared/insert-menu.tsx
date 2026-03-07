@@ -11,7 +11,7 @@ import {
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { getBlocksByCategory } from "@/components/slides/blocks";
-import { SHAPE_TYPE_OPTIONS, renderShapeSvgPrimitive } from "@/components/slides/blocks/shape-utils";
+import { SHAPE_TYPE_OPTIONS, SHAPE_CATEGORIES, getShapesByCategory, renderShapeSvgPrimitive, isLineShape } from "@/components/slides/blocks/shape-utils";
 import { getBlockIcon } from "./block-icons";
 import type { ContentBlock } from "@/types/presentation";
 
@@ -311,27 +311,40 @@ export function InsertMenu({
                   {isShapeItem && shapeSubmenuOpen && isActive && (
                     <div
                       data-testid="insert-menu-shape-submenu"
-                      className="mx-2 my-1 grid grid-cols-4 gap-1 rounded-lg border border-border bg-surface-raised p-1.5"
+                      className="mx-2 my-1 max-h-[200px] overflow-y-auto rounded-lg border border-border bg-surface-raised p-1.5"
                     >
-                      {SHAPE_TYPE_OPTIONS.map((shape) => (
-                        <button
-                          key={shape.type}
-                          type="button"
-                          data-testid="insert-menu-shape-item"
-                          data-shape-type={shape.type}
-                          title={shape.label}
-                          onClick={() => selectItem("shape", { shapeType: shape.type })}
-                          className="flex h-8 items-center justify-center rounded border border-border bg-surface text-ink-muted transition-colors hover:border-brand hover:text-brand"
-                        >
-                          <svg className="h-5 w-5" viewBox="0 0 100 100" aria-hidden="true">
-                            {renderShapeSvgPrimitive(shape.type, {
-                              fill: shape.type === "line" ? "none" : "currentColor",
-                              stroke: "currentColor",
-                              strokeWidth: shape.type === "line" ? 10 : 6,
-                            })}
-                          </svg>
-                        </button>
-                      ))}
+                      {SHAPE_CATEGORIES.map((cat) => {
+                        const shapes = getShapesByCategory()[cat];
+                        if (shapes.length === 0) return null;
+                        return (
+                          <div key={cat} className="mb-1.5 last:mb-0">
+                            <h5 className="px-1 pb-0.5 text-[9px] font-semibold uppercase tracking-wider text-ink-muted/70">
+                              {cat}
+                            </h5>
+                            <div className="grid grid-cols-4 gap-1">
+                              {shapes.map((shape) => (
+                                <button
+                                  key={shape.type}
+                                  type="button"
+                                  data-testid="insert-menu-shape-item"
+                                  data-shape-type={shape.type}
+                                  title={shape.label}
+                                  onClick={() => selectItem("shape", { shapeType: shape.type })}
+                                  className="flex h-8 items-center justify-center rounded border border-border bg-surface text-ink-muted transition-colors hover:border-brand hover:text-brand"
+                                >
+                                  <svg className="h-5 w-5" viewBox="0 0 100 100" aria-hidden="true">
+                                    {renderShapeSvgPrimitive(shape.type, {
+                                      fill: isLineShape(shape.type) ? "none" : "currentColor",
+                                      stroke: "currentColor",
+                                      strokeWidth: isLineShape(shape.type) ? 10 : 6,
+                                    })}
+                                  </svg>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

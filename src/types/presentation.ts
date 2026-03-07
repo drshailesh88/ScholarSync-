@@ -94,6 +94,7 @@ export interface TimelineData {
 /** Shape block for geometric callouts and visual elements */
 export interface ShapeData {
   shapeType:
+    // Basic (existing)
     | "rectangle"
     | "rounded_rectangle"
     | "circle"
@@ -104,7 +105,37 @@ export interface ShapeData {
     | "star"
     | "diamond"
     | "pentagon"
-    | "hexagon";
+    | "hexagon"
+    // Flowchart
+    | "flowchart_process"
+    | "flowchart_decision"
+    | "flowchart_data"
+    | "flowchart_document"
+    | "flowchart_start_end"
+    | "flowchart_predefined"
+    | "flowchart_manual_input"
+    | "flowchart_preparation"
+    // Connectors
+    | "connector_straight"
+    | "connector_elbow"
+    | "connector_curved"
+    // Callouts
+    | "callout_rect"
+    | "callout_rounded"
+    | "callout_cloud"
+    // Arrows
+    | "arrow_right"
+    | "arrow_left"
+    | "arrow_up"
+    | "arrow_down"
+    | "arrow_double"
+    | "arrow_curved"
+    | "chevron"
+    // Brackets / Braces
+    | "bracket_left"
+    | "bracket_right"
+    | "brace_left"
+    | "brace_right";
   fillColor?: string;
   strokeColor?: string;
   strokeWidth?: number;
@@ -113,6 +144,13 @@ export interface ShapeData {
   textColor?: string;
   opacity?: number;
   rotation?: number;
+  // Connector-specific properties
+  connectorStart?: { x: number; y: number };
+  connectorEnd?: { x: number; y: number };
+  arrowStart?: "none" | "arrow" | "circle" | "diamond";
+  arrowEnd?: "none" | "arrow" | "circle" | "diamond";
+  connectorStyle?: "straight" | "elbow" | "curved";
+  connectedToBlock?: { startBlockIndex?: number; endBlockIndex?: number };
 }
 
 /** Toggle/accordion block for expandable content sections */

@@ -6,7 +6,7 @@ import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, Bl
 import { cn } from "@/lib/utils";
 import { detectMediaType } from "@/components/slides/blocks/media-block";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
-import { SHAPE_TYPE_OPTIONS, renderShapeSvgPrimitive } from "@/components/slides/blocks/shape-utils";
+import { SHAPE_CATEGORIES, getShapesByCategory, renderShapeSvgPrimitive, isLineShape, isConnectorShape } from "@/components/slides/blocks/shape-utils";
 import { FONT_FAMILY_OPTIONS, FONT_SIZE_OPTIONS } from "@/components/slides/wysiwyg/text-formatting-options";
 import { BlockStyleControls } from "@/components/slides/shared/block-style-controls";
 import { ColorPicker } from "@/components/slides/shared/color-picker";
@@ -1569,32 +1569,44 @@ function ShapeEditor({
       <EditorSection title="Shape">
         <div>
           <FieldLabel>Shape Type</FieldLabel>
-          <div className="grid grid-cols-3 gap-1.5">
-            {SHAPE_TYPE_OPTIONS.map((shape) => {
-              const isSelected = data.shapeType === shape.type;
-              const previewStroke = shape.type === "line" ? strokeColor : strokeWidth > 0 ? strokeColor : "#94a3b8";
-              const previewStrokeWidth = shape.type === "line" ? Math.max(2, strokeWidth || 0) : Math.max(1, strokeWidth || 0);
-
+          <div className="max-h-[200px] overflow-y-auto space-y-2">
+            {SHAPE_CATEGORIES.map((cat) => {
+              const shapes = getShapesByCategory()[cat];
+              if (shapes.length === 0) return null;
               return (
-                <button
-                  key={shape.type}
-                  type="button"
-                  onClick={() => updateData({ shapeType: shape.type })}
-                  className={`rounded-md border px-1 py-1 text-[9px] transition-colors ${
-                    isSelected
-                      ? "border-brand bg-brand/10 text-brand"
-                      : "border-border bg-surface-raised text-ink-muted hover:border-brand/50 hover:text-ink"
-                  }`}
-                >
-                  <svg className="mx-auto h-6 w-full" viewBox="0 0 100 100" aria-hidden="true">
-                    {renderShapeSvgPrimitive(shape.type, {
-                      fill: shape.type === "line" ? "none" : fillColor,
-                      stroke: previewStroke,
-                      strokeWidth: previewStrokeWidth,
+                <div key={cat}>
+                  <span className="text-[9px] font-semibold uppercase tracking-wider text-ink-muted/70">{cat}</span>
+                  <div className="grid grid-cols-3 gap-1.5 mt-0.5">
+                    {shapes.map((shape) => {
+                      const isSelected = data.shapeType === shape.type;
+                      const isLineLike = isLineShape(shape.type);
+                      const previewStroke = isLineLike ? strokeColor : strokeWidth > 0 ? strokeColor : "#94a3b8";
+                      const previewStrokeWidth = isLineLike ? Math.max(2, strokeWidth || 0) : Math.max(1, strokeWidth || 0);
+
+                      return (
+                        <button
+                          key={shape.type}
+                          type="button"
+                          onClick={() => updateData({ shapeType: shape.type })}
+                          className={`rounded-md border px-1 py-1 text-[9px] transition-colors ${
+                            isSelected
+                              ? "border-brand bg-brand/10 text-brand"
+                              : "border-border bg-surface-raised text-ink-muted hover:border-brand/50 hover:text-ink"
+                          }`}
+                        >
+                          <svg className="mx-auto h-6 w-full" viewBox="0 0 100 100" aria-hidden="true">
+                            {renderShapeSvgPrimitive(shape.type, {
+                              fill: isLineLike ? "none" : fillColor,
+                              stroke: previewStroke,
+                              strokeWidth: previewStrokeWidth,
+                            })}
+                          </svg>
+                          <span className="block mt-0.5 leading-tight">{shape.label}</span>
+                        </button>
+                      );
                     })}
-                  </svg>
-                  <span className="block mt-0.5 leading-tight">{shape.label}</span>
-                </button>
+                  </div>
+                </div>
               );
             })}
           </div>
@@ -1701,6 +1713,37 @@ function ShapeEditor({
             ]}
           />
         </div>
+
+        {isConnectorShape(data.shapeType) && (
+          <>
+            <div>
+              <FieldLabel>Start Arrow</FieldLabel>
+              <FieldSelect
+                value={data.arrowStart ?? "none"}
+                onChange={(v) => updateData({ arrowStart: v as ShapeData["arrowStart"] })}
+                options={[
+                  { value: "none", label: "None" },
+                  { value: "arrow", label: "Arrow" },
+                  { value: "circle", label: "Circle" },
+                  { value: "diamond", label: "Diamond" },
+                ]}
+              />
+            </div>
+            <div>
+              <FieldLabel>End Arrow</FieldLabel>
+              <FieldSelect
+                value={data.arrowEnd ?? "arrow"}
+                onChange={(v) => updateData({ arrowEnd: v as ShapeData["arrowEnd"] })}
+                options={[
+                  { value: "none", label: "None" },
+                  { value: "arrow", label: "Arrow" },
+                  { value: "circle", label: "Circle" },
+                  { value: "diamond", label: "Diamond" },
+                ]}
+              />
+            </div>
+          </>
+        )}
       </EditorSection>
     </div>
   );
