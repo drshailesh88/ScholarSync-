@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { getThemeCSSVars, isDarkTheme } from "../theme-engine";
-import type { ThemeConfig } from "@/types/presentation";
+import { PRESET_THEMES, type ThemeConfig } from "@/types/presentation";
+import { contrastRatio } from "@/lib/presentation/color-contrast";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -125,5 +126,66 @@ describe("theme-engine", () => {
       // RGB(200,200,200) → luminance ~0.78 > 0.5 → light
       expect(isDarkTheme(makeTheme({ backgroundColor: "#C8C8C8" }))).toBe(false);
     });
+  });
+
+  // -----------------------------------------------------------------------
+  // PRESET_THEMES validation
+  // -----------------------------------------------------------------------
+  describe("PRESET_THEMES", () => {
+    const themeEntries = Object.entries(PRESET_THEMES);
+
+    it("contains all 26 themes", () => {
+      expect(themeEntries.length).toBe(26);
+    });
+
+    const requiredFields: (keyof ThemeConfig)[] = [
+      "name",
+      "primaryColor",
+      "secondaryColor",
+      "backgroundColor",
+      "textColor",
+      "accentColor",
+    ];
+
+    it.each(themeEntries)(
+      "theme '%s' has all required fields",
+      (_key, config) => {
+        for (const field of requiredFields) {
+          expect(config[field], `missing ${field} in ${_key}`).toBeDefined();
+          expect(typeof config[field]).toBe("string");
+          expect((config[field] as string).length).toBeGreaterThan(0);
+        }
+      },
+    );
+
+    it.each(themeEntries)(
+      "theme '%s' meets WCAG AA contrast (textColor vs backgroundColor)",
+      (_key, config) => {
+        const ratio = contrastRatio(config.textColor, config.backgroundColor);
+        expect(
+          ratio,
+          `${_key}: contrast ${ratio.toFixed(2)} < 4.5 (text=${config.textColor} bg=${config.backgroundColor})`,
+        ).toBeGreaterThanOrEqual(4.5);
+      },
+    );
+
+    it("no two themes share the same primaryColor", () => {
+      const primaryColors = themeEntries.map(([, c]) => c.primaryColor.toUpperCase());
+      const unique = new Set(primaryColors);
+      expect(unique.size).toBe(primaryColors.length);
+    });
+
+    it.each(themeEntries)(
+      "theme '%s' has valid CSS font stacks",
+      (_key, config) => {
+        const fontRegex = /^[\w\s'-]+(?:,\s*[\w\s'-]+)*$/;
+        if (config.fontFamily) {
+          expect(config.fontFamily).toMatch(fontRegex);
+        }
+        if (config.headingFontFamily) {
+          expect(config.headingFontFamily).toMatch(fontRegex);
+        }
+      },
+    );
   });
 });

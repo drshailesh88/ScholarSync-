@@ -13,7 +13,7 @@ import {
   CaretUp,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
-import { SourceSelector, type SourceType } from "./source-selector";
+import { SourceSelector, type SourceType, type UrlSource } from "./source-selector";
 import { TemplateSelector } from "./template-selector";
 import { PRESET_THEMES, ACADEMIC_TEMPLATES } from "@/types/presentation";
 import type { AudienceType } from "@/types/presentation";
@@ -54,6 +54,7 @@ export function GenerationWizard() {
   const [rawText, setRawText] = useState("");
   const [deepResearchSessionId, setDeepResearchSessionId] = useState<number | null>(null);
   const [selectedReferences, setSelectedReferences] = useState<ParsedReference[]>([]);
+  const [urlSources, setUrlSources] = useState<UrlSource[]>([]);
 
   // Step 1: Template & Audience
   const [templateId, setTemplateId] = useState<string | null>(null);
@@ -83,7 +84,8 @@ export function GenerationWizard() {
     (sourceType === "document" && documentId != null) ||
     (sourceType === "text" && rawText.trim().length > 50) ||
     (sourceType === "deep_research" && deepResearchSessionId != null) ||
-    (sourceType === "references" && selectedReferences.length > 0);
+    (sourceType === "references" && selectedReferences.length > 0) ||
+    (sourceType === "url" && urlSources.length > 0 && urlSources.some((s) => s.fetched));
 
   const canProceedStep2 = title.trim().length > 0;
 
@@ -100,6 +102,24 @@ export function GenerationWizard() {
       if (sourceType === "references" && selectedReferences.length > 0) {
         effectiveSourceType = "text";
         effectiveRawText = formatReferencesAsContent(selectedReferences);
+      }
+
+      if (sourceType === "url" && urlSources.length > 0) {
+        effectiveSourceType = "text";
+        // Fetch full content for each URL and concatenate
+        const parts: string[] = [];
+        for (const source of urlSources.filter((s) => s.fetched)) {
+          const res = await fetch("/api/slides/fetch-url", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: source.url }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            parts.push(`--- Source: ${data.title} ---\n\n${data.content}`);
+          }
+        }
+        effectiveRawText = parts.join("\n\n");
       }
 
       const res = await fetch("/api/presentations/preprocess", {
@@ -244,6 +264,8 @@ export function GenerationWizard() {
             onRawTextChange={setRawText}
             onReferencesSelected={setSelectedReferences}
             selectedReferences={selectedReferences}
+            urlSources={urlSources}
+            onUrlSourcesChange={setUrlSources}
           />
 
           {/* Deep Research source option */}
