@@ -93,11 +93,11 @@ export async function POST(req: Request): Promise<Response> {
         });
         contextChunks = retrievedChunks;
 
-        // Fetch paper metadata for source attribution
-        const chunkPaperIds = [
-          ...new Set(retrievedChunks.map((c) => c.paper_id)),
+        // Fetch selected paper metadata so source coverage can name used and unused papers.
+        const metadataPaperIds = [
+          ...new Set([...(paperIds ?? []), ...retrievedChunks.map((c) => c.paper_id)]),
         ];
-        if (chunkPaperIds.length > 0) {
+        if (metadataPaperIds.length > 0) {
           const paperRows = await db
             .select({
               id: papers.id,
@@ -106,7 +106,7 @@ export async function POST(req: Request): Promise<Response> {
               year: papers.year,
             })
             .from(papers)
-            .where(inArray(papers.id, chunkPaperIds));
+            .where(inArray(papers.id, metadataPaperIds));
           for (const p of paperRows) {
             sourcePapers.set(p.id, {
               title: p.title,

@@ -386,6 +386,7 @@ export default function NotebookPage(): React.ReactElement {
 
       // Clear all Sprint 1-5 overlay/feature states
       setFollowUpSuggestions([]);
+      setCoverageReport(null);
       setSuggestionsForMessageId(null);
       setSuggestionsLoading(false);
       setPdfViewerState(null);
@@ -434,6 +435,7 @@ export default function NotebookPage(): React.ReactElement {
     conversationIdRef.current = null;
     setChatMessages([]);
     setCurrentSources([]);
+    setCoverageReport(null);
     setShowSourcesPanel(false);
     setHighlightedSource(null);
     setFollowUpSuggestions([]);
