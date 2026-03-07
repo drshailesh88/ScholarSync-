@@ -6,6 +6,7 @@ import { ImageBlock } from "../image-block";
 
 vi.mock("next/image", () => ({
   default: ({ unoptimized: _unoptimized, ...props }: ImgHTMLAttributes<HTMLImageElement> & { unoptimized?: boolean }) => (
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text -- test mock
     <img {...props} />
   ),
 }));

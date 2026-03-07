@@ -4,6 +4,9 @@ import { useRef, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { BlockPosition, ContentBlock } from "@/types/presentation";
 import { cn } from "@/lib/utils";
+import { Lock } from "@phosphor-icons/react";
+import { useSlidesStore } from "@/stores/slides-store";
+import { EditingIndicatorSlot } from "../shared/collaboration-slots";
 import {
   computeAlignmentGuides,
   computeEqualSpacingGuides,
@@ -35,7 +38,7 @@ interface BlockSelectionWrapperProps {
   gridSize?: number;
   initialPosition?: BlockPosition;
   canvasRef?: React.RefObject<HTMLDivElement | null>;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   contentClassName?: string;
@@ -206,7 +209,7 @@ export function BlockSelectionWrapper({
   maintainAspectRatio = false,
   onSelect,
   onStartEdit,
-  onDelete,
+  onDelete: _onDelete,
   onContextMenu,
   onResize,
   onMove,
@@ -221,14 +224,27 @@ export function BlockSelectionWrapper({
   contentClassName,
   contentStyle,
 }: BlockSelectionWrapperProps) {
+  const activeSlideId = useSlidesStore((s) => s.activeSlideId);
+  const collaborationBlockId =
+    activeSlideId !== null
+      ? `slide-${activeSlideId}-block-${blockIndex}`
+      : "";
+
   const wrapperRef = useRef<HTMLDivElement>(null);
   const resizeDragStateRef = useRef<ResizeDragState | null>(null);
   const moveDragStateRef = useRef<MoveDragState | null>(null);
   const rotateDragStateRef = useRef<RotateDragState | null>(null);
   const suppressClickRef = useRef(false);
+  const resizeMouseMoveRef = useRef<(e: MouseEvent) => void>(() => {});
+  const rotateMouseMoveRef = useRef<(e: MouseEvent) => void>(() => {});
+  const moveMouseMoveRef = useRef<(e: MouseEvent) => void>(() => {});
+  const finalizeResizeRef = useRef<() => void>(() => {});
+  const finalizeRotateRef = useRef<() => void>(() => {});
+  const finalizeMoveRef = useRef<() => void>(() => {});
   const [isInteractionActive, setIsInteractionActive] = useState(false);
   const [alignmentGuides, setAlignmentGuides] = useState<AlignmentGuide[]>([]);
   const [spacingGuides, setSpacingGuides] = useState<SpacingGuide[]>([]);
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
 
   const rotation = normalizeDegrees(block.rotation ?? 0);
   const scaleX = block.scaleX ?? 1;
@@ -329,6 +345,7 @@ export function BlockSelectionWrapper({
     (e: React.MouseEvent) => {
       e.stopPropagation();
       if (
+        block.locked ||
         suppressClickRef.current ||
         wrapperRef.current?.dataset.resizing === "true" ||
         wrapperRef.current?.dataset.moving === "true" ||
@@ -338,7 +355,7 @@ export function BlockSelectionWrapper({
       }
       onStartEdit();
     },
-    [onStartEdit]
+    [block.locked, onStartEdit]
   );
 
   const handleKeyDown = useCallback(
@@ -629,8 +646,8 @@ export function BlockSelectionWrapper({
     if (!dragState) return;
     resizeDragStateRef.current = null;
 
-    window.removeEventListener("mousemove", handleResizeMouseMove);
-    window.removeEventListener("mouseup", finalizeResize);
+    window.removeEventListener("mousemove", resizeMouseMoveRef.current);
+    window.removeEventListener("mouseup", finalizeResizeRef.current);
     wrapperRef.current?.removeAttribute("data-resizing");
 
     if (onResize) {
@@ -642,7 +659,7 @@ export function BlockSelectionWrapper({
     setTimeout(() => {
       suppressClickRef.current = false;
     }, 0);
-  }, [clearGuideState, handleResizeMouseMove, onResize]);
+  }, [clearGuideState, onResize]);
 
   const startResize = useCallback((handle: ResizeHandle, e: React.MouseEvent) => {
     e.preventDefault();
@@ -685,9 +702,9 @@ export function BlockSelectionWrapper({
 
     suppressClickRef.current = true;
     wrapper.setAttribute("data-resizing", "true");
-    window.addEventListener("mousemove", handleResizeMouseMove);
-    window.addEventListener("mouseup", finalizeResize);
-  }, [canvasRef, finalizeResize, handleResizeMouseMove, maintainAspectRatio, onResize, resolvePosition, rotation, scaleX, scaleY]);
+    window.addEventListener("mousemove", resizeMouseMoveRef.current);
+    window.addEventListener("mouseup", finalizeResizeRef.current);
+  }, [canvasRef, maintainAspectRatio, onResize, resolvePosition, rotation, scaleX, scaleY]);
 
   const handleRotateMouseMove = useCallback((e: MouseEvent) => {
     const dragState = rotateDragStateRef.current;
@@ -710,8 +727,8 @@ export function BlockSelectionWrapper({
     if (!dragState) return;
     rotateDragStateRef.current = null;
 
-    window.removeEventListener("mousemove", handleRotateMouseMove);
-    window.removeEventListener("mouseup", finalizeRotate);
+    window.removeEventListener("mousemove", rotateMouseMoveRef.current);
+    window.removeEventListener("mouseup", finalizeRotateRef.current);
     wrapperRef.current?.removeAttribute("data-rotating");
 
     clearGuideState();
@@ -719,7 +736,7 @@ export function BlockSelectionWrapper({
     setTimeout(() => {
       suppressClickRef.current = false;
     }, 0);
-  }, [clearGuideState, handleRotateMouseMove]);
+  }, [clearGuideState]);
 
   const startRotate = useCallback((e: React.MouseEvent) => {
     if (e.button !== 0) return;
@@ -746,9 +763,9 @@ export function BlockSelectionWrapper({
 
     suppressClickRef.current = true;
     wrapper.setAttribute("data-rotating", "true");
-    window.addEventListener("mousemove", handleRotateMouseMove);
-    window.addEventListener("mouseup", finalizeRotate);
-  }, [finalizeRotate, handleRotateMouseMove, isEditing, isSelected, onRotate]);
+    window.addEventListener("mousemove", rotateMouseMoveRef.current);
+    window.addEventListener("mouseup", finalizeRotateRef.current);
+  }, [isEditing, isSelected, onRotate]);
 
   const removeMoveArtifacts = useCallback((dragState: MoveDragState | null) => {
     if (!dragState) return;
@@ -820,8 +837,8 @@ export function BlockSelectionWrapper({
     if (!dragState) return;
     moveDragStateRef.current = null;
 
-    window.removeEventListener("mousemove", handleMoveMouseMove);
-    window.removeEventListener("mouseup", finalizeMove);
+    window.removeEventListener("mousemove", moveMouseMoveRef.current);
+    window.removeEventListener("mouseup", finalizeMoveRef.current);
     wrapperRef.current?.removeAttribute("data-moving");
     removeMoveArtifacts(dragState);
 
@@ -834,10 +851,11 @@ export function BlockSelectionWrapper({
     setTimeout(() => {
       suppressClickRef.current = false;
     }, 0);
-  }, [clearGuideState, handleMoveMouseMove, onMove, removeMoveArtifacts]);
+  }, [clearGuideState, onMove, removeMoveArtifacts]);
 
   const startMove = useCallback((e: React.MouseEvent) => {
     if (e.button !== 0) return;
+    if (block.locked) return;
     if (!isSelected || isEditing || !onMove) return;
     if ((e.target as HTMLElement).closest("[data-resize-handle]")) return;
     if ((e.target as HTMLElement).closest("[data-rotation-handle]")) return;
@@ -877,31 +895,39 @@ export function BlockSelectionWrapper({
 
     suppressClickRef.current = true;
     wrapper.setAttribute("data-moving", "true");
-    window.addEventListener("mousemove", handleMoveMouseMove);
-    window.addEventListener("mouseup", finalizeMove);
-  }, [canvasRef, finalizeMove, handleMoveMouseMove, isEditing, isSelected, onMove, resolvePosition]);
+    window.addEventListener("mousemove", moveMouseMoveRef.current);
+    window.addEventListener("mouseup", finalizeMoveRef.current);
+  }, [block.locked, canvasRef, isEditing, isSelected, onMove, resolvePosition]);
+
+  // Sync handler refs so event listeners always call the latest versions
+  useEffect(() => {
+    resizeMouseMoveRef.current = handleResizeMouseMove;
+    finalizeResizeRef.current = finalizeResize;
+    rotateMouseMoveRef.current = handleRotateMouseMove;
+    finalizeRotateRef.current = finalizeRotate;
+    moveMouseMoveRef.current = handleMoveMouseMove;
+    finalizeMoveRef.current = finalizeMove;
+  });
+
+  // Track canvas element for portal
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync ref to state for portal target
+    setPortalContainer(canvasRef?.current ?? null);
+  }, [canvasRef]);
 
   useEffect(() => {
     return () => {
-      window.removeEventListener("mousemove", handleResizeMouseMove);
-      window.removeEventListener("mouseup", finalizeResize);
-      window.removeEventListener("mousemove", handleMoveMouseMove);
-      window.removeEventListener("mouseup", finalizeMove);
-      window.removeEventListener("mousemove", handleRotateMouseMove);
-      window.removeEventListener("mouseup", finalizeRotate);
+      window.removeEventListener("mousemove", resizeMouseMoveRef.current);
+      window.removeEventListener("mouseup", finalizeResizeRef.current);
+      window.removeEventListener("mousemove", moveMouseMoveRef.current);
+      window.removeEventListener("mouseup", finalizeMoveRef.current);
+      window.removeEventListener("mousemove", rotateMouseMoveRef.current);
+      window.removeEventListener("mouseup", finalizeRotateRef.current);
       removeMoveArtifacts(moveDragStateRef.current);
       moveDragStateRef.current = null;
       rotateDragStateRef.current = null;
     };
-  }, [
-    finalizeMove,
-    finalizeResize,
-    finalizeRotate,
-    handleMoveMouseMove,
-    handleResizeMouseMove,
-    handleRotateMouseMove,
-    removeMoveArtifacts,
-  ]);
+  }, [removeMoveArtifacts]);
 
   const transformParts = [
     style?.transform,
@@ -910,8 +936,27 @@ export function BlockSelectionWrapper({
     `scaleY(${scaleY})`,
   ].filter(Boolean);
 
+  // Visual style properties (not applied while editing)
+  const visualStyles: React.CSSProperties = {};
+  if (!isEditing) {
+    const opacityValue = block.opacity ?? 100;
+    if (opacityValue !== 100) {
+      visualStyles.opacity = opacityValue / 100;
+    }
+    if (block.shadow) {
+      const s = block.shadow;
+      visualStyles.boxShadow = `${s.offsetX}px ${s.offsetY}px ${s.blur}px ${s.spread ?? 0}px ${s.color}`;
+    }
+    if (block.border) {
+      const b = block.border;
+      visualStyles.border = `${b.width}px ${b.style} ${b.color}`;
+      visualStyles.borderRadius = `${b.radius}px`;
+    }
+  }
+
   const wrapperStyle: React.CSSProperties = {
     ...style,
+    ...visualStyles,
     transformOrigin: style?.transformOrigin ?? "center",
     transform: transformParts.join(" "),
   };
@@ -923,9 +968,11 @@ export function BlockSelectionWrapper({
         className={cn(
           "relative group transition-all outline-none",
           // Hover state (not selected, not editing)
-          !isSelected && !isEditing && "hover:outline hover:outline-2 hover:outline-blue-300/50 hover:outline-offset-1",
+          !isSelected && !isEditing && !block.locked && "hover:outline hover:outline-2 hover:outline-blue-300/50 hover:outline-offset-1",
+          !isSelected && !isEditing && block.locked && "hover:outline hover:outline-2 hover:outline-gray-400/50 hover:outline-offset-1",
           // Selected state
-          isSelected && !isEditing && "outline outline-2 outline-blue-500 outline-offset-1",
+          isSelected && !isEditing && !block.locked && "outline outline-2 outline-blue-500 outline-offset-1",
+          isSelected && !isEditing && block.locked && "outline outline-2 outline-gray-400 outline-offset-1",
           // Editing state
           isEditing && "outline outline-2 outline-blue-500 outline-offset-1",
           className
@@ -948,8 +995,13 @@ export function BlockSelectionWrapper({
           {children}
         </div>
 
-        {/* Resize handles — only shown when selected but NOT editing */}
-        {isSelected && !isEditing &&
+        {/* Collaboration editing indicator — shows colored border when another user is editing */}
+        {collaborationBlockId && (
+          <EditingIndicatorSlot blockId={collaborationBlockId} />
+        )}
+
+        {/* Resize handles — only shown when selected, NOT editing, NOT locked */}
+        {isSelected && !isEditing && !block.locked &&
           RESIZE_HANDLES.map((handle) => (
             <div
               key={handle.position}
@@ -962,7 +1014,7 @@ export function BlockSelectionWrapper({
             />
           ))}
 
-        {isSelected && !isEditing && (
+        {isSelected && !isEditing && !block.locked && (
           <>
             <div
               className="absolute"
@@ -985,7 +1037,7 @@ export function BlockSelectionWrapper({
                 width: 10,
                 height: 10,
                 transform: "translateX(-50%)",
-                cursor: wrapperRef.current?.dataset.rotating === "true" ? "grabbing" : "grab",
+                cursor: "grab",
                 zIndex: 11,
               }}
               data-rotation-handle="true"
@@ -993,16 +1045,30 @@ export function BlockSelectionWrapper({
             />
           </>
         )}
+
+        {/* Lock icon — shown when locked and selected or hovered */}
+        {block.locked && (
+          <div
+            className={cn(
+              "absolute top-0 right-0 transition-opacity",
+              isSelected ? "opacity-50" : "opacity-0 group-hover:opacity-50"
+            )}
+            style={{ zIndex: 12, padding: 2 }}
+            data-lock-icon="true"
+          >
+            <Lock size={12} weight="bold" />
+          </div>
+        )}
       </div>
 
-      {canvasRef?.current &&
+      {portalContainer &&
         createPortal(
           <AlignmentGuidesOverlay
             visible={isInteractionActive}
             guides={alignmentGuides}
             spacingGuides={spacingGuides}
           />,
-          canvasRef.current
+          portalContainer
         )}
     </>
   );

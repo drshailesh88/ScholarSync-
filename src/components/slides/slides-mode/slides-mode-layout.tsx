@@ -15,12 +15,20 @@ import type { ContentBlock } from "@/types/presentation";
 import { FindReplaceDialog } from "../shared/find-replace-dialog";
 import { SlideSorterView } from "../shared/slide-sorter-view";
 import { registerGlobalShortcuts } from "../shared/keyboard-shortcuts";
+import {
+  HandoutExportDialog,
+  type HandoutExportOptions,
+} from "../shared/handout-export-dialog";
+import {
+  PresenceBridgeSlot,
+} from "../shared/collaboration-slots";
 
 // Lazy-loaded panels from existing presentation components
 import { CommentsPanel, useCommentCounts } from "@/components/presentation/comments-panel";
 import { VersionHistoryPanel } from "@/components/presentation/version-history-panel";
 import { AnalyticsPanel } from "@/components/presentation/analytics-panel";
 import { DefensePrepPanel } from "@/components/presentation/defense-prep-panel";
+import { AccessibilityPanel } from "../shared/accessibility-panel";
 import { SlideRendererV2 } from "../shared/slide-renderer-v2";
 import {
   downloadBlob,
@@ -43,6 +51,7 @@ function getPngScale(event?: ReactMouseEvent<HTMLButtonElement>): 2 | 3 {
 
 export function SlidesModeLayout() {
   const [exporting, setExporting] = useState(false);
+  const [showHandoutDialog, setShowHandoutDialog] = useState(false);
 
   useEffect(() => registerGlobalShortcuts(useSlidesStore), []);
 
@@ -107,13 +116,24 @@ export function SlidesModeLayout() {
     }
   }
 
-  async function handleExportPdf() {
+  function handleExportPdf() {
+    setShowHandoutDialog(true);
+  }
+
+  async function handleExportHandout(options: HandoutExportOptions) {
     setExporting(true);
     try {
       const res = await fetch("/api/export/presentation-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(getExportPayload()),
+        body: JSON.stringify({
+          ...getExportPayload(),
+          layout: options.layout,
+          includeSlideNumbers: options.includeSlideNumbers,
+          includeHeader: options.includeHeader,
+          includeSpeakerNotes: options.includeSpeakerNotes,
+          paperSize: options.paperSize,
+        }),
       });
       if (!res.ok) throw new Error("Export failed");
       const blob = await res.blob();
@@ -125,6 +145,7 @@ export function SlidesModeLayout() {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      setShowHandoutDialog(false);
     } catch (err) {
       console.error("PDF export error:", err);
     } finally {
@@ -254,6 +275,9 @@ export function SlidesModeLayout() {
 
   return (
     <div className="flex flex-col h-full">
+      {/* Liveblocks presence bridge — syncs store to presence */}
+      <PresenceBridgeSlot />
+
       {/* Top toolbar */}
       <SlidesToolbar
         onExportPptx={handleExportPptx}
@@ -334,6 +358,8 @@ export function SlidesModeLayout() {
             />
           </div>
         )}
+
+        {rightPanel === "accessibility" && <AccessibilityPanel />}
       </div>
 
       {/* Find & Replace overlay */}
@@ -341,6 +367,14 @@ export function SlidesModeLayout() {
       {showSlideSorter && (
         <SlideSorterView onClose={() => setShowSlideSorter(false)} />
       )}
+
+      {/* Handout export dialog */}
+      <HandoutExportDialog
+        open={showHandoutDialog}
+        onClose={() => setShowHandoutDialog(false)}
+        onExport={handleExportHandout}
+        exporting={exporting}
+      />
     </div>
   );
 }

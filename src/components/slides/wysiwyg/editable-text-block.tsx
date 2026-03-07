@@ -35,7 +35,7 @@ import {
   TextIndent,
   TextOutdent,
 } from "@phosphor-icons/react";
-import type { ThemeConfig } from "@/types/presentation";
+import type { ThemeConfig, TextEffects } from "@/types/presentation";
 import {
   FONT_FAMILY_OPTIONS,
   FONT_SIZE_OPTIONS,
@@ -80,6 +80,10 @@ interface EditableTextBlockProps {
   lineHeight?: number;
   paragraphSpacing?: number;
   onLineHeightChange?: (lineHeight: number) => void;
+  textShadow?: TextEffects["textShadow"];
+  textOutline?: TextEffects["textOutline"];
+  textTransform?: TextEffects["textTransform"];
+  letterSpacing?: TextEffects["letterSpacing"];
 }
 
 type TextBlockStyle = "title" | "subtitle" | "body" | "caption";
@@ -110,12 +114,34 @@ export function getParagraphSpacingCss(
   return `${selector} p + p { margin-top: ${paragraphSpacing}px; }`;
 }
 
+export function buildTextEffectStyles(effects?: TextEffects): React.CSSProperties {
+  if (!effects) return {};
+  const styles: React.CSSProperties = {};
+  if (effects.textShadow) {
+    const { offsetX, offsetY, blur, color } = effects.textShadow;
+    styles.textShadow = `${offsetX}px ${offsetY}px ${blur}px ${color}`;
+  }
+  if (effects.textOutline) {
+    const { width, color } = effects.textOutline;
+    styles.WebkitTextStroke = `${width}px ${color}`;
+  }
+  if (effects.textTransform) {
+    styles.textTransform = effects.textTransform;
+  }
+  if (effects.letterSpacing !== undefined) {
+    styles.letterSpacing = `${effects.letterSpacing}em`;
+  }
+  return styles;
+}
+
 export function getTextStyles(
   style: TextBlockStyle,
   theme: ThemeConfig,
-  lineHeight?: number
+  lineHeight?: number,
+  effects?: TextEffects,
 ): React.CSSProperties {
   const resolvedLineHeight = lineHeight ?? getDefaultLineHeight(style);
+  const effectStyles = buildTextEffectStyles(effects);
 
   switch (style) {
     case "title":
@@ -125,6 +151,7 @@ export function getTextStyles(
         color: theme.primaryColor,
         fontFamily: theme.headingFontFamily ?? theme.fontFamily ?? "Inter, sans-serif",
         lineHeight: resolvedLineHeight,
+        ...effectStyles,
       };
     case "subtitle":
       return {
@@ -134,6 +161,7 @@ export function getTextStyles(
         opacity: 0.7,
         fontFamily: theme.fontFamily ?? "Inter, sans-serif",
         lineHeight: resolvedLineHeight,
+        ...effectStyles,
       };
     case "caption":
       return {
@@ -143,6 +171,7 @@ export function getTextStyles(
         opacity: 0.5,
         fontFamily: theme.fontFamily ?? "Inter, sans-serif",
         lineHeight: resolvedLineHeight,
+        ...effectStyles,
       };
     case "body":
     default:
@@ -152,6 +181,7 @@ export function getTextStyles(
         color: theme.textColor,
         fontFamily: theme.fontFamily ?? "Inter, sans-serif",
         lineHeight: resolvedLineHeight,
+        ...effectStyles,
       };
   }
 }
@@ -172,6 +202,10 @@ export function EditableTextBlock({
   lineHeight,
   paragraphSpacing,
   onLineHeightChange,
+  textShadow,
+  textOutline,
+  textTransform,
+  letterSpacing,
 }: EditableTextBlockProps) {
   const updateRef = useRef(onUpdate);
   const [openMenu, setOpenMenu] = useState<"fontFamily" | "fontSize" | "color" | "lineHeight" | null>(null);
@@ -241,12 +275,15 @@ export function EditableTextBlock({
     };
   }, [editor]);
 
-  useEffect(() => {
+  // Reset menus when editing stops (React-recommended render-time state adjustment)
+  const [prevIsEditing, setPrevIsEditing] = useState(isEditing);
+  if (isEditing !== prevIsEditing) {
+    setPrevIsEditing(isEditing);
     if (!isEditing) {
       setOpenMenu(null);
       setIsLinkPopoverOpen(false);
     }
-  }, [isEditing]);
+  }
 
   // Sync editable state
   useEffect(() => {
@@ -315,8 +352,12 @@ export function EditableTextBlock({
 
   const resolvedParagraphSpacing = paragraphSpacing ?? DEFAULT_PARAGRAPH_SPACING;
   const currentLineHeight = lineHeight ?? getDefaultLineHeight(style);
+  const effects: TextEffects | undefined =
+    textShadow || textOutline || textTransform || letterSpacing !== undefined
+      ? { textShadow, textOutline, textTransform, letterSpacing }
+      : undefined;
   const textStyles = {
-    ...getTextStyles(style, theme, lineHeight),
+    ...getTextStyles(style, theme, lineHeight, effects),
     ...(fontFamily ? { fontFamily } : {}),
     ...(fontSize ? { fontSize } : {}),
     ...(color ? { color } : {}),

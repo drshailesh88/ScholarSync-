@@ -5,6 +5,11 @@ import { conversations, messages, users } from "@/lib/db/schema";
 import { eq, and, asc } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import crypto from "crypto";
+import {
+  hashPassword,
+  verifyPassword,
+  isHashedPassword,
+} from "@/lib/crypto/password";
 
 // ---------------------------------------------------------------------------
 // Enable sharing — uses existing token when present, otherwise generates one
@@ -120,10 +125,16 @@ export async function updateNotebookShareSettings(
 ) {
   const userId = await getCurrentUserId();
 
+  // Hash the password before storing (null means "remove password")
+  let hashedPassword: string | null = null;
+  if (settings.password) {
+    hashedPassword = await hashPassword(settings.password);
+  }
+
   const [convo] = await db
     .update(conversations)
     .set({
-      share_password: settings.password ?? null,
+      share_password: hashedPassword,
       share_expires_at: settings.expiresAt ?? null,
       updated_at: new Date(),
     })
@@ -212,6 +223,12 @@ export async function verifyNotebookSharePassword(
     .where(eq(conversations.share_token, token));
 
   if (!convo || !convo.shareEnabled) return false;
-  if (!convo.sharePassword) return true;
+  if (!convo.sharePassword) return true; // no password set
+
+  // Support both hashed and legacy plain-text passwords during migration
+  if (isHashedPassword(convo.sharePassword)) {
+    return verifyPassword(password, convo.sharePassword);
+  }
+  // Legacy plain-text fallback
   return convo.sharePassword === password;
 }

@@ -127,8 +127,8 @@ function renderMoveWrapper({
           gridSize,
           initialPosition,
           canvasRef,
-          children: createElement("div", null, "Content"),
-        }
+        },
+        createElement("div", null, "Content")
       )
     );
   });

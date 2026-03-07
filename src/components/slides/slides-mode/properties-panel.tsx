@@ -7,6 +7,7 @@ import { LayoutPicker } from "@/components/presentation/layout-picker";
 import { AiToolsDropdown } from "@/components/presentation/ai-tools-dropdown";
 import { CoachPanel } from "@/components/presentation/coach-panel";
 import { MasterEditor } from "@/components/slides/shared/master-editor";
+import { GradientEditor } from "@/components/slides/shared/gradient-editor";
 import { BlockPropertyEditor } from "./block-property-editor";
 import { TEXT_COLOR_OPTIONS } from "@/components/slides/wysiwyg/text-formatting-options";
 import { applyAnimationPreset, countRevealSteps } from "@/lib/presentation/animation-presets";
@@ -17,6 +18,7 @@ import type {
   InstitutionKit,
   BlockPosition,
   AnimationPresetKey,
+  GradientConfig,
 } from "@/types/presentation";
 import type { CardBackground, SlideTransition } from "@/stores/slides-store";
 
@@ -28,12 +30,6 @@ const TRANSITION_OPTIONS: { value: SlideTransition; label: string }[] = [
 ];
 
 const HEX_COLOR_PATTERN = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
-
-const GRADIENT_DIRECTION_OPTIONS: { value: NonNullable<CardBackground["gradientDirection"]>; label: string }[] = [
-  { value: "top-to-bottom", label: "Top to Bottom" },
-  { value: "left-to-right", label: "Left to Right" },
-  { value: "diagonal", label: "Diagonal" },
-];
 
 const IMAGE_POSITION_OPTIONS: { value: NonNullable<CardBackground["imagePosition"]>; label: string }[] = [
   { value: "cover", label: "Cover" },
@@ -122,13 +118,53 @@ export function PropertiesPanel() {
   };
 
   const background = activeSlide?.cardBackground;
-  const gradientEnabled = background?.gradientEnabled ?? false;
   const overlayType = background?.overlayType === "clear" ? "none" : background?.overlayType ?? "none";
   const imagePosition = IMAGE_POSITION_OPTIONS.some((opt) => opt.value === background?.imagePosition)
     ? (background?.imagePosition as NonNullable<CardBackground["imagePosition"]>)
     : "cover";
   const intensity = background?.overlayIntensity ?? 50;
   const effectiveTransition = activeSlide?.transition ?? transition;
+
+  type BackgroundType = "solid" | "gradient" | "image";
+  const derivedBgType: BackgroundType = background?.gradient
+    ? "gradient"
+    : background?.imageUrl
+      ? "image"
+      : "solid";
+  const [bgType, setBgType] = useState<BackgroundType>(derivedBgType);
+
+  // Sync bgType when active slide changes
+  useEffect(() => {
+    setBgType(
+      background?.gradient
+        ? "gradient"
+        : background?.imageUrl
+          ? "image"
+          : "solid"
+    );
+  }, [activeSlide?.id, background?.gradient, background?.imageUrl]);
+
+  const handleBgTypeChange = (type: BackgroundType) => {
+    setBgType(type);
+    if (!activeSlide) return;
+    if (type === "solid") {
+      updateCardBackground({ gradient: undefined, imageUrl: undefined });
+    } else if (type === "gradient") {
+      if (!background?.gradient) {
+        const defaultGradient: GradientConfig = {
+          type: "linear",
+          angle: 135,
+          stops: [
+            { color: "#667EEA", position: 0 },
+            { color: "#764BA2", position: 100 },
+          ],
+        };
+        updateCardBackground({ gradient: defaultGradient, imageUrl: undefined });
+      }
+    } else if (type === "image") {
+      updateCardBackground({ gradient: undefined });
+    }
+  };
 
   const updateCardBackground = (changes: Partial<CardBackground>) => {
     if (!activeSlide) return;
@@ -564,126 +600,107 @@ export function PropertiesPanel() {
               Background
             </h3>
             <div className="space-y-3">
-              <div>
-                <label className="text-[10px] text-ink-muted block mb-1">Color</label>
-                <div className="grid grid-cols-10 gap-1.5 mb-2">
-                  {TEXT_COLOR_OPTIONS.map((colorValue) => (
-                    <button
-                      key={colorValue}
-                      type="button"
-                      onClick={() => {
-                        setCustomHex(colorValue);
-                        updateCardBackground({ color: colorValue });
-                      }}
-                      className={`h-5 w-5 rounded border ${
-                        background?.color === colorValue ? "ring-2 ring-brand border-brand" : "border-border"
-                      }`}
-                      style={{ backgroundColor: colorValue }}
-                      aria-label={`Select background color ${colorValue}`}
-                    />
-                  ))}
-                </div>
-                <input
-                  type="text"
-                  value={customHex}
-                  onChange={(e) => handleCustomHexChange(e.target.value)}
-                  placeholder="#RRGGBB"
-                  className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink placeholder:text-ink-muted/50 focus:outline-none focus:border-brand"
-                />
+              {/* Background Type Toggle */}
+              <div className="flex gap-1 rounded-lg border border-border p-0.5">
+                {(["solid", "gradient", "image"] as const).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => handleBgTypeChange(t)}
+                    className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
+                      bgType === t
+                        ? "bg-brand/10 text-brand"
+                        : "text-ink-muted hover:text-ink"
+                    }`}
+                  >
+                    {t === "solid" ? "Solid" : t === "gradient" ? "Gradient" : "Image"}
+                  </button>
+                ))}
               </div>
 
-              <div>
-                <label className="text-[10px] text-ink-muted flex items-center gap-2 mb-1">
+              {/* Solid color controls */}
+              {bgType === "solid" && (
+                <div>
+                  <label className="text-[10px] text-ink-muted block mb-1">Color</label>
+                  <div className="grid grid-cols-10 gap-1.5 mb-2">
+                    {TEXT_COLOR_OPTIONS.map((colorValue) => (
+                      <button
+                        key={colorValue}
+                        type="button"
+                        onClick={() => {
+                          setCustomHex(colorValue);
+                          updateCardBackground({ color: colorValue });
+                        }}
+                        className={`h-5 w-5 rounded border ${
+                          background?.color === colorValue ? "ring-2 ring-brand border-brand" : "border-border"
+                        }`}
+                        style={{ backgroundColor: colorValue }}
+                        aria-label={`Select background color ${colorValue}`}
+                      />
+                    ))}
+                  </div>
                   <input
-                    type="checkbox"
-                    checked={gradientEnabled}
-                    onChange={(e) => updateCardBackground({ gradientEnabled: e.target.checked })}
-                    className="accent-brand"
+                    type="text"
+                    value={customHex}
+                    onChange={(e) => handleCustomHexChange(e.target.value)}
+                    placeholder="#RRGGBB"
+                    className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink placeholder:text-ink-muted/50 focus:outline-none focus:border-brand"
                   />
-                  Gradient
-                </label>
-                {gradientEnabled && (
-                  <div className="space-y-2">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="text-[10px] text-ink-muted block mb-0.5">From Color</label>
-                        <input
-                          type="color"
-                          value={background?.gradientFrom ?? "#1E3A8A"}
-                          onChange={(e) => updateCardBackground({ gradientFrom: e.target.value })}
-                          className="w-full h-8 border border-border rounded-md bg-surface cursor-pointer"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-[10px] text-ink-muted block mb-0.5">To Color</label>
-                        <input
-                          type="color"
-                          value={background?.gradientTo ?? "#9333EA"}
-                          onChange={(e) => updateCardBackground({ gradientTo: e.target.value })}
-                          className="w-full h-8 border border-border rounded-md bg-surface cursor-pointer"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-[10px] text-ink-muted block mb-0.5">Direction</label>
-                      <select
-                        value={background?.gradientDirection ?? "top-to-bottom"}
-                        onChange={(e) =>
-                          updateCardBackground({
-                            gradientDirection: e.target.value as NonNullable<CardBackground["gradientDirection"]>,
-                          })
-                        }
-                        className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink focus:outline-none focus:border-brand"
-                      >
-                        {GRADIENT_DIRECTION_OPTIONS.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
 
-              <div>
-                <label className="text-[10px] text-ink-muted block mb-0.5">Image URL</label>
-                <input
-                  type="text"
-                  value={background?.imageUrl ?? ""}
-                  onChange={(e) =>
-                    updateCardBackground({ imageUrl: e.target.value.trim() || undefined })
-                  }
-                  placeholder="https://..."
-                  className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink placeholder:text-ink-muted/50 focus:outline-none focus:border-brand"
+              {/* Gradient controls */}
+              {bgType === "gradient" && background?.gradient && (
+                <GradientEditor
+                  gradient={background.gradient}
+                  onChange={(gradient) => updateCardBackground({ gradient })}
+                  themeConfig={useSlidesStore.getState().themeConfig}
                 />
-                {background?.imageUrl && (
-                  <div className="mt-2 rounded border border-border overflow-hidden w-full h-16 bg-surface-raised">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={background.imageUrl} alt="Background preview" className="w-full h-full object-cover" />
+              )}
+
+              {/* Image controls */}
+              {bgType === "image" && (
+                <>
+                  <div>
+                    <label className="text-[10px] text-ink-muted block mb-0.5">Image URL</label>
+                    <input
+                      type="text"
+                      value={background?.imageUrl ?? ""}
+                      onChange={(e) =>
+                        updateCardBackground({ imageUrl: e.target.value.trim() || undefined })
+                      }
+                      placeholder="https://..."
+                      className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink placeholder:text-ink-muted/50 focus:outline-none focus:border-brand"
+                    />
+                    {background?.imageUrl && (
+                      <div className="mt-2 rounded border border-border overflow-hidden w-full h-16 bg-surface-raised">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={background.imageUrl} alt="Background preview" className="w-full h-full object-cover" />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                  <div>
+                    <label className="text-[10px] text-ink-muted block mb-0.5">Image Position</label>
+                    <select
+                      value={imagePosition}
+                      onChange={(e) =>
+                        updateCardBackground({
+                          imagePosition: e.target.value as NonNullable<CardBackground["imagePosition"]>,
+                        })
+                      }
+                      className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink focus:outline-none focus:border-brand"
+                    >
+                      {IMAGE_POSITION_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              )}
 
-              <div>
-                <label className="text-[10px] text-ink-muted block mb-0.5">Image Position</label>
-                <select
-                  value={imagePosition}
-                  onChange={(e) =>
-                    updateCardBackground({
-                      imagePosition: e.target.value as NonNullable<CardBackground["imagePosition"]>,
-                    })
-                  }
-                  className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink focus:outline-none focus:border-brand"
-                >
-                  {IMAGE_POSITION_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
+              {/* Overlay (shared across all types) */}
               <div>
                 <label className="text-[10px] text-ink-muted block mb-0.5">Overlay</label>
                 <select

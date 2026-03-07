@@ -197,6 +197,21 @@ export interface InfographicData {
   colorScheme?: "theme" | "blue" | "green" | "purple" | "orange" | "rainbow";
 }
 
+/** Audio/video media block */
+export interface MediaData {
+  mediaType: "video" | "audio";
+  source: "upload" | "url";
+  url?: string;
+  mimeType?: string;
+  posterUrl?: string;
+  title?: string;
+  autoplay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
+  startTime?: number;
+  endTime?: number;
+}
+
 /** Scientific illustration block from FINNISH integration */
 export interface IllustrationData {
   svgContent: string;
@@ -227,12 +242,24 @@ export interface BlockPosition {
   height: number; // percentage of slide height
 }
 
+export interface GradientStop {
+  color: string;
+  position: number; // 0-100
+}
+
+export interface GradientConfig {
+  type: "linear" | "radial";
+  angle: number; // degrees, 0-360 (for linear)
+  stops: GradientStop[];
+}
+
 export interface CardBackground {
   color?: string;
   gradientEnabled?: boolean;
   gradientFrom?: string;
   gradientTo?: string;
   gradientDirection?: "top-to-bottom" | "left-to-right" | "diagonal";
+  gradient?: GradientConfig;
   imageUrl?: string;
   imagePosition?:
     | "cover"
@@ -247,6 +274,21 @@ export interface CardBackground {
   overlayType?: "none" | "frosted" | "faded" | "clear";
   overlayIntensity?: number; // 0-100
   overlayColor?: string;
+}
+
+export interface BlockShadow {
+  offsetX: number;
+  offsetY: number;
+  blur: number;
+  spread?: number;
+  color: string;
+}
+
+export interface BlockBorder {
+  width: number;
+  color: string;
+  style: "solid" | "dashed" | "dotted";
+  radius: number;
 }
 
 type ContentBlockBase = {
@@ -265,7 +307,31 @@ type ContentBlockBase = {
   scaleX?: number;
   /** Vertical transform scale (set to -1 for vertical flip) */
   scaleY?: number;
+  /** Whether the block is locked (prevents move, resize, edit, delete) */
+  locked?: boolean;
+  /** Opacity 0-100, default 100 */
+  opacity?: number;
+  /** Box shadow */
+  shadow?: BlockShadow;
+  /** Border */
+  border?: BlockBorder;
 };
+
+/** Shared text effect options for text blocks, titles, and subtitles */
+export interface TextEffects {
+  textShadow?: {
+    offsetX: number;   // px
+    offsetY: number;   // px
+    blur: number;      // px
+    color: string;     // hex or rgba
+  };
+  textOutline?: {
+    width: number;     // px (0.5 to 3)
+    color: string;     // hex
+  };
+  textTransform?: "none" | "uppercase" | "lowercase" | "capitalize";
+  letterSpacing?: number;  // em units (-0.05 to 0.3)
+}
 
 export type ContentBlock =
   | (ContentBlockBase & {
@@ -278,6 +344,10 @@ export type ContentBlock =
         color?: string;
         lineHeight?: number;
         paragraphSpacing?: number;
+        textShadow?: TextEffects["textShadow"];
+        textOutline?: TextEffects["textOutline"];
+        textTransform?: TextEffects["textTransform"];
+        letterSpacing?: TextEffects["letterSpacing"];
       };
     })
   | (ContentBlockBase & { type: "bullets"; data: { items: string[]; ordered?: boolean } })
@@ -302,7 +372,9 @@ export type ContentBlock =
   // V3: Visual generation blocks
   | (ContentBlockBase & { type: "infographic"; data: InfographicData; figureLabel?: string })
   // V4: Scientific illustration blocks (FINNISH integration)
-  | (ContentBlockBase & { type: "illustration"; data: IllustrationData; figureLabel?: string });
+  | (ContentBlockBase & { type: "illustration"; data: IllustrationData; figureLabel?: string })
+  // V5: Audio/video media blocks
+  | (ContentBlockBase & { type: "media"; data: MediaData });
 
 // ---------------------------------------------------------------------------
 // Theme Config (stored as jsonb in slide_decks.theme_config)

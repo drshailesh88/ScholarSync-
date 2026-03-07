@@ -154,15 +154,26 @@ export function registerGlobalShortcuts(store: typeof useSlidesStore) {
       return;
     }
 
+    if (mod && key === "l" && !e.shiftKey) {
+      if (state.selectedBlockIndices.size > 0 && !state.allBlocksSelected) {
+        e.preventDefault();
+        const blockIndex = state.getPrimarySelectedBlockIndex();
+        if (blockIndex !== null) {
+          state.toggleBlockLock(blockIndex);
+        }
+        return;
+      }
+    }
+
     if (mod && e.shiftKey && key === "g") {
       e.preventDefault();
-      console.log("Ungroup selected blocks (placeholder)");
+      // TODO: implement ungroup selected blocks
       return;
     }
 
     if (mod && key === "g") {
       e.preventDefault();
-      console.log("Group selected blocks (placeholder)");
+      // TODO: implement group selected blocks
       return;
     }
 
@@ -199,6 +210,14 @@ export function registerGlobalShortcuts(store: typeof useSlidesStore) {
 
     if (e.key === "Delete" || e.key === "Backspace") {
       if (state.selectedBlockIndices.size > 0 || state.allBlocksSelected) {
+        // Don't delete if any selected block is locked
+        const activeSlide = state.getActiveSlide();
+        if (activeSlide) {
+          const anyLocked = [...state.selectedBlockIndices].some(
+            (idx) => activeSlide.contentBlocks[idx]?.locked
+          );
+          if (anyLocked) return;
+        }
         e.preventDefault();
         deleteSelectedBlocks(state);
       }

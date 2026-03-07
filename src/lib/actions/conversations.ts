@@ -105,3 +105,21 @@ export async function addMessage(data: {
 
   return msg;
 }
+
+/**
+ * Submit feedback (thumbs up/down) for a message.
+ * Rating: 1 = thumbs up, -1 = thumbs down, null = clear feedback.
+ */
+export async function submitMessageFeedback(
+  messageId: number,
+  rating: 1 | -1 | null,
+  comment?: string
+) {
+  await db
+    .update(messages)
+    .set({
+      feedback_rating: rating,
+      feedback_comment: comment || null,
+    })
+    .where(eq(messages.id, messageId));
+}

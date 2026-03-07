@@ -110,11 +110,16 @@ const slideVariants = {
 function useTimer() {
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(true);
-  const startRef = useRef<number>(Date.now());
+  const startRef = useRef<number>(0);
   const pausedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!running) return;
+
+    // Initialise start time on first run
+    if (startRef.current === 0) {
+      startRef.current = Date.now();
+    }
 
     const update = () => {
       setElapsed(Math.floor((Date.now() - startRef.current) / 1000));
@@ -224,18 +229,25 @@ export function PresenterMode({
     return getMaxRevealOrder(slide.contentBlocks);
   }, [currentIndex, visibleSlides]);
 
+  // Sync ref with current index
   useEffect(() => {
     currentIndexRef.current = currentIndex;
   }, [currentIndex]);
 
-  useEffect(() => {
+  // Reset reveal state when slide changes (render-time state adjustment)
+  const [prevIndexForReveal, setPrevIndexForReveal] = useState(currentIndex);
+  if (prevIndexForReveal !== currentIndex) {
+    setPrevIndexForReveal(currentIndex);
     setRevealedOrder(0);
     setActiveRevealOrder(null);
-  }, [currentIndex]);
+  }
 
-  useEffect(() => {
+  // Clamp index when total slides change (render-time state adjustment)
+  const [prevTotalSlides, setPrevTotalSlides] = useState(totalSlides);
+  if (prevTotalSlides !== totalSlides) {
+    setPrevTotalSlides(totalSlides);
     setCurrentIndex((prev) => Math.max(0, Math.min(prev, Math.max(totalSlides - 1, 0))));
-  }, [totalSlides]);
+  }
 
   const goToSlide = useCallback(
     (index: number) => {

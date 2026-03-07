@@ -27,9 +27,12 @@ export function ContextMenu({ isOpen, position, items, onClose }: ContextMenuPro
   const [isVisible, setIsVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState(position);
 
+  // Reset visibility immediately when menu opens, then position after measuring
+  // The rAF callback setState is asynchronous (not synchronous in effect body)
   useEffect(() => {
     if (!isOpen) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: reset before rAF measurement
     setIsVisible(false);
 
     const frame = window.requestAnimationFrame(() => {

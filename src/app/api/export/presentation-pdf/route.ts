@@ -474,3 +474,451 @@ function wrapText(
   if (currentLine) lines.push(currentLine);
   return lines;
 }
+
+// ---------------------------------------------------------------------------
+// Shared helpers for handout layouts
+// ---------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyFont = any;
+
+interface Fonts {
+  font: AnyFont;
+  fontBold: AnyFont;
+  fontItalic: AnyFont;
+  fontMono: AnyFont;
+}
+
+function drawPageHeader(
+  page: PDFPage,
+  deckTitle: string,
+  fontBold: PDFFont,
+  pageW: number,
+  pageH: number,
+  margin: number,
+  includeHeader: boolean,
+): number {
+  if (!includeHeader) return pageH - margin;
+  const y = pageH - margin;
+  const titleSize = 10;
+  const titleWidth = fontBold.widthOfTextAtSize(deckTitle, titleSize);
+  page.drawText(deckTitle, {
+    x: (pageW - titleWidth) / 2,
+    y,
+    size: titleSize,
+    font: fontBold,
+    color: rgb(0.2, 0.2, 0.2),
+  });
+  return y - 18;
+}
+
+function drawPageNumber(
+  page: PDFPage,
+  pageNum: number,
+  font: PDFFont,
+  pageW: number,
+  margin: number,
+  includePageNumbers: boolean,
+) {
+  if (!includePageNumbers) return;
+  const text = `${pageNum}`;
+  const textWidth = font.widthOfTextAtSize(text, 8);
+  page.drawText(text, {
+    x: (pageW - textWidth) / 2,
+    y: margin - 18,
+    size: 8,
+    font,
+    color: rgb(0.5, 0.5, 0.5),
+  });
+}
+
+function drawSlidePreviewBox(
+  page: PDFPage,
+  slide: SlideInput,
+  fonts: Fonts,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  slideNumber: number,
+  includeSlideNumbers: boolean,
+) {
+  const { font, fontBold, fontItalic, fontMono } = fonts;
+  const dark = rgb(0.2, 0.2, 0.2);
+  const muted = rgb(0.5, 0.5, 0.5);
+  const border = rgb(0.75, 0.75, 0.75);
+
+  // Draw border
+  page.drawRectangle({
+    x,
+    y: y - h,
+    width: w,
+    height: h,
+    borderColor: border,
+    borderWidth: 0.75,
+    color: rgb(1, 1, 1),
+  });
+
+  const innerMargin = 8;
+  const contentX = x + innerMargin;
+  const contentW = w - innerMargin * 2;
+  let curY = y - innerMargin;
+  const yFloor = y - h + innerMargin;
+
+  // Slide number badge
+  if (includeSlideNumbers) {
+    const numText = `${slideNumber}`;
+    page.drawText(numText, { x: contentX, y: curY, size: 7, font, color: muted });
+    curY -= 10;
+  }
+
+  // Title
+  if (slide.title) {
+    const titleLines = wrapText(slide.title, fontBold, 10, contentW);
+    curY = drawLines(titleLines, page, contentX, curY, yFloor, 10, fontBold, dark, 13);
+    curY -= 4;
+  }
+
+  // Subtitle
+  if (slide.subtitle) {
+    const subLines = wrapText(slide.subtitle, fontItalic, 8, contentW);
+    curY = drawLines(subLines, page, contentX, curY, yFloor, 8, fontItalic, muted, 11);
+    curY -= 4;
+  }
+
+  // Block summaries
+  for (const block of (slide.contentBlocks ?? []).slice(0, 4)) {
+    if (curY < yFloor) break;
+    curY = renderBlock(block, page, font, fontBold, fontItalic, fontMono, contentX, contentW, curY, yFloor);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Layout: full_slide (landscape, one slide per page)
+// ---------------------------------------------------------------------------
+
+function renderFullSlide(
+  pdf: ReturnType<typeof PDFDocument.prototype.addPage> extends infer P ? { addPage: (size?: [number, number]) => P } : never,
+  body: ExportRequest,
+  fonts: Fonts,
+  letterW: number,
+  letterH: number,
+  margin: number,
+  deckTitle: string,
+) {
+  const { font, fontBold, fontItalic, fontMono } = fonts;
+  const dark = rgb(0.2, 0.2, 0.2);
+  const muted = rgb(0.5, 0.5, 0.5);
+
+  for (let i = 0; i < body.slides.length; i++) {
+    const slide = body.slides[i];
+    // Landscape: swap width and height
+    const pageW = letterH;
+    const pageH = letterW;
+    const page = pdf.addPage([pageW, pageH]);
+
+    let y = drawPageHeader(page, deckTitle, fontBold, pageW, pageH, margin, body.includeHeader);
+    const contentWidth = pageW - margin * 2;
+    const yFloor = margin + 20;
+
+    // Slide number
+    if (body.includeSlideNumbers) {
+      page.drawText(`Slide ${i + 1}`, { x: margin, y, size: 8, font, color: muted });
+      y -= 14;
+    }
+
+    // Title
+    if (slide.title) {
+      const titleLines = wrapText(slide.title, fontBold, 18, contentWidth);
+      y = drawLines(titleLines, page, margin, y, yFloor, 18, fontBold, dark, 24);
+      y -= 6;
+    }
+
+    // Subtitle
+    if (slide.subtitle) {
+      const subLines = wrapText(slide.subtitle, fontItalic, 12, contentWidth);
+      y = drawLines(subLines, page, margin, y, yFloor, 12, fontItalic, muted, 16);
+      y -= 8;
+    }
+
+    // Content blocks
+    for (const block of slide.contentBlocks ?? []) {
+      if (y < yFloor) break;
+      y = renderBlock(block, page, font, fontBold, fontItalic, fontMono, margin, contentWidth, y, yFloor);
+    }
+
+    drawPageNumber(page, i + 1, font, pageW, margin, body.includeSlideNumbers);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Layout: two_up (portrait, 2 slides per page)
+// ---------------------------------------------------------------------------
+
+function renderTwoUp(
+  pdf: ReturnType<typeof PDFDocument.prototype.addPage> extends infer P ? { addPage: (size?: [number, number]) => P } : never,
+  body: ExportRequest,
+  fonts: Fonts,
+  pageW: number,
+  pageH: number,
+  margin: number,
+  deckTitle: string,
+) {
+  const slidesPerPage = 2;
+  const gap = 20;
+  const totalPages = Math.ceil(body.slides.length / slidesPerPage);
+
+  for (let p = 0; p < totalPages; p++) {
+    const page = pdf.addPage([pageW, pageH]);
+    const startY = drawPageHeader(page, deckTitle, fonts.fontBold, pageW, pageH, margin, body.includeHeader);
+
+    const availH = startY - margin - 20;
+    const boxW = pageW - margin * 2;
+    const boxH = (availH - gap) / 2;
+
+    for (let s = 0; s < slidesPerPage; s++) {
+      const slideIdx = p * slidesPerPage + s;
+      if (slideIdx >= body.slides.length) break;
+
+      const boxY = startY - s * (boxH + gap);
+      drawSlidePreviewBox(
+        page,
+        body.slides[slideIdx],
+        fonts,
+        margin,
+        boxY,
+        boxW,
+        boxH,
+        slideIdx + 1,
+        body.includeSlideNumbers,
+      );
+    }
+
+    drawPageNumber(page, p + 1, fonts.font, pageW, margin, body.includeSlideNumbers);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Layout: three_up_notes (portrait, 3 slides left + notes right)
+// ---------------------------------------------------------------------------
+
+function renderThreeUpNotes(
+  pdf: ReturnType<typeof PDFDocument.prototype.addPage> extends infer P ? { addPage: (size?: [number, number]) => P } : never,
+  body: ExportRequest,
+  fonts: Fonts,
+  pageW: number,
+  pageH: number,
+  margin: number,
+  deckTitle: string,
+) {
+  const slidesPerPage = 3;
+  const gap = 14;
+  const totalPages = Math.ceil(body.slides.length / slidesPerPage);
+  const leftColW = (pageW - margin * 2) * 0.45; // ~3.2" on letter
+  const rightColX = margin + leftColW + 14;
+  const rightColW = pageW - rightColX - margin;
+
+  for (let p = 0; p < totalPages; p++) {
+    const page = pdf.addPage([pageW, pageH]);
+    const startY = drawPageHeader(page, deckTitle, fonts.fontBold, pageW, pageH, margin, body.includeHeader);
+
+    const availH = startY - margin - 20;
+    const boxH = (availH - gap * 2) / 3;
+
+    for (let s = 0; s < slidesPerPage; s++) {
+      const slideIdx = p * slidesPerPage + s;
+      if (slideIdx >= body.slides.length) break;
+
+      const boxY = startY - s * (boxH + gap);
+      const slide = body.slides[slideIdx];
+
+      // Draw slide preview on the left
+      drawSlidePreviewBox(
+        page,
+        slide,
+        fonts,
+        margin,
+        boxY,
+        leftColW,
+        boxH,
+        slideIdx + 1,
+        body.includeSlideNumbers,
+      );
+
+      // Draw ruled lines on the right for note-taking
+      const lineStartY = boxY - 4;
+      const lineEndY = boxY - boxH + 4;
+      const lineSpacing = 16;
+      const ruleColor = rgb(0.82, 0.82, 0.82);
+
+      for (let ly = lineStartY; ly >= lineEndY; ly -= lineSpacing) {
+        page.drawLine({
+          start: { x: rightColX, y: ly },
+          end: { x: rightColX + rightColW, y: ly },
+          thickness: 0.4,
+          color: ruleColor,
+        });
+      }
+
+      // If speaker notes exist and the option is on, render them
+      if (body.includeSpeakerNotes && slide.speakerNotes) {
+        const noteLines = wrapText(slide.speakerNotes, fonts.font, 7, rightColW - 4);
+        let noteY = lineStartY - 2;
+        for (const line of noteLines.slice(0, 12)) {
+          if (noteY < lineEndY) break;
+          page.drawText(line, {
+            x: rightColX + 2,
+            y: noteY,
+            size: 7,
+            font: fonts.font,
+            color: rgb(0.35, 0.35, 0.35),
+          });
+          noteY -= lineSpacing;
+        }
+      }
+    }
+
+    drawPageNumber(page, p + 1, fonts.font, pageW, margin, body.includeSlideNumbers);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Layout: six_up (portrait, 3×2 grid)
+// ---------------------------------------------------------------------------
+
+function renderSixUp(
+  pdf: ReturnType<typeof PDFDocument.prototype.addPage> extends infer P ? { addPage: (size?: [number, number]) => P } : never,
+  body: ExportRequest,
+  fonts: Fonts,
+  pageW: number,
+  pageH: number,
+  margin: number,
+  deckTitle: string,
+) {
+  const cols = 2;
+  const rows = 3;
+  const slidesPerPage = cols * rows;
+  const gapX = 14;
+  const gapY = 14;
+  const totalPages = Math.ceil(body.slides.length / slidesPerPage);
+
+  for (let p = 0; p < totalPages; p++) {
+    const page = pdf.addPage([pageW, pageH]);
+    const startY = drawPageHeader(page, deckTitle, fonts.fontBold, pageW, pageH, margin, body.includeHeader);
+
+    const availW = pageW - margin * 2;
+    const availH = startY - margin - 20;
+    const boxW = (availW - gapX * (cols - 1)) / cols;
+    const boxH = (availH - gapY * (rows - 1)) / rows;
+
+    for (let s = 0; s < slidesPerPage; s++) {
+      const slideIdx = p * slidesPerPage + s;
+      if (slideIdx >= body.slides.length) break;
+
+      const col = s % cols;
+      const row = Math.floor(s / cols);
+      const boxX = margin + col * (boxW + gapX);
+      const boxY = startY - row * (boxH + gapY);
+
+      drawSlidePreviewBox(
+        page,
+        body.slides[slideIdx],
+        fonts,
+        boxX,
+        boxY,
+        boxW,
+        boxH,
+        slideIdx + 1,
+        body.includeSlideNumbers,
+      );
+    }
+
+    drawPageNumber(page, p + 1, fonts.font, pageW, margin, body.includeSlideNumbers);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Layout: outline (text-only — titles + bullet content)
+// ---------------------------------------------------------------------------
+
+function renderOutline(
+  pdf: ReturnType<typeof PDFDocument.prototype.addPage> extends infer P ? { addPage: (size?: [number, number]) => P } : never,
+  body: ExportRequest,
+  fonts: Fonts,
+  pageW: number,
+  pageH: number,
+  margin: number,
+  deckTitle: string,
+) {
+  const { font, fontBold, fontItalic } = fonts;
+  const dark = rgb(0.2, 0.2, 0.2);
+  const muted = rgb(0.4, 0.4, 0.4);
+  const contentWidth = pageW - margin * 2;
+  let pageNum = 1;
+
+  let page = pdf.addPage([pageW, pageH]);
+  let y = drawPageHeader(page, deckTitle, fontBold, pageW, pageH, margin, body.includeHeader);
+  const yFloor = margin + 30;
+
+  function ensureSpace(needed: number) {
+    if (y - needed < yFloor) {
+      drawPageNumber(page, pageNum, font, pageW, margin, body.includeSlideNumbers);
+      pageNum++;
+      page = pdf.addPage([pageW, pageH]);
+      y = drawPageHeader(page, deckTitle, fontBold, pageW, pageH, margin, body.includeHeader);
+    }
+  }
+
+  for (let i = 0; i < body.slides.length; i++) {
+    const slide = body.slides[i];
+
+    ensureSpace(30);
+
+    // Slide heading
+    const heading = body.includeSlideNumbers
+      ? `${i + 1}. ${slide.title || "(Untitled)"}`
+      : slide.title || "(Untitled)";
+    const headingLines = wrapText(heading, fontBold, 13, contentWidth);
+    y = drawLines(headingLines, page, margin, y, yFloor, 13, fontBold, dark, 17);
+    y -= 4;
+
+    // Subtitle
+    if (slide.subtitle) {
+      const subLines = wrapText(slide.subtitle, fontItalic, 10, contentWidth - 15);
+      y = drawLines(subLines, page, margin + 15, y, yFloor, 10, fontItalic, muted, 13);
+      y -= 4;
+    }
+
+    // Extract text content from blocks (text-only outline)
+    for (const block of slide.contentBlocks ?? []) {
+      if (y < yFloor) {
+        ensureSpace(20);
+      }
+
+      if (block.type === "text") {
+        const textLines = wrapText(block.data.text ?? "", font, 10, contentWidth - 20);
+        y = drawLines(textLines, page, margin + 20, y, yFloor, 10, font, dark, 13);
+        y -= 2;
+      } else if (block.type === "bullets") {
+        const items: string[] = block.data.items ?? [];
+        const ordered = block.data.ordered ?? false;
+        for (let j = 0; j < items.length; j++) {
+          if (y < yFloor) ensureSpace(14);
+          const prefix = ordered ? `${j + 1}. ` : "\u2022 ";
+          const bulletLines = wrapText(`${prefix}${items[j]}`, font, 9, contentWidth - 30);
+          y = drawLines(bulletLines, page, margin + 30, y, yFloor, 9, font, dark, 12);
+        }
+        y -= 2;
+      } else if (block.type === "quote") {
+        const quoteLines = wrapText(`\u201C${block.data.text}\u201D`, fontItalic, 9, contentWidth - 30);
+        y = drawLines(quoteLines, page, margin + 30, y, yFloor, 9, fontItalic, muted, 12);
+        y -= 2;
+      }
+      // Skip image, chart, diagram etc. in outline mode
+    }
+
+    y -= 10;
+  }
+
+  drawPageNumber(page, pageNum, font, pageW, margin, body.includeSlideNumbers);
+}

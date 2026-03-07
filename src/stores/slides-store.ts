@@ -7,6 +7,7 @@ import type {
   InstitutionKit,
   SlideMaster,
   CardBackground as PresentationCardBackground,
+  TextEffects,
 } from "@/types/presentation";
 import { PRESET_THEMES } from "@/types/presentation";
 import {
@@ -42,6 +43,8 @@ export interface SlideState {
   cardBackground?: CardBackground;
   transition?: SlideTransition;
   hidden?: boolean;
+  titleEffects?: TextEffects;
+  subtitleEffects?: TextEffects;
 }
 
 export type WorkspaceMode = "slides" | "create";
@@ -52,6 +55,7 @@ export type RightPanel =
   | "versions"
   | "analytics"
   | "defense"
+  | "accessibility"
   | null;
 export type AgentMode = "learn" | "draft" | "visual" | "illustrate";
 export type SaveStatus = "idle" | "saving" | "saved" | "error";
@@ -75,6 +79,11 @@ export interface SlidesStore {
   audienceType: AudienceType;
   themeKey: string;
   themeConfig: ThemeConfig;
+
+  // Custom themes (per-deck, persisted via updateDeck)
+  customThemes: Record<string, ThemeConfig>;
+  addCustomTheme: (key: string, config: ThemeConfig) => void;
+  deleteCustomTheme: (key: string) => void;
 
   // Branding
   institutionKit: Partial<InstitutionKit> | null;
@@ -176,6 +185,9 @@ export interface SlidesStore {
 
   // Block-level update (convenience)
   updateBlock: (blockIndex: number, block: ContentBlock) => void;
+  lockBlock: (blockIndex: number) => void;
+  unlockBlock: (blockIndex: number) => void;
+  toggleBlockLock: (blockIndex: number) => void;
   bringToFront: (blockIndex: number) => void;
   sendToBack: (blockIndex: number) => void;
   bringForward: (blockIndex: number) => void;
@@ -238,6 +250,35 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
   audienceType: "general",
   themeKey: "modern",
   themeConfig: PRESET_THEMES.modern,
+
+  // Custom themes
+  customThemes: {},
+  addCustomTheme: (key, config) => {
+    set((state) => ({
+      customThemes: { ...state.customThemes, [key]: config },
+    }));
+    const { deckId, themeConfig, customThemes } = get();
+    if (deckId) {
+      const merged = { ...customThemes, [key]: config };
+      updateDeck(deckId, {
+        themeConfig: { ...themeConfig, _customThemes: merged } as unknown as ThemeConfig,
+      });
+    }
+  },
+  deleteCustomTheme: (key) => {
+    set((state) => {
+      const next = { ...state.customThemes };
+      delete next[key];
+      return { customThemes: next };
+    });
+    const { deckId, themeConfig } = get();
+    const updated = { ...get().customThemes };
+    if (deckId) {
+      updateDeck(deckId, {
+        themeConfig: { ...themeConfig, _customThemes: updated } as unknown as ThemeConfig,
+      });
+    }
+  },
 
   // Branding
   institutionKit: null,
@@ -410,8 +451,9 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
         }));
         return { slides: reordered, activeSlideId: mergedSlide.id };
       });
-    } catch {
-      // ignore
+    } catch (e) {
+      console.error("pasteSlide failed", e);
+      set({ saveStatus: "error" });
     }
   },
 
@@ -603,6 +645,8 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
           (data.themeConfig as ThemeConfig) ??
           PRESET_THEMES[data.theme ?? "modern"] ??
           PRESET_THEMES.modern,
+        customThemes:
+          ((data.themeConfig as Record<string, unknown> | null)?._customThemes as Record<string, ThemeConfig>) ?? {},
         masters: mergeSlideMasters(
           (data as Record<string, unknown>).masters
         ),
@@ -692,6 +736,31 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
     if (!slide) return;
     const newBlocks = [...slide.contentBlocks];
     newBlocks[blockIndex] = block;
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+  },
+
+  lockBlock: (blockIndex) => {
+    const slide = get().getActiveSlide();
+    if (!slide || blockIndex < 0 || blockIndex >= slide.contentBlocks.length) return;
+    const newBlocks = [...slide.contentBlocks];
+    newBlocks[blockIndex] = { ...newBlocks[blockIndex], locked: true };
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+  },
+
+  unlockBlock: (blockIndex) => {
+    const slide = get().getActiveSlide();
+    if (!slide || blockIndex < 0 || blockIndex >= slide.contentBlocks.length) return;
+    const newBlocks = [...slide.contentBlocks];
+    newBlocks[blockIndex] = { ...newBlocks[blockIndex], locked: false };
+    get().updateSlide(slide.id, { contentBlocks: newBlocks });
+  },
+
+  toggleBlockLock: (blockIndex) => {
+    const slide = get().getActiveSlide();
+    if (!slide || blockIndex < 0 || blockIndex >= slide.contentBlocks.length) return;
+    const block = slide.contentBlocks[blockIndex];
+    const newBlocks = [...slide.contentBlocks];
+    newBlocks[blockIndex] = { ...block, locked: !block.locked };
     get().updateSlide(slide.id, { contentBlocks: newBlocks });
   },
 
@@ -831,24 +900,32 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
       });
 
       return newSlide;
-    } catch {
+    } catch (e) {
+      console.error("addSlide failed", e);
+      set({ saveStatus: "error" });
       return null;
     }
   },
 
   deleteSlide: async (id) => {
+    const previousSlides = get().slides;
+    const previousActiveSlideId = get().activeSlideId;
+
+    // Optimistic update
+    set((state) => {
+      const filtered = state.slides.filter((s) => s.id !== id);
+      let newActiveId = state.activeSlideId;
+      if (state.activeSlideId === id) {
+        newActiveId = filtered.length > 0 ? filtered[0].id : null;
+      }
+      return { slides: filtered, activeSlideId: newActiveId };
+    });
+
     try {
       await deleteSlideAction(id);
-      set((state) => {
-        const filtered = state.slides.filter((s) => s.id !== id);
-        let newActiveId = state.activeSlideId;
-        if (state.activeSlideId === id) {
-          newActiveId = filtered.length > 0 ? filtered[0].id : null;
-        }
-        return { slides: filtered, activeSlideId: newActiveId };
-      });
-    } catch {
-      // ignore
+    } catch (e) {
+      console.error("deleteSlide failed", e);
+      set({ slides: previousSlides, activeSlideId: previousActiveSlideId, saveStatus: "error" });
     }
   },
 
@@ -894,8 +971,9 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
         }));
         return { slides: reordered, activeSlideId: mergedSlide.id };
       });
-    } catch {
-      // ignore
+    } catch (e) {
+      console.error("duplicateSlide failed", e);
+      set({ saveStatus: "error" });
     }
   },
 
@@ -913,9 +991,10 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
 
     try {
       await reorderSlidesAction(deckId, ids);
-    } catch {
+    } catch (e) {
+      console.error("reorderSlides failed", e);
       // Revert on failure
-      set({ slides });
+      set({ slides, saveStatus: "error" });
     }
   },
 
@@ -1025,13 +1104,18 @@ export const useSlidesStore = create<SlidesStore>((set, get) => ({
     if (timer) clearTimeout(timer);
 
     const newTimer = setTimeout(async () => {
+      // Guard: skip save if the slide no longer exists in state (e.g. deleted during debounce window)
+      const slideStillExists = get().slides.some((s) => s.id === slideId);
+      if (!slideStillExists) return;
+
       set({ saveStatus: "saving" });
       try {
         await updateSlideAction(slideId, data);
         set({ saveStatus: "saved" });
         // Reset to idle after a moment
         setTimeout(() => set({ saveStatus: "idle" }), 1500);
-      } catch {
+      } catch (e) {
+        console.error("_debouncedSave failed", e);
         set({ saveStatus: "error" });
       }
     }, 800);

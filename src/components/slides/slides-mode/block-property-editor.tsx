@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useSlidesStore } from "@/stores/slides-store";
-import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, InfographicData, InfographicType, InfographicItem, ShapeData } from "@/types/presentation";
+import type { ContentBlock, ChartData, EmbedData, ToggleData, NestedCardData, BlockAnimation, InfographicData, InfographicType, InfographicItem, ShapeData, MediaData } from "@/types/presentation";
+import { detectMediaType } from "@/components/slides/blocks/media-block";
 import { Trash, Plus, Upload } from "@phosphor-icons/react";
 import { SHAPE_TYPE_OPTIONS, renderShapeSvgPrimitive } from "@/components/slides/blocks/shape-utils";
 import {
@@ -10,6 +11,7 @@ import {
   FONT_SIZE_OPTIONS,
   TEXT_COLOR_OPTIONS,
 } from "@/components/slides/wysiwyg/text-formatting-options";
+import { BlockStyleControls } from "@/components/slides/shared/block-style-controls";
 
 // ---------------------------------------------------------------------------
 // BlockPropertyEditor — context-sensitive editor for the selected block.
@@ -101,6 +103,9 @@ export function BlockPropertyEditor() {
     case "infographic":
       editor = <InfographicEditor block={selectedBlock} onUpdate={onUpdate} />;
       break;
+    case "media":
+      editor = <MediaEditor block={selectedBlock} onUpdate={onUpdate} />;
+      break;
     default:
       editor = (
         <div className="px-3 py-4 text-xs text-ink-muted">
@@ -112,6 +117,7 @@ export function BlockPropertyEditor() {
   return (
     <>
       {editor}
+      <BlockStyleControls block={selectedBlock} onUpdate={onUpdate} />
       <AnimationSection block={selectedBlock} onUpdate={onUpdate} />
     </>
   );
@@ -360,7 +366,251 @@ function TextEditor({
           </div>
         </div>
       </EditorSection>
+
+      <TextEffectsEditor
+        textShadow={data.textShadow}
+        textOutline={data.textOutline}
+        textTransform={data.textTransform}
+        letterSpacing={data.letterSpacing}
+        onUpdate={(effects) => updateData(effects)}
+      />
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Text Effects Editor (shared between text blocks and title/subtitle)
+// ---------------------------------------------------------------------------
+
+const SHADOW_PRESETS = [
+  { label: "None", value: undefined as undefined },
+  { label: "Subtle", value: { offsetX: 1, offsetY: 1, blur: 2, color: "rgba(0,0,0,0.2)" } },
+  { label: "Medium", value: { offsetX: 2, offsetY: 2, blur: 4, color: "rgba(0,0,0,0.3)" } },
+  { label: "Strong", value: { offsetX: 3, offsetY: 3, blur: 6, color: "rgba(0,0,0,0.5)" } },
+] as const;
+
+function TextEffectsEditor({
+  textShadow,
+  textOutline,
+  textTransform,
+  letterSpacing,
+  onUpdate,
+  glowColor,
+}: {
+  textShadow?: TextBlock["data"]["textShadow"];
+  textOutline?: TextBlock["data"]["textOutline"];
+  textTransform?: TextBlock["data"]["textTransform"];
+  letterSpacing?: TextBlock["data"]["letterSpacing"];
+  onUpdate: (partial: Partial<TextBlock["data"]>) => void;
+  glowColor?: string;
+}) {
+  const shadowEnabled = !!textShadow;
+  const outlineEnabled = !!textOutline;
+  const resolvedGlowColor = glowColor ?? "#4F46E5";
+
+  return (
+    <EditorSection title="Text Effects">
+      {/* Text Shadow */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between">
+          <FieldLabel>Text Shadow</FieldLabel>
+          <input
+            type="checkbox"
+            checked={shadowEnabled}
+            onChange={(e) => {
+              if (e.target.checked) {
+                onUpdate({ textShadow: { offsetX: 1, offsetY: 1, blur: 2, color: "rgba(0,0,0,0.2)" } });
+              } else {
+                onUpdate({ textShadow: undefined });
+              }
+            }}
+            className="accent-brand"
+          />
+        </div>
+        {shadowEnabled && (
+          <div className="space-y-1.5 pl-1">
+            <div className="flex flex-wrap gap-1">
+              {SHADOW_PRESETS.map((preset) => (
+                <button
+                  key={preset.label}
+                  type="button"
+                  onClick={() => onUpdate({ textShadow: preset.value ? { ...preset.value } : undefined })}
+                  className={`rounded border px-2 py-0.5 text-[10px] ${
+                    !preset.value && !shadowEnabled
+                      ? "border-brand bg-brand/10 text-brand"
+                      : "border-border text-ink-muted hover:bg-surface-raised"
+                  }`}
+                >
+                  {preset.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() =>
+                  onUpdate({
+                    textShadow: { offsetX: 0, offsetY: 0, blur: 8, color: `${resolvedGlowColor}80` },
+                  })
+                }
+                className="rounded border border-border px-2 py-0.5 text-[10px] text-ink-muted hover:bg-surface-raised"
+              >
+                Glow
+              </button>
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-ink-muted w-12">X</span>
+                <input
+                  type="range"
+                  min={-10}
+                  max={10}
+                  value={textShadow!.offsetX}
+                  onChange={(e) =>
+                    onUpdate({ textShadow: { ...textShadow!, offsetX: Number(e.target.value) } })
+                  }
+                  className="flex-1 h-1 accent-brand cursor-pointer"
+                />
+                <span className="text-[10px] text-ink-muted tabular-nums w-8 text-right">
+                  {textShadow!.offsetX}px
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-ink-muted w-12">Y</span>
+                <input
+                  type="range"
+                  min={-10}
+                  max={10}
+                  value={textShadow!.offsetY}
+                  onChange={(e) =>
+                    onUpdate({ textShadow: { ...textShadow!, offsetY: Number(e.target.value) } })
+                  }
+                  className="flex-1 h-1 accent-brand cursor-pointer"
+                />
+                <span className="text-[10px] text-ink-muted tabular-nums w-8 text-right">
+                  {textShadow!.offsetY}px
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-ink-muted w-12">Blur</span>
+                <input
+                  type="range"
+                  min={0}
+                  max={20}
+                  value={textShadow!.blur}
+                  onChange={(e) =>
+                    onUpdate({ textShadow: { ...textShadow!, blur: Number(e.target.value) } })
+                  }
+                  className="flex-1 h-1 accent-brand cursor-pointer"
+                />
+                <span className="text-[10px] text-ink-muted tabular-nums w-8 text-right">
+                  {textShadow!.blur}px
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-ink-muted w-12">Color</span>
+                <input
+                  type="color"
+                  value={toColorInputValue(textShadow!.color)}
+                  onChange={(e) =>
+                    onUpdate({ textShadow: { ...textShadow!, color: e.target.value } })
+                  }
+                  className="h-6 w-8 rounded border border-border bg-surface-raised"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Text Outline */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between">
+          <FieldLabel>Text Outline</FieldLabel>
+          <input
+            type="checkbox"
+            checked={outlineEnabled}
+            onChange={(e) => {
+              if (e.target.checked) {
+                onUpdate({ textOutline: { width: 1, color: "#000000" } });
+              } else {
+                onUpdate({ textOutline: undefined });
+              }
+            }}
+            className="accent-brand"
+          />
+        </div>
+        {outlineEnabled && (
+          <div className="space-y-1 pl-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-ink-muted w-12">Width</span>
+              <input
+                type="range"
+                min={0.5}
+                max={3}
+                step={0.5}
+                value={textOutline!.width}
+                onChange={(e) =>
+                  onUpdate({ textOutline: { ...textOutline!, width: Number(e.target.value) } })
+                }
+                className="flex-1 h-1 accent-brand cursor-pointer"
+              />
+              <span className="text-[10px] text-ink-muted tabular-nums w-8 text-right">
+                {textOutline!.width}px
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-ink-muted w-12">Color</span>
+              <input
+                type="color"
+                value={toColorInputValue(textOutline!.color)}
+                onChange={(e) =>
+                  onUpdate({ textOutline: { ...textOutline!, color: e.target.value } })
+                }
+                className="h-6 w-8 rounded border border-border bg-surface-raised"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Text Transform */}
+      <div>
+        <FieldLabel>Text Transform</FieldLabel>
+        <FieldSelect
+          value={textTransform ?? "none"}
+          onChange={(v) =>
+            onUpdate({ textTransform: v === "none" ? undefined : (v as "uppercase" | "lowercase" | "capitalize") })
+          }
+          options={[
+            { value: "none", label: "None" },
+            { value: "uppercase", label: "UPPERCASE" },
+            { value: "lowercase", label: "lowercase" },
+            { value: "capitalize", label: "Capitalize" },
+          ]}
+        />
+      </div>
+
+      {/* Letter Spacing */}
+      <div className="space-y-0.5">
+        <div className="flex items-center justify-between">
+          <FieldLabel>Letter Spacing</FieldLabel>
+          <span className="text-[10px] text-ink-muted tabular-nums">
+            {(letterSpacing ?? 0).toFixed(2)}em
+          </span>
+        </div>
+        <input
+          type="range"
+          min={-0.05}
+          max={0.3}
+          step={0.01}
+          value={letterSpacing ?? 0}
+          onChange={(e) => {
+            const v = Number(e.target.value);
+            onUpdate({ letterSpacing: v === 0 ? undefined : v });
+          }}
+          className="w-full h-1 accent-brand cursor-pointer"
+        />
+      </div>
+    </EditorSection>
   );
 }
 
@@ -1934,6 +2184,203 @@ function InfographicEditor({
           placeholder="Optional caption"
         />
       </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Media Editor — audio/video source, playback options
+// ---------------------------------------------------------------------------
+
+type MediaBlock = Extract<ContentBlock, { type: "media" }>;
+
+function MediaEditor({ block, onUpdate }: { block: MediaBlock; onUpdate: (b: ContentBlock) => void }) {
+  const data = block.data;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const update = (partial: Partial<MediaData>) => {
+    onUpdate({ ...block, data: { ...data, ...partial } });
+  };
+
+  const handleUrlChange = (url: string) => {
+    const detected = detectMediaType(url);
+    const partial: Partial<MediaData> = { url, source: "url" };
+    if (detected === "audio") partial.mediaType = "audio";
+    else if (detected === "video" || detected === "video_embed") partial.mediaType = "video";
+    update(partial);
+  };
+
+  const handleFileUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/slides/upload-media", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) throw new Error("Upload failed");
+      const payload = (await response.json()) as { url?: string; mimeType?: string };
+      if (!payload.url) throw new Error("Missing URL");
+      const isAudio = file.type.startsWith("audio/");
+      update({
+        url: payload.url,
+        mimeType: payload.mimeType ?? file.type,
+        mediaType: isAudio ? "audio" : "video",
+        source: "upload",
+      });
+    } catch (error) {
+      console.error("Media upload failed:", error);
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      <EditorSection title="Media">
+        <div>
+          <FieldLabel>Source</FieldLabel>
+          <FieldSelect
+            value={data.source ?? "url"}
+            onChange={(v) => update({ source: v as "upload" | "url" })}
+            options={[
+              { value: "url", label: "URL" },
+              { value: "upload", label: "Upload File" },
+            ]}
+          />
+        </div>
+
+        {data.source === "upload" ? (
+          <div>
+            <input
+              ref={inputRef}
+              type="file"
+              accept="video/*,audio/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void handleFileUpload(file);
+              }}
+            />
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => inputRef.current?.click()}
+              className="w-full text-xs py-1.5 rounded-md border border-border bg-surface-raised text-ink hover:bg-surface-raised/80 disabled:opacity-60"
+            >
+              <Upload size={12} className="inline mr-1" />
+              {uploading ? "Uploading..." : data.url ? "Replace File" : "Choose File"}
+            </button>
+            {data.url && (
+              <p className="text-[10px] text-ink-muted mt-1 truncate">{data.url}</p>
+            )}
+          </div>
+        ) : (
+          <div>
+            <FieldLabel>URL</FieldLabel>
+            <FieldInput
+              value={data.url ?? ""}
+              onChange={handleUrlChange}
+              placeholder="https://example.com/video.mp4"
+            />
+          </div>
+        )}
+
+        <div>
+          <FieldLabel>Media Type</FieldLabel>
+          <FieldSelect
+            value={data.mediaType ?? "video"}
+            onChange={(v) => update({ mediaType: v as "video" | "audio" })}
+            options={[
+              { value: "video", label: "Video" },
+              { value: "audio", label: "Audio" },
+            ]}
+          />
+        </div>
+
+        <div>
+          <FieldLabel>Title</FieldLabel>
+          <FieldInput
+            value={data.title ?? ""}
+            onChange={(v) => update({ title: v || undefined })}
+            placeholder="Display title"
+          />
+        </div>
+
+        {data.mediaType === "video" && (
+          <div>
+            <FieldLabel>Poster Image URL</FieldLabel>
+            <FieldInput
+              value={data.posterUrl ?? ""}
+              onChange={(v) => update({ posterUrl: v || undefined })}
+              placeholder="https://example.com/poster.jpg"
+            />
+          </div>
+        )}
+      </EditorSection>
+
+      <EditorSection title="Playback">
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={data.autoplay ?? false}
+            onChange={(e) => update({ autoplay: e.target.checked })}
+            className="rounded border-border"
+          />
+          <span className="text-xs text-ink">Autoplay in presenter mode</span>
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={data.loop ?? false}
+            onChange={(e) => update({ loop: e.target.checked })}
+            className="rounded border-border"
+          />
+          <span className="text-xs text-ink">Loop</span>
+        </label>
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={data.muted ?? false}
+            onChange={(e) => update({ muted: e.target.checked })}
+            className="rounded border-border"
+          />
+          <span className="text-xs text-ink">Muted</span>
+        </label>
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <FieldLabel>Start (sec)</FieldLabel>
+            <FieldInput
+              value={data.startTime != null ? String(data.startTime) : ""}
+              onChange={(v) => update({ startTime: v ? Number(v) : undefined })}
+              placeholder="0"
+              type="number"
+            />
+          </div>
+          <div className="flex-1">
+            <FieldLabel>End (sec)</FieldLabel>
+            <FieldInput
+              value={data.endTime != null ? String(data.endTime) : ""}
+              onChange={(v) => update({ endTime: v ? Number(v) : undefined })}
+              placeholder=""
+              type="number"
+            />
+          </div>
+        </div>
+      </EditorSection>
+
+      {data.url && (
+        <button
+          type="button"
+          onClick={() => update({ url: undefined, mimeType: undefined, posterUrl: undefined })}
+          className="w-full text-xs py-1.5 rounded-md border border-red-300 text-red-700 hover:bg-red-50"
+        >
+          Remove Media
+        </button>
+      )}
     </div>
   );
 }

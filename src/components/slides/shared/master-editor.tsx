@@ -92,6 +92,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
     if (masters.length === 0) {
       const created = defaultMaster("Master");
       addMaster(created);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync on initial open
       setActiveMasterId(created.id);
       return;
     }

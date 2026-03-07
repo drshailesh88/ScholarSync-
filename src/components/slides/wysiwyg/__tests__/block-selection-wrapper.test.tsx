@@ -28,8 +28,8 @@ function renderWrapper(onSelect: (options?: { addToSelection?: boolean }) => voi
           onSelect,
           onStartEdit: vi.fn(),
           onDelete: vi.fn(),
-          children: createElement("div", null, "Content"),
-        }
+        },
+        createElement("div", null, "Content")
       )
     );
   });
@@ -134,8 +134,8 @@ describe("BlockSelectionWrapper rotation", () => {
             onRotate,
             initialPosition: { x: 10, y: 10, width: 20, height: 20 },
             canvasRef: { current: canvas },
-            children: createElement("div", null, "Content"),
-          }
+          },
+          createElement("div", null, "Content")
         )
       );
     });

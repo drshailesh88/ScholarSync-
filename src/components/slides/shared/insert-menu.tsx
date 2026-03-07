@@ -31,14 +31,6 @@ interface InsertMenuProps {
   onClose: () => void;
   align?: "start" | "center";
 }
-interface MenuItem {
-  category: CategoryKey;
-  type: ContentBlock["type"];
-  label: string;
-  iconName: string;
-  index: number;
-}
-
 export function InsertMenu({
   isOpen,
   anchorRef,
@@ -59,9 +51,7 @@ export function InsertMenu({
   const normalizedSearch = search.trim().toLowerCase();
 
   const itemsByCategory = useMemo(() => {
-    let runningIndex = 0;
-
-    return CATEGORY_ORDER.map((category) => {
+    const categories = CATEGORY_ORDER.map((category) => {
       const allItems = groups[category] ?? [];
       const filteredItems = allItems.filter(({ type, entry }) => {
         if (entry.label.toLowerCase().includes(normalizedSearch)) return true;
@@ -76,17 +66,27 @@ export function InsertMenu({
         });
       });
 
-      const items = filteredItems.map(({ type, entry }) => {
-        const item: MenuItem = {
-          category,
-          type,
-          label: entry.label,
-          iconName: entry.iconName,
-          index: runningIndex,
-        };
-        runningIndex += 1;
-        return item;
-      });
+      return { category, filteredItems };
+    });
+
+    // Compute running indices without mutation
+    const offsets = categories.reduce<number[]>(
+      (acc, _cat, i) => {
+        acc.push(i === 0 ? 0 : acc[i - 1] + categories[i - 1].filteredItems.length);
+        return acc;
+      },
+      []
+    );
+
+    return categories.map(({ category, filteredItems }, catIndex) => {
+      const offset = offsets[catIndex];
+      const items = filteredItems.map(({ type, entry }, i) => ({
+        category,
+        type,
+        label: entry.label,
+        iconName: entry.iconName,
+        index: offset + i,
+      }));
 
       return {
         category,
@@ -101,24 +101,34 @@ export function InsertMenu({
     [itemsByCategory]
   );
 
+  // Reset state when menu opens (React render-time state adjustment)
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) {
+      setSearch("");
+      setActiveIndex(0);
+      setShapeSubmenuOpen(false);
+    }
+  }
+
+  // Clamp activeIndex when items change (render-time adjustment)
+  const [prevItemCount, setPrevItemCount] = useState(flattenedItems.length);
+  if (flattenedItems.length !== prevItemCount) {
+    setPrevItemCount(flattenedItems.length);
+    if (isOpen) {
+      if (flattenedItems.length === 0) setActiveIndex(-1);
+      else if (activeIndex >= flattenedItems.length) setActiveIndex(flattenedItems.length - 1);
+      else if (activeIndex < 0) setActiveIndex(0);
+    }
+  }
+
+  // Focus input on open
   useEffect(() => {
-    if (!isOpen) return;
-    setSearch("");
-    setActiveIndex(0);
-    setShapeSubmenuOpen(false);
-    inputRef.current?.focus();
+    if (isOpen) inputRef.current?.focus();
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    setActiveIndex((current) => {
-      if (flattenedItems.length === 0) return -1;
-      if (current < 0) return 0;
-      if (current >= flattenedItems.length) return flattenedItems.length - 1;
-      return current;
-    });
-  }, [flattenedItems, isOpen]);
-
+  // Scroll active item into view
   useEffect(() => {
     if (!isOpen) return;
     const activeItem = itemRefs.current[activeIndex];
@@ -127,11 +137,15 @@ export function InsertMenu({
     }
   }, [activeIndex, isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const active = flattenedItems[activeIndex];
-    setShapeSubmenuOpen(active?.type === "shape");
-  }, [activeIndex, flattenedItems, isOpen]);
+  // Sync shape submenu with active item
+  const [prevActiveForSubmenu, setPrevActiveForSubmenu] = useState(activeIndex);
+  if (activeIndex !== prevActiveForSubmenu) {
+    setPrevActiveForSubmenu(activeIndex);
+    if (isOpen) {
+      const active = flattenedItems[activeIndex];
+      setShapeSubmenuOpen(active?.type === "shape");
+    }
+  }
 
   useEffect(() => {
     if (!isOpen) return;
@@ -270,7 +284,7 @@ export function InsertMenu({
                     data-testid="insert-menu-item"
                     data-type={item.type}
                     data-category={item.category}
-                    aria-selected={isActive}
+                    aria-current={isActive || undefined}
                     onMouseEnter={() => {
                       setActiveIndex(item.index);
                       setShapeSubmenuOpen(isShapeItem);

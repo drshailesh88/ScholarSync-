@@ -31,6 +31,11 @@ interface R2Bucket {
 
 const LOCAL_PDF_DIR = path.join(process.cwd(), ".data", "pdfs");
 const LOCAL_RECORDING_DIR = path.join(process.cwd(), ".data", "recordings");
+const LOCAL_AUDIO_OVERVIEW_DIR = path.join(
+  process.cwd(),
+  ".data",
+  "audio-overviews"
+);
 
 /** True when running inside Cloudflare Workers (the `cloudflare:workers` module exists). */
 function isWorkers(): boolean {
@@ -228,6 +233,99 @@ export async function deleteRecording(storagePath: string): Promise<void> {
     const filePath = path.join(
       LOCAL_RECORDING_DIR,
       storagePath.replace("recordings/", ""),
+    );
+    try {
+      await unlink(filePath);
+    } catch {
+      // Ignore
+    }
+    return;
+  }
+
+  try {
+    await getBucket().delete(storagePath);
+  } catch {
+    // Ignore deletion errors
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Audio Overview helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Upload an audio overview to R2 (or local filesystem in dev).
+ * @returns The storage key (e.g. "audio-overviews/42/abc.mp3")
+ */
+export async function uploadAudioOverview(
+  conversationId: number,
+  audioId: string,
+  buffer: Buffer,
+  extension: string = "mp3",
+): Promise<string> {
+  const key = `audio-overviews/${conversationId}/${audioId}.${extension}`;
+
+  if (!isWorkers()) {
+    const dir = path.join(LOCAL_AUDIO_OVERVIEW_DIR, String(conversationId));
+    if (!existsSync(dir)) await mkdir(dir, { recursive: true });
+    await writeFile(path.join(dir, `${audioId}.${extension}`), buffer);
+    return key;
+  }
+
+  const mimeTypes: Record<string, string> = {
+    mp3: "audio/mpeg",
+    wav: "audio/wav",
+    opus: "audio/opus",
+  };
+
+  await getBucket().put(key, buffer, {
+    httpMetadata: {
+      contentType: mimeTypes[extension] || "audio/mpeg",
+      cacheControl: "private, max-age=86400",
+    },
+  });
+  return key;
+}
+
+/**
+ * Download an audio overview from R2 as a Buffer.
+ * @param storagePath - the full key, e.g. "audio-overviews/42/abc.mp3"
+ */
+export async function downloadAudioOverview(
+  storagePath: string,
+): Promise<Buffer | null> {
+  if (!isWorkers()) {
+    const filePath = path.join(
+      LOCAL_AUDIO_OVERVIEW_DIR,
+      storagePath.replace("audio-overviews/", ""),
+    );
+    if (!existsSync(filePath)) return null;
+    try {
+      return await readFile(filePath);
+    } catch {
+      return null;
+    }
+  }
+
+  try {
+    const obj = await getBucket().get(storagePath);
+    if (!obj) return null;
+    const ab = await obj.arrayBuffer();
+    return Buffer.from(ab);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Delete an audio overview from R2.
+ * @param storagePath - the full key, e.g. "audio-overviews/42/abc.mp3"
+ */
+export async function deleteAudioOverview(storagePath: string): Promise<void> {
+  if (!isWorkers()) {
+    const filePath = path.join(
+      LOCAL_AUDIO_OVERVIEW_DIR,
+      storagePath.replace("audio-overviews/", ""),
     );
     try {
       await unlink(filePath);

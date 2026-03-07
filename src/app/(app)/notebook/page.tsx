@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   ArrowBendDownRight,
   FileText,
+  Globe,
   LinkSimple,
   PaperPlaneRight,
   Paperclip,
@@ -24,6 +25,11 @@ import {
   Notebook,
   ShareNetwork,
   Headphones,
+  FilePdf,
+  Copy,
+  Check,
+  ThumbsUp,
+  ThumbsDown,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -38,10 +44,12 @@ import {
   getConversations,
   getConversation,
   updateConversationPaperIds,
+  submitMessageFeedback,
 } from "@/lib/actions/conversations";
 import { getUserPapers, savePaper } from "@/lib/actions/papers";
 import { getExtractionForPaper, verifyExtraction } from "@/lib/actions/extraction";
 import { extractUploadedPdf } from "@/lib/actions/pdf-advanced";
+import { ingestUrl } from "@/lib/actions/url-ingest";
 import { getFollowUpSuggestions } from "@/lib/actions/follow-up-suggestions";
 import type { FollowUpSuggestion } from "@/lib/ai/prompts/follow-up-suggestions";
 
@@ -70,6 +78,7 @@ interface SourceFile {
   paperId?: number;
   status?: "ready" | "processing" | "error" | "embed_failed";
   isExtracted?: boolean;
+  originalUrl?: string;
 }
 
 interface ExtractionData {
@@ -122,6 +131,27 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / 1048576).toFixed(1)} MB`;
 }
 
+function getSourceUrlFromMetadata(metadata: unknown): string | undefined {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) {
+    return undefined;
+  }
+
+  const sourceUrl = (metadata as Record<string, unknown>).sourceUrl;
+  return typeof sourceUrl === "string" && sourceUrl.length > 0
+    ? sourceUrl
+    : undefined;
+}
+
+function getHostnameLabel(url?: string): string | null {
+  if (!url) return null;
+
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
+}
+
 function renderCitedText(
   text: string,
   sources: SourceMetadata[],
@@ -133,14 +163,32 @@ function renderCitedText(
     if (match) {
       const sourceIdx = parseInt(match[1], 10);
       const source = sources[sourceIdx - 1];
+      if (!source) {
+        return <Fragment key={i}>{part}</Fragment>;
+      }
+
+      const shortTitle = (() => {
+        const title = source.paperTitle;
+        const colonIdx = title.indexOf(":");
+        if (colonIdx > 0 && colonIdx <= 40) {
+          return title.substring(0, colonIdx);
+        }
+        return title.length > 30 ? title.substring(0, 28) + "…" : title;
+      })();
+
+      const pageLabel = source.pageNumber ? `, p.${source.pageNumber}` : "";
+
       return (
         <button
           key={i}
           onClick={() => onHighlight(sourceIdx)}
-          className="text-brand text-[10px] align-super font-medium hover:underline cursor-pointer"
-          title={source?.paperTitle || `Source ${sourceIdx}`}
+          className="inline-flex items-center gap-1 mx-0.5 px-2 py-0.5 bg-brand/10 border border-brand/20 text-brand rounded-md text-[10px] font-semibold cursor-pointer hover:bg-brand/20 transition-all align-baseline"
+          title={`${source.paperTitle}${source.pageNumber ? ` — Page ${source.pageNumber}` : ""}${source.sectionType ? ` (${source.sectionType})` : ""}`}
         >
-          [{sourceIdx}]
+          <FilePdf size={10} weight="bold" className="shrink-0" />
+          <span className="truncate max-w-[180px]">
+            {shortTitle}{pageLabel}
+          </span>
         </button>
       );
     }
@@ -240,6 +288,14 @@ export default function NotebookPage(): React.ReactElement {
   } | null>(null);
   const [showSourcesPanel, setShowSourcesPanel] = useState(false);
   const [currentSources, setCurrentSources] = useState<SourceMetadata[]>([]);
+  const [coverageReport, setCoverageReport] = useState<{
+    totalPapers: number;
+    papersUsed: number;
+    papersUnused: number;
+    coverageRatio: number;
+    summary: string;
+    unusedPapers: { id: number; title: string }[];
+  } | null>(null);
   const [extractingPapers, setExtractingPapers] = useState<Set<number>>(new Set());
   const [extractions, setExtractions] = useState<Map<number, ExtractionData>>(new Map());
   const [expandedExtraction, setExpandedExtraction] = useState<number | null>(null);
@@ -252,6 +308,8 @@ export default function NotebookPage(): React.ReactElement {
   const [followUpSuggestions, setFollowUpSuggestions] = useState<FollowUpSuggestion[]>([]);
   const [suggestionsForMessageId, setSuggestionsForMessageId] = useState<string | null>(null);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [feedbackState, setFeedbackState] = useState<Map<string, 1 | -1>>(new Map());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const conversationIdRef = useRef<number | null>(null);
@@ -269,6 +327,7 @@ export default function NotebookPage(): React.ReactElement {
           paperId: p.id,
           status: "ready" as const,
           isExtracted: !!p.is_extracted,
+          originalUrl: getSourceUrlFromMetadata(p.metadata),
         }));
         setFiles(sources);
 
@@ -448,9 +507,8 @@ export default function NotebookPage(): React.ReactElement {
   }, []);
 
   const retryEmbed = useCallback(async (paperId: number) => {
-    const fileId = `paper_${paperId}`;
     setFiles((prev) =>
-      prev.map((f) => (f.id === fileId ? { ...f, status: "processing" } : f))
+      prev.map((f) => (f.paperId === paperId ? { ...f, status: "processing" } : f))
     );
     try {
       const embedRes = await fetch("/api/embed", {
@@ -461,16 +519,16 @@ export default function NotebookPage(): React.ReactElement {
       if (!embedRes.ok) {
         console.error("Embedding retry failed");
         setFiles((prev) =>
-          prev.map((f) => (f.id === fileId ? { ...f, status: "embed_failed" } : f))
+          prev.map((f) => (f.paperId === paperId ? { ...f, status: "embed_failed" } : f))
         );
       } else {
         setFiles((prev) =>
-          prev.map((f) => (f.id === fileId ? { ...f, status: "ready" } : f))
+          prev.map((f) => (f.paperId === paperId ? { ...f, status: "ready" } : f))
         );
       }
     } catch {
       setFiles((prev) =>
-        prev.map((f) => (f.id === fileId ? { ...f, status: "embed_failed" } : f))
+        prev.map((f) => (f.paperId === paperId ? { ...f, status: "embed_failed" } : f))
       );
     }
   }, []);
@@ -486,14 +544,57 @@ export default function NotebookPage(): React.ReactElement {
       setShowSourceNotes(false);
       setShowShareDialog(false);
 
+      const fileEntry = files.find(
+        (file) => file.paperId === source.paperId && file.originalUrl
+      );
+
+      if (fileEntry?.originalUrl) {
+        setPdfViewerState(null);
+        window.open(fileEntry.originalUrl, "_blank", "noopener,noreferrer");
+        return;
+      }
+
       setPdfViewerState({
         paperId: source.paperId,
         pageNumber: source.pageNumber ?? 1,
         paperTitle: source.paperTitle,
       });
     },
-    [currentSources]
+    [currentSources, files]
   );
+
+  const handleCopyMessage = useCallback(async (messageId: string, content: string) => {
+    try {
+      const cleanText = content.replace(/\[\d+\]/g, "").replace(/\s{2,}/g, " ").trim();
+      await navigator.clipboard.writeText(cleanText);
+      setCopiedMessageId(messageId);
+      setTimeout(() => setCopiedMessageId(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  }, []);
+
+  const handleFeedback = useCallback(async (messageId: string, rating: 1 | -1) => {
+    const currentRating = feedbackState.get(messageId);
+    const newRating = currentRating === rating ? null : rating;
+
+    setFeedbackState((prev) => {
+      const next = new Map(prev);
+      if (newRating === null) {
+        next.delete(messageId);
+      } else {
+        next.set(messageId, newRating);
+      }
+      return next;
+    });
+
+    const dbId = parseInt(messageId.replace("msg_", ""), 10);
+    if (!isNaN(dbId) && dbId > 0) {
+      submitMessageFeedback(dbId, newRating).catch((err) => {
+        console.error("Failed to submit feedback:", err);
+      });
+    }
+  }, [feedbackState]);
 
   const sendMessage = useCallback(async (text?: string) => {
     const msg = text || input.trim();
@@ -502,6 +603,7 @@ export default function NotebookPage(): React.ReactElement {
     // Clear previous suggestions when sending a new message.
     suggestionRequestIdRef.current += 1;
     setFollowUpSuggestions([]);
+    setCoverageReport(null);
     setSuggestionsForMessageId(null);
     setSuggestionsLoading(false);
 
@@ -567,6 +669,19 @@ export default function NotebookPage(): React.ReactElement {
         } catch {
           // Ignore parse errors
         }
+      }
+
+      // Parse source coverage from headers
+      const coverageHeader = res.headers.get("X-RAG-Coverage");
+      if (coverageHeader) {
+        try {
+          const coverage = JSON.parse(coverageHeader);
+          setCoverageReport(coverage);
+        } catch {
+          // Ignore parse errors
+        }
+      } else {
+        setCoverageReport(null);
       }
 
       const reader = res.body?.getReader();
@@ -730,15 +845,58 @@ export default function NotebookPage(): React.ReactElement {
     if (fileInputRef.current) fileInputRef.current.value = "";
   }, []);
 
-  const addUrl = (): void => {
+  const addUrl = useCallback(async (): Promise<void> => {
     if (!urlValue.trim()) return;
+
+    const url = urlValue.trim();
+    const tempId = `url_${Date.now()}`;
+
     setFiles((prev) => [
       ...prev,
-      { id: `url_${Date.now()}`, name: urlValue.trim(), size: "URL", selected: true },
+      {
+        id: tempId,
+        name: url,
+        size: "URL",
+        selected: true,
+        status: "processing",
+        originalUrl: url,
+      },
     ]);
     setUrlValue("");
     setShowUrlInput(false);
-  };
+
+    try {
+      const result = await ingestUrl(url);
+
+      setFiles((prev) =>
+        prev.map((file) =>
+          file.id === tempId
+            ? {
+                ...file,
+                name: result.title,
+                size: `${result.wordCount.toLocaleString()} words`,
+                paperId: result.paperId,
+                status: result.status,
+                originalUrl: url,
+              }
+            : file
+        )
+      );
+    } catch (error) {
+      console.error("URL ingest failed:", error);
+      setFiles((prev) =>
+        prev.map((file) =>
+          file.id === tempId
+            ? {
+                ...file,
+                size: error instanceof Error ? error.message : "Failed to load URL",
+                status: "error",
+              }
+            : file
+        )
+      );
+    }
+  }, [urlValue]);
 
   const handleOpenAudioOverview = useCallback(async () => {
     const selectedPaperIds = files
@@ -888,11 +1046,46 @@ export default function NotebookPage(): React.ReactElement {
                   onChange={() => setFiles((prev) => prev.map((f) => (f.id === file.id ? { ...f, selected: !f.selected } : f)))}
                   className="rounded border-border accent-brand"
                 />
-                <FileText size={16} className={cn("shrink-0", file.status === "error" || file.status === "embed_failed" ? "text-red-400" : file.status === "processing" ? "text-amber-400 animate-pulse" : "text-ink-muted")} />
+                {file.originalUrl ? (
+                  <Globe
+                    size={16}
+                    className={cn(
+                      "shrink-0",
+                      file.status === "error" || file.status === "embed_failed"
+                        ? "text-red-400"
+                        : file.status === "processing"
+                          ? "text-amber-400 animate-pulse"
+                          : "text-blue-400"
+                    )}
+                  />
+                ) : (
+                  <FileText
+                    size={16}
+                    className={cn(
+                      "shrink-0",
+                      file.status === "error" || file.status === "embed_failed"
+                        ? "text-red-400"
+                        : file.status === "processing"
+                          ? "text-amber-400 animate-pulse"
+                          : "text-ink-muted"
+                    )}
+                  />
+                )}
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-ink truncate">{file.name}</p>
                   <p className="text-[10px] text-ink-muted">
-                    {file.status === "processing" ? "Processing..." : file.status === "error" ? "Failed" : file.status === "embed_failed" ? "Embedding failed" : file.size}
+                    {file.status === "processing"
+                      ? "Processing..."
+                      : file.status === "error"
+                        ? file.size
+                        : file.status === "embed_failed"
+                          ? "Embedding failed"
+                          : file.originalUrl
+                            ? (() => {
+                                const hostname = getHostnameLabel(file.originalUrl);
+                                return hostname ? `${hostname} · ${file.size}` : file.size;
+                              })()
+                            : file.size}
                   </p>
                   {file.status === "embed_failed" && file.paperId && (
                     <button
@@ -960,7 +1153,11 @@ export default function NotebookPage(): React.ReactElement {
                 onChange={(e) => setUrlValue(e.target.value)}
                 placeholder="https://..."
                 className="flex-1 px-3 py-1.5 rounded-lg bg-surface-raised border border-border text-xs text-ink focus:outline-none"
-                onKeyDown={(e) => e.key === "Enter" && addUrl()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    void addUrl();
+                  }
+                }}
                 autoFocus
               />
               <button onClick={addUrl} className="text-xs text-brand font-medium">Add</button>
@@ -1064,6 +1261,49 @@ export default function NotebookPage(): React.ReactElement {
                 </div>
               </div>
 
+              {msg.role === "assistant" && msg.content && (
+                <div className="flex items-center gap-1 mt-1 ml-10">
+                  <button
+                    onClick={() => handleCopyMessage(msg.id, msg.content)}
+                    className="p-1.5 text-ink-muted hover:text-ink hover:bg-surface-raised rounded-lg transition-all"
+                    title="Copy response"
+                    aria-label="Copy response to clipboard"
+                  >
+                    {copiedMessageId === msg.id ? (
+                      <Check size={14} className="text-green-500" />
+                    ) : (
+                      <Copy size={14} />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => handleFeedback(msg.id, 1)}
+                    className={cn(
+                      "p-1.5 rounded-lg transition-all",
+                      feedbackState.get(msg.id) === 1
+                        ? "text-green-500 bg-green-500/10"
+                        : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+                    )}
+                    title="Helpful response"
+                    aria-label="Mark response as helpful"
+                  >
+                    <ThumbsUp size={14} weight={feedbackState.get(msg.id) === 1 ? "fill" : "regular"} />
+                  </button>
+                  <button
+                    onClick={() => handleFeedback(msg.id, -1)}
+                    className={cn(
+                      "p-1.5 rounded-lg transition-all",
+                      feedbackState.get(msg.id) === -1
+                        ? "text-red-400 bg-red-500/10"
+                        : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+                    )}
+                    title="Unhelpful response"
+                    aria-label="Mark response as unhelpful"
+                  >
+                    <ThumbsDown size={14} weight={feedbackState.get(msg.id) === -1 ? "fill" : "regular"} />
+                  </button>
+                </div>
+              )}
+
               {msg.role === "assistant" &&
                 msg.id === suggestionsForMessageId &&
                 msgIndex === chatMessages.length - 1 &&
@@ -1116,6 +1356,31 @@ export default function NotebookPage(): React.ReactElement {
           )}
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Source Coverage Badge */}
+        {coverageReport && coverageReport.totalPapers > 1 && (
+          <div className="mt-2 mb-1">
+            <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs ${
+              coverageReport.coverageRatio === 1
+                ? "bg-green-500/10 text-green-500"
+                : coverageReport.coverageRatio >= 0.5
+                  ? "bg-amber-500/10 text-amber-500"
+                  : "bg-red-500/10 text-red-400"
+            }`}>
+              <span className="font-medium">
+                Sources used: {coverageReport.papersUsed}/{coverageReport.totalPapers}
+              </span>
+              {coverageReport.papersUnused > 0 && (
+                <span className="text-ink-muted">
+                  — {coverageReport.unusedPapers.map((p) => {
+                    const colonIdx = p.title.indexOf(":");
+                    return colonIdx > 0 ? p.title.substring(0, colonIdx) : p.title.substring(0, 30);
+                  }).join(", ")} not referenced
+                </span>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Sources Panel */}
         {currentSources.length > 0 && (

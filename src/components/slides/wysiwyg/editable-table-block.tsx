@@ -351,7 +351,7 @@ export function EditableTableBlock({
       TableHeader,
       TableCell,
     ],
-    content: tableDataToHtml(dataRef.current),
+    content: tableDataToHtml(normalizeTableData(data)),
     editable: isEditing,
     onUpdate: ({ editor: currentEditor }) => {
       const nextData = parseTableHtmlToData(currentEditor.getHTML(), dataRef.current);
@@ -438,7 +438,9 @@ export function EditableTableBlock({
 
   const currentData = useMemo(() => {
     if (!editor) return normalizeTableData(data);
-    return parseTableHtmlToData(editor.getHTML(), dataRef.current);
+    return parseTableHtmlToData(editor.getHTML(), normalizeTableData(data));
+    // editorStateVersion is intentionally included to trigger re-parse on editor changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, editor, editorStateVersion]);
 
   const canRemoveRow = currentData.rows.length > 1;

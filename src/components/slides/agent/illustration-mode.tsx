@@ -4,8 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import {
   PaperPlaneRight,
   CircleNotch,
-  ArrowRight,
-  Plus,
   Check,
   Images,
   Sparkle,
@@ -50,8 +48,6 @@ export function IllustrationMode() {
   const router = useRouter();
   const activeSlide = useSlidesStore((s) => s.getActiveSlide());
   const updateSlide = useSlidesStore((s) => s.updateSlide);
-  const addSlide = useSlidesStore((s) => s.addSlide);
-  const themeConfig = useSlidesStore((s) => s.themeConfig);
 
   const [activeSubTab, setActiveSubTab] = useState<IllustrationSubTab>("generate");
   const [input, setInput] = useState("");
@@ -118,17 +114,6 @@ export function IllustrationMode() {
 
     const updatedBlocks = [...activeSlide.contentBlocks, block];
     updateSlide(activeSlide.id, { contentBlocks: updatedBlocks });
-    setOptions([]);
-    setInput("");
-    setSelectedIndex(null);
-  }
-
-  async function handleInsertOnNewSlide(block: ContentBlock) {
-    const slideTitle = input || "Illustration";
-    const newSlide = await addSlide(activeSlide?.id);
-    if (newSlide) {
-      updateSlide(newSlide.id, { title: slideTitle, contentBlocks: [block] });
-    }
     setOptions([]);
     setInput("");
     setSelectedIndex(null);

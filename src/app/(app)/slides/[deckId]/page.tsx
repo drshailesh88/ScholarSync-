@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { SlidesWorkspace } from "@/components/slides/slides-workspace";
+import { CollaborationProvider } from "@/components/presentation/collaboration-provider";
 
 export default function SlidesEditorPage() {
   const params = useParams();
@@ -15,5 +16,18 @@ export default function SlidesEditorPage() {
     );
   }
 
-  return <SlidesWorkspace deckId={deckId} />;
+  return (
+    <CollaborationProvider
+      deckId={deckId}
+      initialSlides={[]}
+      initialDeckMeta={{
+        title: "",
+        theme: "modern",
+        themeConfig: {},
+        slideOrder: [],
+      }}
+    >
+      <SlidesWorkspace deckId={deckId} />
+    </CollaborationProvider>
+  );
 }

@@ -114,8 +114,6 @@ export function CanvasRulers({
   unit,
   onUnitChange,
 }: CanvasRulersProps) {
-  if (!enabled) return <>{children}</>;
-
   const [internalUnit, setInternalUnit] = useState<RulerUnit>("percent");
   const activeUnit = unit ?? internalUnit;
   const setUnit = onUnitChange ?? setInternalUnit;
@@ -128,6 +126,8 @@ export function CanvasRulers({
     () => buildTicks(activeUnit, "vertical"),
     [activeUnit]
   );
+
+  if (!enabled) return <>{children}</>;
 
   const xPos = mousePosition ? clampPercent(mousePosition.x) : null;
   const yPos = mousePosition ? clampPercent(mousePosition.y) : null;

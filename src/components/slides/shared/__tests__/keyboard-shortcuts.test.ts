@@ -220,18 +220,18 @@ describe("registerGlobalShortcuts", () => {
     expect([...state.selectedBlockIndices].sort((a, b) => a - b)).toEqual([0, 1, 2]);
   });
 
-  it("Ctrl+G and Ctrl+Shift+G call placeholder actions", () => {
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+  it("Ctrl+G and Ctrl+Shift+G are handled without propagation", () => {
     const { store } = createMockStore();
     cleanup = registerGlobalShortcuts(store);
 
-    dispatchKeyboardEvent("g", { ctrlKey: true });
-    dispatchKeyboardEvent("g", { ctrlKey: true, shiftKey: true });
+    const groupEvent = new KeyboardEvent("keydown", { key: "g", ctrlKey: true, bubbles: true, cancelable: true });
+    const ungroupEvent = new KeyboardEvent("keydown", { key: "g", ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true });
 
-    expect(logSpy).toHaveBeenCalledWith("Group selected blocks (placeholder)");
-    expect(logSpy).toHaveBeenCalledWith("Ungroup selected blocks (placeholder)");
+    window.dispatchEvent(groupEvent);
+    window.dispatchEvent(ungroupEvent);
 
-    logSpy.mockRestore();
+    expect(groupEvent.defaultPrevented).toBe(true);
+    expect(ungroupEvent.defaultPrevented).toBe(true);
   });
 
   it("Escape exits editing first, then selection, then presentation", () => {

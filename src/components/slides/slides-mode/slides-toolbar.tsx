@@ -23,12 +23,14 @@ import {
   MagnifyingGlass,
   GridFour,
   Eye,
+  Eyeglasses,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useSlidesStore, type RightPanel, type SaveStatus } from "@/stores/slides-store";
 import { ModeSelector } from "../mode-selector";
 import { createDefaultBlock } from "../blocks";
 import { InsertMenu } from "../shared/insert-menu";
+import { AvatarsSlot as CollaborationAvatarsSlot } from "../shared/collaboration-slots";
 import type { ContentBlock } from "@/types/presentation";
 
 interface SlidesToolbarProps {
@@ -232,6 +234,7 @@ export function SlidesToolbar({
 
       <button
         onClick={() => togglePanel("defense")}
+        aria-label="Defense"
         className={cn(
           "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
           rightPanel === "defense"
@@ -244,6 +247,7 @@ export function SlidesToolbar({
 
       <button
         onClick={() => togglePanel("comments")}
+        aria-label="Comments"
         className={cn(
           "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
           rightPanel === "comments"
@@ -256,6 +260,7 @@ export function SlidesToolbar({
 
       <button
         onClick={() => togglePanel("analytics")}
+        aria-label="Analytics"
         className={cn(
           "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
           rightPanel === "analytics"
@@ -268,6 +273,7 @@ export function SlidesToolbar({
 
       <button
         onClick={() => togglePanel("versions")}
+        aria-label="Version history"
         className={cn(
           "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
           rightPanel === "versions"
@@ -278,7 +284,24 @@ export function SlidesToolbar({
         <ClockCounterClockwise size={14} />
       </button>
 
+      <button
+        onClick={() => togglePanel("accessibility")}
+        className={cn(
+          "flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors",
+          rightPanel === "accessibility"
+            ? "bg-brand/10 text-brand"
+            : "text-ink-muted hover:text-ink hover:bg-surface-raised"
+        )}
+        title="Accessibility Checker"
+      >
+        <Eyeglasses size={14} />
+        A11y
+      </button>
+
       <div className="w-px h-5 bg-border mx-1" />
+
+      {/* Collaboration avatars — shows who is in the room */}
+      <CollaborationAvatarsSlot />
 
       <button
         onClick={() => setIsPresenting(true)}
@@ -290,6 +313,7 @@ export function SlidesToolbar({
 
       <button
         onClick={() => setShowSharePanel(true)}
+        aria-label="Share"
         className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
       >
         <ShareNetwork size={14} />

@@ -46,6 +46,7 @@ export function SlideThumbnail({
     <button
       onClick={onClick}
       onContextMenu={onContextMenu}
+      aria-current={isActive ? "true" : undefined}
       className={`w-full text-left relative group transition-all rounded-lg overflow-hidden ${
         isActive
           ? "ring-2 ring-brand shadow-md"

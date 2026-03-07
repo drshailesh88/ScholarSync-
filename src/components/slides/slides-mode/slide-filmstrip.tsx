@@ -41,6 +41,7 @@ import type { SlideLayout } from "@/types/presentation";
 import type { ContextMenuItem } from "../shared/context-menu";
 import { SlideThumbnail } from "../shared/slide-thumbnail";
 import { SlideRendererV2 } from "../shared/slide-renderer-v2";
+import { PresenceDotsSlot } from "../shared/collaboration-slots";
 import {
   downloadBlob,
   exportSlideAsPNG,
@@ -417,9 +418,6 @@ export function SlideFilmstrip() {
     standardLayouts,
     masters,
     exportSlideFromContextMenu,
-    themeConfig,
-    themeKey,
-    deckTitle,
     updateSlide,
   ]);
 
@@ -482,6 +480,8 @@ export function SlideFilmstrip() {
                       <EyeSlash size={11} aria-label="Hidden slide" />
                     </div>
                   ) : null}
+                  {/* Collaboration presence dots */}
+                  <PresenceDotsSlot slideId={slide.id} />
                 </div>
               </SortableThumbnail>
             ))}

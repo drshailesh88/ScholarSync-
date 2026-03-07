@@ -7,6 +7,8 @@ import { logger } from "@/lib/logger";
 import { getModel } from "@/lib/ai/models";
 import { advancedRetrieve } from "@/lib/rag/pipeline";
 import type { RAGResult } from "@/lib/rag/pipeline";
+import { analyzeSourceCoverage } from "@/lib/rag/source-coverage";
+import type { CoverageReport } from "@/lib/rag/source-coverage";
 import { db } from "@/lib/db";
 import { papers } from "@/lib/db/schema";
 import { inArray } from "drizzle-orm";
@@ -122,6 +124,23 @@ export async function POST(req: Request): Promise<Response> {
       }
     }
 
+    // Compute source coverage report
+    let coverageReport: CoverageReport | null = null;
+    if (paperIds && paperIds.length > 0 && contextChunks.length > 0) {
+      const selectedPapers = paperIds.map((pid) => {
+        const meta = sourcePapers.get(pid);
+        return { id: pid, title: meta?.title || `Paper ${pid}` };
+      });
+      coverageReport = analyzeSourceCoverage(
+        selectedPapers,
+        contextChunks.map((c) => ({
+          paper_id: c.paper_id,
+          score: "rerankScore" in c ? (c as { rerankScore: number }).rerankScore : undefined,
+          section_type: c.section_type,
+        }))
+      );
+    }
+
     // Build system prompt with source-grounded context
     let systemPrompt = `You are ScholarSync, an AI research assistant for academic writing. You help students and researchers analyze their papers and answer questions.`;
 
@@ -193,12 +212,25 @@ export async function POST(req: Request): Promise<Response> {
       };
     });
 
-    return new Response(response.body, {
-      headers: {
-        ...Object.fromEntries(response.headers.entries()),
-        "X-RAG-Sources": JSON.stringify(sourceMetadata),
-      },
-    });
+    const responseHeaders: Record<string, string> = {
+      ...Object.fromEntries(response.headers.entries()),
+      "X-RAG-Sources": JSON.stringify(sourceMetadata),
+    };
+
+    if (coverageReport) {
+      responseHeaders["X-RAG-Coverage"] = JSON.stringify({
+        totalPapers: coverageReport.totalPapers,
+        papersUsed: coverageReport.papersUsed,
+        papersUnused: coverageReport.papersUnused,
+        coverageRatio: coverageReport.coverageRatio,
+        summary: coverageReport.summary,
+        unusedPapers: coverageReport.papers
+          .filter((p) => !p.contributed)
+          .map((p) => ({ id: p.paperId, title: p.paperTitle })),
+      });
+    }
+
+    return new Response(response.body, { headers: responseHeaders });
   } catch (error) {
     log.error("RAG chat error", error);
     return NextResponse.json(

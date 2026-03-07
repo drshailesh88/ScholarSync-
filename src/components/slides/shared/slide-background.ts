@@ -1,11 +1,25 @@
 import type React from "react";
 import type { CardBackground } from "@/stores/slides-store";
+import type { GradientConfig } from "@/types/presentation";
 
 const GRADIENT_DIRECTIONS: Record<string, string> = {
   "top-to-bottom": "to bottom",
   "left-to-right": "to right",
   diagonal: "135deg",
 };
+
+export function buildGradientCSS(gradient: GradientConfig): string {
+  const stops = gradient.stops
+    .slice()
+    .sort((a, b) => a.position - b.position)
+    .map((s) => `${s.color} ${s.position}%`)
+    .join(", ");
+
+  if (gradient.type === "radial") {
+    return `radial-gradient(circle, ${stops})`;
+  }
+  return `linear-gradient(${gradient.angle}deg, ${stops})`;
+}
 
 const IMAGE_POSITION_PRESETS: Record<
   string,
@@ -39,7 +53,11 @@ export function getSlideBackgroundStyle(
     style.backgroundColor = bg.color;
   }
 
-  if (bg.gradientEnabled && bg.gradientFrom && bg.gradientTo) {
+  if (bg.gradient && bg.gradient.stops.length >= 2) {
+    const gradientValue = buildGradientCSS(bg.gradient);
+    style.background = gradientValue;
+    style.backgroundImage = gradientValue;
+  } else if (bg.gradientEnabled && bg.gradientFrom && bg.gradientTo) {
     const gradientValue = `linear-gradient(${getGradientDirection(bg)}, ${bg.gradientFrom}, ${bg.gradientTo})`;
     style.background = gradientValue;
     style.backgroundImage = gradientValue;

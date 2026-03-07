@@ -32,10 +32,11 @@ describe("block-registry", () => {
       "nested_card",
       "infographic",
       "illustration",
+      "media",
     ];
 
-    it("has entries for all 21 content block types", () => {
-      expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(21);
+    it("has entries for all 22 content block types", () => {
+      expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(22);
       for (const type of expectedTypes) {
         expect(BLOCK_REGISTRY[type]).toBeDefined();
       }
@@ -130,8 +131,8 @@ describe("block-registry", () => {
     it("all blocks are assigned exactly once", () => {
       const groups = getBlocksByCategory();
       const allTypes = Object.values(groups).flatMap((g) => g.map((b) => b.type));
-      expect(allTypes).toHaveLength(21);
-      expect(new Set(allTypes).size).toBe(21);
+      expect(allTypes).toHaveLength(22);
+      expect(new Set(allTypes).size).toBe(22);
     });
   });
 

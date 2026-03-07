@@ -53,13 +53,7 @@ function isPlaywrightDevRequest(request: Request): boolean {
   return cookieHeader.includes("__playwright=true");
 }
 
-export default clerkMiddleware(async (auth, request) => {
-  // Skip Clerk auth for Playwright E2E tests in development
-  if (isPlaywrightDevRequest(request)) {
-    const response = NextResponse.next();
-    return applySecurityHeaders(response);
-  }
-
+const clerkProxy = clerkMiddleware(async (auth, request) => {
   if (!isPublicRoute(request)) {
     await auth.protect();
   }
@@ -67,6 +61,16 @@ export default clerkMiddleware(async (auth, request) => {
   const response = NextResponse.next();
   return applySecurityHeaders(response);
 });
+
+export default async function proxy(request: Request) {
+  // Important: bypass before invoking clerkMiddleware to avoid any auth/session
+  // network work during local Playwright automation.
+  if (isPlaywrightDevRequest(request)) {
+    return applySecurityHeaders(NextResponse.next());
+  }
+
+  return clerkProxy(request);
+}
 
 export const config = {
   matcher: [

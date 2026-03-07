@@ -20,14 +20,20 @@ import { EmbedBlock } from "../gamma-mode/blocks/embed-block";
 import { NestedCardBlock } from "../gamma-mode/blocks/nested-card-block";
 import { InfographicBlock } from "./infographic-block";
 import { IllustrationBlock } from "./illustration-block";
+import { MediaBlock } from "./media-block";
 
 // ---------------------------------------------------------------------------
 // Block Registry — maps each content block type to its renderer + metadata
 // ---------------------------------------------------------------------------
 
 export interface BlockRegistryEntry {
-  /** Display component */
-  render: React.ComponentType<{ data: Record<string, unknown>; theme: ThemeConfig; scale?: number }>;
+  /**
+   * Display component. Uses `any` for the data prop because the registry is a
+   * heterogeneous map — each block has its own typed data shape. Type safety is
+   * enforced at call sites via the ContentBlock discriminated union.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  render: React.ComponentType<{ data: any; theme: ThemeConfig; scale?: number }>;
   /** Human-readable label */
   label: string;
   /** Icon name (Phosphor icon) */
@@ -38,31 +44,30 @@ export interface BlockRegistryEntry {
   category: "content" | "media" | "academic";
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = {
   text: {
-    render: TextBlock as any,
+    render: TextBlock,
     label: "Text",
     iconName: "TextAa",
     defaultData: () => ({ text: "Enter text...", style: "body" }),
     category: "content",
   },
   bullets: {
-    render: BulletsBlock as any,
+    render: BulletsBlock,
     label: "Bullets",
     iconName: "ListBullets",
     defaultData: () => ({ items: ["Item 1", "Item 2", "Item 3"], ordered: false }),
     category: "content",
   },
   quote: {
-    render: QuoteBlock as any,
+    render: QuoteBlock,
     label: "Quote",
     iconName: "Quotes",
     defaultData: () => ({ text: "Enter quote...", attribution: "Author" }),
     category: "content",
   },
   shape: {
-    render: ShapeBlock as any,
+    render: ShapeBlock,
     label: "Shape",
     iconName: "Rectangle",
     defaultData: () => ({
@@ -74,21 +79,21 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     category: "content",
   },
   citation: {
-    render: CitationBlock as any,
+    render: CitationBlock,
     label: "Citation",
     iconName: "BookOpen",
     defaultData: () => ({ text: "Claim text", source: "Author et al., Year" }),
     category: "content",
   },
   image: {
-    render: ImageBlock as any,
+    render: ImageBlock,
     label: "Image",
     iconName: "Image",
     defaultData: () => ({ alt: "Image description", suggestion: "Describe the ideal image" }),
     category: "media",
   },
   chart: {
-    render: ChartBlock as any,
+    render: ChartBlock,
     label: "Chart",
     iconName: "ChartBar",
     defaultData: () => ({
@@ -100,7 +105,7 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     category: "media",
   },
   table: {
-    render: TableBlock as any,
+    render: TableBlock,
     label: "Table",
     iconName: "Table",
     defaultData: () => ({
@@ -110,49 +115,49 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     category: "media",
   },
   math: {
-    render: MathBlock as any,
+    render: MathBlock,
     label: "Equation",
     iconName: "MathOperations",
     defaultData: () => ({ expression: "E = mc^2", displayMode: true }),
     category: "academic",
   },
   diagram: {
-    render: DiagramBlock as any,
+    render: DiagramBlock,
     label: "Diagram",
     iconName: "TreeStructure",
     defaultData: () => ({ syntax: "graph TD\n  A[Start] --> B[End]", diagramType: "flowchart" }),
     category: "academic",
   },
   code: {
-    render: CodeBlock as any,
+    render: CodeBlock,
     label: "Code",
     iconName: "Code",
     defaultData: () => ({ code: "# Your code here\nprint('hello')", language: "python" }),
     category: "academic",
   },
   callout: {
-    render: CalloutBlock as any,
+    render: CalloutBlock,
     label: "Callout",
     iconName: "Megaphone",
     defaultData: () => ({ text: "Important information here", type: "info" }),
     category: "academic",
   },
   stat_result: {
-    render: StatBlock as any,
+    render: StatBlock,
     label: "Statistic",
     iconName: "ChartBar",
     defaultData: () => ({ label: "Metric", value: "42%", interpretation: "Brief interpretation" }),
     category: "academic",
   },
   bibliography: {
-    render: BibliographyBlock as any,
+    render: BibliographyBlock,
     label: "Bibliography",
     iconName: "BookOpen",
     defaultData: () => ({ entries: [], style: "apa" }),
     category: "academic",
   },
   timeline: {
-    render: TimelineBlock as any,
+    render: TimelineBlock,
     label: "Timeline",
     iconName: "Clock",
     defaultData: () => ({
@@ -164,28 +169,28 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     category: "academic",
   },
   divider: {
-    render: DividerBlock as any,
+    render: DividerBlock,
     label: "Divider",
     iconName: "Minus",
     defaultData: () => ({ style: "solid" }),
     category: "content",
   },
   toggle: {
-    render: ToggleBlock as any,
+    render: ToggleBlock,
     label: "Toggle",
     iconName: "CaretCircleDown",
     defaultData: () => ({ title: "Click to expand", content: "Hidden content goes here", defaultOpen: false }),
     category: "content",
   },
   embed: {
-    render: EmbedBlock as any,
+    render: EmbedBlock,
     label: "Embed",
     iconName: "Globe",
     defaultData: () => ({ url: "", embedType: "generic" as const, aspectRatio: "16:9" as const }),
     category: "media",
   },
   nested_card: {
-    render: NestedCardBlock as any,
+    render: NestedCardBlock,
     label: "Nested Card",
     iconName: "Cards",
     defaultData: () => ({
@@ -196,7 +201,7 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     category: "content",
   },
   infographic: {
-    render: InfographicBlock as any,
+    render: InfographicBlock,
     label: "Infographic",
     iconName: "PaintBrush",
     defaultData: () => ({
@@ -212,7 +217,7 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     category: "media",
   },
   illustration: {
-    render: IllustrationBlock as any,
+    render: IllustrationBlock,
     label: "Illustration",
     iconName: "Atom",
     defaultData: () => ({
@@ -224,8 +229,21 @@ export const BLOCK_REGISTRY: Record<ContentBlock["type"], BlockRegistryEntry> = 
     }),
     category: "media",
   },
+  media: {
+    render: MediaBlock,
+    label: "Media",
+    iconName: "PlayCircle",
+    defaultData: () => ({
+      mediaType: "video",
+      source: "url",
+      url: "",
+      autoplay: false,
+      loop: false,
+      muted: false,
+    }),
+    category: "media",
+  },
 };
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Get all block types grouped by category for the insert menu.

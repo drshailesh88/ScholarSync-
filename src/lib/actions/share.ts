@@ -5,6 +5,11 @@ import { slideDecks, slides } from "@/lib/db/schema";
 import { eq, and, asc } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 import crypto from "crypto";
+import {
+  hashPassword,
+  verifyPassword,
+  isHashedPassword,
+} from "@/lib/crypto/password";
 
 // ---------------------------------------------------------------------------
 // Enable sharing — generates a unique token and sets shareEnabled = true
@@ -90,10 +95,16 @@ export async function updateShareSettings(
 ) {
   const userId = await getCurrentUserId();
 
+  // Hash the password before storing (null means "remove password")
+  let hashedPassword: string | null = null;
+  if (settings.password) {
+    hashedPassword = await hashPassword(settings.password);
+  }
+
   const [deck] = await db
     .update(slideDecks)
     .set({
-      sharePassword: settings.password ?? null,
+      sharePassword: hashedPassword,
       shareExpiresAt: settings.expiresAt ?? null,
       updatedAt: new Date(),
     })
@@ -152,5 +163,11 @@ export async function verifySharePassword(token: string, password: string) {
 
   if (!deck || !deck.shareEnabled) return false;
   if (!deck.sharePassword) return true; // no password set
+
+  // Support both hashed and legacy plain-text passwords during migration
+  if (isHashedPassword(deck.sharePassword)) {
+    return verifyPassword(password, deck.sharePassword);
+  }
+  // Legacy plain-text fallback (will be replaced on next password update)
   return deck.sharePassword === password;
 }

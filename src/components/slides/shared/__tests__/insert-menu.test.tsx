@@ -132,7 +132,7 @@ describe("InsertMenu", () => {
       input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
     });
 
-    const activeItem = getMenuItems().find((item) => item.getAttribute("aria-selected") === "true");
+    const activeItem = getMenuItems().find((item) => item.getAttribute("aria-current") === "true");
     expect(activeItem?.dataset.type).toBe("bullets");
 
     result.cleanup();

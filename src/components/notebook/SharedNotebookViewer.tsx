@@ -37,13 +37,28 @@ function renderCitedTextReadOnly(
     if (match) {
       const sourceIdx = parseInt(match[1], 10);
       const source = sources[sourceIdx - 1];
+      if (!source) {
+        return <Fragment key={i}>{part}</Fragment>;
+      }
+
+      const shortTitle = (() => {
+        const title = source.paperTitle;
+        const colonIdx = title.indexOf(":");
+        if (colonIdx > 0 && colonIdx <= 40) {
+          return title.substring(0, colonIdx);
+        }
+        return title.length > 30 ? title.substring(0, 28) + "…" : title;
+      })();
+
+      const pageLabel = source.pageNumber ? `, p.${source.pageNumber}` : "";
+
       return (
         <span
           key={i}
-          className="text-brand text-[10px] align-super font-medium"
-          title={source?.paperTitle || `Source ${sourceIdx}`}
+          className="inline-flex items-center gap-1 mx-0.5 px-2 py-0.5 bg-[#6366f1]/10 border border-[#6366f1]/20 text-[#818cf8] rounded-md text-[10px] font-semibold align-baseline"
+          title={source.paperTitle}
         >
-          [{sourceIdx}]
+          {shortTitle}{pageLabel}
         </span>
       );
     }

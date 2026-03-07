@@ -33,12 +33,14 @@ import {
 } from "../shared/slide-background";
 import { GridOverlay } from "../shared/grid-overlay";
 import { CanvasRulers, type RulerUnit } from "../shared/canvas-rulers";
+import { Lock, LockOpen } from "@phosphor-icons/react";
 import { BLOCK_REGISTRY, createDefaultBlock } from "../blocks";
 import { ImageBlock } from "../blocks/image-block";
 import { BlockSelectionWrapper } from "./block-selection-wrapper";
 import { EditableTextBlock, EditableBulletsBlock } from "./editable-text-block";
 import { EditableTableBlock } from "./editable-table-block";
 import { BlockInserter } from "./block-inserter";
+import { RemoteCursorsSlot } from "../shared/collaboration-slots";
 import { rectsIntersect, toBoundsRect, type DragSelection } from "./selection-utils";
 import {
   getSlideMasterById,
@@ -81,6 +83,8 @@ export function SlideCanvasWYSIWYG() {
   const sendToBack = useSlidesStore((s) => s.sendToBack);
   const bringForward = useSlidesStore((s) => s.bringForward);
   const sendBackward = useSlidesStore((s) => s.sendBackward);
+  const lockBlock = useSlidesStore((s) => s.lockBlock);
+  const unlockBlock = useSlidesStore((s) => s.unlockBlock);
   const showGrid = useSlidesStore((s) => s.showGrid);
   const showRulers = useSlidesStore((s) => s.showRulers);
   const gridSize = useSlidesStore((s) => s.gridSize);
@@ -354,7 +358,7 @@ export function SlideCanvasWYSIWYG() {
       deselectAll();
       setEditingBlockIndex(null);
     },
-    [activeSlide, deselectAll, updateSlide]
+    [activeSlide, deselectAll, setEditingBlockIndex, updateSlide]
   );
 
   const deleteBySelection = useCallback(
@@ -578,28 +582,40 @@ export function SlideCanvasWYSIWYG() {
       closeCanvasMenu();
       openBlockMenu(e);
     },
-    [closeCanvasMenu, openBlockMenu, selectBlock]
+    [closeCanvasMenu, openBlockMenu, selectBlock, setEditingBlockIndex]
   );
 
-  useEffect(() => {
+  // Reset context menu when slide changes (React render-time state adjustment)
+  const [prevSlideIdForCtx, setPrevSlideIdForCtx] = useState(activeSlide?.id);
+  if (prevSlideIdForCtx !== activeSlide?.id) {
+    setPrevSlideIdForCtx(activeSlide?.id);
     setContextBlockIndex(null);
     closeCanvasMenu();
     closeBlockMenu();
-  }, [activeSlide?.id, closeBlockMenu, closeCanvasMenu]);
+  }
 
-  useEffect(() => {
-    if (contextBlockIndex === null || !activeSlide) return;
-    if (!activeSlide.contentBlocks[contextBlockIndex]) {
-      setContextBlockIndex(null);
-      closeBlockMenu();
-    }
-  }, [activeSlide, closeBlockMenu, contextBlockIndex]);
+  // Validate context block still exists
+  if (
+    contextBlockIndex !== null &&
+    activeSlide &&
+    !activeSlide.contentBlocks[contextBlockIndex]
+  ) {
+    setContextBlockIndex(null);
+    closeBlockMenu();
+  }
 
-  useEffect(() => {
+  // Reset ruler state when rulers disabled (React render-time state adjustment)
+  const [prevShowRulers, setPrevShowRulers] = useState(showRulers);
+  if (showRulers !== prevShowRulers) {
+    setPrevShowRulers(showRulers);
     if (!showRulers) {
       setMouseRulerPosition(null);
-      return;
+      setSelectedRulerBounds(null);
     }
+  }
+
+  useEffect(() => {
+    if (!showRulers) return;
 
     const handleWindowMouseMove = (event: MouseEvent) => {
       setMouseRulerPosition(toRulerPercent(event.clientX, event.clientY));
@@ -612,10 +628,7 @@ export function SlideCanvasWYSIWYG() {
   }, [showRulers, toRulerPercent]);
 
   useEffect(() => {
-    if (!showRulers) {
-      setSelectedRulerBounds(null);
-      return;
-    }
+    if (!showRulers) return;
 
     let rafId = 0;
     const tick = () => {
@@ -623,6 +636,7 @@ export function SlideCanvasWYSIWYG() {
       rafId = window.requestAnimationFrame(tick);
     };
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial DOM measurement
     measureSelectedRulerBounds();
     rafId = window.requestAnimationFrame(tick);
     return () => {
@@ -701,6 +715,20 @@ export function SlideCanvasWYSIWYG() {
     }
 
     items.push(
+      { label: "divider-lock", divider: true, onClick: () => {} },
+      contextBlock.locked
+        ? {
+            label: "Unlock",
+            icon: <LockOpen size={13} />,
+            shortcut: "⌘L",
+            onClick: () => unlockBlock(contextBlockIndex),
+          }
+        : {
+            label: "Lock",
+            icon: <Lock size={13} />,
+            shortcut: "⌘L",
+            onClick: () => lockBlock(contextBlockIndex),
+          },
       { label: "divider-z-index-top", divider: true, onClick: () => {} },
       {
         label: "Bring to Front",
@@ -737,10 +765,13 @@ export function SlideCanvasWYSIWYG() {
     cutBlock,
     deleteBySelection,
     duplicateBlockByIndex,
+    lockBlock,
     pasteBlockAfterIndex,
     sendBackward,
     sendToBack,
     selectBlock,
+    setEditingBlockIndex,
+    unlockBlock,
     updateBlock,
   ]);
 
@@ -866,8 +897,10 @@ export function SlideCanvasWYSIWYG() {
     };
   }, [clearPreviewTimers]);
 
+  // Reset animation preview when slide changes
   useEffect(() => {
     clearPreviewTimers();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset preview on slide change
     setPreviewState(IDLE_PREVIEW_STATE);
   }, [activeSlide?.id, clearPreviewTimers]);
 
@@ -905,6 +938,8 @@ export function SlideCanvasWYSIWYG() {
 
   return (
     <div
+      role="region"
+      aria-label="Slide canvas"
       className="flex-1 flex items-center justify-center p-8 overflow-auto"
       onClick={handleCanvasClick}
       onKeyDown={handleKeyDown}
@@ -955,6 +990,9 @@ export function SlideCanvasWYSIWYG() {
           >
             <GridOverlay visible={showGrid} gridSize={gridSize} />
 
+            {/* Remote cursors overlay — shows other users' cursors */}
+            <RemoteCursorsSlot canvasRef={canvasRef} />
+
             {/* Title area — editable in-place */}
             {!activeMaster && !layoutResult.hasBuiltInTitle && (
               <div className="mb-[0.5em] shrink-0">
@@ -975,6 +1013,7 @@ export function SlideCanvasWYSIWYG() {
                   placeholder="Click to add title..."
                   theme={theme}
                   style="title"
+                  {...activeSlide.titleEffects}
                 />
                 <EditableTextBlock
                   content={activeSlide.subtitle}
@@ -993,6 +1032,7 @@ export function SlideCanvasWYSIWYG() {
                   placeholder="Click to add subtitle..."
                   theme={theme}
                   style="subtitle"
+                  {...activeSlide.subtitleEffects}
                 />
               </div>
             )}
@@ -1018,6 +1058,7 @@ export function SlideCanvasWYSIWYG() {
                   theme={theme}
                   style="title"
                   className="text-center"
+                  {...activeSlide.titleEffects}
                 />
                 <EditableTextBlock
                   content={activeSlide.subtitle}
@@ -1037,6 +1078,7 @@ export function SlideCanvasWYSIWYG() {
                   theme={theme}
                   style="subtitle"
                   className="text-center"
+                  {...activeSlide.subtitleEffects}
                 />
               </div>
             )}
@@ -1064,6 +1106,7 @@ export function SlideCanvasWYSIWYG() {
                   theme={theme}
                   style="title"
                   className="text-center"
+                  {...activeSlide.titleEffects}
                 />
               </div>
             )}
@@ -1334,17 +1377,20 @@ function EditableBlockDispatcher({
   const [isCropMode, setIsCropMode] = useState(false);
   const [draftCrop, setDraftCrop] = useState<ImageCrop | null>(null);
 
-  useEffect(() => {
-    if (!isSelected && isCropMode) {
+  // Reset crop mode when deselected or block changes (React render-time state adjustment)
+  const [prevCropState, setPrevCropState] = useState({ blockIndex, isSelected });
+  if (
+    prevCropState.blockIndex !== blockIndex ||
+    (!isSelected && prevCropState.isSelected)
+  ) {
+    setPrevCropState({ blockIndex, isSelected });
+    if (isCropMode) {
       setIsCropMode(false);
       setDraftCrop(null);
     }
-  }, [isCropMode, isSelected]);
-
-  useEffect(() => {
-    setIsCropMode(false);
-    setDraftCrop(null);
-  }, [blockIndex]);
+  } else if (prevCropState.isSelected !== isSelected) {
+    setPrevCropState({ blockIndex, isSelected });
+  }
 
   const handleResize = useCallback(
     (position: BlockPosition) => {
@@ -1423,6 +1469,10 @@ function EditableBlockDispatcher({
           onLineHeightChange={(nextLineHeight) => {
             onUpdate({ ...block, data: { ...block.data, lineHeight: nextLineHeight } });
           }}
+          textShadow={block.data.textShadow}
+          textOutline={block.data.textOutline}
+          textTransform={block.data.textTransform}
+          letterSpacing={block.data.letterSpacing}
         />
       </BlockSelectionWrapper>
     );

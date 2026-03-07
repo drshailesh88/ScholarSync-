@@ -76,8 +76,8 @@ function renderResizeWrapper({
           onResize: resizeSpy,
           initialPosition,
           canvasRef,
-          children: createElement("div", null, "Content"),
         },
+        createElement("div", null, "Content")
       )
     );
   });

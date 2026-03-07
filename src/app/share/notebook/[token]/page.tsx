@@ -1,6 +1,7 @@
 import { getNotebookByShareToken } from "@/lib/actions/notebook-share";
 import { notFound } from "next/navigation";
 import { SharedNotebookViewer } from "@/components/notebook/SharedNotebookViewer";
+import { NotebookPasswordGate } from "@/components/notebook/NotebookPasswordGate";
 import type { Metadata } from "next";
 
 interface ShareNotebookPageProps {
@@ -31,9 +32,8 @@ export default async function ShareNotebookPage({
     notFound();
   }
 
-  // Password gate is deferred for notebook sharing MVP.
   if (notebook.hasPassword) {
-    notFound();
+    return <NotebookPasswordGate token={token} notebook={notebook} />;
   }
 
   return (
