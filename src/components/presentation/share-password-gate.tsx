@@ -4,6 +4,9 @@ import { useState } from "react";
 import { Lock } from "@phosphor-icons/react";
 import { verifySharePassword } from "@/lib/actions/share";
 import { SharedPresentationViewer } from "./shared-presentation-viewer";
+import type { InstitutionKit } from "@/types/presentation";
+
+type InstitutionKitProp = Partial<InstitutionKit> | null;
 
 interface SlideData {
   id: number;
@@ -23,6 +26,7 @@ interface SharePasswordGateProps {
     description: string | null;
     theme: string | null;
     themeConfig: unknown;
+    institutionKit: unknown;
     hasPassword: boolean;
     slides: SlideData[];
   };
@@ -60,6 +64,7 @@ export function SharePasswordGate({ token, deck }: SharePasswordGateProps) {
         slides={deck.slides}
         theme={deck.theme}
         themeConfig={deck.themeConfig}
+        institutionKit={deck.institutionKit as InstitutionKitProp}
       />
     );
   }
