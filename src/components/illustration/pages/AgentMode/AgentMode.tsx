@@ -13,12 +13,16 @@
  * Responsive layout
  */
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { startTransition, useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { ErrorBoundary, IllustrationErrorFallback } from '@/components/illustration/ErrorBoundary';
 import { useAgentStore } from '@/stores/illustration/useAgentStore';
 import { TemplateGallery } from './TemplateGallery';
 import { ChatHistory } from './ChatHistory';
 import { PromptInput } from './PromptInput';
 import { DiagramPreview } from './DiagramPreview';
+
+const AGENT_IMPORT_SESSION_KEY = 'scholarsync-illustration-agent-import';
 
 // ===========================================================================
 // DOMAIN DETECTION
@@ -278,8 +282,42 @@ interface AgentModeProps {
   onSendToEditor?: (svg: string) => void;
 }
 
+function AgentModeSkeleton(): JSX.Element {
+  const blockStyle: React.CSSProperties = {
+    borderRadius: '12px',
+    backgroundColor: 'var(--bg-secondary)',
+    opacity: 0.8,
+  };
+
+  return (
+    <div style={styles.container} aria-label="Agent mode loading">
+      <aside style={{ ...styles.sidebarSkeleton, ...blockStyle }} />
+      <main style={styles.main}>
+        <div style={{ ...styles.chatContainer, gap: '12px' }}>
+          <div style={{ ...styles.headerSkeleton, ...blockStyle }} />
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div
+              key={`agent-skeleton-${index}`}
+              style={{
+                ...styles.messageSkeleton,
+                ...blockStyle,
+                width: index % 2 === 0 ? '72%' : '58%',
+                alignSelf: index % 2 === 0 ? 'flex-start' : 'flex-end',
+              }}
+            />
+          ))}
+          <div style={{ ...styles.promptSkeleton, ...blockStyle }} />
+        </div>
+      </main>
+      <aside style={{ ...styles.previewPane, ...blockStyle }} />
+    </div>
+  );
+}
+
 export const AgentMode: React.FC<AgentModeProps> = ({ onSendToEditor }) => {
+  const router = useRouter();
   const [showPreviewPane, setShowPreviewPane] = useState(true);
+  const [isHydrated, setIsHydrated] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const {
@@ -288,6 +326,10 @@ export const AgentMode: React.FC<AgentModeProps> = ({ onSendToEditor }) => {
     currentDiagram,
     messages
   } = useAgentStore();
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   /**
    * Handle sending a prompt to the illustration generation API
@@ -407,8 +449,14 @@ export const AgentMode: React.FC<AgentModeProps> = ({ onSendToEditor }) => {
   const handleSendToEditor = useCallback((svg: string) => {
     if (onSendToEditor) {
       onSendToEditor(svg);
+      return;
     }
-  }, [onSendToEditor]);
+
+    sessionStorage.setItem(AGENT_IMPORT_SESSION_KEY, svg);
+    startTransition(() => {
+      router.push('/illustrate/editor?import=agent');
+    });
+  }, [onSendToEditor, router]);
 
   // Handle regenerate
   const handleRegenerate = useCallback((messageId: string) => {
@@ -426,45 +474,62 @@ export const AgentMode: React.FC<AgentModeProps> = ({ onSendToEditor }) => {
     handleSendPrompt(prompt);
   }, [handleSendPrompt]);
 
+  if (!isHydrated) {
+    return <AgentModeSkeleton />;
+  }
+
   return (
-    <div style={styles.container}>
-      {/* Left Sidebar: Template Gallery */}
-      <TemplateGallery onSelectTemplate={handleSelectTemplate} />
-
-      {/* Main Chat Area */}
-      <main style={styles.main}>
-        <div style={styles.chatContainer}>
-          <ChatHistory
-            onSendToEditor={handleSendToEditor}
-            onRegenerate={handleRegenerate}
-            onPromptSuggestion={handlePromptSuggestion}
-          />
-          <PromptInput onSend={handleSendPrompt} onStop={handleStop} />
-        </div>
-      </main>
-
-      {/* Right Preview Pane (optional) */}
-      {showPreviewPane && currentDiagram && (
-        <aside style={styles.previewPane}>
-          <div style={styles.previewHeader}>
-            <h3 style={styles.previewTitle}>Preview</h3>
-            <button
-              onClick={() => setShowPreviewPane(false)}
-              style={styles.closeBtn}
-              title="Close preview"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-          <div style={styles.previewContent}>
-            <DiagramPreview svg={currentDiagram} />
-          </div>
-        </aside>
+    <ErrorBoundary
+      scope="Agent mode"
+      fullScreen
+      fallback={({ error, reset, scope }) => (
+        <IllustrationErrorFallback
+          error={error}
+          reset={reset}
+          scope={scope}
+          fullScreen
+          description="The illustration agent failed while rendering this workspace."
+        />
       )}
-    </div>
+    >
+      <div style={styles.container}>
+        <TemplateGallery onSelectTemplate={handleSelectTemplate} />
+
+        <main style={styles.main}>
+          <div style={styles.chatContainer}>
+            <ChatHistory
+              onSendToEditor={handleSendToEditor}
+              onRegenerate={handleRegenerate}
+              onPromptSuggestion={handlePromptSuggestion}
+            />
+            <PromptInput onSend={handleSendPrompt} onStop={handleStop} />
+          </div>
+        </main>
+
+        {showPreviewPane && currentDiagram && (
+          <aside style={styles.previewPane}>
+            <div style={styles.previewHeader}>
+              <h3 style={styles.previewTitle}>Preview</h3>
+              <button
+                type="button"
+                onClick={() => setShowPreviewPane(false)}
+                style={styles.closeBtn}
+                title="Close preview"
+                aria-label="Close preview"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+            <div style={styles.previewContent}>
+              <DiagramPreview svg={currentDiagram} />
+            </div>
+          </aside>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };
 
@@ -491,6 +556,20 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     padding: 'var(--spacing-lg)',
     overflow: 'hidden'
+  },
+  sidebarSkeleton: {
+    width: '320px',
+    margin: '16px',
+  },
+  headerSkeleton: {
+    height: '56px',
+  },
+  messageSkeleton: {
+    height: '96px',
+  },
+  promptSkeleton: {
+    marginTop: 'auto',
+    height: '72px',
   },
   previewPane: {
     width: '350px',

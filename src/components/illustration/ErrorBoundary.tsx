@@ -1,23 +1,22 @@
-"use client";/**
- * ErrorBoundary Component
- * Catches React errors and displays a friendly fallback UI
- *
- * @module components/ErrorBoundary
- */
+"use client";
 
 import { Component, ErrorInfo, ReactNode } from 'react';
 
-// ============================================================================
-// Types
-// ============================================================================
+export interface ErrorBoundaryFallbackProps {
+  error: Error | null;
+  reset: () => void;
+  scope?: string;
+}
 
 interface ErrorBoundaryProps {
-  /** Child components to render */
   children: ReactNode;
-  /** Optional custom fallback component */
-  fallback?: ReactNode;
-  /** Optional callback when error is caught */
+  fallback?: ReactNode | ((props: ErrorBoundaryFallbackProps) => ReactNode);
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  resetKeys?: unknown[];
+  scope?: string;
+  title?: string;
+  description?: string;
+  fullScreen?: boolean;
 }
 
 interface ErrorBoundaryState {
@@ -25,10 +24,6 @@ interface ErrorBoundaryState {
   error: Error | null;
   errorInfo: ErrorInfo | null;
 }
-
-// ============================================================================
-// Styles
-// ============================================================================
 
 const styles = {
   container: {
@@ -41,6 +36,12 @@ const styles = {
     backgroundColor: 'var(--bg-primary)',
     color: 'var(--text-primary)',
     fontFamily: 'var(--font-sans)',
+  },
+  containerInline: {
+    minHeight: '280px',
+    height: '100%',
+    borderRadius: '12px',
+    border: '1px solid var(--border-primary)',
   },
   content: {
     maxWidth: '600px',
@@ -71,7 +72,7 @@ const styles = {
   button: {
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '8px',
+    justifyContent: 'center',
     padding: '10px 20px',
     fontSize: '14px',
     fontWeight: 500,
@@ -90,8 +91,9 @@ const styles = {
     border: '1px solid var(--border-primary)',
   },
   detailsContainer: {
-    marginTop: '32px',
+    marginTop: '24px',
     width: '100%',
+    textAlign: 'left' as const,
   },
   detailsToggle: {
     display: 'flex',
@@ -106,13 +108,12 @@ const styles = {
     margin: '0 auto',
   },
   errorDetails: {
-    marginTop: '16px',
+    marginTop: '12px',
     padding: '16px',
     backgroundColor: 'var(--bg-secondary)',
     borderRadius: '8px',
     border: '1px solid var(--border-primary)',
-    textAlign: 'left' as const,
-    maxHeight: '200px',
+    maxHeight: '220px',
     overflowY: 'auto' as const,
   },
   errorCode: {
@@ -124,21 +125,92 @@ const styles = {
   },
 };
 
-// ============================================================================
-// Component
-// ============================================================================
+function areResetKeysEqual(previous?: unknown[], next?: unknown[]): boolean {
+  if (previous === next) {
+    return true;
+  }
 
-/**
- * Error Boundary component that catches JavaScript errors anywhere in the
- * child component tree and displays a fallback UI instead of crashing.
- *
- * @example
- * ```tsx
- * <ErrorBoundary onError={(error) => logError(error)}>
- *   <App />
- * </ErrorBoundary>
- * ```
- */
+  if (!previous || !next || previous.length !== next.length) {
+    return false;
+  }
+
+  return previous.every((value, index) => Object.is(value, next[index]));
+}
+
+export function IllustrationErrorFallback({
+  error,
+  reset,
+  scope,
+  fullScreen = false,
+  title = 'Something went wrong',
+  description,
+}: ErrorBoundaryFallbackProps & {
+  fullScreen?: boolean;
+  title?: string;
+  description?: string;
+}): JSX.Element {
+  const resolvedTitle = scope ? `${scope} failed to load` : title;
+  const resolvedDescription =
+    description ??
+    'An unexpected error occurred. Try resetting this section or reload the page.';
+
+  return (
+    <div
+      style={{
+        ...styles.container,
+        ...(fullScreen ? {} : styles.containerInline),
+      }}
+      role="alert"
+      aria-live="assertive"
+    >
+      <div style={styles.content}>
+        <div style={styles.icon}>
+          <svg
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+        </div>
+
+        <h1 style={styles.title}>{resolvedTitle}</h1>
+
+        <p style={styles.message}>
+          {resolvedDescription}
+          {error?.message ? ` (${error.message})` : ''}
+        </p>
+
+        <div style={styles.buttonGroup}>
+          <button
+            type="button"
+            style={{ ...styles.button, ...styles.primaryButton }}
+            onClick={reset}
+          >
+            Try Again
+          </button>
+          {fullScreen && (
+            <button
+              type="button"
+              style={{ ...styles.button, ...styles.secondaryButton }}
+              onClick={() => window.location.reload()}
+            >
+              Reload Page
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
@@ -154,24 +226,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log error for debugging
     console.error('[ErrorBoundary] Caught error:', error);
     console.error('[ErrorBoundary] Component stack:', errorInfo.componentStack);
-
-    // Update state with error info
     this.setState({ errorInfo });
-
-    // Call optional error callback
     this.props.onError?.(error, errorInfo);
   }
 
-  handleReload = (): void => {
-    window.location.reload();
-  };
-
-  handleGoHome = (): void => {
-    window.location.href = '/';
-  };
+  componentDidUpdate(prevProps: ErrorBoundaryProps): void {
+    if (this.state.hasError && !areResetKeysEqual(prevProps.resetKeys, this.props.resetKeys)) {
+      this.handleReset();
+    }
+  }
 
   handleReset = (): void => {
     this.setState({
@@ -183,100 +248,44 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   render(): ReactNode {
     const { hasError, error, errorInfo } = this.state;
-    const { children, fallback } = this.props;
+    const {
+      children,
+      fallback,
+      scope,
+      title,
+      description,
+      fullScreen = true,
+    } = this.props;
 
     if (hasError) {
-      // Render custom fallback if provided
       if (fallback) {
+        if (typeof fallback === 'function') {
+          return fallback({ error, reset: this.handleReset, scope });
+        }
         return fallback;
       }
 
-      // Render default error UI
       return (
-        <div style={styles.container}>
-          <div style={styles.content}>
-            <div style={styles.icon}>
-              <svg
-                width="64"
-                height="64"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
-            </div>
+        <>
+          <IllustrationErrorFallback
+            error={error}
+            reset={this.handleReset}
+            scope={scope}
+            title={title}
+            description={description}
+            fullScreen={fullScreen}
+          />
 
-            <h1 style={styles.title}>Something went wrong</h1>
-
-            <p style={styles.message}>
-              We encountered an unexpected error. This has been logged for review.
-              You can try reloading the page or return to the home page.
-            </p>
-
-            <div style={styles.buttonGroup}>
-              <button
-                style={{ ...styles.button, ...styles.primaryButton }}
-                onClick={this.handleReload}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-                  <path d="M21 3v5h-5" />
-                </svg>
-                Reload Page
-              </button>
-
-              <button
-                style={{ ...styles.button, ...styles.secondaryButton }}
-                onClick={this.handleGoHome}
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                  <polyline points="9,22 9,12 15,12 15,22" />
-                </svg>
-                Go Home
-              </button>
-            </div>
-
-            {/* Error details for development */}
-            {process.env.NODE_ENV === 'development' && error && (
-              <ErrorDetails error={error} errorInfo={errorInfo} />
-            )}
-          </div>
-        </div>
+          {process.env.NODE_ENV === 'development' && error && (
+            <ErrorDetails error={error} errorInfo={errorInfo} />
+          )}
+        </>
       );
     }
 
     return children;
   }
 }
-
-// ============================================================================
-// Error Details Component (Development Only)
-// ============================================================================
 
 interface ErrorDetailsProps {
   error: Error;
@@ -293,7 +302,7 @@ class ErrorDetails extends Component<ErrorDetailsProps, ErrorDetailsState> {
   };
 
   toggleDetails = (): void => {
-    this.setState((prev) => ({ showDetails: !prev.showDetails }));
+    this.setState((previous) => ({ showDetails: !previous.showDetails }));
   };
 
   render(): ReactNode {
@@ -302,23 +311,7 @@ class ErrorDetails extends Component<ErrorDetailsProps, ErrorDetailsState> {
 
     return (
       <div style={styles.detailsContainer}>
-        <button style={styles.detailsToggle} onClick={this.toggleDetails}>
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{
-              transform: showDetails ? 'rotate(180deg)' : 'rotate(0deg)',
-              transition: 'transform 150ms ease',
-            }}
-          >
-            <polyline points="6,9 12,15 18,9" />
-          </svg>
+        <button type="button" style={styles.detailsToggle} onClick={this.toggleDetails}>
           {showDetails ? 'Hide' : 'Show'} Error Details
         </button>
 
@@ -330,13 +323,13 @@ class ErrorDetails extends Component<ErrorDetailsProps, ErrorDetailsState> {
               <strong>Stack:</strong>
               {'\n'}
               {error.stack}
-              {errorInfo && (
+              {errorInfo?.componentStack ? (
                 <>
                   {'\n\n'}
                   <strong>Component Stack:</strong>
                   {errorInfo.componentStack}
                 </>
-              )}
+              ) : null}
             </pre>
           </div>
         )}

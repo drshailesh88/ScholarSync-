@@ -5,6 +5,31 @@
  * and environment variable overrides via Vite's import.meta.env
  */
 
+type EnvRecord = Record<string, string | boolean | undefined>;
+
+function getEnvValue(key: string): string | undefined {
+  const viteEnv = (import.meta as ImportMeta & { env?: EnvRecord }).env;
+  const value = viteEnv?.[key];
+
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+
+  if (typeof value === 'string') {
+    return value;
+  }
+
+  return process.env[key];
+}
+
+const appEnvironment =
+  (getEnvValue('MODE') || process.env.NODE_ENV || 'development') as
+    | 'development'
+    | 'production'
+    | 'test';
+const isDevEnvironment = getEnvValue('DEV') !== 'false' && appEnvironment !== 'production';
+const isProdEnvironment = getEnvValue('PROD') === 'true' || appEnvironment === 'production';
+
 // =============================================================================
 // ENVIRONMENT HELPERS
 // =============================================================================
@@ -36,48 +61,48 @@ export const config = {
   // ---------------------------------------------------------------------------
   app: {
     name: 'FINNISH',
-    version: import.meta.env.VITE_APP_VERSION || '0.1.0',
+    version: getEnvValue('VITE_APP_VERSION') || '0.1.0',
     description: 'Scientific Illustration Editor',
-    environment: (import.meta.env.MODE || 'development') as 'development' | 'production' | 'test',
-    isDev: import.meta.env.DEV ?? true,
-    isProd: import.meta.env.PROD ?? false,
+    environment: appEnvironment,
+    isDev: isDevEnvironment,
+    isProd: isProdEnvironment,
   },
 
   // ---------------------------------------------------------------------------
   // API Settings
   // ---------------------------------------------------------------------------
   api: {
-    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:3000',
-    timeout: parseNumber(import.meta.env.VITE_API_TIMEOUT, 30000),
+    baseUrl: getEnvValue('VITE_API_URL') || 'http://localhost:3000',
+    timeout: parseNumber(getEnvValue('VITE_API_TIMEOUT'), 30000),
   },
 
   // ---------------------------------------------------------------------------
   // AI Service Configuration
   // ---------------------------------------------------------------------------
   ai: {
-    claudeApiKey: import.meta.env.VITE_CLAUDE_API_KEY || '',
-    claudeModel: import.meta.env.VITE_CLAUDE_MODEL || 'claude-sonnet-4-20250514',
-    openaiApiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
-    maxTokens: parseNumber(import.meta.env.VITE_AI_MAX_TOKENS, 4096),
-    temperature: parseFloat(import.meta.env.VITE_AI_TEMPERATURE || '0.7'),
+    claudeApiKey: getEnvValue('VITE_CLAUDE_API_KEY') || '',
+    claudeModel: getEnvValue('VITE_CLAUDE_MODEL') || 'claude-sonnet-4-20250514',
+    openaiApiKey: getEnvValue('VITE_OPENAI_API_KEY') || '',
+    maxTokens: parseNumber(getEnvValue('VITE_AI_MAX_TOKENS'), 4096),
+    temperature: parseFloat(getEnvValue('VITE_AI_TEMPERATURE') || '0.7'),
     // Rate limiting
-    requestsPerMinute: parseNumber(import.meta.env.VITE_AI_RPM, 60),
-    retryAttempts: parseNumber(import.meta.env.VITE_AI_RETRY_ATTEMPTS, 3),
-    retryDelay: parseNumber(import.meta.env.VITE_AI_RETRY_DELAY, 1000),
+    requestsPerMinute: parseNumber(getEnvValue('VITE_AI_RPM'), 60),
+    retryAttempts: parseNumber(getEnvValue('VITE_AI_RETRY_ATTEMPTS'), 3),
+    retryDelay: parseNumber(getEnvValue('VITE_AI_RETRY_DELAY'), 1000),
   },
 
   // ---------------------------------------------------------------------------
   // Feature Flags
   // ---------------------------------------------------------------------------
   features: {
-    aiGeneration: parseBoolean(import.meta.env.VITE_FEATURE_AI_GENERATION, true),
-    collaboration: parseBoolean(import.meta.env.VITE_FEATURE_COLLABORATION, false),
-    cloudSync: parseBoolean(import.meta.env.VITE_FEATURE_CLOUD_SYNC, false),
-    experimentalTools: parseBoolean(import.meta.env.VITE_FEATURE_EXPERIMENTAL, false),
-    debugMode: parseBoolean(import.meta.env.VITE_FEATURE_DEBUG, import.meta.env.DEV ?? false),
-    analytics: parseBoolean(import.meta.env.VITE_FEATURE_ANALYTICS, false),
-    offlineMode: parseBoolean(import.meta.env.VITE_FEATURE_OFFLINE, true),
-    agentMode: parseBoolean(import.meta.env.VITE_FEATURE_AGENT_MODE, true),
+    aiGeneration: parseBoolean(getEnvValue('VITE_FEATURE_AI_GENERATION'), true),
+    collaboration: parseBoolean(getEnvValue('VITE_FEATURE_COLLABORATION'), false),
+    cloudSync: parseBoolean(getEnvValue('VITE_FEATURE_CLOUD_SYNC'), false),
+    experimentalTools: parseBoolean(getEnvValue('VITE_FEATURE_EXPERIMENTAL'), false),
+    debugMode: parseBoolean(getEnvValue('VITE_FEATURE_DEBUG'), isDevEnvironment),
+    analytics: parseBoolean(getEnvValue('VITE_FEATURE_ANALYTICS'), false),
+    offlineMode: parseBoolean(getEnvValue('VITE_FEATURE_OFFLINE'), true),
+    agentMode: parseBoolean(getEnvValue('VITE_FEATURE_AGENT_MODE'), true),
   },
 
   // ---------------------------------------------------------------------------
@@ -85,15 +110,15 @@ export const config = {
   // ---------------------------------------------------------------------------
   editor: {
     // Canvas defaults
-    defaultWidth: parseNumber(import.meta.env.VITE_EDITOR_WIDTH, 1920),
-    defaultHeight: parseNumber(import.meta.env.VITE_EDITOR_HEIGHT, 1080),
+    defaultWidth: parseNumber(getEnvValue('VITE_EDITOR_WIDTH'), 1920),
+    defaultHeight: parseNumber(getEnvValue('VITE_EDITOR_HEIGHT'), 1080),
 
     // History/Undo system
-    maxHistoryStates: parseNumber(import.meta.env.VITE_EDITOR_MAX_HISTORY, 50),
+    maxHistoryStates: parseNumber(getEnvValue('VITE_EDITOR_MAX_HISTORY'), 50),
 
     // Grid and snapping
-    gridSize: parseNumber(import.meta.env.VITE_EDITOR_GRID_SIZE, 10),
-    snapThreshold: parseNumber(import.meta.env.VITE_EDITOR_SNAP_THRESHOLD, 5),
+    gridSize: parseNumber(getEnvValue('VITE_EDITOR_GRID_SIZE'), 10),
+    snapThreshold: parseNumber(getEnvValue('VITE_EDITOR_SNAP_THRESHOLD'), 5),
     showGrid: true,
     snapToGrid: true,
     snapToObjects: true,
@@ -105,21 +130,21 @@ export const config = {
     defaultZoom: 1,
 
     // Auto-save
-    autoSaveEnabled: parseBoolean(import.meta.env.VITE_EDITOR_AUTOSAVE, true),
-    autoSaveInterval: parseNumber(import.meta.env.VITE_EDITOR_AUTOSAVE_INTERVAL, 30000), // 30 seconds
+    autoSaveEnabled: parseBoolean(getEnvValue('VITE_EDITOR_AUTOSAVE'), true),
+    autoSaveInterval: parseNumber(getEnvValue('VITE_EDITOR_AUTOSAVE_INTERVAL'), 30000), // 30 seconds
 
     // Performance
-    maxObjects: parseNumber(import.meta.env.VITE_EDITOR_MAX_OBJECTS, 10000),
-    renderThrottle: parseNumber(import.meta.env.VITE_EDITOR_RENDER_THROTTLE, 16), // ~60fps
+    maxObjects: parseNumber(getEnvValue('VITE_EDITOR_MAX_OBJECTS'), 10000),
+    renderThrottle: parseNumber(getEnvValue('VITE_EDITOR_RENDER_THROTTLE'), 16), // ~60fps
   },
 
   // ---------------------------------------------------------------------------
   // Export Configuration
   // ---------------------------------------------------------------------------
   export: {
-    defaultDPI: parseNumber(import.meta.env.VITE_EXPORT_DPI, 300),
-    defaultQuality: parseNumber(import.meta.env.VITE_EXPORT_QUALITY, 90),
-    defaultFormat: (import.meta.env.VITE_EXPORT_FORMAT || 'png') as ExportFormat,
+    defaultDPI: parseNumber(getEnvValue('VITE_EXPORT_DPI'), 300),
+    defaultQuality: parseNumber(getEnvValue('VITE_EXPORT_QUALITY'), 90),
+    defaultFormat: (getEnvValue('VITE_EXPORT_FORMAT') || 'png') as ExportFormat,
 
     // Format-specific settings
     png: {
@@ -148,7 +173,7 @@ export const config = {
   // Import Configuration
   // ---------------------------------------------------------------------------
   import: {
-    maxFileSize: parseNumber(import.meta.env.VITE_IMPORT_MAX_SIZE, 50 * 1024 * 1024), // 50MB
+    maxFileSize: parseNumber(getEnvValue('VITE_IMPORT_MAX_SIZE'), 50 * 1024 * 1024), // 50MB
     supportedFormats: ['svg', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'pdf'] as const,
 
     // Image tracing defaults

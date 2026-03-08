@@ -1,28 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export interface FontOption {
   value: string;
   label: string;
 }
-
-export const FONT_FAMILY_OPTIONS: FontOption[] = [
-  { value: 'Arial', label: 'Arial' },
-  { value: 'Helvetica', label: 'Helvetica' },
-  { value: 'Times New Roman', label: 'Times New Roman' },
-  { value: 'Georgia', label: 'Georgia' },
-  { value: 'Courier New', label: 'Courier New' },
-  { value: 'Verdana', label: 'Verdana' },
-  { value: 'Trebuchet MS', label: 'Trebuchet MS' },
-  { value: 'Impact', label: 'Impact' },
-  { value: 'Comic Sans MS', label: 'Comic Sans MS' },
-  { value: 'system-ui', label: 'System UI' },
-  { value: '-apple-system', label: 'Apple System' },
-  { value: 'Segoe UI', label: 'Segoe UI' },
-  { value: 'Roboto', label: 'Roboto' },
-  { value: 'sans-serif', label: 'Sans Serif' },
-  { value: 'serif', label: 'Serif' },
-  { value: 'monospace', label: 'Monospace' },
-];
 
 interface FontPickerProps {
   value: string;
@@ -44,10 +25,31 @@ const styles: Record<string, React.CSSProperties> = {
 };
 
 export function FontPicker({ value, onChange, disabled = false }: FontPickerProps): JSX.Element {
-  const hasExactOption = FONT_FAMILY_OPTIONS.some((option) => option.value === value);
+  const [fontOptions, setFontOptions] = useState<FontOption[]>([
+    { value: 'Arial', label: 'Arial' },
+    { value: 'sans-serif', label: 'Sans Serif' },
+    { value: 'serif', label: 'Serif' },
+    { value: 'monospace', label: 'Monospace' },
+  ]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void import('./font-options').then((module) => {
+      if (!cancelled) {
+        setFontOptions(module.FONT_FAMILY_OPTIONS);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const hasExactOption = fontOptions.some((option) => option.value === value);
   const options = hasExactOption || !value
-    ? FONT_FAMILY_OPTIONS
-    : [{ value, label: value }, ...FONT_FAMILY_OPTIONS];
+    ? fontOptions
+    : [{ value, label: value }, ...fontOptions];
 
   return (
     <select

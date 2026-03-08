@@ -7,7 +7,7 @@
 
 import { useEffect, useCallback, useMemo, useRef } from 'react';
 import { FabricObject } from 'fabric';
-import { toggleObjectFlip } from '@/components/illustration/PropertiesPanel';
+import { toggleObjectFlip } from '@/components/illustration/objectTransforms';
 import { useEditorStore, useHistoryState } from '@/stores/illustration/editorStore';
 import { ToolType } from '@/lib/illustration/types/index';
 import {

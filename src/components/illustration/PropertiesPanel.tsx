@@ -10,7 +10,7 @@
 /* eslint-disable react/no-children-prop */
  
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Rect,
   Line,
@@ -27,6 +27,7 @@ import {
 } from '@/components/illustration/CharacterPanel';
 import { EffectsPanel } from '@/components/illustration/EffectsPanel';
 import { GradientEditor } from '@/components/illustration/GradientEditor';
+import { toggleObjectFlip, type FlippableObjectLike } from '@/components/illustration/objectTransforms';
 import { useToast } from '@/components/illustration/Toast/useToast';
 import {
   alignBottom,
@@ -375,11 +376,6 @@ interface RectCornerLike extends MutableFabricObjectLike {
   getScaledHeight?: () => number;
 }
 
-interface FlippableObjectLike extends MutableFabricObjectLike {
-  flipX?: boolean;
-  flipY?: boolean;
-}
-
 export function getStrokeDashArrayForPreset(preset: StrokeDashPreset): number[] | null {
   const value = STROKE_DASH_PATTERNS[preset];
   return value ? [...value] : null;
@@ -426,17 +422,7 @@ export function applyUniformCornerRadius(rect: MutableFabricObjectLike, value: n
   rect.set({ rx: nextValue, ry: nextValue });
 }
 
-export function toggleObjectFlip(
-  object: FlippableObjectLike,
-  direction: 'horizontal' | 'vertical'
-): void {
-  if (direction === 'horizontal') {
-    object.set({ flipX: !Boolean(object.flipX) });
-    return;
-  }
-
-  object.set({ flipY: !Boolean(object.flipY) });
-}
+export { toggleObjectFlip };
 
 export function setObjectAspectLock(object: MutableFabricObjectLike, lock: boolean): void {
   object.set({ lockUniScaling: lock });
@@ -545,7 +531,9 @@ const styles: Record<string, React.CSSProperties> = {
   aspectLockButton: {
     width: '24px',
     height: '24px',
-    border: '1px solid var(--border-primary)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'var(--border-primary)',
     borderRadius: '4px',
     backgroundColor: 'var(--bg-tertiary)',
     color: 'var(--text-secondary)',
@@ -597,7 +585,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '1px solid var(--border-primary)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'var(--border-primary)',
     borderRadius: '4px',
     backgroundColor: 'var(--bg-tertiary)',
     color: 'var(--text-primary)',
@@ -700,7 +690,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   toggleButton: {
     padding: '4px 8px',
-    border: '1px solid var(--border-primary)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'var(--border-primary)',
     borderRadius: '4px',
     backgroundColor: 'transparent',
     color: 'var(--text-secondary)',
@@ -726,7 +718,9 @@ const styles: Record<string, React.CSSProperties> = {
   fillModeButton: {
     height: '26px',
     padding: '0 8px',
-    border: '1px solid var(--border-primary)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'var(--border-primary)',
     borderRadius: '4px',
     backgroundColor: 'transparent',
     color: 'var(--text-secondary)',
@@ -889,6 +883,7 @@ function TransformInput({
         value={value}
         inputMode="decimal"
         aria-label={label}
+        data-testid={`transform-${label.toLowerCase()}-input`}
         onFocus={onFocus}
         onBlur={onBlur}
         onChange={(e) => onChange(e.target.value)}
@@ -1094,6 +1089,7 @@ export default function PropertiesPanel({
     createDefaultGradientState('linear')
   );
   const [, setTextSyncTick] = useState(0);
+  const transformSyncTimeoutRef = useRef<number | null>(null);
 
   const transformTargets = useMemo(
     () => selectedObjects as unknown as TransformObjectLike[],
@@ -1104,20 +1100,44 @@ export default function PropertiesPanel({
     setTransformValues(computeMixedTransformValues(transformTargets));
   }, [transformTargets]);
 
+  const scheduleTransformSync = useCallback(() => {
+    if (typeof window === 'undefined') {
+      syncTransformValues();
+      return;
+    }
+
+    if (transformSyncTimeoutRef.current !== null) {
+      window.clearTimeout(transformSyncTimeoutRef.current);
+    }
+
+    transformSyncTimeoutRef.current = window.setTimeout(() => {
+      transformSyncTimeoutRef.current = null;
+      syncTransformValues();
+    }, 40);
+  }, [syncTransformValues]);
+
   useEffect(() => {
     setInputDrafts({});
     syncTransformValues();
   }, [syncTransformValues]);
 
   useEffect(() => {
+    return () => {
+      if (transformSyncTimeoutRef.current !== null && typeof window !== 'undefined') {
+        window.clearTimeout(transformSyncTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (!canvas) return;
 
     if (subscribeToCanvasEvents) {
-      return subscribeToCanvasEvents([...TRANSFORM_SYNC_EVENTS], syncTransformValues);
+      return subscribeToCanvasEvents([...TRANSFORM_SYNC_EVENTS], scheduleTransformSync);
     }
 
-    return subscribeToTransformEvents(canvas as unknown as CanvasEventSourceLike, syncTransformValues);
-  }, [canvas, subscribeToCanvasEvents, syncTransformValues]);
+    return subscribeToTransformEvents(canvas as unknown as CanvasEventSourceLike, scheduleTransformSync);
+  }, [canvas, scheduleTransformSync, subscribeToCanvasEvents]);
 
   const syncTextPanel = useCallback(() => {
     if (!activeObject || !isCharacterTextObject(activeObject)) return;

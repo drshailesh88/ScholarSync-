@@ -7,6 +7,7 @@
 
 import { create } from 'zustand';
 import { subscribeWithSelector, devtools, persist } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 
 // ============================================================================
 // Types
@@ -564,8 +565,10 @@ export const useLayerStore = create<LayerStore>()(
  * Hook to get all layers sorted by order
  */
 export const useLayers = () =>
-  useLayerStore((state) =>
-    [...state.layers].sort((a, b) => a.order - b.order)
+  useLayerStore(
+    useShallow((state) =>
+      [...state.layers].sort((a, b) => a.order - b.order)
+    )
   );
 
 /**
@@ -599,16 +602,20 @@ export const useLayerById = (layerId: string) =>
  * Hook to get visible layers only
  */
 export const useVisibleLayers = () =>
-  useLayerStore((state) =>
-    state.layers.filter((l) => l.visible).sort((a, b) => a.order - b.order)
+  useLayerStore(
+    useShallow((state) =>
+      state.layers.filter((l) => l.visible).sort((a, b) => a.order - b.order)
+    )
   );
 
 /**
  * Hook to get unlocked layers only
  */
 export const useUnlockedLayers = () =>
-  useLayerStore((state) =>
-    state.layers.filter((l) => !l.locked).sort((a, b) => a.order - b.order)
+  useLayerStore(
+    useShallow((state) =>
+      state.layers.filter((l) => !l.locked).sort((a, b) => a.order - b.order)
+    )
   );
 
 /**
@@ -621,10 +628,12 @@ export const useIsLayerActive = (layerId: string) =>
  * Hook to get layer panel state
  */
 export const useLayerPanelState = () =>
-  useLayerStore((state) => ({
-    isPanelExpanded: state.isPanelExpanded,
-    dragState: state.dragState,
-  }));
+  useLayerStore(
+    useShallow((state) => ({
+      isPanelExpanded: state.isPanelExpanded,
+      dragState: state.dragState,
+    }))
+  );
 
 /**
  * Hook to get objects in the active layer

@@ -6,6 +6,8 @@
  */
 
 import {
+  Suspense,
+  lazy,
   useRef,
   useEffect,
   useCallback,
@@ -13,11 +15,11 @@ import {
   useImperativeHandle,
   useState,
 } from 'react';
-import { Canvas as FabricCanvas, FabricObject, Rect, Ellipse, Line, Textbox, Triangle, Group, Polygon, Path as FabricPath, util } from 'fabric';
+import { Canvas as FabricCanvas, FabricObject, Rect, Ellipse, Line, Textbox, Triangle, Group, Polygon, Path as FabricPath, ActiveSelection, util } from 'fabric';
 import { useEditorStore, useActiveTool, useViewport, useGridState, useShapeToolSettings } from '@/stores/illustration/editorStore';
 import { ToolType } from '@/lib/illustration/types';
 import { useToast } from '@/components/illustration/Toast/useToast';
-import { PenToolOverlay } from './PenToolOverlay';
+import { useCanvas as useCanvasContext } from './CanvasContext';
 import { PointEditingOverlay } from './PointEditingOverlay';
 import { ConnectorManager, ensureObjectId } from '@/lib/illustration/canvas/ConnectorManager';
 import { DEFAULT_CONNECTOR_STYLE } from '@/lib/illustration/canvas/SmartConnector';
@@ -37,20 +39,6 @@ import {
 import { EraserTool } from '@/lib/illustration/editor/tools/EraserTool';
 import { ScissorsTool } from '@/lib/illustration/editor/tools/ScissorsTool';
 import { MeasureTool, type Measurement } from '@/lib/illustration/editor/tools/MeasureTool';
-import {
-  createFreehandState,
-  addPoint,
-  generatePreviewPath,
-  finalizeFreehandStroke,
-  resetFreehandState,
-  defaultFreehandSettings,
-  type FreehandSettings,
-} from '@/lib/illustration/canvas/freehand-canvas';
-import {
-  convertObjectToRough,
-  defaultRoughSettings,
-  type RoughCanvasSettings,
-} from '@/lib/illustration/canvas/rough-canvas';
 // Note: Canvas.css was removed - using inline styles instead
 
 // ============================================================================
@@ -111,6 +99,23 @@ export interface CanvasRef {
   applyRoughToSelected: () => void;
 }
 
+type IllustratorCanvasDebugHandle = {
+  getObjects: () => FabricObject[];
+  getActiveObjects: () => FabricObject[];
+  selectObjectsByIndexes: (indexes: number[]) => number;
+  clearSelection: () => void;
+};
+
+function getSelectableCanvasObjects(canvas: FabricCanvas): FabricObject[] {
+  return canvas.getObjects().filter((object) => {
+    if ((object as FabricObject & { isGrid?: boolean }).isGrid) {
+      return false;
+    }
+
+    return object.get('data-type') !== 'connector';
+  }) as FabricObject[];
+}
+
 // ============================================================================
 // Drawing State
 // ============================================================================
@@ -121,6 +126,79 @@ interface DrawingState {
   startY: number;
   tempObject: FabricObject | null;
   connectorSource: string | null;
+}
+
+interface InputPoint {
+  x: number;
+  y: number;
+  pressure?: number;
+}
+
+export interface FreehandSettings {
+  preset: 'pen' | 'marker' | 'highlighter' | 'brush' | 'calligraphy';
+  size: number;
+  thinning: number;
+  smoothing: number;
+  streamline: number;
+  color: string;
+  opacity: number;
+}
+
+interface FreehandDrawingState {
+  points: InputPoint[];
+  isDrawing: boolean;
+  previewPath: FabricPath | null;
+}
+
+export interface RoughCanvasSettings {
+  preset: 'whiteboard' | 'notebook' | 'chalkboard' | 'technical';
+  roughness: number;
+  bowing: number;
+  seed?: number;
+  stroke: string;
+  strokeWidth: number;
+  fill: string;
+  fillStyle: string;
+}
+
+const defaultFreehandSettings: FreehandSettings = {
+  preset: 'brush',
+  size: 16,
+  thinning: 0.8,
+  smoothing: 0.7,
+  streamline: 0.6,
+  color: '#000000',
+  opacity: 1,
+};
+
+const defaultRoughSettings: RoughCanvasSettings = {
+  preset: 'notebook',
+  roughness: 1,
+  bowing: 1,
+  stroke: '#000000',
+  strokeWidth: 2,
+  fill: 'rgba(0, 120, 212, 0.1)',
+  fillStyle: 'hachure',
+};
+
+interface FreehandModule {
+  addPoint: (state: FreehandDrawingState, x: number, y: number, pressure?: number) => void;
+  generatePreviewPath: (
+    state: FreehandDrawingState,
+    settings: FreehandSettings
+  ) => FabricPath | null;
+  finalizeFreehandStroke: (
+    state: FreehandDrawingState,
+    settings: FreehandSettings
+  ) => FabricPath | null;
+  resetFreehandState: (state: FreehandDrawingState) => void;
+}
+
+interface RoughModule {
+  convertObjectToRough: (
+    object: FabricObject,
+    settings: RoughCanvasSettings
+  ) => FabricPath | null;
 }
 
 type DrawingFlagCanvas = FabricCanvas & {
@@ -143,6 +221,14 @@ function getSelectionTargets(activeObject: FabricObject | null): FabricObject[] 
   }
 
   return [activeObject];
+}
+
+function createFreehandState(): FreehandDrawingState {
+  return {
+    points: [],
+    isDrawing: false,
+    previewPath: null,
+  };
 }
 
 function getClientCoordinates(event: MouseEvent | TouchEvent): Point2D | null {
@@ -194,6 +280,10 @@ const withGridExcludedFromExport = <T,>(canvas: FabricCanvas, exporter: () => T)
   }
 };
 
+const LazyPenToolOverlay = lazy(() =>
+  import('./PenToolOverlay').then((module) => ({ default: module.PenToolOverlay }))
+);
+
 // ============================================================================
 // Component
 // ============================================================================
@@ -230,8 +320,12 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
     const eraserObjectCountAtDownRef = useRef<number | null>(null);
     const freehandStateRef = useRef(createFreehandState());
     const freehandSettingsRef = useRef<FreehandSettings>({ ...defaultFreehandSettings });
+    const freehandModuleRef = useRef<FreehandModule | null>(null);
+    const freehandModulePromiseRef = useRef<Promise<FreehandModule> | null>(null);
     const roughEnabledRef = useRef(false);
     const roughSettingsRef = useRef<RoughCanvasSettings>({ ...defaultRoughSettings });
+    const roughModuleRef = useRef<RoughModule | null>(null);
+    const roughModulePromiseRef = useRef<Promise<RoughModule> | null>(null);
 
     // Pen tool state
     const [penToolActive, setPenToolActive] = useState(false);
@@ -254,7 +348,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
     const toast = useToast();
 
     // Store hooks
-    const setCanvas = useEditorStore((state) => state.setCanvas);
+    const setEditorCanvas = useEditorStore((state) => state.setCanvas);
     const setActiveTool = useEditorStore((state) => state.setActiveTool);
     const setLastSampledColor = useEditorStore((state) => state.setLastSampledColor);
     const setPan = useEditorStore((state) => state.setPan);
@@ -266,10 +360,54 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
     const { zoom } = useViewport();
     const { gridVisible, gridSize, snapToGrid } = useGridState();
     const { polygonSides, starPoints } = useShapeToolSettings();
+    const { setCanvas: setCanvasContext } = useCanvasContext();
 
     const serializeCanvasState = useCallback((canvas: FabricCanvas): string => {
       const state = filterGridFromSerializedState(canvas.toJSON() as SerializedCanvasState);
       return JSON.stringify(state);
+    }, []);
+
+    const loadFreehandModule = useCallback(async (): Promise<FreehandModule> => {
+      if (freehandModuleRef.current) {
+        return freehandModuleRef.current;
+      }
+
+      if (!freehandModulePromiseRef.current) {
+        freehandModulePromiseRef.current = import('@/lib/illustration/canvas/freehand-canvas').then(
+          (module) => {
+            const loadedModule: FreehandModule = {
+              addPoint: module.addPoint,
+              generatePreviewPath: module.generatePreviewPath,
+              finalizeFreehandStroke: module.finalizeFreehandStroke,
+              resetFreehandState: module.resetFreehandState,
+            };
+            freehandModuleRef.current = loadedModule;
+            return loadedModule;
+          }
+        );
+      }
+
+      return freehandModulePromiseRef.current;
+    }, []);
+
+    const loadRoughModule = useCallback(async (): Promise<RoughModule> => {
+      if (roughModuleRef.current) {
+        return roughModuleRef.current;
+      }
+
+      if (!roughModulePromiseRef.current) {
+        roughModulePromiseRef.current = import('@/lib/illustration/canvas/rough-canvas').then(
+          (module) => {
+            const loadedModule: RoughModule = {
+              convertObjectToRough: module.convertObjectToRough,
+            };
+            roughModuleRef.current = loadedModule;
+            return loadedModule;
+          }
+        );
+      }
+
+      return roughModulePromiseRef.current;
     }, []);
 
     const setCanvasDrawingFlag = useCallback((isDrawing: boolean) => {
@@ -333,7 +471,40 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       fabricRef.current = canvas;
       (canvas as DrawingFlagCanvas)._isDrawing = false;
-      setCanvas(canvas);
+      setEditorCanvas(canvas);
+      setCanvasContext(canvas);
+      if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+        const debugHandle: IllustratorCanvasDebugHandle = {
+          getObjects: () => getSelectableCanvasObjects(canvas),
+          getActiveObjects: () => canvas.getActiveObjects() as FabricObject[],
+          selectObjectsByIndexes: (indexes) => {
+            const selectableObjects = getSelectableCanvasObjects(canvas);
+            const objects = indexes
+              .map((index) => selectableObjects[index])
+              .filter((object): object is FabricObject => Boolean(object));
+
+            canvas.discardActiveObject();
+
+            if (objects.length === 1) {
+              canvas.setActiveObject(objects[0]);
+            } else if (objects.length > 1) {
+              canvas.setActiveObject(new ActiveSelection(objects, { canvas }));
+            }
+
+            canvas.requestRenderAll();
+            canvas.fire('selection:created', { selected: objects });
+
+            return objects.length;
+          },
+          clearSelection: () => {
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+          },
+        };
+
+        (window as Window & { __SCHOLARSYNC_ILLUSTRATOR_CANVAS__?: IllustratorCanvasDebugHandle | null })
+          .__SCHOLARSYNC_ILLUSTRATOR_CANVAS__ = debugHandle;
+      }
 
       // Initialize ConnectorManager
       connectorManagerRef.current = new ConnectorManager(canvas);
@@ -349,11 +520,17 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       // Cleanup
       return () => {
+        connectorManagerRef.current?.clear();
         connectorManagerRef.current?.stopListening();
         connectorManagerRef.current = null;
         canvas.dispose();
         fabricRef.current = null;
-        setCanvas(null);
+        setEditorCanvas(null);
+        setCanvasContext(null);
+        if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+          (window as Window & { __SCHOLARSYNC_ILLUSTRATOR_CANVAS__?: IllustratorCanvasDebugHandle | null })
+            .__SCHOLARSYNC_ILLUSTRATOR_CANVAS__ = null;
+        }
       };
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -571,7 +748,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         });
         setPenToolActive(false);
         setEyedropperPreview((prev) => ({ ...prev, visible: false }));
-        resetFreehandState(freehandStateRef.current);
+        freehandModuleRef.current?.resetFreehandState(freehandStateRef.current);
       } else {
         // Drawing tools (shapes)
         canvas.selection = false;
@@ -587,6 +764,16 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       canvas.renderAll();
     }, [activeTool]);
+
+    useEffect(() => {
+      if (activeTool === ToolType.BRUSH) {
+        void loadFreehandModule();
+      }
+
+      if (activeTool === ToolType.PEN) {
+        void import('./PenToolOverlay');
+      }
+    }, [activeTool, loadFreehandModule]);
 
     useEffect(() => {
       if (activeTool !== ToolType.ERASER) {
@@ -730,8 +917,12 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           const fhState = freehandStateRef.current;
           fhState.isDrawing = true;
           fhState.points = [];
+          if (!freehandModuleRef.current) {
+            void loadFreehandModule();
+            toast.info('Loading brush engine...');
+          }
           const pressure = 'pressure' in e.e ? (e.e as PointerEvent).pressure || 0.5 : 0.5;
-          addPoint(fhState, pointer.x, pointer.y, pressure);
+          freehandModuleRef.current?.addPoint(fhState, pointer.x, pointer.y, pressure);
           return;
         }
 
@@ -861,6 +1052,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         setActiveTool,
         setCanvasDrawingFlag,
         setLastSampledColor,
+        loadFreehandModule,
         starPoints,
         toast,
       ]
@@ -920,14 +1112,18 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         // Handle brush/freehand drawing
         if (activeTool === ToolType.BRUSH && freehandStateRef.current.isDrawing) {
           const fhState = freehandStateRef.current;
+          const freehandModule = freehandModuleRef.current;
+          if (!freehandModule) {
+            return;
+          }
           const pressure = 'pressure' in e.e ? (e.e as PointerEvent).pressure || 0.5 : 0.5;
-          addPoint(fhState, pointer.x, pointer.y, pressure);
+          freehandModule.addPoint(fhState, pointer.x, pointer.y, pressure);
 
           // Update preview
           if (fhState.previewPath) {
             canvas.remove(fhState.previewPath);
           }
-          const preview = generatePreviewPath(fhState, freehandSettingsRef.current);
+          const preview = freehandModule.generatePreviewPath(fhState, freehandSettingsRef.current);
           if (preview) {
             fhState.previewPath = preview;
             canvas.add(preview);
@@ -1025,7 +1221,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       }
     }, [activeTool]);
 
-    const handleMouseUp = useCallback((e?: { e: MouseEvent | TouchEvent }) => {
+    const handleMouseUp = useCallback(async (e?: { e: MouseEvent | TouchEvent }) => {
       const canvas = fabricRef.current;
       if (!canvas) return;
 
@@ -1067,10 +1263,14 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
       // Finalize freehand drawing
       if (activeTool === ToolType.BRUSH) {
         const fhState = freehandStateRef.current;
+        const freehandModule = freehandModuleRef.current;
         if (fhState.previewPath) {
           canvas.remove(fhState.previewPath);
         }
-        const finalPath = finalizeFreehandStroke(fhState, freehandSettingsRef.current);
+        const finalPath = freehandModule?.finalizeFreehandStroke(
+          fhState,
+          freehandSettingsRef.current
+        );
         if (finalPath) {
           canvas.add(finalPath);
           canvas.setActiveObject(finalPath);
@@ -1141,7 +1341,11 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
             activeTool === ToolType.ELLIPSE ||
             activeTool === ToolType.LINE)
         ) {
-          const roughPath = convertObjectToRough(state.tempObject, roughSettingsRef.current);
+          const roughModule = await loadRoughModule();
+          const roughPath = roughModule.convertObjectToRough(
+            state.tempObject,
+            roughSettingsRef.current
+          );
           if (roughPath) {
             canvas.remove(state.tempObject);
             canvas.add(roughPath);
@@ -1198,7 +1402,7 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       setCanvasDrawingFlag(false);
       state.tempObject = null;
-    }, [activeTool, pushHistory, serializeCanvasState, setCanvasDrawingFlag]);
+    }, [activeTool, loadRoughModule, pushHistory, serializeCanvasState, setCanvasDrawingFlag]);
 
     // Register drawing event handlers
     useEffect(() => {
@@ -1464,6 +1668,9 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         getFreehandSettings: () => ({ ...freehandSettingsRef.current }),
         setRoughEnabled: (enabled: boolean) => {
           roughEnabledRef.current = enabled;
+          if (enabled) {
+            void loadRoughModule();
+          }
         },
         getRoughEnabled: () => roughEnabledRef.current,
         setRoughSettings: (settings: Partial<RoughCanvasSettings>) => {
@@ -1476,19 +1683,22 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           const activeObjects = getSelectionTargets(canvas.getActiveObject() as FabricObject | null);
           if (activeObjects.length === 0) return;
 
-          canvas.discardActiveObject();
-          activeObjects.forEach((obj) => {
-            const roughPath = convertObjectToRough(obj, roughSettingsRef.current);
-            if (roughPath) {
-              canvas.remove(obj);
-              canvas.add(roughPath);
-            }
-          });
-          canvas.renderAll();
-          pushHistory(serializeCanvasState(canvas));
+          void (async () => {
+            const roughModule = await loadRoughModule();
+            canvas.discardActiveObject();
+            activeObjects.forEach((obj) => {
+              const roughPath = roughModule.convertObjectToRough(obj, roughSettingsRef.current);
+              if (roughPath) {
+                canvas.remove(obj);
+                canvas.add(roughPath);
+              }
+            });
+            canvas.renderAll();
+            pushHistory(serializeCanvasState(canvas));
+          })();
         },
       }),
-      [backgroundColor, pushHistory, serializeCanvasState]
+      [backgroundColor, loadRoughModule, pushHistory, serializeCanvasState]
     );
 
     // ========================================================================
@@ -1511,12 +1721,16 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
     );
 
     return (
-      <div ref={containerRef} className={`canvas-container ${className}`}>
+      <div
+        ref={containerRef}
+        className={`canvas-container ${className}`}
+        data-testid="illustrator-canvas-stage"
+      >
         <div
           className="canvas-wrapper"
           style={getCanvasWrapperStyle(width, height)}
         >
-          <canvas ref={canvasRef} id="finnish-canvas" />
+          <canvas ref={canvasRef} id="finnish-canvas" data-testid="illustrator-canvas" />
           {activeTool === ToolType.MEASURE && measurementOverlay && (() => {
             const canvas = fabricRef.current;
             if (!canvas) return null;
@@ -1615,16 +1829,19 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
             height={height}
             onExit={exitPointEditingMode}
           />
-          {/* Paper.js Pen Tool Overlay */}
-          <PenToolOverlay
-            fabricCanvas={fabricRef.current}
-            isActive={penToolActive}
-            strokeColor="#0078d4"
-            strokeWidth={2}
-            width={width}
-            height={height}
-            onPathComplete={handlePenToolPathComplete}
-          />
+          {penToolActive && (
+            <Suspense fallback={null}>
+              <LazyPenToolOverlay
+                fabricCanvas={fabricRef.current}
+                isActive={penToolActive}
+                strokeColor="#0078d4"
+                strokeWidth={2}
+                width={width}
+                height={height}
+                onPathComplete={handlePenToolPathComplete}
+              />
+            </Suspense>
+          )}
         </div>
       </div>
     );

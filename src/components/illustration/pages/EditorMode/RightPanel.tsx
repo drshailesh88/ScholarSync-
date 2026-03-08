@@ -5,14 +5,12 @@
  * @module pages/EditorMode/RightPanel
  */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { Suspense, lazy, useState, useCallback, useMemo } from 'react';
 import { loadSVGFromString, util, FabricObject } from 'fabric';
 import { LayersPanel } from '@/components/illustration/LayersPanel';
-import PropertiesPanel from '@/components/illustration/PropertiesPanel';
-import IconPicker from '@/components/illustration/IconPicker';
+import { ErrorBoundary, IllustrationErrorFallback } from '@/components/illustration/ErrorBoundary';
 import type { UnifiedIconResult } from '@/lib/illustration/lib/icons';
-import { StylePanel, defaultHandDrawnSettings, type HandDrawnSettings } from '@/components/illustration/StylePanel';
-import { JournalFigurePanel } from '@/components/illustration/JournalFigurePanel';
+import { defaultHandDrawnSettings, type HandDrawnSettings } from '@/components/illustration/StylePanel';
 import { useEditorStore } from '@/stores/illustration/editorStore';
 import { useToast } from '@/components/illustration/Toast/useToast';
 
@@ -62,14 +60,18 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '6px',
     height: '100%',
     padding: '0 12px',
-    border: 'none',
+    borderWidth: '0',
+    borderStyle: 'solid',
+    borderColor: 'transparent',
     backgroundColor: 'transparent',
     color: 'var(--text-secondary)',
     fontSize: '11px',
     fontWeight: 500,
     cursor: 'pointer',
     transition: 'all 150ms ease',
-    borderBottom: '2px solid transparent',
+    borderBottomWidth: '2px',
+    borderBottomStyle: 'solid',
+    borderBottomColor: 'transparent',
     marginBottom: '-1px',
   },
   tabActive: {
@@ -168,6 +170,52 @@ const tabs: Tab[] = [
   { id: 'style', label: 'Style', icon: <StyleIcon /> },
   { id: 'journal', label: 'Journal', icon: <JournalIcon /> },
 ];
+
+const LazyPropertiesPanel = lazy(() => import('@/components/illustration/PropertiesPanel'));
+const LazyIconPicker = lazy(() => import('@/components/illustration/IconPicker'));
+const LazyStylePanel = lazy(() =>
+  import('@/components/illustration/StylePanel').then((module) => ({ default: module.StylePanel }))
+);
+const LazyJournalFigurePanel = lazy(() =>
+  import('@/components/illustration/JournalFigurePanel').then((module) => ({
+    default: module.JournalFigurePanel,
+  }))
+);
+
+function PanelSkeleton({ label }: { label: string }): JSX.Element {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        padding: '16px',
+      }}
+      aria-label={`${label} loading`}
+    >
+      <div
+        style={{
+          height: '14px',
+          width: '40%',
+          borderRadius: '999px',
+          backgroundColor: 'var(--bg-tertiary)',
+        }}
+      />
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div
+          key={`${label}-${index}`}
+          style={{
+            height: index === 0 ? '36px' : '28px',
+            width: index === 2 ? '82%' : '100%',
+            borderRadius: '8px',
+            backgroundColor: 'var(--bg-tertiary)',
+            opacity: 0.85,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 // ============================================================================
 // Tab Button Component
@@ -303,22 +351,49 @@ export function RightPanel({
       case 'layers':
         return <LayersPanel />;
       case 'properties':
-        return <PropertiesPanel selectedObjects={selectedObjects} />;
+        return (
+          <ErrorBoundary
+            scope="Properties panel"
+            fullScreen={false}
+            fallback={({ error, reset, scope }) => (
+              <IllustrationErrorFallback
+                error={error}
+                reset={reset}
+                scope={scope}
+                fullScreen={false}
+              />
+            )}
+          >
+            <Suspense fallback={<PanelSkeleton label="Properties panel" />}>
+              <LazyPropertiesPanel selectedObjects={selectedObjects} />
+            </Suspense>
+          </ErrorBoundary>
+        );
       case 'icons':
-        return <IconPicker onSelectIcon={handleIconSelect} />;
+        return (
+          <Suspense fallback={<PanelSkeleton label="Icon browser" />}>
+            <LazyIconPicker onSelectIcon={handleIconSelect} />
+          </Suspense>
+        );
       case 'style':
         return (
-          <div style={{ padding: '16px' }}>
-            <StylePanel
-              settings={handDrawnSettings}
-              onSettingsChange={setHandDrawnSettings}
-              onApplyToSelection={handleApplyToSelection}
-              hasSelection={hasSelection}
-            />
-          </div>
+          <Suspense fallback={<PanelSkeleton label="Style panel" />}>
+            <div style={{ padding: '16px' }}>
+              <LazyStylePanel
+                settings={handDrawnSettings}
+                onSettingsChange={setHandDrawnSettings}
+                onApplyToSelection={handleApplyToSelection}
+                hasSelection={hasSelection}
+              />
+            </div>
+          </Suspense>
         );
       case 'journal':
-        return <JournalFigurePanel />;
+        return (
+          <Suspense fallback={<PanelSkeleton label="Journal panel" />}>
+            <LazyJournalFigurePanel />
+          </Suspense>
+        );
       default:
         return null;
     }

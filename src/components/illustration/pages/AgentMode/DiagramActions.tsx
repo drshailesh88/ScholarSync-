@@ -169,52 +169,60 @@ export const DiagramActions: React.FC<DiagramActionsProps> = ({
   return (
     <div style={styles.container}>
       <button
+        type="button"
         onClick={handleSendToEditor}
         style={styles.button}
         title="Edit in canvas editor"
+        aria-label="Edit diagram in editor"
       >
         <span style={styles.icon}><EditIcon /></span>
-        <span>Send to Editor</span>
+        <span>Edit</span>
       </button>
 
       <div style={styles.dropdownWrapper} ref={dropdownRef}>
         <button
+          type="button"
           onClick={() => setShowDropdown(!showDropdown)}
           style={styles.button}
           title="Download diagram"
+          aria-label="Open export options"
         >
           <span style={styles.icon}><DownloadIcon /></span>
-          <span>Download</span>
+          <span>Export</span>
           <span style={styles.chevron}><ChevronDownIcon /></span>
         </button>
         {showDropdown && (
           <div style={styles.dropdown}>
-            <button onClick={handleDownloadSVG} style={styles.dropdownItem}>
-              Download as SVG
+            <button type="button" onClick={handleDownloadSVG} style={styles.dropdownItem}>
+              Export SVG
             </button>
-            <button onClick={handleDownloadPNG} style={styles.dropdownItem}>
-              Download as PNG
+            <button type="button" onClick={handleDownloadPNG} style={styles.dropdownItem}>
+              Export PNG
             </button>
           </div>
         )}
       </div>
 
       <button
+        type="button"
         onClick={handleRegenerate}
         style={styles.button}
         title="Generate a new variation"
+        aria-label="Regenerate diagram"
       >
         <span style={styles.icon}><RefreshIcon /></span>
         <span>Regenerate</span>
       </button>
 
       <button
+        type="button"
         onClick={handleCopySVG}
         style={{
           ...styles.button,
           ...(copied ? styles.buttonSuccess : {})
         }}
         title="Copy SVG to clipboard"
+        aria-label="Copy SVG"
       >
         <span style={styles.icon}>
           {copied ? <CheckIcon /> : <CopyIcon />}

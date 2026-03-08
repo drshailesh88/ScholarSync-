@@ -58,10 +58,10 @@ const navSections = [
   },
 ];
 
-const hasClerkKeys =
-  typeof window !== "undefined" &&
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-  !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.includes("placeholder");
+const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+const hasClerkKeys = Boolean(
+  clerkPublishableKey && !clerkPublishableKey.includes("placeholder")
+);
 
 interface AppSidebarProps {
   open?: boolean;

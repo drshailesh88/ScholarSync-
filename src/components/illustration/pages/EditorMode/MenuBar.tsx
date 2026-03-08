@@ -9,13 +9,8 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { FabricObject, Line, Path as FabricPath } from 'fabric';
 import { useEditorStore, useHistoryState, useViewport, useGridState, useGuideState } from '@/stores/illustration/editorStore';
 import { useCanvas } from '@/components/illustration/Canvas/CanvasContext';
-import { toggleObjectFlip } from '@/components/illustration/PropertiesPanel';
+import { toggleObjectFlip } from '@/components/illustration/objectTransforms';
 import { useToast } from '@/components/illustration/Toast/useToast';
-import {
-  applyBooleanOperationToCanvas,
-  isEmptyResultError,
-  type PathfinderOperation,
-} from '@/lib/illustration/canvas/boolean-operations';
 import { createOffsetLine, createOffsetPath } from '@/lib/illustration/canvas/path-offset';
 import { isClippingMaskGroup } from '@/lib/illustration/canvas/clipping-mask';
 import { isCompoundPath } from '@/lib/illustration/canvas/compound-path';
@@ -41,6 +36,8 @@ interface MenuDefinition {
   label: string;
   items: MenuItem[];
 }
+
+type PathfinderOperation = 'unite' | 'subtract' | 'intersect' | 'exclude';
 
 // ============================================================================
 // Props
@@ -768,7 +765,7 @@ export function MenuBar({
   );
 
   const handlePathfinderOperation = useCallback(
-    (operation: PathfinderOperation) => {
+    async (operation: PathfinderOperation) => {
       if (!canvas) {
         toast.error('Canvas not ready');
         return;
@@ -781,8 +778,12 @@ export function MenuBar({
       }
 
       try {
+        const { applyBooleanOperationToCanvas } = await import(
+          '@/lib/illustration/canvas/boolean-operations'
+        );
         applyBooleanOperationToCanvas(canvas, selectedObjects, operation);
       } catch (error) {
+        const { isEmptyResultError } = await import('@/lib/illustration/canvas/boolean-operations');
         if (isEmptyResultError(error)) {
           toast.error('Operation produced no result');
           return;
@@ -1023,10 +1024,12 @@ export function MenuBar({
 
       {/* Quick action buttons */}
       <button
+        type="button"
         className="menu-action-btn"
         onClick={() => canUndo && undo()}
         disabled={!canUndo}
         title="Undo (Ctrl+Z)"
+        aria-label="Undo"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M3 7v6h6" />
@@ -1034,10 +1037,12 @@ export function MenuBar({
         </svg>
       </button>
       <button
+        type="button"
         className="menu-action-btn"
         onClick={() => canRedo && redo()}
         disabled={!canRedo}
         title="Redo (Ctrl+Y)"
+        aria-label="Redo"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 7v6h-6" />

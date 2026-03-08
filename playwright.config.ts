@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: "html",
   timeout: 60_000,
   use: {
-    baseURL: process.env.BASE_URL ?? "http://localhost:5173",
+    baseURL: process.env.BASE_URL ?? "http://127.0.0.1:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
@@ -21,7 +21,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run dev",
-    port: Number(process.env.PORT ?? 5173),
+    port: Number(process.env.PORT ?? 3000),
     reuseExistingServer: true,
     timeout: 120_000,
     stdout: "pipe",

@@ -13,22 +13,19 @@
  * @module pages/EditorMode/EditorMode
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { Suspense, lazy, useState, useEffect, useCallback, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { ErrorBoundary, IllustrationErrorFallback } from '@/components/illustration/ErrorBoundary';
 import { useEditorStore, useGuideState, useViewport } from '@/stores/illustration/editorStore';
-import { useToast } from '@/components/illustration/Toast';
+import { ToastProvider, useToast } from '@/components/illustration/Toast';
 import { Canvas, CanvasProvider, CanvasRef } from '@/components/illustration/Canvas';
 import { IllustratorToolbar, type IllustratorTool } from '@/components/illustration/IllustratorToolbar';
 import { defaultHandDrawnSettings, type HandDrawnSettings } from '@/components/illustration/StylePanel';
-import { ExportDialog, type ExportFormat, type ExportSettings } from '@/components/illustration/ExportDialog';
+import type { ExportFormat, ExportSettings } from '@/components/illustration/ExportDialog';
 import { exportAsPng, exportAsPdf, exportAsSvg, exportAsPptx } from '@/lib/illustration/lib/export';
-import { BackgroundRemovalTool } from '@/components/illustration/BackgroundRemoval';
-import { AIGenerationTool } from '@/components/illustration/AIGeneration';
-import { ShapeGeneratorPanel, type ShapeType } from '@/components/illustration/tools';
+import type { ShapeType } from '@/components/illustration/tools';
 import { LoadingSpinner } from '@/components/illustration/LoadingSpinner';
 import { ScientificTextToolbar } from '@/components/illustration/ScientificTextToolbar';
-import { FigurePanelGenerator } from '@/components/illustration/FigurePanelGenerator';
-import { DocumentSettings } from '@/components/illustration/DocumentSettings';
-import { useIllustratorTools } from '@/hooks/illustration/useIllustratorTools';
 import { useKeyboardShortcuts } from '@/hooks/illustration/useKeyboardShortcuts';
 import { useCanvas as useCanvasContext } from '@/components/illustration/Canvas/CanvasContext';
 import {
@@ -41,7 +38,6 @@ import {
 } from '@/components/illustration/Rulers';
 import { MenuBar } from './MenuBar';
 import { Toolbar } from './Toolbar';
-import { RightPanel } from './RightPanel';
 import { StatusBar } from './StatusBar';
 import { ToolType } from '@/lib/illustration/types';
 import {
@@ -56,6 +52,42 @@ import {
   readImageFileAsDataUrl,
 } from '@/lib/illustration/image-import';
 
+const LazyExportDialog = lazy(() =>
+  import('@/components/illustration/ExportDialog').then((module) => ({
+    default: module.ExportDialog,
+  }))
+);
+const LazyBackgroundRemovalTool = lazy(() =>
+  import('@/components/illustration/BackgroundRemoval').then((module) => ({
+    default: module.BackgroundRemovalTool,
+  }))
+);
+const LazyAIGenerationTool = lazy(() =>
+  import('@/components/illustration/AIGeneration').then((module) => ({
+    default: module.AIGenerationTool,
+  }))
+);
+const LazyShapeGeneratorPanel = lazy(() =>
+  import('@/components/illustration/tools').then((module) => ({
+    default: module.ShapeGeneratorPanel,
+  }))
+);
+const LazyFigurePanelGenerator = lazy(() =>
+  import('@/components/illustration/FigurePanelGenerator').then((module) => ({
+    default: module.FigurePanelGenerator,
+  }))
+);
+const LazyDocumentSettings = lazy(() =>
+  import('@/components/illustration/DocumentSettings').then((module) => ({
+    default: module.DocumentSettings,
+  }))
+);
+const LazyRightPanel = lazy(() =>
+  import('./RightPanel').then((module) => ({ default: module.RightPanel }))
+);
+
+const AGENT_IMPORT_SESSION_KEY = 'scholarsync-illustration-agent-import';
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -69,6 +101,30 @@ interface ScientificToolbarPosition {
   visible: boolean;
   x: number;
   y: number;
+}
+
+function ensureCanvasObjectId(object: {
+  id?: string;
+  get?: (key: string) => unknown;
+  set?: (key: string, value: unknown) => unknown;
+}): string {
+  const existingId =
+    object.id ||
+    (typeof object.get === 'function' ? object.get('id') : undefined);
+
+  if (typeof existingId === 'string' && existingId.length > 0) {
+    if (!object.id) {
+      object.id = existingId;
+    }
+    return existingId;
+  }
+
+  const generatedId = `obj-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  object.id = generatedId;
+  if (typeof object.set === 'function') {
+    object.set('id', generatedId);
+  }
+  return generatedId;
 }
 
 // ============================================================================
@@ -182,6 +238,42 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
+function InlineEditorSkeleton({ label }: { label: string }): JSX.Element {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        padding: '16px',
+        height: '100%',
+      }}
+      aria-label={`${label} loading`}
+    >
+      <div
+        style={{
+          height: '16px',
+          width: '40%',
+          borderRadius: '999px',
+          backgroundColor: 'var(--bg-secondary)',
+        }}
+      />
+      {Array.from({ length: 5 }).map((_, index) => (
+        <div
+          key={`${label}-${index}`}
+          style={{
+            height: index === 0 ? '48px' : '28px',
+            width: index === 3 ? '78%' : '100%',
+            borderRadius: '8px',
+            backgroundColor: 'var(--bg-secondary)',
+            opacity: 0.8,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // ============================================================================
 // EditorMode Component
 // ============================================================================
@@ -190,11 +282,11 @@ export interface EditorModeProps {
   id?: string;
 }
 
-export function EditorMode({ id }: EditorModeProps): JSX.Element {
+function EditorModeContent({ id }: EditorModeProps): JSX.Element {
+  const searchParams = useSearchParams();
   const { showToast } = useToast();
 
   const canvasRef = useRef<CanvasRef>(null);
-  const paperCanvasRef = useRef<HTMLCanvasElement>(null);
   const [mouseCoords, setMouseCoords] = useState<MouseCoords>({ x: 0, y: 0 });
   const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
   const [canvasBackgroundColor, setCanvasBackgroundColor] = useState(DEFAULT_CANVAS_BACKGROUND);
@@ -211,6 +303,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const [initialShapeType, setInitialShapeType] = useState<ShapeType>('dna');
   const [rulerUnit, setRulerUnit] = useState<RulerUnit>('px');
   const [createGuideRequest, setCreateGuideRequest] = useState<CreateGuideRequest | null>(null);
+  const [isCanvasReady, setIsCanvasReady] = useState(false);
   const [scientificToolbar, setScientificToolbar] = useState<ScientificToolbarPosition>({
     visible: false,
     x: 100,
@@ -255,11 +348,32 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const handleHandDrawnToggle = useCallback((enabled: boolean) => {
     setHandDrawnEnabled(enabled);
     setHandDrawnSettings(prev => ({ ...prev, enabled }));
-    // Sync rough.js enabled state to canvas ref
     if (canvasRef.current) {
       canvasRef.current.setRoughEnabled(enabled);
     }
   }, []);
+
+  useEffect(() => {
+    if (!canvasRef.current) {
+      return;
+    }
+
+    canvasRef.current.setRoughSettings({
+      preset:
+        handDrawnSettings.roughness > 1.5
+          ? 'chalkboard'
+          : handDrawnSettings.roughness > 0.8
+            ? 'whiteboard'
+            : handDrawnSettings.bowing < 0.5
+              ? 'technical'
+              : 'notebook',
+      roughness: handDrawnSettings.roughness,
+      bowing: handDrawnSettings.bowing,
+      strokeWidth: handDrawnSettings.strokeWidth,
+      fillStyle: handDrawnSettings.fillStyle,
+    });
+    canvasRef.current.setRoughEnabled(handDrawnSettings.enabled);
+  }, [handDrawnSettings]);
 
   // Handle opening export dialog
   const handleOpenExportDialog = useCallback(() => {
@@ -364,6 +478,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     clearCanvas,
     exportJSON,
     importJSON,
+    importSVG,
     zoomToFit,
   } = useCanvasContext();
 
@@ -527,16 +642,13 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     }
   }, [canvas, showToast]);
 
-  // Initialize illustrator tools hook
-  // The hook sets up event handlers and manages Paper.js integration
-  const { applyHandDrawnToSelection } = useIllustratorTools({
-    canvas: canvas,
-    activeTool: illustratorTool,
-    handDrawnSettings: handDrawnSettings,
-    strokeColor: '#000000',
-    strokeWidth: 2,
-    paperCanvasRef: paperCanvasRef,
-  });
+  const applyHandDrawnToSelection = useCallback(async () => {
+    if (!canvasRef.current || !handDrawnSettings.enabled) {
+      return;
+    }
+
+    canvasRef.current.applyRoughToSelected();
+  }, [handDrawnSettings.enabled]);
 
   // ========================================================================
   // Load Diagram by ID
@@ -584,6 +696,50 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     }
   }, [id, loadDiagram]);
 
+  useEffect(() => {
+    if (!isCanvasReady || searchParams.get('import') !== 'agent') {
+      return;
+    }
+
+    const pendingSvg = sessionStorage.getItem(AGENT_IMPORT_SESSION_KEY);
+    if (!pendingSvg) {
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+
+    void importSVG(pendingSvg)
+      .then(() => {
+        if (cancelled) {
+          return;
+        }
+        sessionStorage.removeItem(AGENT_IMPORT_SESSION_KEY);
+        showToast({
+          type: 'success',
+          message: 'Imported diagram from Agent mode',
+        });
+      })
+      .catch((error) => {
+        console.error('Failed to import agent diagram:', error);
+        if (!cancelled) {
+          showToast({
+            type: 'error',
+            message: 'Failed to import agent diagram',
+          });
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [importSVG, isCanvasReady, searchParams, setLoading, showToast]);
+
   // ========================================================================
   // Canvas Resize Handler
   // ========================================================================
@@ -613,6 +769,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
 
   const handleCanvasReady = useCallback((canvas: any) => {
     setCanvas(canvas);
+    setIsCanvasReady(true);
 
     // Show welcome toast only for new documents
     if (!id) {
@@ -656,7 +813,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   }, [canvas]);
 
   const handleSelectionChange = useCallback((objects: any[]) => {
-    const objectIds = objects.map((obj) => obj.id || `obj-${Math.random().toString(36).substr(2, 9)}`);
+    const objectIds = objects.map((obj) => ensureCanvasObjectId(obj));
     useEditorStore.getState().selectObjects(objectIds);
 
     if (objects.length === 1 && isTextObject(objects[0])) {
@@ -760,9 +917,20 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const rulerOffset = showRulers ? RULER_STRIP_SIZE : 0;
 
   return (
-    <CanvasProvider>
+    <ErrorBoundary
+      scope="Illustration editor"
+      resetKeys={[id, searchParams.toString()]}
+      fallback={({ error, reset, scope }) => (
+        <IllustrationErrorFallback
+          error={error}
+          reset={reset}
+          scope={scope}
+          fullScreen
+          description="The illustration editor hit an unexpected error."
+        />
+      )}
+    >
       <div style={styles.container}>
-        {/* Top Menu Bar */}
         <MenuBar
           onOpenExportDialog={handleOpenExportDialog}
           onOpenDocumentSettings={handleOpenDocumentSettings}
@@ -772,25 +940,27 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
           onOpenShapeGenerator={handleOpenShapeGenerator}
         />
 
-        <DocumentSettings
-          isOpen={documentSettingsOpen}
-          initialWidth={canvasSize.width}
-          initialHeight={canvasSize.height}
-          initialBackgroundColor={canvasBackgroundColor}
-          onConfirm={handleApplyDocumentSettings}
-          onCancel={() => setDocumentSettingsOpen(false)}
-        />
+        <Suspense fallback={null}>
+          <LazyDocumentSettings
+            isOpen={documentSettingsOpen}
+            initialWidth={canvasSize.width}
+            initialHeight={canvasSize.height}
+            initialBackgroundColor={canvasBackgroundColor}
+            onConfirm={handleApplyDocumentSettings}
+            onCancel={() => setDocumentSettingsOpen(false)}
+          />
+        </Suspense>
 
-        {/* Export Dialog */}
-        <ExportDialog
-          isOpen={exportDialogOpen}
-          onClose={() => setExportDialogOpen(false)}
-          onExport={handleExport}
-          filename="diagram"
-          onError={(message) => showToast({ type: 'error', message })}
-        />
+        <Suspense fallback={null}>
+          <LazyExportDialog
+            isOpen={exportDialogOpen}
+            onClose={() => setExportDialogOpen(false)}
+            onExport={handleExport}
+            filename="diagram"
+            onError={(message) => showToast({ type: 'error', message })}
+          />
+        </Suspense>
 
-        {/* Background Removal Tool Modal */}
         {bgRemovalToolOpen && (
           <div
             style={styles.modalOverlay}
@@ -800,14 +970,15 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
               }
             }}
           >
-            <BackgroundRemovalTool
-              isOpen={bgRemovalToolOpen}
-              onClose={() => setBgRemovalToolOpen(false)}
-            />
+            <Suspense fallback={<InlineEditorSkeleton label="Background removal" />}>
+              <LazyBackgroundRemovalTool
+                isOpen={bgRemovalToolOpen}
+                onClose={() => setBgRemovalToolOpen(false)}
+              />
+            </Suspense>
           </div>
         )}
 
-        {/* AI Generation Tool Modal */}
         {aiGenerationToolOpen && (
           <div
             style={styles.modalOverlay}
@@ -817,14 +988,15 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
               }
             }}
           >
-            <AIGenerationTool
-              isOpen={aiGenerationToolOpen}
-              onClose={() => setAIGenerationToolOpen(false)}
-            />
+            <Suspense fallback={<InlineEditorSkeleton label="AI generation" />}>
+              <LazyAIGenerationTool
+                isOpen={aiGenerationToolOpen}
+                onClose={() => setAIGenerationToolOpen(false)}
+              />
+            </Suspense>
           </div>
         )}
 
-        {/* Shape Generator Panel Modal */}
         {shapeGeneratorOpen && (
           <div
             style={styles.modalOverlay}
@@ -834,21 +1006,23 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
               }
             }}
           >
-            <ShapeGeneratorPanel
-              isOpen={shapeGeneratorOpen}
-              onClose={() => setShapeGeneratorOpen(false)}
-              initialShape={initialShapeType}
-            />
+            <Suspense fallback={<InlineEditorSkeleton label="Shape generator" />}>
+              <LazyShapeGeneratorPanel
+                isOpen={shapeGeneratorOpen}
+                onClose={() => setShapeGeneratorOpen(false)}
+                initialShape={initialShapeType}
+              />
+            </Suspense>
           </div>
         )}
 
-        {/* Figure Panel Generator */}
-        <FigurePanelGenerator
-          isOpen={figurePanelGeneratorOpen}
-          onClose={() => setFigurePanelGeneratorOpen(false)}
-        />
+        <Suspense fallback={null}>
+          <LazyFigurePanelGenerator
+            isOpen={figurePanelGeneratorOpen}
+            onClose={() => setFigurePanelGeneratorOpen(false)}
+          />
+        </Suspense>
 
-        {/* Illustrator Toolbar (Pen, Brush, Shapes, Hand-drawn toggle) */}
         <IllustratorToolbar
           canvas={canvas}
           activeTool={illustratorTool}
@@ -858,12 +1032,9 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
           onOpenFigurePanelGenerator={handleOpenFigurePanelGenerator}
         />
 
-        {/* Main Content Area */}
         <div style={styles.main}>
-          {/* Left Toolbar */}
           <Toolbar onOpenShapeGenerator={handleOpenShapeGenerator} />
 
-          {/* Center Canvas Area */}
           <div
             ref={canvasAreaRef}
             style={{
@@ -875,10 +1046,12 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
             onDragLeave={handleCanvasDragLeave}
             onDrop={handleCanvasDrop}
           >
-            {isLoading && (
+            {(isLoading || !isCanvasReady) && (
               <div style={styles.loadingOverlay}>
                 <LoadingSpinner size="lg" variant="primary" />
-                <span style={styles.loadingText}>Loading diagram...</span>
+                <span style={styles.loadingText}>
+                  {isCanvasReady ? 'Loading diagram...' : 'Initializing editor...'}
+                </span>
               </div>
             )}
 
@@ -896,6 +1069,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
                       type="button"
                       style={styles.rulerCorner}
                       title={`Ruler units: ${rulerUnit.toUpperCase()} (click to toggle)`}
+                      aria-label="Toggle ruler units"
                       onClick={() => setRulerUnit((unit) => (unit === 'px' ? 'pt' : 'px'))}
                     >
                       {rulerUnit}
@@ -931,16 +1105,29 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
                     height: canvasSize.height,
                   }}
                 >
-                  <Canvas
-                    ref={canvasRef}
-                    width={canvasSize.width}
-                    height={canvasSize.height}
-                    backgroundColor={canvasBackgroundColor}
-                    onReady={handleCanvasReady}
-                    onMouseMove={handleMouseMove}
-                    onSelectionChange={handleSelectionChange}
-                    onObjectModified={handleObjectModified}
-                  />
+                  <ErrorBoundary
+                    scope="Canvas"
+                    fullScreen={false}
+                    fallback={({ error, reset, scope }) => (
+                      <IllustrationErrorFallback
+                        error={error}
+                        reset={reset}
+                        scope={scope}
+                        fullScreen={false}
+                      />
+                    )}
+                  >
+                    <Canvas
+                      ref={canvasRef}
+                      width={canvasSize.width}
+                      height={canvasSize.height}
+                      backgroundColor={canvasBackgroundColor}
+                      onReady={handleCanvasReady}
+                      onMouseMove={handleMouseMove}
+                      onSelectionChange={handleSelectionChange}
+                      onObjectModified={handleObjectModified}
+                    />
+                  </ErrorBoundary>
 
                   <GuideOverlay
                     width={canvasSize.width}
@@ -955,21 +1142,6 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
                     onUpdateGuide={updateGuide}
                     onRemoveGuide={removeGuide}
                   />
-
-                  {/* Paper.js overlay canvas for Pen Tool - always rendered for ref availability */}
-                  <canvas
-                    ref={paperCanvasRef}
-                    width={canvasSize.width}
-                    height={canvasSize.height}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      pointerEvents: illustratorTool === 'pen' ? 'auto' : 'none',
-                      zIndex: illustratorTool === 'pen' ? 20 : -1,
-                      visibility: illustratorTool === 'pen' ? 'visible' : 'hidden',
-                    }}
-                  />
                 </div>
               </div>
             </div>
@@ -982,18 +1154,28 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
             />
           </div>
 
-          {/* Right Panel */}
-          <RightPanel
-            handDrawnSettings={handDrawnSettings}
-            onHandDrawnSettingsChange={setHandDrawnSettings}
-            onApplyHandDrawnToSelection={applyHandDrawnToSelection}
-          />
+          <Suspense fallback={<InlineEditorSkeleton label="Right panel" />}>
+            <LazyRightPanel
+              handDrawnSettings={handDrawnSettings}
+              onHandDrawnSettingsChange={setHandDrawnSettings}
+              onApplyHandDrawnToSelection={applyHandDrawnToSelection}
+            />
+          </Suspense>
         </div>
 
-        {/* Bottom Status Bar */}
         <StatusBar mouseCoords={mouseCoords} canvasSize={canvasSize} />
       </div>
-    </CanvasProvider>
+    </ErrorBoundary>
+  );
+}
+
+export function EditorMode({ id }: EditorModeProps): JSX.Element {
+  return (
+    <ToastProvider>
+      <CanvasProvider>
+        <EditorModeContent id={id} />
+      </CanvasProvider>
+    </ToastProvider>
   );
 }
 

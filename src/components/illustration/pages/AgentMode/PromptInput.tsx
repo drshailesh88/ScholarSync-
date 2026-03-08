@@ -91,17 +91,21 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSend, onStop }) => {
           style={styles.textarea}
           disabled={isLoading}
           rows={1}
+          aria-label="Agent prompt input"
         />
         {isLoading ? (
           <button
+            type="button"
             onClick={handleStop}
             style={{ ...styles.button, ...styles.stopButton }}
             title="Stop generation"
+            aria-label="Stop generation"
           >
             <StopIcon />
           </button>
         ) : (
           <button
+            type="button"
             onClick={handleSend}
             disabled={!canSend}
             style={{
@@ -109,6 +113,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onSend, onStop }) => {
               ...(canSend ? styles.buttonEnabled : styles.buttonDisabled)
             }}
             title="Send message (Enter)"
+            aria-label="Send prompt"
           >
             <SendIcon />
           </button>

@@ -7,6 +7,7 @@
 
 import { create } from 'zustand';
 import { subscribeWithSelector, devtools } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import type {
   FabricCanvas,
   EditorState,
@@ -411,19 +412,33 @@ export const useEditorStore = create<EditorStore>()(
 
         if (past.length === 0 || !canvas) return;
 
-        // Get current state to move to future
         const currentState = JSON.stringify(canvas.toJSON());
+        const latestPastState = past[past.length - 1];
+        const hasUnrecordedChanges = currentState !== latestPastState;
+        const previousState =
+          past.length === 1
+            ? past[0]
+            : hasUnrecordedChanges
+              ? latestPastState
+              : past[past.length - 2];
+        const futureState = hasUnrecordedChanges ? currentState : latestPastState;
+        const newPast =
+          past.length === 1
+            ? past
+            : hasUnrecordedChanges
+              ? past
+              : past.slice(0, -1);
 
-        // Pop the most recent past state
-        const previousState = past[past.length - 1];
-        const newPast = past.slice(0, -1);
+        if (futureState === previousState && past.length === 1) {
+          return;
+        }
 
         // Update history
         set(
           {
             history: {
               past: newPast,
-              future: [currentState, ...future],
+              future: [futureState, ...future],
             },
           },
           false,
@@ -449,9 +464,6 @@ export const useEditorStore = create<EditorStore>()(
 
         if (future.length === 0 || !canvas) return;
 
-        // Get current state to move to past
-        const currentState = JSON.stringify(canvas.toJSON());
-
         // Pop the most recent future state
         const nextState = future[0];
         const newFuture = future.slice(1);
@@ -460,7 +472,7 @@ export const useEditorStore = create<EditorStore>()(
         set(
           {
             history: {
-              past: [...past, currentState],
+              past: [...past, nextState],
               future: newFuture,
             },
           },
@@ -556,61 +568,73 @@ export const useActiveTool = () => useEditorStore((state) => state.activeTool);
  * Hook to get polygon/star tool settings
  */
 export const useShapeToolSettings = () =>
-  useEditorStore((state) => ({
-    polygonSides: state.polygonSides,
-    starPoints: state.starPoints,
-  }));
+  useEditorStore(
+    useShallow((state) => ({
+      polygonSides: state.polygonSides,
+      starPoints: state.starPoints,
+    }))
+  );
 
 /**
  * Hook to get viewport state
  */
 export const useViewport = () =>
-  useEditorStore((state) => ({
-    zoom: state.zoom,
-    pan: state.pan,
-  }));
+  useEditorStore(
+    useShallow((state) => ({
+      zoom: state.zoom,
+      pan: state.pan,
+    }))
+  );
 
 /**
  * Hook to get selection state
  */
 export const useSelection = () =>
-  useEditorStore((state) => ({
-    selectedObjects: state.selectedObjects,
-    hasSelection: state.selectedObjects.length > 0,
-    selectionCount: state.selectedObjects.length,
-  }));
+  useEditorStore(
+    useShallow((state) => ({
+      selectedObjects: state.selectedObjects,
+      hasSelection: state.selectedObjects.length > 0,
+      selectionCount: state.selectedObjects.length,
+    }))
+  );
 
 /**
  * Hook to get grid state
  */
 export const useGridState = () =>
-  useEditorStore((state) => ({
-    gridVisible: state.gridVisible,
-    snapToGrid: state.snapToGrid,
-    gridSize: state.gridSize,
-  }));
+  useEditorStore(
+    useShallow((state) => ({
+      gridVisible: state.gridVisible,
+      snapToGrid: state.snapToGrid,
+      gridSize: state.gridSize,
+    }))
+  );
 
 /**
  * Hook to get guide/ruler state
  */
 export const useGuideState = () =>
-  useEditorStore((state) => ({
-    showRulers: state.showRulers,
-    showGuides: state.showGuides,
-    guides: state.guides,
-    guideSnapIndicator: state.guideSnapIndicator,
-  }));
+  useEditorStore(
+    useShallow((state) => ({
+      showRulers: state.showRulers,
+      showGuides: state.showGuides,
+      guides: state.guides,
+      guideSnapIndicator: state.guideSnapIndicator,
+    }))
+  );
 
 /**
  * Hook to get history state
  */
 export const useHistoryState = () =>
-  useEditorStore((state) => ({
-    canUndo: state.history.past.length > 0,
-    canRedo: state.history.future.length > 0,
-    undoCount: state.history.past.length,
-    redoCount: state.history.future.length,
-  }));
+  useEditorStore(
+    useShallow((state) => ({
+      canUndo: state.history.past.length > 0,
+      canRedo: state.history.future.length > 0,
+      undoCount: state.history.past.length,
+      redoCount: state.history.future.length,
+    }))
+  );
 
 // ============================================================================
 // Store Utilities

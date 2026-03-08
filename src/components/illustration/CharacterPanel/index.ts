@@ -13,4 +13,5 @@ export {
   type CharacterTextLike,
 } from './CharacterPanel';
 
-export { FontPicker, FONT_FAMILY_OPTIONS, type FontOption } from './FontPicker';
+export { FontPicker, type FontOption } from './FontPicker';
+export { FONT_FAMILY_OPTIONS } from './font-options';

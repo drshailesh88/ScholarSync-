@@ -302,6 +302,7 @@ function ToolButton({ tool: _tool, icon, label, shortcut, isActive, onClick }: T
 
   return (
     <button
+      type="button"
       style={{
         ...styles.toolButton,
         ...(isActive ? styles.toolButtonActive : {}),
@@ -313,6 +314,7 @@ function ToolButton({ tool: _tool, icon, label, shortcut, isActive, onClick }: T
       title={`${label}${shortcut ? ` (${shortcut})` : ''}`}
       aria-label={label}
       aria-pressed={isActive}
+      data-tool-label={label}
     >
       {icon}
       {isHovered && (
@@ -330,6 +332,7 @@ function ActionButton({ icon, label, shortcut, onClick }: ActionButtonProps) {
 
   return (
     <button
+      type="button"
       style={{
         ...styles.toolButton,
         ...(isHovered ? styles.toolButtonHover : {}),
@@ -339,6 +342,7 @@ function ActionButton({ icon, label, shortcut, onClick }: ActionButtonProps) {
       onMouseLeave={() => setIsHovered(false)}
       title={`${label}${shortcut ? ` (${shortcut})` : ''}`}
       aria-label={label}
+      data-tool-label={label}
     >
       {icon}
       {isHovered && (
@@ -433,8 +437,49 @@ export function Toolbar({ onOpenShapeGenerator }: ToolbarProps): JSX.Element {
     setActiveTool(toolType);
   };
 
+  const handleToolbarKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    const supportedKeys = ['ArrowUp', 'ArrowDown', 'Home', 'End'];
+    if (!supportedKeys.includes(event.key)) {
+      return;
+    }
+
+    const buttons = Array.from(
+      event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')
+    );
+    if (buttons.length === 0) {
+      return;
+    }
+
+    const currentIndex = buttons.findIndex((button) => button === document.activeElement);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (event.key === 'Home') {
+      buttons[0]?.focus();
+      return;
+    }
+
+    if (event.key === 'End') {
+      buttons[buttons.length - 1]?.focus();
+      return;
+    }
+
+    const direction = event.key === 'ArrowDown' ? 1 : -1;
+    const nextIndex = (currentIndex + direction + buttons.length) % buttons.length;
+    buttons[nextIndex]?.focus();
+  };
+
   return (
-    <aside style={styles.toolbar} role="toolbar" aria-label="Drawing tools">
+    <aside
+      style={styles.toolbar}
+      role="toolbar"
+      aria-label="Drawing tools"
+      aria-orientation="vertical"
+      onKeyDown={handleToolbarKeyDown}
+    >
       {toolGroups.map((group, groupIndex) => (
         <React.Fragment key={group.label}>
           {groupIndex > 0 && <div style={styles.divider} />}

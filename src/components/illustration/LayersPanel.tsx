@@ -9,6 +9,7 @@
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import {
   useLayerStore,
   useLayers,
@@ -411,7 +412,20 @@ export const LayersPanel: React.FC = () => {
     endDrag,
     setDropTarget,
     reorderLayers,
-  } = useLayerStore();
+  } = useLayerStore(
+    useShallow((state) => ({
+      setActiveLayer: state.setActiveLayer,
+      toggleLayerVisibility: state.toggleLayerVisibility,
+      toggleLayerLock: state.toggleLayerLock,
+      renameLayer: state.renameLayer,
+      removeLayer: state.removeLayer,
+      addLayer: state.addLayer,
+      startDrag: state.startDrag,
+      endDrag: state.endDrag,
+      setDropTarget: state.setDropTarget,
+      reorderLayers: state.reorderLayers,
+    }))
+  );
 
   // Add new layer handler
   const handleAddLayer = useCallback(() => {

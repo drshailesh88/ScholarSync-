@@ -217,6 +217,7 @@ function ToolButton({ tool: _tool, icon, label, shortcut, isActive, onClick }: T
 
   return (
     <button
+      type="button"
       style={{
         ...styles.toolButton,
         ...(isActive ? styles.toolButtonActive : {}),
@@ -228,6 +229,7 @@ function ToolButton({ tool: _tool, icon, label, shortcut, isActive, onClick }: T
       title={`${label}${shortcut ? ` (${shortcut})` : ''}`}
       aria-label={label}
       aria-pressed={isActive}
+      data-tool-label={label}
     >
       {icon}
       {isHovered && (
@@ -283,6 +285,41 @@ export function IllustratorToolbar({
     onHandDrawnToggle?.(!handDrawnEnabled);
   }, [handDrawnEnabled, onHandDrawnToggle]);
 
+  const handleToolbarKeyDown = useCallback((event: React.KeyboardEvent<HTMLDivElement>) => {
+    const supportedKeys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+    if (!supportedKeys.includes(event.key)) {
+      return;
+    }
+
+    const buttons = Array.from(
+      event.currentTarget.querySelectorAll<HTMLButtonElement>('button:not(:disabled)')
+    );
+    if (buttons.length === 0) {
+      return;
+    }
+
+    const currentIndex = buttons.findIndex((button) => button === document.activeElement);
+    if (currentIndex === -1) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (event.key === 'Home') {
+      buttons[0]?.focus();
+      return;
+    }
+
+    if (event.key === 'End') {
+      buttons[buttons.length - 1]?.focus();
+      return;
+    }
+
+    const direction = event.key === 'ArrowRight' ? 1 : -1;
+    const nextIndex = (currentIndex + direction + buttons.length) % buttons.length;
+    buttons[nextIndex]?.focus();
+  }, []);
+
   // Group tools
   const selectionTools = toolConfig.filter(t => t.group === 'selection');
   const drawTools = toolConfig.filter(t => t.group === 'draw');
@@ -290,7 +327,13 @@ export function IllustratorToolbar({
   const textTools = toolConfig.filter(t => t.group === 'text');
 
   return (
-    <div style={styles.toolbar} role="toolbar" aria-label="Illustration tools">
+    <div
+      style={styles.toolbar}
+      role="toolbar"
+      aria-label="Illustration tools"
+      aria-orientation="horizontal"
+      onKeyDown={handleToolbarKeyDown}
+    >
       {/* Selection tools */}
       <div style={styles.toolGroup}>
         {selectionTools.map(tool => (
@@ -366,6 +409,7 @@ export function IllustratorToolbar({
         onClick={onOpenFigurePanelGenerator}
         title="Generate multi-panel figure layout"
         type="button"
+        aria-label="Figure panels"
       >
         <FigurePanelIcon />
         <span>Figure Panels</span>
@@ -383,6 +427,8 @@ export function IllustratorToolbar({
         onMouseLeave={() => setToggleHovered(false)}
         title="Toggle hand-drawn style (applies Rough.js sketchy effect)"
         aria-pressed={handDrawnEnabled}
+        type="button"
+        aria-label="Sketchy mode"
       >
         <SketchyIcon />
         <span>Sketchy</span>
