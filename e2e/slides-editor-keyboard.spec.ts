@@ -7,10 +7,10 @@ async function setupSlidesEditor(page: Page, title: string) {
   await navigateTo(page, "/slides/new");
 
   await page.getByPlaceholder(/machine learning/i).fill(title);
-  await page.getByRole("button", { name: /next/i }).click();
+  await page.getByRole("button", { name: "Next" }).first().click();
 
   await page.getByText("General", { exact: true }).first().click();
-  await page.getByRole("button", { name: /next/i }).click();
+  await page.getByRole("button", { name: "Next" }).first().click();
 
   await page.getByRole("button", { name: /create presentation/i }).click();
   await page.waitForURL(/\/slides\/\d+/, { timeout: 15000 });
