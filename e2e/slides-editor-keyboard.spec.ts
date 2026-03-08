@@ -347,14 +347,16 @@ test.describe("Block Navigation", () => {
     await setupSlidesEditor(page, "Tab Block Navigation Test");
 
     // The slide should have at least a title block
-    // Click on a block to select it
-    const block = page
-      .locator("[contenteditable='true']")
-      .or(page.locator("[data-block-type]"))
-      .first();
+    // Click on a block to select it — use a generous timeout since CI may be slow
+    const block = page.locator("[contenteditable='true']").first();
+    const blockAlt = page.locator("[data-block-type]").first();
 
-    if (await block.isVisible({ timeout: 5000 }).catch(() => false)) {
-      await block.click();
+    const blockVisible = await block.isVisible({ timeout: 5000 }).catch(() => false);
+    const blockAltVisible = !blockVisible && await blockAlt.isVisible({ timeout: 3000 }).catch(() => false);
+    const target = blockVisible ? block : blockAltVisible ? blockAlt : null;
+
+    if (target) {
+      await target.click();
       await page.waitForTimeout(300);
 
       // Press Escape to ensure we're in selection mode (not editing)
@@ -362,7 +364,7 @@ test.describe("Block Navigation", () => {
       await page.waitForTimeout(200);
 
       // Re-click to be in selected mode
-      await block.click();
+      await target.click();
       await page.waitForTimeout(200);
 
       // Tab should move selection to the next block
