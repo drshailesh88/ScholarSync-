@@ -236,7 +236,7 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
     switch (tool) {
       case 'select': return ToolType.SELECT;
       case 'pen': return ToolType.PEN;
-      case 'brush': return ToolType.PENCIL;
+      case 'brush': return ToolType.BRUSH;
       case 'rectangle': return ToolType.RECTANGLE;
       case 'ellipse': return ToolType.ELLIPSE;
       case 'line': return ToolType.LINE;
@@ -255,6 +255,10 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   const handleHandDrawnToggle = useCallback((enabled: boolean) => {
     setHandDrawnEnabled(enabled);
     setHandDrawnSettings(prev => ({ ...prev, enabled }));
+    // Sync rough.js enabled state to canvas ref
+    if (canvasRef.current) {
+      canvasRef.current.setRoughEnabled(enabled);
+    }
   }, []);
 
   // Handle opening export dialog
@@ -538,12 +542,6 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
   // Load Diagram by ID
   // ========================================================================
 
-  useEffect(() => {
-    if (id) {
-      loadDiagram(id);
-    }
-  }, [id]);
-
   const loadDiagram = useCallback(async (diagramId: string) => {
     setLoading(true);
 
@@ -579,6 +577,12 @@ export function EditorMode({ id }: EditorModeProps): JSX.Element {
       setLoading(false);
     }
   }, [setLoading, showToast]);
+
+  useEffect(() => {
+    if (id) {
+      loadDiagram(id);
+    }
+  }, [id, loadDiagram]);
 
   // ========================================================================
   // Canvas Resize Handler

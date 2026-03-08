@@ -37,6 +37,20 @@ import {
 import { EraserTool } from '@/lib/illustration/editor/tools/EraserTool';
 import { ScissorsTool } from '@/lib/illustration/editor/tools/ScissorsTool';
 import { MeasureTool, type Measurement } from '@/lib/illustration/editor/tools/MeasureTool';
+import {
+  createFreehandState,
+  addPoint,
+  generatePreviewPath,
+  finalizeFreehandStroke,
+  resetFreehandState,
+  defaultFreehandSettings,
+  type FreehandSettings,
+} from '@/lib/illustration/canvas/freehand-canvas';
+import {
+  convertObjectToRough,
+  defaultRoughSettings,
+  type RoughCanvasSettings,
+} from '@/lib/illustration/canvas/rough-canvas';
 // Note: Canvas.css was removed - using inline styles instead
 
 // ============================================================================
@@ -81,6 +95,20 @@ export interface CanvasRef {
   removeObject: (object: FabricObject) => void;
   /** Get the connector manager instance */
   getConnectorManager: () => ConnectorManager | null;
+  /** Update freehand brush settings */
+  setFreehandSettings: (settings: Partial<FreehandSettings>) => void;
+  /** Get current freehand brush settings */
+  getFreehandSettings: () => FreehandSettings;
+  /** Set rough.js hand-drawn style enabled */
+  setRoughEnabled: (enabled: boolean) => void;
+  /** Get rough.js enabled state */
+  getRoughEnabled: () => boolean;
+  /** Update rough.js settings */
+  setRoughSettings: (settings: Partial<RoughCanvasSettings>) => void;
+  /** Get current rough.js settings */
+  getRoughSettings: () => RoughCanvasSettings;
+  /** Apply rough.js hand-drawn style to selected objects */
+  applyRoughToSelected: () => void;
 }
 
 // ============================================================================
@@ -200,6 +228,10 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
     const scissorsToolRef = useRef(new ScissorsTool({ hitThreshold: 8 }));
     const measureToolRef = useRef(new MeasureTool());
     const eraserObjectCountAtDownRef = useRef<number | null>(null);
+    const freehandStateRef = useRef(createFreehandState());
+    const freehandSettingsRef = useRef<FreehandSettings>({ ...defaultFreehandSettings });
+    const roughEnabledRef = useRef(false);
+    const roughSettingsRef = useRef<RoughCanvasSettings>({ ...defaultRoughSettings });
 
     // Pen tool state
     const [penToolActive, setPenToolActive] = useState(false);
@@ -529,6 +561,17 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         });
         setPenToolActive(false);
         setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+      } else if (activeTool === ToolType.BRUSH) {
+        canvas.selection = false;
+        canvas.defaultCursor = 'crosshair';
+        canvas.hoverCursor = 'crosshair';
+        canvas.forEachObject((obj) => {
+          obj.selectable = false;
+          obj.evented = false;
+        });
+        setPenToolActive(false);
+        setEyedropperPreview((prev) => ({ ...prev, visible: false }));
+        resetFreehandState(freehandStateRef.current);
       } else {
         // Drawing tools (shapes)
         canvas.selection = false;
@@ -678,6 +721,17 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           previousSelectionRef.current = null;
           setEyedropperPreview((prev) => ({ ...prev, visible: false, color: sampledColor }));
           setActiveTool(ToolType.SELECT);
+          return;
+        }
+
+        // Handle brush/freehand tool
+        if (activeTool === ToolType.BRUSH) {
+          setCanvasDrawingFlag(true);
+          const fhState = freehandStateRef.current;
+          fhState.isDrawing = true;
+          fhState.points = [];
+          const pressure = 'pressure' in e.e ? (e.e as PointerEvent).pressure || 0.5 : 0.5;
+          addPoint(fhState, pointer.x, pointer.y, pressure);
           return;
         }
 
@@ -863,6 +917,25 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           return;
         }
 
+        // Handle brush/freehand drawing
+        if (activeTool === ToolType.BRUSH && freehandStateRef.current.isDrawing) {
+          const fhState = freehandStateRef.current;
+          const pressure = 'pressure' in e.e ? (e.e as PointerEvent).pressure || 0.5 : 0.5;
+          addPoint(fhState, pointer.x, pointer.y, pressure);
+
+          // Update preview
+          if (fhState.previewPath) {
+            canvas.remove(fhState.previewPath);
+          }
+          const preview = generatePreviewPath(fhState, freehandSettingsRef.current);
+          if (preview) {
+            fhState.previewPath = preview;
+            canvas.add(preview);
+            canvas.renderAll();
+          }
+          return;
+        }
+
         if (!state.isDrawing) return;
 
         // Handle connector tool - update temp line
@@ -991,6 +1064,23 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
         return;
       }
 
+      // Finalize freehand drawing
+      if (activeTool === ToolType.BRUSH) {
+        const fhState = freehandStateRef.current;
+        if (fhState.previewPath) {
+          canvas.remove(fhState.previewPath);
+        }
+        const finalPath = finalizeFreehandStroke(fhState, freehandSettingsRef.current);
+        if (finalPath) {
+          canvas.add(finalPath);
+          canvas.setActiveObject(finalPath);
+          canvas.renderAll();
+          pushHistory(serializeCanvasState(canvas));
+        }
+        setCanvasDrawingFlag(false);
+        return;
+      }
+
       // Finalize connector drawing
       if (activeTool === ToolType.CONNECTOR && state.isDrawing && state.connectorSource) {
         // Remove temp line
@@ -1044,6 +1134,26 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
 
       // Finalize drawing
       if (state.isDrawing && state.tempObject) {
+        // Check if rough.js style should be applied to drawn shapes
+        if (
+          roughEnabledRef.current &&
+          (activeTool === ToolType.RECTANGLE ||
+            activeTool === ToolType.ELLIPSE ||
+            activeTool === ToolType.LINE)
+        ) {
+          const roughPath = convertObjectToRough(state.tempObject, roughSettingsRef.current);
+          if (roughPath) {
+            canvas.remove(state.tempObject);
+            canvas.add(roughPath);
+            canvas.setActiveObject(roughPath);
+            canvas.renderAll();
+            pushHistory(serializeCanvasState(canvas));
+            setCanvasDrawingFlag(false);
+            state.tempObject = null;
+            return;
+          }
+        }
+
         state.tempObject.set({
           selectable: true,
           evented: true,
@@ -1348,8 +1458,37 @@ export const Canvas = forwardRef<CanvasRef, CanvasProps>(
           }
         },
         getConnectorManager: () => connectorManagerRef.current,
+        setFreehandSettings: (settings: Partial<FreehandSettings>) => {
+          freehandSettingsRef.current = { ...freehandSettingsRef.current, ...settings };
+        },
+        getFreehandSettings: () => ({ ...freehandSettingsRef.current }),
+        setRoughEnabled: (enabled: boolean) => {
+          roughEnabledRef.current = enabled;
+        },
+        getRoughEnabled: () => roughEnabledRef.current,
+        setRoughSettings: (settings: Partial<RoughCanvasSettings>) => {
+          roughSettingsRef.current = { ...roughSettingsRef.current, ...settings };
+        },
+        getRoughSettings: () => ({ ...roughSettingsRef.current }),
+        applyRoughToSelected: () => {
+          const canvas = fabricRef.current;
+          if (!canvas) return;
+          const activeObjects = getSelectionTargets(canvas.getActiveObject() as FabricObject | null);
+          if (activeObjects.length === 0) return;
+
+          canvas.discardActiveObject();
+          activeObjects.forEach((obj) => {
+            const roughPath = convertObjectToRough(obj, roughSettingsRef.current);
+            if (roughPath) {
+              canvas.remove(obj);
+              canvas.add(roughPath);
+            }
+          });
+          canvas.renderAll();
+          pushHistory(serializeCanvasState(canvas));
+        },
       }),
-      [backgroundColor]
+      [backgroundColor, pushHistory, serializeCanvasState]
     );
 
     // ========================================================================
