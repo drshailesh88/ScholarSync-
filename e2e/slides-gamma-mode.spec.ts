@@ -16,11 +16,11 @@ async function createNewDeck(
   if (description) {
     await page.getByPlaceholder(/describe your topic/i).fill(description);
   }
-  await page.getByRole("button", { name: /next/i }).click();
+  await page.getByRole("button", { name: "Next" }).first().click();
 
   // Step 2: Audience — pick "General"
   await page.getByText("General", { exact: true }).first().click();
-  await page.getByRole("button", { name: /next/i }).click();
+  await page.getByRole("button", { name: "Next" }).first().click();
 
   // Step 3: Theme — pick default (Modern), click Create
   await page.getByRole("button", { name: /create presentation/i }).click();

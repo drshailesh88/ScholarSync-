@@ -8,11 +8,11 @@ async function setupSlidesEditor(page: Page, title: string) {
 
   // Step 1: Topic
   await page.getByPlaceholder(/machine learning/i).fill(title);
-  await page.getByRole("button", { name: /next/i }).click();
+  await page.getByRole("button", { name: "Next" }).first().click();
 
   // Step 2: Audience
   await page.getByText("General", { exact: true }).first().click();
-  await page.getByRole("button", { name: /next/i }).click();
+  await page.getByRole("button", { name: "Next" }).first().click();
 
   // Step 3: Theme — click Create
   await page.getByRole("button", { name: /create presentation/i }).click();
