@@ -1,6 +1,7 @@
 export { default as EffectsPanel } from './EffectsPanel';
 export { default } from './EffectsPanel';
 export {
+  applyBlendMode,
   applyDropShadowToObject,
   applyObjectOpacity,
   applyVectorBlurToObject,
@@ -17,3 +18,4 @@ export {
   type EffectsPanelProps,
   type EffectsState,
 } from './EffectsPanel';
+export { default as BlendModeSelect, BLEND_MODES, DEFAULT_BLEND_MODE, type BlendModeValue } from './BlendModeSelect';

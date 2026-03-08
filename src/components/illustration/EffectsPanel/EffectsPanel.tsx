@@ -1,8 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FabricObject, Shadow } from 'fabric';
 import ShadowControls from './ShadowControls';
+import BlendModeSelect, { DEFAULT_BLEND_MODE, type BlendModeValue } from './BlendModeSelect';
 
 export interface DropShadowSettings {
   color: string;
@@ -20,12 +21,14 @@ export interface EffectsState {
   blurEnabled: boolean;
   blurAmount: number;
   opacityPercent: number;
+  blendMode: BlendModeValue;
 }
 
 export interface EffectObjectLike {
   shadow?: unknown;
   fill?: unknown;
   opacity?: number;
+  globalCompositeOperation?: string;
   set: (keyOrValues: string | Record<string, unknown>, value?: unknown) => unknown;
   setCoords?: () => void;
 }
@@ -149,6 +152,10 @@ export function applyObjectOpacity(object: EffectObjectLike, opacityPercent: num
   object.set({ opacity: clamp(opacityPercent, 0, 100) / 100 });
 }
 
+export function applyBlendMode(object: EffectObjectLike, mode: BlendModeValue): void {
+  object.set({ globalCompositeOperation: mode });
+}
+
 function getShadowInstance(shadowValue: unknown): Shadow | null {
   if (!shadowValue) {
     return null;
@@ -169,12 +176,20 @@ function normalizeColorSignature(color: string): string {
   return color.replace(/\s+/g, '').toLowerCase();
 }
 
+function readBlendMode(object: EffectObjectLike | null): BlendModeValue {
+  if (!object || !object.globalCompositeOperation) {
+    return DEFAULT_BLEND_MODE;
+  }
+  return object.globalCompositeOperation as BlendModeValue;
+}
+
 export function readEffectsStateFromObject(object: EffectObjectLike | null): EffectsState {
   const opacityPercent = clamp(
     Math.round(toNumber(object?.opacity, 1) * 100),
     0,
     100
   );
+  const blendMode = readBlendMode(object);
 
   if (!object) {
     return {
@@ -186,6 +201,7 @@ export function readEffectsStateFromObject(object: EffectObjectLike | null): Eff
       blurEnabled: false,
       blurAmount: DEFAULT_BLUR_AMOUNT,
       opacityPercent,
+      blendMode,
     };
   }
 
@@ -201,6 +217,7 @@ export function readEffectsStateFromObject(object: EffectObjectLike | null): Eff
       blurEnabled: false,
       blurAmount: DEFAULT_BLUR_AMOUNT,
       opacityPercent,
+      blendMode,
     };
   }
 
@@ -223,6 +240,7 @@ export function readEffectsStateFromObject(object: EffectObjectLike | null): Eff
     blurEnabled: isVectorBlur,
     blurAmount: isVectorBlur ? clamp(blur, 0, 20) : DEFAULT_BLUR_AMOUNT,
     opacityPercent,
+    blendMode,
   };
 }
 
@@ -325,6 +343,7 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
   const [blurEnabled, setBlurEnabled] = useState(false);
   const [blurAmount, setBlurAmount] = useState(DEFAULT_BLUR_AMOUNT);
   const [opacityPercent, setOpacityPercent] = useState(DEFAULT_OPACITY_PERCENT);
+  const [blendMode, setBlendMode] = useState<BlendModeValue>(DEFAULT_BLEND_MODE);
 
   const currentShadowSettings = useMemo<DropShadowSettings>(
     () => ({
@@ -348,6 +367,7 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
     setBlurEnabled(nextState.blurEnabled);
     setBlurAmount(nextState.blurAmount);
     setOpacityPercent(nextState.opacityPercent);
+    setBlendMode(nextState.blendMode);
   }, [activeObject]);
 
   const commitToSelection = useCallback(
@@ -493,6 +513,14 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
     [commitToSelection]
   );
 
+  const handleBlendModeChange = useCallback(
+    (nextMode: BlendModeValue) => {
+      setBlendMode(nextMode);
+      commitToSelection((object) => applyBlendMode(object, nextMode));
+    },
+    [commitToSelection]
+  );
+
   if (!activeObject) {
     return null;
   }
@@ -585,6 +613,8 @@ export default function EffectsPanel({ selectedObjects, canvas }: EffectsPanelPr
           />
         </div>
       </div>
+
+      <BlendModeSelect value={blendMode} onChange={handleBlendModeChange} />
     </div>
   );
 }

@@ -2,16 +2,19 @@ import { Shadow } from 'fabric';
 import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_DROP_SHADOW_SETTINGS,
+  applyBlendMode,
   applyDropShadowToObject,
   applyObjectOpacity,
   readEffectsStateFromObject,
   type EffectObjectLike,
 } from '@/components/illustration/EffectsPanel';
+import { DEFAULT_BLEND_MODE } from '@/components/illustration/EffectsPanel/BlendModeSelect';
 
 class MockEffectObject implements EffectObjectLike {
   shadow: unknown = null;
   fill: unknown = '#22aa66';
   opacity = 1;
+  globalCompositeOperation?: string = undefined;
 
   set(keyOrValues: string | Record<string, unknown>, value?: unknown) {
     if (typeof keyOrValues === 'string') {
@@ -91,5 +94,49 @@ describe('Effects panel helpers', () => {
     applyObjectOpacity(object, 50);
 
     expect(object.opacity).toBe(0.5);
+  });
+
+  it('Blend mode "multiply" sets globalCompositeOperation to "multiply"', () => {
+    const object = new MockEffectObject();
+
+    applyBlendMode(object, 'multiply');
+
+    expect(object.globalCompositeOperation).toBe('multiply');
+  });
+
+  it('Default blend mode is "source-over"', () => {
+    expect(DEFAULT_BLEND_MODE).toBe('source-over');
+
+    const object = new MockEffectObject();
+    const state = readEffectsStateFromObject(object);
+
+    expect(state.blendMode).toBe('source-over');
+  });
+
+  it('Shadow with offset 10,10 and color black renders correctly', () => {
+    const object = new MockEffectObject();
+
+    applyDropShadowToObject(object, true, {
+      color: 'rgba(0,0,0,1)',
+      blur: 10,
+      offsetX: 10,
+      offsetY: 10,
+    });
+
+    const shadow = object.shadow as Shadow;
+    expect(shadow).toBeInstanceOf(Shadow);
+    expect(shadow.color).toBe('rgba(0,0,0,1)');
+    expect(shadow.offsetX).toBe(10);
+    expect(shadow.offsetY).toBe(10);
+    expect(shadow.blur).toBe(10);
+  });
+
+  it('Reading existing blend mode from object populates state correctly', () => {
+    const object = new MockEffectObject();
+    object.globalCompositeOperation = 'screen';
+
+    const state = readEffectsStateFromObject(object);
+
+    expect(state.blendMode).toBe('screen');
   });
 });
