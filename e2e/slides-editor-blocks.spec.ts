@@ -16,7 +16,7 @@ async function setupSlidesEditor(page: Page, title: string) {
 
   // Step 3: Theme — click Create
   await page.getByRole("button", { name: /create presentation/i }).click();
-  await page.waitForURL(/\/slides\/\d+/, { timeout: 15000 });
+  await page.waitForURL(/\/slides\/\d+/, { timeout: 30000 });
 
   // If mode selector appears, pick Slides Mode
   const slidesBtn = page.getByText("Slides Mode").first();

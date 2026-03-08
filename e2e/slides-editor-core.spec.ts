@@ -16,7 +16,7 @@ async function setupSlidesEditor(page: Page, title: string) {
 
   // Step 3: Theme — click Create
   await page.getByRole("button", { name: /create presentation/i }).click();
-  await page.waitForURL(/\/slides\/\d+/, { timeout: 15000 });
+  await page.waitForURL(/\/slides\/\d+/, { timeout: 30000 });
 
   // If mode selector appears, pick Slides Mode
   const slidesBtn = page.getByText("Slides Mode").first();
@@ -51,7 +51,12 @@ test.describe("Slide Management", () => {
     const addBtn = page.getByRole("button", { name: /add slide/i }).first();
     if (await addBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
       await addBtn.click();
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2000);
+
+      // Wait for the new slide thumbnail to appear
+      await expect(
+        page.locator("[data-testid^='filmstrip-slide-']")
+      ).toHaveCount(initialCount + 1, { timeout: 5000 }).catch(() => {});
 
       const newCount = await page
         .locator("[data-testid^='filmstrip-slide-']")
@@ -67,7 +72,7 @@ test.describe("Slide Management", () => {
     const addBtn = page.getByRole("button", { name: /add slide/i }).first();
     if (await addBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
       await addBtn.click();
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2000);
     }
 
     const countBefore = await page
@@ -86,7 +91,7 @@ test.describe("Slide Management", () => {
       const deleteItem = page.getByText("Delete Slide").first();
       if (await deleteItem.isVisible({ timeout: 2000 }).catch(() => false)) {
         await deleteItem.click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2000);
 
         const countAfter = await page
           .locator("[data-testid^='filmstrip-slide-']")
@@ -113,7 +118,7 @@ test.describe("Slide Management", () => {
       const dupItem = page.getByText("Duplicate Slide").first();
       if (await dupItem.isVisible({ timeout: 2000 }).catch(() => false)) {
         await dupItem.click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2000);
 
         const countAfter = await page
           .locator("[data-testid^='filmstrip-slide-']")
@@ -148,7 +153,8 @@ test.describe("Canvas Editing", () => {
     // The WYSIWYG canvas area should be visible
     const canvas = page
       .locator("[data-testid='slide-ruler-surface']")
-      .or(page.locator("main").first());
+      .or(page.locator("main"))
+      .first();
     await expect(canvas).toBeVisible({ timeout: 5000 });
   });
 

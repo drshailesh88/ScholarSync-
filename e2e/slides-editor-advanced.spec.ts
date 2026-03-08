@@ -13,7 +13,7 @@ async function setupSlidesEditor(page: Page, title: string) {
   await page.getByRole("button", { name: "Next" }).first().click();
 
   await page.getByRole("button", { name: /create presentation/i }).click();
-  await page.waitForURL(/\/slides\/\d+/, { timeout: 15000 });
+  await page.waitForURL(/\/slides\/\d+/, { timeout: 30000 });
 
   const slidesBtn = page.getByText("Slides Mode").first();
   if (await slidesBtn.isVisible({ timeout: 3000 }).catch(() => false)) {

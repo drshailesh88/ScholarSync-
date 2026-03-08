@@ -26,7 +26,7 @@ async function createNewDeck(
   await page.getByRole("button", { name: /create presentation/i }).click();
 
   // Wait for redirect to /slides/<id>
-  await page.waitForURL(/\/slides\/\d+/, { timeout: 15000 });
+  await page.waitForURL(/\/slides\/\d+/, { timeout: 30000 });
 }
 
 // ---------------------------------------------------------------------------

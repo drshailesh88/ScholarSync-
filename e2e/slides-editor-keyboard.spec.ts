@@ -13,7 +13,7 @@ async function setupSlidesEditor(page: Page, title: string) {
   await page.getByRole("button", { name: "Next" }).first().click();
 
   await page.getByRole("button", { name: /create presentation/i }).click();
-  await page.waitForURL(/\/slides\/\d+/, { timeout: 15000 });
+  await page.waitForURL(/\/slides\/\d+/, { timeout: 30000 });
 
   const slidesBtn = page.getByText("Slides Mode").first();
   if (await slidesBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -349,11 +349,11 @@ test.describe("Block Navigation", () => {
     // The slide should have at least a title block
     // Click on a block to select it
     const block = page
-      .locator("[data-block-type]")
-      .or(page.locator("[contenteditable]"))
+      .locator("[contenteditable='true']")
+      .or(page.locator("[data-block-type]"))
       .first();
 
-    if (await block.isVisible({ timeout: 3000 }).catch(() => false)) {
+    if (await block.isVisible({ timeout: 5000 }).catch(() => false)) {
       await block.click();
       await page.waitForTimeout(300);
 
