@@ -195,7 +195,7 @@ export function AnalyticsPanel({ deckId, onClose }: AnalyticsPanelProps) {
                         width={56}
                       />
                       <Tooltip
-                        formatter={(value: number | string | undefined) => [`${value ?? 0}s`, "Avg Time"]}
+                        formatter={(value) => [`${value ?? 0}s`, "Avg Time"]}
                         contentStyle={{
                           background: "var(--surface)",
                           border: "1px solid var(--border)",
