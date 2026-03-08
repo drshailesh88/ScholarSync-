@@ -18,6 +18,10 @@ import {
   makeClippingMask as applyClippingMask,
   releaseClippingMask as releaseClippingMaskOperation,
 } from '@/lib/illustration/canvas/clipping-mask';
+import {
+  makeCompoundPath as applyCompoundPath,
+  releaseCompoundPath as releaseCompoundPathOperation,
+} from '@/lib/illustration/canvas/compound-path';
 
 // ============================================================================
 // Types
@@ -93,6 +97,12 @@ export interface CanvasContextValue {
 
   /** Release clipping mask from selected clipped group */
   releaseClippingMask: () => Promise<boolean>;
+
+  /** Create a compound path from selected paths */
+  makeCompoundPath: () => boolean;
+
+  /** Release compound path back to individual paths */
+  releaseCompoundPath: () => boolean;
 
   /** Bring selected object to front */
   bringToFront: () => void;
@@ -409,6 +419,37 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
     return true;
   }, [canvas]);
 
+  // Make compound path
+  const makeCompoundPath = useCallback(() => {
+    if (!canvas) return false;
+
+    const result = applyCompoundPath(canvas);
+    if (!result.success || !result.compoundPath) {
+      return false;
+    }
+
+    canvas.requestRenderAll();
+    canvas.fire('object:modified', { target: result.compoundPath });
+    return true;
+  }, [canvas]);
+
+  // Release compound path
+  const releaseCompoundPath = useCallback(() => {
+    if (!canvas) return false;
+
+    const result = releaseCompoundPathOperation(canvas);
+    if (!result.success) {
+      return false;
+    }
+
+    canvas.requestRenderAll();
+    const historyTarget = result.releasedPaths?.[0];
+    if (historyTarget) {
+      canvas.fire('object:modified', { target: historyTarget });
+    }
+    return true;
+  }, [canvas]);
+
   // Bring to front
   const bringToFront = useCallback(() => {
     if (!canvas) return;
@@ -537,6 +578,8 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
       ungroupSelected,
       makeClippingMask,
       releaseClippingMask,
+      makeCompoundPath,
+      releaseCompoundPath,
       bringToFront,
       sendToBack,
       bringForward,
@@ -568,6 +611,8 @@ export function CanvasProvider({ children }: CanvasProviderProps) {
       ungroupSelected,
       makeClippingMask,
       releaseClippingMask,
+      makeCompoundPath,
+      releaseCompoundPath,
       bringToFront,
       sendToBack,
       bringForward,

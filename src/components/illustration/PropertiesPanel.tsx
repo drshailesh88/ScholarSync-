@@ -46,6 +46,7 @@ import {
   type PathfinderOperation,
 } from '@/lib/illustration/canvas/boolean-operations';
 import { isClippingMaskGroup } from '@/lib/illustration/canvas/clipping-mask';
+import { isCompoundPath } from '@/lib/illustration/canvas/compound-path';
 import {
   createFabricGradient,
   createDefaultGradientState,
@@ -1636,12 +1637,18 @@ export default function PropertiesPanel({
 
     const isLocked = activeObject.lockMovementX && activeObject.lockMovementY;
     const showClippingMaskIndicator = isClippingMaskGroup(activeObject);
+    const showCompoundPathIndicator = isCompoundPath(activeObject);
 
     return (
       <>
         {showClippingMaskIndicator && (
           <PropertySection title="Clipping">
             <div style={styles.helperText}>Clipping Mask</div>
+          </PropertySection>
+        )}
+        {showCompoundPathIndicator && (
+          <PropertySection title="Compound">
+            <div style={styles.helperText}>Compound Path (Even-Odd Fill)</div>
           </PropertySection>
         )}
         <PropertySection title="Actions">

@@ -5,7 +5,7 @@
  * @module hooks/useKeyboardShortcuts
  */
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback, useMemo, useRef } from 'react';
 import { FabricObject } from 'fabric';
 import { toggleObjectFlip } from '@/components/illustration/PropertiesPanel';
 import { useEditorStore, useHistoryState } from '@/stores/illustration/editorStore';
@@ -14,6 +14,10 @@ import {
   makeClippingMask as applyClippingMask,
   releaseClippingMask as applyReleaseClippingMask,
 } from '@/lib/illustration/canvas/clipping-mask';
+import {
+  makeCompoundPath as applyCompoundPath,
+  releaseCompoundPath as applyReleaseCompoundPath,
+} from '@/lib/illustration/canvas/compound-path';
 
 // ============================================================================
 // Types
@@ -233,6 +237,29 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
         canvas.fire('object:modified', { target: historyTarget });
       }
     })();
+  }, [canvas]);
+
+  const makeCompoundPathAction = useCallback(() => {
+    if (!canvas) return;
+
+    const result = applyCompoundPath(canvas);
+    if (!result.success || !result.compoundPath) return;
+
+    canvas.requestRenderAll();
+    canvas.fire('object:modified', { target: result.compoundPath });
+  }, [canvas]);
+
+  const releaseCompoundPathAction = useCallback(() => {
+    if (!canvas) return;
+
+    const result = applyReleaseCompoundPath(canvas);
+    if (!result.success) return;
+
+    const historyTarget = result.releasedPaths?.[0];
+    canvas.requestRenderAll();
+    if (historyTarget) {
+      canvas.fire('object:modified', { target: historyTarget });
+    }
   }, [canvas]);
 
   const flipHorizontal = useCallback(() => {
@@ -667,6 +694,23 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
       preventDefault: true,
     },
     {
+      key: '8',
+      ctrlOrCmd: true,
+      handler: makeCompoundPathAction,
+      description: 'Make Compound Path',
+      category: 'object',
+      preventDefault: true,
+    },
+    {
+      key: '8',
+      ctrlOrCmd: true,
+      alt: true,
+      handler: releaseCompoundPathAction,
+      description: 'Release Compound Path',
+      category: 'object',
+      preventDefault: true,
+    },
+    {
       key: 'h',
       shift: true,
       handler: flipHorizontal,
@@ -691,7 +735,8 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
   ];
 
   // Combine default and custom shortcuts
-  const allShortcuts = [...defaultShortcuts, ...customShortcuts];
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const allShortcuts = useMemo(() => [...defaultShortcuts, ...customShortcuts], [customShortcuts]);
 
   // ========================================================================
   // Key Down Handler
@@ -798,6 +843,7 @@ export function useKeyboardShortcuts(options: UseKeyboardShortcutsOptions = {}) 
     /** Whether shortcuts are currently enabled */
     enabled,
     /** Whether space key is currently pressed */
+     
     isSpacePressed: spaceRef.current,
   };
 }
