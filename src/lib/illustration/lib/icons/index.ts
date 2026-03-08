@@ -466,6 +466,14 @@ export {
 } from './generateIcon';
 
 export {
+  // Fuzzy Search exports
+  levenshteinDistance,
+  fuzzyMatchScore,
+  isFuzzyMatch,
+  fuzzySearch,
+} from './fuzzy-search';
+
+export {
   // Icon Storage exports
   addToFavorites,
   removeFromFavorites,
@@ -504,6 +512,7 @@ import { searchBioicons, bioiconsList } from './bioicons';
 import { searchBioiconsMetadata, bioiconsMetadata, getBioiconsUrl } from './bioicons-data';
 import { searchSciDrawIcons, scidrawIcons } from './scidraw';
 import { expandWithSynonyms } from '@/lib/illustration/data/icon-synonyms';
+import { isFuzzyMatch } from './fuzzy-search';
 
 /**
  * Unified icon result from any library
@@ -514,7 +523,7 @@ export interface UnifiedIconResult {
   category: string;
   keywords: string[];
   library: 'tabler' | 'health' | 'science' | 'iconpark' | 'simple' | 'bioicons' | 'bioicons-full' | 'scidraw';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   component?: React.ComponentType<any>;
   slug?: string; // For simple-icons
   hex?: string;  // For simple-icons brand color
@@ -707,6 +716,19 @@ export function searchAllIcons(query: string): UnifiedIconResult[] {
             score += 3;
             break; // Only count once per keyword
           }
+        }
+      }
+    }
+
+    // Fuzzy matching: if no direct/synonym match, check Levenshtein distance
+    if (score === 0 && normalizedQuery.length >= 3) {
+      if (isFuzzyMatch(normalizedQuery, nameLower)) {
+        score += 5;
+      }
+      for (const keyword of keywordsLower) {
+        if (isFuzzyMatch(normalizedQuery, keyword)) {
+          score += 2;
+          break;
         }
       }
     }

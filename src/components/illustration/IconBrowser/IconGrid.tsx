@@ -74,6 +74,8 @@ const IconCard: React.FC<IconCardProps> = ({
   showTooltip,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [hoverPos, setHoverPos] = useState<{ x: number; y: number } | null>(null);
+  const cardRef = React.useRef<HTMLButtonElement>(null);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -90,6 +92,19 @@ const IconCard: React.FC<IconCardProps> = ({
     },
     [onDoubleClick]
   );
+
+  const handleMouseEnter = useCallback(() => {
+    setIsHovered(true);
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setHoverPos({ x: rect.right + 8, y: rect.top });
+    }
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+    setHoverPos(null);
+  }, []);
 
   const cardStyle: React.CSSProperties = useMemo(
     () => ({
@@ -126,34 +141,55 @@ const IconCard: React.FC<IconCardProps> = ({
   }, [showTooltip, icon]);
 
   return (
-    <button
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={cardStyle}
-      title={tooltipContent}
-      aria-label={`Icon: ${icon.name}`}
-      type="button"
-    >
-      <div
-        style={iconContainerStyle}
-        dangerouslySetInnerHTML={{ __html: icon.svg }}
-      />
-      {showName && (
-        <span style={styles.iconName} title={icon.name}>
-          {icon.name}
-        </span>
-      )}
-      {isSelected && (
-        <span
-          style={{
-            ...styles.domainIndicator,
-            backgroundColor: domainColors[icon.domain],
-          }}
+    <>
+      <button
+        ref={cardRef}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        style={cardStyle}
+        title={tooltipContent}
+        aria-label={`Icon: ${icon.name}`}
+        type="button"
+      >
+        <div
+          style={iconContainerStyle}
+          dangerouslySetInnerHTML={{ __html: icon.svg }}
         />
+        {showName && (
+          <span style={styles.iconName} title={icon.name}>
+            {icon.name}
+          </span>
+        )}
+        {isSelected && (
+          <span
+            style={{
+              ...styles.domainIndicator,
+              backgroundColor: domainColors[icon.domain],
+            }}
+          />
+        )}
+      </button>
+
+      {/* 128x128 hover preview popup */}
+      {isHovered && hoverPos && (
+        <div
+          style={{
+            ...styles.hoverPreview,
+            left: hoverPos.x,
+            top: hoverPos.y,
+          }}
+        >
+          <div
+            style={styles.hoverPreviewIcon}
+            dangerouslySetInnerHTML={{ __html: icon.svg }}
+          />
+          <span style={styles.hoverPreviewName}>{icon.name}</span>
+          <span style={styles.hoverPreviewCategory}>{icon.category}</span>
+        </div>
       )}
-    </button>
+    </>
   );
 };
 
@@ -353,6 +389,44 @@ const styles: Record<string, React.CSSProperties> = {
     background:
       'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)',
     animation: 'skeleton-pulse 1.5s infinite',
+  },
+  hoverPreview: {
+    position: 'fixed',
+    zIndex: 1000,
+    width: '160px',
+    padding: '12px',
+    background: 'var(--bg-secondary, #111827)',
+    border: '1px solid var(--border-color, #374151)',
+    borderRadius: '8px',
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '6px',
+    pointerEvents: 'none',
+  },
+  hoverPreviewIcon: {
+    width: '128px',
+    height: '128px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'var(--text-secondary, #d1d5db)',
+  },
+  hoverPreviewName: {
+    fontSize: '12px',
+    fontWeight: 600,
+    color: 'var(--text-primary, #f3f4f6)',
+    textAlign: 'center',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    width: '100%',
+  },
+  hoverPreviewCategory: {
+    fontSize: '10px',
+    color: 'var(--text-muted, #9ca3af)',
+    textTransform: 'capitalize',
   },
   emptyState: {
     display: 'flex',

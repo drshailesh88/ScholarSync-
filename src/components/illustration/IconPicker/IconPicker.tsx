@@ -20,21 +20,18 @@ import {
   scienceBrandsList,
   type UnifiedIconResult,
 } from '@/lib/illustration/lib/icons';
+import { fuzzySearch } from '@/lib/illustration/lib/icons/fuzzy-search';
 import {
   generateIconFromQuery,
   isAIGenerationAvailable,
   type GenerationResult,
 } from '@/lib/illustration/lib/icons/generateIcon';
 import {
-  addToFavorites,
-  removeFromFavorites,
   toggleFavorite,
-  isFavorite,
   getFavorites,
   getRecents,
   addToRecents,
   createCollection,
-  addToCollection,
   getCollections,
   type IconCollection,
 } from '@/lib/illustration/lib/icons/iconStorage';
@@ -63,9 +60,6 @@ export interface IconPickerProps {
 // CONSTANTS
 // =============================================================================
 
-const RECENT_ICONS_KEY = 'finnish-recent-icons';
-const MAX_RECENT_ICONS = 20;
-
 const MAIN_CATEGORIES = [
   { id: 'all', name: 'All', color: '#6b7280' },
   { id: 'medical', name: 'Medical', color: '#ef4444' },
@@ -83,28 +77,6 @@ const PERSONAL_CATEGORIES = [
 // =============================================================================
 // HELPER FUNCTIONS
 // =============================================================================
-
-function getRecentIcons(): string[] {
-  try {
-    const stored = localStorage.getItem(RECENT_ICONS_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-}
-
-function addRecentIcon(iconId: string): void {
-  try {
-    const recent = getRecentIcons().filter((id) => id !== iconId);
-    recent.unshift(iconId);
-    localStorage.setItem(
-      RECENT_ICONS_KEY,
-      JSON.stringify(recent.slice(0, MAX_RECENT_ICONS))
-    );
-  } catch {
-    // Ignore localStorage errors
-  }
-}
 
 function getAllIcons(): UnifiedIconResult[] {
   const all: UnifiedIconResult[] = [];
@@ -245,9 +217,28 @@ export const IconPicker: React.FC<IconPickerProps> = ({
 
   // Filter and search icons
   const displayedIcons = useMemo(() => {
-    // Search mode overrides everything
+    // Search mode overrides everything - with fuzzy matching
     if (searchQuery.trim()) {
-      return searchAllIcons(searchQuery);
+      const directResults = searchAllIcons(searchQuery);
+
+      // Also run fuzzy search for typo tolerance
+      const allNames = allIcons.map(i => i.name);
+      const fuzzyMatches = fuzzySearch(searchQuery, allNames, 30);
+      const fuzzyMatchedIcons = fuzzyMatches
+        .filter(m => m.score > 0.3)
+        .map(m => allIcons.find(i => i.name === m.value))
+        .filter((i): i is UnifiedIconResult => i !== undefined);
+
+      // Merge: direct results first, then fuzzy (dedup)
+      const seen = new Set(directResults.map(i => i.id));
+      const merged = [...directResults];
+      for (const icon of fuzzyMatchedIcons) {
+        if (!seen.has(icon.id)) {
+          seen.add(icon.id);
+          merged.push(icon);
+        }
+      }
+      return merged.slice(0, 100);
     }
 
     // Personal categories
@@ -310,7 +301,7 @@ export const IconPicker: React.FC<IconPickerProps> = ({
   }, []);
 
   // Check if a category is a personal category
-  const isPersonalCategory = useMemo(() => {
+  const _isPersonalCategory = useMemo(() => {
     return PERSONAL_CATEGORIES.some((c) => c.id === selectedCategory);
   }, [selectedCategory]);
 
