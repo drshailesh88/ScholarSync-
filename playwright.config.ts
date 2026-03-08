@@ -23,6 +23,8 @@ export default defineConfig({
     command: "npm run dev",
     port: Number(process.env.PORT ?? 5173),
     reuseExistingServer: true,
-    timeout: 5000,
+    timeout: 120_000,
+    stdout: "pipe",
+    stderr: "pipe",
   },
 });
