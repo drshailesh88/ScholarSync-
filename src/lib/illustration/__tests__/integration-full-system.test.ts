@@ -21,11 +21,22 @@ import { applyDocumentSettingsToCanvas } from '@/lib/illustration/document-setti
 import { booleanUnite, initializePathfinderPaperScope } from '@/lib/illustration/canvas/boolean-operations';
 import { makeClippingMask, releaseClippingMask } from '@/lib/illustration/canvas/clipping-mask';
 import { generatePolygonPoints, generateStarPoints } from '@/lib/illustration/canvas/shape-generators';
+import {
+  addPoint,
+  createFreehandState,
+  defaultFreehandSettings,
+  finalizeFreehandStroke,
+} from '@/lib/illustration/canvas/freehand-canvas';
+import { convertObjectToRough, defaultRoughSettings } from '@/lib/illustration/canvas/rough-canvas';
 import { moveAnchorPoint } from '@/lib/illustration/canvas/path-editing';
 import { importSVGToCanvas } from '@/lib/illustration/canvas/svg-import';
 import { distributeH } from '@/lib/illustration/canvas/align-operations';
 import { sampleObjectFillColor } from '@/lib/illustration/canvas/eyedropper-utils';
-import { applyUniformCornerRadius, toggleObjectFlip } from '@/components/illustration/PropertiesPanel';
+import { toggleObjectFlip } from '@/components/illustration/PropertiesPanel';
+import { getRulerScreenPosition } from '@/components/illustration/Rulers';
+import { searchIcons } from '@/lib/illustration/data/icons';
+import { DirectSelectTool } from '@/lib/illustration/editor/tools/DirectSelectTool';
+import { MeasureTool } from '@/lib/illustration/editor/tools/MeasureTool';
 import { useEditorStore } from '@/stores/illustration/editorStore';
 
 interface MockCanvasContext {
@@ -417,6 +428,9 @@ class IntegrationCanvasMock {
   private width: number;
   private height: number;
   public backgroundColor: unknown = '#ffffff';
+  public selection = true;
+  public defaultCursor = 'default';
+  public hoverCursor = 'move';
   private zoom = 1;
 
   constructor(width = 800, height = 600, initialObjects: FabricObject[] = []) {
@@ -448,6 +462,10 @@ class IntegrationCanvasMock {
 
   getObjects(): FabricObject[] {
     return this.objects;
+  }
+
+  forEachObject(callback: (object: FabricObject) => void): void {
+    this.objects.forEach(callback);
   }
 
   add(...objects: FabricObject[]): number {
@@ -510,6 +528,13 @@ class IntegrationCanvasMock {
 
   renderAll(): void {
     this.requestRenderAll();
+  }
+
+  getPointer(event: MouseEvent): { x: number; y: number } {
+    return {
+      x: event.clientX ?? 0,
+      y: event.clientY ?? 0,
+    };
   }
 
   toJSON(): { width: number; height: number; backgroundColor: unknown; objects: SerializedObjectState[] } {
@@ -592,7 +617,7 @@ afterEach(() => {
   store.clearHistory();
 });
 
-describe('full editor integration workflows', () => {
+describe('full system integration workflows', () => {
   it('a) rect + gradient + drop shadow exports SVG with gradient defs and filter', async () => {
     const canvas = new IntegrationCanvasMock(640, 480);
     const rect = new Rect({ left: 80, top: 90, width: 220, height: 140 });
@@ -669,8 +694,8 @@ describe('full editor integration workflows', () => {
     expect(centerX).toBeCloseTo(canvas.getWidth() / 2, 5);
   });
 
-  it('d) text keeps Georgia bold 24px with gradient fill', () => {
-    const text = new Textbox('ScholarSync', {
+  it('d) text "Hello" keeps Georgia bold 24px with gradient fill', () => {
+    const text = new Textbox('Hello', {
       left: 100,
       top: 70,
       fontFamily: 'Arial',
@@ -719,26 +744,35 @@ describe('full editor integration workflows', () => {
     expect(objectTypes).toEqual(['ellipse', 'rect']);
   });
 
-  it('f) imported SVG path can be direct-edited and re-exported with moved anchor', async () => {
-    const agentSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120"><path d="M 10 10 L 80 10 L 80 80 Z" fill="#94a3b8" /></svg>';
+  it('f) agent-generated diagram opens in editor, moves object, and exports', async () => {
+    const agentSvg = [
+      '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120">',
+      '<rect x="10" y="10" width="80" height="40" fill="#94a3b8" />',
+      '<path d="M 10 70 L 80 70 L 80 100 Z" fill="#38bdf8" />',
+      '</svg>',
+    ].join('');
     const imported = await importSVGToCanvas(agentSvg);
-    const pathObject = imported.objects.find((object) => object.type === 'path') as FabricPath | undefined;
+    const movableObject = imported.objects[0];
 
-    expect(pathObject).toBeTruthy();
-    if (!pathObject?.path) {
-      throw new Error('Imported path not found');
+    expect(imported.objects.length).toBeGreaterThanOrEqual(2);
+    expect(movableObject).toBeTruthy();
+    if (!movableObject) {
+      throw new Error('Imported object not found');
     }
 
-    const movedPath = moveAnchorPoint(pathObject.path as TSimplePathData, 1, { x: 110, y: 10 });
-    pathObject.set('path', movedPath);
-    pathObject.setCoords();
+    movableObject.set({
+      left: (movableObject.left ?? 0) + 30,
+      top: (movableObject.top ?? 0) + 15,
+    });
+    movableObject.setCoords();
 
-    const canvas = new IntegrationCanvasMock(300, 200, [pathObject]);
+    const canvas = new IntegrationCanvasMock(300, 200, imported.objects);
     const result = await new SVGExporter().export(asFabricCanvas(canvas), { optimize: false, minify: false });
     const exported = await readBlobAsText(result.blob);
 
+    expect(exported).toContain('<rect');
     expect(exported).toContain('<path');
-    expect(exported).toContain('110');
+    expect(exported).toContain('data-object-index=');
   });
 
   it('g) 1920x1080 canvas exports PNG with matching dimensions', async () => {
@@ -802,27 +836,110 @@ describe('full editor integration workflows', () => {
     expect(sampled).not.toBe('#0000ff');
   });
 
-  it('j) rounded corners on star is a no-op and does not throw', () => {
-    const star = new Polygon(generateStarPoints(0, 0, 70, 35, 5), {
-      left: 200,
-      top: 120,
-      fill: '#f43f5e',
+  it('j) star tool with 5 points creates 10 vertices', () => {
+    const points = generateStarPoints(0, 0, 70, 35, 5);
+
+    expect(points).toHaveLength(10);
+  });
+
+  it('k) freehand stroke produces a Fabric Path', () => {
+    const state = createFreehandState();
+    addPoint(state, 10, 10, 0.4);
+    addPoint(state, 40, 20, 0.5);
+    addPoint(state, 70, 35, 0.6);
+    addPoint(state, 100, 40, 0.7);
+
+    const path = finalizeFreehandStroke(state, defaultFreehandSettings);
+
+    expect(path).toBeInstanceOf(FabricPath);
+    expect(path?.type).toBe('path');
+    expect(path?.path?.length ?? 0).toBeGreaterThan(0);
+  });
+
+  it('l) rough.js toggle converts a rect into a sketchier path with extra points', () => {
+    const rect = new Rect({
+      left: 50,
+      top: 60,
+      width: 140,
+      height: 90,
+      fill: '#fde68a',
+      stroke: '#92400e',
+      strokeWidth: 2,
     });
 
-    const beforeRx = (star as unknown as { rx?: number }).rx;
-    const beforeRy = (star as unknown as { ry?: number }).ry;
+    const roughPath = convertObjectToRough(rect, {
+      ...defaultRoughSettings,
+      seed: 7,
+    });
 
-    expect(() => applyUniformCornerRadius(star as unknown as Parameters<typeof applyUniformCornerRadius>[0], 12)).not.toThrow();
+    expect(roughPath).toBeInstanceOf(FabricPath);
+    expect(roughPath?.type).toBe('path');
+    expect(roughPath?.path?.length ?? 0).toBeGreaterThan(12);
+  });
 
-    const afterRx = (star as unknown as { rx?: number }).rx;
-    const afterRy = (star as unknown as { ry?: number }).ry;
-    expect(afterRx).toBe(beforeRx);
-    expect(afterRy).toBe(beforeRy);
+  it('m) ruler zoom sync doubles tick positions at 2x zoom', () => {
+    expect(getRulerScreenPosition(10, 2, 0)).toBe(20);
+    expect(getRulerScreenPosition(50, 2, 0)).toBe(100);
+    expect(getRulerScreenPosition(100, 2, 12)).toBe(212);
+  });
+
+  it('n) direct select chooses a path and moving an anchor updates it', () => {
+    const path = new FabricPath('M 10 10 L 80 10 L 80 80 Z', {
+      left: 20,
+      top: 30,
+      fill: '#94a3b8',
+    });
+    const canvas = new IntegrationCanvasMock(320, 200, [path]);
+    let selectedPath: FabricPath | null = null;
+
+    const tool = new DirectSelectTool({
+      onPathSelected: (nextPath) => {
+        selectedPath = nextPath;
+      },
+    });
+
+    tool.activate(asFabricCanvas(canvas));
+    tool.onMouseDown?.({
+      e: new MouseEvent('mousedown', { clientX: 80, clientY: 40 }),
+      target: path,
+      pointer: { x: 80, y: 40 },
+    });
+
+    expect(selectedPath).toBe(path);
+    const movedPath = moveAnchorPoint(path.path as TSimplePathData, 1, { x: 120, y: 10 });
+    path.set('path', movedPath);
+    path.setCoords();
+
+    expect(JSON.stringify(path.path)).toContain('120');
+  });
+
+  it('o) measure tool does not create permanent objects on the canvas', () => {
+    const rect = new Rect({ left: 30, top: 40, width: 120, height: 60, fill: '#60a5fa' });
+    const canvas = new IntegrationCanvasMock(400, 300, [rect]);
+    const tool = new MeasureTool();
+    const initialCount = canvas.getObjects().length;
+
+    tool.activate(asFabricCanvas(canvas));
+    tool.onMouseDown?.({
+      e: new MouseEvent('mousedown', { clientX: 10, clientY: 15 }),
+      pointer: { x: 10, y: 15 },
+    });
+    tool.onMouseMove?.({
+      e: new MouseEvent('mousemove', { clientX: 110, clientY: 85 }),
+      pointer: { x: 110, y: 85 },
+    });
+    tool.onMouseUp?.({
+      e: new MouseEvent('mouseup', { clientX: 110, clientY: 85 }),
+      pointer: { x: 110, y: 85 },
+    });
+
+    expect(tool.getMeasurement()?.distance ?? 0).toBeGreaterThan(0);
+    expect(canvas.getObjects()).toHaveLength(initialCount);
   });
 });
 
 describe('editor performance and export fidelity', () => {
-  it('performance: render 200 objects under 100ms and undo 50 history states under 200ms', async () => {
+  it('performance: render 200 objects under 100ms, undo 50 history states under 200ms, and search icons under 500ms', async () => {
     const canvas = new IntegrationCanvasMock(1920, 1080);
 
     for (let index = 0; index < 200; index += 1) {
@@ -869,12 +986,19 @@ describe('editor performance and export fidelity', () => {
     const undoStart = performance.now();
     await store.undo();
     const undoMs = performance.now() - undoStart;
-    console.info(`[integration-perf] renderMs=${renderMs.toFixed(2)} undoMs=${undoMs.toFixed(2)}`);
+    const iconSearchStart = performance.now();
+    const iconResults = searchIcons('cell', { limit: 5000 });
+    const iconSearchMs = performance.now() - iconSearchStart;
+    console.info(
+      `[integration-perf] renderMs=${renderMs.toFixed(2)} undoMs=${undoMs.toFixed(2)} iconSearchMs=${iconSearchMs.toFixed(2)}`
+    );
 
     expect(undoMs).toBeLessThan(200);
+    expect(iconResults.length).toBeGreaterThan(0);
+    expect(iconSearchMs).toBeLessThan(500);
   });
 
-  it('export fidelity: complex SVG has gradients, clipPath, text attrs, and expected object count', async () => {
+  it('export fidelity: complex SVG has no grid lines, valid gradients, clipPath, text attrs, and matching object count', async () => {
     const canvas = new IntegrationCanvasMock(1200, 800);
 
     const makeGradientRect = (left: number, top: number, color: string): Rect => {
@@ -906,6 +1030,12 @@ describe('editor performance and export fidelity', () => {
       new Ellipse({ left: 420, top: 230, rx: 65, ry: 40, fill: '#14b8a6' }),
       new Ellipse({ left: 610, top: 230, rx: 65, ry: 40, fill: '#f43f5e' }),
       new FabricPath('M 0 0 L 90 0 L 45 70 Z', { left: 790, top: 220, fill: '#eab308' }),
+      new FabricPath('M 0 0 L 120 20 L 70 70 Z', { left: 930, top: 220, fill: '#3b82f6' }),
+      new Rect({ left: 930, top: 60, width: 140, height: 90, fill: '#fb7185' }),
+      new Ellipse({ left: 960, top: 380, rx: 55, ry: 35, fill: '#2dd4bf' }),
+      new Rect({ left: 120, top: 560, width: 160, height: 80, fill: '#c084fc' }),
+      new Rect({ left: 340, top: 560, width: 160, height: 80, fill: '#facc15' }),
+      new Ellipse({ left: 580, top: 560, rx: 70, ry: 40, fill: '#818cf8' }),
       new Textbox('Fidelity Check', {
         left: 60,
         top: 380,
@@ -919,6 +1049,13 @@ describe('editor performance and export fidelity', () => {
         top: 390,
         fontFamily: 'Georgia',
         fontSize: 20,
+        fill: '#111827',
+      }),
+      new Textbox('Gradient + clips + text', {
+        left: 760,
+        top: 520,
+        fontFamily: 'Georgia',
+        fontSize: 18,
         fill: '#111827',
       }),
     ];

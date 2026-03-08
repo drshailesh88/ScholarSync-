@@ -4,6 +4,10 @@
  * (paper.js, fabric) tries to create a 2D canvas context on import.
  */
 
+if (typeof globalThis !== 'undefined') {
+  (globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+}
+
 const stubGradient = { addColorStop: () => {} };
 
 const mockContext = {

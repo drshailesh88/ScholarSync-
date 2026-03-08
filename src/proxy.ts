@@ -63,7 +63,7 @@ const clerkProxy = clerkMiddleware(async (auth, request) => {
   return applySecurityHeaders(response);
 });
 
-export default async function middleware(request: NextRequest, event: NextFetchEvent) {
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
   // Important: bypass before invoking clerkMiddleware to avoid any auth/session
   // network work during local Playwright automation.
   if (isPlaywrightDevRequest(request)) {
