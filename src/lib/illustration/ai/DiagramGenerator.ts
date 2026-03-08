@@ -22,6 +22,8 @@ import type {
 } from './types';
 import { createLogger, AIServiceError } from './types';
 import type { ConversationContext } from './ConversationManager';
+import { polishSvg } from './post-processing';
+import type { PublicationPolishOptions } from './post-processing';
 
 // =============================================================================
 // TYPES
@@ -41,6 +43,8 @@ export interface GenerateOptions {
   conversationId?: string;
   /** Additional metadata */
   metadata?: Record<string, unknown>;
+  /** Publication polish options (set to false to disable) */
+  publicationPolish?: PublicationPolishOptions | false;
 }
 
 /**
@@ -192,6 +196,15 @@ export class DiagramGenerator {
       // Generate the diagram
       const result = await backend.generate(request);
 
+      // Apply publication polish post-processing
+      if (options.publicationPolish !== false) {
+        const polishOptions = typeof options.publicationPolish === 'object'
+          ? options.publicationPolish
+          : undefined;
+        result.svg = polishSvg(result.svg, polishOptions);
+        this.logger.debug('Publication polish applied');
+      }
+
       // Record in conversation history
       const conversationId = this.conversationManager.addTurn(
         prompt,
@@ -315,6 +328,10 @@ export class DiagramGenerator {
 
       // Generate the refined diagram
       const result = await backend.generate(request);
+
+      // Apply publication polish post-processing
+      result.svg = polishSvg(result.svg);
+      this.logger.debug('Publication polish applied to refinement');
 
       // Record in conversation history
       const conversationId = this.conversationManager.addTurn(

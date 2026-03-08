@@ -13,6 +13,8 @@ import { PDFOptions, PDFExportSettings } from './PDFOptions';
 import { PPTXOptions, PPTXExportSettings } from './PPTXOptions';
 import { LaTeXOptions, LaTeXExportSettings } from './LaTeXOptions';
 import { LoadingSpinner } from '../LoadingSpinner';
+import { getAllPresets } from '@/lib/illustration/ai/post-processing';
+import type { JournalPreset } from '@/lib/illustration/ai/post-processing';
 
 // ============================================================================
 // Types
@@ -31,6 +33,8 @@ export interface ExportDialogProps {
   tikzPreview?: string;
   /** Callback for error handling (for toast notifications) */
   onError?: (message: string) => void;
+  /** Callback when a journal preset is selected for post-processing */
+  onJournalPresetChange?: (preset: JournalPreset | null) => void;
 }
 
 export type ExportSettings =
@@ -218,6 +222,7 @@ export function ExportDialog({
   filename = 'diagram',
   tikzPreview = '',
   onError,
+  onJournalPresetChange,
 }: ExportDialogProps): JSX.Element | null {
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>('png');
   const [exportFilename, setExportFilename] = useState(filename);
@@ -228,6 +233,8 @@ export function ExportDialog({
   const [latexSettings, setLatexSettings] = useState<LaTeXExportSettings>(defaultLaTeXSettings);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [selectedPreset, setSelectedPreset] = useState<string>('none');
+  const journalPresets = getAllPresets();
 
   // Reset filename and error when dialog opens
   useEffect(() => {
@@ -394,6 +401,50 @@ export function ExportDialog({
               />
             )}
           </div>
+
+          {/* Journal Preset Selector */}
+          {(selectedFormat === 'svg' || selectedFormat === 'pdf' || selectedFormat === 'png') && (
+            <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--border-color, #333)' }}>
+              <label style={styles.label}>Journal Preset</label>
+              <select
+                value={selectedPreset}
+                onChange={(e) => {
+                  setSelectedPreset(e.target.value);
+                  const preset = journalPresets.find(p => p.id === e.target.value) || null;
+                  onJournalPresetChange?.(preset);
+                }}
+                style={{
+                  ...styles.input,
+                  width: '100%',
+                  cursor: 'pointer',
+                  appearance: 'auto' as const,
+                }}
+              >
+                <option value="none">None (no journal preset)</option>
+                {journalPresets.map(preset => (
+                  <option key={preset.id} value={preset.id}>
+                    {preset.name} ({preset.maxWidthMm}mm single col)
+                  </option>
+                ))}
+              </select>
+              {selectedPreset !== 'none' && (() => {
+                const preset = journalPresets.find(p => p.id === selectedPreset);
+                return preset?.notes ? (
+                  <div style={{
+                    marginTop: '8px',
+                    padding: '8px 12px',
+                    fontSize: '12px',
+                    color: 'var(--text-secondary, #9d9d9d)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderRadius: '6px',
+                    lineHeight: 1.5,
+                  }}>
+                    {preset.notes}
+                  </div>
+                ) : null;
+              })()}
+            </div>
+          )}
         </div>
 
         {/* Error Message */}
