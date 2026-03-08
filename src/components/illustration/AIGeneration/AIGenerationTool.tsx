@@ -728,6 +728,7 @@ export function AIGenerationTool({
       {result && result.images.length > 0 && (
         <div style={styles.previewContainer}>
           {result.images.length === 1 ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={result.images[0].url}
               alt="Generated illustration"
@@ -736,6 +737,7 @@ export function AIGenerationTool({
           ) : (
             <div style={styles.previewGrid}>
               {result.images.map((image, index) => (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   key={index}
                   src={image.url}

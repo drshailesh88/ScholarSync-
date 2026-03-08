@@ -498,8 +498,9 @@ export const EMERGENCY_MEDICINE_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const emergencyMedicinePrompts = {
   EMERGENCY_MEDICINE_DOMAIN_PROMPT,
   EMERGENCY_MEDICINE_PROMPTS,
   EMERGENCY_MEDICINE_FEW_SHOT_EXAMPLES,
 };
+export default emergencyMedicinePrompts;

@@ -7,7 +7,7 @@
  * @module __tests__/canvas-intelligence
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { JSDOM } from 'jsdom';
 
 // Polyfill DOMParser for Node.js test environment
@@ -15,9 +15,6 @@ const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>');
 global.DOMParser = dom.window.DOMParser as any;
 
 import {
-  ConnectorPort,
-  ConnectorStyle,
-  SmartConnectorData,
   getConnectionPoint,
   calculateConnectorPath,
   createArrowhead,
@@ -26,7 +23,7 @@ import {
 } from '../canvas/SmartConnector';
 import { ObjectLabelingManager } from '../canvas/ai-object-labeling';
 import { AlignmentManager, calculateEvenSpacing, findNearestAlignmentPoint } from '../canvas/alignment-guides';
-import { parseMermaidSVG, isMermaidDiagram, MermaidGraph } from '../canvas/mermaid-import';
+import { parseMermaidSVG, isMermaidDiagram } from '../canvas/mermaid-import';
 
 // =============================================================================
 // MOCKS

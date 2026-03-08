@@ -433,7 +433,7 @@ export function generateSectionStyle(section: PosterSection, theme: PosterTheme)
 // Export
 // ============================================================================
 
-export default {
+const posterPresets = {
   sizes: posterSizes,
   themes: posterThemes,
   templates: posterTemplates,
@@ -446,3 +446,5 @@ export default {
   getRecommendedDpi,
   generateSectionStyle
 };
+
+export default posterPresets;

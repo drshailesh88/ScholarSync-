@@ -409,7 +409,7 @@ export function getAgriculturePromptsByCategory(category: keyof typeof AGRICULTU
   return categoryData.prompts.map((key) => AGRICULTURE_PROMPTS[key as keyof typeof AGRICULTURE_PROMPTS]);
 }
 
-export default {
+const agriculturePrompts = {
   AGRICULTURE_DOMAIN_PROMPT,
   AGRICULTURE_PROMPTS,
   AGRICULTURE_FEW_SHOT_EXAMPLES,
@@ -418,3 +418,4 @@ export default {
   getAllAgriculturePrompts,
   getAgriculturePromptsByCategory,
 };
+export default agriculturePrompts;

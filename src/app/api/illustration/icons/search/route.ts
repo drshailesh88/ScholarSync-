@@ -166,9 +166,9 @@ export async function GET(req: Request) {
   const log = logger.withRequestId();
 
   try {
-    let userId: string;
+    let _userId: string;
     try {
-      userId = await getCurrentUserId();
+      _userId = await getCurrentUserId();
     } catch {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

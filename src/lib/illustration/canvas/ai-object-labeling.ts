@@ -536,14 +536,14 @@ export function getObjectLabelId(obj: FabricObject): string | undefined {
  */
 export function highlightLabeledObjects(
   canvas: FabricCanvas,
-  duration: number = 2000
+  _duration: number = 2000
 ): (() => void) {
   const objects = canvas.getObjects();
   const highlights: Array<{ obj: FabricObject; original: any }> = [];
 
   for (const obj of objects) {
     if (isObjectLabeled(obj)) {
-      const label = getObjectLabel(obj);
+      const _label = getObjectLabel(obj);
       const labelId = getObjectLabelId(obj);
       const color = labelId ? '#6366f1' : '#fbbf24';
 

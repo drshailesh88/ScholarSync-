@@ -40,7 +40,7 @@ export { jsPDF } from 'jspdf';
 // svg2pdf.js - Convert SVG elements to PDF using jsPDF
 // @see https://github.com/yWorks/svg2pdf.js
 // Stub export - full library needs to be installed for SVG to PDF conversion
-export const svg2pdf = typeof window !== 'undefined' ? async (svg: SVGElement, pdf: unknown, options?: unknown) => {
+export const svg2pdf = typeof window !== 'undefined' ? async (_svg: SVGElement, _pdf: unknown, _options?: unknown) => {
   console.warn('svg2pdf stub: Full SVG to PDF conversion requires library installation');
   return Promise.resolve();
 } : () => Promise.resolve();

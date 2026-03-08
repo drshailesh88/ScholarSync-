@@ -12,7 +12,7 @@ import {
   runPreflight,
   JOURNAL_PRESETS,
   type JournalPreset,
-  type PreflightResult,
+  type PreflightResult as _PreflightResult,
 } from '../JournalPresets';
 
 // Mock fabric object

@@ -567,8 +567,10 @@ export const PSYCHIATRY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const psychiatryPrompts = {
   PSYCHIATRY_DOMAIN_PROMPT,
   PSYCHIATRY_PROMPTS,
   PSYCHIATRY_FEW_SHOT_EXAMPLES,
 };
+
+export default psychiatryPrompts;

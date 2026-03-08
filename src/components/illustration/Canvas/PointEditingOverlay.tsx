@@ -207,7 +207,7 @@ export function PointEditingOverlay({
     }
 
     return parsePathAnchors(pathObject.path);
-  }, [pathObject, smoothMap]);
+  }, [pathObject]);
 
   const isAnchorSmooth = useCallback((anchorIndex: number, sourcePathData?: TSimplePathData): boolean => {
     const mapped = smoothMap[anchorIndex];
@@ -387,7 +387,7 @@ export function PointEditingOverlay({
       handleIn: anchor.handleIn ? mapPointToScreen(fabricCanvas, anchor.handleIn) : null,
       handleOut: anchor.handleOut ? mapPointToScreen(fabricCanvas, anchor.handleOut) : null,
     }));
-  }, [fabricCanvas, pathObject, smoothMap]);
+  }, [fabricCanvas, pathObject]);
 
   const beginAnchorDrag = useCallback((event: React.PointerEvent<HTMLDivElement>, anchorIndex: number) => {
     if (!pathObject || !fabricCanvas) {

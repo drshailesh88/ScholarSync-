@@ -54,7 +54,7 @@ async function focusCanvas(page: Page) {
 }
 
 // Helper: Get active slide number from filmstrip
-async function getActiveSlideNumber(page: Page): Promise<number | null> {
+async function _getActiveSlideNumber(page: Page): Promise<number | null> {
   // Active slide in filmstrip has specific styling — count its position
   const filmstripSlides = page.locator("[data-testid^='filmstrip-slide-']");
   const count = await filmstripSlides.count();
@@ -316,7 +316,7 @@ test.describe("Escape Chain", () => {
 
       // State 1: Editing — ProseMirror should be focused
       const prosemirror = page.locator(".ProseMirror:focus-within").first();
-      const isEditing = await prosemirror
+      const _isEditing = await prosemirror
         .isVisible({ timeout: 1000 })
         .catch(() => false);
 

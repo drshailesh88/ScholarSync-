@@ -463,7 +463,7 @@ export function getForensicsPromptsByCategory(category: keyof typeof FORENSICS_P
   return categoryData.prompts.map((key) => FORENSICS_PROMPTS[key as keyof typeof FORENSICS_PROMPTS]);
 }
 
-export default {
+const forensicsPrompts = {
   FORENSICS_DOMAIN_PROMPT,
   FORENSICS_PROMPTS,
   FORENSICS_FEW_SHOT_EXAMPLES,
@@ -472,3 +472,4 @@ export default {
   getAllForensicsPrompts,
   getForensicsPromptsByCategory,
 };
+export default forensicsPrompts;

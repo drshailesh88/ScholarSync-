@@ -439,8 +439,9 @@ export const INFECTIOUS_DISEASE_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const infectiousDiseasePrompts = {
   INFECTIOUS_DISEASE_DOMAIN_PROMPT,
   INFECTIOUS_DISEASE_PROMPTS,
   INFECTIOUS_DISEASE_FEW_SHOT_EXAMPLES,
 };
+export default infectiousDiseasePrompts;

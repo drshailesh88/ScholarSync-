@@ -11,8 +11,8 @@
  * - Sorting by score (desc), then name (asc)
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { searchAllIcons, type ScoredIconResult } from '../index';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { searchAllIcons, type ScoredIconResult as _ScoredIconResult } from '../index';
 
 // Mock the icon libraries for testing
 vi.mock('../healthIcons', () => ({

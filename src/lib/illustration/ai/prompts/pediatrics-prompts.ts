@@ -646,8 +646,9 @@ export const PEDIATRICS_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const pediatricsPrompts = {
   PEDIATRICS_DOMAIN_PROMPT,
   PEDIATRICS_PROMPTS,
   PEDIATRICS_FEW_SHOT_EXAMPLES,
 };
+export default pediatricsPrompts;

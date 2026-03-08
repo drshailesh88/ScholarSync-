@@ -429,8 +429,10 @@ export const PHYSIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const physiologyPrompts = {
   PHYSIOLOGY_DOMAIN_PROMPT,
   PHYSIOLOGY_PROMPTS,
   PHYSIOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default physiologyPrompts;

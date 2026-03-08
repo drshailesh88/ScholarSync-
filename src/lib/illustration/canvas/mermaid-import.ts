@@ -9,7 +9,7 @@
 
 import { Canvas as FabricCanvas, Rect, IText, FabricObject, Group } from 'fabric';
 import { ConnectorManager, ensureObjectId } from './ConnectorManager';
-import { calculateConnectorPath } from './SmartConnector';
+// calculateConnectorPath import removed - unused
 
 // =============================================================================
 // TYPES
@@ -151,7 +151,7 @@ function parseNodeGroup(element: Element): MermaidNode | null {
     // Diamond shapes are rendered as polygons
     const points = polygon.getAttribute('points');
     if (points) {
-      const coords = points.split(/\s+/).map((p, i) => {
+      const coords = points.split(/\s+/).map((p, _i) => {
         const [x, y] = p.split(',').map(Number);
         return { x, y };
       });
@@ -236,7 +236,7 @@ function parseEdgePath(element: Element, nodes: MermaidNode[]): MermaidEdge | nu
 /**
  * Parse an edge label element
  */
-function parseEdgeLabel(element: Element, nodes: MermaidNode[]): MermaidEdge | null {
+function parseEdgeLabel(element: Element, _nodes: MermaidNode[]): MermaidEdge | null {
   const id = element.getAttribute('id') || '';
   // Format: L-L-SOURCE-TARGET
   const idMatch = id.match(/L-L-([A-Za-z0-9]+)-([A-Za-z0-9]+)/);
@@ -355,7 +355,7 @@ function createFabricNode(
   node: MermaidNode,
   options: CreateCanvasGraphOptions
 ): Group {
-  const { nodeColor = '#ffffff', textColor = '#333333', padding = 8 } = options;
+  const { nodeColor = '#ffffff', textColor = '#333333', padding: _padding = 8 } = options;
 
   const objects: FabricObject[] = [];
 

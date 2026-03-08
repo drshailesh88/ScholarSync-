@@ -431,8 +431,9 @@ export const NEUROLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const neurologyPrompts = {
   NEUROLOGY_DOMAIN_PROMPT,
   NEUROLOGY_PROMPTS,
   NEUROLOGY_FEW_SHOT_EXAMPLES,
 };
+export default neurologyPrompts;

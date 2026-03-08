@@ -373,8 +373,10 @@ export const ENDOCRINOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const endocrinologyPrompts = {
   ENDOCRINOLOGY_DOMAIN_PROMPT,
   ENDOCRINOLOGY_PROMPTS,
   ENDOCRINOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default endocrinologyPrompts;

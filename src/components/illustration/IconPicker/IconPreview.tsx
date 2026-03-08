@@ -6,7 +6,7 @@
  * Supports color tinting and favorite toggling.
  */
 
-import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import type { UnifiedIconResult } from '@/lib/illustration/lib/icons';
 import { createSimpleIconSvg } from '@/lib/illustration/lib/icons';
 import {
@@ -145,7 +145,7 @@ export const IconPreview: React.FC<IconPreviewProps> = ({
       }, 50);
       return () => clearTimeout(timer);
     }
-  }, [icon]);
+  }, [icon, iconColor]);
 
   /**
    * Apply color tint to SVG by replacing currentColor

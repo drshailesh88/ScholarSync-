@@ -578,8 +578,10 @@ export const ZOOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const zoologyPrompts = {
   ZOOLOGY_DOMAIN_PROMPT,
   ZOOLOGY_PROMPTS,
   ZOOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default zoologyPrompts;

@@ -404,7 +404,7 @@ export function getPhysicsFewShotExamples(count: number = 2): FewShotExample[] {
 // EXPORTS
 // =============================================================================
 
-export default {
+const physicsPrompts = {
   PHYSICS_DOMAIN_PROMPT,
   PHYSICS_PROMPTS,
   PHYSICS_FEW_SHOT_EXAMPLES,
@@ -413,3 +413,5 @@ export default {
   getFullPhysicsPrompt,
   getPhysicsFewShotExamples,
 };
+
+export default physicsPrompts;

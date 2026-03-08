@@ -15,8 +15,6 @@ import {
   isAIGenerationAvailable,
   clearIconCache,
   getCacheSize,
-  type GenerationResult,
-  type GenerationOptions,
 } from '../generateIcon';
 
 // Mock the config

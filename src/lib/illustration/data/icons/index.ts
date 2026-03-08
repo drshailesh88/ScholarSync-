@@ -713,7 +713,7 @@ export { hematologyOncologyIcons } from './hematology-oncology';
 export { dermatologyIcons } from './dermatology';
 export { mathematicsIcons } from './mathematics';
 
-export default {
+const iconLibrary = {
   allIcons,
   iconsByDomain,
   domainMetadata,
@@ -729,3 +729,5 @@ export default {
   iconToDataUrl,
   iconToBase64,
 };
+
+export default iconLibrary;

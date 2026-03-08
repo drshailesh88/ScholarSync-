@@ -551,8 +551,9 @@ export const BIOMEDICAL_ENGINEERING_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const biomedicalEngineeringPrompts = {
   BIOMEDICAL_ENGINEERING_DOMAIN_PROMPT,
   BIOMEDICAL_ENGINEERING_PROMPTS,
   BIOMEDICAL_ENGINEERING_FEW_SHOT_EXAMPLES,
 };
+export default biomedicalEngineeringPrompts;

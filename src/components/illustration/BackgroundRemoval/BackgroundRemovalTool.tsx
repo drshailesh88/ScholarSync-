@@ -663,6 +663,7 @@ export function BackgroundRemovalTool({
             <div style={styles.previewBox}>
               <span style={styles.previewLabel}>Original</span>
               {originalPreview && (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={originalPreview}
                   alt="Original"
@@ -673,6 +674,7 @@ export function BackgroundRemovalTool({
             <div style={styles.previewBox}>
               <span style={styles.previewLabel}>Result</span>
               {resultPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={resultPreview}
                   alt="Background removed"

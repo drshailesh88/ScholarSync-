@@ -11,7 +11,7 @@ import {
   Canvas as FabricCanvas,
   FabricObject,
   Line,
-  Rect,
+  Rect as _Rect,
   Group,
 } from 'fabric';
 
@@ -188,7 +188,7 @@ export class AlignmentManager {
     if (snapThreshold <= 0) return;
 
     const bounds = obj.getBoundingRect();
-    const center = obj.getCenterPoint();
+    const _center = obj.getCenterPoint();
 
     // Get all snap points from other objects
     const otherObjects = this.canvas.getObjects().filter(

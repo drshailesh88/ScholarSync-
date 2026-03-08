@@ -35,7 +35,6 @@ import {
   exportStorageData,
   importStorageData,
   getStorageStats,
-  type IconCollection,
 } from '../iconStorage';
 
 // Mock localStorage
@@ -234,7 +233,7 @@ describe('icon-storage', () => {
     it('should get collections containing an icon', () => {
       const c1 = createCollection('C1', ['icon-1']);
       const c2 = createCollection('C2', ['icon-2', 'icon-1']);
-      const c3 = createCollection('C3', ['icon-3']);
+      const _c3 = createCollection('C3', ['icon-3']);
 
       const withIcon1 = getCollectionsContainingIcon('icon-1');
       expect(withIcon1.length).toBe(2);
@@ -307,7 +306,7 @@ describe('icon-storage', () => {
       addToFavorites('icon-1');
       addToFavorites('icon-2');
       addToRecents('icon-3');
-      const c1 = createCollection('C1', ['icon-4', 'icon-5']);
+      const _c1 = createCollection('C1', ['icon-4', 'icon-5']);
 
       const stats = getStorageStats();
       expect(stats.favoritesCount).toBe(2);

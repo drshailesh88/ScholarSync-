@@ -588,8 +588,10 @@ export const ECOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const ecologyPrompts = {
   ECOLOGY_DOMAIN_PROMPT,
   ECOLOGY_PROMPTS,
   ECOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default ecologyPrompts;

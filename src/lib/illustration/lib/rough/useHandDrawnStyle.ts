@@ -39,7 +39,7 @@ export function useHandDrawnStyle(options: UseHandDrawnStyleOptions = {}): UseHa
       customOptions: options.customOptions,
       seed: options.seed,
     });
-  }, [options.preset, options.seed]);
+  }, [options.preset, options.seed, options.customOptions]);
 
   const init = useCallback(() => {
     if (svgRef.current) {

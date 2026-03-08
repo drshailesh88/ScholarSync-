@@ -302,13 +302,11 @@ export async function createChartImage(
 
   try {
     // Create the plot - use type assertion for compatibility
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await Plotly.newPlot(container as any, data as any, layout as any, {
       staticPlot: true,
     });
 
     // Export to desired format
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = await Plotly.toImage(container as any, {
       format,
       width,
@@ -319,7 +317,6 @@ export async function createChartImage(
     return result;
   } finally {
     // Clean up
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Plotly.purge(container as any);
     document.body.removeChild(container);
   }
@@ -336,7 +333,6 @@ export async function downloadChart(
   const Plotly = await import('plotly.js-dist-min');
 
   // Export to image data URL
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const dataUrl = await Plotly.toImage(plotElement as any, {
     format,
     width: plotElement.offsetWidth || 600,

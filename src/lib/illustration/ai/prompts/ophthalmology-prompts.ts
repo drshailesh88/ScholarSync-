@@ -399,8 +399,10 @@ export const OPHTHALMOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const ophthalmologyPrompts = {
   OPHTHALMOLOGY_DOMAIN_PROMPT,
   OPHTHALMOLOGY_PROMPTS,
   OPHTHALMOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default ophthalmologyPrompts;

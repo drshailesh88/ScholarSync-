@@ -14,7 +14,7 @@ import { saveSvgAsPng, svgAsPngUri, svgAsDataUri, download } from 'save-svg-as-p
 import { jsPDF } from 'jspdf';
 
 // Stub for svg2pdf - full library needs to be installed for PDF export
-const svg2pdf = typeof window !== 'undefined' ? (async (svg: SVGElement, pdf: unknown, options: unknown) => {
+const svg2pdf = typeof window !== 'undefined' ? (async (_svg: SVGElement, _pdf: unknown, _options: unknown) => {
   // Placeholder: use jsPDF's native SVG support if available
   console.warn('svg2pdf stub: PDF export with SVG conversion requires full library installation');
   return Promise.resolve();

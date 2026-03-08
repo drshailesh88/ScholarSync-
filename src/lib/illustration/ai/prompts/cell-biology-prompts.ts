@@ -467,8 +467,10 @@ export const CELL_BIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const cellBiologyPrompts = {
   CELL_BIOLOGY_DOMAIN_PROMPT,
   CELL_BIOLOGY_PROMPTS,
   CELL_BIOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default cellBiologyPrompts;

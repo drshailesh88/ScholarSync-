@@ -463,8 +463,10 @@ export const MICROBIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const microbiologyPrompts = {
   MICROBIOLOGY_DOMAIN_PROMPT,
   MICROBIOLOGY_PROMPTS,
   MICROBIOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default microbiologyPrompts;

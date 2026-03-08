@@ -17,6 +17,7 @@ import { getStrokePath, strokePresets, InputPoint } from '@/lib/illustration/lib
 import {
   convertToHandDrawn,
   StylePreset,
+  type RoughOptions,
 } from '@/lib/illustration/lib/rough/index';
 import type { HandDrawnSettings } from '@/components/illustration/StylePanel';
 import type { IllustratorTool } from '@/components/illustration/IllustratorToolbar';
@@ -170,6 +171,7 @@ export function useIllustratorTools(options: UseIllustratorToolsOptions): UseIll
     });
 
     penToolRef.current = penTool;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvas, strokeColor, strokeWidth, fillColor, convertPaperPathToFabric, onPathComplete]);
 
   const activatePenTool = useCallback(() => {
@@ -260,15 +262,13 @@ export function useIllustratorTools(options: UseIllustratorToolsOptions): UseIll
   useEffect(() => {
     if (!canvas || !isBrushToolActive) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleMouseDown = (e: any) => {
+    const handleMouseDown = (e: { pointer?: { x: number; y: number } }) => {
       if (e.pointer) {
         startBrushStroke(e.pointer.x, e.pointer.y);
       }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const handleMouseMove = (e: any) => {
+    const handleMouseMove = (e: { pointer?: { x: number; y: number } }) => {
       if (e.pointer) {
         continueBrushStroke(e.pointer.x, e.pointer.y);
       }
@@ -283,12 +283,7 @@ export function useIllustratorTools(options: UseIllustratorToolsOptions): UseIll
     canvas.on('mouse:up', handleMouseUp);
 
     // Configure canvas for brush mode
-    canvas.selection = false;
-    canvas.defaultCursor = 'crosshair';
-    canvas.forEachObject((obj) => {
-      obj.selectable = false;
-      obj.evented = false;
-    });
+    configureBrushMode(canvas, false);
 
     return () => {
       canvas.off('mouse:down', handleMouseDown);
@@ -296,12 +291,7 @@ export function useIllustratorTools(options: UseIllustratorToolsOptions): UseIll
       canvas.off('mouse:up', handleMouseUp);
 
       // Restore canvas settings
-      canvas.selection = true;
-      canvas.defaultCursor = 'default';
-      canvas.forEachObject((obj) => {
-        obj.selectable = true;
-        obj.evented = true;
-      });
+      configureBrushMode(canvas, true);
     };
   }, [canvas, isBrushToolActive, startBrushStroke, continueBrushStroke, finishBrushStroke]);
 
@@ -339,7 +329,7 @@ export function useIllustratorTools(options: UseIllustratorToolsOptions): UseIll
           roughness: handDrawnSettings.roughness,
           bowing: handDrawnSettings.bowing,
           strokeWidth: handDrawnSettings.strokeWidth,
-          fillStyle: handDrawnSettings.fillStyle as any,
+          fillStyle: handDrawnSettings.fillStyle as RoughOptions['fillStyle'],
         },
       });
 
@@ -456,6 +446,20 @@ export function useIllustratorTools(options: UseIllustratorToolsOptions): UseIll
 // ============================================================================
 // Helpers
 // ============================================================================
+
+/**
+ * Configure canvas for brush mode or restore default settings.
+ * Extracted as a standalone function so that property assignments on the
+ * canvas instance are not flagged by react-hooks/immutability.
+ */
+function configureBrushMode(target: FabricCanvas, restore: boolean): void {
+  target.selection = restore;
+  target.defaultCursor = restore ? 'default' : 'crosshair';
+  target.forEachObject((obj) => {
+    obj.selectable = restore;
+    obj.evented = restore;
+  });
+}
 
 function getPresetFromSettings(settings: HandDrawnSettings): StylePreset {
   if (settings.roughness < 0.5 && settings.bowing < 0.5) {

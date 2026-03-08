@@ -92,7 +92,7 @@ export class ExportService {
     const exporter = this.getExporter(options.format);
 
     // Remove format from options before passing to exporter
-    const { format, ...exportOptions } = options;
+    const { format: _format, ...exportOptions } = options;
 
     return exporter.export(canvas, exportOptions, onProgress);
   }

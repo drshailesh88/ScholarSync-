@@ -440,7 +440,7 @@ export function getGeologyPromptsByCategory(category: keyof typeof GEOLOGY_PROMP
   return categoryData.prompts.map((key) => GEOLOGY_PROMPTS[key as keyof typeof GEOLOGY_PROMPTS]);
 }
 
-export default {
+const geologyPrompts = {
   GEOLOGY_DOMAIN_PROMPT,
   GEOLOGY_PROMPTS,
   GEOLOGY_FEW_SHOT_EXAMPLES,
@@ -449,3 +449,5 @@ export default {
   getAllGeologyPrompts,
   getGeologyPromptsByCategory,
 };
+
+export default geologyPrompts;

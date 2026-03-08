@@ -442,8 +442,10 @@ export const ANATOMY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const anatomyPrompts = {
   ANATOMY_DOMAIN_PROMPT,
   ANATOMY_PROMPTS,
   ANATOMY_FEW_SHOT_EXAMPLES,
 };
+
+export default anatomyPrompts;

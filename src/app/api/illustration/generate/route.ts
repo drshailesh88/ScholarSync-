@@ -15,7 +15,7 @@ import { generateImage, isGeminiAvailable } from "@/lib/illustration/ai/backends
 import { pngToEditableSVG } from "@/lib/illustration/ai/vectorize";
 
 // Import prompts
-import { buildSystemPrompt, DOMAIN_PROMPTS } from "@/lib/illustration/ai/prompts";
+import { buildSystemPrompt, DOMAIN_PROMPTS as _DOMAIN_PROMPTS } from "@/lib/illustration/ai/prompts";
 
 // Import utilities
 import { detectBestBackend as utilDetectBestBackend, type Backend } from "@/lib/illustration/ai/utils";

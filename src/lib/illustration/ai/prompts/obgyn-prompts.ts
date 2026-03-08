@@ -528,8 +528,9 @@ export const OBGYN_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const obgynPrompts = {
   OBGYN_DOMAIN_PROMPT,
   OBGYN_PROMPTS,
   OBGYN_FEW_SHOT_EXAMPLES,
 };
+export default obgynPrompts;

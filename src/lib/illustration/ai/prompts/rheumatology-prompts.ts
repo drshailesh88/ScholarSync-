@@ -418,8 +418,10 @@ export const RHEUMATOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const rheumatologyPrompts = {
   RHEUMATOLOGY_DOMAIN_PROMPT,
   RHEUMATOLOGY_PROMPTS,
   RHEUMATOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default rheumatologyPrompts;

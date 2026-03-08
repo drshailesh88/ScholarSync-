@@ -353,7 +353,7 @@ export function ImportDialog({
         size: 0, // Unknown for URLs
         preview: url,
       });
-    } catch (err) {
+    } catch {
       setError('Invalid URL format');
     } finally {
       setIsLoading(false);
@@ -504,6 +504,7 @@ export function ImportDialog({
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={detectedFile.preview}
                       alt="Preview"

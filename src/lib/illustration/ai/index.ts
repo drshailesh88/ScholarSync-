@@ -162,7 +162,7 @@ export function suggestBackend(prompt: string): string {
 // DEFAULT EXPORT
 // =============================================================================
 
-export default {
+const illustrationAI = {
   DiagramGenerator,
   PromptParser,
   ConversationManager,
@@ -180,3 +180,4 @@ export default {
   parsePrompt,
   suggestBackend,
 };
+export default illustrationAI;

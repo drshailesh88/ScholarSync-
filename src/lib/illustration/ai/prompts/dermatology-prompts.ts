@@ -575,8 +575,10 @@ export const DERMATOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const dermatologyPrompts = {
   DERMATOLOGY_DOMAIN_PROMPT,
   DERMATOLOGY_PROMPTS,
   DERMATOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default dermatologyPrompts;

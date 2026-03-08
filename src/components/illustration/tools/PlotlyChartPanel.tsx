@@ -474,7 +474,7 @@ interface PlotlyChartProps {
  */
 function PlotlyChart({ data, layout, width, height, onRenderComplete }: PlotlyChartProps) {
   const chartRef = useRef<HTMLDivElement>(null);
-  const [isReady, setIsReady] = useState(false);
+  const [_isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     // Dynamically import Plotly only on client side
@@ -537,9 +537,10 @@ function PlotlyChart({ data, layout, width, height, onRenderComplete }: PlotlyCh
 
     loadPlotly();
 
+    const chartEl = chartRef.current;
     return () => {
-      if (chartRef.current && plotlyInstance) {
-        plotlyInstance.purge(chartRef.current);
+      if (chartEl && plotlyInstance) {
+        plotlyInstance.purge(chartEl);
       }
     };
   }, [data, layout, width, height, onRenderComplete]);
@@ -575,7 +576,7 @@ export function PlotlyChartPanel({
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Parse data from text input
-  const parseDataInput = useCallback((text: string): number[] => {
+  const _parseDataInput = useCallback((text: string): number[] => {
     try {
       const parsed = JSON.parse(text);
       return Array.isArray(parsed) ? parsed : [];
@@ -589,7 +590,7 @@ export function PlotlyChartPanel({
   }, []);
 
   // Update chart data
-  const updateChartData = useCallback((index: number, updates: Partial<ChartData>) => {
+  const _updateChartData = useCallback((index: number, updates: Partial<ChartData>) => {
     setChartData(prev =>
       prev.map((d, i) => (i === index ? { ...d, ...updates } : d))
     );
@@ -703,6 +704,7 @@ export function PlotlyChartPanel({
         {/* Chart Preview */}
         <div style={styles.chartPreview}>
           {capturedImage ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={capturedImage}
               alt="Chart preview"

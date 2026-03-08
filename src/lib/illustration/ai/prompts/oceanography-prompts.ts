@@ -645,8 +645,9 @@ export const OCEANOGRAPHY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const oceanographyPrompts = {
   OCEANOGRAPHY_DOMAIN_PROMPT,
   OCEANOGRAPHY_PROMPTS,
   OCEANOGRAPHY_FEW_SHOT_EXAMPLES,
 };
+export default oceanographyPrompts;

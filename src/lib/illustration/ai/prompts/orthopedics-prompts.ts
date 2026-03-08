@@ -449,8 +449,10 @@ export const ORTHOPEDICS_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const orthopedicsPrompts = {
   ORTHOPEDICS_DOMAIN_PROMPT,
   ORTHOPEDICS_PROMPTS,
   ORTHOPEDICS_FEW_SHOT_EXAMPLES,
 };
+
+export default orthopedicsPrompts;

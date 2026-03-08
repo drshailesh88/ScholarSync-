@@ -467,8 +467,10 @@ export const ENGINEERING_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const engineeringPrompts = {
   ENGINEERING_DOMAIN_PROMPT,
   ENGINEERING_PROMPTS,
   ENGINEERING_FEW_SHOT_EXAMPLES,
 };
+
+export default engineeringPrompts;

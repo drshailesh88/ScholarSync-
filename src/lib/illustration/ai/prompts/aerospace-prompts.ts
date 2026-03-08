@@ -421,7 +421,7 @@ export function getAerospacePromptsByCategory(category: keyof typeof AEROSPACE_P
   return categoryData.prompts.map((key) => AEROSPACE_PROMPTS[key as keyof typeof AEROSPACE_PROMPTS]);
 }
 
-export default {
+const aerospacePrompts = {
   AEROSPACE_DOMAIN_PROMPT,
   AEROSPACE_PROMPTS,
   AEROSPACE_FEW_SHOT_EXAMPLES,
@@ -430,3 +430,4 @@ export default {
   getAllAerospacePrompts,
   getAerospacePromptsByCategory,
 };
+export default aerospacePrompts;

@@ -588,8 +588,10 @@ export const BIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const biologyPrompts = {
   BIOLOGY_DOMAIN_PROMPT,
   BIOLOGY_PROMPTS,
   BIOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default biologyPrompts;

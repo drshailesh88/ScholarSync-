@@ -80,6 +80,7 @@ export function usePenTool(options: UsePenToolOptions = {}): UsePenToolReturn {
       setIsReady(false);
       setIsDrawing(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Update options when they change

@@ -402,8 +402,10 @@ export const PHARMACOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const pharmacologyPrompts = {
   PHARMACOLOGY_DOMAIN_PROMPT,
   PHARMACOLOGY_PROMPTS,
   PHARMACOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default pharmacologyPrompts;

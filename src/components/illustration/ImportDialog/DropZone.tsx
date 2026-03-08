@@ -290,6 +290,7 @@ export function DropZone({
         <div style={styles.preview}>
           <div style={styles.thumbnail}>
             {selectedFile.preview ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={selectedFile.preview}
                 alt="Preview"

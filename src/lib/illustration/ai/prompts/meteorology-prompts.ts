@@ -590,8 +590,9 @@ export const METEOROLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const meteorologyPrompts = {
   METEOROLOGY_DOMAIN_PROMPT,
   METEOROLOGY_PROMPTS,
   METEOROLOGY_FEW_SHOT_EXAMPLES,
 };
+export default meteorologyPrompts;

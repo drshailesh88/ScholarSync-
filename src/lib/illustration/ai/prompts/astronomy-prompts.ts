@@ -451,7 +451,7 @@ export function getAstronomyPromptsByCategory(category: keyof typeof ASTRONOMY_P
   return categoryData.prompts.map((key) => ASTRONOMY_PROMPTS[key as keyof typeof ASTRONOMY_PROMPTS]);
 }
 
-export default {
+const astronomyPrompts = {
   ASTRONOMY_DOMAIN_PROMPT,
   ASTRONOMY_PROMPTS,
   ASTRONOMY_FEW_SHOT_EXAMPLES,
@@ -460,3 +460,4 @@ export default {
   getAllAstronomyPrompts,
   getAstronomyPromptsByCategory,
 };
+export default astronomyPrompts;

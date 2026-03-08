@@ -251,7 +251,7 @@ describe('Multi-Backend Illustration Generation', () => {
       const mockText = '{"syntax": "flowchart LR\\n  A --> B"}';
       vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       const { text } = await vi.mocked(generateText)({} as any);
       const syntaxMatch = text.match(/"syntax"\s*:\s*"([^"]+)"/);
       const extracted = syntaxMatch ? syntaxMatch[1].replace(/\\n/g, '\n') : '';
@@ -263,7 +263,7 @@ describe('Multi-Backend Illustration Generation', () => {
       const mockText = '```mermaid\nflowchart TB\n  A --> B\n```';
       vi.mocked(generateText).mockResolvedValue({ text: mockText, usage: mockUsage } as any);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       const { text } = await vi.mocked(generateText)({} as any);
       const cleaned = text.replace(/```mermaid\n?/g, '').replace(/```\n?/g, '');
 
@@ -541,7 +541,7 @@ async function mockGenerateWithSVG(_prompt: string, _domain?: string, _existingD
 }
 
 async function mockGenerateWithGemini(_prompt: string, _options?: { domain?: string; style?: string }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const imageResult = vi.mocked(generateImage).mock.results[0]?.value || await vi.mocked(generateImage)({} as any);
   const vectorizeResult = vi.mocked(pngToEditableSVG).mock.results[0]?.value || await vi.mocked(pngToEditableSVG)(Buffer.from('test'), {});
 

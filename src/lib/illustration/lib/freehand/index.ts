@@ -151,7 +151,6 @@ export function analyzeStroke(points: InputPoint[], options?: Partial<StrokeOpti
  */
 export function getOutlinePoints(points: InputPoint[], options?: Partial<StrokeOptions>): number[][] {
   const strokePoints = points.map(p => [p.x, p.y, p.pressure ?? 0.5] as const);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return getStrokeOutlinePoints(strokePoints as any, { ...defaultStrokeOptions, ...options });
 }
 

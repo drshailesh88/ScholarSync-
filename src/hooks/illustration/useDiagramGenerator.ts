@@ -14,7 +14,7 @@ import {
   type ExtendedGenerationResult,
 } from '@/lib/illustration/ai/DiagramGenerator';
 import type { ConversationContext } from '@/lib/illustration/ai/ConversationManager';
-import type { ParsedPrompt, DiagramVersion } from '@/lib/illustration/ai/types';
+import type { ParsedPrompt, DiagramType, DiagramVersion } from '@/lib/illustration/ai/types';
 
 // =============================================================================
 // TYPES
@@ -168,22 +168,30 @@ export function useDiagramGenerator(
   // Generator instance (persisted across renders)
   const generatorRef = useRef<DiagramGenerator | null>(null);
 
-  // State
-  const [state, setState] = useState<GenerationState>({
-    isGenerating: false,
-    isRefining: false,
-    error: null,
-    result: null,
-    svg: null,
-    dsl: null,
-    conversationId: null,
-    version: 0,
-    suggestions: [],
+  // State - use lazy initializer to load persisted conversation from localStorage
+  const [state, setState] = useState<GenerationState>(() => {
+    let savedConversationId: string | null = null;
+    if (persistConversation && typeof window !== 'undefined') {
+      savedConversationId = localStorage.getItem('diagramGenerator_conversationId');
+    }
+    return {
+      isGenerating: false,
+      isRefining: false,
+      error: null,
+      result: null,
+      svg: null,
+      dsl: null,
+      conversationId: savedConversationId,
+      version: 0,
+      suggestions: [],
+    };
   });
 
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [parsedPrompt, setParsedPrompt] = useState<ParsedPrompt | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const [conversationContext, setConversationContext] = useState<ConversationContext | null>(null);
+  const [availableBackends, setAvailableBackends] = useState<string[]>([]);
 
   // Initialize generator
   useEffect(() => {
@@ -192,8 +200,10 @@ export function useDiagramGenerator(
     }
 
     if (autoInitialize && !initialized) {
-      generatorRef.current.initialize().then(() => {
+      const generator = generatorRef.current;
+      generator.initialize().then(() => {
         setInitialized(true);
+        setAvailableBackends(generator.getAvailableBackends());
       });
     }
 
@@ -202,22 +212,25 @@ export function useDiagramGenerator(
     };
   }, [autoInitialize, initialized]);
 
-  // Load persisted conversation
-  useEffect(() => {
-    if (persistConversation && typeof window !== 'undefined') {
-      const savedId = localStorage.getItem('diagramGenerator_conversationId');
-      if (savedId) {
-        setState((prev) => ({ ...prev, conversationId: savedId }));
-      }
-    }
-  }, [persistConversation]);
-
   // Save conversation ID
   useEffect(() => {
     if (persistConversation && state.conversationId && typeof window !== 'undefined') {
       localStorage.setItem('diagramGenerator_conversationId', state.conversationId);
     }
   }, [persistConversation, state.conversationId]);
+
+  /**
+   * Sync conversation context from generator ref into state.
+   * Called from callbacks after operations that change conversation state.
+   */
+  const syncConversationContext = useCallback((conversationId: string | null) => {
+    const generator = generatorRef.current;
+    if (!generator || !conversationId) {
+      setConversationContext(null);
+      return;
+    }
+    setConversationContext(generator.getConversationHistory(conversationId));
+  }, []);
 
   /**
    * Generate a diagram from a prompt
@@ -266,17 +279,20 @@ export function useDiagramGenerator(
 
         setParsedPrompt(result.parsedPrompt ?? null);
 
+        const newConversationId = result.conversationId ?? state.conversationId;
+
         setState((prev) => ({
           ...prev,
           isGenerating: false,
           result,
           svg: result.svg,
           dsl: result.dsl ?? null,
-          conversationId: result.conversationId ?? prev.conversationId,
+          conversationId: newConversationId,
           version: result.metadata.version ?? prev.version + 1,
           suggestions: result.suggestions ?? [],
         }));
 
+        syncConversationContext(newConversationId);
         onSuccess?.(result);
         return result;
       } catch (e) {
@@ -290,7 +306,7 @@ export function useDiagramGenerator(
         return null;
       }
     },
-    [state.conversationId, state.version, maxHistory, onSuccess, onError, onGenerationStart]
+    [state.conversationId, state.version, maxHistory, onSuccess, onError, onGenerationStart, syncConversationContext]
   );
 
   /**
@@ -357,6 +373,7 @@ export function useDiagramGenerator(
           suggestions: result.suggestions ?? [],
         }));
 
+        syncConversationContext(state.conversationId);
         onSuccess?.(result);
         return result;
       } catch (e) {
@@ -370,7 +387,7 @@ export function useDiagramGenerator(
         return null;
       }
     },
-    [state.svg, state.conversationId, state.version, maxHistory, onSuccess, onError, onGenerationStart]
+    [state.svg, state.conversationId, state.version, maxHistory, onSuccess, onError, onGenerationStart, syncConversationContext]
   );
 
   /**
@@ -399,7 +416,7 @@ export function useDiagramGenerator(
 
       try {
         const result = await generatorRef.current.generateFromTemplate(
-          templateType as any,
+          templateType as DiagramType,
           data
         );
 
@@ -417,17 +434,20 @@ export function useDiagramGenerator(
           return newHistory.slice(-maxHistory);
         });
 
+        const newConversationId = result.conversationId ?? state.conversationId;
+
         setState((prev) => ({
           ...prev,
           isGenerating: false,
           result,
           svg: result.svg,
           dsl: result.dsl ?? null,
-          conversationId: result.conversationId ?? prev.conversationId,
+          conversationId: newConversationId,
           version: result.metadata.version ?? prev.version + 1,
           suggestions: result.suggestions ?? [],
         }));
 
+        syncConversationContext(newConversationId);
         onSuccess?.(result);
         return result;
       } catch (e) {
@@ -441,7 +461,7 @@ export function useDiagramGenerator(
         return null;
       }
     },
-    [state.version, maxHistory, onSuccess, onError, onGenerationStart]
+    [state.conversationId, state.version, maxHistory, onSuccess, onError, onGenerationStart, syncConversationContext]
   );
 
   /**
@@ -485,6 +505,7 @@ export function useDiagramGenerator(
     });
     setHistory([]);
     setParsedPrompt(null);
+    setConversationContext(null);
 
     if (generatorRef.current) {
       generatorRef.current.clearConversation();
@@ -556,23 +577,12 @@ export function useDiagramGenerator(
     }));
 
     setHistory([]);
+    setConversationContext(null);
 
     if (persistConversation && typeof window !== 'undefined') {
       localStorage.removeItem('diagramGenerator_conversationId');
     }
   }, [state.conversationId, persistConversation]);
-
-  /**
-   * Get conversation context
-   */
-  const conversationContext = state.conversationId && generatorRef.current
-    ? generatorRef.current.getConversationHistory(state.conversationId)
-    : null;
-
-  /**
-   * Get available backends
-   */
-  const availableBackends = generatorRef.current?.getAvailableBackends() ?? [];
 
   return {
     // State

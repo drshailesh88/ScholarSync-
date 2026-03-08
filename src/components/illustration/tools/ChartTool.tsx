@@ -11,7 +11,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { FabricImage } from 'fabric';
 
 // Stub for react-plotly - full library needs to be installed for chart functionality
-const Plot: React.ComponentType<any> = ({ data, layout }: { data: unknown[]; layout: unknown }) => (
+const Plot: React.ComponentType<any> = ({ data: _data, layout: _layout }: { data: unknown[]; layout: unknown }) => (
   <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-muted, #999)' }}>
     <div>Chart Preview</div>
     <div style={{ fontSize: '12px', marginTop: '8px' }}>
@@ -796,7 +796,6 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
   }, [canvasContext, chartState.width, chartState.height, onApply, onClose]);
 
   // Handle plot initialization - use generic signature for react-plotly.js compatibility
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
   const handlePlotInit = useCallback((_figure: any, graphDiv: any) => {
     plotRef.current = graphDiv as PlotlyHTMLElement;
   }, []);
@@ -1021,9 +1020,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
         <div style={styles.previewContainer}>
           {plotData && plotLayout ? (
             <Plot
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               data={plotData as any}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               layout={{
                 ...plotLayout,
                 width: Math.min(chartState.width, 700),

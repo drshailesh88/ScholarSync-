@@ -670,8 +670,10 @@ export const PATHOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const pathologyPrompts = {
   PATHOLOGY_DOMAIN_PROMPT,
   PATHOLOGY_PROMPTS,
   PATHOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default pathologyPrompts;

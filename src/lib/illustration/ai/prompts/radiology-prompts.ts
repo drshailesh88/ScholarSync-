@@ -482,8 +482,10 @@ export const RADIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const radiologyPrompts = {
   RADIOLOGY_DOMAIN_PROMPT,
   RADIOLOGY_PROMPTS,
   RADIOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default radiologyPrompts;

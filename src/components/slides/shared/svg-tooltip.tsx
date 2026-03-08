@@ -90,34 +90,34 @@ export function useSvgTooltip(interactive: boolean = true) {
 }
 
 export function SvgTooltip({ tooltip }: { tooltip: SvgTooltipState }) {
-  const tipRef = useRef<HTMLDivElement>(null);
-  const [adjusted, setAdjusted] = useState({ x: 0, y: 0 });
+  const tipRef = useCallback(
+    (el: HTMLDivElement | null) => {
+      if (!el || !tooltip.visible) return;
+      const parent = el.offsetParent as HTMLElement | null;
+      if (!parent) return;
 
-  useEffect(() => {
-    if (!tooltip.visible || !tipRef.current) return;
-    const el = tipRef.current;
-    const parent = el.offsetParent as HTMLElement | null;
-    if (!parent) return;
+      const parentRect = parent.getBoundingClientRect();
+      let x = tooltip.x + 12;
+      let y = tooltip.y - 8;
 
-    const parentRect = parent.getBoundingClientRect();
-    let x = tooltip.x + 12;
-    let y = tooltip.y - 8;
+      // Prevent going off right edge
+      if (x + el.offsetWidth > parentRect.width) {
+        x = tooltip.x - el.offsetWidth - 12;
+      }
+      // Prevent going off bottom edge
+      if (y + el.offsetHeight > parentRect.height) {
+        y = parentRect.height - el.offsetHeight - 4;
+      }
+      // Prevent going off top
+      if (y < 0) y = 4;
+      // Prevent going off left
+      if (x < 0) x = 4;
 
-    // Prevent going off right edge
-    if (x + el.offsetWidth > parentRect.width) {
-      x = tooltip.x - el.offsetWidth - 12;
-    }
-    // Prevent going off bottom edge
-    if (y + el.offsetHeight > parentRect.height) {
-      y = parentRect.height - el.offsetHeight - 4;
-    }
-    // Prevent going off top
-    if (y < 0) y = 4;
-    // Prevent going off left
-    if (x < 0) x = 4;
-
-    setAdjusted({ x, y });
-  }, [tooltip.x, tooltip.y, tooltip.visible]);
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+    },
+    [tooltip.x, tooltip.y, tooltip.visible]
+  );
 
   if (!tooltip.visible || !tooltip.data) return null;
 
@@ -126,8 +126,6 @@ export function SvgTooltip({ tooltip }: { tooltip: SvgTooltipState }) {
       ref={tipRef}
       className="absolute pointer-events-none z-50 rounded-lg shadow-lg px-2.5 py-1.5 text-xs max-w-[200px]"
       style={{
-        left: adjusted.x,
-        top: adjusted.y,
         backgroundColor: "#1F2937",
         color: "#ffffff",
       }}

@@ -437,8 +437,9 @@ export const ENT_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const entPrompts = {
   ENT_DOMAIN_PROMPT,
   ENT_PROMPTS,
   ENT_FEW_SHOT_EXAMPLES,
 };
+export default entPrompts;

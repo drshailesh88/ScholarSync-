@@ -497,8 +497,9 @@ export const ANESTHESIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const anesthesiologyPrompts = {
   ANESTHESIOLOGY_DOMAIN_PROMPT,
   ANESTHESIOLOGY_PROMPTS,
   ANESTHESIOLOGY_FEW_SHOT_EXAMPLES,
 };
+export default anesthesiologyPrompts;

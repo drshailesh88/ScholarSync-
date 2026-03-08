@@ -21,7 +21,7 @@ export type Backend = "mermaid" | "svg" | "gemini";
  * @param domain - Optional domain context
  * @returns The selected backend
  */
-export function detectBestBackend(prompt: string, domain?: string): Backend {
+export function detectBestBackend(prompt: string, _domain?: string): Backend {
   const lower = prompt.toLowerCase();
 
   // Mermaid: flowcharts, process diagrams, decision trees

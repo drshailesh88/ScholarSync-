@@ -412,8 +412,10 @@ export const BIOCHEMISTRY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const biochemistryPrompts = {
   BIOCHEMISTRY_DOMAIN_PROMPT,
   BIOCHEMISTRY_PROMPTS,
   BIOCHEMISTRY_FEW_SHOT_EXAMPLES,
 };
+
+export default biochemistryPrompts;

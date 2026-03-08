@@ -409,7 +409,7 @@ export function getChemistryPromptsByCategory(category: keyof typeof CHEMISTRY_P
   return categoryData.prompts.map((key) => CHEMISTRY_PROMPTS[key as keyof typeof CHEMISTRY_PROMPTS]);
 }
 
-export default {
+const chemistryPrompts = {
   CHEMISTRY_DOMAIN_PROMPT,
   CHEMISTRY_PROMPTS,
   CHEMISTRY_FEW_SHOT_EXAMPLES,
@@ -418,3 +418,5 @@ export default {
   getAllChemistryPrompts,
   getChemistryPromptsByCategory,
 };
+
+export default chemistryPrompts;

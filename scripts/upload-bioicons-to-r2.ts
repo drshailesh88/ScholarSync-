@@ -43,7 +43,7 @@ function getBucket() {
 /**
  * Upload a single SVG to R2 or save locally
  */
-async function uploadIcon(name: string, content: Buffer): Promise<string> {
+async function _uploadIcon(name: string, content: Buffer): Promise<string> {
   const key = `icons/bioicons/${name}`;
 
   if (isWorkers()) {
@@ -115,8 +115,8 @@ async function uploadBioicons() {
 
   // Production R2 upload path
   console.log("☁️  Production mode: Uploading to R2...");
-  let uploaded = 0;
-  let failed = 0;
+  const _uploaded = 0;
+  const _failed = 0;
 
   // This would run in actual Workers environment
   // For now, it's a placeholder since we're not in Workers

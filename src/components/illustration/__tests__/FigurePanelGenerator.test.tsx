@@ -155,7 +155,7 @@ describe('FigurePanelGenerator', () => {
     });
 
     it('should calculate panel index from grid position', () => {
-      const rows = 2;
+      const _rows = 2;
       const cols = 3;
 
       // Row 0

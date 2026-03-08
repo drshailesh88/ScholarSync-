@@ -518,8 +518,10 @@ export const NEUROSCIENCE_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const neurosciencePrompts = {
   NEUROSCIENCE_DOMAIN_PROMPT,
   NEUROSCIENCE_PROMPTS,
   NEUROSCIENCE_FEW_SHOT_EXAMPLES,
 };
+
+export default neurosciencePrompts;

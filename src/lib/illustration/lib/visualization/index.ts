@@ -461,7 +461,6 @@ export function createHeatmap(
 
   // Add annotations if requested
   if (heatmapData.showAnnotation) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const annotations: any[] = [];
     for (let i = 0; i < heatmapData.z.length; i++) {
       for (let j = 0; j < heatmapData.z[i].length; j++) {

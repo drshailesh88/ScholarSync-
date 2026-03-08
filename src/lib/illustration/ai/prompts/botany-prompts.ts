@@ -617,8 +617,9 @@ export const BOTANY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const botanyPrompts = {
   BOTANY_DOMAIN_PROMPT,
   BOTANY_PROMPTS,
   BOTANY_FEW_SHOT_EXAMPLES,
 };
+export default botanyPrompts;

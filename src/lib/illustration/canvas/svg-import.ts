@@ -103,7 +103,7 @@ export async function importSVGToCanvas(
   }
 
   // Extract dimensions
-  const dimensions = extractDimensions(svgElement);
+  const _dimensions = extractDimensions(svgElement);
 
   // Convert to Fabric objects
   const objects = await convertToFabricObjects(svgElement, opts);

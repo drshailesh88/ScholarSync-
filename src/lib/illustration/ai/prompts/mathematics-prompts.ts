@@ -649,8 +649,9 @@ export const MATHEMATICS_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const mathematicsPrompts = {
   MATHEMATICS_DOMAIN_PROMPT,
   MATHEMATICS_PROMPTS,
   MATHEMATICS_FEW_SHOT_EXAMPLES,
 };
+export default mathematicsPrompts;

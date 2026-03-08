@@ -591,8 +591,10 @@ export const CARDIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const cardiologyPrompts = {
   CARDIOLOGY_DOMAIN_PROMPT,
   CARDIOLOGY_PROMPTS,
   CARDIOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default cardiologyPrompts;

@@ -9,8 +9,6 @@
  * @module components/illustration/ScientificTextToolbar
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { useEditorStore } from '@/stores/illustration/editorStore';
 

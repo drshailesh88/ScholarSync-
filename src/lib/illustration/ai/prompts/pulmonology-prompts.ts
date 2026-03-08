@@ -381,8 +381,10 @@ export const PULMONOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const pulmonologyPrompts = {
   PULMONOLOGY_DOMAIN_PROMPT,
   PULMONOLOGY_PROMPTS,
   PULMONOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default pulmonologyPrompts;

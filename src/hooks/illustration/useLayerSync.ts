@@ -20,6 +20,22 @@ import {
 } from '@/lib/illustration/LayerManager';
 
 // ============================================================================
+// Internal Types
+// ============================================================================
+
+/** Canvas object with optional custom properties used by layers */
+interface CanvasObject {
+  id?: string;
+  isGrid?: boolean;
+  set: (key: string, value: unknown) => void;
+}
+
+/** Canvas event with target object */
+interface CanvasObjectEvent {
+  target?: CanvasObject;
+}
+
+// ============================================================================
 // Types
 // ============================================================================
 
@@ -66,7 +82,7 @@ export interface UseLayerSyncReturn {
 /**
  * Generate object ID if not present on Fabric object
  */
-function ensureObjectId(obj: any): string {
+function ensureObjectId(obj: CanvasObject): string {
   if (!obj.id) {
     obj.id = `obj_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     obj.set('id', obj.id);
@@ -91,7 +107,7 @@ function toStoreLayer(layer: Layer): StoreLayer {
 /**
  * Debounce function
  */
-function debounce<T extends (...args: any[]) => void>(
+function debounce<T extends (...args: unknown[]) => void>(
   fn: T,
   delay: number
 ): T & { cancel: () => void } {
@@ -205,7 +221,7 @@ export function useLayerSync(
       layers.forEach((layer) => {
         layer.objects.forEach((objectId) => {
           const objects = canvas.getObjects();
-          const obj = objects.find((o: any) => o.id === objectId);
+          const obj = objects.find((o) => (o as unknown as CanvasObject).id === objectId);
 
           if (obj) {
             obj.set({
@@ -307,7 +323,7 @@ export function useLayerSync(
    * Handle object added to canvas
    */
   const handleObjectAdded = useCallback(
-    (e: any) => {
+    (e: CanvasObjectEvent) => {
       const obj = e.target;
       if (!obj || obj.isGrid) return;
 
@@ -321,7 +337,7 @@ export function useLayerSync(
           if (syncToStore) {
             addObjectToLayer(activeLayerId, objectId);
           }
-        } catch (error) {
+        } catch {
           // If active layer doesn't exist, try default layer
           const defaultLayer = manager.getDefaultLayer();
           if (defaultLayer) {
@@ -357,7 +373,7 @@ export function useLayerSync(
    * Handle object removed from canvas
    */
   const handleObjectRemoved = useCallback(
-    (e: any) => {
+    (e: CanvasObjectEvent) => {
       const obj = e.target;
       if (!obj || obj.isGrid || !obj.id) return;
 
@@ -519,7 +535,7 @@ export function useLayerSync(
 
   return {
     manager,
-    isAttached: isAttachedRef.current,
+    isAttached: manager.isAttached(),
     syncCanvasToLayers,
     syncLayersToCanvas,
     createNewLayer,

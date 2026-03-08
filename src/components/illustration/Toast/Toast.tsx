@@ -224,6 +224,13 @@ function ToastItem({ toast, onDismiss }: ToastItemProps): JSX.Element {
   const [isHovered, setIsHovered] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
+  const handleDismiss = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onDismiss(toast.id);
+    }, 200);
+  }, [toast.id, onDismiss]);
+
   useEffect(() => {
     if (toast.duration === 0) return;
 
@@ -232,14 +239,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps): JSX.Element {
     }, toast.duration || DEFAULT_DURATION);
 
     return () => clearTimeout(timeout);
-  }, [toast.id, toast.duration]);
-
-  const handleDismiss = useCallback(() => {
-    setIsExiting(true);
-    setTimeout(() => {
-      onDismiss(toast.id);
-    }, 200);
-  }, [toast.id, onDismiss]);
+  }, [toast.id, toast.duration, handleDismiss]);
 
   const typeStyles: Record<ToastType, React.CSSProperties> = {
     success: styles.toastSuccess,

@@ -480,8 +480,10 @@ export const NEPHROLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const nephrologyPrompts = {
   NEPHROLOGY_DOMAIN_PROMPT,
   NEPHROLOGY_PROMPTS,
   NEPHROLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default nephrologyPrompts;

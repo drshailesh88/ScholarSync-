@@ -500,8 +500,10 @@ export const MOLECULAR_BIOLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const molecularBiologyPrompts = {
   MOLECULAR_BIOLOGY_DOMAIN_PROMPT,
   MOLECULAR_BIOLOGY_PROMPTS,
   MOLECULAR_BIOLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default molecularBiologyPrompts;

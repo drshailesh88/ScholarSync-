@@ -538,6 +538,7 @@ export function Welcome(): JSX.Element {
                 >
                   <div style={styles.recentThumbnail}>
                     {diagram.thumbnail ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={diagram.thumbnail}
                         alt=""

@@ -420,8 +420,10 @@ export const GASTROENTEROLOGY_FEW_SHOT_EXAMPLES: FewShotExample[] = [
 // EXPORT
 // =============================================================================
 
-export default {
+const gastroenterologyPrompts = {
   GASTROENTEROLOGY_DOMAIN_PROMPT,
   GASTROENTEROLOGY_PROMPTS,
   GASTROENTEROLOGY_FEW_SHOT_EXAMPLES,
 };
+
+export default gastroenterologyPrompts;

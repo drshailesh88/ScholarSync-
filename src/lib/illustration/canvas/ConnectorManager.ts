@@ -16,7 +16,7 @@ import {
 import {
   SmartConnectorData,
   ConnectorStyle,
-  ConnectorPort,
+  ConnectorPort as _ConnectorPort,
   DEFAULT_CONNECTOR_STYLE,
   createConnectorVisual,
   updateConnectorVisual as updateVisual,
@@ -59,7 +59,7 @@ function findObjectById(canvas: FabricCanvas, id: string): FabricObject | undefi
 /**
  * Check if an object is a connector (not a node)
  */
-function isConnector(obj: FabricObject): boolean {
+function _isConnector(obj: FabricObject): boolean {
   return obj.get('data-type') === 'connector';
 }
 
