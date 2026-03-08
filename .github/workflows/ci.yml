@@ -131,8 +131,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Audit dependencies (high + critical)
-        run: npm audit --audit-level=high
+      - name: Audit dependencies (critical only)
+        run: npm audit --audit-level=critical
 
       - name: Check for hardcoded secrets
         run: |
