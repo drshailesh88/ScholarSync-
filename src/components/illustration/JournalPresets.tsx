@@ -8,10 +8,15 @@
  * @module components/illustration/JournalPresets
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { useEditorStore } from '@/stores/illustration/editorStore';
+import {
+  formatFigureLabel,
+  createScaleBar,
+  type FigureLabelStyle,
+} from '@/lib/illustration/canvas/color-conventions';
 
 // ============================================================================
 // TYPES
@@ -516,12 +521,23 @@ export interface JournalPresetsProps {
   onPresetSelect?: (preset: JournalPreset) => void;
   /** Callback when export should proceed with selected preset */
   onExport?: (preset: JournalPreset) => void;
+  /** Callback when inserting a figure label */
+  onInsertLabel?: (text: string) => void;
+  /** Callback when inserting a scale bar */
+  onInsertScaleBar?: (widthPx: number, heightPx: number, label: string) => void;
 }
 
-export function JournalPresets({ onPresetSelect, onExport }: JournalPresetsProps): JSX.Element {
+export function JournalPresets({ onPresetSelect, onExport, onInsertLabel, onInsertScaleBar }: JournalPresetsProps): JSX.Element {
   const canvas = useEditorStore((state) => state.canvas);
   const [selectedPreset, setSelectedPreset] = useState<JournalPreset | null>(null);
   const [preflightResult, setPreflightResult] = useState<PreflightResult | null>(null);
+
+  // Figure prep state
+  const [figLabelStyle, setFigLabelStyle] = useState<FigureLabelStyle>('fig-dot');
+  const [figLabelNumber, setFigLabelNumber] = useState(1);
+  const [scaleBarValue, setScaleBarValue] = useState(100);
+  const [scaleBarUnit, setScaleBarUnit] = useState('μm');
+  const scaleBarWidthPx = 200;
 
   // Get canvas objects for preflight
   const canvasObjects = useMemo(() => {
@@ -559,6 +575,19 @@ export function JournalPresets({ onPresetSelect, onExport }: JournalPresetsProps
       onExport(selectedPreset);
     }
   }, [selectedPreset, onExport]);
+
+  // Handle figure label insertion
+  const handleInsertFigLabel = useCallback(() => {
+    const label = formatFigureLabel({ style: figLabelStyle, number: figLabelNumber });
+    onInsertLabel?.(label);
+    setFigLabelNumber(prev => prev + 1);
+  }, [figLabelStyle, figLabelNumber, onInsertLabel]);
+
+  // Handle scale bar insertion
+  const handleInsertScaleBar = useCallback(() => {
+    const bar = createScaleBar({ lengthValue: scaleBarValue, unit: scaleBarUnit, barWidthPx: scaleBarWidthPx });
+    onInsertScaleBar?.(bar.widthPx, bar.heightPx, bar.label);
+  }, [scaleBarValue, scaleBarUnit, scaleBarWidthPx, onInsertScaleBar]);
 
   return (
     <div style={styles.panel}>
@@ -599,6 +628,53 @@ export function JournalPresets({ onPresetSelect, onExport }: JournalPresetsProps
           </div>
         </div>
       )}
+
+      {/* Figure Prep Quick Tools */}
+      <div style={styles.section}>
+        <div style={styles.sectionTitle}>Figure Preparation</div>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <select
+            style={{ ...styles.button, flex: 1, textAlign: 'left' }}
+            value={figLabelStyle}
+            onChange={(e) => setFigLabelStyle(e.target.value as FigureLabelStyle)}
+          >
+            <option value="fig-dot">Fig. 1</option>
+            <option value="figure-space">Figure 1</option>
+            <option value="letter-paren">(a)</option>
+            <option value="letter-plain">A</option>
+          </select>
+          <button
+            style={{ ...styles.button, ...styles.buttonPrimary }}
+            onClick={handleInsertFigLabel}
+          >
+            Insert Label
+          </button>
+        </div>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <input
+            type="number"
+            style={{ ...styles.button, width: '60px', textAlign: 'center' }}
+            value={scaleBarValue}
+            min={1}
+            onChange={(e) => setScaleBarValue(parseInt(e.target.value) || 1)}
+          />
+          <select
+            style={{ ...styles.button }}
+            value={scaleBarUnit}
+            onChange={(e) => setScaleBarUnit(e.target.value)}
+          >
+            <option value="nm">nm</option>
+            <option value="μm">μm</option>
+            <option value="mm">mm</option>
+          </select>
+          <button
+            style={{ ...styles.button, ...styles.buttonPrimary }}
+            onClick={handleInsertScaleBar}
+          >
+            Scale Bar
+          </button>
+        </div>
+      </div>
 
       {/* Preflight Results */}
       <PreflightDisplay result={preflightResult} />
