@@ -226,35 +226,35 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 210 | Editor | AI Chat Panel (Studio page) / AI Event Handling — find-sources — opens research sidebar with context from editor | /studio | ✅ PASS | Dispatching `find-sources` opened the research sidebar; the snapshot then showed `Close (Cmd+Shift+L)`, the search box, and Search/Library/Chat tabs. |  |
 | 211 | Editor | AI Chat Panel (Studio page) / AI Event Handling — cite — asks AI for citation help | /studio | ✅ PASS | Dispatching `cite` sent `/api/chat` the prompt `Help me add a citation from my library. What paper should I cite here?`. |  |
 | 212 | Editor | AI Chat Panel (Studio page) / AI Event Handling — integrity-check — switches to Checks tab | /studio | ✅ PASS | Dispatching `integrity-check` switched the panel into the Checks view; the snapshot then exposed `Run Integrity Check`. |  |
-| 213 | Editor | Write Mode — AI Intensity (Studio page) — Focus | /studio | ⬜ |  |  |
-| 214 | Editor | Write Mode — AI Intensity (Studio page) — Collaborate | /studio | ⬜ |  |  |
-| 215 | Editor | Write Mode — AI Intensity (Studio page) — Accelerate | /studio | ⬜ |  |  |
-| 216 | Editor | Write Mode — AI Intensity (Studio page) — Clicking a level selects it (highlighted state) | /studio | ⬜ |  |  |
-| 217 | Editor | Write Mode — AI Intensity (Studio page) — Description text updates below the buttons | /studio | ⬜ |  |  |
-| 218 | Editor | Write Mode — AI Intensity (Studio page) — Selected intensity is passed as draftContext.intensity to the chat API | /studio | ⬜ |  |  |
-| 219 | Editor | Learn Mode — Guide Mode (Studio page) / Features — Banner message — "Guide Mode — I won't write for you — I'll teach you how" | /studio | ⬜ |  |  |
-| 220 | Editor | Learn Mode — Guide Mode (Studio page) / Features — Document type selector — dropdown with 7 types: | /studio | ⬜ |  |  |
-| 221 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 1 | /studio | ⬜ |  |  |
-| 222 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 2 | /studio | ⬜ |  |  |
-| 223 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 3 | /studio | ⬜ |  |  |
-| 224 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 4 | /studio | ⬜ |  |  |
-| 225 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 5 | /studio | ⬜ |  |  |
-| 226 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 6 | /studio | ⬜ |  |  |
-| 227 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Active stage is highlighted green | /studio | ⬜ |  |  |
-| 228 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Completed stages (before active) have lighter green background | /studio | ⬜ |  |  |
-| 229 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Future stages are grey | /studio | ⬜ |  |  |
-| 230 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Clicking any stage sets it as active | /studio | ⬜ |  |  |
-| 231 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Guide context (documentType + stage) is passed to the chat API | /studio | ⬜ |  |  |
-| 232 | Editor | Research Sidebar (Studio page) / Research Tab in AI Panel — "Open Literature Research Panel" button — opens the ResearchSidebar component | /studio | ⬜ |  |  |
-| 233 | Editor | Research Sidebar (Studio page) / Research Tab in AI Panel — Shortcut hint — Cmd+Shift+L to toggle | /studio | ⬜ |  |  |
-| 234 | Editor | Research Sidebar (Studio page) / Research Tab in AI Panel — Quick search — PubMed search input + Search button, opens research sidebar with query | /studio | ⬜ |  |  |
-| 235 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Resizable — drag handle to adjust width | /studio | ⬜ |  |  |
-| 236 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Three tabs: Search, Library, Chat | /studio | ⬜ |  |  |
-| 237 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Collapsed state — shows Books icon only | /studio | ⬜ |  |  |
-| 238 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Badge counter — shows paper count in library | /studio | ⬜ |  |  |
-| 239 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Paper selection — for evidence tables | /studio | ⬜ |  |  |
-| 240 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Citation insertion — can insert citations from research papers | /studio | ⬜ |  |  |
-| 241 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Keyboard shortcut: Cmd+Shift+L toggles sidebar (handled by Studio page event listener) | /studio | ⬜ |  |  |
+| 213 | Editor | Write Mode — AI Intensity (Studio page) — Focus | /studio | ✅ PASS | Clicking `Focus` highlighted the button with `bg-sky-500` and updated the helper copy to `AI is quiet — only responds when you ask`. |  |
+| 214 | Editor | Write Mode — AI Intensity (Studio page) — Collaborate | /studio | ✅ PASS | `Collaborate` is the default selected intensity and renders with the brand-highlighted state plus the collaboration description. |  |
+| 215 | Editor | Write Mode — AI Intensity (Studio page) — Accelerate | /studio | ✅ PASS | Clicking `Accelerate` highlighted the button with `bg-violet-500` and updated the helper copy to `AI is proactive — full suggestions and sidebar`. |  |
+| 216 | Editor | Write Mode — AI Intensity (Studio page) — Clicking a level selects it (highlighted state) | /studio | ✅ PASS | Real browser clicks switched the active highlight between Focus, Collaborate, and Accelerate. |  |
+| 217 | Editor | Write Mode — AI Intensity (Studio page) — Description text updates below the buttons | /studio | ✅ PASS | The intensity description below the segmented control updated live with each selection. |  |
+| 218 | Editor | Write Mode — AI Intensity (Studio page) — Selected intensity is passed as draftContext.intensity to the chat API | /studio | ✅ PASS | Sending a live chat message while `Accelerate` was active captured `/api/chat` with `draftContext.intensity: \"accelerate\"`. |  |
+| 219 | Editor | Learn Mode — Guide Mode (Studio page) / Features — Banner message — "Guide Mode — I won't write for you — I'll teach you how" | /studio | ✅ PASS | Switching to Learn mode showed the green Guide Mode banner and the placeholder changed to `Ask me to challenge your thinking...`. |  |
+| 220 | Editor | Learn Mode — Guide Mode (Studio page) / Features — Document type selector — dropdown with 7 types: | /studio | ✅ PASS | The Learn-mode picker exposed all 7 options: Case Report, Original Article, Review Article, Meta-Analysis, Book Chapter, Academic Draft, and Letter / Correspondence. |  |
+| 221 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 1 | /studio | ✅ PASS | With `Case Report` selected, `Understand` loaded as the initial active stage and could be activated. |  |
+| 222 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 2 | /studio | ✅ PASS | Clicking `Plan` promoted it to the active green stage. |  |
+| 223 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 3 | /studio | ✅ PASS | Clicking `Outline` promoted it to the active green stage. |  |
+| 224 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 4 | /studio | ✅ PASS | Clicking `Draft` promoted it to the active green stage. |  |
+| 225 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 5 | /studio | ✅ PASS | Clicking `Revise` promoted it to the active green stage. |  |
+| 226 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — 6 | /studio | ✅ PASS | Clicking `Polish` promoted it to the active green stage. |  |
+| 227 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Active stage is highlighted green | /studio | ✅ PASS | The active stage renders with `bg-emerald-500 text-white`. |  |
+| 228 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Completed stages (before active) have lighter green background | /studio | ✅ PASS | After moving to `Revise`, preceding stages rendered with the lighter `bg-emerald-500/30 text-emerald-600` style. |  |
+| 229 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Future stages are grey | /studio | ✅ PASS | With `Revise` active, the remaining future stage `Polish` stayed grey with `bg-surface-raised/50 text-ink-muted`. |  |
+| 230 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Clicking any stage sets it as active | /studio | ✅ PASS | Repeated clicks across Plan, Outline, Draft, Revise, and Polish all switched the active state correctly. |  |
+| 231 | Editor | Learn Mode — Guide Mode (Studio page) / Stage Progression — Guide context (documentType + stage) is passed to the chat API | /studio | ✅ PASS | In Learn mode with `Case Report` + `Draft`, `/api/chat` captured `guideContext.documentType: \"case_report\"` and `guideContext.stage: \"draft\"`. |  |
+| 232 | Editor | Research Sidebar (Studio page) / Research Tab in AI Panel — "Open Literature Research Panel" button — opens the ResearchSidebar component | /studio | ✅ PASS | The AI-panel Research tab exposed `Open Literature Research Panel`, and clicking it opened the full Literature Research sidebar. |  |
+| 233 | Editor | Research Sidebar (Studio page) / Research Tab in AI Panel — Shortcut hint — Cmd+Shift+L to toggle | /studio | ✅ PASS | The same AI-panel Research tab displayed the `Cmd+Shift+L` shortcut hint. |  |
+| 234 | Editor | Research Sidebar (Studio page) / Research Tab in AI Panel — Quick search — PubMed search input + Search button, opens research sidebar with query | /studio | ✅ PASS | Entering `SGLT2 inhibitors heart failure` in `Quick search PubMed...` opened the research sidebar and seeded the search textarea with that query. |  |
+| 235 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Resizable — drag handle to adjust width | /studio | ✅ PASS | Simulating a drag on the resize handle changed the sidebar width from `400px` to `320px`. |  |
+| 236 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Three tabs: Search, Library, Chat | /studio | ✅ PASS | The opened sidebar showed all three bottom tabs: `Search`, `Library`, and `Chat`. |  |
+| 237 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Collapsed state — shows Books icon only | /studio | ✅ PASS | Closing the sidebar collapsed it to the narrow Books-icon rail with the `Open Research Sidebar (Cmd+Shift+L)` control. |  |
+| 238 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Badge counter — shows paper count in library | /studio | ✅ PASS | Adding one paper to the library changed the sidebar tab badge to `Library 1`. |  |
+| 239 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Paper selection — for evidence tables | /studio | ✅ PASS | Selecting two live search results surfaced the `2 selected` state and the `Build Evidence Table` action bar. |  |
+| 240 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Citation insertion — can insert citations from research papers | /studio | ✅ PASS | Fixed Studio to listen for research citation events; a research-paper insertion now creates a reference, inserts a citation node `[1]`, and shows `Citation inserted`. |  |
+| 241 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Keyboard shortcut: Cmd+Shift+L toggles sidebar (handled by Studio page event listener) | /studio | ✅ PASS | Dispatching `Cmd+Shift+L` opened the research sidebar, exposing the full search textarea and close control. |  |
 | 242 | Editor | Integrity Panel (Studio page) / Idle State — Shield icon with description | /studio | ⬜ |  |  |
 | 243 | Editor | Integrity Panel (Studio page) / Idle State — "Run Integrity Check" button | /studio | ⬜ |  |  |
 | 244 | Editor | Integrity Panel (Studio page) / Idle State — Requires minimum 50 characters in document | /studio | ⬜ |  |  |
