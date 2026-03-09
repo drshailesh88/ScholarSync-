@@ -125,28 +125,28 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 109 | Editor | Reference Sidebar / Features — DOI copy — copy DOI to clipboard | /studio | ✅ PASS | `Copy DOI` wrote the expected URL-form DOI (`https://doi.org/10.1093/ckj/sfaf292`) to `navigator.clipboard.writeText`. |  |
 | 110 | Editor | Reference Sidebar / Features — Expand/collapse — click to see full reference details | /studio | ✅ PASS | Clicking a reference row expanded full metadata plus `Open DOI`, `Copy DOI`, and `Remove` actions. |  |
 | 111 | Editor | Reference Sidebar / Features — Close button — closes the sidebar | /studio | ✅ PASS | Clicking the sidebar header close button hid the entire reference sidebar and removed the `Filter references...` field from the page. |  |
-| 112 | Editor | Bibliography — BibliographyNode auto-inserted at document end when first citation is added | /studio | ⬜ |  |  |
-| 113 | Editor | Bibliography — Renders formatted reference list from the reference store | /studio | ⬜ |  |  |
-| 114 | Editor | Bibliography — Only one bibliography block allowed per document (prevents duplicates) | /studio | ⬜ |  |  |
-| 115 | Editor | Bibliography — Non-editable block — users cannot type inside it | /studio | ⬜ |  |  |
-| 116 | Editor | Bibliography — Updates reactively when citations are added/removed | /studio | ⬜ |  |  |
-| 117 | Editor | Footnotes — Insert via Cmd+Shift+F — prompts for footnote text via window.prompt | /studio | ⬜ |  |  |
-| 118 | Editor | Footnotes — Insert via slash command "Footnote" | /studio | ⬜ |  |  |
-| 119 | Editor | Footnotes — Footnote appears as superscript number in the text | /studio | ⬜ |  |  |
-| 120 | Editor | Footnotes — Hover tooltip — shows footnote content | /studio | ⬜ |  |  |
-| 121 | Editor | Footnotes — Footnote editor — inline editing of footnote text (via FootnoteView) | /studio | ⬜ |  |  |
-| 122 | Editor | Footnotes — Delete footnote button in footnote view | /studio | ⬜ |  |  |
-| 123 | Editor | Footnotes — Auto-renumbering — ProseMirror plugin renumbers footnotes when they change order | /studio | ⬜ |  |  |
-| 124 | Editor | Footnotes — FootnoteSection — renders all footnotes at the bottom of the editor area | /studio | ⬜ |  |  |
-| 125 | Editor | Document Outline — Toggle — click the List icon to expand, X to collapse | /studio | ⬜ |  |  |
-| 126 | Editor | Document Outline — Auto-show on hover — expands when mouse enters the area | /studio | ⬜ |  |  |
-| 127 | Editor | Document Outline — Minimum headings — only appears when document has 2+ headings | /studio | ⬜ |  |  |
-| 128 | Editor | Document Outline — Heading hierarchy — H1-H4 with proper indentation | /studio | ⬜ |  |  |
-| 129 | Editor | Document Outline — Active section highlighting — current section has brand-colored left border | /studio | ⬜ |  |  |
-| 130 | Editor | Document Outline — Click to scroll — clicking a heading scrolls to it and positions cursor | /studio | ⬜ |  |  |
-| 131 | Editor | Document Outline — Word count per section — appears on hover for each heading | /studio | ⬜ |  |  |
-| 132 | Editor | Document Outline — Missing IMRAD section warnings — amber warnings for missing: Introduction, Methods, Results, Discussion, Conclusion, References | /studio | ⬜ |  |  |
-| 133 | Editor | Document Outline — Total word count — displayed in footer | /studio | ⬜ |  |  |
+| 112 | Editor | Bibliography — BibliographyNode auto-inserted at document end when first citation is added | /studio | ✅ PASS | Inserting the first Studio citation appended a bibliography node at the document end automatically. |  |
+| 113 | Editor | Bibliography — Renders formatted reference list from the reference store | /studio | ✅ PASS | The Studio bibliography rendered full Vancouver-style entries from the citation store, including DOI text. |  |
+| 114 | Editor | Bibliography — Only one bibliography block allowed per document (prevents duplicates) | /studio | ✅ PASS | Adding a second citation kept the document at exactly one `node-bibliography` block while expanding the same list to two entries. |  |
+| 115 | Editor | Bibliography — Non-editable block — users cannot type inside it | /studio | ✅ PASS | Attempting to inject text into the bibliography selection left the editor HTML unchanged because the bibliography block is non-editable. |  |
+| 116 | Editor | Bibliography — Updates reactively when citations are added/removed | /studio | ✅ PASS | Deleting the second citation immediately shrank the bibliography from two entries back to one without a refresh. |  |
+| 117 | Editor | Footnotes — Insert via Cmd+Shift+F — prompts for footnote text via window.prompt | /studio | ✅ PASS | `Meta+Shift+F` consumed the prompt text and inserted a footnote marker into the Studio editor. |  |
+| 118 | Editor | Footnotes — Insert via slash command "Footnote" | /studio | ✅ PASS | The `/` menu `Footnote` item inserted a second footnote through the same prompt-driven command. |  |
+| 119 | Editor | Footnotes — Footnote appears as superscript number in the text | /studio | ✅ PASS | Inserted footnotes rendered as inline superscript markers (`1`, then `2`) in the document. |  |
+| 120 | Editor | Footnotes — Hover tooltip — shows footnote content | /studio | ✅ PASS | Hovering the first footnote marker opened a tooltip containing `Footnote 1` and the stored footnote text. |  |
+| 121 | Editor | Footnotes — Footnote editor — inline editing of footnote text (via FootnoteView) | /studio | ✅ PASS | Fixed `FootnoteView` to expose an inline textarea; editing it changed the bottom footnote list to `Edited first footnote`. |  |
+| 122 | Editor | Footnotes — Delete footnote button in footnote view | /studio | ✅ PASS | Clicking the tooltip `✕` button removed the hovered footnote marker from the document. |  |
+| 123 | Editor | Footnotes — Auto-renumbering — ProseMirror plugin renumbers footnotes when they change order | /studio | ✅ PASS | After deleting the first of two footnotes, the remaining marker renumbered itself to `1`. |  |
+| 124 | Editor | Footnotes — FootnoteSection — renders all footnotes at the bottom of the editor area | /studio | ✅ PASS | Fixed Studio to render `FootnoteSection`; the page now mounts a bottom `Footnotes` section under the editor. |  |
+| 125 | Editor | Document Outline — Toggle — click the List icon to expand, X to collapse | /studio | ✅ PASS | Fixed Studio to mount the outline; clicking `Document Outline` expanded the panel and clicking `X` collapsed it. |  |
+| 126 | Editor | Document Outline — Auto-show on hover — expands when mouse enters the area | /studio | ✅ PASS | Hovering the collapsed outline button auto-expanded the panel without an explicit click. |  |
+| 127 | Editor | Document Outline — Minimum headings — only appears when document has 2+ headings | /studio | ✅ PASS | Before inserting headings the outline was absent; after loading a document with `Introduction` and `Methods`, the collapsed outline button appeared. |  |
+| 128 | Editor | Document Outline — Heading hierarchy — H1-H4 with proper indentation | /studio | ✅ PASS | The outline indented the H3 `Subsection` entry to `24px` while H2 sections stayed at `12px`, matching the intended hierarchy. |  |
+| 129 | Editor | Document Outline — Active section highlighting — current section has brand-colored left border | /studio | ✅ PASS | After clicking `Methods`, its outline row switched to `border-brand bg-brand/5`, marking it as the active section. |  |
+| 130 | Editor | Document Outline — Click to scroll — clicking a heading scrolls to it and positions cursor | /studio | ✅ PASS | Clicking `Methods` in the outline moved the text selection onto the `Methods` heading in the editor. |  |
+| 131 | Editor | Document Outline — Word count per section — appears on hover for each heading | /studio | ✅ PASS | The expanded outline showed per-section counts such as `Introduction 3w`, `Methods 3w`, and `Subsection 2w`. |  |
+| 132 | Editor | Document Outline — Missing IMRAD section warnings — amber warnings for missing: Introduction, Methods, Results, Discussion, Conclusion, References | /studio | ✅ PASS | The outline displayed missing-section warnings for `Results`, `Discussion`, `Conclusion`, and `References` when only `Introduction` and `Methods` existed. |  |
+| 133 | Editor | Document Outline — Total word count — displayed in footer | /studio | ✅ PASS | The outline footer rendered `Total: 6 words` for the current synthetic Studio document. |  |
 | 134 | Editor | Comments System / Adding Comments (Editor page only) — Selection toolbar comment button — select text, click comment icon | /editor/[id] | ⬜ |  |  |
 | 135 | Editor | Comments System / Adding Comments (Editor page only) — Cmd+/ — toggles comment sidebar open/closed | /editor/[id] | ⬜ |  |  |
 | 136 | Editor | Comments System / Adding Comments (Editor page only) — Inline comments capture the quoted text from selection | /editor/[id] | ⬜ |  |  |
