@@ -365,43 +365,43 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 349 | Editor | Quick Test Workflow / Studio AI Flow — Type in chat — verify Socratic teaching response | /editor/[id] | ✅ PASS | In Learn mode, submitting a question triggered `POST /api/chat` and returned a Socratic response that asked a clarifying question before explaining the framework. |  |
 | 350 | Editor | Quick Test Workflow / Studio AI Flow — Click Checks tab — run integrity check | /editor/[id] | ✅ PASS | Opening `Checks` and clicking `Run Integrity Check` produced a live integrity report. |  |
 | 351 | Editor | Quick Test Workflow / Studio AI Flow — Verify all 4 result sections render correctly | /editor/[id] | ✅ PASS | The integrity report rendered all four sections: `AI Detection`, `Plagiarism`, `Citations`, and `Writing Quality`. |  |
-| 352 | LaTeX | Project List Page — Page header — "LaTeX Editor" title with subtitle "Write, preview, and compile LaTeX papers" | /latex | ⬜ |  |  |
-| 353 | LaTeX | Project List Page — "New Paper" button — links to /latex/new | /latex | ⬜ |  |  |
-| 354 | LaTeX | Project List Page — Project cards — each shows: | /latex | ⬜ |  |  |
-| 355 | LaTeX | Project List Page — Project title (truncated if long) | /latex | ⬜ |  |  |
-| 356 | LaTeX | Project List Page — Last updated date (formatted: "Mar 9, 2026") | /latex | ⬜ |  |  |
-| 357 | LaTeX | Project List Page — Compiler type label (pdflatex/xelatex/lualatex) | /latex | ⬜ |  |  |
-| 358 | LaTeX | Project List Page — Article icon with brand color | /latex | ⬜ |  |  |
-| 359 | LaTeX | Project List Page — Click project card — navigates to /latex/[projectId] | /latex | ⬜ |  |  |
-| 360 | LaTeX | Project List Page — Delete button — appears on hover (trash icon), removes project immediately (optimistic UI) | /latex | ⬜ |  |  |
-| 361 | LaTeX | Project List Page — Loading state — spinner while fetching projects | /latex | ⬜ |  |  |
-| 362 | LaTeX | Project List Page — Empty state — icon + "No papers yet" message + "Create Paper" button | /latex | ⬜ |  |  |
-| 363 | LaTeX | New Paper Page — Template & Compiler Selection / Title Input — Title field — text input, placeholder "Untitled Paper" | /latex/new | ⬜ |  |  |
-| 364 | LaTeX | New Paper Page — Template & Compiler Selection / Title Input — Enter key — triggers create action | /latex/new | ⬜ |  |  |
-| 365 | LaTeX | New Paper Page — Template & Compiler Selection / Title Input — Defaults to "Untitled Paper" if left empty | /latex/new | ⬜ |  |  |
-| 366 | LaTeX | Template Selection (12 templates) / General Templates — Blank Document | /latex/new | ⬜ |  |  |
-| 367 | LaTeX | Template Selection (12 templates) / General Templates — IEEE Conference | /latex/new | ⬜ |  |  |
-| 368 | LaTeX | Template Selection (12 templates) / General Templates — Nature | /latex/new | ⬜ |  |  |
-| 369 | LaTeX | Template Selection (12 templates) / General Templates — Thesis | /latex/new | ⬜ |  |  |
-| 370 | LaTeX | Template Selection (12 templates) / General Templates — Elsevier | /latex/new | ⬜ |  |  |
-| 371 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — IJMR | /latex/new | ⬜ |  |  |
-| 372 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — JAPI | /latex/new | ⬜ |  |  |
-| 373 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — JAMA | /latex/new | ⬜ |  |  |
-| 374 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Lancet | /latex/new | ⬜ |  |  |
-| 375 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — BMJ | /latex/new | ⬜ |  |  |
-| 376 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Case Report | /latex/new | ⬜ |  |  |
-| 377 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Systematic Review | /latex/new | ⬜ |  |  |
-| 378 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Selected template — highlighted with brand border and ring | /latex/new | ⬜ |  |  |
-| 379 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Templates have category headers: "General" and "Medical & Clinical" | /latex/new | ⬜ |  |  |
-| 380 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Each card shows icon (color-coded) + label + description | /latex/new | ⬜ |  |  |
-| 381 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — pdflatex (default) | /latex/new | ⬜ |  |  |
-| 382 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — xelatex | /latex/new | ⬜ |  |  |
-| 383 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — lualatex | /latex/new | ⬜ |  |  |
-| 384 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — Selected compiler highlighted with brand color | /latex/new | ⬜ |  |  |
-| 385 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — "Create Paper" button — creates project and redirects to editor | /latex/new | ⬜ |  |  |
-| 386 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — Loading state — spinner + disabled button during creation | /latex/new | ⬜ |  |  |
-| 387 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — Error state — red error box below button | /latex/new | ⬜ |  |  |
-| 388 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — Back button — arrow left navigates to /latex | /latex/new | ⬜ |  |  |
+| 352 | LaTeX | Project List Page — Page header — "LaTeX Editor" title with subtitle "Write, preview, and compile LaTeX papers" | /latex | ✅ PASS | The LaTeX list page renders the expected title and subtitle. |  |
+| 353 | LaTeX | Project List Page — "New Paper" button — links to /latex/new | /latex | ✅ PASS | The `New Paper` CTA links to `/latex/new`. |  |
+| 354 | LaTeX | Project List Page — Project cards — each shows: | /latex | ✅ PASS | Live project cards render as structured list entries with title/date/compiler metadata. |  |
+| 355 | LaTeX | Project List Page — Project title (truncated if long) | /latex | ✅ PASS | Creating a long-title paper and returning to `/latex` showed the card title with the `truncate` class. |  |
+| 356 | LaTeX | Project List Page — Last updated date (formatted: "Mar 9, 2026") | /latex | ✅ PASS | Project cards show formatted dates like `Mar 10, 2026`. |  |
+| 357 | LaTeX | Project List Page — Compiler type label (pdflatex/xelatex/lualatex) | /latex | ✅ PASS | Project cards show the compiler label; the tested cards rendered `pdflatex`. |  |
+| 358 | LaTeX | Project List Page — Article icon with brand color | /latex | ✅ PASS | The list card icon renders with the brand-colored `text-brand` styling. |  |
+| 359 | LaTeX | Project List Page — Click project card — navigates to /latex/[projectId] | /latex | ✅ PASS | Clicking the created long-title card navigated to `/latex/71131123-1b97-41b4-9364-494ac0b95552`. |  |
+| 360 | LaTeX | Project List Page — Delete button — appears on hover (trash icon), removes project immediately (optimistic UI) | /latex | ✅ PASS | Hovering the temp project exposed the trash button and clicking it removed the card before the delayed delete request completed. |  |
+| 361 | LaTeX | Project List Page — Loading state — spinner while fetching projects | /latex | ✅ PASS | A fresh Playwright navigation to `/latex` captured the initial loading spinner before hydration completed. |  |
+| 362 | LaTeX | Project List Page — Empty state — icon + "No papers yet" message + "Create Paper" button | /latex | ⚠️ PARTIAL | Verified in code that `/latex` renders the empty-state icon, `No papers yet`, and `Create Paper` when `projects.length === 0`, but this local dev user already has LaTeX projects and there is no safe per-user override to reach it live. |  |
+| 363 | LaTeX | New Paper Page — Template & Compiler Selection / Title Input — Title field — text input, placeholder "Untitled Paper" | /latex/new | ✅ PASS | The title input is visible with placeholder `Untitled Paper`. |  |
+| 364 | LaTeX | New Paper Page — Template & Compiler Selection / Title Input — Enter key — triggers create action | /latex/new | ✅ PASS | Pressing Enter in the title field created a new paper and redirected to the LaTeX editor. |  |
+| 365 | LaTeX | New Paper Page — Template & Compiler Selection / Title Input — Defaults to "Untitled Paper" if left empty | /latex/new | ✅ PASS | Creating with an empty title redirected to the editor with project title `Untitled Paper`. |  |
+| 366 | LaTeX | Template Selection (12 templates) / General Templates — Blank Document | /latex/new | ✅ PASS | The `Blank Document` template card is visible on `/latex/new`. |  |
+| 367 | LaTeX | Template Selection (12 templates) / General Templates — IEEE Conference | /latex/new | ✅ PASS | The `IEEE Conference` template card is visible on `/latex/new`. |  |
+| 368 | LaTeX | Template Selection (12 templates) / General Templates — Nature | /latex/new | ✅ PASS | The `Nature` template card is visible on `/latex/new`. |  |
+| 369 | LaTeX | Template Selection (12 templates) / General Templates — Thesis | /latex/new | ✅ PASS | The `Thesis` template card is visible on `/latex/new`. |  |
+| 370 | LaTeX | Template Selection (12 templates) / General Templates — Elsevier | /latex/new | ✅ PASS | The `Elsevier` template card is visible on `/latex/new`. |  |
+| 371 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — IJMR | /latex/new | ✅ PASS | The `IJMR` template card is visible on `/latex/new`. |  |
+| 372 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — JAPI | /latex/new | ✅ PASS | The `JAPI` template card is visible on `/latex/new`. |  |
+| 373 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — JAMA | /latex/new | ✅ PASS | The `JAMA` template card is visible on `/latex/new`. |  |
+| 374 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Lancet | /latex/new | ✅ PASS | The `Lancet` template card is visible on `/latex/new`. |  |
+| 375 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — BMJ | /latex/new | ✅ PASS | The `BMJ` template card is visible on `/latex/new`. |  |
+| 376 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Case Report | /latex/new | ✅ PASS | The `Case Report` template card is visible on `/latex/new`. |  |
+| 377 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Systematic Review | /latex/new | ✅ PASS | The `Systematic Review` template card is visible on `/latex/new`. |  |
+| 378 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Selected template — highlighted with brand border and ring | /latex/new | ✅ PASS | Selecting `JAMA` applied the brand border and ring highlight classes. |  |
+| 379 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Templates have category headers: "General" and "Medical & Clinical" | /latex/new | ✅ PASS | `/latex/new` shows both `General` and `Medical & Clinical` section headers. |  |
+| 380 | LaTeX | Template Selection (12 templates) / Medical & Clinical Templates — Each card shows icon (color-coded) + label + description | /latex/new | ✅ PASS | Template cards render an icon, label, and description; verified on `JAMA` and the full template grid. |  |
+| 381 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — pdflatex (default) | /latex/new | ✅ PASS | `pdflatex` is selected by default on load. |  |
+| 382 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — xelatex | /latex/new | ✅ PASS | Clicking `xelatex` makes it the active compiler option. |  |
+| 383 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — lualatex | /latex/new | ✅ PASS | Clicking `lualatex` makes it the active compiler option. |  |
+| 384 | LaTeX | New Paper Page — Template & Compiler Selection / Compiler Selection — Selected compiler highlighted with brand color | /latex/new | ✅ PASS | The active compiler button uses the brand-colored selected state. |  |
+| 385 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — "Create Paper" button — creates project and redirects to editor | /latex/new | ✅ PASS | Clicking `Create Paper` created a paper and redirected into the LaTeX editor workspace. |  |
+| 386 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — Loading state — spinner + disabled button during creation | /latex/new | ✅ PASS | During create, the button disabled and rendered the inline spinner before redirecting. |  |
+| 387 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — Error state — red error box below button | /latex/new | ✅ PASS | Aborting the create request surfaced the inline error box below the button (`Failed to fetch`). |  |
+| 388 | LaTeX | New Paper Page — Template & Compiler Selection / Create Action — Back button — arrow left navigates to /latex | /latex/new | ✅ PASS | Clicking the back arrow on `/latex/new` returned to `/latex`. |  |
 | 389 | LaTeX | LaTeX Workspace — Layout & Panels / Panel Visibility — File tree — toggle with Cmd+B or left-edge tab button | /latex/[projectId] | ⬜ |  |  |
 | 390 | LaTeX | LaTeX Workspace — Layout & Panels / Panel Visibility — Agent panel — toggle with Cmd+J or right-edge tab button | /latex/[projectId] | ⬜ |  |  |
 | 391 | LaTeX | LaTeX Workspace — Layout & Panels / Panel Visibility — Both panels can be open simultaneously on desktop | /latex/[projectId] | ⬜ |  |  |
