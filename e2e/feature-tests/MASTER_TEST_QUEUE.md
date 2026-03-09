@@ -14,16 +14,16 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 ## Queue
 | # | Module | Feature | Page | Status | Notes | Commit |
 |---|--------|---------|------|--------|-------|--------|
-| 1 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Editable document title — click the title input field, type to rename (debounced 1s save) | /editor/[id] | ⬜ |  |  |
-| 2 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Back button — arrow left navigates to /dashboard | /editor/[id] | ⬜ |  |  |
-| 3 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Document type selector — dropdown with 4 options: | /editor/[id] | ⬜ |  |  |
-| 4 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Pending citation notice — blue banner appears when a paper was saved from another page (reads from sessionStorage) | /editor/[id] | ⬜ |  |  |
-| 5 | Editor | Document Header & Metadata / Studio Page (/studio) — Editable document title — in the left sidebar header | /studio | ⬜ |  |  |
-| 6 | Editor | Document Header & Metadata / Studio Page (/studio) — Project selector dropdown — appears when user has multiple projects, allows switching between them | /studio | ⬜ |  |  |
-| 7 | Editor | Document Header & Metadata / Studio Page (/studio) — URL parameter support — ?projectId=X pre-selects a project, ?mode=learn starts in learn mode | /studio | ⬜ |  |  |
-| 8 | Editor | Editor Modes / Editor Page — Editing mode — full editing, described as "Direct changes to document" | /editor/[id] | ⬜ |  |  |
-| 9 | Editor | Editor Modes / Editor Page — Viewing mode — read-only, editor becomes non-editable, described as "Read-only, no edits" | /editor/[id] | ⬜ |  |  |
-| 10 | Editor | Editor Modes / Editor Page — Mode toggle dropdown in TopBar shows icon + label + description for each mode | /editor/[id] | ⬜ |  |  |
+| 1 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Editable document title — click the title input field, type to rename (debounced 1s save) | /editor/[id] | ✅ PASS | Title edited on `/editor/new`; save indicator updated. |  |
+| 2 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Back button — arrow left navigates to /dashboard | /editor/[id] | ✅ PASS | Back link target verified as `/dashboard`. |  |
+| 3 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Document type selector — dropdown with 4 options: | /editor/[id] | ✅ PASS | Dropdown exposed Original Article, Case Report, Review Article, Meta-Analysis. |  |
+| 4 | Editor | Document Header & Metadata / Editor Page (/editor/[id]) — Pending citation notice — blue banner appears when a paper was saved from another page (reads from sessionStorage) | /editor/[id] | ❌ BLOCKED | Reproduced from `/library` -> `/editor/new`; sessionStorage key is consumed but no banner renders after 3 attempts. Logged to BLOCKED.md. |  |
+| 5 | Editor | Document Header & Metadata / Studio Page (/studio) — Editable document title — in the left sidebar header | /studio | ✅ PASS | Main studio title input accepted updates. |  |
+| 6 | Editor | Document Header & Metadata / Studio Page (/studio) — Project selector dropdown — appears when user has multiple projects, allows switching between them | /studio | ⚠️ PARTIAL | No project selector rendered in current account state; multi-project precondition not met. |  |
+| 7 | Editor | Document Header & Metadata / Studio Page (/studio) — URL parameter support — ?projectId=X pre-selects a project, ?mode=learn starts in learn mode | /studio | ⚠️ PARTIAL | `?mode=learn` activated Learn mode; `?projectId` pre-select unverified because no multi-project selector/data surfaced. |  |
+| 8 | Editor | Editor Modes / Editor Page — Editing mode — full editing, described as "Direct changes to document" | /editor/[id] | ✅ PASS | Default mode showed `Editing` and editor contenteditable state was `true`. |  |
+| 9 | Editor | Editor Modes / Editor Page — Viewing mode — read-only, editor becomes non-editable, described as "Read-only, no edits" | /editor/[id] | ✅ PASS | Switched to `Viewing`; contenteditable nodes reported `false`. |  |
+| 10 | Editor | Editor Modes / Editor Page — Mode toggle dropdown in TopBar shows icon + label + description for each mode | /editor/[id] | ✅ PASS | Dropdown exposed `Editing / Direct changes to document` and `Viewing / Read-only, no edits`. |  |
 | 11 | Editor | Editor Modes / Studio Page — Write mode — AI drafting assistance, shows AI Intensity bar | /studio | ⬜ |  |  |
 | 12 | Editor | Editor Modes / Studio Page — Learn mode — guided educational mode, AI teaches instead of writing for you | /studio | ⬜ |  |  |
 | 13 | Editor | Text Formatting — Bold | /studio | ⬜ |  |  |
