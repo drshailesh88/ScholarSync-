@@ -603,3 +603,169 @@ The legend explains the paragraph color coding:
 | **CircleNotch** | Loading spinner during analysis |
 | **CaretDown** | Project dropdown indicator |
 | **FileText** | Source mode toggle buttons |
+
+### Detailed QA Coverage
+
+#### Initial State and Data Hydration
+- [ ] `sourceMode` defaults to `document` on first render
+- [ ] `docLoading` defaults to `true` before the first document fetch resolves
+- [ ] `result` defaults to `null`, so input mode is the first visible state
+- [ ] `activeTab` defaults to `issues` before any result is shown
+- [ ] `listProjectsForAnalysis()` runs on mount to populate the document dropdown
+- [ ] The first returned project ID is auto-assigned to `selectedProjectId` when no project is already selected
+- [ ] `getActiveDocumentForAnalysis(selectedProjectId)` runs after document mode initializes and again when the selected project changes
+- [ ] Document fetch failures clear `activeDoc` and reset `inputText` to an empty string
+- [ ] Empty `inputText` clears both `clientIssues` and `clientMetrics`
+
+#### Header and Navigation
+- [ ] Header back control is a `Link` to `/studio`, not a button with imperative navigation
+- [ ] Header title reads `Writing Analysis` while `result` is null
+- [ ] Header title switches to `Draft Analysis` after a successful analysis response sets `result`
+- [ ] Source-mode toggle group is visible only while `result` is null
+- [ ] Results-mode legend replaces the source toggle group after `result` is set
+- [ ] Results legend contains exactly three items: `Low Human (<40%)`, `Mixed (40-70%)`, and `High Human (>70%)`
+- [ ] Each legend item includes a colored square swatch plus text label
+
+#### Source Mode Toggle
+- [ ] `From Document` button is the selected toggle on initial render
+- [ ] Selected toggle uses `bg-brand text-white`
+- [ ] Unselected toggle uses `text-ink-muted` and hover text-color changes
+- [ ] `From Document` toggle includes a `FileText` icon before its label
+- [ ] `Paste Text` toggle has text only with no icon in the current implementation
+- [ ] Clicking `Paste Text` switches `sourceMode` to `paste`
+- [ ] Clicking `From Document` switches `sourceMode` back to `document`
+- [ ] Switching from document mode to paste mode does not clear `inputText`; the current text carries over
+- [ ] Switching back to document mode triggers a fresh document load that can overwrite pasted text
+
+#### Document Mode Project Selector
+- [ ] Project selector row is rendered only when `sourceMode === "document"` and `projects.length > 0`
+- [ ] Project selector row starts with the label `Project:`
+- [ ] Project dropdown trigger shows the selected project title when `selectedProject` is found
+- [ ] Project dropdown trigger falls back to `Select project` when no project is selected yet
+- [ ] Project dropdown trigger includes a trailing `CaretDown` icon
+- [ ] Clicking the project trigger toggles `projectDropdownOpen`
+- [ ] Open project menu renders as an absolutely positioned dropdown under the trigger
+- [ ] Project menu is capped with `max-h-60 overflow-y-auto`
+- [ ] Currently selected project row uses `bg-brand/10 text-brand font-medium`
+- [ ] Non-selected project rows use `text-ink` and gain a hover background
+- [ ] Clicking a project option sets `selectedProjectId` and closes the dropdown
+- [ ] Clicking outside the dropdown closes it through the `mousedown` document listener
+- [ ] When `activeDoc` exists, a `Document: {title}` text label is shown to the right of the project selector
+
+#### Document Mode Loading and Empty States
+- [ ] While `docLoading` is true in document mode, the textarea is replaced by a centered loading state
+- [ ] Document loading state shows a `CircleNotch` icon with `animate-spin`
+- [ ] Document loading state shows the text `Loading document...`
+- [ ] When document mode has no `activeDoc`, the textarea is replaced by the empty-document state
+- [ ] Empty-document state uses a `FileText` icon above the message
+- [ ] Empty-document state message reads `No document found. Write something in the Studio first, or switch to paste mode.`
+- [ ] Empty-document state hides the textarea and analyze button entirely
+
+#### Textarea Behavior
+- [ ] Document-mode textarea placeholder is `Document content loaded from your project...`
+- [ ] Paste-mode textarea placeholder is `Paste your text here to analyze writing quality, detect AI-generated content, and get improvement suggestions...`
+- [ ] Document-mode textarea is `readOnly`
+- [ ] Paste-mode textarea is editable
+- [ ] Textarea uses `font-serif`
+- [ ] Textarea uses `resize-none`
+- [ ] Textarea uses `focus:ring-2 focus:ring-brand/40` when focused
+- [ ] Word count text is always computed from `effectiveText.split(/\s+/).filter(Boolean).length`
+- [ ] Word count reads `0 words` when the textarea is empty or whitespace-only
+- [ ] Paste-mode typing updates `inputText` on every `onChange`
+
+#### Inline Error Handling
+- [ ] Inline error text is rendered directly under the textarea in red when `error` is non-null
+- [ ] Forced submission with fewer than 50 characters sets `Please enter at least 50 characters of text to analyze.`
+- [ ] New document loads clear prior errors by setting `error` back to `null`
+- [ ] Starting a new analysis clears prior errors before the fetch begins
+- [ ] Non-OK API responses use `data.error || "Writing analysis failed"` for the inline error
+- [ ] Network exceptions set the inline error to `Failed to connect. Check your API key.`
+- [ ] Error feedback is inline text only; there is no toast, alert banner, or modal
+
+#### Analyze Writing Button
+- [ ] Analyze button label is `Analyze Writing` while idle
+- [ ] Analyze button includes a leading `Sparkle` icon while idle
+- [ ] Analyze button is disabled when `effectiveText.trim().length < 50`
+- [ ] Analyze button is disabled when `loading` is true
+- [ ] Disabled button uses the `disabled:opacity-50` style
+- [ ] Clicking Analyze serializes the request body as `{ text: inputText, mode: "full" }`
+- [ ] Clicking Analyze splits the current text into paragraphs using `/\n\n+/` before the network request
+- [ ] While loading, the button label changes to `Analyzing...`
+- [ ] While loading, the button still renders the `Sparkle` icon; it does not swap to a spinner in the current implementation
+- [ ] Successful responses store the parsed JSON in `result`
+- [ ] Successful responses keep the previously computed `clientMetrics` visible for the results summary cards
+
+#### Instant Metrics Panel
+- [ ] Instant metrics panel is hidden until `clientMetrics` exists and trimmed text length is greater than 0
+- [ ] Instant metrics panel appears for loaded document text as well as pasted text
+- [ ] Instant metrics analysis is debounced by 500ms after the last text change
+- [ ] Instant gauge size is `110`
+- [ ] Instant gauge center displays the numeric `fleschReadingEase` score
+- [ ] Instant gauge label comes from `clientMetrics.readabilityLabel`
+- [ ] Instant readability labels in the current implementation are `Easy`, `Standard`, `Difficult`, and `Very Difficult`
+- [ ] Counts grid renders `Words`, `Sentences`, and `Paragraphs` summary cards
+- [ ] Readability section renders four `MetricBar` rows
+- [ ] Writing Quality section renders four `IssueBadge` tiles
+- [ ] Instant issues section header shows `Issues ({clientIssues.length})`
+- [ ] Instant issues list renders at most 10 items before collapsing to a `+N more issues` footer
+- [ ] Warning-severity instant issues use yellow styling
+- [ ] Non-warning instant issues use blue styling
+
+#### Results Mode Layout
+- [ ] Successful analysis hides the source toggle and displays the three-color legend
+- [ ] Results left panel wraps the analyzed text in a `glass-panel rounded-2xl p-8` container
+- [ ] Results left panel header contains the `Analyze New Text` reset button on the left
+- [ ] Results left panel header shows `activeDoc.documentTitle` on the right when a document-backed analysis is open
+- [ ] Clicking `Analyze New Text` sets `result` back to `null`
+- [ ] Clicking `Analyze New Text` clears `paragraphs`
+- [ ] Clicking `Analyze New Text` resets `activeTab` back to `issues`
+- [ ] Results right panel width is `w-96`
+- [ ] Results right panel gauge size is `120`
+- [ ] Results right panel keeps the Words, Sentences, and Paragraphs summary cards above the tabs when `clientMetrics` exists
+
+#### Highlighted Paragraph Rendering
+- [ ] Each paragraph is rendered from the precomputed `paragraphs` array, not by splitting the server response
+- [ ] Paragraphs with no matching `paragraphAnalysis` entry default to `100` human probability
+- [ ] Paragraphs under 40% human use red background and left border styling
+- [ ] Paragraphs between 40% and 70% human use yellow background and left border styling
+- [ ] Paragraphs above 70% human use emerald background and left border styling
+- [ ] Paragraph flags render as `Flags: {comma-separated flags}` below the paragraph when flags exist
+- [ ] Paragraph flag text is omitted entirely when no flags are present
+
+#### Results Issues Tab
+- [ ] Results tab list is driven by `analysisTabs`
+- [ ] Issues-tab count badge uses `result.writingQuality.suggestions.length` once results exist
+- [ ] When `writingQuality.suggestions.length === 0`, the issues tab shows `No issues detected. Your writing looks great!`
+- [ ] AI suggestion cards use `bg-purple-500/10`
+- [ ] AI suggestion cards include a purple `Sparkle` icon and a `Suggestion {n}` label
+- [ ] Local write-good issues render in a dedicated `Writing Issues (write-good)` section below AI suggestions
+- [ ] Results write-good issues render at most 15 cards before a `+N more issues` footer
+- [ ] Results write-good issue cards show uppercase type labels
+- [ ] Results write-good issue cards display the issue reason text only
+- [ ] Plagiarism Indicators section renders only when `result.plagiarismIndicators.length > 0`
+- [ ] High-severity plagiarism cards use red text/background styling
+- [ ] Medium-severity plagiarism cards use yellow text/background styling
+- [ ] Low-severity plagiarism cards use muted text on `bg-surface-raised`
+- [ ] Plagiarism cards display uppercase `{SEVERITY} Risk` labels, an italic excerpt, and a concern line
+
+#### Results Detailed Metrics Tab
+- [ ] Detailed Metrics tab renders `Readability`, `Writing Quality`, and `AI Detection` sections every time metrics view is active
+- [ ] Readability section always shows `Readability Grade`
+- [ ] Results readability section adds `Flesch-Kincaid Grade`, `Gunning Fog Index`, and `Flesch Reading Ease` only when `clientMetrics` exists
+- [ ] Results `Avg Sentence Length` row comes from `result.writingQuality.averageSentenceLength`
+- [ ] Writing Quality `Passive Voice` falls back to `result.writingQuality.passiveVoiceCount` when `clientMetrics` is unavailable
+- [ ] Writing Quality `Weasel Words`, `Adverbs`, and `Complex Sentences` rows render only when `clientMetrics` exists
+- [ ] AI Detection section renders `Human Score`, `AI Score`, and `Overall Risk` as `ToneBadge` rows
+- [ ] Human Score uses emerald for >= 70, yellow for 40-69, and red below 40
+- [ ] AI Score uses emerald for <= 30, yellow for 31-60, and red above 60
+- [ ] Overall Risk uses `low -> emerald`, `medium -> yellow`, and `high -> red`
+- [ ] Paragraph Breakdown section renders only when `result.paragraphAnalysis.length > 0`
+- [ ] Paragraph Breakdown rows display `Paragraph {n}` on the left and `{humanProbability}% human` on the right
+
+#### Helper Component Behavior
+- [ ] `MetricBar` caps bar fill width at 100% with `Math.min((value / max) * 100, 100)`
+- [ ] `MetricBar` appends suffix text such as ` words`, ` instances`, or ` sentences` in the value label when provided
+- [ ] `IssueBadge` color map is `yellow`, `orange`, `blue`, and `red`
+- [ ] `CircularGauge` color thresholds are green >= 80, yellow >= 60, orange >= 40, and red below 40
+- [ ] Results gauge readability label uses `Excellent`, `Good`, `Needs Improvement`, and `Poor`
+- [ ] Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels
