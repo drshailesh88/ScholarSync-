@@ -37,6 +37,9 @@ export function ExportDialog({
 
   const handleExport = useCallback(async () => {
     setIsExporting(true);
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 0);
+    });
 
     try {
       if (format === "docx") {
