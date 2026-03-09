@@ -213,25 +213,34 @@ export default function CompliancePage() {
     const paras = inputText.split(/\n\n+/).filter((p) => p.trim().length > 0);
     setParagraphs(paras);
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+
     try {
       const res = await fetch("/api/integrity-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: inputText, mode: "full" }),
+        signal: controller.signal,
       });
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({ error: "Check failed" }));
-        setError(data.error || "Integrity check failed");
+        setError(data.error || "Integrity check failed. Please try again.");
         setLoading(false);
         return;
       }
 
       const data = await res.json();
       setResult(data);
-    } catch {
-      setError("Failed to connect. Check your API key.");
+    } catch (err) {
+      if (err instanceof DOMException && err.name === "AbortError") {
+        setError("The check took too long. Please try again with shorter text.");
+      } else {
+        setError("Failed to connect to the analysis service. Please try again.");
+      }
     } finally {
+      clearTimeout(timeout);
       setLoading(false);
     }
   }, [inputText]);

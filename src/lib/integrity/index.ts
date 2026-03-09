@@ -44,7 +44,10 @@ export async function runIntegrityCheck(
   const useBinoculars = isPaid;
   const [aiResult, plagiarismResult, citationResult, selfPlagiarismResult] = await Promise.all([
     runAI
-      ? runAIDetection(input.text, useBinoculars)
+      ? runAIDetection(input.text, useBinoculars).catch((err): null => {
+          console.error("[integrity] AI detection error:", err);
+          return null;
+        })
       : Promise.resolve(null),
     runPlagiarism
       ? runPlagiarismCheck(input.text).catch((err): PlagiarismResult => {
