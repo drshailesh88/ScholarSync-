@@ -256,6 +256,18 @@ const structuralCommands: SlashCommandItem[] = [
       }
     },
   },
+  {
+    title: "Cite",
+    description: "Insert a citation from your library",
+    icon: "academic",
+    category: "academic",
+    shortcut: "Cmd+Shift+C",
+    command: () => {
+      window.dispatchEvent(
+        new CustomEvent("scholarsync:open-citation-dialog")
+      );
+    },
+  },
 
   // AI Actions (integration points — dispatch events, don't implement)
   {
