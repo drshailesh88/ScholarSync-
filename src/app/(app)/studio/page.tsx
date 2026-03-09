@@ -36,6 +36,7 @@ import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 import { useStudioDocument, type SaveStatus } from "@/hooks/use-studio-document";
 import { countSectionWords, getDocumentWordCount } from "@/lib/editor/word-counter";
+import type { Reference } from "@/types/citation";
 import {
   GUIDE_STAGES,
   GUIDE_STAGE_LABELS,
@@ -55,11 +56,84 @@ interface ChatMessage {
   content: string;
 }
 
+interface ResearchCitationDetail {
+  title: string;
+  authors?: string[];
+  year?: number | null;
+  journal?: string;
+  doi?: string;
+  pmid?: string;
+}
+
 const aiPanelTabs = [
   { key: "chat", label: "Chat & Learn" },
   { key: "research", label: "Research" },
   { key: "checks", label: "Checks" },
 ];
+
+function toCitationAuthors(authors?: string[]) {
+  if (!authors?.length) return [];
+
+  return authors.map((author) => {
+    const trimmed = author.trim();
+    if (!trimmed) {
+      return { family: "Unknown", given: "" };
+    }
+
+    if (trimmed.includes(",")) {
+      const [family, given = ""] = trimmed.split(",").map((part) => part.trim());
+      return { family: family || "Unknown", given };
+    }
+
+    const parts = trimmed.split(/\s+/);
+    if (parts.length === 1) {
+      return { family: parts[0], given: "" };
+    }
+
+    return {
+      family: parts[parts.length - 1] || "Unknown",
+      given: parts.slice(0, -1).join(" "),
+    };
+  });
+}
+
+function buildResearchReference(
+  detail: ResearchCitationDetail,
+  documentId: string
+): Reference {
+  const authors = toCitationAuthors(detail.authors);
+  const stableKey =
+    detail.doi?.trim() ||
+    detail.pmid?.trim() ||
+    detail.title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const id = `ref-research-${stableKey}`;
+
+  return {
+    id,
+    documentId,
+    type: "article",
+    title: detail.title,
+    authors,
+    year: detail.year || 0,
+    journal: detail.journal || undefined,
+    doi: detail.doi || undefined,
+    pmid: detail.pmid || undefined,
+    dateAdded: new Date().toISOString(),
+    cslData: {
+      id,
+      type: "article-journal",
+      title: detail.title,
+      author: authors.map((author) => ({
+        family: author.family,
+        given: author.given,
+      })),
+      issued: detail.year ? { "date-parts": [[detail.year]] } : undefined,
+      "container-title": detail.journal || undefined,
+      DOI: detail.doi || undefined,
+      PMID: detail.pmid || undefined,
+    },
+  };
+}
 
 export default function StudioPage() {
   return (
@@ -230,6 +304,7 @@ function StudioContent() {
   const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
   const setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
+  const addReferences = useReferenceStore((s) => s.addReferences);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
   const commentSidebarOpen = useEditorStore((s) => s.commentSidebarOpen);
   const toggleCommentSidebar = useEditorStore((s) => s.toggleCommentSidebar);
@@ -493,6 +568,25 @@ function StudioContent() {
       }, 2500);
     });
   }, []);
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<ResearchCitationDetail>).detail;
+      if (!detail?.title?.trim()) return;
+
+      const reference = buildResearchReference(
+        detail,
+        String(studioDoc?.id ?? "studio")
+      );
+
+      addReferences([reference]);
+      handleInsertCitation([reference.id]);
+    };
+
+    window.addEventListener("scholarsync:insert-citation", handler);
+    return () =>
+      window.removeEventListener("scholarsync:insert-citation", handler);
+  }, [addReferences, handleInsertCitation, studioDoc?.id]);
 
   useEffect(() => {
     return () => {
