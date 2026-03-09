@@ -72,18 +72,21 @@ export function SelectionToolbar({ editor }: SelectionToolbarProps) {
       setVisible(true);
     };
 
-    editor.on("selectionUpdate", updateToolbar);
-    editor.on("blur", () => {
+    const handleBlur = () => {
       // Small delay to allow toolbar button clicks
       setTimeout(() => {
         if (!toolbarRef.current?.contains(document.activeElement)) {
           setVisible(false);
         }
       }, 150);
-    });
+    };
+
+    editor.on("selectionUpdate", updateToolbar);
+    editor.on("blur", handleBlur);
 
     return () => {
       editor.off("selectionUpdate", updateToolbar);
+      editor.off("blur", handleBlur);
     };
   }, [editor]);
 

@@ -109,12 +109,10 @@ export function AcademicEditor({
   } = useEditorStore();
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3, 4] },
-        // Disable link/underline from StarterKit — we configure them separately
-        link: false,
-        underline: false,
       }),
       // Underline configured separately
       Underline,
