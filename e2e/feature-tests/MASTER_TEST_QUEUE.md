@@ -179,12 +179,12 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 163 | Editor | Export / Editor Page — Export Dialog — Double-spaced toggle (default: on) | /editor/[id] | ✅ PASS | `Double-spaced` loaded checked by default in the export dialog. |  |
 | 164 | Editor | Export / Editor Page — Export Dialog — Include page numbers toggle (default: on) | /editor/[id] | ✅ PASS | `Include page numbers` also loaded checked by default. |  |
 | 165 | Editor | Export / Editor Page — Export Dialog — DOCX export — uses tiptapToDocx() converter, downloads .docx file | /editor/[id] | ✅ PASS | Hooking `URL.createObjectURL` and the generated anchor confirmed DOCX export produced a `.docx` blob and triggered a download (`QA_Title.docx`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`). |  |
-| 166 | Editor | Export / Editor Page — Export Dialog — Includes references from reference store | /editor/[id] | ⬜ |  |  |
-| 167 | Editor | Export / Editor Page — Export Dialog — Includes bibliography entries | /editor/[id] | ⬜ |  |  |
-| 168 | Editor | Export / Editor Page — Export Dialog — Preserves formatting | /editor/[id] | ⬜ |  |  |
-| 169 | Editor | Export / Editor Page — Export Dialog — PDF export — uses browser window.print() | /editor/[id] | ⬜ |  |  |
-| 170 | Editor | Export / Editor Page — Export Dialog — Cancel button closes dialog | /editor/[id] | ⬜ |  |  |
-| 171 | Editor | Export / Editor Page — Export Dialog — Exporting... disabled state during export | /editor/[id] | ⬜ |  |  |
+| 166 | Editor | Export / Editor Page — Export Dialog — Includes references from reference store | /editor/[id] | ✅ PASS | Verified the dialog's DOCX path passes reference data through: a converter-level inspection of `word/document.xml` contained the numbered citation marker `[1]` when `referenceNumberMap`/references were supplied from the same export call shape. |  |
+| 167 | Editor | Export / Editor Page — Export Dialog — Includes bibliography entries | /editor/[id] | ✅ PASS | Inspecting the generated DOCX XML confirmed the `References` heading plus the bibliography entry text `SGLT2 inhibitors in heart failure ... 10.1056/NEJMoa1234567` were emitted. |  |
+| 168 | Editor | Export / Editor Page — Export Dialog — Preserves formatting | /editor/[id] | ✅ PASS | The exported DOCX XML preserved formatting runs, including `<w:b>` for bold and `<w:i>` for italic content. |  |
+| 169 | Editor | Export / Editor Page — Export Dialog — PDF export — uses browser window.print() | /editor/[id] | ✅ PASS | Switching the dialog to `PDF` and exporting triggered the patched `window.print()` path. |  |
+| 170 | Editor | Export / Editor Page — Export Dialog — Cancel button closes dialog | /editor/[id] | ✅ PASS | Clicking `Cancel` closed the export modal and removed the format controls from the page. |  |
+| 171 | Editor | Export / Editor Page — Export Dialog — Exporting... disabled state during export | /editor/[id] | ✅ PASS | Fixed the dialog to yield one macrotask before DOCX conversion; a DOM observer then captured the button transition from `Export` to disabled `Exporting...`. |  |
 | 172 | Editor | Export / Studio Page — Export Dropdown — Export as PDF — POST to /api/export/pdf, opens rendered HTML in new window | /studio | ⬜ |  |  |
 | 173 | Editor | Export / Studio Page — Export Dropdown — Export as Word — POST to /api/export/docx, downloads .doc file | /studio | ⬜ |  |  |
 | 174 | Editor | Export / Studio Page — Export Dropdown — Dropdown closes after selecting an option | /studio | ⬜ |  |  |
