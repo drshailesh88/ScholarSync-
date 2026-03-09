@@ -4,12 +4,28 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import type { Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import { Underline } from "@tiptap/extension-underline";
+import { Superscript } from "@tiptap/extension-superscript";
+import { Subscript } from "@tiptap/extension-subscript";
+import { Highlight } from "@tiptap/extension-highlight";
+import { TextAlign } from "@tiptap/extension-text-align";
+import { TextStyle } from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
+import { FontFamily } from "@tiptap/extension-font-family";
+import { Link } from "@tiptap/extension-link";
+import { CharacterCount } from "@tiptap/extension-character-count";
+import { Typography } from "@tiptap/extension-typography";
+import { TaskList } from "@tiptap/extension-task-list";
+import { TaskItem } from "@tiptap/extension-task-item";
 import { useRef, useCallback, useEffect } from "react";
 import { Toolbar } from "./toolbar";
 import { SlashCommands } from "./slash-commands";
 import { CitationNode } from "./extensions/citation-node";
 import { BibliographyNode } from "./extensions/bibliography-node";
 import { createCitationPlugin } from "./extensions/citation-plugin";
+import { AcademicKeyboardShortcuts } from "./extensions/keyboard-shortcuts";
+import { SelectionToolbar } from "./SelectionToolbar";
+import { LinkPopover } from "./LinkPopover";
 import { Extension } from "@tiptap/core";
 
 /**
@@ -82,10 +98,32 @@ export function TiptapEditor({
       StarterKit.configure({
         heading: { levels: [1, 2, 3, 4, 5, 6] },
       }),
+      Underline,
+      Superscript,
+      Subscript,
+      Highlight.configure({ multicolor: true }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+      TextStyle,
+      Color,
+      FontFamily,
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        linkOnPaste: true,
+      }),
       Placeholder.configure({
         placeholder: "Start typing or press '/' for AI commands...",
       }),
+      CharacterCount,
+      Typography,
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+      }),
       SlashCommands,
+      AcademicKeyboardShortcuts,
       CitationNode,
       BibliographyNode,
       CitationNumbering,
@@ -95,6 +133,7 @@ export function TiptapEditor({
       attributes: {
         class:
           "academic-editor-content max-w-none focus:outline-none min-h-[400px] px-6 py-4",
+        spellcheck: "true",
       },
     },
     onUpdate: ({ editor: ed }) => {
@@ -182,7 +221,15 @@ export function TiptapEditor({
         onToggleReferenceSidebar={onToggleReferenceSidebar}
         referenceCount={referenceCount}
       />
-      <EditorContent editor={editor} />
+      <div className="relative">
+        {editor && (
+          <>
+            <SelectionToolbar editor={editor} />
+            <LinkPopover editor={editor} />
+          </>
+        )}
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 }

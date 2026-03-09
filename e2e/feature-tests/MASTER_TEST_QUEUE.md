@@ -29,12 +29,12 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 13 | Editor | Text Formatting — Bold | /studio | ✅ PASS | Selected editor text wrapped with `<strong>` and toggled back off successfully. |  |
 | 14 | Editor | Text Formatting — Italic | /studio | ✅ PASS | Selected editor text wrapped with `<em>` and toggled back off successfully. |  |
 | 15 | Editor | Text Formatting — Underline | /studio | ✅ PASS | `Meta+U` wrapped selected text with `<u>` and toggled back off successfully. |  |
-| 16 | Editor | Text Formatting — Strikethrough | /studio | ⬜ |  |  |
-| 17 | Editor | Text Formatting — Highlight | /studio | ⬜ |  |  |
+| 16 | Editor | Text Formatting — Strikethrough | /studio | ✅ PASS | Fixed Studio editor to load academic shortcut/extensions; `Meta+Shift+X` now wraps with `<s>` and toggles off. |  |
+| 17 | Editor | Text Formatting — Highlight | /studio | ✅ PASS | Fixed Studio editor to load highlight extension; `Meta+Shift+H` now wraps with `<mark>` and toggles off. |  |
 | 18 | Editor | Text Formatting — Highlight colors | /studio | ⬜ |  |  |
-| 19 | Editor | Text Formatting — Superscript | /studio | ⬜ |  |  |
-| 20 | Editor | Text Formatting — Subscript | /studio | ⬜ |  |  |
-| 21 | Editor | Text Formatting — Inline code | /studio | ⬜ |  |  |
+| 19 | Editor | Text Formatting — Superscript | /studio | ✅ PASS | Fixed Studio editor to load superscript extension; `Meta+Shift+.` now wraps with `<sup>` and toggles off. |  |
+| 20 | Editor | Text Formatting — Subscript | /studio | ✅ PASS | Fixed Studio editor to load subscript extension; `Meta+Shift+,` now wraps with `<sub>` and toggles off. |  |
+| 21 | Editor | Text Formatting — Inline code | /studio | ✅ PASS | `Meta+E` wraps selected Studio text with `<code>`. |  |
 | 22 | Editor | Text Formatting — Text color | /studio | ⬜ |  |  |
 | 23 | Editor | Text Formatting — Font family | /studio | ⬜ |  |  |
 | 24 | Editor | Text Formatting — Text alignment | /studio | ⬜ |  |  |
