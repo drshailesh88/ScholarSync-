@@ -134,6 +134,12 @@ export function ReferenceSidebar({
   const filteredUncited = uncitedRefs.filter(filterFn);
 
   const handleDelete = (refId: string) => {
+    if (
+      typeof window !== "undefined" &&
+      !window.confirm("Remove this reference from the sidebar?")
+    ) {
+      return;
+    }
     removeReference(refId);
     if (expandedId === refId) setExpandedId(null);
   };
