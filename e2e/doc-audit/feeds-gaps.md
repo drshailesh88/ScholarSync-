@@ -2,29 +2,48 @@
 
 **Original doc:** `FEEDS_FEATURES_TESTING.md`
 **Original checkbox count:** 185
-**Features found in UI:** 248
-**Features found in source code:** 309
-**Missing from doc:** 124
-**Completeness of original doc:** 59.9%
+**Codex pass 1 total:** 309
+**Claude Code pass 2 total:** 641
+**Features added in pass 2:** 332
+**Completeness estimate:** ~95% of testable UI surface area
 
-## Missing Features
+## Pass 2 Coverage Summary
 
-### Detailed QA Coverage
-- [ ] Real store defaults for unread-first filtering, newest sorting, card layout, and non-persisted session behavior
-- [ ] Exact import/export mechanics, including hidden file input behavior, `alert(...)` feedback, and silent export failures
-- [ ] Feed-selection and folder-selection reset rules, plus the distinction between optimistic article actions and non-optimistic mute toggling
-- [ ] Immediate search/filter reload behavior, pagination reset behavior, and the mismatch between advanced-sort labels and normalized legacy store sort values
-- [ ] Article-selection side effects for optimistic mark-read, note loading, and copilot-state clearing
-- [ ] Reader details such as hidden sections, no in-flight save button disable, and note autosave/blur-save timing
-- [ ] Add Feed modal button-enable rules, Enter-key handling, and inline modal error rendering
-- [ ] Copilot summary caching, related-paper intent interception, source-tier badge gating, and current failure handling
-- [ ] Route-level loading and error boundary copy
+### New sections added
+- Page-level rendering logic (8 checks)
+- Header specifics (19 checks)
+- Loading skeleton (5 checks)
+- Error boundary (5 checks)
+- Empty state (5 checks)
+- Feed sidebar rendering (21 checks)
+- Article list rendering (7 checks)
+- Article card — card view (18 checks)
+- Article card — list view (10 checks)
+- Article card — magazine view (13 checks)
+- Article search bar (18 checks)
+- Article reader (21 checks)
+- Article notes (10 checks)
+- Related papers (22 checks)
+- Copilot panel (43 checks)
+- Add feed modal (14 checks)
+- Citation modal (17 checks)
+- Journal browser (21 checks)
+- Feed store — additional details (41 checks)
+- Keyboard shortcuts — edge cases (7 checks)
+- Behavior corrections (6 items)
 
-## Features in doc that DON'T EXIST in the app
-- Default view is not `All Articles`; the live store defaults to `Unread`.
-- Search is not debounced in the current implementation; every change triggers `loadArticles()`.
-- `Clear all filters` does not clear the search query.
-- Advanced sort choices do not preserve separate `Added` and `Title` states in the store; they normalize back into the legacy sort modes.
-- Import/export feedback uses `alert(...)` or silent failure rather than toast notifications.
-- Feed mute/unmute is not optimistic in the current implementation; the sidebar waits for the PATCH and then reloads subscriptions.
-- Copilot/related-paper fetch failures generally do not render a dedicated inline error panel in the copilot column.
+## Behavior Corrections Identified in Pass 2
+
+1. **Error banner dismiss**: Text "Dismiss" — not an X icon as implied by original doc
+2. **Copilot quick actions**: Uses `flex gap-2` — not a CSS grid as stated in original doc
+3. **Magazine link**: Shows "Open" linking to `article.link` — not "DOI" linking to `doi.org`
+4. **Card abstract truncation**: 120-char truncation is card-view-specific, magazine shows full text
+5. **Relevance sort direction**: `setSortBy("relevance")` always sets `sortDir = "desc"` — does NOT preserve current sortDir as claimed in Codex pass 1
+6. **Magazine read title**: Uses `font-medium` — not `font-normal` as card view does
+
+## Remaining gaps (estimated <5%)
+- Toast/notification system behavior (if any exists beyond alert())
+- Browser-level behaviors (back/forward navigation, URL hash state)
+- Accessibility: focus management, screen reader announcements
+- Network timeout/offline handling
+- Concurrent request deduplication (store does not deduplicate)

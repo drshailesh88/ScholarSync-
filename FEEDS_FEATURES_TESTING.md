@@ -761,3 +761,412 @@
 - [ ] Copilot-related fetch failures generally clear loading state without rendering a dedicated inline error panel.
 
 *Generated from source code in `src/app/(app)/feeds/`, `src/components/feeds/`, `src/stores/feed-store.ts`, and related API routes — March 2026*
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> Findings from line-by-line source code review of every .tsx/.ts file
+> contributing to the /feeds route. Each checkbox is a distinct testable
+> assertion not already covered above.
+
+### Page-Level Rendering Logic (page.tsx)
+
+- [ ] Page container height is `h-[calc(100vh-7rem)]`
+- [ ] `hasSubscriptions` check includes `isLoadingSubscriptions` — content layout shown while subscriptions still loading (never flashes empty state during load)
+- [ ] CopilotPanel and ArticleReader are mutually exclusive via ternary: when `copilotOpen && selectedArticleId`, CopilotPanel replaces ArticleReader
+- [ ] onAI handler in ArticleList sets selected article FIRST, then opens copilot after 50ms `setTimeout` delay
+- [ ] `citeArticle` state is `FeedArticleWithStatus | null`; CitationModal visibility controlled by non-null citeArticle
+- [ ] CitationModal `onClose` sets `citeArticle` to `null`
+- [ ] AddFeedModal `onClose` sets `showAddModal` to `false`
+- [ ] Main content area uses `flex gap-4 flex-1 min-h-0`
+
+### Header Specifics (page.tsx)
+
+- [ ] Header title `text-xl font-bold text-ink`
+- [ ] Unread text `text-xs text-ink-muted mt-0.5`
+- [ ] Unread text singular form: "1 unread article" (no trailing "s" when `totalUnread === 1`)
+- [ ] Export button icon: `Export` from phosphor-icons (not Download)
+- [ ] Export button label text: "Export" (visible inline text, not tooltip-only)
+- [ ] Import button icon: `Upload` from phosphor-icons
+- [ ] Import button label text: "Import" (visible inline text, not tooltip-only)
+- [ ] Mark all read icon: `Checks` from phosphor-icons
+- [ ] Mark all read label text: "Mark all read" (visible inline)
+- [ ] Add Feed button uses `Plus` icon with `weight="bold"`
+- [ ] Add Feed button is primary styled: `bg-brand text-white text-sm font-medium`
+- [ ] All other header buttons use `text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised`
+- [ ] Sort segmented control container: `bg-surface-raised rounded-xl p-0.5`
+- [ ] Layout control container: `bg-surface-raised rounded-lg p-0.5` (different rounding from sort)
+- [ ] Active sort button styling: `bg-surface text-ink shadow-sm`
+- [ ] Inactive sort button styling: `text-ink-muted hover:text-ink`
+- [ ] Layout buttons have `aria-label` attributes matching their label values
+- [ ] Error banner full styling: `bg-red-500/10 border border-red-500/20 text-red-400 text-sm`
+- [ ] Error banner dismiss button is text "Dismiss" (NOT an X icon) — styled `text-red-400 hover:text-red-300 text-xs font-medium`
+- [ ] Header `setSortBy("relevance")` sets `sortDir = "desc"` (not "asc")
+
+### Loading Skeleton (loading.tsx)
+
+- [ ] Loading skeleton header: 1 title skeleton (`h-7 w-40`) + 2 button skeletons (`h-9 w-28 rounded-xl`)
+- [ ] Loading skeleton uses identical height constraint `h-[calc(100vh-7rem)]` as actual page
+- [ ] Sidebar skeleton: `glass-panel rounded-2xl p-3 h-full` with 8 rows (`h-9 rounded-lg`)
+- [ ] Sidebar skeleton hidden below `lg` breakpoint (matches actual sidebar)
+- [ ] Article area: 6 `SkeletonCard` components in `space-y-2` layout
+
+### Error Boundary (error.tsx)
+
+- [ ] Error boundary uses `ErrorDisplay` shared UI component
+- [ ] ErrorDisplay shows `WarningCircle` icon (32px) in `bg-red-500/10` container
+- [ ] ErrorDisplay "Try Again" button includes `ArrowCounterClockwise` icon
+- [ ] ErrorDisplay calls `Sentry.captureException(error)` on mount when error is present
+- [ ] Error boundary maps `reset` prop to `onRetry` callback on ErrorDisplay
+
+### Empty State (feed-empty-state.tsx)
+
+- [ ] Empty state uses `EmptyState` shared UI component
+- [ ] EmptyState icon rendered in 16×16 container with `bg-surface-raised` background
+- [ ] EmptyState title styling: `text-lg font-semibold text-ink mb-2`
+- [ ] EmptyState description styling: `text-sm text-ink-muted max-w-sm mb-6`
+- [ ] EmptyState action button styling: `bg-brand text-white text-sm font-medium hover:bg-brand-hover`
+
+### Feed Sidebar Rendering (feed-sidebar.tsx)
+
+- [ ] Sidebar panel: `glass-panel rounded-2xl h-full overflow-y-auto p-3`
+- [ ] Filter section has bottom border: `border-b border-border-subtle` with `mb-3 pb-3`
+- [ ] "FILTER" header styled: `text-[10px] font-semibold tracking-widest text-ink-muted/60`
+- [ ] View filter buttons: `w-full px-3 py-2 rounded-lg text-sm font-medium`
+- [ ] "All Articles" uses `Rss` icon (16px)
+- [ ] "Unread" uses `Circle` icon with `weight="fill"` and `className="text-brand"` always
+- [ ] "Starred" uses `Star` icon; weight is `"fill"` ONLY when `viewFilter === "starred" && isAllSelected`
+- [ ] View filter active highlighting requires BOTH `viewFilter === f.key` AND `isAllSelected` (selecting a specific feed/folder removes filter highlight)
+- [ ] View filter buttons call `setSelectedFeed(null)` AND `setSelectedFolder(null)` in addition to `setViewFilter()`
+- [ ] Folder header: `uppercase tracking-wider text-xs font-semibold`
+- [ ] Folder child feeds indented with `ml-2` wrapper div
+- [ ] FeedItem name derived from `sub.displayName || sub.feedSource.title`
+- [ ] FeedItem unread badge: `text-[10px] font-medium tabular-nums px-1.5 py-0.5 rounded-full bg-brand/10 text-brand`
+- [ ] FeedItem mute button title attribute: "Unmute" when `sub.isMuted`, "Mute" when not
+- [ ] FeedItem mute button disabled styling: `disabled:opacity-40`
+- [ ] FeedItem click uses `sub.feedSourceId` for `setSelectedFeed()` (NOT `sub.id`)
+- [ ] Mute PATCH URL uses `sub.id` (subscription id, different from feedSourceId)
+- [ ] Mute PATCH body: `{ isMuted: !sub.isMuted }`
+- [ ] Folder unread count: `text-[10px] tabular-nums text-ink-muted` right-aligned
+- [ ] Selected feed item: `bg-surface-raised text-ink font-medium`
+- [ ] Unselected feed item: `text-ink-muted hover:text-ink hover:bg-surface-raised/50`
+
+### Article List Rendering (article-list.tsx)
+
+- [ ] Skeleton condition: `isLoading && articles.length === 0` (only on first-page load)
+- [ ] Empty condition: `!isLoading && articles.length === 0`
+- [ ] Card component dynamically selected: `layout === "list"` → ArticleCardList, `"magazine"` → ArticleCardMagazine, else ArticleCard
+- [ ] Article spacing: magazine `space-y-4`, list/card `space-y-1`
+- [ ] Load more button: `w-full py-2 rounded-xl text-sm font-medium text-ink-muted hover:text-ink hover:bg-surface-raised disabled:opacity-50`
+- [ ] Load more container: `pt-3 pb-1 shrink-0`
+- [ ] List view `ArticleCardList` does NOT accept `onCite`/`onAI` props — no action buttons possible in list layout
+
+### Article Card — Card View (article-card.tsx)
+
+- [ ] ArticleCard root element is a `<button>` (not div)
+- [ ] Unread dot color: `bg-brand` (design-system brand token, not hard-coded blue)
+- [ ] Source title reads from `article.feedSourceTitle` field
+- [ ] Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? "")`
+- [ ] `formatRelativeTime()` outputs: "just now" (<1 min), "{n}m ago", "{n}h ago", "{n}d ago", or `toLocaleDateString()` (≥30 days)
+- [ ] Abstract snippet truncated to first 120 characters + "..." in card view only (magazine shows full text)
+- [ ] Snippet only rendered when `article.abstractSnippet` is truthy
+- [ ] Snippet styling: `text-xs text-ink-muted/70 line-clamp-2`
+- [ ] Action row parent div has `onClick={(e) => e.stopPropagation()}` to prevent card selection
+- [ ] Star button title attribute: "Unstar" when starred, "Star" when not
+- [ ] Star icon color when starred: `text-yellow-500 hover:text-yellow-400` (text color only, no background)
+- [ ] Save button title attribute: "Saved" when saved, "Save to Library" when not
+- [ ] Save icon color when saved: `text-brand` (no background)
+- [ ] Cite button has its own inline `e.stopPropagation()` in onClick
+- [ ] AI button has its own inline `e.stopPropagation()` in onClick
+- [ ] DOI link is an `<a>` element (not button), opens `https://doi.org/${article.doi}`
+- [ ] DOI link text: "DOI" (not the actual doi value)
+- [ ] DOI link has its own `e.stopPropagation()` on click
+- [ ] DOI link only shown when `article.doi` is truthy
+
+### Article Card — List View (article-card-list.tsx)
+
+- [ ] List view root element is a `<button>`
+- [ ] List view unread styling: `font-medium` on the entire button row
+- [ ] List view read styling: `text-ink-muted` on the entire button row
+- [ ] Read article spacer: empty `<span>` with `w-2 h-2 shrink-0 aria-hidden="true"` (preserves alignment)
+- [ ] Title truncated via `truncate` (single-line ellipsis, not line-clamp)
+- [ ] Feed name visibility: `hidden md:inline` (hidden on small screens, visible from md breakpoint)
+- [ ] Reading time visibility: `hidden lg:inline` (hidden below lg breakpoint)
+- [ ] List view does NOT render a favicon image
+- [ ] List view does NOT render authors
+- [ ] List view does NOT render abstract/snippet text
+
+### Article Card — Magazine View (article-card-magazine.tsx)
+
+- [ ] Magazine card: `glass-panel rounded-2xl overflow-hidden`
+- [ ] Magazine hover state (unselected): `hover:ring-1 hover:ring-border`
+- [ ] Image container: `w-full h-48 bg-surface-raised overflow-hidden` (bg visible when image loading)
+- [ ] Image uses `object-cover` fit
+- [ ] Content area padding: `p-5`
+- [ ] Magazine title: `text-base` (larger than card view's `text-sm`)
+- [ ] Magazine read title: `font-medium text-ink-muted` (card view uses `font-normal`)
+- [ ] Magazine abstract shows full `article.abstractSnippet` (NOT truncated to 120 chars like card view)
+- [ ] Magazine abstract styling: `text-sm text-ink-muted line-clamp-3 leading-relaxed`
+- [ ] Magazine external link text: "Open" (NOT "DOI" like card view)
+- [ ] Magazine external link uses `article.link` (NOT `https://doi.org/${article.doi}`)
+- [ ] Magazine external link only shows when `article.link` is truthy (NOT `article.doi`)
+- [ ] Magazine favicon has onError handler: `style.display = "none"` (matches sidebar, not card view)
+
+### Article Search Bar (article-search-bar.tsx)
+
+- [ ] Search input: `pl-9 pr-4 py-2 rounded-xl text-xs`
+- [ ] Search clear button position: `right-3 top-1/2 -translate-y-1/2`
+- [ ] Filter toggle with active filters: `bg-brand/10 text-brand border-brand/20`
+- [ ] Filter toggle without active filters: `bg-surface-raised text-ink-muted border-border hover:text-ink`
+- [ ] Blue dot indicator: `w-1.5 h-1.5 rounded-full bg-brand`
+- [ ] Sort toggle icon: `SortAscending` when `sortBy === "oldest"`, `SortDescending` otherwise
+- [ ] Advanced filter panel: `glass-panel rounded-xl p-3 space-y-3` (only rendered when `showAdvancedFilters`)
+- [ ] Date filter "From" label: `text-[10px] text-ink-muted font-medium uppercase tracking-wide`
+- [ ] Date filter "To" label: same styling as "From"
+- [ ] Date inputs are `type="date"` (native HTML date picker)
+- [ ] Journal dropdown label: "Journal" (uppercase tracking-wide)
+- [ ] Journal dropdown default option text: "All journals"
+- [ ] Advanced sort labels: "Date" (for published), "Added", "Title" (3 equal-width buttons)
+- [ ] Advanced sort active: `bg-brand/10 text-brand border border-brand/20`
+- [ ] Advanced sort inactive: `bg-surface-raised text-ink-muted border border-border hover:text-ink`
+- [ ] `currentLegacySort` derivation: `sortBy === "relevance" ? "title" : "published"` — maps store sort to advanced sort visual state
+- [ ] Setting sort "added" with `sortDir = "asc"` normalizes to store `sortBy = "oldest"`
+- [ ] Setting sort "published" with `sortDir = "desc"` normalizes to store `sortBy = "newest"`
+- [ ] `hasActiveFilters` does NOT include `searchQuery` — only checks `filterDateFrom || filterDateTo || filterJournal`
+
+### Article Reader (article-reader.tsx)
+
+- [ ] Reader panel: `glass-panel rounded-2xl h-full overflow-y-auto p-5`
+- [ ] Reader empty state: `glass-panel rounded-2xl h-full flex items-center justify-center`
+- [ ] Reader empty state text styling: `text-sm text-ink-muted`
+- [ ] Title styling: `text-lg font-bold text-ink leading-snug mb-3`
+- [ ] Authors: `text-sm text-ink-muted mb-2`; hidden when `article.authors` is falsy
+- [ ] Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by " · ")
+- [ ] Journal info styling: `text-xs text-ink-muted/70 mb-1`
+- [ ] Published date styling: `text-xs text-ink-muted/70 mb-4`
+- [ ] Reading time on same line as published date, separated by ` · `
+- [ ] `estimateReadingTime()` returns `"< 1 min"` for null/empty text, otherwise `"{n} min read"` (at 200 WPM)
+- [ ] Reader Star button label text: "Starred" / "Star" (not icon-only like card view)
+- [ ] Reader Save button label text: "Saved" / "Save" (not icon-only like card view)
+- [ ] Reader Cite button: only rendered when `onCite` prop is provided
+- [ ] Reader AI button styling: `bg-brand/10 text-brand hover:bg-brand/15 border border-brand/20`
+- [ ] Reader AI button icon: `Sparkle` with `weight="fill"`
+- [ ] Reader Open Original: `<a>` element (not button), hidden when `article.link` falsy
+- [ ] Abstract header text: "Abstract" (`text-sm font-semibold text-ink mb-2`)
+- [ ] Abstract body: `text-sm text-ink-muted leading-relaxed`
+- [ ] DOI text format: "DOI: " followed by linked doi value (`text-brand hover:underline`)
+- [ ] ArticleNotes rendered inside the actions border-b section
+- [ ] RelatedPapers rendered below notes with `mt-4`, still inside the border-b section
+
+### Article Notes (article-notes.tsx)
+
+- [ ] NoteBlank icon size: 14px
+- [ ] "Notes" label: `text-xs text-ink-muted`
+- [ ] Saved indicator: Check icon (12px) + "Saved" text in `text-emerald-500`
+- [ ] Textarea: `resize-none rounded-xl border border-border bg-surface-raised px-3 py-2 text-xs leading-relaxed`
+- [ ] Textarea focus: `focus:ring-2 focus:ring-brand/40`
+- [ ] Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)
+- [ ] Blur handler clears pending save timer before persisting
+- [ ] Blur handler only persists when `localValue !== notes` (skips if unchanged)
+- [ ] Saved indicator disappears after exactly 2000ms
+- [ ] Component cleans up both save timer and saved-indicator timer on unmount
+
+### Related Papers (related-papers.tsx)
+
+- [ ] "Find Related Papers" button: `rounded-xl border border-border-subtle bg-surface-raised/50 px-4 py-3 text-sm`
+- [ ] Loading: `Spinner` icon (18px) with `animate-spin` + "Finding related papers..." text
+- [ ] Error text: `text-red-400` center-aligned `text-xs`
+- [ ] Error message: "Could not find related papers"
+- [ ] RelatedPaperCards empty state: "No related papers found." (`text-xs text-ink-muted` centered)
+- [ ] Paper card container: `rounded-xl border border-border-subtle bg-surface-raised/60 p-3`
+- [ ] Paper title: `text-sm font-medium leading-snug text-ink`
+- [ ] Authors: first 3 joined by ", " + " et al." when more than 3
+- [ ] Authors fallback: "Unknown authors" when authors array is empty
+- [ ] Paper metadata line: authors + ` · {journal}` + ` · {year}` (each part conditional)
+- [ ] Paper abstract: `line-clamp-3 text-xs leading-relaxed text-ink-muted`; only shown when NOT `dense` AND `abstract` exists
+- [ ] DOI link: `inline-flex items-center gap-1 text-xs text-brand hover:underline` with ArrowSquareOut icon (12px)
+- [ ] PubMed link: same styling as DOI link, links to `https://pubmed.ncbi.nlm.nih.gov/${pmid}/`
+- [ ] Citation count: `{count} citations` in `text-xs text-ink-muted`; only shown when `citationCount > 0`
+- [ ] Save button "Saving..." state icon: `Spinner` with `animate-spin`
+- [ ] Save button "Saved" state icon: `Check` with `weight="bold"`
+- [ ] Save button "Retry Save" state icon: `BookmarkSimple` with `weight="fill"`
+- [ ] Save button idle state icon: `BookmarkSimple` with `weight="regular"`
+- [ ] Save POSTs to `/api/papers/save` with `{ paper }` body
+- [ ] `RelatedPapers` uses local component state (separate from store's copilot-related papers)
+- [ ] `RelatedPapers` prevents re-fetch after first load: `if (loading || loaded) return`
+- [ ] `getPaperKey()` fallback chain: `paper.doi || paper.pmid || paper.s2Id || "{title}-{year}-{index}"`
+
+### Copilot Panel (copilot-panel.tsx)
+
+- [ ] Copilot header icon container: `w-6 h-6 rounded-full bg-brand/20`
+- [ ] Copilot title: "AI Copilot" (`text-sm font-semibold text-ink`)
+- [ ] Close button: `p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised`
+- [ ] CompactHeader styling: `px-4 py-3 bg-surface-raised/50 rounded-xl border border-border-subtle`
+- [ ] CompactHeader title: `text-sm font-semibold text-ink line-clamp-2`
+- [ ] CompactHeader second line: authors + ` · {journal}` + ` · {year}` (year from `new Date(publishedAt).getFullYear()`)
+- [ ] CompactHeader authors fallback: empty string `""` when null
+- [ ] Quick actions layout: `flex gap-2` (NOT grid despite doc section calling it "3-column grid")
+- [ ] Summarize button full styling: `bg-brand/10 text-brand` with `Lightning` icon (`weight="fill"`)
+- [ ] Explain button full styling: `bg-surface-raised text-ink` with `ChatText` icon
+- [ ] Explain sends hardcoded question: "Explain this paper to me in simple terms — what was studied, what was found, and why it matters."
+- [ ] Related button full styling: `bg-surface-raised text-ink` with `Books` icon
+- [ ] Related button disabled condition: `copilotLoading || relatedPapersLoading` (stricter than Summarize/Explain)
+- [ ] Summarize and Explain disabled condition: only `copilotLoading`
+- [ ] Source badge full_paper: `bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400`
+- [ ] Source badge abstract_only: `bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400`
+- [ ] Source badge title_only: `bg-red-500/10 border-red-500/20 text-red-500`
+- [ ] Source badge icons: 📄 full_paper, 📋 abstract_only, ⚠️ title_only
+- [ ] Messages area: `overflow-y-auto px-4 py-3 space-y-3 min-h-0`
+- [ ] Empty state icon container: `w-12 h-12 rounded-2xl bg-brand/10` with Sparkle (24px)
+- [ ] Empty state text: "Ask me about this paper" (`text-sm font-medium text-ink mb-1`)
+- [ ] Empty state helper: "Click Summarize for a quick overview, or ask any question about the study." (`text-xs text-ink-muted max-w-[250px]`)
+- [ ] User messages: `bg-surface-raised text-ink` aligned right (`justify-end`)
+- [ ] Assistant messages: `bg-brand/5 text-ink` aligned left (`justify-start`) with Sparkle avatar
+- [ ] Assistant avatar: `w-6 h-6 rounded-full bg-brand/20` with `Sparkle` (12px)
+- [ ] Message text: `whitespace-pre-wrap text-xs leading-relaxed`
+- [ ] Related papers in messages use `RelatedPaperCards` with `dense` prop
+- [ ] Related-papers message width: `max-w-[95%]` (vs normal `max-w-[85%]`)
+- [ ] Loading Sparkle icon uses `animate-spin` class (separate from bouncing dots)
+- [ ] Bouncing dot delays: 0ms, `[animation-delay:150ms]`, `[animation-delay:300ms]`
+- [ ] Bouncing dot styling: `w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce`
+- [ ] Suggestion chips header text: "Try asking:" (`text-xs text-ink-muted font-medium`)
+- [ ] Suggestion chip: `w-full text-left px-3 py-2 rounded-lg text-xs` with `line-clamp-2`
+- [ ] Suggestion chip hover: `hover:border-brand/30`
+- [ ] Suggestion chips disabled when `copilotLoading` is true
+- [ ] Chat input form border: `border-t border-border-subtle`
+- [ ] Chat input styling: `rounded-xl bg-surface-raised border border-border text-ink text-xs`
+- [ ] Send button: `p-2 rounded-xl bg-brand text-white` with `PaperPlaneRight` icon (16px)
+- [ ] Send button disabled: `copilotLoading || !input.trim()` (both conditions)
+- [ ] Form submit: prevents default, trims input, clears local input state, then calls `sendCopilotMessage`
+- [ ] Auto-scroll: `messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })` triggered on `copilotMessages` change
+
+### Add Feed Modal (add-feed-modal.tsx)
+
+- [ ] Modal title: "Add Feed" (not "Add a Feed" or "New Feed")
+- [ ] Modal max-width: `max-w-xl`
+- [ ] Tab keys: `"url"` and `"browse"` (not `"Add URL"` / `"Browse Journals"`)
+- [ ] RSS input icon: `Rss` (16px) positioned `left-3 top-1/2 -translate-y-1/2`
+- [ ] RSS input type: `url` (enables browser URL validation)
+- [ ] PubMed input icon: `MagnifyingGlass` (16px) positioned same as RSS
+- [ ] PubMed input type: `text`
+- [ ] RSS Add button text: "Adding..." during subscribe, "Add" normally
+- [ ] PubMed Create Feed button text: "Creating..." during subscribe, "Create Feed" normally
+- [ ] Divider: "or" text centered between `border-t border-border-subtle` lines
+- [ ] Error styling: `text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-xl`
+- [ ] Successful URL add: clears `feedUrl` then calls `onClose()`
+- [ ] Successful PubMed add: clears `pubmedQuery` then calls `onClose()`
+- [ ] `subscribe` error re-thrown by store — modal catches it and sets local error state
+- [ ] `subscribePubMed` error re-thrown by store — modal catches it with different default message: "Failed to create PubMed feed"
+
+### Citation Modal (citation-modal.tsx)
+
+- [ ] Modal title: "Cite Article" (not "Citation" or "Cite")
+- [ ] Default citation tab: `"apa"` (useState initial value)
+- [ ] Citation display area: `bg-surface-raised rounded-xl p-4 mb-4 min-h-[80px]`
+- [ ] Citation text uses `font-mono` (monospace rendering)
+- [ ] Loading text: "Formatting citations..." with `animate-pulse`
+- [ ] Error text: "Failed to load citation formats" (`text-xs text-ink-muted`)
+- [ ] Copy Citation button: `bg-brand text-white` with `ClipboardText` icon (16px)
+- [ ] Copy button text changes: "Copy BibTeX" on bibtex tab, "Copy Citation" on others
+- [ ] Copy feedback text: "Copied!" for exactly 2000ms
+- [ ] Copy In-Text button: `border border-border text-ink` secondary style
+- [ ] Copy In-Text button hidden on bibtex tab (`tab !== "bibtex"`)
+- [ ] Clipboard fallback: creates textarea, calls `document.execCommand("copy")`, removes textarea
+- [ ] DOI section: centered (`text-center`) below copy buttons with `mt-3`
+- [ ] Citation formats fetched via server action `getAllCitationFormats(articleToPaperData(article))`
+- [ ] When article changes: formats reset to null, loading set to `!!article`, tab NOT reset
+- [ ] Fetch uses cancellation pattern: `let cancelled = false` with cleanup function
+- [ ] Copy buttons disabled when `!formats` (no formats loaded)
+
+### Journal Browser (journal-browser.tsx)
+
+- [ ] Loading state: 4 `Skeleton` bars (`h-16 w-full rounded-xl`)
+- [ ] Search uses `SearchInput` shared UI component (not raw input)
+- [ ] Category dropdown default: "All Categories"
+- [ ] Specialty dropdown default: "All Specialties"
+- [ ] Dropdowns styled: `rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm`
+- [ ] Fetch uses `AbortController` for cleanup on search/category/specialty changes
+- [ ] AbortError caught and silently ignored (DOMException with name "AbortError")
+- [ ] Browse mode empty state: "No journals found matching your filters."
+- [ ] Browse mode subtitle: "Explore the curated directory by category, specialty, or publisher."
+- [ ] "Can't find what you're looking for?" help section only in search mode
+- [ ] "Can't find" text varies: references PubMed + RSS URL when no feeds found vs when some found
+- [ ] Journal card category pill: `rounded-full bg-surface-raised px-2 py-0.5 text-[10px] text-ink-muted`
+- [ ] Journal card specialty pill: same styling as category pill
+- [ ] Journal card "Suggested for you" badge: `rounded-full bg-brand/10 px-2 py-0.5 text-[10px] text-brand`
+- [ ] Journal list container: `max-h-64 overflow-y-auto` (scrollable, fixed height)
+- [ ] Journal empty state: `rounded-xl border border-dashed border-border-subtle px-4 py-6 text-center`
+- [ ] Subscribe checks both `journal.isSubscribed` property AND URL match against current subscriptions
+- [ ] `subscribedUrls` computed via `useMemo` from subscriptions array
+- [ ] Suggested feeds hidden when search is active: `hasSearch ? [] : data?.suggestedFeeds ?? []`
+- [ ] Browse feeds exclude suggested in browse mode: `feeds.filter((feed) => !feed.isSuggested)`
+- [ ] PubMed create feed uses `trimmedSearch` (not raw `search`) as query
+- [ ] PubMed success message: green text `text-xs text-green-500`
+- [ ] PubMed error message: red text `text-xs text-red-400`
+
+### Feed Store — Additional Details (feed-store.ts)
+
+- [ ] `showAdvancedFilters` state: boolean, default `false`
+- [ ] `loadSubscriptions` clears error at start: `{ isLoadingSubscriptions: true, error: null }`
+- [ ] `loadSubscriptions` fetches from `GET /api/feeds` endpoint
+- [ ] `loadSubscriptions` error message from `Error` instance or fallback "Failed to load subscriptions"
+- [ ] `loadArticles` always sends `sortDir` parameter (even for default "desc")
+- [ ] `loadArticles` only sends `sortBy` when NOT "newest" (omits for default to reduce params)
+- [ ] `loadArticles` sends `isRead=false` for unread filter, `isStarred=true` for starred filter
+- [ ] `subscribe` POSTs to `/api/feeds` with `{ feedUrl }` body
+- [ ] `subscribe` re-throws error after setting store error (enables caller catch)
+- [ ] `subscribePubMed` POSTs to `/api/feeds` with `{ pubmedQuery: query }` body
+- [ ] `subscribePubMed` re-throws error after setting store error
+- [ ] `unsubscribe` DELETEs `/api/feeds/${subscriptionId}`; locally removes subscription (optimistic)
+- [ ] `markRead` is fire-and-forget: synchronous optimistic update + `fetch().catch(revert)`
+- [ ] `markRead` skips if article already read (`if (!article || article.isRead) return`)
+- [ ] `markRead` POSTs to `/api/feeds/articles/${articleId}/read`
+- [ ] `toggleStar` POSTs to `/api/feeds/articles/${articleId}/star`
+- [ ] `saveToLibrary` POSTs to `/api/feeds/articles/${articleId}/save`
+- [ ] `markAllRead` POSTs to `/api/feeds/articles/mark-all-read` with optional `{ feedSourceId }`
+- [ ] `markAllRead` on success calls `loadSubscriptions()` to refresh unread counts
+- [ ] `loadArticleNote` GETs `/api/feeds/articles/${articleId}/notes`
+- [ ] `loadArticleNote` silently returns on non-ok response (no error set)
+- [ ] `loadArticleNote` stores empty notes by deleting key from `articleNotes` map
+- [ ] `saveArticleNote` trims notes before storing/sending
+- [ ] `saveArticleNote` sends `null` to API for empty notes: `{ notes: trimmedNotes || null }`
+- [ ] `saveArticleNote` failure is silent (catch block empty)
+- [ ] `setLayout` does NOT trigger article reload (only updates layout state)
+- [ ] `clearFilters` does NOT reset `searchQuery` (only date and journal)
+- [ ] `loadJournals` fetches from `GET /api/feeds/articles/journals`
+- [ ] `loadJournals` failure is silent
+- [ ] `setSelectedArticle` also loads article note via `loadArticleNote(articleId)`
+- [ ] `clearCopilot` sets `copilotOpen = false` — changing articles auto-closes copilot panel
+- [ ] Chat history filters out `system` role messages before sending to API
+- [ ] Chat sends prior messages minus the just-added user message: `history.slice(0, -1)`
+- [ ] `sendCopilotMessage` clears `copilotSuggestions` to `[]` when user sends any message
+- [ ] Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires
+- [ ] `RELATED_PAPERS_INTENT` regex: `/\b(related papers|similar papers|similar articles|more like this|find related)\b/i`
+- [ ] `withRelatedSuggestion()` only appends "Find related papers" if no existing suggestion matches the intent regex
+- [ ] `formatRelatedPapersSummary()` with papers: "I found {n} related papers via {sourceLabel}."
+- [ ] `formatRelatedPapersSummary()` without papers: "I couldn't find related papers for this article. Try a broader topic search."
+- [ ] Source label map: `s2_recommendations` → "Semantic Scholar recommendations", `s2_search` → "Semantic Scholar search", else "PubMed search"
+- [ ] `summarizeArticle` sends full article metadata: title, authors, abstractSnippet, doi, pubmedId, journal, volume, issue, publishedAt (ISO), link
+- [ ] `summarizeArticle` error sets store `error` (global banner, not copilot-local)
+- [ ] Standard chat error sets store `error` (global banner, not copilot-local)
+- [ ] `findRelatedPapers` failure does NOT set store error (silent clear of loading state)
+
+### Keyboard Shortcuts — Additional Edge Cases (page.tsx)
+
+- [ ] `j` does nothing when at last article (`currentIndex >= articles.length - 1`)
+- [ ] `k` does nothing when at first article (`currentIndex <= 0`)
+- [ ] `o` does nothing when `selectedArticleId` is falsy (no article selected)
+- [ ] `s` accesses `toggleStar` via `useFeedStore.getState()` (not from destructured state)
+- [ ] `c` does nothing if article not found in `articles` array for `selectedArticleId`
+- [ ] `a` reads live `copilotOpen` state via `useFeedStore.getState()` to toggle
+- [ ] `/` calls `e.preventDefault()` to suppress "/" character appearing in focused input
+
+### Behavior Corrections
+
+- Error banner dismiss button is TEXT "Dismiss" — existing doc line 95 describes it as "Dismiss button (X)" which incorrectly implies an X icon
+- Quick action buttons in copilot use `flex gap-2` layout — existing doc section 10 calls it "3-column grid" which is incorrect
+- Magazine view abstract is full `abstractSnippet` — existing doc section 5 says "line-clamp-3" which is the CSS class but the text itself is NOT pre-truncated like card view
+- Magazine external link text is "Open" linking to `article.link` — existing doc section 5 action table says "DOI" linking to `doi.org/{doi}` which is only correct for card view
+- Card view abstract says "first 120 chars + '...'" — correct for card view only; the existing doc doesn't clarify this is card-view-specific behavior
+- Clicking `Relevance` sort sets `sortDir = "desc"` (not "preserving current sortDir" as stated in existing doc line 654) — `setSortBy("relevance")` sets `sortDir: sortBy === "oldest" ? "asc" : "desc"`, which resolves to `"desc"` since sortBy is "relevance"
