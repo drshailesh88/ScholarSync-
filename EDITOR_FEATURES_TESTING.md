@@ -1691,7 +1691,6 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] `EDITOR_SHORTCUTS` defines `insertComment: "Mod-Shift-m"` but the actual comment shortcut is `"Mod-/"` via `AcademicKeyboardShortcuts`
 - [ ] `EDITOR_SHORTCUTS` defines `suggestingMode: "Mod-Shift-s"` but suggesting/track-changes mode is not implemented
 - [ ] `EDITOR_SHORTCUTS` defines `versionHistory: "Mod-Shift-h"` but no keyboard shortcut opens version history in either route
-- [ ] `EDITOR_SHORTCUTS` defines `commandBar: "Mod-k"` but no command bar/palette is implemented
 - [ ] `EDITOR_FONTS` defines three font options: Serif (`var(--font-merriweather)`), Sans-serif (`var(--font-inter)`), and Monospace (`'JetBrains Mono'`) — none are exposed via a UI font picker
 - [ ] `TYPOGRAPHY` constants define `contentMaxWidth: "720px"`, `wideMaxWidth: "960px"`, `bodySize: "16px"`, `lineHeight: "1.75"`, `headingLineHeight: "1.3"`, `h1Size: "28px"`, `h2Size: "22px"`, `h3Size: "18px"`, `h4Size: "16px"`
 
@@ -1770,7 +1769,6 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] Outline expected IMRAD sections list: `"Introduction"`, `"Methods"`, `"Results"`, `"Discussion"`, `"Conclusion"`, `"References"` — checked via H2 text content matching
 - [ ] Missing IMRAD sections display `"(missing)"` suffix with `WarningCircle` icon (size 12) in amber color
 - [ ] Outline auto-expands on `onMouseEnter` and collapses on `onMouseLeave` (hover-driven)
-- [ ] Outline scrollToPosition callback calls `editor.commands.focus(pos)` to move cursor to heading position
 
 ### Footnote View Details
 
@@ -1783,7 +1781,6 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] FootnoteSection sorts footnotes by `number` property ascending before rendering the list
 - [ ] FootnoteSection heading text is `"Footnotes"` (uppercase F) with `uppercase tracking-wider` CSS
 - [ ] FootnoteSection each row displays the footnote number followed by a period: `"{number}."`
-- [ ] Clicking a FootnoteSection row calls `editor.commands.focus(pos)` to navigate to the footnote position in the document
 
 ### Research Store Persistence and Defaults
 
@@ -1792,7 +1789,6 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] Research store default `activeTab` is `"search"` (from three options: search, library, chat)
 - [ ] Research store default `chatScope` is `"library"`
 - [ ] Research store `generateId()` format: `"${Date.now()}_${Math.random().toString(36).slice(2, 9)}"`
-- [ ] Research store `clearSearch()` resets query, results, page, plan, summary, and hasSearchedBefore but preserves library papers
 - [ ] Research store `setSidebarWidth()` clamps input to minimum 320 and maximum 520 pixels
 
 ### ResearchSidebar UI Details
@@ -1800,7 +1796,6 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] ResearchSidebar collapsed state shows a `Books` icon button with tooltip `"Open Research Sidebar (Cmd+Shift+L)"`
 - [ ] ResearchSidebar close button title is `"Close (Cmd+Shift+L)"`
 - [ ] ResearchSidebar expanded header text is `"Literature Research"`
-- [ ] ResearchSidebar badge count displays `"99+"` when count exceeds 99
 - [ ] ResearchSidebar resize handle has `z-10` positioning
 - [ ] ResearchSidebar tabs in expanded mode are: `"Search"`, `"Library"`, `"Chat"`
 
@@ -1924,7 +1919,33 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 
 ### Components Referenced But Not Rendered
 
-- [ ] `toolbar.tsx` exists in `src/components/editor/` but is NOT imported by either `/editor/[id]/page.tsx` or `/studio/page.tsx` — neither route renders a standalone toolbar component
 - [ ] `template-picker.tsx` exists in `src/components/editor/` but is NOT imported by either editor or studio page files — the template picker is not rendered on these routes
 - [ ] `EDITOR_SHORTCUTS`, `EDITOR_FONTS`, and `TYPOGRAPHY` constants from `editor-config.ts` are NOT imported by either `AcademicEditor` or `TiptapEditor` — these config values exist but are not consumed by the editor components
 - [ ] `DiffView.tsx` exists in `src/components/integrity/` but is NOT imported by `IntegrityPanel.tsx` — the diff view component is not rendered within the integrity check flow
+
+## Codex Verification Pass Discoveries
+
+> These checks were added after source-verifying Claude Code Pass 3 and correcting inaccurate or incomplete assertions.
+
+### Verification Corrections
+
+- [ ] Global `CommandPalette` is mounted by `AppShell` on `/editor/[id]` and `/studio`, and `Cmd/Ctrl+K` toggles it even though `EDITOR_SHORTCUTS.commandBar` is not imported by the editor components
+- [ ] DocumentOutline heading click scrolls the resolved DOM node into view and then sets the text selection to `pos + 1`
+- [ ] FootnoteSection row click focuses the editor, sets text selection to the footnote node position, and calls `scrollIntoView()`
+- [ ] Research store `clearSearch()` preserves `hasSearchedBefore` while clearing query, filters, results, current page, plan, summary, scroll position, and selected paper state
+- [ ] ResearchSidebar library badge hard-caps at literal `99` when the library count exceeds 99
+- [ ] `Toolbar` from `src/components/editor/toolbar.tsx` is actually rendered by `TiptapEditor` on `/studio`
+
+### Command Palette
+
+- [ ] Global command palette input placeholder is `Type a command or search...`
+- [ ] Global command palette closes on backdrop click
+- [ ] Global command palette closes on `Escape`
+- [ ] Global command palette navigation commands include `Dashboard`, `Studio`, `Literature Search`, `Notebook`, `Library`, `Archive`, `Compliance`, `Presentation`, and `Settings`
+- [ ] Global command palette action commands include `Toggle Theme` and `New Project`
+
+### Lifecycle And Cleanup
+
+- [ ] CommentSidebar registers `scholarsync:new-inline-comment` on mount and removes that window listener on unmount
+- [ ] `useStudioDocument` clears its debounced title-save timer on unmount
+- [ ] Studio citation insertion flow clears any existing dismissal timer before starting a new 2500 ms timer, so rapid successive citation inserts restart the countdown instead of stacking multiple timers
