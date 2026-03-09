@@ -89,42 +89,42 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 73 | Editor | Link Management / LinkPopover (Editor page only) — Clicking a link shows a floating popover with: | /editor/[id] | ✅ PASS | Clicking an editor link opened a popover with URL text plus `Edit link`, `Open in new tab`, and `Remove link` controls. |  |
 | 74 | Editor | Link Management / LinkPopover (Editor page only) — Enter key confirms edit, Escape cancels | /editor/[id] | ✅ PASS | Editing the link URL and pressing Enter updated the href; reopening edit mode and pressing Escape left the existing href unchanged. |  |
 | 75 | Editor | Link Management / LinkPopover (Editor page only) — Popover positions above the clicked link | /editor/[id] | ✅ PASS | Fixed popover placement; runtime bounds now show the popover above the clicked editor link. |  |
-| 76 | Editor | Citation System / Citation Dialog — Opens via Cmd+Shift+C keyboard shortcut | /editor/[id] | ⬜ |  |  |
-| 77 | Editor | Citation System / Citation Dialog — Opens via slash command (if available) | /editor/[id] | ⬜ |  |  |
-| 78 | Editor | Citation System / Citation Dialog — Opens via "+" button in Studio left sidebar references section | /editor/[id] | ⬜ |  |  |
-| 79 | Editor | Citation System / Citation Dialog — Opens via reference sidebar "Add" button | /editor/[id] | ⬜ |  |  |
-| 80 | Editor | Citation Dialog / Citation Dialog Tabs — Search — PubMed/scholarly database full-text search | /editor/[id] | ⬜ |  |  |
-| 81 | Editor | Citation Dialog / Citation Dialog Tabs — Library — browse papers already in user's library | /editor/[id] | ⬜ |  |  |
-| 82 | Editor | Citation Dialog / Citation Dialog Tabs — DOI — paste a DOI to resolve and preview | /editor/[id] | ⬜ |  |  |
-| 83 | Editor | Citation Dialog / Citation Dialog Tabs — Manual — manual citation entry form | /editor/[id] | ⬜ |  |  |
-| 84 | Editor | Citation Dialog / Citation Dialog UX — Multi-select — can select multiple references at once | /editor/[id] | ⬜ |  |  |
-| 85 | Editor | Citation Dialog / Citation Dialog UX — Selected count displayed | /editor/[id] | ⬜ |  |  |
-| 86 | Editor | Citation Dialog / Citation Dialog UX — Keyboard navigation (arrow keys, Enter) | /editor/[id] | ⬜ |  |  |
-| 87 | Editor | Citation Dialog / Citation Dialog UX — Escape to close | /editor/[id] | ⬜ |  |  |
-| 88 | Editor | Citation Dialog / Citation Dialog UX — Insert button adds citation node(s) to editor at cursor position | /editor/[id] | ⬜ |  |  |
-| 89 | Editor | Citation System / Citation Node (inline) — Appears as a chip/badge in the text (e.g., [1] or [1,2,3]) | /editor/[id] | ⬜ |  |  |
-| 90 | Editor | Citation System / Citation Node (inline) — Hover tooltip — shows reference details | /editor/[id] | ⬜ |  |  |
-| 91 | Editor | Citation System / Citation Node (inline) — Click popover — shows citation details and management options | /editor/[id] | ⬜ |  |  |
-| 92 | Editor | Citation System / Citation Node (inline) — Remove individual reference from a multi-citation | /editor/[id] | ⬜ |  |  |
-| 93 | Editor | Citation System / Citation Node (inline) — Delete entire citation | /editor/[id] | ⬜ |  |  |
-| 94 | Editor | Citation System / Citation Node (inline) — Citation numbering follows document order (Vancouver numeric style) | /editor/[id] | ⬜ |  |  |
-| 95 | Editor | Citation System / Citation Node (inline) — Citation numbers update automatically when citations are reordered | /editor/[id] | ⬜ |  |  |
-| 96 | Editor | Citation System / Citation Insertion Flow (Studio page) — Cursor position is saved before dialog opens | /studio | ⬜ |  |  |
-| 97 | Editor | Citation System / Citation Insertion Flow (Studio page) — After inserting, editor refocuses at saved position | /studio | ⬜ |  |  |
-| 98 | Editor | Citation System / Citation Insertion Flow (Studio page) — Citation notice appears briefly: "Citation inserted" or "N citations inserted" (2.5s auto-dismiss) | /studio | ⬜ |  |  |
-| 99 | Editor | Citation System / Citation Insertion Flow (Studio page) — Bibliography node is auto-inserted at document end if not already present | /studio | ⬜ |  |  |
-| 100 | Editor | Reference Sidebar — Opens via Cmd+Shift+R keyboard shortcut | /studio | ⬜ |  |  |
-| 101 | Editor | Reference Sidebar — Opens via TopBar reference badge button (Editor page) | /studio | ⬜ |  |  |
-| 102 | Editor | Reference Sidebar — Opens via "View all N references" link (Studio left sidebar) | /studio | ⬜ |  |  |
-| 103 | Editor | Reference Sidebar / Features — Cited vs uncited — references separated into groups | /studio | ⬜ |  |  |
-| 104 | Editor | Reference Sidebar / Features — Sort modes — by number, author, year, date added | /studio | ⬜ |  |  |
-| 105 | Editor | Reference Sidebar / Features — Filter/search — by title, author, journal | /studio | ⬜ |  |  |
-| 106 | Editor | Reference Sidebar / Features — Reference count displayed in header | /studio | ⬜ |  |  |
-| 107 | Editor | Reference Sidebar / Features — Add reference button → opens citation dialog | /studio | ⬜ |  |  |
-| 108 | Editor | Reference Sidebar / Features — Delete reference — with confirmation | /studio | ⬜ |  |  |
-| 109 | Editor | Reference Sidebar / Features — DOI copy — copy DOI to clipboard | /studio | ⬜ |  |  |
-| 110 | Editor | Reference Sidebar / Features — Expand/collapse — click to see full reference details | /studio | ⬜ |  |  |
-| 111 | Editor | Reference Sidebar / Features — Close button — closes the sidebar | /studio | ⬜ |  |  |
+| 76 | Editor | Citation System / Citation Dialog — Opens via Cmd+Shift+C keyboard shortcut | /editor/[id] | ✅ PASS | `Meta+Shift+C` on `/editor/new` opened the shared citation dialog with `Your References`, `Library`, `Paste DOI/PMID`, and `Manual Entry` tabs. |  |
+| 77 | Editor | Citation System / Citation Dialog — Opens via slash command (if available) | /editor/[id] | ✅ PASS | Restored the `Cite` slash command; selecting it from `/` opened the citation dialog after dispatching `scholarsync:open-citation-dialog`. |  |
+| 78 | Editor | Citation System / Citation Dialog — Opens via "+" button in Studio left sidebar references section | /editor/[id] | ✅ PASS | Verified on `/studio`, where the left reference sidebar exists: the `Add reference` `+` button opened the same citation dialog. |  |
+| 79 | Editor | Citation System / Citation Dialog — Opens via reference sidebar "Add" button | /editor/[id] | ✅ PASS | On `/editor/new`, opening the reference sidebar and clicking `Add reference` opened the citation dialog immediately. |  |
+| 80 | Editor | Citation Dialog / Citation Dialog Tabs — Search — PubMed/scholarly database full-text search | /editor/[id] | ✅ PASS | Fixed the search tab to call `/api/references/search-pubmed`; searching `asthma` on `/editor/new` returned live PubMed results after increasing the NCBI timeouts. |  |
+| 81 | Editor | Citation Dialog / Citation Dialog Tabs — Library — browse papers already in user's library | /editor/[id] | ✅ PASS | The `Library` tab loaded real saved papers from `searchPapersInLibrary`, including multiple kidney-disease entries from the current account. |  |
+| 82 | Editor | Citation Dialog / Citation Dialog Tabs — DOI — paste a DOI to resolve and preview | /editor/[id] | ✅ PASS | Pasting DOI `10.1056/NEJMoa2204233` resolved through `POST /api/references/resolve` and showed a preview card with `Add to References`. |  |
+| 83 | Editor | Citation Dialog / Citation Dialog Tabs — Manual — manual citation entry form | /editor/[id] | ✅ PASS | The `Manual Entry` tab accepted title, author, and year input; it successfully created `Study One` and `Study Two` references used in later citation-node tests. |  |
+| 84 | Editor | Citation Dialog / Citation Dialog UX — Multi-select — can select multiple references at once | /editor/[id] | ✅ PASS | The dialog held multiple selected references simultaneously; after selecting both manual references the footer tracked two active selections. |  |
+| 85 | Editor | Citation Dialog / Citation Dialog UX — Selected count displayed | /editor/[id] | ✅ PASS | The selected-footer counter updated to `Selected (2)` in the dialog DOM when two references were selected. |  |
+| 86 | Editor | Citation Dialog / Citation Dialog UX — Keyboard navigation (arrow keys, Enter) | /editor/[id] | ✅ PASS | On `/editor/new`, `ArrowDown` plus `Enter` selected the focused reference and enabled the `Insert Citation` footer action. |  |
+| 87 | Editor | Citation Dialog / Citation Dialog UX — Escape to close | /editor/[id] | ✅ PASS | Pressing `Escape` closed the citation dialog cleanly on `/editor/new`. |  |
+| 88 | Editor | Citation Dialog / Citation Dialog UX — Insert button adds citation node(s) to editor at cursor position | /editor/[id] | ✅ PASS | Clicking `Insert Citation` closed the dialog and inserted a citation node into the editor at the saved cursor paragraph on `/editor/new`. |  |
+| 89 | Editor | Citation System / Citation Node (inline) — Appears as a chip/badge in the text (e.g., [1] or [1,2,3]) | /editor/[id] | ✅ PASS | Inserted citations rendered as inline chips such as `[1-2]` and `[1]` inside the editor content. |  |
+| 90 | Editor | Citation System / Citation Node (inline) — Hover tooltip — shows reference details | /editor/[id] | ✅ PASS | Hovering the citation chip rendered the tooltip with `Smith (2024) / Study One` and `Jones (2023) / Study Two` details. |  |
+| 91 | Editor | Citation System / Citation Node (inline) — Click popover — shows citation details and management options | /editor/[id] | ✅ PASS | Clicking the citation chip opened a popover with per-reference `View`/`Remove` actions plus a `Delete citation` control. |  |
+| 92 | Editor | Citation System / Citation Node (inline) — Remove individual reference from a multi-citation | /editor/[id] | ✅ PASS | Removing one reference from the top `[1-2]` citation reduced it to `[1]` and kept the citation node intact. |  |
+| 93 | Editor | Citation System / Citation Node (inline) — Delete entire citation | /editor/[id] | ✅ PASS | `Delete citation` removed the selected inline citation node while leaving the remaining citation and bibliography block intact. |  |
+| 94 | Editor | Citation System / Citation Node (inline) — Citation numbering follows document order (Vancouver numeric style) | /editor/[id] | ✅ PASS | After removing Smith from the first citation, the bibliography renumbered to `1. Jones ... 2. Smith ...`, matching first appearance order in the document. |  |
+| 95 | Editor | Citation System / Citation Node (inline) — Citation numbers update automatically when citations are reordered | /editor/[id] | ✅ PASS | When the first citation’s reference order changed, numeric chips and bibliography numbers recomputed immediately from the new document order without manual refresh. |  |
+| 96 | Editor | Citation System / Citation Insertion Flow (Studio page) — Cursor position is saved before dialog opens | /studio | ✅ PASS | On `/studio`, placing the cursor between `Alpha` and `Beta`, opening the dialog, and inserting a citation produced `Alpha [1] Beta`, confirming the saved selection was reused. |  |
+| 97 | Editor | Citation System / Citation Insertion Flow (Studio page) — After inserting, editor refocuses at saved position | /studio | ✅ PASS | After insertion the active element returned to `.ProseMirror` with `ProseMirror-focused`, not the dialog or sidebar. |  |
+| 98 | Editor | Citation System / Citation Insertion Flow (Studio page) — Citation notice appears briefly: "Citation inserted" or "N citations inserted" (2.5s auto-dismiss) | /studio | ✅ PASS | A DOM observer captured `Citation inserted` mutations during Studio insertion; the notice was transient and gone by the time the next body-text check ran. |  |
+| 99 | Editor | Citation System / Citation Insertion Flow (Studio page) — Bibliography node is auto-inserted at document end if not already present | /studio | ✅ PASS | The first Studio citation automatically appended a bibliography node at the document end with the formatted reference list. |  |
+| 100 | Editor | Reference Sidebar — Opens via Cmd+Shift+R keyboard shortcut | /studio | ✅ PASS | The Studio reference sidebar opened when the app received the `Meta+Shift+R` key event and exposed `Add reference`, `Sort`, and `Filter references...`. |  |
+| 101 | Editor | Reference Sidebar — Opens via TopBar reference badge button (Editor page) | /studio | ⚠️ PARTIAL | On `/editor/new`, both selector-click and direct `.click()` on `button[title=\"References\"]` failed to open the reference sidebar, so the editor-page badge flow is still broken. |  |
+| 102 | Editor | Reference Sidebar — Opens via "View all N references" link (Studio left sidebar) | /studio | ✅ PASS | After adding six references in Studio, the left sidebar exposed `View all 6 references`, and clicking it opened the full reference sidebar. |  |
+| 103 | Editor | Reference Sidebar / Features — Cited vs uncited — references separated into groups | /studio | ✅ PASS | The sidebar listed cited references first and rendered a separate `Not cited (4)` section for uncited references. |  |
+| 104 | Editor | Reference Sidebar / Features — Sort modes — by number, author, year, date added | /studio | ✅ PASS | The sort menu exposed the default citation-number mode plus `By author`, `By year`, and `By date added`. |  |
+| 105 | Editor | Reference Sidebar / Features — Filter/search — by title, author, journal | /studio | ✅ PASS | Filtering for `finerenone` reduced the sidebar to the matching Clin Kidney J reference row. |  |
+| 106 | Editor | Reference Sidebar / Features — Reference count displayed in header | /studio | ✅ PASS | The open sidebar header showed the live reference count badge, which updated to `6` after adding four uncited references. |  |
+| 107 | Editor | Reference Sidebar / Features — Add reference button → opens citation dialog | /studio | ✅ PASS | Clicking the sidebar `Add reference` button opened the citation dialog from the active Studio document. |  |
+| 108 | Editor | Reference Sidebar / Features — Delete reference — with confirmation | /studio | ✅ PASS | Fixed sidebar deletion to require confirmation; canceling the new prompt kept the reference in place and logged the prompt text `Remove this reference from the sidebar?`. |  |
+| 109 | Editor | Reference Sidebar / Features — DOI copy — copy DOI to clipboard | /studio | ✅ PASS | `Copy DOI` wrote the expected URL-form DOI (`https://doi.org/10.1093/ckj/sfaf292`) to `navigator.clipboard.writeText`. |  |
+| 110 | Editor | Reference Sidebar / Features — Expand/collapse — click to see full reference details | /studio | ✅ PASS | Clicking a reference row expanded full metadata plus `Open DOI`, `Copy DOI`, and `Remove` actions. |  |
+| 111 | Editor | Reference Sidebar / Features — Close button — closes the sidebar | /studio | ✅ PASS | Clicking the sidebar header close button hid the entire reference sidebar and removed the `Filter references...` field from the page. |  |
 | 112 | Editor | Bibliography — BibliographyNode auto-inserted at document end when first citation is added | /studio | ⬜ |  |  |
 | 113 | Editor | Bibliography — Renders formatted reference list from the reference store | /studio | ⬜ |  |  |
 | 114 | Editor | Bibliography — Only one bibliography block allowed per document (prevents duplicates) | /studio | ⬜ |  |  |
