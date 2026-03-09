@@ -35,9 +35,9 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 19 | Editor | Text Formatting — Superscript | /studio | ✅ PASS | Fixed Studio editor to load superscript extension; `Meta+Shift+.` now wraps with `<sup>` and toggles off. |  |
 | 20 | Editor | Text Formatting — Subscript | /studio | ✅ PASS | Fixed Studio editor to load subscript extension; `Meta+Shift+,` now wraps with `<sub>` and toggles off. |  |
 | 21 | Editor | Text Formatting — Inline code | /studio | ✅ PASS | `Meta+E` wraps selected Studio text with `<code>`. |  |
-| 22 | Editor | Text Formatting — Text color | /studio | ⬜ |  |  |
-| 23 | Editor | Text Formatting — Font family | /studio | ⬜ |  |  |
-| 24 | Editor | Text Formatting — Text alignment | /studio | ⬜ |  |  |
+| 22 | Editor | Text Formatting — Text color | /studio | ✅ PASS | Live Studio editor command applied `style=\"color: rgb(255, 0, 0);\"` to selected text. |  |
+| 23 | Editor | Text Formatting — Font family | /studio | ✅ PASS | Live Studio editor command applied `font-family: Georgia;` to selected text. |  |
+| 24 | Editor | Text Formatting — Text alignment | /studio | ✅ PASS | Live Studio editor command applied left, center, right, and justify paragraph alignment styles. |  |
 | 25 | Editor | Structural Blocks (via Slash Commands) — Text | /studio | ⬜ |  |  |
 | 26 | Editor | Structural Blocks (via Slash Commands) — Heading 1 | /studio | ⬜ |  |  |
 | 27 | Editor | Structural Blocks (via Slash Commands) — Heading 2 | /studio | ⬜ |  |  |
