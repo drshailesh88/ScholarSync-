@@ -290,39 +290,39 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 274 | Editor | Left Sidebar (Studio page) — Navigation links: | /studio | ✅ PASS | The sidebar navigation block shows `Current Draft`, `My Library`, and `Literature Search`. |  |
 | 275 | Editor | Left Sidebar (Studio page) — References section: | /studio | ✅ PASS | The sidebar references section shows the live count, add button, and cited-source cards such as `[1] Integrity Citation Test`. |  |
 | 276 | Editor | Left Sidebar (Studio page) — AI Credits — progress bar at bottom showing token usage (used / limit) | /studio | ✅ PASS | The footer renders the `AI Credits` progress bar with the live used/limit text, e.g. `0 / 10,000`. |  |
-| 277 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Accessible from TopBar ? button (Editor page) | /studio | ⬜ |  |  |
-| 278 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Shows all shortcuts organized in 4 categories: Formatting, Structure, Academic, Tools | /studio | ⬜ |  |  |
-| 279 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Each shortcut shows key combination as styled keyboard keys | /studio | ⬜ |  |  |
-| 280 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Modal closes on backdrop click or X button | /studio | ⬜ |  |  |
-| 281 | Editor | Markdown Input Rules — # Text | /studio | ⬜ |  |  |
-| 282 | Editor | Markdown Input Rules — ## Text | /studio | ⬜ |  |  |
-| 283 | Editor | Markdown Input Rules — ### Text | /studio | ⬜ |  |  |
-| 284 | Editor | Markdown Input Rules — #### Text | /studio | ⬜ |  |  |
-| 285 | Editor | Markdown Input Rules — text | /studio | ⬜ |  |  |
-| 286 | Editor | Markdown Input Rules — *text* | /studio | ⬜ |  |  |
-| 287 | Editor | Markdown Input Rules — ~~text~~ | /studio | ⬜ |  |  |
-| 288 | Editor | Markdown Input Rules — - item | /studio | ⬜ |  |  |
-| 289 | Editor | Markdown Input Rules — 1. item | /studio | ⬜ |  |  |
-| 290 | Editor | Markdown Input Rules — > text | /studio | ⬜ |  |  |
-| 291 | Editor | Markdown Input Rules — code | /studio | ⬜ |  |  |
-| 292 | Editor | Error Handling & Edge Cases / Editor Page — EditorErrorBoundary — wraps entire editor, catches React errors, shows graceful error UI with document ID | /editor/[id] | ⬜ |  |  |
-| 293 | Editor | Error Handling & Edge Cases / Editor Page — Error banner — amber banner with warning icon + error message when document operations fail | /editor/[id] | ⬜ |  |  |
-| 294 | Editor | Error Handling & Edge Cases / Editor Page — Retry button — appears in error banner when save fails | /editor/[id] | ⬜ |  |  |
-| 295 | Editor | Error Handling & Edge Cases / Editor Page — Loading state — spinner + "Loading document..." while fetching content | /editor/[id] | ⬜ |  |  |
-| 296 | Editor | Error Handling & Edge Cases / Studio Page — Loading state — centered spinner + "Loading document..." | /studio | ⬜ |  |  |
-| 297 | Editor | Error Handling & Edge Cases / Studio Page — Error state — centered warning icon + error message | /studio | ⬜ |  |  |
-| 298 | Editor | Error Handling & Edge Cases / Studio Page — Chat error — amber error box in chat panel | /studio | ⬜ |  |  |
-| 299 | Editor | Error Handling & Edge Cases / Editor Behavior — Spellcheck — enabled via spellcheck: "true" attribute | /studio | ⬜ |  |  |
-| 300 | Editor | Error Handling & Edge Cases / Editor Behavior — Placeholder text — context-aware: | /studio | ⬜ |  |  |
-| 301 | Editor | Error Handling & Edge Cases / Editor Behavior — Editor height — minimum height calc(100vh - 12rem) for full-page feel | /studio | ⬜ |  |  |
-| 302 | Editor | Error Handling & Edge Cases / Editor Behavior — Content area max width — 720px centered with padding | /studio | ⬜ |  |  |
-| 303 | Editor | Error Handling & Edge Cases / Document Templates (Editor page) — New documents get template content based on document type via generateTemplateContent() | /editor/[id] | ⬜ |  |  |
-| 304 | Editor | Error Handling & Edge Cases / Document Templates (Editor page) — Templates provide IMRAD structure scaffolding | /editor/[id] | ⬜ |  |  |
-| 305 | Editor | Error Handling & Edge Cases / Data Protection — beforeunload event prevents closing tab during unsaved/saving states (Editor page) | /editor/[id] | ⬜ |  |  |
-| 306 | Editor | Error Handling & Edge Cases / Data Protection — localStorage fallback saves draft on every keystroke (Studio page) | /editor/[id] | ⬜ |  |  |
-| 307 | Editor | Quick Test Workflow / Basic Editor Flow — Open editor page / studio page | /editor/[id] | ⬜ |  |  |
-| 308 | Editor | Quick Test Workflow / Basic Editor Flow — Type text — verify placeholder disappears | /editor/[id] | ⬜ |  |  |
-| 309 | Editor | Quick Test Workflow / Basic Editor Flow — Apply formatting (bold, italic, underline) | /editor/[id] | ⬜ |  |  |
+| 277 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Accessible from TopBar ? button (Editor page) | /studio | ✅ PASS | Fixed Studio to expose a `Keyboard shortcuts` `?` button in the top action row; clicking it opens the shared shortcuts dialog. |  |
+| 278 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Shows all shortcuts organized in 4 categories: Formatting, Structure, Academic, Tools | /studio | ✅ PASS | The Studio dialog shows all four sections: `Formatting`, `Structure`, `Academic`, and `Tools`. |  |
+| 279 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Each shortcut shows key combination as styled keyboard keys | /studio | ✅ PASS | The dialog renders styled keycap spans for every shortcut; the live modal contained 63 keycap pills. |  |
+| 280 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Modal closes on backdrop click or X button | /studio | ✅ PASS | Both close paths work on Studio: clicking the X button and clicking the dark backdrop each dismissed the modal. |  |
+| 281 | Editor | Markdown Input Rules — # Text | /studio | ✅ PASS | Typing `# Heading One` converted the block into an `H1`. |  |
+| 282 | Editor | Markdown Input Rules — ## Text | /studio | ✅ PASS | Typing `## Heading Two` converted the block into an `H2`. |  |
+| 283 | Editor | Markdown Input Rules — ### Text | /studio | ✅ PASS | Typing `### Heading Three` converted the block into an `H3`. |  |
+| 284 | Editor | Markdown Input Rules — #### Text | /studio | ✅ PASS | Typing `#### Heading Four` converted the block into an `H4`. |  |
+| 285 | Editor | Markdown Input Rules — text | /studio | ✅ PASS | Typing `**bold** ` converted the content into a `<strong>` mark. |  |
+| 286 | Editor | Markdown Input Rules — *text* | /studio | ✅ PASS | Typing `*italic* ` converted the content into an `<em>` mark. |  |
+| 287 | Editor | Markdown Input Rules — ~~text~~ | /studio | ✅ PASS | Typing `~~strike~~ ` converted the content into an `<s>` mark. |  |
+| 288 | Editor | Markdown Input Rules — - item | /studio | ✅ PASS | Typing `- item` converted the block into a `<ul><li>`. |  |
+| 289 | Editor | Markdown Input Rules — 1. item | /studio | ✅ PASS | Typing `1. item` converted the block into an `<ol><li>`. |  |
+| 290 | Editor | Markdown Input Rules — > text | /studio | ✅ PASS | Typing `> quote` converted the block into a `<blockquote>`. |  |
+| 291 | Editor | Markdown Input Rules — code | /studio | ✅ PASS | Typing `` `code` `` converted the content into an inline `<code>` mark. |  |
+| 292 | Editor | Error Handling & Edge Cases / Editor Page — EditorErrorBoundary — wraps entire editor, catches React errors, shows graceful error UI with document ID | /editor/[id] | ⚠️ PARTIAL | Verified in code that `/editor/[id]` is wrapped in `EditorErrorBoundary`, but I did not find a safe browser-only repro that triggers a render crash to exercise the fallback UI live. |  |
+| 293 | Editor | Error Handling & Edge Cases / Editor Page — Error banner — amber banner with warning icon + error message when document operations fail | /editor/[id] | ✅ PASS | Aborting the live autosave `POST /editor/new` request surfaced the amber warning banner with `Failed to save. Please check your connection.` |  |
+| 294 | Editor | Error Handling & Edge Cases / Editor Page — Retry button — appears in error banner when save fails | /editor/[id] | ✅ PASS | The forced save failure rendered both the top status `Retry save` control and the banner `Retry` button. |  |
+| 295 | Editor | Error Handling & Edge Cases / Editor Page — Loading state — spinner + "Loading document..." while fetching content | /editor/[id] | ⚠️ PARTIAL | Verified the `/editor/[id]` loading branch in code (`Spinner` + `Loading document...`), but I did not capture a clean live snapshot because the route resolves too quickly in this environment. |  |
+| 296 | Editor | Error Handling & Edge Cases / Studio Page — Loading state — centered spinner + "Loading document..." | /studio | ⚠️ PARTIAL | Verified the Studio loading branch in code (`CircleNotch` + `Loading document...`), but I did not capture it live before hydration completed. |  |
+| 297 | Editor | Error Handling & Edge Cases / Studio Page — Error state — centered warning icon + error message | /studio | ⚠️ PARTIAL | Verified the centered `docError` branch in code, but I did not find a clean browser-only repro that preserved the page shell while failing only the Studio document load action. |  |
+| 298 | Editor | Error Handling & Edge Cases / Studio Page — Chat error — amber error box in chat panel | /studio | ✅ PASS | Aborting live `/api/chat` requests rendered the amber chat error box with `Failed to send message. Check your API key.` |  |
+| 299 | Editor | Error Handling & Edge Cases / Editor Behavior — Spellcheck — enabled via spellcheck: "true" attribute | /studio | ✅ PASS | The Studio editor root has `spellcheck=\"true\"`. |  |
+| 300 | Editor | Error Handling & Edge Cases / Editor Behavior — Placeholder text — context-aware: | /studio | ✅ PASS | Clearing the Studio draft exposed the live placeholder `Start typing or press '/' for AI commands...` on the empty paragraph node. |  |
+| 301 | Editor | Error Handling & Edge Cases / Editor Behavior — Editor height — minimum height calc(100vh - 12rem) for full-page feel | /studio | ✅ PASS | Fixed Studio parity: the editor now computes to a `528px` minimum height from `min-h-[calc(100vh-12rem)]`. |  |
+| 302 | Editor | Error Handling & Edge Cases / Editor Behavior — Content area max width — 720px centered with padding | /studio | ✅ PASS | Fixed Studio parity: the content wrapper now has `max-width: 720px` with the existing `px-6 py-4` padding. |  |
+| 303 | Editor | Error Handling & Edge Cases / Document Templates (Editor page) — New documents get template content based on document type via generateTemplateContent() | /editor/[id] | ⚠️ PARTIAL | Verified in code that `/editor/[id]` falls back to `generateTemplateContent(documentType)` when `dbContent` is absent, but my current `/editor/new` session reused saved content so I did not observe a fresh template render live. |  |
+| 304 | Editor | Error Handling & Edge Cases / Document Templates (Editor page) — Templates provide IMRAD structure scaffolding | /editor/[id] | ⚠️ PARTIAL | The generator code contains IMRAD scaffolding for `original-article` (`Introduction`, `Methods`, `Results`, `Discussion`, `Conclusion`), but I did not get a clean live new-document render in this session. |  |
+| 305 | Editor | Error Handling & Edge Cases / Data Protection — beforeunload event prevents closing tab during unsaved/saving states (Editor page) | /editor/[id] | ⚠️ PARTIAL | Verified the `beforeunload` guard in code for `unsaved`/`saving` states, but browser event construction limitations prevented a reliable live assertion of `defaultPrevented`. |  |
+| 306 | Editor | Error Handling & Edge Cases / Data Protection — localStorage fallback saves draft on every keystroke (Studio page) | /editor/[id] | ✅ PASS | Typing on Studio immediately updated `localStorage.scholarsync_studio_draft`, including the new text and `wordCount`. |  |
+| 307 | Editor | Quick Test Workflow / Basic Editor Flow — Open editor page / studio page | /editor/[id] | ✅ PASS | `/editor/new` opens the editor workflow successfully. |  |
+| 308 | Editor | Quick Test Workflow / Basic Editor Flow — Type text — verify placeholder disappears | /editor/[id] | ✅ PASS | After clearing the editor, the placeholder `Start writing, or type / for commands...` appeared and disappeared as soon as I typed `format me`. |  |
+| 309 | Editor | Quick Test Workflow / Basic Editor Flow — Apply formatting (bold, italic, underline) | /editor/[id] | ✅ PASS | Selecting `format me` and pressing `Cmd+B`, `Cmd+I`, and `Cmd+U` produced `<strong><em><u>format me</u></em></strong>`. |  |
 | 310 | Editor | Quick Test Workflow / Basic Editor Flow — Type / — verify slash menu appears | /editor/[id] | ⬜ |  |  |
 | 311 | Editor | Quick Test Workflow / Basic Editor Flow — Insert a heading, bullet list, and table | /editor/[id] | ⬜ |  |  |
 | 312 | Editor | Quick Test Workflow / Basic Editor Flow — Verify word count updates in real-time | /editor/[id] | ⬜ |  |  |
