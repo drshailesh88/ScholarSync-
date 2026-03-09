@@ -19,6 +19,7 @@ import {
   CloudCheck,
   Warning,
   CaretDown,
+  Question,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
@@ -26,6 +27,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { CommentSidebar } from "@/components/editor/CommentSidebar";
+import { KeyboardShortcutsDialog } from "@/components/editor/KeyboardShortcutsDialog";
 import { CitationDialog } from "@/components/citations/citation-dialog";
 import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { useReferenceStore } from "@/stores/reference-store";
@@ -288,6 +290,7 @@ function StudioContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [usageStats, setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
   const conversationIdRef = useRef<number | null>(null);
   const editorRef = useRef<Editor | null>(null);
@@ -1012,7 +1015,15 @@ function StudioContent() {
               </span>
             )}
           </div>
-          <div className="relative">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowKeyboardShortcuts(true)}
+              title="Keyboard shortcuts"
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
+            >
+              <Question size={14} />
+            </button>
+            <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
@@ -1038,6 +1049,7 @@ function StudioContent() {
                 </button>
               </div>
             )}
+            </div>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto bg-surface">
@@ -1220,6 +1232,10 @@ function StudioContent() {
         open={citationDialogOpen}
         onClose={closeCitationDialog}
         onInsert={handleInsertCitation}
+      />
+      <KeyboardShortcutsDialog
+        isOpen={showKeyboardShortcuts}
+        onClose={() => setShowKeyboardShortcuts(false)}
       />
     </div>
   );
