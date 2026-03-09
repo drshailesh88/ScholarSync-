@@ -823,7 +823,6 @@
 ### Empty State (feed-empty-state.tsx)
 
 - [ ] Empty state uses `EmptyState` shared UI component
-- [ ] EmptyState icon rendered in 16×16 container with `bg-surface-raised` background
 - [ ] EmptyState title styling: `text-lg font-semibold text-ink mb-2`
 - [ ] EmptyState description styling: `text-sm text-ink-muted max-w-sm mb-6`
 - [ ] EmptyState action button styling: `bg-brand text-white text-sm font-medium hover:bg-brand-hover`
@@ -911,7 +910,6 @@
 - [ ] Magazine external link text: "Open" (NOT "DOI" like card view)
 - [ ] Magazine external link uses `article.link` (NOT `https://doi.org/${article.doi}`)
 - [ ] Magazine external link only shows when `article.link` is truthy (NOT `article.doi`)
-- [ ] Magazine favicon has onError handler: `style.display = "none"` (matches sidebar, not card view)
 
 ### Article Search Bar (article-search-bar.tsx)
 
@@ -1118,7 +1116,6 @@
 - [ ] `subscribe` re-throws error after setting store error (enables caller catch)
 - [ ] `subscribePubMed` POSTs to `/api/feeds` with `{ pubmedQuery: query }` body
 - [ ] `subscribePubMed` re-throws error after setting store error
-- [ ] `unsubscribe` DELETEs `/api/feeds/${subscriptionId}`; locally removes subscription (optimistic)
 - [ ] `markRead` is fire-and-forget: synchronous optimistic update + `fetch().catch(revert)`
 - [ ] `markRead` skips if article already read (`if (!article || article.isRead) return`)
 - [ ] `markRead` POSTs to `/api/feeds/articles/${articleId}/read`
@@ -1160,7 +1157,6 @@
 - [ ] `s` accesses `toggleStar` via `useFeedStore.getState()` (not from destructured state)
 - [ ] `c` does nothing if article not found in `articles` array for `selectedArticleId`
 - [ ] `a` reads live `copilotOpen` state via `useFeedStore.getState()` to toggle
-- [ ] `/` calls `e.preventDefault()` to suppress "/" character appearing in focused input
 
 ### Behavior Corrections
 
@@ -1170,3 +1166,19 @@
 - Magazine external link text is "Open" linking to `article.link` — existing doc section 5 action table says "DOI" linking to `doi.org/{doi}` which is only correct for card view
 - Card view abstract says "first 120 chars + '...'" — correct for card view only; the existing doc doesn't clarify this is card-view-specific behavior
 - Clicking `Relevance` sort sets `sortDir = "desc"` (not "preserving current sortDir" as stated in existing doc line 654) — `setSortBy("relevance")` sets `sortDir: sortBy === "oldest" ? "asc" : "desc"`, which resolves to `"desc"` since sortBy is "relevance"
+
+## Codex Verification Pass Discoveries
+
+> Source-backed behaviors found during verification after removing 4 inaccurate Claude Code pass-2 checkboxes.
+
+### Shared UI Details
+- [ ] Shared `EmptyState` wraps the icon in a `w-16 h-16 rounded-2xl bg-surface-raised` container and renders the icon at 32px
+
+### Feed Sidebar
+- [ ] Feed mute/unmute button starts hidden with `opacity-0` and only becomes visible on row hover via `group-hover:opacity-100`
+- [ ] Magazine-view favicons hide broken images with `onError={() => currentTarget.style.display = "none"}` just like sidebar and card-view favicons
+
+### Feed Store
+- [ ] `unsubscribe()` removes the subscription from local state only after the DELETE request succeeds; it is not optimistic
+- [ ] Closing Copilot through `closeCopilot()` only sets `copilotOpen = false` and preserves messages/source state for the same selected article
+- [ ] Re-selecting the same article id does not clear Copilot state because `clearCopilot()` only runs when `articleId !== prev`

@@ -4,8 +4,10 @@
 **Original checkbox count:** 185
 **Codex pass 1 total:** 309
 **Claude Code pass 2 total:** 641
-**Features added in pass 2:** 332
-**Completeness estimate:** ~95% of testable UI surface area
+**Verification-corrected final total:** 643
+**Net features added vs original doc:** 458
+**Verification delta:** 4 hallucinations removed, 6 Codex verification discoveries added
+**Completeness estimate:** ~96% of testable UI surface area
 
 ## Pass 2 Coverage Summary
 
@@ -32,6 +34,22 @@
 - Keyboard shortcuts — edge cases (7 checks)
 - Behavior corrections (6 items)
 
+## Verification Outcome
+
+### Hallucinations removed
+- EmptyState icon container was documented with the wrong size
+- Magazine favicon fallback was documented with a false comparison against card view
+- `unsubscribe()` was documented as optimistic when it is not
+- `/` keyboard shortcut behavior was explained incorrectly for focused inputs
+
+### Codex verification discoveries added
+- Shared `EmptyState` icon container is actually `w-16 h-16` with a 32px icon
+- Feed mute button is hidden by default and appears on row hover via `group-hover:opacity-100`
+- Magazine-view favicons hide broken images with the same `onError` pattern as other feed surfaces
+- `unsubscribe()` removes local state only after a successful DELETE response
+- `closeCopilot()` closes the panel without clearing its message/source state for the same article
+- Re-selecting the same article id does not call `clearCopilot()`
+
 ## Behavior Corrections Identified in Pass 2
 
 1. **Error banner dismiss**: Text "Dismiss" — not an X icon as implied by original doc
@@ -41,9 +59,7 @@
 5. **Relevance sort direction**: `setSortBy("relevance")` always sets `sortDir = "desc"` — does NOT preserve current sortDir as claimed in Codex pass 1
 6. **Magazine read title**: Uses `font-medium` — not `font-normal` as card view does
 
-## Remaining gaps (estimated <5%)
-- Toast/notification system behavior (if any exists beyond alert())
-- Browser-level behaviors (back/forward navigation, URL hash state)
-- Accessibility: focus management, screen reader announcements
-- Network timeout/offline handling
-- Concurrent request deduplication (store does not deduplicate)
+## Remaining gaps (estimated <4%)
+- Browser-level behaviors outside the React tree (back/forward navigation, URL history expectations)
+- Accessibility-specific focus/announcement behavior not explicitly encoded in JSX
+- Network timeout/offline behavior beyond the current store/component request branches
