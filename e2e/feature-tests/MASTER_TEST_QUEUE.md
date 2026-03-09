@@ -323,11 +323,11 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 307 | Editor | Quick Test Workflow / Basic Editor Flow — Open editor page / studio page | /editor/[id] | ✅ PASS | `/editor/new` opens the editor workflow successfully. |  |
 | 308 | Editor | Quick Test Workflow / Basic Editor Flow — Type text — verify placeholder disappears | /editor/[id] | ✅ PASS | After clearing the editor, the placeholder `Start writing, or type / for commands...` appeared and disappeared as soon as I typed `format me`. |  |
 | 309 | Editor | Quick Test Workflow / Basic Editor Flow — Apply formatting (bold, italic, underline) | /editor/[id] | ✅ PASS | Selecting `format me` and pressing `Cmd+B`, `Cmd+I`, and `Cmd+U` produced `<strong><em><u>format me</u></em></strong>`. |  |
-| 310 | Editor | Quick Test Workflow / Basic Editor Flow — Type / — verify slash menu appears | /editor/[id] | ⬜ |  |  |
-| 311 | Editor | Quick Test Workflow / Basic Editor Flow — Insert a heading, bullet list, and table | /editor/[id] | ⬜ |  |  |
-| 312 | Editor | Quick Test Workflow / Basic Editor Flow — Verify word count updates in real-time | /editor/[id] | ⬜ |  |  |
-| 313 | Editor | Quick Test Workflow / Basic Editor Flow — Press Cmd+S — verify immediate save | /editor/[id] | ⬜ |  |  |
-| 314 | Editor | Quick Test Workflow / Basic Editor Flow — Wait 2s after typing — verify auto-save triggers | /editor/[id] | ⬜ |  |  |
+| 310 | Editor | Quick Test Workflow / Basic Editor Flow — Type / — verify slash menu appears | /editor/[id] | ✅ PASS | Typing `/` on an empty editor line opened the full slash menu with `BASIC BLOCKS`, `ACADEMIC`, `AI TOOLS`, and `DOCUMENT TOOLS`. |  |
+| 311 | Editor | Quick Test Workflow / Basic Editor Flow — Insert a heading, bullet list, and table | /editor/[id] | ✅ PASS | Using the slash menu inserted a heading node, a bullet list, and an academic table into the same editor document. |  |
+| 312 | Editor | Quick Test Workflow / Basic Editor Flow — Verify word count updates in real-time | /editor/[id] | ✅ PASS | The top-bar word count updated live from `3 words` to `4 words` immediately after typing. |  |
+| 313 | Editor | Quick Test Workflow / Basic Editor Flow — Press Cmd+S — verify immediate save | /editor/[id] | ✅ PASS | Typing a character and pressing `Cmd+S` immediately triggered live save `POST /editor/new` requests and refreshed the saved timestamp. |  |
+| 314 | Editor | Quick Test Workflow / Basic Editor Flow — Wait 2s after typing — verify auto-save triggers | /editor/[id] | ✅ PASS | Typing without `Cmd+S` and waiting 2.5 seconds triggered the debounced autosave `POST /editor/new` requests. |  |
 | 315 | Editor | Quick Test Workflow / Citation Flow — Press Cmd+Shift+C — citation dialog opens | /editor/[id] | ⬜ |  |  |
 | 316 | Editor | Quick Test Workflow / Citation Flow — Search for a paper / enter DOI | /editor/[id] | ⬜ |  |  |
 | 317 | Editor | Quick Test Workflow / Citation Flow — Select reference(s) and click Insert | /editor/[id] | ⬜ |  |  |
