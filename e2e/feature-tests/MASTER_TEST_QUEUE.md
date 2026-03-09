@@ -24,11 +24,11 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 8 | Editor | Editor Modes / Editor Page — Editing mode — full editing, described as "Direct changes to document" | /editor/[id] | ✅ PASS | Default mode showed `Editing` and editor contenteditable state was `true`. |  |
 | 9 | Editor | Editor Modes / Editor Page — Viewing mode — read-only, editor becomes non-editable, described as "Read-only, no edits" | /editor/[id] | ✅ PASS | Switched to `Viewing`; contenteditable nodes reported `false`. |  |
 | 10 | Editor | Editor Modes / Editor Page — Mode toggle dropdown in TopBar shows icon + label + description for each mode | /editor/[id] | ✅ PASS | Dropdown exposed `Editing / Direct changes to document` and `Viewing / Read-only, no edits`. |  |
-| 11 | Editor | Editor Modes / Studio Page — Write mode — AI drafting assistance, shows AI Intensity bar | /studio | ⬜ |  |  |
-| 12 | Editor | Editor Modes / Studio Page — Learn mode — guided educational mode, AI teaches instead of writing for you | /studio | ⬜ |  |  |
-| 13 | Editor | Text Formatting — Bold | /studio | ⬜ |  |  |
-| 14 | Editor | Text Formatting — Italic | /studio | ⬜ |  |  |
-| 15 | Editor | Text Formatting — Underline | /studio | ⬜ |  |  |
+| 11 | Editor | Editor Modes / Studio Page — Write mode — AI drafting assistance, shows AI Intensity bar | /studio | ✅ PASS | Write mode was active by default on `/studio`. |  |
+| 12 | Editor | Editor Modes / Studio Page — Learn mode — guided educational mode, AI teaches instead of writing for you | /studio | ✅ PASS | Clicking Learn switched the segmented control to active Learn state. |  |
+| 13 | Editor | Text Formatting — Bold | /studio | ✅ PASS | Selected editor text wrapped with `<strong>` and toggled back off successfully. |  |
+| 14 | Editor | Text Formatting — Italic | /studio | ✅ PASS | Selected editor text wrapped with `<em>` and toggled back off successfully. |  |
+| 15 | Editor | Text Formatting — Underline | /studio | ✅ PASS | `Meta+U` wrapped selected text with `<u>` and toggled back off successfully. |  |
 | 16 | Editor | Text Formatting — Strikethrough | /studio | ⬜ |  |  |
 | 17 | Editor | Text Formatting — Highlight | /studio | ⬜ |  |  |
 | 18 | Editor | Text Formatting — Highlight colors | /studio | ⬜ |  |  |
