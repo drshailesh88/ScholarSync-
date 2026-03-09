@@ -30,15 +30,15 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
       const target = e.target as HTMLElement;
       const linkEl = target.closest("a");
 
-      if (linkEl && editor.view.dom.contains(linkEl)) {
-        e.preventDefault();
-        const rect = linkEl.getBoundingClientRect();
-        setPopoverPos({
-          x: rect.left + rect.width / 2,
-          y: rect.bottom + 4,
-        });
-        setUrl(linkEl.getAttribute("href") || "");
-        setIsEditing(false);
+        if (linkEl && editor.view.dom.contains(linkEl)) {
+          e.preventDefault();
+          const rect = linkEl.getBoundingClientRect();
+          setPopoverPos({
+            x: rect.left + rect.width / 2,
+            y: rect.top - 8,
+          });
+          setUrl(linkEl.getAttribute("href") || "");
+          setIsEditing(false);
       } else if (
         popoverRef.current &&
         !popoverRef.current.contains(target)
@@ -90,7 +90,7 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
       style={{
         left: popoverPos.x,
         top: popoverPos.y,
-        transform: "translateX(-50%)",
+        transform: "translate(-50%, -100%)",
       }}
     >
       {isEditing ? (
