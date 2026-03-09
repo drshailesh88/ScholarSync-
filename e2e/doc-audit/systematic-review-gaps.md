@@ -3,9 +3,9 @@
 **Original doc:** `SYSTEMATIC_REVIEW_FEATURES_TESTING.md`  
 **Original checkbox count:** 374  
 **Features found in UI:** 507  
-**Features found in source code:** 611  
-**Missing from doc:** 237  
-**Completeness of original doc:** 61.2%
+**Features found in source code:** 915  
+**Missing from doc:** 541  
+**Completeness of original doc:** 40.9%
 
 ## Missing Features
 
@@ -67,6 +67,17 @@
 - [ ] Living Review hides its create form by default, defaults frequency to weekly, and stores `check_now` result summaries locally
 - [ ] Unified RoB, GRADE, Manuscript, and Snowballing panels have current-state behaviors around default subviews, CSV export, DOCX export state, and included-paper fallback logic
 
+### Re-Audit Pass 2 Coverage
+- [ ] Unified RoB needed detailed checks for dashboard defaults, auto-assignment fallback rules, filter-tab labels, CSV export behavior, empty states, and tool-panel return behavior
+- [ ] Data Extraction needed detailed checks for the 5-field default schema, full-text toggle default, paper eligibility gating, batch progress strings, source-panel behavior, and local-only inline editing
+- [ ] Meta-Analysis needed explicit checks for default inputs, CI auto-fill, trim-and-fill wording, subgroup validation, sensitivity validation, and tab-specific result rendering
+- [ ] NMA needed explicit checks for spinner-only saved-result loading, validation error strings, result-tab labels, league-table CSV export filename, inconsistency empty state, and rankings wording
+- [ ] GRADE needed explicit checks for selector/input defaults, disabled conditions, loading/error copy, empty-state branching, row expansion, downgrade labels, and CSV export visibility
+- [ ] Manuscript needed explicit checks for section ordering, hidden export controls before generation, local-only edit persistence, copy timeout behavior, abstract context generation, and DOCX title/filename behavior
+- [ ] Snowballing needed exact checks for seeds/results default state, direction/depth defaults, success-banner copy, session history wording, discovered-paper status pills, and mini-network legend behavior
+- [ ] Living Review needed exact checks for hidden-form default state, prefill rules, create/check/pause/resume/delete behavior, success-banner copy, and the absence of UI support for `update_frequency`
+- [ ] Source/API cross-checking exposed additional behavior corrections: screening-PDF shortcut hints are not wired, protocol export omits the route's required `protocol` payload, and data-extraction edits stay session-local
+
 ### Store and APIs
 - [ ] Persisted store key, persisted fields, and intentionally excluded `criteria` state were missing
 - [ ] Projects API ordering and screening-progress calculation were missing
@@ -82,3 +93,5 @@
 - Search-strategy generation does not have a dedicated request-scoped loading flag; the current spinner logic is tied to initial config loading.
 - Non-numeric route params do not render a dedicated invalid-id error experience; the outer page returns `null`.
 - `CollaboratorPresence` does not provide a friendly label mapping for `nma` and may show the raw key.
+- Screening PDF viewer displays shortcut hints for `Esc`, `I`, `E`, and `U`, but the component does not register those handlers.
+- Protocol export buttons call the route without the `protocol` query payload that the current API requires for text/html export.

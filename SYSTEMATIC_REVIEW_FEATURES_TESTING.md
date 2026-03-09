@@ -1730,3 +1730,329 @@ Each item has a compliance status:
 - Search-strategy generation does not have a dedicated in-flight loading flag; the button spinner logic is tied to initial review-config loading state rather than the generation request itself.
 - The workflow route does not render a dedicated invalid-project-id error screen for non-numeric params; it returns `null` before the inner content mounts.
 - `CollaboratorPresence` does not have a friendly `nma` label mapping and may fall back to the raw tab key.
+
+## Re-Audit Discoveries (Codex Pass 2)
+
+All items in `Actual Current Behavior Corrections` above were re-verified against the current source in this pass.
+
+### Unified Risk of Bias Panel
+- [ ] Unified RoB panel initializes with `dashboard` sub-view before any tool-specific panel is opened
+- [ ] Unified RoB panel initializes the tool filter to `all`
+- [ ] Panel title renders as `Unified Risk of Bias Dashboard`
+- [ ] Header description explicitly says the panel auto-detects study type and routes papers to RoB 2, ROBINS-I, or QUADAS-2
+- [ ] Dashboard action button label is `Auto-Assign Tools`
+- [ ] Dashboard action button label is `Export CSV`
+- [ ] Dashboard action button label is `Refresh`
+- [ ] `Auto-Assign Tools` is disabled while the panel is loading
+- [ ] `Auto-Assign Tools` is disabled while auto-assignment is already running
+- [ ] `Auto-Assign Tools` is disabled when the paper list is empty
+- [ ] `Export CSV` is disabled until at least one assessment result exists across the three RoB tools
+- [ ] `Refresh` shows a spinning refresh icon while the dashboard is loading
+- [ ] Initial full-panel loading state only appears when `isLoading` is true and no papers have been loaded yet
+- [ ] Initial loading message is exactly `Loading papers and assessments...`
+- [ ] Included-paper load prefers papers with screening decision `include` or `included`
+- [ ] If no papers are explicitly included yet, Unified RoB falls back to all imported papers instead of rendering an empty dashboard immediately
+- [ ] Auto-assignment preserves a paper's manual override instead of overwriting it on subsequent auto-assign runs
+- [ ] Papers with diagnostic-study heuristics are auto-assigned to `QUADAS-2`
+- [ ] Papers with observational-study heuristics are auto-assigned to `ROBINS-I`
+- [ ] Papers without a stronger heuristic fallback are auto-assigned to `RoB 2`
+- [ ] Summary cards are `Included Papers`, `Assessed`, `Remaining`, and `Completion`
+- [ ] Completion card rounds to a whole-number percentage
+- [ ] Completion shows `0%` when no papers have been assigned a tool yet
+- [ ] Tool distribution section header is `Tool Assignment Distribution`
+- [ ] Tool distribution helper copy says the detected study type determines the suggested assessment tool
+- [ ] Tool filter tabs are `All Papers`, `RoB 2 (N)`, `ROBINS-I (N)`, and `QUADAS-2 (N)`
+- [ ] Filtered empty state message is `No papers match this filter.`
+- [ ] Global empty state message is `No included papers found. Import and screen papers first.`
+- [ ] Table columns are expand control, `Paper`, `Study Type`, `Assigned Tool`, `Status`, and `Overall Judgment`
+- [ ] Paper titles in the table truncate after 55 characters with an ellipsis
+- [ ] Year is appended to the table title as ` (YEAR)` only when a year exists
+- [ ] Assigned-tool select options are exactly `RoB 2`, `ROBINS-I`, and `QUADAS-2`
+- [ ] Manual tool overrides add `overridden` helper text below the select and apply a highlighted ring style
+- [ ] Status cell shows `Done` with a success icon when a result exists for the assigned tool
+- [ ] Status cell shows `Pending` when no result exists for the assigned tool
+- [ ] Dashboard-level error banner includes a `Dismiss` button rather than auto-clearing
+- [ ] CSV export filename is `rob-summary-project-{projectId}.csv`
+- [ ] CSV header row is `Paper ID,Title,Year,Detected Study Type,Assigned Tool,Assessment Status,Overall Judgment`
+- [ ] Entering a specific tool panel replaces the dashboard with that tool component instead of opening a modal or drawer
+- [ ] Tool sub-view back button label is exactly `Back to Unified Dashboard`
+- [ ] Returning from a tool-specific sub-view refreshes all saved results before re-rendering the dashboard
+- [ ] robvis summary section title is `Risk of Bias Summary (robvis-style)`
+- [ ] robvis summary helper text says stacked bars are grouped by tool and overall judgment
+- [ ] Percentage labels inside robvis bars only render for segments larger than roughly 12% of the bar
+
+### Data Extraction Panel
+- [ ] Default extraction schema starts with 5 fields: `sample_size`, `intervention`, `primary_outcome`, `effect_size`, and `follow_up`
+- [ ] Default `sample_size` description is `Total number of participants`
+- [ ] Default `intervention` description is `Intervention used`
+- [ ] Default `primary_outcome` description is `Primary outcome measured`
+- [ ] Default `effect_size` description is `Main effect size reported`
+- [ ] Default `follow_up` description is `Follow-up duration`
+- [ ] Full-text extraction checkbox is checked by default on initial render
+- [ ] Full-text extraction label is exactly `Use full-text PDF chunks`
+- [ ] Schema column headers are `Field Name`, `Description / Prompt`, `Type`, and an unlabeled actions column
+- [ ] Field-name placeholder is `field_name`
+- [ ] Description placeholder is `What the AI should look for`
+- [ ] Type selector options are `Text`, `Number`, `Boolean`, and `Category`
+- [ ] `Add Field` appends a new blank text-type row instead of duplicating the previous row
+- [ ] Remove-field button is hidden when only one schema row remains
+- [ ] Schema validation error message is `All schema fields must have a name and description.`
+- [ ] Included-papers section title is `Included Papers`
+- [ ] Papers list refresh button uses tooltip text `Refresh papers`
+- [ ] Extract-all button is hidden when the included-paper list is empty
+- [ ] Extract-all button label uses the raw paper count in the form `Extract All (N)`
+- [ ] Extract-all button is disabled when the schema is invalid
+- [ ] Extract-all button is disabled while a batch extraction is already running
+- [ ] Extract-all in-flight label is `Extracting ({done}/{total})` when batch progress is known
+- [ ] Loading state copy for the paper list is exactly `Loading papers...`
+- [ ] Empty papers state headline is `No included papers found.`
+- [ ] Empty papers helper text says `Screen and include papers first, then return here to extract data.`
+- [ ] Papers with available chunk data show a `Full-text` chip with tooltip `Full-text PDF chunks available`
+- [ ] Papers without full-text chunks and with abstract length under 50 show `Insufficient text content for extraction`
+- [ ] Per-paper `Extract` button is disabled while that paper is extracting
+- [ ] Per-paper `Extract` button is disabled while a batch extraction is running
+- [ ] Per-paper `Extract` button is disabled for papers with no chunks and fewer than 50 abstract characters
+- [ ] Per-paper action label changes from `Extract` to `Re-extract` once either live or persisted extraction data exists
+- [ ] Abstract-only single-paper extraction error includes the paper title and exact text `does not have enough text content for extraction (minimum 50 characters).`
+- [ ] Batch extraction error for no eligible papers is `No papers have enough text content for extraction. Upload PDFs or ensure papers have abstracts.`
+- [ ] Full-text extraction is preferred when the checkbox is enabled and the paper has saved chunks
+- [ ] Abstract-only extraction falls back to `paper.abstract || ""` rather than another derived text source
+- [ ] Extraction results panel stays hidden until persisted results or live results exist, or the saved table is still loading
+- [ ] Results panel helper text says `Click any value to view source passage`
+- [ ] Saved-table loading message is `Loading extraction data...`
+- [ ] Result-table first column header is `Paper`
+- [ ] Result columns are the union of persisted extraction columns and the current schema field names
+- [ ] Missing result cells render as `--`
+- [ ] Source-link styling only appears when a cell has both `sourceChunkId` and matching chunk data loaded
+- [ ] Clicking a linked extraction value opens the side-by-side source passage viewer instead of inline expanding the row
+- [ ] Quote-only fallback opens the side panel with a synthetic chunk when a source quote exists but no chunk link is available
+- [ ] Edit icon for a result cell is hover-only rather than always visible
+- [ ] Inline result edit supports `Enter` to save the edited value
+- [ ] Inline result edit supports `Escape` to cancel the edit
+- [ ] Inline result edits only mutate in-memory `liveExtractions` state and do not issue a persistence request
+- [ ] Source side panel header shows the field name in brand styling above the paper title
+- [ ] Source side panel metadata shows section chip when `sectionType` exists
+- [ ] Source side panel metadata shows `Page {n}` only when `pageNumber` exists
+- [ ] Source side panel metadata always shows `Chunk #{chunkIndex + 1}`
+- [ ] Source side panel close control is an `X` icon in the header
+- [ ] No-results helper card title is `How AI Extraction Works`
+- [ ] No-results helper card step 1 says the user defines columns and descriptions
+- [ ] No-results helper card step 2 says AI reads full text or abstract and extracts matching data points
+- [ ] No-results helper card step 3 says every extraction links to the source passage
+- [ ] No-results helper card step 4 says the human verifies and edits with the source visible side-by-side
+
+### Meta-Analysis Panel
+- [ ] Meta-analysis panel defaults `analysisName` to `Primary Analysis`
+- [ ] Meta-analysis panel defaults `effectType` to `OR`
+- [ ] Meta-analysis panel defaults `model` to `random`
+- [ ] Meta-analysis panel defaults `outcomeMeasure` to an empty string
+- [ ] Meta-analysis panel initializes with 3 empty study rows rather than 1 or 2
+- [ ] Outcome placeholder is `e.g., HbA1c reduction at 12 months`
+- [ ] Effect-type buttons are `Odds Ratio`, `Risk Ratio`, `Std. Mean Diff`, `Mean Difference`, and `Risk Difference`
+- [ ] Model buttons are exactly `Fixed` and `Random`
+- [ ] Trim-and-fill checkbox label is `Include trim-and-fill analysis`
+- [ ] Study-table headers are `Study Label`, `Effect(log optional)`, `SE`, `95% CI Lower`, `95% CI Upper`, and `Subgroup`
+- [ ] Study-label placeholder is `Study {N}`
+- [ ] Numeric placeholders in effect and SE inputs are `0.00`
+- [ ] CI placeholders are `auto`
+- [ ] Subgroup placeholder is `Group`
+- [ ] Confidence interval values auto-compute on blur of the effect and SE inputs
+- [ ] Remove-study control is disabled when only 2 study rows remain
+- [ ] Primary run button label is `Run Meta-Analysis`
+- [ ] Primary run button label changes to `Running...` while the standard analysis request is in flight
+- [ ] Standard-analysis precheck error is `At least 2 complete studies are required`
+- [ ] Standard-analysis network failure fallback shown to the user is `Analysis failed`
+- [ ] Result tabs are exactly `Main`, `Subgroup`, and `Sensitivity`
+- [ ] Main-result summary cards are `Studies`, `Pooled {effectType}`, `I²`, and `p-value`
+- [ ] Detailed main-result text appends `(potential publication bias)` when Egger's test p-value is below 0.1
+- [ ] Forest plot title is `Forest Plot — {analysisName}`
+- [ ] Funnel plot title is `Funnel Plot — {analysisName}`
+- [ ] Funnel plot title appends `({N} imputed studies)` when trim-and-fill returns imputed studies
+- [ ] Trim-and-fill result block title is `Trim-and-Fill Adjusted Estimate`
+- [ ] Trim-and-fill helper text says `{N} studies imputed to correct for asymmetry`
+- [ ] Subgroup tab helper text says each subgroup needs at least 2 studies and the analysis needs at least 2 subgroups
+- [ ] Subgroup chip counts render in amber styling when a subgroup has fewer than 2 studies
+- [ ] Subgroup run button label is `Run Subgroup Analysis`
+- [ ] Subgroup in-flight label is `Running...`
+- [ ] Subgroup validation error is `At least 2 groups with 2+ studies each are required. Assign studies to groups using the Subgroup column.`
+- [ ] Subgroup forest plot title format is `Subgroup: {groupName} ({studyCount} studies)`
+- [ ] Subgroup comparison block title is `Test for Subgroup Differences`
+- [ ] Sensitivity tab title is `Leave-One-Out Sensitivity Analysis`
+- [ ] Sensitivity helper text says the analysis requires at least 3 complete studies
+- [ ] Sensitivity run button label is `Run Leave-One-Out`
+- [ ] Sensitivity in-flight label is `Running...`
+- [ ] Sensitivity validation error is `At least 3 complete studies are required for leave-one-out analysis`
+- [ ] Leave-one-out result rows are visually highlighted when dropping that study changes the significance conclusion relative to the main analysis
+
+### Network Meta-Analysis Panel
+- [ ] Network meta-analysis panel initializes with 2 empty study rows
+- [ ] NMA panel defaults the model toggle to `fixed`
+- [ ] NMA panel shows a spinner-only loading state while fetching saved results, with no loading text
+- [ ] Failed saved-result GET requests do not block manual data entry and do not show a dedicated banner by default
+- [ ] Header title is `Network Meta-Analysis`
+- [ ] Header description explicitly references a graph-theoretical approach and `Ruecker 2012`
+- [ ] Study table headers are `Study ID`, `Treatment 1`, `Treatment 2`, `Effect (log)`, and `SE`
+- [ ] Study ID placeholder is `e.g., Smith 2020`
+- [ ] Treatment 1 placeholder is `e.g., Drug A`
+- [ ] Treatment 2 placeholder is `e.g., Placebo`
+- [ ] Effect and SE placeholders are both `0.00`
+- [ ] SE input enforces a minimum of `0.001`
+- [ ] Remove-study button tooltip is `Remove study`
+- [ ] Remove-study button is disabled when only 2 study rows remain
+- [ ] Add-row link label is `Add Study`
+- [ ] Run button label is `Run NMA`
+- [ ] Run button is disabled when any validation error exists
+- [ ] Only the first validation error string is rendered inline beside the run button
+- [ ] Validation error text can be `At least 2 complete studies are required.`
+- [ ] Validation error text can be `Study "{studyId}" compares a treatment to itself.`
+- [ ] Validation error text can be `Study "{studyId}" has invalid effect value.`
+- [ ] Validation error text can be `Study "{studyId}" has invalid SE (must be > 0).`
+- [ ] Successful NMA run always switches the active result tab back to `league`
+- [ ] Result tabs are `League Table`, `Network Plot`, `Forest Plot`, `Inconsistency`, and `Rankings`
+- [ ] League-tab export action label is `Export CSV`
+- [ ] League-table export filename is `nma-league-table.csv`
+- [ ] Result status text shows `Random-effects | tau² = {value} | {N} treatments` for random models
+- [ ] Result status text shows `Fixed-effect model | {N} treatments` for fixed models
+- [ ] Forest-tab reference selector label is `Reference:`
+- [ ] Forest-tab reference select defaults to the first treatment when no explicit reference has been chosen
+- [ ] Forest plot title is `NMA Forest Plot`
+- [ ] Inconsistency tab header is `Node-Splitting Inconsistency Test`
+- [ ] Inconsistency empty-state text says no closed loops with both direct and indirect evidence were found
+- [ ] Inconsistency rows show `Inconsistent` when p-value is below 0.05
+- [ ] Inconsistency rows show `Consistent` when p-value is 0.05 or higher
+- [ ] Rankings tab header is `Treatment Rankings (P-scores)`
+- [ ] Rankings helper note cites `Ruecker & Schwarzer 2015`
+
+### GRADE Panel
+- [ ] GRADE panel initializes with `selectedOutcome` as an empty string
+- [ ] GRADE panel initializes with `selectedAnalysisId` as `null`
+- [ ] GRADE panel keeps `expandedRow` collapsed by default
+- [ ] Outcome selector is only rendered when at least one saved meta-analysis exists
+- [ ] Outcome selector placeholder option is `Select an outcome...`
+- [ ] Previously assessed outcomes are prefixed with `[Done] ` in the outcome selector
+- [ ] Free-text outcome input is always shown even when the selector is available
+- [ ] Free-text input placeholder is `Or type an outcome name...`
+- [ ] `Assess Certainty` button is disabled when the trimmed outcome value is empty
+- [ ] `Assess Certainty` button is disabled during initial panel loading
+- [ ] `Assess Certainty` button is disabled while an assessment request is in flight
+- [ ] `Assess Certainty` keeps the label `Assess Certainty` even while the icon swaps to a spinner
+- [ ] `Export CSV` button is hidden until at least one GRADE assessment exists
+- [ ] `Export CSV` shows a spinner icon but keeps the text `Export CSV` while exporting
+- [ ] Refresh button always remains visible, even when no assessments exist yet
+- [ ] Empty state headline is `No GRADE assessments yet.`
+- [ ] Empty state helper text says `Run a meta-analysis first, then return here to assess the certainty of evidence.` when no meta-analyses exist
+- [ ] Empty state helper text says `Select an outcome above or type one in, then click "Assess Certainty" to begin.` when meta-analyses exist
+- [ ] Initial loading message is `Loading assessments...`
+- [ ] Error banner uses a `Dismiss` button rather than auto-clearing
+- [ ] Summary section heading is `Summary of Findings`
+- [ ] Summary helper text says `{N} outcomes assessed. Click a row to expand domain rationale.`
+- [ ] Clicking an assessment row toggles the expanded domain-rationale view for that row
+- [ ] Effect estimate subtitle only renders under an outcome when an effect estimate exists
+- [ ] Participant-count cell renders as `{studies} (n={participants})` only when total participants are available
+- [ ] Domain cells use a check icon for `no_concern`
+- [ ] Domain cells use a single down-arrow icon for `serious`
+- [ ] Domain cells use a double down-arrow icon for `very_serious`
+- [ ] Expanded-domain downgrade text is `(-1 level)` for a single-level downgrade
+- [ ] Expanded-domain downgrade text switches to `(-N levels)` for larger downgrades
+- [ ] Export CSV route adds the attachment filename `grade-summary-{projectId}.csv`
+
+### Manuscript Panel
+- [ ] Manuscript panel initializes with all 5 section slots set to `null`
+- [ ] Active section defaults to `introduction` rather than `abstract`
+- [ ] Section order in the left rail is `Abstract`, `Introduction`, `Methods`, `Results`, and `Discussion`
+- [ ] Custom-instructions label is `Custom Instructions (optional)`
+- [ ] Custom-instructions placeholder is `e.g., Focus on clinical implications, use APA style, emphasize heterogeneity...`
+- [ ] `Generate All Sections` is disabled while any single-section generation is in progress
+- [ ] `Generate All Sections` is disabled while an all-sections run is already in progress
+- [ ] All-sections loading label is exactly `Generating all sections...`
+- [ ] `Export Markdown`, `Download DOCX`, and `Open in Studio` are hidden until at least one section has content
+- [ ] Markdown export filename is `manuscript-draft.md`
+- [ ] DOCX export filename is `manuscript-draft.docx`
+- [ ] DOCX export sends fixed title text `Systematic Review Manuscript Draft` to the API instead of using the project title
+- [ ] DOCX button label changes to `Exporting...` while the export request is in flight
+- [ ] Left-rail progress text format is `{generated} / 5 sections generated`
+- [ ] Section rows show an empty outlined circle before content exists
+- [ ] Section rows show a green success icon after content exists
+- [ ] Section rows show a spinner for only the section currently generating
+- [ ] Section action button label is `Generate` before the section has content
+- [ ] Section action button label becomes `Regenerate` after content exists
+- [ ] Section-level loading helper text says `This may take 15-30 seconds`
+- [ ] Empty-content placeholder headline is `No content generated yet`
+- [ ] Empty-content helper text says `Click "Generate" to create this section using your project data`
+- [ ] Copy button success state changes label text from `Copy` to `Copied`
+- [ ] Copy success state automatically clears after 2 seconds
+- [ ] Edit mode uses a monospaced textarea and local-only save behavior
+- [ ] Edit toolbar button label toggles between `Edit` and `Save`
+- [ ] `Save Changes` updates local section content in memory and does not persist back to the server
+- [ ] `Generate All Sections` runs in the hard-coded order `introduction`, `methods`, `results`, `discussion`, `abstract`
+- [ ] Abstract generation is the only section that passes `existingSections` context to the manuscript API
+- [ ] Footer note explicitly says `[PLACEHOLDER]` markers require manual input and instructs the user to continue editing in Studio for the full editor
+
+### Snowballing Panel
+- [ ] Snowballing panel defaults to `seeds` view on first render
+- [ ] Direction toggle defaults to `both`
+- [ ] Depth toggle defaults to `1`
+- [ ] Initial loading state is a centered spinner with no helper text
+- [ ] Header title is `Citation Snowballing`
+- [ ] Header description explicitly explains forward as `who cites these?` and backward as `what do these cite?`
+- [ ] Top-level view toggles are `Select Seeds` and `Results & Network`
+- [ ] Results toggle shows a count badge only when at least one snowball session exists
+- [ ] Selected-seed counter text pluralizes as `seed selected` or `seeds selected`
+- [ ] `Run Snowball` is disabled when no seeds are selected
+- [ ] `Run Snowball` in-flight label is `Snowballing...`
+- [ ] Successful run banner headline is `Snowballing complete.`
+- [ ] Success banner body lists discovered count, new papers added, and duplicates skipped
+- [ ] Seed empty state copy is `No papers in project yet. Import papers first, then use snowballing to discover related studies.`
+- [ ] Seed-list header text is `Select seed papers ({N} available)`
+- [ ] Seed utility links are exactly `Select all` and `Clear`
+- [ ] Included seed rows show an `Included` pill only for papers with screening decision `include`
+- [ ] Results-view empty state copy is `No snowball sessions yet. Select seed papers and run snowballing.`
+- [ ] Sessions without `completedAt` show `In progress` instead of a date
+- [ ] Session status dot pulses only for `running` sessions
+- [ ] Citation-network heading format is `Citation Network ({papers} papers, {edges} edges)`
+- [ ] Discovered-papers subsection only renders when at least one network node has `addedBy === "snowball"`
+- [ ] Discovered-paper rows show `Unscreened` when no screening decision exists
+- [ ] Mini-network legend labels are `Seed / imported` and `Discovered (snowball)`
+- [ ] Mini-network node radius scales from citation count and truncates node labels at 35 characters
+
+### Living Review Panel
+- [ ] Living Review panel initializes with `showForm` set to false
+- [ ] New-alert frequency defaults to `weekly`
+- [ ] New-search text defaults to an empty string until optionally prefilled from `reviewConfig.searchStrategy.pubmedQuery`
+- [ ] Initial loading state is a centered spinner with no helper copy
+- [ ] Header title is `Living Review`
+- [ ] Header action button label is `New Alert`
+- [ ] Header helper text says new papers are auto-imported and screened against existing criteria
+- [ ] `New Alert` button toggles the visibility of the create form rather than opening a modal
+- [ ] Create-form textarea label is `Search Query`
+- [ ] Create-form textarea placeholder is `Enter PubMed search query...`
+- [ ] Frequency buttons are exactly `daily`, `weekly`, and `monthly`
+- [ ] `Create Alert` is disabled when the trimmed search string is empty
+- [ ] `Create Alert` swaps its icon to a spinner while the create request is in flight
+- [ ] `Cancel` button hides the form without resetting the selected frequency
+- [ ] Successful create hides the form and clears `newSearchString`
+- [ ] Successful create does not render a dedicated toast or banner; it simply refetches the alerts list
+- [ ] `lastCheckResult` success banner is only shown after the `check_now` action returns a result payload
+- [ ] `lastCheckResult` banner headline is `Check complete.`
+- [ ] `lastCheckResult` banner includes a `Dismiss` button that clears only the local summary card
+- [ ] Alerts empty state copy is `No search alerts yet. Create one to automatically check for new papers.`
+- [ ] Alert search string is displayed in a monospaced block with `line-clamp-2`
+- [ ] Active alert rows show `Last:` date only when `lastChecked` exists
+- [ ] Active alert rows show `Next:` date only when `nextCheck` exists and status is `active`
+- [ ] `Check now` action sets a row-specific spinner only for the alert being checked
+- [ ] Pause/resume controls switch by status: `Pause` appears only for active alerts, `Resume` appears for non-active alerts
+- [ ] Delete action does not ask for confirmation in the current component
+- [ ] Pause, resume, check-now, and delete success paths refetch the alerts list without showing a dedicated success toast
+- [ ] Footer explainer starts with `How it works:` and says alerts re-run the PubMed search at the selected frequency
+
+### Second-Pass Verified Behavior Corrections
+- [ ] Screening PDF viewer shows keyboard shortcut hints for `Esc`, `I`, `E`, and `U`, but this component does not register matching keyboard handlers in the current source
+- [ ] Screening PDF viewer exclusion reason form is only forced open from the `Exclude` button while the viewer is in `full-text` mode
+- [ ] Screening PDF viewer `Exclude` action in `title-abstract` mode does not capture a reason before submitting
+- [ ] Protocol export buttons call `GET /api/systematic-review/protocol?format={format}` without supplying the `protocol` query payload that the route currently requires
+- [ ] Manuscript panel only uses client-side markdown export; the `GET /api/systematic-review/manuscript` export path is not used by the panel
+- [ ] Manuscript DOCX export sanitizes the filename from the provided title, but the panel always passes the fixed title `Systematic Review Manuscript Draft`
+- [ ] Living Review panel never exposes the API's `update_frequency` action in the current UI
+- [ ] Alerts route supports `update_frequency`, but the panel only offers `pause`, `resume`, `check_now`, and `delete`
+- [ ] Data Extraction inline edits do not call `GET` or `POST /api/systematic-review/extract`; edited values are session-local until a new extraction or reload replaces them
+- [ ] NMA saved-result loading failure is intentionally non-blocking; the UI falls back to manual entry without a blocking error state
