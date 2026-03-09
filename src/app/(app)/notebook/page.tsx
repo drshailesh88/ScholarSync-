@@ -698,8 +698,14 @@ export default function NotebookPage(): React.ReactElement {
       setChatMessages((prev) => [...prev, assistantMsg]);
 
       const decoder = new TextDecoder();
+      const STREAM_TIMEOUT = 30_000;
       while (true) {
-        const { done, value } = await reader.read();
+        const readPromise = reader.read();
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          const id = setTimeout(() => reject(new Error("Stream timeout")), STREAM_TIMEOUT);
+          readPromise.then(() => clearTimeout(id), () => clearTimeout(id));
+        });
+        const { done, value } = await Promise.race([readPromise, timeoutPromise]);
         if (done) break;
         assistantMsg.content += decoder.decode(value, { stream: true });
         setChatMessages((prev) => prev.map((m) => (m.id === assistantMsg.id ? { ...m, content: assistantMsg.content } : m)));
@@ -741,10 +747,14 @@ export default function NotebookPage(): React.ReactElement {
             setSuggestionsLoading(false);
           });
       }
-    } catch {
+    } catch (err) {
+      const isTimeout = err instanceof Error && err.message === "Stream timeout";
       setChatMessages((prev) => [
         ...prev,
-        { id: `err_${Date.now()}`, role: "assistant", content: "Something went wrong. Please try again." },
+        { id: `err_${Date.now()}`, role: "assistant", content: isTimeout
+          ? "The response timed out. Please try again or ask a simpler question."
+          : "Something went wrong. Please try again."
+        },
       ]);
     } finally {
       setIsLoading(false);
