@@ -69,23 +69,23 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 53 | Editor | AI Slash Commands — Check Guidelines | /studio | ✅ PASS | Fixed Studio listener to map `check-guidelines`; slash command now triggers `POST /api/chat` and returns a guideline review in chat. |  |
 | 54 | Editor | AI Slash Commands — Ask AI | /studio | ✅ PASS | Fixed Studio listener to map `ask`; slash command switches to chat and focuses the AI input without auto-submitting. |  |
 | 55 | Editor | Document Tools (via Slash Commands) — Word Count | /studio | ✅ PASS | Fixed Studio editor-action listener to append a section-by-section word count breakdown in the chat pane. |  |
-| 56 | Editor | Floating Selection Toolbar — Positioning — toolbar appears above the selection, centered horizontally | /studio | ⬜ |  |  |
-| 57 | Editor | Floating Selection Toolbar — Auto-hide — disappears when selection is cleared or editor loses focus (150ms delay for button clicks) | /studio | ⬜ |  |  |
-| 58 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Style dropdown | /studio | ⬜ |  |  |
-| 59 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Bold (B) | /studio | ⬜ |  |  |
-| 60 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Italic (I) | /studio | ⬜ |  |  |
-| 61 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Underline (U) | /studio | ⬜ |  |  |
-| 62 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Strikethrough (S) | /studio | ⬜ |  |  |
-| 63 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Link | /studio | ⬜ |  |  |
-| 64 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Code | /studio | ⬜ |  |  |
-| 65 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Highlight | /studio | ⬜ |  |  |
-| 66 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Comment | /studio | ⬜ |  |  |
-| 67 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — AI Edit (sparkle) | /studio | ⬜ |  |  |
-| 68 | Editor | Link Management / Link Insertion — Cmd+Shift+K — prompts for URL via window.prompt | /studio | ⬜ |  |  |
-| 69 | Editor | Link Management / Link Insertion — Selection toolbar link button — prompts for URL, pre-fills with existing link URL | /studio | ⬜ |  |  |
-| 70 | Editor | Link Management / Link Insertion — Auto-linking — URLs pasted or typed are auto-detected (autolink: true) | /studio | ⬜ |  |  |
-| 71 | Editor | Link Management / Link Insertion — Link on paste — pasting a URL over selected text creates a link (linkOnPaste: true) | /studio | ⬜ |  |  |
-| 72 | Editor | Link Management / Link Insertion — Links do NOT open on click in the editor (openOnClick: false) | /studio | ⬜ |  |  |
+| 56 | Editor | Floating Selection Toolbar — Positioning — toolbar appears above the selection, centered horizontally | /studio | ✅ PASS | For a deterministic `Beta` selection, toolbar center delta was `0` and the fixed toolbar rendered above the selected text. |  |
+| 57 | Editor | Floating Selection Toolbar — Auto-hide — disappears when selection is cleared or editor loses focus (150ms delay for button clicks) | /studio | ✅ PASS | Toolbar disappeared after focus moved to the AI input and the 150ms blur delay elapsed. |  |
+| 58 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Style dropdown | /studio | ✅ PASS | Style menu exposed Normal text and Heading 1-4; choosing `Heading 2` rewrote the block to `<h2>` and updated the toolbar label. |  |
+| 59 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Bold (B) | /studio | ✅ PASS | Toolbar bold button wrapped the selection in `<strong>` and switched to the active `bg-brand/10 text-brand` state. |  |
+| 60 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Italic (I) | /studio | ✅ PASS | Toolbar italic button wrapped the selection in `<em>` and switched to the active `bg-brand/10 text-brand` state. |  |
+| 61 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Underline (U) | /studio | ✅ PASS | Toolbar underline button wrapped the selection in `<u>` and switched to the active `bg-brand/10 text-brand` state. |  |
+| 62 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Strikethrough (S) | /studio | ✅ PASS | Toolbar strikethrough button wrapped the selection in `<s>` and switched to the active `bg-brand/10 text-brand` state. |  |
+| 63 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Link | /studio | ✅ PASS | Toolbar link button prompted for a URL, inserted `<a href=\"https://example.com\">`, and removed the link when the prompt returned an empty string. |  |
+| 64 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Code | /studio | ✅ PASS | Toolbar code button wrapped the selection in `<code>` and switched to the active `bg-brand/10 text-brand` state. |  |
+| 65 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Highlight | /studio | ✅ PASS | Toolbar click wrapped the selection in `<mark>`; right-click exposed the five-color palette `Yellow/Green/Blue/Pink/Orange`. |  |
+| 66 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Comment | /studio | ✅ PASS | Fixed Studio comment handling; toolbar button now opens the comment sidebar with the selected quote and inline comment input. |  |
+| 67 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — AI Edit (sparkle) | /studio | ✅ PASS | Fixed Studio `precision-edit` handling; toolbar button now submits the selected text to `POST /api/chat` and returns an edit response in chat. |  |
+| 68 | Editor | Link Management / Link Insertion — Cmd+Shift+K — prompts for URL via window.prompt | /studio | ✅ PASS | `Meta+Shift+K` opened `window.prompt` and inserted a link with `href=\"https://kbd.example\"` around the selected text. |  |
+| 69 | Editor | Link Management / Link Insertion — Selection toolbar link button — prompts for URL, pre-fills with existing link URL | /studio | ✅ PASS | Toolbar link prompt received `defaultValue: \"https://example.com\"` when editing an existing link and updated the href successfully. |  |
+| 70 | Editor | Link Management / Link Insertion — Auto-linking — URLs pasted or typed are auto-detected (autolink: true) | /studio | ✅ PASS | Typing `https://example.com ` converted the URL into an inline link automatically. |  |
+| 71 | Editor | Link Management / Link Insertion — Link on paste — pasting a URL over selected text creates a link (linkOnPaste: true) | /studio | ✅ PASS | Pasting `https://paste.example` over selected text converted the selection into `<a href=\"https://paste.example\">Beta</a>`. |  |
+| 72 | Editor | Link Management / Link Insertion — Links do NOT open on click in the editor (openOnClick: false) | /studio | ✅ PASS | Clicking an in-editor link left the browser on `/studio`; no navigation occurred. |  |
 | 73 | Editor | Link Management / LinkPopover (Editor page only) — Clicking a link shows a floating popover with: | /editor/[id] | ⬜ |  |  |
 | 74 | Editor | Link Management / LinkPopover (Editor page only) — Enter key confirms edit, Escape cancels | /editor/[id] | ⬜ |  |  |
 | 75 | Editor | Link Management / LinkPopover (Editor page only) — Popover positions above the clicked link | /editor/[id] | ⬜ |  |  |
