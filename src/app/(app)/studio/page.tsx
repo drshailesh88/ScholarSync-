@@ -25,9 +25,11 @@ import { Tabs } from "@/components/ui/tabs";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
+import { CommentSidebar } from "@/components/editor/CommentSidebar";
 import { CitationDialog } from "@/components/citations/citation-dialog";
 import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { useReferenceStore } from "@/stores/reference-store";
+import { useEditorStore } from "@/stores/editor-store";
 import { ResearchSidebar } from "@/components/research/ResearchSidebar";
 import { useResearchStore } from "@/stores/research-store";
 import { getUserUsageStats } from "@/lib/actions/user";
@@ -229,6 +231,8 @@ function StudioContent() {
   const setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
+  const commentSidebarOpen = useEditorStore((s) => s.commentSidebarOpen);
+  const toggleCommentSidebar = useEditorStore((s) => s.toggleCommentSidebar);
 
   const submitAiPrompt = useCallback((prompt: string) => {
     setInput(prompt);
@@ -348,6 +352,9 @@ function StudioContent() {
         case "check-guidelines":
           prompt = `Review this draft against the most relevant reporting guideline checklist and list missing or weak items:\n\n${detail.context || ""}`;
           break;
+        case "precision-edit":
+          prompt = `Improve the clarity, precision, and academic tone of this selected text while preserving meaning:\n\n${detail.context || ""}`;
+          break;
         case "ask":
           setAiTab("chat");
           setTimeout(() => {
@@ -391,14 +398,42 @@ function StudioContent() {
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail as { action?: string };
-      if (detail?.action === "show-word-count") {
+      if (!detail?.action) return;
+
+      if (detail.action === "show-word-count") {
         showWordCountBreakdown();
+        return;
+      }
+
+      if (detail.action === "add-comment" && editorRef.current) {
+        const editor = editorRef.current;
+        const { from, to } = editor.state.selection;
+        const selectedText = editor.state.doc.textBetween(from, to, " ");
+
+        if (!commentSidebarOpen) {
+          toggleCommentSidebar();
+        }
+
+        window.dispatchEvent(
+          new CustomEvent("scholarsync:new-inline-comment", {
+            detail: {
+              textRangeStart: from,
+              textRangeEnd: to,
+              quotedText: selectedText,
+            },
+          })
+        );
+        return;
+      }
+
+      if (detail.action === "toggle-comment-sidebar") {
+        toggleCommentSidebar();
       }
     };
 
     window.addEventListener("scholarsync:editor-action", handler);
     return () => window.removeEventListener("scholarsync:editor-action", handler);
-  }, [showWordCountBreakdown]);
+  }, [commentSidebarOpen, showWordCountBreakdown, toggleCommentSidebar]);
 
   // Handle citation insertion from the dialog.
   // Uses requestAnimationFrame to ensure the modal overlay is fully removed
@@ -929,12 +964,18 @@ function StudioContent() {
       {/* Research Sidebar */}
       <ResearchSidebar />
 
-      {/* Right: AI Panel or Reference Sidebar */}
+      {/* Right: Reference Sidebar, Comment Sidebar, or AI Panel */}
       {sidebarOpen ? (
         <ReferenceSidebar
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onOpenCitationDialog={openCitationDialogWithSelection}
+        />
+      ) : commentSidebarOpen && studioDoc?.id && editorRef.current ? (
+        <CommentSidebar
+          documentId={String(studioDoc.id)}
+          editor={editorRef.current}
+          onClose={toggleCommentSidebar}
         />
       ) : (
         <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
