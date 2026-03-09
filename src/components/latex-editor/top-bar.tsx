@@ -81,7 +81,7 @@ export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExpor
   }, [editingTitle]);
 
   return (
-    <div className="h-12 flex items-center justify-between px-4 border-b border-border-subtle bg-surface/80 backdrop-blur-sm shrink-0">
+    <div className="relative z-20 h-12 flex items-center justify-between px-4 border-b border-border-subtle bg-surface/80 backdrop-blur-sm shrink-0">
       {/* Left: Back + Title + Save Status */}
       <div className="flex items-center gap-3 min-w-0">
         <Link

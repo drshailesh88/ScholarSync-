@@ -1070,3 +1070,547 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] Editor-page overflow `DotsThree` action is present visually but has no implemented behavior
 - [ ] Version-history preview shows raw JSON rather than a rendered rich-text preview of the historical document
 - [ ] The keyboard-shortcuts dialog documents `Cmd + /` for comments, while comment sidebar toggling in the editor route is actually driven by the custom `scholarsync:editor-action` event wiring
+
+## Re-Audit Discoveries (Codex Pass 2)
+
+> These checks were added after a source-only line-by-line re-audit of the editor components, custom extensions, citation stack, export stack, persistence hooks, and Studio chat wiring.
+
+### Route Shell, Errors, and Store Defaults
+- [ ] `/editor/[id]/error.tsx` renders `ErrorDisplay` with title `Editor unavailable`
+- [ ] `/editor/[id]/error.tsx` message reads `We couldn't load the editor. Your work is safe — please try again.`
+- [ ] `/editor/[id]/error.tsx` passes the route `reset` function to `ErrorDisplay.onRetry`
+- [ ] `/editor/[id]` does not have a route-level `loading.tsx` file in the current app tree
+- [ ] `/studio/loading.tsx` renders a route-level skeleton shell before the Studio workspace hydrates
+- [ ] `/studio/loading.tsx` includes one square icon skeleton, one title skeleton, and two button-width skeletons in the top row
+- [ ] `/studio/loading.tsx` includes a full-width horizontal skeleton below the header row
+- [ ] `/studio/loading.tsx` includes one large rounded body skeleton beneath the top chrome
+- [ ] `/studio/error.tsx` renders `ErrorDisplay` with title `Studio unavailable`
+- [ ] `/studio/error.tsx` uses the same safe-work message as the editor route error
+- [ ] Editor store default `mode` is `editing`
+- [ ] Editor store default `outline` is an empty array
+- [ ] Editor store default `outlineVisible` is `false`
+- [ ] Editor store default `wordCount` is `0`
+- [ ] Editor store default `saveStatus.state` is `saved`
+- [ ] Editor store default `activeSectionPos` is `null`
+- [ ] Editor store default `referenceSidebarOpen` is `false`
+- [ ] Editor store default `commentSidebarOpen` is `false`
+- [ ] Editor store default `documentTitle` is `Untitled Manuscript`
+- [ ] Editor store default `documentType` is `original-article`
+- [ ] Editor store default `referenceCount` is `0`
+- [ ] Editor store default `commentCount` is `0`
+- [ ] Reference store default `references` collection is an empty `Map`
+- [ ] Reference store default citation style is `vancouver`
+- [ ] Reference store default `referenceNumberMap` is an empty `Map`
+- [ ] Reference store default `bibliographyEntries` is an empty array
+- [ ] Reference store default `citationDisplayMap` is an empty `Map`
+- [ ] Reference store default `sidebarOpen` is `false`
+- [ ] Reference store default `citationDialogOpen` is `false`
+
+### Editor Route Persistence, Offline Queue, and Retry Logic
+- [ ] `useEditorDocument` treats `urlDocumentId === "new"` as a create/load flow via `loadStudioDocument(...)`
+- [ ] When the editor route creates a new document, it writes the returned document title into the editor store
+- [ ] When the loaded document has sections, the editor route binds persistence to the first section only
+- [ ] When the loaded first section has no `editor_content`, the hook returns `content = null` so the editor falls back to template behavior
+- [ ] A non-numeric editor route id throws `Invalid document ID`
+- [ ] A missing numeric document throws `Document not found`
+- [ ] DB load failures fall back to `localStorage["scholarsync_doc_<urlDocumentId>"]`
+- [ ] Local fallback restores `content` from the parsed local payload
+- [ ] Local fallback also restores `title` from the parsed local payload when present
+- [ ] Local fallback sets the visible error banner text to `Loaded from local storage. Database unavailable. Changes will be saved locally.`
+- [ ] Local fallback clears `projectId` and `sectionId` to `null`
+- [ ] If both DB load and local fallback fail, the hook sets `Failed to load document. Please refresh the page.`
+- [ ] Editor-route autosave versions run every 10 minutes only when `dbDocumentId`, `sectionId`, and `content` all exist
+- [ ] Browser `online` events trigger queued-save replay through `processQueue(...)`
+- [ ] Offline-queue replay marks the editor route as `saved` only after at least one queued save succeeds
+- [ ] Browser `offline` events set the route save state to `offline` unless the current state is already `saving`, `unsaved`, or `local`
+- [ ] Editor-route `handleEditorUpdate` sets in-memory content immediately before the debounced save executes
+- [ ] Editor-route debounced persistence delay is fixed at 2000 ms in the hook
+- [ ] When no DB document exists, editor-route autosave writes only to localStorage and never calls the DB save action
+- [ ] Local-only save payload includes `content`, `plainText`, `wordCount`, `title`, `documentType`, and `timestamp`
+- [ ] Successful DB saves still back up the latest editor payload to `localStorage["scholarsync_doc_<urlDocumentId>"]`
+- [ ] DB save retries use exponential backoff with up to 3 retries, 1000 ms initial delay, 10000 ms max delay, and 0-500 ms jitter
+- [ ] Save retry attempts keep the visible route state at `saving`
+- [ ] When a DB save fails while offline, the hook enqueues exactly one latest save per document in `scholarsync_save_queue`
+- [ ] Offline queue entries replace prior queued saves for the same document instead of accumulating duplicates
+- [ ] Offline save fallback sets route save state to `local`
+- [ ] Offline save fallback sets the banner text to `Saved locally. Changes will sync when you're back online.`
+- [ ] Non-offline save failures set route save state to `error`
+- [ ] Non-offline save failures set the banner text to `Failed to save. Please check your connection.`
+- [ ] `setTitle(...)` updates the DB title immediately when `dbDocumentId` exists
+- [ ] Title-update failures are intentionally silent in the UI and only log to the console
+- [ ] `setTitle(...)` also updates the matching localStorage payload title when local data exists
+- [ ] `retrySave()` sends the current editor JSON back through `saveDocumentContent(...)`
+- [ ] `retrySave()` currently retries with `plain_text_content: ""` and `word_count: 0` rather than recomputing those values
+- [ ] Successful `retrySave()` clears `loadedFromLocalStorage` back to `false`
+
+### AcademicEditor, TopBar, and Floating Tooling
+- [ ] `AcademicEditor` enables editing only when `readOnly` is false and editor store mode is not `viewing`
+- [ ] Academic editor `StarterKit` heading levels are limited to `1`, `2`, `3`, and `4`
+- [ ] Academic editor paragraph placeholder reads `Start writing, or type / for commands...`
+- [ ] Academic editor H1 placeholder reads `Manuscript title...`
+- [ ] Academic editor non-H1 heading placeholder reads `Section heading...`
+- [ ] Academic editor root `EditorContent` class includes `prose prose-lg`
+- [ ] Academic editor root enables browser spellcheck via `spellcheck="true"`
+- [ ] `Cmd/Ctrl+S` inside `AcademicEditor` calls the route `flushSave()` path and prevents the browser default
+- [ ] Initial editor-content hydration only runs when the current editor text is still blank
+- [ ] Initial outline bootstrapping waits 300 ms after mount before scanning headings
+- [ ] Initial outline bootstrapping clears the outline store when the document has fewer than two headings
+- [ ] `AcademicEditor` recalculates and stores comment counts whenever `documentId` changes
+- [ ] `AcademicEditor` syncs the top-bar reference badge count from the `referenceCount` prop
+- [ ] `scholarsync:editor-action` with `add-comment` opens the comment sidebar first if it is closed
+- [ ] `scholarsync:editor-action` with `add-comment` always dispatches `scholarsync:new-inline-comment` after opening the sidebar
+- [ ] `scholarsync:editor-action` with `toggle-comment-sidebar` toggles the sidebar without changing the selection
+- [ ] `scholarsync:editor-action` with `insert-citation` forwards directly to `onOpenCitationDialog`
+- [ ] `scholarsync:editor-action` with `toggle-reference-sidebar` forwards directly to `onToggleReferenceSidebar`
+- [ ] TopBar undo button title is exactly `Undo`
+- [ ] TopBar redo button title is exactly `Redo`
+- [ ] TopBar undo button is disabled when `editor.can().undo()` is false
+- [ ] TopBar redo button is disabled when `editor.can().redo()` is false
+- [ ] TopBar mode dropdown options are exactly `Editing` and `Viewing`
+- [ ] TopBar mode option `Editing` description reads `Direct changes to document`
+- [ ] TopBar mode option `Viewing` description reads `Read-only, no edits`
+- [ ] Switching TopBar mode to `Viewing` calls `editor.setEditable(false)`
+- [ ] Switching TopBar mode back to `Editing` calls `editor.setEditable(true)`
+- [ ] TopBar mode dropdown uses a fixed fullscreen click-catcher to dismiss
+- [ ] TopBar word-count button title reads `Click for section breakdown`
+- [ ] TopBar section-breakdown popover closes on outside mouse down
+- [ ] TopBar saved state renders only `saved`, `saving`, `unsaved`, and `offline`; it has no dedicated `error` or `local` branch
+- [ ] TopBar keyboard-help button title is `Keyboard shortcuts (Cmd+/)`
+
+### Selection Toolbar and Link Popover
+- [ ] SelectionToolbar renders only when the current selection is non-empty
+- [ ] Clearing the text selection hides the floating toolbar entirely
+- [ ] Clearing the text selection also closes the style dropdown and highlight palette
+- [ ] SelectionToolbar positions itself using `coordsAtPos(selection.from)`
+- [ ] SelectionToolbar delays blur-close by 150 ms to allow button interactions inside the toolbar
+- [ ] Style dropdown current label resolves in priority order `Heading 4`, `Heading 3`, `Heading 2`, `Heading 1`, then `Normal text`
+- [ ] Style dropdown button minimum width is 90 px
+- [ ] SelectionToolbar style choices are `Normal text`, `Heading 1`, `Heading 2`, `Heading 3`, and `Heading 4`
+- [ ] SelectionToolbar bold button toggles the `bold` mark on mouse down to preserve selection
+- [ ] SelectionToolbar italic button toggles the `italic` mark on mouse down to preserve selection
+- [ ] SelectionToolbar underline button toggles the `underline` mark on mouse down to preserve selection
+- [ ] SelectionToolbar strikethrough button toggles the `strike` mark on mouse down to preserve selection
+- [ ] SelectionToolbar inline-code button toggles the `code` mark on mouse down to preserve selection
+- [ ] SelectionToolbar highlight main click toggles the highlight mark without choosing a specific color
+- [ ] SelectionToolbar highlight palette opens from the highlight button context menu rather than a normal left click
+- [ ] SelectionToolbar highlight palette colors are yellow `#fef08a`, green `#bbf7d0`, blue `#bfdbfe`, pink `#fecdd3`, and orange `#fed7aa`
+- [ ] SelectionToolbar link action uses `window.prompt("URL", previousUrl)`
+- [ ] Cancelling the link prompt leaves the current link state unchanged
+- [ ] Entering an empty string in the link prompt removes the current link mark
+- [ ] Entering a non-empty string in the link prompt extends the current link mark range before updating `href`
+- [ ] SelectionToolbar comment button dispatches `scholarsync:editor-action` with `action: "add-comment"`
+- [ ] SelectionToolbar AI Edit button dispatches `scholarsync:ai-action` with `action: "precision-edit"`
+- [ ] LinkPopover intercepts clicks on `<a>` tags inside the editor DOM and prevents the browser default navigation
+- [ ] LinkPopover starts in read mode when opened from an inline link
+- [ ] LinkPopover edit input placeholder is `https://...`
+- [ ] LinkPopover pressing `Enter` in edit mode saves the new URL
+- [ ] LinkPopover pressing `Escape` in edit mode exits edit mode without applying additional changes
+- [ ] LinkPopover `Open in new tab` uses `window.open(url, "_blank", "noopener,noreferrer")`
+- [ ] LinkPopover `Remove link` unsets the mark and closes the popover
+
+### Slash Menu Renderer and Keyboard Navigation
+- [ ] Slash menu empty state text is `No commands found`
+- [ ] Slash menu width is fixed at `w-80`
+- [ ] Slash menu max height is `400px` with internal vertical scroll
+- [ ] Slash menu category labels render as `BASIC BLOCKS`, `ACADEMIC`, `AI TOOLS`, and `DOCUMENT TOOLS`
+- [ ] Slash menu resets the selected row to index `0` whenever the item list changes
+- [ ] Slash menu scrolls the selected row into view whenever the selected index changes
+- [ ] Slash menu `ArrowUp` wraps from the first item to the last item
+- [ ] Slash menu `ArrowDown` wraps from the last item back to the first item
+- [ ] Slash menu `Enter` runs the highlighted command and consumes the key event
+- [ ] Slash menu `Escape` hides the popup and consumes the key event
+- [ ] Slash menu popup placement is `bottom-start`
+- [ ] Slash menu popup offset is `[0, 4]`
+- [ ] Slash menu popup uses `interactive: true` and `trigger: "manual"`
+- [ ] Slash suggestions are allowed at the start of a block
+- [ ] Slash suggestions are also allowed immediately after a space character
+- [ ] Slash suggestions are not allowed in the middle of a word with no preceding space or newline
+- [ ] Slash query filtering matches against command title, description, and category text
+
+### Slash Commands: Basic Blocks and Structure
+- [ ] Slash command `Text` label is `Text`
+- [ ] Slash command `Text` description is `Plain paragraph text`
+- [ ] Slash command `Text` converts the current block to a paragraph
+- [ ] Slash command `Heading 1` description is `Manuscript title`
+- [ ] Slash command `Heading 1` shortcut label is `Cmd+Opt+1`
+- [ ] Slash command `Heading 1` sets the current block to heading level 1
+- [ ] Slash command `Heading 2` description is `IMRAD sections`
+- [ ] Slash command `Heading 2` shortcut label is `Cmd+Opt+2`
+- [ ] Slash command `Heading 2` sets the current block to heading level 2
+- [ ] Slash command `Heading 3` description is `Subsections`
+- [ ] Slash command `Heading 3` shortcut label is `Cmd+Opt+3`
+- [ ] Slash command `Heading 3` sets the current block to heading level 3
+- [ ] Slash command `Heading 4` description is `Sub-subsections`
+- [ ] Slash command `Heading 4` shortcut label is `Cmd+Opt+4`
+- [ ] Slash command `Heading 4` sets the current block to heading level 4
+- [ ] Slash command `Bullet List` description is `Unordered list`
+- [ ] Slash command `Bullet List` shortcut label is `Cmd+Shift+8`
+- [ ] Slash command `Bullet List` toggles the current block into a bullet list
+- [ ] Slash command `Numbered List` description is `Ordered list`
+- [ ] Slash command `Numbered List` shortcut label is `Cmd+Shift+7`
+- [ ] Slash command `Numbered List` toggles the current block into an ordered list
+- [ ] Slash command `Checklist` description is `Task checklist`
+- [ ] Slash command `Checklist` shortcut label is `Cmd+Shift+9`
+- [ ] Slash command `Checklist` toggles a task list
+- [ ] Slash command `Block Quote` description is `Quote text`
+- [ ] Slash command `Block Quote` toggles a blockquote
+- [ ] Slash command `Divider` description is `Horizontal rule`
+- [ ] Slash command `Divider` inserts a horizontal rule
+- [ ] Slash command `Code Block` description is `For statistical code`
+- [ ] Slash command `Code Block` toggles a code block using StarterKit
+
+### Slash Commands: Academic Inserts
+- [ ] Slash command `Table` description is `Insert data table`
+- [ ] Slash command `Table` inserts a `3 x 3` table
+- [ ] Slash command `Table` inserts the table with `withHeaderRow: true`
+- [ ] Slash command `Table` runs a `requestAnimationFrame(...)` post-pass to add class `academic-table` to the rendered table element
+- [ ] Slash command `Image` description is `Insert an image`
+- [ ] Slash command `Image` creates a hidden file input rather than opening a URL prompt
+- [ ] Slash command `Image` accepts `image/*` files only
+- [ ] Cancelling the slash image file picker removes the temporary input and inserts nothing
+- [ ] Selecting an image reads the file through `FileReader.readAsDataURL(...)`
+- [ ] Slash image insertion inserts a base64 image into the editor
+- [ ] Slash command `Abstract` inserts a heading `Abstract`
+- [ ] Slash command `Abstract` inserts four following paragraph starters `Background:`, `Methods:`, `Results:`, and `Conclusion:`
+- [ ] Slash command `Abstract` bolds each structured heading label inside the inserted paragraphs
+- [ ] Slash command `Figure Caption` auto-counts existing `Figure N` paragraphs before inserting the next caption number
+- [ ] Slash command `Figure Caption` inserts bold prefix `Figure <n>. `
+- [ ] Slash command `Figure Caption` default trailing text is `Caption text here`
+- [ ] Slash command `Table Caption` auto-counts existing `Table N` paragraphs before inserting the next caption number
+- [ ] Slash command `Table Caption` inserts bold prefix `Table <n>. `
+- [ ] Slash command `Table Caption` default trailing text is `Caption text here`
+- [ ] Slash command `Footnote` opens `prompt("Enter footnote text:")`
+- [ ] Cancelling the footnote prompt inserts no footnote node
+- [ ] Slash command `Cite` description is `Insert a citation from your library`
+- [ ] Slash command `Cite` shortcut label is `Cmd+Shift+C`
+- [ ] Slash command `Cite` opens the citation dialog via `scholarsync:open-citation-dialog`
+
+### Slash Commands: AI Actions and Tool Actions
+- [ ] Slash command `Continue Writing` dispatches `scholarsync:ai-action` with `action: "continue"`
+- [ ] Slash command `Continue Writing` sends the full editor plain text as `detail.context`
+- [ ] Slash command `Outline Section` dispatches `scholarsync:ai-action` with `action: "outline-section"`
+- [ ] Slash command `Check Guidelines` dispatches `scholarsync:ai-action` with `action: "check-guidelines"`
+- [ ] Slash command `Ask AI` dispatches `scholarsync:ai-action` with `action: "ask"` and no insertion side effect
+- [ ] Slash command `Word Count` dispatches `scholarsync:editor-action` with `action: "show-word-count"`
+- [ ] Executing a slash command always deletes the typed slash trigger range before running the command
+
+### Custom Keyboard Shortcuts and Extension Configuration
+- [ ] Academic keyboard shortcut `Mod-Shift-X` toggles strikethrough
+- [ ] Academic keyboard shortcut `Mod-Shift-H` toggles highlight
+- [ ] Academic keyboard shortcut `Mod-Shift-K` opens `window.prompt("Enter URL:")`
+- [ ] Leaving the keyboard-shortcut link prompt empty does not set a link
+- [ ] Academic keyboard shortcut `Mod-Shift-.` toggles superscript
+- [ ] Academic keyboard shortcut `Mod-Shift-,` toggles subscript
+- [ ] Academic keyboard shortcut `Mod-Shift-F` opens `window.prompt("Footnote text:")`
+- [ ] Leaving the keyboard-shortcut footnote prompt empty inserts no footnote node
+- [ ] Academic keyboard shortcut `Mod-/` dispatches `scholarsync:editor-action` with `toggle-comment-sidebar`
+- [ ] Academic keyboard shortcut `Mod-Shift-C` dispatches `scholarsync:editor-action` with `insert-citation`
+- [ ] Academic keyboard shortcut `Mod-Shift-R` dispatches `scholarsync:editor-action` with `toggle-reference-sidebar`
+- [ ] Academic keyboard shortcut `Mod-Shift-Enter` inserts a horizontal rule
+- [ ] Academic keyboard shortcuts `Mod-Shift-1` through `Mod-Shift-4` toggle heading levels 1 through 4
+- [ ] Studio `TiptapEditor` supports heading levels `1` through `6`
+- [ ] Studio `TiptapEditor` placeholder text is `Start typing or press '/' for AI commands...`
+- [ ] Studio `TiptapEditor` uses `Table.configure({ resizable: true })`
+- [ ] Studio `TiptapEditor` allows base64 image insertion through `Image.configure({ allowBase64: true })`
+- [ ] Studio `TiptapEditor` enables autolink and link-on-paste behavior through the Link extension
+- [ ] Studio `TiptapEditor` enables nested task items
+- [ ] Studio `TiptapEditor` mounts the same custom `SlashCommandsExtension`, `OutlinePlugin`, `Footnote`, `CitationNode`, `BibliographyNode`, and citation-numbering plugin as the route editor
+- [ ] Neither `AcademicEditor` nor Studio `TiptapEditor` registers a custom math node or math extension in the current source tree
+- [ ] Neither `AcademicEditor` nor Studio `TiptapEditor` registers a track-changes extension in the current source tree
+
+### Footnotes, Outline Plugin, Citation Nodes, and Bibliography
+- [ ] Footnote nodes are inline atomic nodes and cannot be edited directly in the document body
+- [ ] New footnote ids are generated in the form `fn_<timestamp>_<random>`
+- [ ] New footnote numbers are assigned as existing footnote count plus one
+- [ ] Removing a footnote command deletes the matching node by `id`
+- [ ] Footnote renumbering runs in a ProseMirror plugin `appendTransaction(...)`
+- [ ] Footnote renumbering updates every footnote node whose stored `number` no longer matches document order
+- [ ] Footnote marker HTML renders as a `<sup>` containing the footnote number
+- [ ] Hovering a footnote marker waits 300 ms before showing the tooltip editor
+- [ ] Footnote tooltip title reads `Footnote <number>`
+- [ ] Footnote tooltip textarea saves on blur rather than on every keystroke
+- [ ] Footnote tooltip delete button title is `Remove footnote`
+- [ ] `FootnoteSection` does not render at all when the editor has zero footnotes
+- [ ] `FootnoteSection` heading label is exactly `Footnotes`
+- [ ] `FootnoteSection` sorts footnotes by numeric order before rendering
+- [ ] Clicking a footnote row in `FootnoteSection` focuses the editor and moves selection to that footnote node position
+- [ ] Outline plugin rebuilds the outline on every heading change with a 100 ms debounce
+- [ ] Outline plugin still rebuilds section word counts on non-heading content changes using the standard 500 ms debounce
+- [ ] Citation nodes are inline atomic nodes with `referenceIds` defaulting to an empty array
+- [ ] Citation nodes also support an `overrides` attribute that defaults to `null`
+- [ ] Citation keyboard shortcut `Mod-Shift-C` dispatches `scholarsync:open-citation-dialog`
+- [ ] Citation chip hover waits 400 ms before opening the tooltip
+- [ ] Citation chip click toggles the popover open state and suppresses the hover tooltip
+- [ ] Citation chip fallback text is `[?]` when a numeric citation has no assigned numbers
+- [ ] Citation chip fallback text is `(?)` when an author-year citation has no resolved reference objects
+- [ ] Numeric citation chips compress consecutive numbers into ranges such as `1-3`
+- [ ] Citation popover `View` action opens the reference sidebar through the Zustand store before dispatching scroll-to-reference
+- [ ] Citation popover `Remove` appears only when the citation node contains more than one `referenceId`
+- [ ] Removing the final reference from a citation chip deletes the entire citation node
+- [ ] Citation popover footer action label is `Delete citation`
+- [ ] Citation numbering plugin debounces renumbering by 100 ms after editor updates
+- [ ] Citation numbering assigns numbers on order of first appearance in the document
+- [ ] Bibliography insert command refuses to insert a second bibliography node when one already exists
+- [ ] Empty bibliography node view text reads `References will appear here when you add citations to your text.`
+- [ ] Bibliography node view heading label is `References`
+- [ ] Bibliography view uses pre-formatted CSL bibliography entries when `bibliographyEntries.length > 0`
+- [ ] Bibliography view falls back to Vancouver-style text formatting when CSL bibliography entries are absent
+
+### Citation Dialog: Shared Modal and Search Tab
+- [ ] Citation dialog default active tab is `search` every time the modal opens
+- [ ] Citation dialog clears `searchQuery`, `selectedIds`, DOI state, search results, and search errors on every open
+- [ ] Citation dialog focuses the search input shortly after opening via a 50 ms timeout
+- [ ] Citation dialog closes on backdrop click
+- [ ] Citation dialog closes on `Escape`
+- [ ] Citation dialog header title is `Insert Citation`
+- [ ] Citation dialog tab labels are `Your References`, `Library`, `Paste DOI/PMID`, and `Manual Entry`
+- [ ] Citation dialog search-input placeholder is `Search references or paste DOI/PMID...`
+- [ ] Search queries starting with `10.` or containing `doi.org/` are treated as DOI identifiers
+- [ ] Search queries that are 1 to 8 digits only are treated as PMID identifiers
+- [ ] Search-tab non-identifier PubMed search waits 350 ms after typing before requesting `/api/references/search-pubmed`
+- [ ] Search-tab PubMed request body includes `query`, `page: 1`, `pageSize: 10`, and `documentId`
+- [ ] Search-tab search spinner shows while the PubMed request is pending
+- [ ] Search-tab error fallback string is `PubMed search failed. Please try again.`
+- [ ] Search-tab empty state text is `No PubMed or reference matches found.` when a typed non-identifier query returns nothing
+- [ ] Search-tab empty state text is `No references yet. Add one using DOI/PMID or manual entry.` when there are no saved references and no active text query
+- [ ] Search-tab empty state text is `No matching references found.` when local references exist but filtering returns nothing
+- [ ] Search-tab identifier-detection banner is a full-width button rather than passive help text
+- [ ] Identifier-detection banner label is `Resolve DOI:` or `Resolve PMID:` followed by the typed identifier
+- [ ] Search-tab `ArrowDown` moves the focused search row down by one and clamps at the last row
+- [ ] Search-tab `ArrowUp` moves the focused search row up by one and clamps at zero
+- [ ] Search-tab `Enter` resolves the typed identifier when DOI/PMID detection is active
+- [ ] Search-tab `Enter` toggles the currently focused reference row when DOI/PMID detection is not active
+- [ ] Search-tab merges local references and PubMed results without duplicate ids
+- [ ] Search-tab selected rows show a blue checkbox state
+- [ ] Search-tab already-numbered references show a right-side numeric badge like `[3]`
+
+### Citation Dialog: Library, DOI/PMID, and Manual Entry
+- [ ] Library-tab data loads lazily on first switch to the `library` tab
+- [ ] First library-tab load searches the saved papers library with an empty string
+- [ ] Library-tab search input placeholder is `Search your saved papers...`
+- [ ] Library-tab search waits 300 ms after typing before calling `searchPapersInLibrary(...)`
+- [ ] Library-tab loading state is a centered spinner row
+- [ ] Library-tab empty state text is `No papers match your search.` when a filter query returns no papers
+- [ ] Library-tab empty state text is `No papers in your library yet. Save papers from the Research page.` when the library is empty
+- [ ] Library-tab paper rows show title plus author/journal/year summary text
+- [ ] Library-tab added papers are converted to references with ids `ref-paper-<paper.id>`
+- [ ] Clicking a library paper that is already in references toggles selection instead of adding a duplicate reference object
+- [ ] Library-tab non-selected already-added papers show helper text `Already in references`
+- [ ] Resolving an identifier switches the active tab to `doi`
+- [ ] DOI-tab label text is `Paste DOI or PMID`
+- [ ] DOI-tab input placeholder is `10.1056/NEJMoa2301234 or 37654789`
+- [ ] DOI-tab `Resolve` button is disabled when the input is blank
+- [ ] DOI-tab `Resolve` button is also disabled while `doiLoading` is true
+- [ ] DOI-tab pressing `Enter` with a non-empty input triggers resolution
+- [ ] DOI-tab error panel includes a secondary action text `Try manual entry`
+- [ ] Clicking `Try manual entry` switches the active tab to `manual`
+- [ ] Successful DOI/PMID resolution shows a green preview card with title and condensed author/year/journal metadata
+- [ ] DOI preview action label is `Add to References`
+- [ ] Adding a resolved reference returns the dialog to the `search` tab
+- [ ] Manual-entry `Type` select defaults to `Article`
+- [ ] Manual-entry type options are `Article`, `Book`, `Book Chapter`, `Website`, `Guideline`, `Conference`, `Thesis`, and `Preprint`
+- [ ] Manual-entry title label includes a required asterisk in `Title *`
+- [ ] Manual-entry title placeholder is `Article title`
+- [ ] Manual-entry authors placeholder is `John Smith, Jane Doe`
+- [ ] Manual-entry journal placeholder is `N Engl J Med`
+- [ ] Manual-entry year placeholder is `2024`
+- [ ] Manual-entry volume placeholder is `389`
+- [ ] Manual-entry issue placeholder is `4`
+- [ ] Manual-entry pages placeholder is `312-320`
+- [ ] Manual-entry DOI placeholder is `10.1056/NEJMoa...`
+- [ ] Manual-entry `Save Reference` button is disabled until the title contains non-whitespace text
+- [ ] Manual entry splits authors on commas first, then interprets the last token as family name when needed
+- [ ] Manual entry falls back to reference title `Untitled` when the title field is empty at save time
+- [ ] Manual entry parses `year` with `parseInt(...)` and falls back to `0` when parsing fails
+- [ ] Manual save generates ids in the form `ref_<timestamp>_<random>`
+- [ ] After manual save, the manual form resets all fields back to empty values and type `article`
+- [ ] After manual save, the dialog returns to the `search` tab
+- [ ] When selected references exist, the footer heading reads `Selected (<n>)`
+- [ ] Selected-reference pills show first author family name plus year
+- [ ] Removing a selected-reference pill leaves the dialog open and only updates `selectedIds`
+- [ ] Footer primary action label is `Insert Citation`
+- [ ] Footer primary action is hidden entirely when no references are selected
+
+### Reference Sidebar Detailed Behavior
+- [ ] Reference-sidebar header title is `References`
+- [ ] Reference-sidebar count pill shows the total `references.size`
+- [ ] Header plus button title is `Add reference`
+- [ ] Header sort trigger title is `Sort`
+- [ ] Header close button has no visible label text and closes the sidebar immediately
+- [ ] Sort menu options are `By citation #`, `By author`, `By year`, and `By date added`
+- [ ] Sort mode defaults to `number`
+- [ ] Sort menu closes immediately after choosing a new sort option
+- [ ] The sidebar does not register a document-level outside-click listener to close the sort menu
+- [ ] Filter input placeholder is `Filter references...`
+- [ ] Empty sidebar state headline text is `No references yet.`
+- [ ] Empty sidebar action text is `Add your first reference`
+- [ ] References are split into cited and uncited groups using `referenceNumberMap.has(ref.id)`
+- [ ] The uncited group header label is `Not cited (<n>)`
+- [ ] Uncited rows render with reduced opacity
+- [ ] Collapsed cited rows show numeric badges like `[4]`
+- [ ] Collapsed uncited rows show placeholder badge `[--]`
+- [ ] Collapsed rows truncate titles/authors to two lines at most
+- [ ] Collapsed rows show `Cited: P<n>` chips only when `citationLocations` data is provided
+- [ ] Expanded metadata panel always includes labeled `Title:` and `Authors:` rows
+- [ ] Expanded metadata panel shows `Journal:` row only when journal data exists
+- [ ] Expanded metadata panel shows `Year:` row only when year data exists
+- [ ] Expanded metadata panel shows clickable DOI link only when DOI exists
+- [ ] Expanded metadata panel shows clickable PubMed link only when PMID exists
+- [ ] Expanded metadata panel wraps abstracts inside a collapsed `<details>` element labeled `Abstract`
+- [ ] Expanded action button `Open DOI` appears only when DOI exists
+- [ ] Expanded action button `Copy DOI` appears only when DOI exists
+- [ ] `Copy DOI` writes `https://doi.org/<doi>` to `navigator.clipboard`
+- [ ] Expanded action button `Remove` is right-aligned with `ml-auto`
+- [ ] Clicking `Remove` prompts `Remove this reference from the sidebar?`
+- [ ] Confirmed sidebar removal deletes the reference from the Zustand reference map immediately
+- [ ] Deleting the currently expanded reference collapses it by clearing `expandedId`
+- [ ] `scholarsync:scroll-to-reference` expands the target reference before scrolling it into view
+- [ ] Scroll-to-reference uses `scrollIntoView({ behavior: "smooth", block: "center" })`
+- [ ] The current ReferenceSidebar does not expose any citation-style switching control in its rendered UI
+
+### Comment Sidebar Local Storage and Threading
+- [ ] Comment-sidebar local storage prefix is `scholarsync_comments_`
+- [ ] Comment ids are generated in the form `cmt_<timestamp>_<random>`
+- [ ] Comment-sidebar reads local comment threads on initial mount
+- [ ] Comment-sidebar re-reads local comment threads after each add, reply, resolve, unresolve, or delete action
+- [ ] Local comment threads sort unresolved top-level comments before resolved top-level comments
+- [ ] Within the same resolved/unresolved group, top-level threads sort newest first by `createdAt`
+- [ ] Replies inside a thread sort oldest first by `createdAt`
+- [ ] New local comments always use `userId: "local-user"`
+- [ ] New local comments default `userName` to `You` when no custom `userName` is supplied
+- [ ] New local comments default `isResolved` to `false`
+- [ ] Pending inline-comment adds preserve `textRangeStart`, `textRangeEnd`, and `quotedText`
+- [ ] General document comments save `textRangeStart`, `textRangeEnd`, and `quotedText` as `null`
+- [ ] Reply comments save `parentCommentId` pointing to the parent top-level comment
+- [ ] Deleting a top-level comment also deletes all of its replies from local storage
+- [ ] Comment count helper counts top-level threads only, not replies
+- [ ] Comment count helper unresolved total counts only unresolved top-level threads
+- [ ] Comment-sidebar empty state title is `No comments yet`
+- [ ] Comment-sidebar empty-state helper reads `Select text and click the comment button to start`
+- [ ] Inline pending comment input placeholder is `Add a comment...`
+- [ ] Bottom new-comment input placeholder is `Add a general comment about this document...`
+- [ ] Reply input placeholder is `Write a reply...`
+- [ ] Pending inline comment input submits on `Enter` only when `Shift` is not held
+- [ ] Pending inline comment `Add` button is disabled when the trimmed input is empty
+- [ ] Top-level quoted-text buttons call `scrollToComment(...)` to reselect the original editor range
+- [ ] Top-level actions include `Resolve` or `Unresolve`, `Reply`, and `Delete`
+- [ ] Reply bubbles do not render their own resolve or reply controls
+- [ ] Delete controls appear only when `comment.userId === "local-user"`
+
+### Version History and Export Dialog Details
+- [ ] Version-history loading state is spinner-only with no text label
+- [ ] Version-history empty-state text is `No versions yet`
+- [ ] Manual version save prompt text is `Version name (e.g., 'Before methods rewrite'):`
+- [ ] Cancelling the version-name prompt inserts no manual version
+- [ ] Restore confirm text is `Restore this version? Your current content will be saved as a version first.`
+- [ ] Restore flow auto-saves the current first section before writing the selected version snapshot back
+- [ ] Version-history preview modal title is `Version Preview`
+- [ ] Version-history preview renders `JSON.stringify(content, null, 2)` inside a `<pre>`
+- [ ] Version badge `○` marks auto-saved versions
+- [ ] Version badge `●` marks manual versions
+- [ ] Version labels fall back to `Auto-save` when `autoSaved` is true and no custom name exists
+- [ ] Version labels fall back to `Manual save` when `autoSaved` is false and no custom name exists
+- [ ] Editor export dialog default format is `docx`
+- [ ] Editor export dialog defaults `doubleSpaced` to checked
+- [ ] Editor export dialog defaults `includePageNumbers` to checked
+- [ ] Editor export dialog format buttons are `DOCX` and `PDF`
+- [ ] Editor export dialog primary button label changes from `Export` to `Exporting...` while work is in progress
+- [ ] Editor export dialog DOCX filename strips non-alphanumeric and non-space characters before replacing spaces with underscores
+- [ ] Editor export dialog PDF path uses `window.print()` rather than generating a PDF blob
+- [ ] Export-dialog failures do not show an inline error message and only log `Export failed:` to the console
+- [ ] Studio `/api/export/pdf` route returns a binary PDF attachment, even though the Studio page currently treats the response as HTML text
+- [ ] Studio `/api/export/docx` route supports page-numbered DOCX output on the server, even though the Studio page exposes no page-number toggle
+
+### Studio Left Rail, Mode Controls, and Document Loading
+- [ ] Studio reads `projectId` from the initial query string and converts it with `Number(...)`
+- [ ] Studio initializes Learn mode only when the initial query string contains `mode=learn`
+- [ ] Studio left-rail title input has no placeholder and always reflects `docTitle`
+- [ ] Studio `Write` button applies brand styling only when Learn mode is off
+- [ ] Studio `Learn` button applies emerald styling only when Learn mode is on
+- [ ] Studio project selector is hidden when the user has zero or one project
+- [ ] Studio project selector selected-label fallback text is `Select project`
+- [ ] Studio project-selector dropdown closes on outside `mousedown`
+- [ ] Selecting the already-active project from the project selector is a no-op in the hook
+- [ ] Switching Studio projects clears `initialContent` to `null` before the new project document loads
+- [ ] Switching Studio projects also clears `document` state and resets save status to `idle`
+- [ ] Studio navigation item labels are `Current Draft`, `My Library`, and `Literature Search`
+- [ ] Studio references summary header shows `References (<n>)` using total references in the store rather than cited-only count
+- [ ] Left-rail empty citation helper reads `Use Cmd+Shift+C to add citations`
+- [ ] Left-rail summary truncates to the first five numbered citations sorted by citation order
+- [ ] Left-rail `View all <n> references` button appears only when `references.size > 5`
+- [ ] Studio AI-credits widget falls back to `0 / 50000` when usage stats fail to load
+- [ ] Write-mode intensity buttons are `Focus`, `Collaborate`, and `Accelerate`
+- [ ] Write-mode intensity descriptions are `AI is quiet — only responds when you ask`, `AI assists with completions and suggestions`, and `AI is proactive — full suggestions and sidebar`
+- [ ] Learn-mode banner text is `Guide Mode — I won't write for you — I'll teach you how`
+- [ ] Learn-mode document-type trigger default text is `Select document type`
+- [ ] Learn-mode stage tracker renders only after a guide document type has been selected
+- [ ] Learn-mode stage buttons are `Understand`, `Plan`, `Outline`, `Draft`, `Revise`, and `Polish`
+- [ ] Completed Learn-mode stages render a lighter emerald style while the active stage renders solid emerald
+- [ ] Studio `docLoading` screen text is `Loading document...`
+- [ ] Studio `docError` screen renders the raw hook error string without extra fallback copy
+
+### Studio Chat, Prompt Construction, Research, Checks, and Export Wiring
+- [ ] Studio first chat submit lazily creates a conversation record through `createConversation(...)`
+- [ ] New Studio conversation titles are truncated to the first 80 characters of the first user message
+- [ ] Studio always writes the user chat message to the conversation table optimistically with `.catch(() => {})`
+- [ ] Chat POST body sends only `{ role, content }` pairs from the in-memory message list
+- [ ] Learn-mode chat adds `guideContext.documentType` only when `guideDocType` is set
+- [ ] Learn-mode chat always sends `guideContext.stage` when `guideDocType` is set
+- [ ] Learn-mode chat sends `guideContext.projectTitle` only when the title is not `Untitled Document`
+- [ ] Write-mode chat always sends `draftContext.intensity`
+- [ ] Write-mode chat sends `draftContext.projectTitle` only when the title is not `Untitled Document`
+- [ ] Studio chat API selects `getGuideSystemPrompt(...)` only when `mode === "learn"` and both `guideContext.documentType` and `guideContext.stage` exist
+- [ ] Studio chat API falls back to `getDefaultGuidePrompt()` when Learn mode lacks full guide context
+- [ ] Studio chat API selects `getDraftSystemPrompt(...)` only when `mode === "draft"` and `draftContext.intensity` exists
+- [ ] Studio chat API falls back to `getDefaultDraftPrompt()` when Draft mode lacks intensity context
+- [ ] Draft prompt builder layers the base prompt, intensity overlay, optional ScholarRules, and optional document context in that order
+- [ ] Guide prompt builder is stage-based and document-type-based rather than a single static system prompt string
+- [ ] Studio chat API returns `Authentication required.` with HTTP 401 when auth fails
+- [ ] Studio chat API returns `Invalid request. Please check your input and try again.` with HTTP 400 when zod validation fails
+- [ ] Studio chat API returns `AI service is not configured. Please contact an administrator.` with HTTP 503 when models are unavailable
+- [ ] Studio chat API returns `An unexpected error occurred. Please try again.` with HTTP 500 for uncaught server errors
+- [ ] Studio page turns non-OK chat responses into the visible `chatError` banner without appending an assistant message
+- [ ] Studio page appends an empty assistant message before streaming response chunks into it
+- [ ] Streaming assistant content is persisted back to conversations only after the final chunk has been received
+- [ ] `scholarsync:ai-action` `continue` prompt starts `Continue writing from where the user left off.`
+- [ ] `scholarsync:ai-action` `outline-section` prompt starts `Create a concise bullet outline for the current section`
+- [ ] `scholarsync:ai-action` `check-guidelines` prompt starts `Review this draft against the most relevant reporting guideline checklist`
+- [ ] `scholarsync:ai-action` `precision-edit` prompt starts `Improve the clarity, precision, and academic tone`
+- [ ] `scholarsync:ai-action` `summarize` prompt starts `Summarize the following text concisely:`
+- [ ] `scholarsync:ai-action` `cite` prompt is the fixed question `Help me add a citation from my library. What paper should I cite here?`
+- [ ] `scholarsync:ai-action` `ask` focuses the chat input and does not auto-send any message
+- [ ] `scholarsync:ai-action` `find-sources` opens the ResearchSidebar instead of sending a chat message
+- [ ] `find-sources` seeds research query text from only the first 200 characters of editor context
+- [ ] `scholarsync:ai-action` `integrity-check` switches directly to the `Checks` tab and does not auto-run chat
+- [ ] Studio `show-word-count` action writes a synthetic assistant chat message instead of opening a modal
+- [ ] Studio word-count assistant message starts with `Section word counts:` when section headings exist
+- [ ] Studio word-count assistant message falls back to `Document word count: <n> words` when no section headings exist
+- [ ] Studio comment action dispatch always includes `quotedText` extracted from the current selection
+- [ ] Studio citation insertion restores the saved text selection before inserting a citation node when possible
+- [ ] Successful Studio citation insertion auto-appends a bibliography node when missing
+- [ ] Studio citation notice auto-clears after 2500 ms
+- [ ] Research-to-editor citation insertion creates ids in the form `ref-research-<stableKey>`
+- [ ] Research quick-search button opens the ResearchSidebar only when the query is non-empty
+- [ ] Checks tab feeds `IntegrityPanel` plain text from `editorRef.current?.view.dom.innerText?.trim()` before falling back to `editor.getText(...)`
+- [ ] Studio export dropdown items are `Export as PDF` and `Export as Word`
+- [ ] Studio export dropdown closes immediately before either network request is started
+- [ ] Studio `handleExportPDF()` posts `{ title, content }` HTML to `/api/export/pdf`
+- [ ] Studio `handleExportPDF()` silently returns when editor HTML content is empty
+- [ ] Studio `handleExportPDF()` does nothing visible when the HTTP response is non-OK
+- [ ] Studio `handleExportPDF()` reads the response as text and writes it into a newly opened window
+- [ ] Studio `handleExportDocx()` posts `{ title, content }` HTML to `/api/export/docx`
+- [ ] Studio `handleExportDocx()` silently returns when editor HTML content is empty
+- [ ] Studio Word export downloads a `.doc` filename even though the backend route returns DOCX bytes
+- [ ] Studio export failures log `PDF export failed:` or `DOCX export failed:` to the console and show no inline toast
+
+### Verified Current-Behavior Corrections from Pass 1
+- [ ] `/editor/[id]` still has no dedicated route-level loading file; only the route-level error boundary file exists
+- [ ] The editor-route `DotsThree` button remains visually present but unwired
+- [ ] Version-history preview still renders raw JSON rather than rich text
+- [ ] Studio export still uses a lightweight dropdown rather than the editor-route modal
+- [ ] Studio export dropdown still lacks any outside-click dismissal listener
+- [ ] The live editor route surface is still `/editor/[id]` plus `/studio`; `/editor/new` is still absent from the app tree
+- [ ] The keyboard-shortcuts dialog still advertises `Cmd + /` for comments while actual comment toggling depends on custom event wiring
+- [ ] Track changes are still not implemented for the editor route; the store comment still marks suggesting mode as post-beta/planned
+- [ ] Citation-style switching is still absent from the current reference sidebar UI
+- [ ] Math insertion is still not implemented as a custom editor extension in the current editor stack
