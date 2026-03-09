@@ -31,7 +31,7 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 15 | Editor | Text Formatting — Underline | /studio | ✅ PASS | `Meta+U` wrapped selected text with `<u>` and toggled back off successfully. |  |
 | 16 | Editor | Text Formatting — Strikethrough | /studio | ✅ PASS | Fixed Studio editor to load academic shortcut/extensions; `Meta+Shift+X` now wraps with `<s>` and toggles off. |  |
 | 17 | Editor | Text Formatting — Highlight | /studio | ✅ PASS | Fixed Studio editor to load highlight extension; `Meta+Shift+H` now wraps with `<mark>` and toggles off. |  |
-| 18 | Editor | Text Formatting — Highlight colors | /studio | ⬜ |  |  |
+| 18 | Editor | Text Formatting — Highlight colors | /studio | ✅ PASS | Floating selection toolbar exposed Yellow/Green/Blue/Pink/Orange; Orange applied as `mark[data-color=\"#fed7aa\"]`. |  |
 | 19 | Editor | Text Formatting — Superscript | /studio | ✅ PASS | Fixed Studio editor to load superscript extension; `Meta+Shift+.` now wraps with `<sup>` and toggles off. |  |
 | 20 | Editor | Text Formatting — Subscript | /studio | ✅ PASS | Fixed Studio editor to load subscript extension; `Meta+Shift+,` now wraps with `<sub>` and toggles off. |  |
 | 21 | Editor | Text Formatting — Inline code | /studio | ✅ PASS | `Meta+E` wraps selected Studio text with `<code>`. |  |
