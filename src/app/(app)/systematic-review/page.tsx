@@ -105,7 +105,10 @@ export default function SystematicReviewHubPage() {
             </p>
           </div>
           <button
-            onClick={() => setShowCreate(true)}
+            onClick={() => {
+              setError(null);
+              setShowCreate(true);
+            }}
             className="px-4 py-2 bg-brand text-white rounded-lg text-sm font-medium hover:bg-brand/90 flex items-center gap-2"
           >
             <Plus weight="bold" size={16} />
@@ -130,6 +133,20 @@ export default function SystematicReviewHubPage() {
             <h2 className="text-lg font-semibold text-ink mb-3">
               New Systematic Review
             </h2>
+            <div className="mb-3">
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-ink">
+                  Review Title
+                </label>
+                <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand">
+                  Required
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-ink-muted">
+                Enter a working title to enable project creation. You can define
+                the full PICO and protocol once the review is open.
+              </p>
+            </div>
             <div className="flex gap-3">
               <input
                 type="text"
@@ -154,7 +171,7 @@ export default function SystematicReviewHubPage() {
                 ) : (
                   <Plus weight="bold" size={16} />
                 )}
-                Create
+                Create Review
               </button>
               <button
                 onClick={() => {
@@ -197,7 +214,10 @@ export default function SystematicReviewHubPage() {
               meta-analysis.
             </p>
             <button
-              onClick={() => setShowCreate(true)}
+              onClick={() => {
+                setError(null);
+                setShowCreate(true);
+              }}
               className="px-4 py-2 bg-brand text-white rounded-lg text-sm font-medium hover:bg-brand/90 flex items-center gap-2"
             >
               <Plus weight="bold" size={16} />

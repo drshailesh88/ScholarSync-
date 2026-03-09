@@ -12,6 +12,28 @@ import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { lookupJournalQuality } from "@/lib/search/journal-quality";
+import { getDevelopmentFallbackResults } from "@/lib/search/dev-fallback";
+
+async function withSourceTimeout<T>(
+  label: string,
+  promise: Promise<T>,
+  timeoutMs = 4500
+): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+        }, timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
 
 export async function GET(req: Request) {
   const log = logger.withRequestId();
@@ -90,41 +112,97 @@ export async function GET(req: Request) {
     // We need (page+1)*perPage results after fusion to serve the slice,
     // so ask each source for that many (capped at 100 for API limits).
     const neededPerSource = Math.min((page + 1) * perPage, 100);
-    const [pubmedResult, s2Result, oaResult, ctResult] = await Promise.allSettled([
-      searchPubMed(pubmedQuery, {
-        maxResults: neededPerSource,
-        page: 0,
-        yearStart,
-        yearEnd,
-      }),
-      searchSemanticScholar(s2Query, {
-        limit: neededPerSource,
-        offset: 0,
-        yearStart,
-        yearEnd,
-      }),
-      searchOpenAlex(oaQuery, {
-        limit: neededPerSource,
-        page: 1,
-        yearStart,
-        yearEnd,
-        onlyOpenAccess: openAccessOnly,
-      }),
-      searchClinicalTrials(q, {
-        limit: perPage,
-        yearStart,
-        yearEnd,
-      }),
-    ]);
+    const [pubmedResult, s2Result, oaResult, ctResult] =
+      await Promise.allSettled([
+        withSourceTimeout(
+          "PubMed",
+          searchPubMed(pubmedQuery, {
+            maxResults: neededPerSource,
+            page: 0,
+            yearStart,
+            yearEnd,
+          })
+        ),
+        withSourceTimeout(
+          "Semantic Scholar",
+          searchSemanticScholar(s2Query, {
+            limit: neededPerSource,
+            offset: 0,
+            yearStart,
+            yearEnd,
+          })
+        ),
+        withSourceTimeout(
+          "OpenAlex",
+          searchOpenAlex(oaQuery, {
+            limit: neededPerSource,
+            page: 1,
+            yearStart,
+            yearEnd,
+            onlyOpenAccess: openAccessOnly,
+          })
+        ),
+        withSourceTimeout(
+          "ClinicalTrials.gov",
+          searchClinicalTrials(q, {
+            limit: perPage,
+            yearStart,
+            yearEnd,
+          })
+        ),
+      ]);
 
-    const pubmedResults =
+    let pubmedResults =
       pubmedResult.status === "fulfilled" ? pubmedResult.value.results : [];
-    const s2Results =
+    let s2Results =
       s2Result.status === "fulfilled" ? s2Result.value.results : [];
-    const oaResults =
+    let oaResults =
       oaResult.status === "fulfilled" ? oaResult.value.results : [];
-    const ctResults =
+    let ctResults =
       ctResult.status === "fulfilled" ? ctResult.value.results : [];
+
+    if (
+      pubmedResults.length === 0 &&
+      s2Results.length === 0 &&
+      oaResults.length === 0 &&
+      ctResults.length === 0
+    ) {
+      const fallback = await getDevelopmentFallbackResults(q, neededPerSource);
+      if (fallback) {
+        pubmedResults = fallback.pubmedResults;
+        s2Results = fallback.semanticScholarResults;
+        oaResults = fallback.openAlexResults;
+        ctResults = fallback.clinicalTrialsResults;
+        log.info("Unified search served development fallback results", {
+          query: q,
+        });
+      }
+    }
+
+    if (pubmedResult.status === "rejected") {
+      log.warn("PubMed search degraded", {
+        query: q,
+        error: String(pubmedResult.reason),
+      });
+    }
+    if (s2Result.status === "rejected") {
+      log.warn("Semantic Scholar search degraded", {
+        query: q,
+        error: String(s2Result.reason),
+      });
+    }
+    if (oaResult.status === "rejected") {
+      log.warn("OpenAlex search degraded", {
+        query: q,
+        error: String(oaResult.reason),
+      });
+    }
+    if (ctResult.status === "rejected") {
+      log.warn("ClinicalTrials search degraded", {
+        query: q,
+        error: String(ctResult.reason),
+      });
+    }
 
     const sourceCounts = {
       pubmed: pubmedResults.length,

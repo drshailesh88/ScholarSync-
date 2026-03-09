@@ -1,5 +1,4 @@
 import { getCurrentUserId } from "@/lib/auth";
-import { isAIConfigured } from "@/lib/ai/models";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { db } from "@/lib/db";
@@ -55,14 +54,6 @@ export async function POST(req: Request) {
       RATE_LIMITS.analysis,
     );
     if (rateLimitResponse) return rateLimitResponse;
-
-    // AI configuration check
-    if (!isAIConfigured()) {
-      return new Response(
-        JSON.stringify({ error: "AI service is not configured." }),
-        { status: 503, headers: { "Content-Type": "application/json" } },
-      );
-    }
 
     // Parse and validate request body
     const body = await req.json();

@@ -4,18 +4,12 @@ import { useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from 
 import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection, rectangularSelection, highlightActiveLineGutter } from "@codemirror/view";
 import { EditorState, Compartment } from "@codemirror/state";
 import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
-import { syntaxHighlighting, indentOnInput, bracketMatching, foldGutter, foldKeymap, defaultHighlightStyle, HighlightStyle } from "@codemirror/language";
-import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
+import { syntaxHighlighting, indentOnInput, foldGutter, foldKeymap, defaultHighlightStyle, HighlightStyle } from "@codemirror/language";
+import { closeBracketsKeymap } from "@codemirror/autocomplete";
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import { lintKeymap, lintGutter, setDiagnostics, type Diagnostic } from "@codemirror/lint";
 import { latex } from "codemirror-lang-latex";
 import { tags } from "@lezer/highlight";
-import {
-  latexCommandCompletion,
-  latexEnvironmentCompletion,
-  createCitationCompletion,
-  createRefCompletion,
-} from "./completions";
 
 // Custom LaTeX-friendly highlight style
 const latexHighlightStyle = HighlightStyle.define([
@@ -321,14 +315,6 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
         }
       });
 
-      // Build LaTeX-specific completion sources
-      const citationSource = createCitationCompletion(
-        () => getBibContentRef.current?.() ?? ""
-      );
-      const refSource = createRefCompletion(
-        () => viewRef.current?.state.doc.toString() ?? ""
-      );
-
       const state = EditorState.create({
         doc: initialContent,
         extensions: [
@@ -348,26 +334,11 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
 
           // Input handling
           indentOnInput(),
-          bracketMatching(),
-          closeBrackets(),
 
           // Lint gutter (error/warning markers in the gutter)
           lintGutter(),
 
-          // LaTeX autocompletion with custom sources
-          autocompletion({
-            override: [
-              latexEnvironmentCompletion,  // Must be before command (more specific match)
-              latexCommandCompletion,
-              citationSource,
-              refSource,
-            ],
-            defaultKeymap: true,
-            activateOnTyping: true,
-            maxRenderedOptions: 12,
-          }),
-
-          // LaTeX language support
+          // LaTeX language support (includes autocompletion, bracket matching, close brackets)
           latex(),
 
           // Theme
@@ -381,7 +352,6 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
           keymap.of([
             ...defaultKeymap,
             ...historyKeymap,
-            ...completionKeymap,
             ...closeBracketsKeymap,
             ...searchKeymap,
             ...foldKeymap,

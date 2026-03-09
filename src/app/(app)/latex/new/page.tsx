@@ -127,8 +127,10 @@ export default function NewLatexProjectPage() {
   const [selectedTemplate, setSelectedTemplate] = useState("blank");
   const [compiler, setCompiler] = useState<"pdflatex" | "xelatex" | "lualatex">("pdflatex");
   const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCreate = async () => {
+    setError(null);
     setCreating(true);
     try {
       const project = await createLatexProjectFromTemplate({
@@ -137,7 +139,12 @@ export default function NewLatexProjectPage() {
         templateId: selectedTemplate,
       });
       router.push(`/latex/${project.id}`);
-    } catch {
+    } catch (createError) {
+      setError(
+        createError instanceof Error
+          ? createError.message
+          : "Unable to create this paper right now. Please try again."
+      );
       setCreating(false);
     }
   };
@@ -247,6 +254,12 @@ export default function NewLatexProjectPage() {
           {creating && <CircleNotch size={16} className="animate-spin" />}
           Create Paper
         </button>
+
+        {error && (
+          <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+            {error}
+          </div>
+        )}
       </div>
     </div>
   );

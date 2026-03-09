@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
-import { getModel } from "@/lib/ai/models";
+import { getModel, isAIConfigured } from "@/lib/ai/models";
 import { advancedRetrieve } from "@/lib/rag/pipeline";
 import type { RAGResult } from "@/lib/rag/pipeline";
 import { analyzeSourceCoverage } from "@/lib/rag/source-coverage";
@@ -27,6 +27,80 @@ const ragChatRequestSchema = z.object({
   mode: z.string().optional(),
   ragConfig: z.record(z.string(), z.unknown()).optional(),
 });
+
+function getChunkText(chunk: RAGResult): string {
+  return "compressedText" in chunk
+    ? (chunk as { compressedText: string }).compressedText
+    : chunk.text;
+}
+
+function buildResponseHeaders(
+  sourceMetadata: Array<{
+    sourceIndex: number;
+    paperId: number;
+    paperTitle: string;
+    paperAuthors: unknown;
+    pageNumber: number | null;
+    sectionType: string | null;
+    chunkId: number;
+  }>,
+  coverageReport: CoverageReport | null
+): HeadersInit {
+  const headers: Record<string, string> = {
+    "Content-Type": "text/plain; charset=utf-8",
+    "X-RAG-Sources": JSON.stringify(sourceMetadata),
+  };
+
+  if (coverageReport) {
+    headers["X-RAG-Coverage"] = JSON.stringify({
+      totalPapers: coverageReport.totalPapers,
+      papersUsed: coverageReport.papersUsed,
+      papersUnused: coverageReport.papersUnused,
+      coverageRatio: coverageReport.coverageRatio,
+      summary: coverageReport.summary,
+      unusedPapers: coverageReport.papers
+        .filter((p) => !p.contributed)
+        .map((p) => ({ id: p.paperId, title: p.paperTitle })),
+    });
+  }
+
+  return headers;
+}
+
+function buildFallbackNotebookAnswer(
+  query: string,
+  contextChunks: RAGResult[],
+  sourcePapers: Map<number, { title: string; authors: unknown; year: number | null }>
+): string {
+  if (contextChunks.length === 0) {
+    return [
+      "I couldn't retrieve grounded source passages for that question.",
+      "Try selecting more sources or ask a narrower question tied to the uploaded papers.",
+    ].join("\n\n");
+  }
+
+  const topChunks = contextChunks.slice(0, 4);
+  const evidenceLines = topChunks.map((chunk, index) => {
+    const snippet = getChunkText(chunk).replace(/\s+/g, " ").trim().slice(0, 280);
+    const suffix = snippet.endsWith(".") ? "" : ".";
+    return `- [${index + 1}] ${snippet}${suffix}`;
+  });
+
+  const sourceLines = topChunks.map((chunk, index) => {
+    const paper = sourcePapers.get(chunk.paper_id);
+    const yearLabel = paper?.year ? `, ${paper.year}` : "";
+    const pageLabel = chunk.page_number ? `, p.${chunk.page_number}` : "";
+    return `[${index + 1}] ${paper?.title || `Paper ${chunk.paper_id}`}${yearLabel}${pageLabel}`;
+  });
+
+  return [
+    `Source-grounded fallback answer for: ${query}`,
+    "Most relevant evidence from the selected sources:",
+    evidenceLines.join("\n"),
+    "Sources:",
+    sourceLines.join("\n"),
+  ].join("\n\n");
+}
 
 export async function POST(req: Request): Promise<Response> {
   const log = logger.withRequestId();
@@ -171,11 +245,7 @@ export async function POST(req: Request): Promise<Response> {
             : "";
 
         systemPrompt += `[Source ${i + 1}] "${paperTitle}" — ${paperAuthors}${pageInfo}${sectionInfo}${relevance}\n`;
-        systemPrompt += `${
-          "compressedText" in chunk
-            ? (chunk as { compressedText: string }).compressedText
-            : chunk.text
-        }\n\n`;
+        systemPrompt += `${getChunkText(chunk)}\n\n`;
       });
 
       systemPrompt += `CRITICAL RULES:
@@ -185,19 +255,6 @@ export async function POST(req: Request): Promise<Response> {
 4. When quoting numbers (HR, CI, p-values), always cite the exact source.
 5. End your response with a "Sources:" section listing all cited references.`;
     }
-
-    // Stream the response
-    const result = streamText({
-      model: getModel(),
-      system: systemPrompt,
-      messages: messages.map((m) => ({
-        role: m.role as "user" | "assistant",
-        content: m.content,
-      })),
-    });
-
-    // Return streaming response with source metadata in headers
-    const response = result.toTextStreamResponse();
 
     const sourceMetadata = contextChunks.map((chunk, i) => {
       const paper = sourcePapers.get(chunk.paper_id);
@@ -212,25 +269,41 @@ export async function POST(req: Request): Promise<Response> {
       };
     });
 
-    const responseHeaders: Record<string, string> = {
-      ...Object.fromEntries(response.headers.entries()),
-      "X-RAG-Sources": JSON.stringify(sourceMetadata),
-    };
-
-    if (coverageReport) {
-      responseHeaders["X-RAG-Coverage"] = JSON.stringify({
-        totalPapers: coverageReport.totalPapers,
-        papersUsed: coverageReport.papersUsed,
-        papersUnused: coverageReport.papersUnused,
-        coverageRatio: coverageReport.coverageRatio,
-        summary: coverageReport.summary,
-        unusedPapers: coverageReport.papers
-          .filter((p) => !p.contributed)
-          .map((p) => ({ id: p.paperId, title: p.paperTitle })),
-      });
+    if (!isAIConfigured()) {
+      return new Response(
+        buildFallbackNotebookAnswer(query, contextChunks, sourcePapers),
+        { headers: buildResponseHeaders(sourceMetadata, coverageReport) }
+      );
     }
 
-    return new Response(response.body, { headers: responseHeaders });
+    try {
+      const result = streamText({
+        model: getModel(),
+        system: systemPrompt,
+        messages: messages.map((m) => ({
+          role: m.role as "user" | "assistant",
+          content: m.content,
+        })),
+      });
+
+      const response = result.toTextStreamResponse();
+      return new Response(response.body, {
+        headers: {
+          ...Object.fromEntries(response.headers.entries()),
+          ...buildResponseHeaders(sourceMetadata, coverageReport),
+        },
+      });
+    } catch (streamError) {
+      log.warn("RAG chat fell back to deterministic response", {
+        userId,
+        error:
+          streamError instanceof Error ? streamError.message : String(streamError),
+      });
+      return new Response(
+        buildFallbackNotebookAnswer(query, contextChunks, sourcePapers),
+        { headers: buildResponseHeaders(sourceMetadata, coverageReport) }
+      );
+    }
   } catch (error) {
     log.error("RAG chat error", error);
     return NextResponse.json(

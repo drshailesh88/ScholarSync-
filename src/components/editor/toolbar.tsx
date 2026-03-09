@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import type { Editor } from "@tiptap/react";
 import {
   TextB,
@@ -91,6 +92,10 @@ export function Toolbar({
 }: ToolbarExtendedProps) {
   if (!editor) return null;
 
+  const preserveSelection = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
   return (
     <div className="glass-panel flex items-center gap-0.5 px-2 py-1.5 border-b border-border">
       {buttons.map((btn, idx) => {
@@ -99,7 +104,11 @@ export function Toolbar({
         return (
           <button
             key={idx}
-            onClick={() => btn.action(editor)}
+            type="button"
+            onMouseDown={(event) => {
+              preserveSelection(event);
+              btn.action(editor);
+            }}
             title={btn.label}
             className={cn(
               "p-2 rounded-lg transition-colors",
@@ -119,7 +128,11 @@ export function Toolbar({
       {/* Cite button */}
       {onOpenCitationDialog && (
         <button
-          onClick={onOpenCitationDialog}
+          type="button"
+          onMouseDown={(event) => {
+            preserveSelection(event);
+            onOpenCitationDialog();
+          }}
           title="Insert Citation (Cmd+Shift+C)"
           className="flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-ink-muted hover:text-ink hover:bg-surface-raised text-xs"
         >
@@ -131,7 +144,11 @@ export function Toolbar({
       {/* References sidebar toggle */}
       {onToggleReferenceSidebar && (
         <button
-          onClick={onToggleReferenceSidebar}
+          type="button"
+          onMouseDown={(event) => {
+            preserveSelection(event);
+            onToggleReferenceSidebar();
+          }}
           title="Toggle Reference Sidebar (Cmd+Shift+R)"
           className="flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors text-ink-muted hover:text-ink hover:bg-surface-raised text-xs"
         >
