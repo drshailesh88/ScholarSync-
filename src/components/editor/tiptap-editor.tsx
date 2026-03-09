@@ -23,6 +23,7 @@ import { TableHeader } from "@tiptap/extension-table-header";
 import { TableCell } from "@tiptap/extension-table-cell";
 import { Image as TiptapImage } from "@tiptap/extension-image";
 import { useRef, useCallback, useEffect } from "react";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import { Toolbar } from "./toolbar";
 import { CitationNode } from "./extensions/citation-node";
 import { BibliographyNode } from "./extensions/bibliography-node";
@@ -107,6 +108,22 @@ export function TiptapEditor({
     onEditorReadyRef.current = onEditorReady;
   }, [onEditorReady]);
 
+  const flushSave = useCallback((doc: ProseMirrorNode) => {
+    if (!onUpdateRef.current) return;
+
+    if (timerRef.current) clearTimeout(timerRef.current);
+
+    const json = doc.toJSON() as Record<string, unknown>;
+    const text = doc.textBetween(0, doc.content.size, "\n");
+    const wordCount = getDocumentWordCount(doc);
+
+    onUpdateRef.current({
+      editor_content: json,
+      plain_text_content: text,
+      word_count: wordCount,
+    });
+  }, []);
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -173,6 +190,14 @@ export function TiptapEditor({
         class:
           "academic-editor-content max-w-none focus:outline-none min-h-[400px] px-6 py-4",
         spellcheck: "true",
+      },
+      handleKeyDown: (view, event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
+          event.preventDefault();
+          flushSave(view.state.doc);
+          return true;
+        }
+        return false;
       },
     },
     onUpdate: ({ editor: ed }) => {
