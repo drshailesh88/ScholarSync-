@@ -205,27 +205,27 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 189 | Editor | Save System / Editor Page Additional — Offline state — wifi-off icon + "Saved locally" | /editor/[id] | ✅ PASS | Fixed offline saves to queue and persist locally; editing while offline now ends on a red wifi-off `Saved locally` state. |  |
 | 190 | Editor | Save System / Editor Page Additional — beforeunload protection — browser warns before closing tab if unsaved/saving | /editor/[id] | ✅ PASS | With the header in `Unsaved`, dispatching `beforeunload` returned `defaultPrevented: true` and blocked the unload. |  |
 | 191 | Editor | Save System / Editor Page Additional — Retry save — button in error banner to retry failed save | /editor/[id] | ✅ PASS | After restoring the save request, clicking the error banner `Retry` button moved the header from `Retry save` -> `Saving...` -> `Saved 06:47 PM`. |  |
-| 192 | Editor | Save System / Studio Page Additional — localStorage draft backup — saves content to scholarsync_studio_draft on every keystroke as fallback | /studio | ⬜ |  |  |
-| 193 | Editor | Top Bar (Editor page) — Left | /editor/[id] | ⬜ |  |  |
-| 194 | Editor | Top Bar (Editor page) — Left | /editor/[id] | ⬜ |  |  |
-| 195 | Editor | Top Bar (Editor page) — Center | /editor/[id] | ⬜ |  |  |
-| 196 | Editor | Top Bar (Editor page) — Center | /editor/[id] | ⬜ |  |  |
-| 197 | Editor | Top Bar (Editor page) — Center | /editor/[id] | ⬜ |  |  |
-| 198 | Editor | Top Bar (Editor page) — Right | /editor/[id] | ⬜ |  |  |
-| 199 | Editor | Top Bar (Editor page) — Right | /editor/[id] | ⬜ |  |  |
-| 200 | Editor | Top Bar (Editor page) — Right | /editor/[id] | ⬜ |  |  |
-| 201 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Message input — text input at bottom with send button | /studio | ⬜ |  |  |
-| 202 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Streaming responses — AI responses stream in token by token | /studio | ⬜ |  |  |
-| 203 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Message bubbles — user messages right-aligned, assistant messages left-aligned with sparkle avatar | /studio | ⬜ |  |  |
-| 204 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Loading animation — 3 bouncing dots while waiting for response | /studio | ⬜ |  |  |
-| 205 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Error display — amber error banner with error message | /studio | ⬜ |  |  |
-| 206 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Auto-scroll — chat scrolls to bottom on new messages | /studio | ⬜ |  |  |
-| 207 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Conversation persistence — creates DB conversation via createConversation, stores messages via addMessage | /studio | ⬜ |  |  |
-| 208 | Editor | AI Chat Panel (Studio page) / AI Event Handling — continue — sends document text with "Continue writing..." prompt | /studio | ⬜ |  |  |
-| 209 | Editor | AI Chat Panel (Studio page) / AI Event Handling — summarize — sends "Summarize the following text..." prompt | /studio | ⬜ |  |  |
-| 210 | Editor | AI Chat Panel (Studio page) / AI Event Handling — find-sources — opens research sidebar with context from editor | /studio | ⬜ |  |  |
-| 211 | Editor | AI Chat Panel (Studio page) / AI Event Handling — cite — asks AI for citation help | /studio | ⬜ |  |  |
-| 212 | Editor | AI Chat Panel (Studio page) / AI Event Handling — integrity-check — switches to Checks tab | /studio | ⬜ |  |  |
+| 192 | Editor | Save System / Studio Page Additional — localStorage draft backup — saves content to scholarsync_studio_draft on every keystroke as fallback | /studio | ✅ PASS | Typing into the Studio editor updated `scholarsync_studio_draft` in `36ms`, including the inserted probe text and new word count. |  |
+| 193 | Editor | Top Bar (Editor page) — Left | /editor/[id] | ✅ PASS | After inserting `undoredo`, the left Undo button enabled, removed the token, and returned to the disabled state once history was exhausted. |  |
+| 194 | Editor | Top Bar (Editor page) — Left | /editor/[id] | ✅ PASS | The Redo button was disabled initially, enabled after Undo, and restored the removed token when clicked. |  |
+| 195 | Editor | Top Bar (Editor page) — Center | /editor/[id] | ✅ PASS | The mode dropdown still exposes `Editing / Direct changes to document` and `Viewing / Read-only, no edits` from the top bar. |  |
+| 196 | Editor | Top Bar (Editor page) — Center | /editor/[id] | ✅ PASS | Fixed the word-count button to open a `Section Breakdown` popover with per-section counts and the total word count. |  |
+| 197 | Editor | Top Bar (Editor page) — Center | /editor/[id] | ✅ PASS | The top-bar save status remains in sync with the verified editor save-state cycle (`Unsaved`, `Saving...`, `Saved HH:MM`, offline/local states). |  |
+| 198 | Editor | Top Bar (Editor page) — Right | /editor/[id] | ✅ PASS | Fixed the references badge to drive the editor-page sidebar; clicking the `0` badge now opens the References panel with `Add reference`, `Sort`, and filter controls. |  |
+| 199 | Editor | Top Bar (Editor page) — Right | /editor/[id] | ✅ PASS | Clicking the comments badge opened the comment sidebar with filters and the `Add a comment...` input. |  |
+| 200 | Editor | Top Bar (Editor page) — Right | /editor/[id] | ✅ PASS | Clicking the `?` button opened the Keyboard Shortcuts dialog; `document.body` now contains `Keyboard Shortcuts`. |  |
+| 201 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Message input — text input at bottom with send button | /studio | ✅ PASS | The chat tab shows the expected placeholder `Ask your AI research assistant...`; submitting through the send button triggered a live `/api/chat` request. |  |
+| 202 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Streaming responses — AI responses stream in token by token | /studio | ✅ PASS | Wrapping `/api/chat` with a cloned stream captured multiple chunks (`Pulmonary edema is the abnormal` then ` accumulation`), confirming streaming delivery. |  |
+| 203 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Message bubbles — user messages right-aligned, assistant messages left-aligned with sparkle avatar | /studio | ✅ PASS | The live chat rendered user bubbles under `justify-end` and assistant bubbles under `justify-start` with the sparkle avatar pill. |  |
+| 204 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Loading animation — 3 bouncing dots while waiting for response | /studio | ✅ PASS | During a live chat send the panel showed `3` animated bounce dots plus the spinning sparkle avatar while the response was pending. |  |
+| 205 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Error display — amber error banner with error message | /studio | ✅ PASS | Forcing `/api/chat` to return `500` produced the amber banner `Forced chat failure`. |  |
+| 206 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Auto-scroll — chat scrolls to bottom on new messages | /studio | ✅ PASS | With the message pane constrained to `120px`, a live send advanced `scrollTop` to `289`, matching `scrollHeight - clientHeight` (`409 - 120`). |  |
+| 207 | Editor | AI Chat Panel (Studio page) / Chat & Learn Tab — Conversation persistence — creates DB conversation via createConversation, stores messages via addMessage | /studio | ✅ PASS | A live message lifecycle recorded `/studio` POSTs before and after `/api/chat`, matching the `createConversation` and `addMessage` server-action flow. |  |
+| 208 | Editor | AI Chat Panel (Studio page) / AI Event Handling — continue — sends document text with "Continue writing..." prompt | /studio | ✅ PASS | Dispatching `scholarsync:ai-action` with `continue` sent `/api/chat` a user message starting `Continue writing from where the user left off...`. |  |
+| 209 | Editor | AI Chat Panel (Studio page) / AI Event Handling — summarize — sends "Summarize the following text..." prompt | /studio | ✅ PASS | Dispatching `summarize` sent `/api/chat` a user message starting `Summarize the following text concisely...`. |  |
+| 210 | Editor | AI Chat Panel (Studio page) / AI Event Handling — find-sources — opens research sidebar with context from editor | /studio | ✅ PASS | Dispatching `find-sources` opened the research sidebar; the snapshot then showed `Close (Cmd+Shift+L)`, the search box, and Search/Library/Chat tabs. |  |
+| 211 | Editor | AI Chat Panel (Studio page) / AI Event Handling — cite — asks AI for citation help | /studio | ✅ PASS | Dispatching `cite` sent `/api/chat` the prompt `Help me add a citation from my library. What paper should I cite here?`. |  |
+| 212 | Editor | AI Chat Panel (Studio page) / AI Event Handling — integrity-check — switches to Checks tab | /studio | ✅ PASS | Dispatching `integrity-check` switched the panel into the Checks view; the snapshot then exposed `Run Integrity Check`. |  |
 | 213 | Editor | Write Mode — AI Intensity (Studio page) — Focus | /studio | ⬜ |  |  |
 | 214 | Editor | Write Mode — AI Intensity (Studio page) — Collaborate | /studio | ⬜ |  |  |
 | 215 | Editor | Write Mode — AI Intensity (Studio page) — Accelerate | /studio | ⬜ |  |  |
