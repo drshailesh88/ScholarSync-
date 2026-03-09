@@ -188,7 +188,7 @@ export function TiptapEditor({
     editorProps: {
       attributes: {
         class:
-          "academic-editor-content max-w-none focus:outline-none min-h-[400px] px-6 py-4",
+          "academic-editor-content max-w-none focus:outline-none min-h-[calc(100vh-12rem)] px-6 py-4",
         spellcheck: "true",
       },
       handleKeyDown: (view, event) => {

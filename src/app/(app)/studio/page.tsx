@@ -1069,7 +1069,7 @@ function StudioContent() {
             </div>
           ) : (
             <TiptapEditor
-              className="max-w-3xl mx-auto"
+              className="max-w-[720px] mx-auto"
               content={initialContent}
               contentKey={studioDoc?.id ?? null}
               onUpdate={handleEditorUpdate}
