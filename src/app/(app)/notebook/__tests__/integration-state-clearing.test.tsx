@@ -374,3 +374,38 @@ describe("Integration: overlay mutual exclusion", () => {
     view.cleanup();
   });
 });
+
+describe("Integration: request timeout handling", () => {
+  it("aborts a stalled notebook request and shows a timeout message", async () => {
+    vi.useFakeTimers();
+    const fetchMock = vi.fn((_input: RequestInfo | URL, init?: RequestInit) => {
+      return new Promise<Response>((_resolve, reject) => {
+        const signal = init?.signal;
+        signal?.addEventListener("abort", () => {
+          reject(new DOMException("The operation was aborted.", "AbortError"));
+        });
+      });
+    });
+    global.fetch = fetchMock as typeof fetch;
+
+    const view = renderNotebook();
+
+    try {
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      await submitMessage("Tell me about the sources");
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(30_000);
+      });
+
+      expect(document.body.textContent).toContain(
+        "The response timed out. Please try again or ask a simpler question.",
+      );
+    } finally {
+      view.cleanup();
+      vi.useRealTimers();
+    }
+  });
+});

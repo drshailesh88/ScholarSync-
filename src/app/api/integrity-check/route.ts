@@ -1,5 +1,6 @@
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
+import { isAIConfigured } from "@/lib/ai/models";
 import { logger } from "@/lib/logger";
 import { db } from "@/lib/db";
 import { users, integrityChecks } from "@/lib/db/schema";
@@ -55,6 +56,13 @@ export async function POST(req: Request) {
     );
     if (rateLimitResponse) return rateLimitResponse;
 
+    if (!isAIConfigured()) {
+      return new Response(
+        JSON.stringify({ error: "AI service is not configured." }),
+        { status: 503, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
     // Parse and validate request body
     const body = await req.json();
     const parsed = requestSchema.safeParse(body);
@@ -78,13 +86,24 @@ export async function POST(req: Request) {
     const plan = (user?.plan ?? "free") as IntegrityCheckInput["plan"];
 
     // Run the unified integrity check
-    const result = await runIntegrityCheck({
-      text: parsed.data.text,
-      plan,
-      mode: parsed.data.mode,
-      sources: parsed.data.sources,
-      userId,
-    });
+    let result: Awaited<ReturnType<typeof runIntegrityCheck>>;
+    try {
+      result = await runIntegrityCheck({
+        text: parsed.data.text,
+        plan,
+        mode: parsed.data.mode,
+        sources: parsed.data.sources,
+        userId,
+      });
+    } catch (error) {
+      log.error("AI detection failed during integrity check", error);
+      return new Response(
+        JSON.stringify({
+          error: "AI detection service is unavailable. Please try again later.",
+        }),
+        { status: 503, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
     log.info("Integrity check completed", {
       userId,

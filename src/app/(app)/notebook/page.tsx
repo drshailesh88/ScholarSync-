@@ -623,6 +623,9 @@ export default function NotebookPage(): React.ReactElement {
     // Determine the conversation mode and API mode to send
     const conversationMode = notebookMode === "learn" ? "learn" as const : "notebook" as const;
     const apiMode = notebookMode === "learn" ? "learn" : "notebook";
+    const requestController = new AbortController();
+    const requestTimeout = setTimeout(() => requestController.abort(), 30_000);
+    let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
 
     try {
       // Create conversation on first message
@@ -649,6 +652,7 @@ export default function NotebookPage(): React.ReactElement {
           mode: apiMode,
           ...(selectedPaperIds.length > 0 ? { paperIds: selectedPaperIds } : {}),
         }),
+        signal: requestController.signal,
       });
 
       if (!res.ok) {
@@ -686,7 +690,7 @@ export default function NotebookPage(): React.ReactElement {
         setCoverageReport(null);
       }
 
-      const reader = res.body?.getReader();
+      reader = res.body?.getReader() ?? null;
       if (!reader) { setIsLoading(false); return; }
 
       const assistantMsg: ChatMessage = {
@@ -748,7 +752,15 @@ export default function NotebookPage(): React.ReactElement {
           });
       }
     } catch (err) {
-      const isTimeout = err instanceof Error && err.message === "Stream timeout";
+      const isTimeout =
+        (err instanceof DOMException && err.name === "AbortError") ||
+        (err instanceof Error && err.message === "Stream timeout");
+      if (isTimeout) {
+        requestController.abort();
+      }
+      if (reader) {
+        await reader.cancel().catch(() => {});
+      }
       setChatMessages((prev) => [
         ...prev,
         { id: `err_${Date.now()}`, role: "assistant", content: isTimeout
@@ -757,6 +769,7 @@ export default function NotebookPage(): React.ReactElement {
         },
       ]);
     } finally {
+      clearTimeout(requestTimeout);
       setIsLoading(false);
     }
   }, [input, isLoading, chatMessages, files, notebookMode]);

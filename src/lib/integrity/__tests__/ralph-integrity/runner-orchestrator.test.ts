@@ -153,4 +153,18 @@ describe("Cycle 5: Orchestrator tier gating", () => {
 
     expect(result.tier).toBe("paid");
   });
+
+  it("IC-057: AI detection failures propagate instead of fabricating a low-risk result", async () => {
+    const { runAIDetection } = await import("../../ai-detection");
+    vi.mocked(runAIDetection).mockRejectedValueOnce(new Error("provider unavailable"));
+
+    const { runIntegrityCheck } = await import("../../index");
+
+    await expect(
+      runIntegrityCheck({
+        text: "A".repeat(100),
+        plan: "free",
+      }),
+    ).rejects.toThrow("provider unavailable");
+  });
 });
