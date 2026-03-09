@@ -328,34 +328,34 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 312 | Editor | Quick Test Workflow / Basic Editor Flow — Verify word count updates in real-time | /editor/[id] | ✅ PASS | The top-bar word count updated live from `3 words` to `4 words` immediately after typing. |  |
 | 313 | Editor | Quick Test Workflow / Basic Editor Flow — Press Cmd+S — verify immediate save | /editor/[id] | ✅ PASS | Typing a character and pressing `Cmd+S` immediately triggered live save `POST /editor/new` requests and refreshed the saved timestamp. |  |
 | 314 | Editor | Quick Test Workflow / Basic Editor Flow — Wait 2s after typing — verify auto-save triggers | /editor/[id] | ✅ PASS | Typing without `Cmd+S` and waiting 2.5 seconds triggered the debounced autosave `POST /editor/new` requests. |  |
-| 315 | Editor | Quick Test Workflow / Citation Flow — Press Cmd+Shift+C — citation dialog opens | /editor/[id] | ⬜ |  |  |
-| 316 | Editor | Quick Test Workflow / Citation Flow — Search for a paper / enter DOI | /editor/[id] | ⬜ |  |  |
-| 317 | Editor | Quick Test Workflow / Citation Flow — Select reference(s) and click Insert | /editor/[id] | ⬜ |  |  |
-| 318 | Editor | Quick Test Workflow / Citation Flow — Verify citation chip appears in text with number | /editor/[id] | ⬜ |  |  |
-| 319 | Editor | Quick Test Workflow / Citation Flow — Verify bibliography auto-inserted at document end | /editor/[id] | ⬜ |  |  |
-| 320 | Editor | Quick Test Workflow / Citation Flow — Hover citation — tooltip shows details | /editor/[id] | ⬜ |  |  |
-| 321 | Editor | Quick Test Workflow / Citation Flow — Click citation — popover shows management options | /editor/[id] | ⬜ |  |  |
-| 322 | Editor | Quick Test Workflow / Citation Flow — Press Cmd+Shift+R — reference sidebar opens | /editor/[id] | ⬜ |  |  |
-| 323 | Editor | Quick Test Workflow / Citation Flow — Verify references listed with sort/filter options | /editor/[id] | ⬜ |  |  |
-| 324 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Select text in editor | /editor/[id] | ⬜ |  |  |
-| 325 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click comment button in floating toolbar | /editor/[id] | ⬜ |  |  |
-| 326 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Verify comment sidebar opens with quoted text | /editor/[id] | ⬜ |  |  |
-| 327 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Type a comment and press Enter | /editor/[id] | ⬜ |  |  |
-| 328 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Verify comment thread appears | /editor/[id] | ⬜ |  |  |
-| 329 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click reply, type reply, press Enter | /editor/[id] | ⬜ |  |  |
-| 330 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click Resolve, verify resolved styling | /editor/[id] | ⬜ |  |  |
-| 331 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Filter by "Resolved" — verify filter works | /editor/[id] | ⬜ |  |  |
-| 332 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click quoted text — editor scrolls to position | /editor/[id] | ⬜ |  |  |
-| 333 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Version History" button | /editor/[id] | ⬜ |  |  |
-| 334 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Save Current Version", enter name | /editor/[id] | ⬜ |  |  |
-| 335 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Verify version appears in list | /editor/[id] | ⬜ |  |  |
-| 336 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Preview" — modal shows content | /editor/[id] | ⬜ |  |  |
-| 337 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Restore" — confirm dialog, content restored | /editor/[id] | ⬜ |  |  |
-| 338 | Editor | Quick Test Workflow / Export Flow — Click "Export" button | /editor/[id] | ⬜ |  |  |
-| 339 | Editor | Quick Test Workflow / Export Flow — Select DOCX format | /editor/[id] | ⬜ |  |  |
-| 340 | Editor | Quick Test Workflow / Export Flow — Toggle double-spacing and page numbers | /editor/[id] | ⬜ |  |  |
-| 341 | Editor | Quick Test Workflow / Export Flow — Click Export — verify .docx file downloads | /editor/[id] | ⬜ |  |  |
-| 342 | Editor | Quick Test Workflow / Export Flow — Select PDF format — verify print dialog opens | /editor/[id] | ⬜ |  |  |
+| 315 | Editor | Quick Test Workflow / Citation Flow — Press Cmd+Shift+C — citation dialog opens | /editor/[id] | ✅ PASS | `Cmd+Shift+C` opened the Insert Citation modal on `/editor/new`. |  |
+| 316 | Editor | Quick Test Workflow / Citation Flow — Search for a paper / enter DOI | /editor/[id] | ✅ PASS | Entering DOI `10.1056/NEJMoa2021436` surfaced the DOI resolve flow and loaded the citation metadata. |  |
+| 317 | Editor | Quick Test Workflow / Citation Flow — Select reference(s) and click Insert | /editor/[id] | ✅ PASS | The resolved paper was selected in the modal and inserted successfully with the modal CTA. |  |
+| 318 | Editor | Quick Test Workflow / Citation Flow — Verify citation chip appears in text with number | /editor/[id] | ✅ PASS | The editor DOM rendered a live inline citation chip `[1]` after insertion. |  |
+| 319 | Editor | Quick Test Workflow / Citation Flow — Verify bibliography auto-inserted at document end | /editor/[id] | ✅ PASS | Inserting the first citation auto-appended the bibliography block with the `References` heading and numbered entry. |  |
+| 320 | Editor | Quick Test Workflow / Citation Flow — Hover citation — tooltip shows details | /editor/[id] | ✅ PASS | Hovering `[1]` exposed the citation details inline, including title and journal metadata. |  |
+| 321 | Editor | Quick Test Workflow / Citation Flow — Click citation — popover shows management options | /editor/[id] | ✅ PASS | Clicking `[1]` opened the citation popover with management actions including `View` and `Delete citation`. |  |
+| 322 | Editor | Quick Test Workflow / Citation Flow — Press Cmd+Shift+R — reference sidebar opens | /editor/[id] | ✅ PASS | `Cmd+Shift+R` opened the reference sidebar from the editor page. |  |
+| 323 | Editor | Quick Test Workflow / Citation Flow — Verify references listed with sort/filter options | /editor/[id] | ✅ PASS | The sidebar showed the inserted reference plus live `Sort` and `Filter references...` controls. |  |
+| 324 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Select text in editor | /editor/[id] | ✅ PASS | I selected editor content live, first across the document and then a targeted `bullet item` range for quote-specific validation. |  |
+| 325 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click comment button in floating toolbar | /editor/[id] | ✅ PASS | The floating toolbar comment action opened the comments sidebar for the current text selection. |  |
+| 326 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Verify comment sidebar opens with quoted text | /editor/[id] | ✅ PASS | A targeted `bullet item` selection produced a sidebar thread with the quoted excerpt `“bullet item”`. |  |
+| 327 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Type a comment and press Enter | /editor/[id] | ✅ PASS | Typing `Quick flow comment` and pressing Enter created the comment thread immediately. |  |
+| 328 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Verify comment thread appears | /editor/[id] | ✅ PASS | The new thread appeared in the sidebar with thread actions and persisted after creation. |  |
+| 329 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click reply, type reply, press Enter | /editor/[id] | ✅ PASS | Replying with `Quick flow reply` appended a nested reply entry to the same thread. |  |
+| 330 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click Resolve, verify resolved styling | /editor/[id] | ✅ PASS | Resolving the thread switched the action to `Unresolve` and applied the resolved styling/badge. |  |
+| 331 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Filter by "Resolved" — verify filter works | /editor/[id] | ✅ PASS | Switching to the `Resolved` filter kept the resolved thread visible and hid unresolved-only state. |  |
+| 332 | Editor | Quick Test Workflow / Comments Flow (Editor page) — Click quoted text — editor scrolls to position | /editor/[id] | ✅ PASS | Clicking the quoted excerpt reselected `bullet item` in the editor and moved the editor scroller back toward that anchor. |  |
+| 333 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Version History" button | /editor/[id] | ✅ PASS | The Version History side panel opened with save and per-version preview/restore controls. |  |
+| 334 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Save Current Version", enter name | /editor/[id] | ✅ PASS | The named save flow accepted `Quick Flow Version` and created a new manual version entry. |  |
+| 335 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Verify version appears in list | /editor/[id] | ✅ PASS | `Quick Flow Version` appeared at the top of the version list with a fresh timestamp. |  |
+| 336 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Preview" — modal shows content | /editor/[id] | ✅ PASS | Preview opened the version payload and showed the saved document content, including `Flow Heading` and `bullet item`. |  |
+| 337 | Editor | Quick Test Workflow / Version History Flow (Editor page) — Click "Restore" — confirm dialog, content restored | /editor/[id] | ✅ PASS | After adding `RESTORE_MARKER`, restoring the named version removed the marker and reverted the document to the saved content. |  |
+| 338 | Editor | Quick Test Workflow / Export Flow — Click "Export" button | /editor/[id] | ✅ PASS | Clicking `Export` opened the export dialog on the editor page. |  |
+| 339 | Editor | Quick Test Workflow / Export Flow — Select DOCX format | /editor/[id] | ✅ PASS | The export dialog rendered both `DOCX` and `PDF`, with `DOCX` selected for Word export. |  |
+| 340 | Editor | Quick Test Workflow / Export Flow — Toggle double-spacing and page numbers | /editor/[id] | ✅ PASS | Both export toggles responded live during the DOCX configuration step. |  |
+| 341 | Editor | Quick Test Workflow / Export Flow — Click Export — verify .docx file downloads | /editor/[id] | ✅ PASS | Export created a DOCX blob (`application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `9045` bytes) and triggered download `QA_Title_a.docx`. |  |
+| 342 | Editor | Quick Test Workflow / Export Flow — Select PDF format — verify print dialog opens | /editor/[id] | ✅ PASS | Switching to `PDF` and exporting called `window.print()`, confirming the browser print path opened. |  |
 | 343 | Editor | Quick Test Workflow / Studio AI Flow — Switch to Write mode | /editor/[id] | ⬜ |  |  |
 | 344 | Editor | Quick Test Workflow / Studio AI Flow — Select AI intensity (Focus/Collaborate/Accelerate) | /editor/[id] | ⬜ |  |  |
 | 345 | Editor | Quick Test Workflow / Studio AI Flow — Type a question in chat — verify streaming response | /editor/[id] | ⬜ |  |  |
