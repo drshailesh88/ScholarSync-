@@ -255,41 +255,41 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 239 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Paper selection — for evidence tables | /studio | ✅ PASS | Selecting two live search results surfaced the `2 selected` state and the `Build Evidence Table` action bar. |  |
 | 240 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Citation insertion — can insert citations from research papers | /studio | ✅ PASS | Fixed Studio to listen for research citation events; a research-paper insertion now creates a reference, inserts a citation node `[1]`, and shows `Citation inserted`. |  |
 | 241 | Editor | Research Sidebar (Studio page) / ResearchSidebar Component — Keyboard shortcut: Cmd+Shift+L toggles sidebar (handled by Studio page event listener) | /studio | ✅ PASS | Dispatching `Cmd+Shift+L` opened the research sidebar, exposing the full search textarea and close control. |  |
-| 242 | Editor | Integrity Panel (Studio page) / Idle State — Shield icon with description | /studio | ⬜ |  |  |
-| 243 | Editor | Integrity Panel (Studio page) / Idle State — "Run Integrity Check" button | /studio | ⬜ |  |  |
-| 244 | Editor | Integrity Panel (Studio page) / Idle State — Requires minimum 50 characters in document | /studio | ⬜ |  |  |
-| 245 | Editor | Integrity Panel (Studio page) / Running State — Spinning loader with "Analyzing Document..." message | /studio | ⬜ |  |  |
-| 246 | Editor | Integrity Panel (Studio page) / Running State — Description: "Running AI detection, plagiarism scan, and citation verification" | /studio | ⬜ |  |  |
-| 247 | Editor | Integrity Panel (Studio page) / Error State — Warning icon with error message | /studio | ⬜ |  |  |
-| 248 | Editor | Integrity Panel (Studio page) / Error State — Retry button | /studio | ⬜ |  |  |
-| 249 | Editor | Results — Four Collapsible Sections / AI Detection — Human Score — circular gauge at top (0-100%) | /studio | ⬜ |  |  |
-| 250 | Editor | Results — Four Collapsible Sections / AI Detection — Overall risk level indicator | /studio | ⬜ |  |  |
-| 251 | Editor | Results — Four Collapsible Sections / AI Detection — Engine badge — shows "Binoculars" if used | /studio | ⬜ |  |  |
-| 252 | Editor | Results — Four Collapsible Sections / AI Detection — Stats grid: | /studio | ⬜ |  |  |
-| 253 | Editor | Results — Four Collapsible Sections / AI Detection — Flagged paragraphs (up to 5): | /studio | ⬜ |  |  |
-| 254 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Locked state — shows "Available on paid plans" with upgrade link when not available | /studio | ⬜ |  |  |
-| 255 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Similarity score — percentage | /studio | ⬜ |  |  |
-| 256 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Sources scanned count | /studio | ⬜ |  |  |
-| 257 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Matches (up to 5): | /studio | ⬜ |  |  |
-| 258 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — No matches — green success message | /studio | ⬜ |  |  |
-| 259 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Locked state — shows "Available on paid plans" | /studio | ⬜ |  |  |
-| 260 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Verified/total citation count | /studio | ⬜ |  |  |
-| 261 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Issues (up to 8): | /studio | ⬜ |  |  |
-| 262 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Verified references list (up to 10): | /studio | ⬜ |  |  |
-| 263 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — All verified — green success message | /studio | ⬜ |  |  |
-| 264 | Editor | Results — Four Collapsible Sections / Writing Quality — Readability grade — numeric grade | /studio | ⬜ |  |  |
-| 265 | Editor | Results — Four Collapsible Sections / Writing Quality — Average sentence length — in words | /studio | ⬜ |  |  |
-| 266 | Editor | Results — Four Collapsible Sections / Writing Quality — Passive voice count — number of instances | /studio | ⬜ |  |  |
-| 267 | Editor | Results — Four Collapsible Sections / Writing Quality — Suggestions — bulleted improvement suggestions | /studio | ⬜ |  |  |
-| 268 | Editor | Integrity Panel (Studio page) / Additional — Re-run button — in results header to run check again | /studio | ⬜ |  |  |
-| 269 | Editor | Integrity Panel (Studio page) / Additional — Free tier notice — amber banner when on free plan: "Free tier — AI detection only" | /studio | ⬜ |  |  |
-| 270 | Editor | Integrity Panel (Studio page) / Additional — All sections are collapsible/expandable (default: all expanded) | /studio | ⬜ |  |  |
-| 271 | Editor | Left Sidebar (Studio page) — Document title — editable text input at top | /studio | ⬜ |  |  |
-| 272 | Editor | Left Sidebar (Studio page) — Write/Learn mode toggle — two-button toggle below title | /studio | ⬜ |  |  |
-| 273 | Editor | Left Sidebar (Studio page) — Project selector — dropdown (only if user has multiple projects) | /studio | ⬜ |  |  |
-| 274 | Editor | Left Sidebar (Studio page) — Navigation links: | /studio | ⬜ |  |  |
-| 275 | Editor | Left Sidebar (Studio page) — References section: | /studio | ⬜ |  |  |
-| 276 | Editor | Left Sidebar (Studio page) — AI Credits — progress bar at bottom showing token usage (used / limit) | /studio | ⬜ |  |  |
+| 242 | Editor | Integrity Panel (Studio page) / Idle State — Shield icon with description | /studio | ✅ PASS | `Checks` opens the shield/description idle state with `Integrity Check` and the plagiarism/citation verification helper copy. |  |
+| 243 | Editor | Integrity Panel (Studio page) / Idle State — "Run Integrity Check" button | /studio | ✅ PASS | The idle panel renders a working `Run Integrity Check` CTA. |  |
+| 244 | Editor | Integrity Panel (Studio page) / Idle State — Requires minimum 50 characters in document | /studio | ✅ PASS | Fixed the short-document path so Studio now shows `Document must have at least 50 characters to check.` and sends no `/api/integrity-check` request. |  |
+| 245 | Editor | Integrity Panel (Studio page) / Running State — Spinning loader with "Analyzing Document..." message | /studio | ✅ PASS | A delayed live `/api/integrity-check` run showed the loading state with `Analyzing Document...`. |  |
+| 246 | Editor | Integrity Panel (Studio page) / Running State — Description: "Running AI detection, plagiarism scan, and citation verification" | /studio | ✅ PASS | The live loading state showed the full running description under the spinner. |  |
+| 247 | Editor | Integrity Panel (Studio page) / Error State — Warning icon with error message | /studio | ✅ PASS | Fixed Studio to enter the error state for short drafts; the panel now renders the validation message instead of silently staying idle. |  |
+| 248 | Editor | Integrity Panel (Studio page) / Error State — Retry button | /studio | ✅ PASS | The error state exposes a working `Retry` button. |  |
+| 249 | Editor | Results — Four Collapsible Sections / AI Detection — Human Score — circular gauge at top (0-100%) | /studio | ✅ PASS | Paid and free integrity runs both rendered the top Human Score gauge (for example `13 Human Score`). |  |
+| 250 | Editor | Results — Four Collapsible Sections / AI Detection — Overall risk level indicator | /studio | ✅ PASS | The AI Detection summary showed the live risk label, e.g. `13% human · high risk`. |  |
+| 251 | Editor | Results — Four Collapsible Sections / AI Detection — Engine badge — shows "Binoculars" if used | /studio | ⚠️ PARTIAL | Paid `/api/integrity-check` runs returned `aiDetection.engine: \"llm-heuristic\"`, so the `Binoculars` badge path was not exercised in this environment. |  |
+| 252 | Editor | Results — Four Collapsible Sections / AI Detection — Stats grid: | /studio | ✅ PASS | The AI grid rendered `Avg. Sentence`, `Burstiness`, `Vocabulary`, and `Hedging Phrases` with live values. |  |
+| 253 | Editor | Results — Four Collapsible Sections / AI Detection — Flagged paragraphs (up to 5): | /studio | ✅ PASS | The results showed flagged paragraph cards with human score, reasons, and improvement guidance. |  |
+| 254 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Locked state — shows "Available on paid plans" with upgrade link when not available | /studio | ✅ PASS | Before promoting the dev user to `basic`, the free-tier run showed the locked plagiarism card with `Available on paid plans` and `Upgrade to unlock →`. |  |
+| 255 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Similarity score — percentage | /studio | ✅ PASS | Paid runs rendered a live plagiarism summary such as `0% similar · 0 sources`. |  |
+| 256 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Sources scanned count | /studio | ✅ PASS | Paid runs showed the scanned-source count, e.g. `Scanned 30 scholarly sources`. |  |
+| 257 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — Matches (up to 5): | /studio | ⚠️ PARTIAL | I tried both filler text and copied textbook-style diabetes text, but the paid engine stayed on the no-match path, so source match cards never rendered. |  |
+| 258 | Editor | Results — Four Collapsible Sections / Plagiarism (Paid feature) — No matches — green success message | /studio | ✅ PASS | The paid plagiarism section rendered the green `No significant matches found` success state. |  |
+| 259 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Locked state — shows "Available on paid plans" | /studio | ✅ PASS | The free-tier integrity run showed the locked citations card with `Available on paid plans`. |  |
+| 260 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Verified/total citation count | /studio | ✅ PASS | Fixed Studio integrity serialization; with an inserted citation, paid results now show `Citations 0/1 verified · 2 issues`. |  |
+| 261 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Issues (up to 8): | /studio | ✅ PASS | The paid citation audit listed concrete issues for `[1]`, including the invalid DOI and failed PMID verification. |  |
+| 262 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — Verified references list (up to 10): | /studio | ✅ PASS | After the Studio fix, the citation audit rendered `Verified References` with `[1] Integrity Citation Test`. |  |
+| 263 | Editor | Results — Four Collapsible Sections / Citation Audit (Paid feature) — All verified — green success message | /studio | ✅ PASS | Earlier integrity runs without citation issues showed the green `All citations verified` success state. |  |
+| 264 | Editor | Results — Four Collapsible Sections / Writing Quality — Readability grade — numeric grade | /studio | ✅ PASS | The Writing Quality section displayed a numeric readability grade such as `Grade 13.9`. |  |
+| 265 | Editor | Results — Four Collapsible Sections / Writing Quality — Average sentence length — in words | /studio | ✅ PASS | The Writing Quality section displayed average sentence length in words, e.g. `11.4 words`. |  |
+| 266 | Editor | Results — Four Collapsible Sections / Writing Quality — Passive voice count — number of instances | /studio | ✅ PASS | The Writing Quality section displayed passive voice count, e.g. `2 instances`. |  |
+| 267 | Editor | Results — Four Collapsible Sections / Writing Quality — Suggestions — bulleted improvement suggestions | /studio | ✅ PASS | The suggestions list rendered multiple improvement bullets for sentence variation, passive voice, and readability. |  |
+| 268 | Editor | Integrity Panel (Studio page) / Additional — Re-run button — in results header to run check again | /studio | ✅ PASS | The results header exposes a working `Re-run` button that triggers a fresh integrity request. |  |
+| 269 | Editor | Integrity Panel (Studio page) / Additional — Free tier notice — amber banner when on free plan: "Free tier — AI detection only" | /studio | ✅ PASS | Before switching the dev user to `basic`, the free-tier run showed the amber `Free tier — AI detection only` notice. |  |
+| 270 | Editor | Integrity Panel (Studio page) / Additional — All sections are collapsible/expandable (default: all expanded) | /studio | ✅ PASS | All four result sections were expanded by default, and clicking `AI Detection` collapsed its content. |  |
+| 271 | Editor | Left Sidebar (Studio page) — Document title — editable text input at top | /studio | ✅ PASS | The left sidebar top control is a live editable title input. |  |
+| 272 | Editor | Left Sidebar (Studio page) — Write/Learn mode toggle — two-button toggle below title | /studio | ✅ PASS | The left sidebar shows the two-button `Write` / `Learn` mode toggle under the title. |  |
+| 273 | Editor | Left Sidebar (Studio page) — Project selector — dropdown (only if user has multiple projects) | /studio | ⚠️ PARTIAL | This session only exposed a single Studio project, so the conditional project selector never rendered. |  |
+| 274 | Editor | Left Sidebar (Studio page) — Navigation links: | /studio | ✅ PASS | The sidebar navigation block shows `Current Draft`, `My Library`, and `Literature Search`. |  |
+| 275 | Editor | Left Sidebar (Studio page) — References section: | /studio | ✅ PASS | The sidebar references section shows the live count, add button, and cited-source cards such as `[1] Integrity Citation Test`. |  |
+| 276 | Editor | Left Sidebar (Studio page) — AI Credits — progress bar at bottom showing token usage (used / limit) | /studio | ✅ PASS | The footer renders the `AI Credits` progress bar with the live used/limit text, e.g. `0 / 10,000`. |  |
 | 277 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Accessible from TopBar ? button (Editor page) | /studio | ⬜ |  |  |
 | 278 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Shows all shortcuts organized in 4 categories: Formatting, Structure, Academic, Tools | /studio | ⬜ |  |  |
 | 279 | Editor | Keyboard Shortcuts — Complete Reference / Keyboard Shortcuts Dialog — Each shortcut shows key combination as styled keyboard keys | /studio | ⬜ |  |  |
