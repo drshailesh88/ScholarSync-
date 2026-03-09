@@ -1614,3 +1614,317 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] Track changes are still not implemented for the editor route; the store comment still marks suggesting mode as post-beta/planned
 - [ ] Citation-style switching is still absent from the current reference sidebar UI
 - [ ] Math insertion is still not implemented as a custom editor extension in the current editor stack
+
+## Re-Audit Discoveries (Claude Code Pass 3)
+
+> These checks were found by line-by-line source code audit of every file contributing to `/editor/[id]` and `/studio`, cross-referenced against the existing 989 checks from Passes 1-2.
+
+### Studio Page Architecture
+
+- [ ] `StudioPage` default export wraps `StudioContent` inside a React `<Suspense>` boundary (no fallback UI)
+- [ ] `StudioContent` is a separate inner function component, not the default export
+- [ ] Studio page root container uses `h-[calc(100vh-7rem)]` height (vs editor page's `calc(100vh-4rem)`)
+- [ ] Studio left sidebar has a fixed width of `w-64` (256px)
+- [ ] Studio left-rail title input has no `placeholder` attribute at all (empty string fallback)
+- [ ] Studio `Write` button uses `bg-brand text-white` styling (not sky/blue), contradicting the doc's claim of "brand purple"
+- [ ] Studio project selector uses `mousedown` event for outside-click detection, not `click`
+- [ ] Studio project selector dropdown has `max-h-60 overflow-y-auto` for long project lists
+- [ ] Studio project selector dropdown width is `w-56` (224px)
+- [ ] Studio `Current Draft` is a static `<div>` (not a `<Link>`), confirming it is not navigable
+- [ ] Studio `My Library` link icon is `Books` (size 16), `Literature Search` icon is `GlobeHemisphereWest` (size 16)
+- [ ] Studio left-rail cited source rows show first author family name only (not "first author + year")
+- [ ] Studio left-rail cited source author falls back to `"Unknown"` when `ref.authors[0]?.family` is undefined
+- [ ] Studio `View all N references` button opens `ReferenceSidebar` via `setSidebarOpen(true)`, not via `toggleSidebar()`
+
+### Studio Chat Internals
+
+- [ ] Studio chat message IDs are generated as `msg_${Date.now()}` for user messages and `msg_${Date.now() + 1}` for assistant messages
+- [ ] Studio `submitAiPrompt()` sets the input value twice — once immediately and once inside a 100ms `setTimeout` — then calls `form.requestSubmit()` via DOM query
+- [ ] Studio `submitAiPrompt()` finds the form element with `document.querySelector<HTMLFormElement>("form")`
+- [ ] Studio `ask` AI action focuses the chat input by querying `input[placeholder*="AI research assistant"], input[placeholder*="challenge your thinking"]`
+- [ ] Studio `ask` AI action uses `setTimeout(() => ..., 0)` (zero delay) for the focus call
+- [ ] Studio conversation mode is `"draft"` when in Write mode (not `"write"`)
+- [ ] Studio conversation mode is `"learn"` when in Learn mode
+- [ ] Studio chat streaming uses `TextDecoder` with `{ stream: true }` option for incremental decoding
+- [ ] Studio chat streaming mutates the `assistantMsg.content` string directly before calling `setMessages` to update state
+- [ ] Studio chat sends assistant message content to `addMessage()` only after the entire stream is complete (not during streaming)
+- [ ] Studio chat `addMessage()` calls for both user and assistant messages use `.catch(() => {})` to silently swallow persistence errors
+
+### Studio Integrity Panel Wiring
+
+- [ ] Studio `Checks` tab feeds `IntegrityPanel` the document text from `editorRef.current?.view.dom.innerText?.trim()` first, falling back to `editor.getText()`
+- [ ] Studio passes sorted cited references to `IntegrityPanel` as `sources` prop, including title, doi, pmid, authors, and year
+- [ ] IntegrityPanel `sources` author formatting handles both string and `{given, family}` object author formats
+- [ ] IntegrityPanel API request body truncates document text to first 50,000 characters: `text.slice(0, 50000)`
+- [ ] IntegrityPanel API endpoint is `/api/integrity-check` (POST)
+- [ ] IntegrityPanel error message for short documents is exactly `"Document must have at least 50 characters to check."`
+
+### Studio Export Internals
+
+- [ ] Studio `getEditorContent()` reads the raw HTML from `document.querySelector(".ProseMirror")?.innerHTML`
+- [ ] Studio PDF export response is read as `.text()` and written into a new window via `document.write()`, not as a binary PDF blob
+- [ ] Studio Word export filename regex replaces ALL non-alphanumeric characters (including spaces) via `/[^a-zA-Z0-9]/g` with underscores
+- [ ] Studio Word export creates a temporary `<a>` element, appends it to `document.body`, programmatically clicks it, then removes it and revokes the object URL
+
+### TiptapEditor (Studio) vs AcademicEditor Differences
+
+- [ ] Studio `TiptapEditor` editor content CSS class is `"academic-editor-content max-w-none focus:outline-none min-h-[calc(100vh-12rem)] px-6 py-4"` — does NOT include `prose prose-lg`
+- [ ] AcademicEditor editor content CSS class includes `"prose prose-lg"` which Studio's version omits, resulting in different default typography styles
+- [ ] Studio `TiptapEditor` vertical padding is `py-4` (16px) vs AcademicEditor's `py-8` (32px)
+- [ ] Both editors set `immediatelyRender: false` on `useEditor`, disabling server-side rendering of editor content
+- [ ] AcademicEditor wrapper max width is `max-w-[720px]` with `mx-auto px-6`
+- [ ] Studio `TiptapEditor` supports heading levels `[1, 2, 3, 4, 5, 6]` vs AcademicEditor's `[1, 2, 3, 4]`
+- [ ] Both editors load `CharacterCount` extension but neither exposes a character count value in the UI
+- [ ] Both editors load `Typography` extension for automatic smart quote and typographic substitution
+- [ ] AcademicEditor configures `Highlight.configure({ multicolor: true })` enabling multi-color highlight support
+- [ ] AcademicEditor configures `TiptapImage.configure({ inline: false, allowBase64: true })` making images block-level elements
+- [ ] AcademicEditor configures `Placeholder.configure({ showOnlyCurrent: true, includeChildren: true })` showing placeholder only in the currently focused empty block
+- [ ] AcademicEditor `Table` extension applies `academic-table` class via `HTMLAttributes.class` directly (not via requestAnimationFrame post-pass like the slash command does)
+- [ ] AcademicEditor returns `null` (renders nothing) when the `useEditor` hook has not yet initialized
+
+### Editor Config Constants (Defined But Not All Wired)
+
+- [ ] `EDITOR_SHORTCUTS` constant in `editor-config.ts` defines `clearFormatting: "Mod-\\"` but this shortcut is NOT registered in `AcademicKeyboardShortcuts`
+- [ ] `EDITOR_SHORTCUTS` defines heading shortcuts as `"Mod-Alt-1"` through `"Mod-Alt-4"` but the actual `AcademicKeyboardShortcuts` extension registers them as `"Mod-Shift-1"` through `"Mod-Shift-4"`
+- [ ] `EDITOR_SHORTCUTS` defines `documentOutline: "Mod-Shift-o"` but this shortcut is NOT wired in any extension or event listener
+- [ ] `EDITOR_SHORTCUTS` defines `find: "Mod-f"` and `findReplace: "Mod-Shift-h"` but neither find nor find-replace functionality is implemented
+- [ ] `EDITOR_SHORTCUTS` defines `insertComment: "Mod-Shift-m"` but the actual comment shortcut is `"Mod-/"` via `AcademicKeyboardShortcuts`
+- [ ] `EDITOR_SHORTCUTS` defines `suggestingMode: "Mod-Shift-s"` but suggesting/track-changes mode is not implemented
+- [ ] `EDITOR_SHORTCUTS` defines `versionHistory: "Mod-Shift-h"` but no keyboard shortcut opens version history in either route
+- [ ] `EDITOR_SHORTCUTS` defines `commandBar: "Mod-k"` but no command bar/palette is implemented
+- [ ] `EDITOR_FONTS` defines three font options: Serif (`var(--font-merriweather)`), Sans-serif (`var(--font-inter)`), and Monospace (`'JetBrains Mono'`) — none are exposed via a UI font picker
+- [ ] `TYPOGRAPHY` constants define `contentMaxWidth: "720px"`, `wideMaxWidth: "960px"`, `bodySize: "16px"`, `lineHeight: "1.75"`, `headingLineHeight: "1.3"`, `h1Size: "28px"`, `h2Size: "22px"`, `h3Size: "18px"`, `h4Size: "16px"`
+
+### Draft Mode Type System (Defined, Partially Wired)
+
+- [ ] `PrecisionEditAction` type defines 14 discrete edit actions: rephrase, shorten, expand, make_academic, active_voice, simplify, strengthen_claim, add_transition, split_paragraph, merge_paragraphs, reorder, add_citation, flag_unsupported, check_guidelines
+- [ ] `PRECISION_EDIT_LABELS` maps each action to a human label (e.g., `make_academic` → `"Make Academic"`, `active_voice` → `"Active Voice"`)
+- [ ] `ScholarRules` interface defines project-level AI configuration with fields: `document_type`, `target_journal`, `reporting_guideline`, `citation_style`, `dialect` (British_English/American_English), `voice`, `tense` (per section), `max_sentence_length`, `max_paragraph_length`, `avoid_terms`, `prefer_terms`, `custom_rules`, `ghost_text`
+- [ ] `ScholarRules.ghost_text` sub-interface includes `enabled`, `pause_delay_ms`, `max_length_sentences`, `citation_prompts` fields
+- [ ] `ScholarRules.voice` accepts `"first_person_plural"`, `"first_person_singular"`, `"third_person"`, or `"passive"`
+- [ ] `ScholarRules.tense` maps per-section tense preferences for: introduction, methods, results, discussion, case_presentation
+- [ ] `DraftContext` interface sends `intensity`, `documentType`, `currentSection`, `targetJournal`, `projectTitle`, `scholarRules`, `surroundingText` to the chat API
+- [ ] `PrecisionEditRequest` sends `action`, `selectedText`, `instruction`, `surroundingContext`, `documentType`, `targetJournal`, `scholarRules`
+- [ ] `PrecisionEditResponse` returns `originalText`, `suggestedText`, `explanation`, `action`
+- [ ] `SuggestionSeverity` type defines three levels: `"error"`, `"improvement"`, `"polish"`
+- [ ] `SuggestionCategory` type defines three categories: `"language"`, `"consistency"`, `"structure"`
+
+### Citation Node Overrides Structure
+
+- [ ] Citation node `overrides` attribute, when non-null, is a record keyed by `referenceId` with per-reference fields: `prefix`, `suffix`, `suppressAuthor`, `locator`, `locatorType`
+- [ ] Citation `locatorType` accepts: `"page"`, `"chapter"`, `"figure"`, `"table"`, `"section"`
+- [ ] Citation `overrides` are parsed from `data-overrides` HTML attribute via JSON.parse with null fallback on error
+
+### Citation Display Logic Details
+
+- [ ] `CitationStyleId` type defines exactly 7 styles: `"vancouver"`, `"apa"`, `"ama"`, `"icmje"`, `"harvard"`, `"chicago-author-date"`, `"ieee"`
+- [ ] Numeric citation styles (vancouver, ieee, ama, icmje) compress consecutive numbers into ranges: [1,2,3] → `"1-3"`, [1,2,4] → `"1,2,4"`, [1,2,3,5] → `"1-3,5"`
+- [ ] Author-year citation styles format as: 1 author → `"(Smith, 2020)"`, 2 authors → `"(Smith & Jones, 2021)"`, 3+ authors → `"(Smith et al., 2020)"`
+- [ ] Multiple author-year citations are separated by semicolons: `"(Smith, 2020; Jones, 2021)"`
+- [ ] Author-year citations with no resolved references display `"(?)"` as fallback
+- [ ] Numeric citations with no assigned numbers display `"[?]"` as fallback
+- [ ] Citation chip selected state adds `ring-2 ring-blue-400 dark:ring-blue-500 ring-offset-1`
+- [ ] Citation chip base colors: `bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800`
+- [ ] Citation chip has a `data-citation` HTML attribute
+- [ ] Citation popover container is `w-72` (288px) with `rounded-xl` corners
+
+### Citation Tooltip Details
+
+- [ ] Citation tooltip authors line uses `font-semibold` class
+- [ ] Citation tooltip title uses `text-gray-300 dark:text-gray-600 truncate max-w-[250px]` with single-line truncation
+- [ ] Citation tooltip journal uses `text-gray-400 dark:text-gray-500 italic`
+- [ ] Citation tooltip separator between entries uses `border-t border-gray-700 dark:border-gray-300 my-1`
+- [ ] Citation popover "View" button icon is `ArrowSquareOut` (size 10), "Remove" button icon is `Trash` (size 10), footer delete icon is `Trash` (size 12)
+
+### Bibliography Vancouver Fallback Formatting
+
+- [ ] Vancouver fallback takes the first 6 authors maximum; if >6, appends `", et al."`
+- [ ] Vancouver author initials are computed by splitting given name on `/\s+/`, taking first character of each part, uppercasing, and joining without spaces
+- [ ] Vancouver author format: `"Family Initials"` (e.g., `"Smith JA"`)
+- [ ] Vancouver title handling: appends `"."` only if title does not already end with one
+- [ ] Vancouver journal section format: `"Journal. Year;Volume(Issue):Pages."` with optional fields omitted
+- [ ] Vancouver DOI format: `"doi:10.xxxx/..."` (lowercase `doi:` prefix)
+
+### Document Template System
+
+- [ ] `generateTemplateContent()` creates initial Tiptap JSON when DB content is null
+- [ ] `DOCUMENT_TEMPLATES` defines 4 templates: `"original-article"`, `"case-report"`, `"review-article"`, `"meta-analysis"`
+- [ ] Original Article template sections: Introduction, Methods (→ Study Design, Participants, Outcomes, Statistical Analysis), Results (→ Primary Outcome, Secondary Outcomes), Discussion, Conclusion, References
+- [ ] Case Report template sections: Introduction, Case Presentation (→ History, Examination, Investigations, Treatment, Outcome), Discussion, Conclusion, References
+- [ ] Review Article template sections: Introduction, Search Strategy, Findings, Discussion, Conclusion, References
+- [ ] Meta-Analysis template sections: Introduction, Methods (→ Search Strategy, Study Selection, Data Extraction, Statistical Analysis), Results, Discussion, Conclusion, References
+- [ ] Template subsections (e.g., Study Design under Methods) render as H3 headings; main sections render as H2
+- [ ] `buildPlaceholderMap()` returns a mapping of lowercased heading text to placeholder strings for each template
+
+### Document Outline Details
+
+- [ ] Document outline container is positioned `fixed right-6 top-1/4 z-30` (not z-50 like other overlays)
+- [ ] Outline collapsed toggle button is a `w-9 h-9` rounded-lg button with `List` icon size 18
+- [ ] Outline panel width is `w-64` (256px) with `max-h-[50vh]` and overflow scroll
+- [ ] Outline panel entrance animation: `animate-in fade-in slide-in-from-right-2 duration-200`
+- [ ] Outline panel uses `bg-white/95 dark:bg-surface/95 backdrop-blur-sm` for translucent background
+- [ ] Outline heading indentation: H1 → 0px, H2 → 0px, H3 → 12px, H4 → 24px (padding-left inline style)
+- [ ] Outline empty heading text displays `"(empty)"` instead of the heading text
+- [ ] Outline word count per heading displays as `"{count}w"` (lowercase w suffix) on hover
+- [ ] Outline footer text reads `"Total: {wordCount} words"`
+- [ ] Outline expected IMRAD sections list: `"Introduction"`, `"Methods"`, `"Results"`, `"Discussion"`, `"Conclusion"`, `"References"` — checked via H2 text content matching
+- [ ] Missing IMRAD sections display `"(missing)"` suffix with `WarningCircle` icon (size 12) in amber color
+- [ ] Outline auto-expands on `onMouseEnter` and collapses on `onMouseLeave` (hover-driven)
+- [ ] Outline scrollToPosition callback calls `editor.commands.focus(pos)` to move cursor to heading position
+
+### Footnote View Details
+
+- [ ] Footnote tooltip appears on hover after a 300ms delay (not 400ms like citation tooltips)
+- [ ] Footnote tooltip container is `w-64` (256px) wide with `z-50` positioning
+- [ ] Footnote tooltip textarea has exactly `rows={3}`
+- [ ] Footnote tooltip textarea saves text changes on `onBlur` event, not on every keystroke
+- [ ] Footnote delete button in tooltip is a plain text `"✕"` (Unicode multiplication sign), not a Phosphor icon
+- [ ] Footnote superscript marker uses `text-brand cursor-help font-semibold hover:underline` styling
+- [ ] FootnoteSection sorts footnotes by `number` property ascending before rendering the list
+- [ ] FootnoteSection heading text is `"Footnotes"` (uppercase F) with `uppercase tracking-wider` CSS
+- [ ] FootnoteSection each row displays the footnote number followed by a period: `"{number}."`
+- [ ] Clicking a FootnoteSection row calls `editor.commands.focus(pos)` to navigate to the footnote position in the document
+
+### Research Store Persistence and Defaults
+
+- [ ] Research store persists to `sessionStorage` (not localStorage) under key `"scholar-sync-research"`
+- [ ] Research store sidebar default width is `380` pixels, clamped between `320` and `520`
+- [ ] Research store default `activeTab` is `"search"` (from three options: search, library, chat)
+- [ ] Research store default `chatScope` is `"library"`
+- [ ] Research store `generateId()` format: `"${Date.now()}_${Math.random().toString(36).slice(2, 9)}"`
+- [ ] Research store `clearSearch()` resets query, results, page, plan, summary, and hasSearchedBefore but preserves library papers
+- [ ] Research store `setSidebarWidth()` clamps input to minimum 320 and maximum 520 pixels
+
+### ResearchSidebar UI Details
+
+- [ ] ResearchSidebar collapsed state shows a `Books` icon button with tooltip `"Open Research Sidebar (Cmd+Shift+L)"`
+- [ ] ResearchSidebar close button title is `"Close (Cmd+Shift+L)"`
+- [ ] ResearchSidebar expanded header text is `"Literature Research"`
+- [ ] ResearchSidebar badge count displays `"99+"` when count exceeds 99
+- [ ] ResearchSidebar resize handle has `z-10` positioning
+- [ ] ResearchSidebar tabs in expanded mode are: `"Search"`, `"Library"`, `"Chat"`
+
+### Offline Queue and Save Retry Details
+
+- [ ] Offline queue localStorage key is `"scholarsync_save_queue"`
+- [ ] Offline queue `enqueueSave()` replaces any existing queued save for the same `documentId` (deduplication)
+- [ ] Offline queue save IDs are formatted as `"{documentId}-{Date.now()}"`
+- [ ] Offline queue `processQueue()` processes saves sorted by `timestamp` ascending (oldest first)
+- [ ] Offline queue `processQueue()` returns `{ processed: number; failed: number }` counts
+- [ ] Save retry `withRetry()` adds random jitter of 0-500ms (`Math.random() * 500`) on top of exponential backoff
+- [ ] Save retry total attempts is `maxRetries + 1` (default: 4 total attempts, not 3)
+
+### Word Counter Details
+
+- [ ] `countWords()` splits text on `/\s+/` and filters empty strings, counting only non-empty tokens
+- [ ] `countSectionWords()` returns keys in format `"{heading text}__{position}"` (double underscore separator)
+- [ ] `countSectionWords()` only counts `node.isTextblock` nodes that are NOT headings themselves
+
+### Editor-route SaveStatus vs Store SaveStatus Mismatch
+
+- [ ] Editor store `SaveStatus.state` type is `"saved" | "saving" | "unsaved" | "offline"` (4 values)
+- [ ] `useEditorDocument` hook defines its own `SaveStatus` as `"saved" | "saving" | "unsaved" | "error" | "offline" | "local"` (6 values)
+- [ ] `useStudioDocument` hook defines `SaveStatus` as `"idle" | "unsaved" | "saving" | "saved" | "error"` (5 values, includes `"idle"` but not `"offline"` or `"local"`)
+- [ ] TopBar save indicator only handles `saved`, `saving`, `unsaved`, and `offline` states — the `error` and `local` states from the hook are rendered by the editor page header bar, not by TopBar
+
+### Export API Route Internals
+
+- [ ] DOCX export API route validates: `title` max 500 chars, `content` max 500,000 chars, `citations` array max 1,000 items
+- [ ] PDF export API route uses the same validation schema as DOCX
+- [ ] DOCX export API uses `docx` library (server-side) with Times New Roman font throughout
+- [ ] PDF export API uses `pdf-lib` library with embedded TimesRoman, TimesRomanBold, and TimesRomanBoldItalic fonts
+- [ ] PDF export API page size is US Letter (612 x 792 points) with 72-point (1-inch) margins on all sides
+- [ ] PDF export API line spacing is 24 points (double-spaced) with first-line paragraph indent of 36 points
+- [ ] DOCX export API line spacing is 480 twips (double-spaced) with hanging indent of 720 twips for references
+- [ ] DOCX export uses page header with document title in italics at 10pt and page number in footer
+- [ ] Both export APIs apply rate limiting via `RATE_LIMITS.export`
+- [ ] Both export APIs return `{ error: "Authentication required" }` with 401 for unauthenticated requests
+- [ ] Both export APIs return `{ error: "Content is required" }` with 400 when content is empty
+- [ ] Both export APIs return `{ error: "Export failed" }` with 500 for unhandled server errors
+
+### tiptap-to-docx Converter Details
+
+- [ ] `tiptapToDocx()` converter renders footnotes under a section heading `"Notes"` (not `"Footnotes"`)
+- [ ] `tiptapToDocx()` converter renders bibliography under section heading `"References"`
+- [ ] `tiptapToDocx()` renders images as plain text: `"[Image: {alt || src || 'image'}]"`
+- [ ] `tiptapToDocx()` renders bullet list items with Unicode bullet prefix `"\u2022 "` (•)
+- [ ] `tiptapToDocx()` renders checked task items with `"\u2611"` (☑) and unchecked with `"\u2610"` (☐)
+- [ ] `tiptapToDocx()` renders citation superscripts at 18 half-points (9pt font size)
+
+### Chat API Route Details
+
+- [ ] Chat API Zod schema limits `messages` array to maximum 50 items
+- [ ] Chat API applies rate limiting via `RATE_LIMITS.ai`
+- [ ] Chat API selects `getGuideSystemPrompt()` only when `mode === "learn"` AND both `guideContext.documentType` and `guideContext.stage` exist
+- [ ] Chat API selects `getDraftSystemPrompt()` only when `mode === "draft"` AND `draftContext.intensity` exists
+- [ ] Chat API returns streaming response via `result.toTextStreamResponse()`
+
+### Reference Type System
+
+- [ ] `Reference.type` accepts 9 values: `"article"`, `"book"`, `"chapter"`, `"website"`, `"guideline"`, `"conference"`, `"thesis"`, `"preprint"`, `"other"` — but the Manual Entry form only exposes 8 options (no `"other"`)
+- [ ] `Reference` interface includes optional fields not surfaced in any UI: `pmcid`, `url`, `publisher`, `keywords`, `notes`, `tags`, `pdfUrl`
+- [ ] `CSLItem` interface supports an open `[key: string]: unknown` index signature for arbitrary CSL-JSON fields
+
+### Guide Types Additional Details
+
+- [ ] `GuideContext` interface includes optional fields not used in Studio UI: `targetJournal`, `studyType`, `completedChecklist`, `socraticRounds`
+- [ ] `REPORTING_GUIDELINES` for `review_article` includes `"Narrative review best practices"` in addition to `"PRISMA"`
+- [ ] `REPORTING_GUIDELINES` for `book_chapter`, `academic_draft`, and `letter` are all empty arrays (no reporting guidelines mapped)
+
+### Slash Command Shortcut Label vs Actual Shortcut Mismatch
+
+- [ ] Slash menu heading commands display shortcut badges as `"Cmd+Opt+1"` through `"Cmd+Opt+4"` but the actual keyboard shortcuts registered in `AcademicKeyboardShortcuts` are `"Mod-Shift-1"` through `"Mod-Shift-4"`
+- [ ] Slash command `Block Quote` has no shortcut badge displayed in the menu, although `Cmd+Shift+B` is registered via StarterKit
+- [ ] Slash command `Divider` has no shortcut badge displayed in the menu, although `Cmd+Shift+Enter` is registered in keyboard shortcuts
+- [ ] Slash command `Code Block` has no shortcut badge displayed in the menu
+
+### TopBar Implementation Details
+
+- [ ] TopBar save status timestamp refreshes on a 30-second interval via `setInterval(..., 30000)`
+- [ ] TopBar word count button has `title="Click for section breakdown"`
+- [ ] TopBar section breakdown popover closes on `mousedown` outside event (not `click`)
+- [ ] TopBar mode dropdown uses a `fixed inset-0 z-40` overlay as click-catcher behind the `z-50` dropdown
+- [ ] TopBar reference badge button `title` is `"References"`, comment badge button `title` is `"Comments"`
+
+### Citation Dialog Identifier Detection
+
+- [ ] Citation dialog detects DOI queries by checking if query starts with `"10."` or contains `"doi.org/"`
+- [ ] Citation dialog detects PMID queries by checking if query is 1-8 digits only (regex pattern)
+- [ ] Citation dialog identifier detection banner is a clickable full-width button reading `"Resolve DOI: {id}"` or `"Resolve PMID: {id}"`
+- [ ] Citation dialog DOI/PMID resolution switches the active tab to `"doi"` before resolving
+- [ ] Citation dialog DOI-tab error includes a secondary `"Try manual entry"` link that switches to manual tab
+- [ ] Citation dialog DOI-tab error message for network failures is `"Network error. Please try again."`
+- [ ] Citation dialog DOI-tab error message for resolution failures is `data.error || "Could not resolve identifier."`
+
+### Editor Page Pending Citation Notice
+
+- [ ] Editor page pending citation notice with a paper title reads `Saved "{title}" to your library. Open Citation Dialog to cite it.`
+- [ ] Editor page pending citation notice without a title reads `Paper saved to your library. Open Citation Dialog to cite it.`
+- [ ] Editor page pending citation notice auto-dismisses after 5000ms (5 seconds), not 2500ms like Studio's citation notice
+
+### Studio Citation Notice vs Editor Citation Notice
+
+- [ ] Studio citation insertion notice text is `"Citation inserted"` (singular) or `"{N} citations inserted"` (plural)
+- [ ] Studio citation notice auto-clears after 2500ms (2.5 seconds)
+- [ ] Editor page has NO citation insertion notice — it has only a pending-from-library notice (5 seconds)
+
+### Comment Sidebar Input Variants
+
+- [ ] Bottom new-comment input placeholder is `"Add a comment..."` in the actual source code
+- [ ] Bottom new-comment input submits on `Enter` key (when not Shift+Enter)
+- [ ] Reply input submits on `Enter` key (when not Shift+Enter)
+- [ ] Comment sidebar unresolved badge uses `bg-amber-500/15 text-amber-500` amber styling with `text-[10px]` font size
+
+### Behavior Corrections (Pass 3)
+
+- [ ] CORRECTION: Existing doc line 1491 states bottom new-comment input placeholder is `"Add a general comment about this document..."` — actual source code uses `"Add a comment..."` (shorter text)
+- [ ] CORRECTION: Existing doc section 19 says save status indicators show "pulsing cloud icon" for saving — the editor page actually uses `CloudArrowUp` with `animate-pulse` class, while Studio uses `CircleNotch` with `animate-spin` (spinning, not pulsing)
+- [ ] CORRECTION: Existing doc section 19 says Studio idle state shows "green check + Saved HH:MM" — Studio idle state actually uses `Check` icon (not `CloudCheck`), and the icon style matches `text-emerald-500` green
+- [ ] CORRECTION: Slash menu heading shortcut badges show `Cmd+Opt+N` in the UI, but the actual registered shortcuts are `Cmd+Shift+N` — the doc should note this UI/behavior mismatch
+
+### Components Referenced But Not Rendered
+
+- [ ] `toolbar.tsx` exists in `src/components/editor/` but is NOT imported by either `/editor/[id]/page.tsx` or `/studio/page.tsx` — neither route renders a standalone toolbar component
+- [ ] `template-picker.tsx` exists in `src/components/editor/` but is NOT imported by either editor or studio page files — the template picker is not rendered on these routes
+- [ ] `EDITOR_SHORTCUTS`, `EDITOR_FONTS`, and `TYPOGRAPHY` constants from `editor-config.ts` are NOT imported by either `AcademicEditor` or `TiptapEditor` — these config values exist but are not consumed by the editor components
+- [ ] `DiffView.tsx` exists in `src/components/integrity/` but is NOT imported by `IntegrityPanel.tsx` — the diff view component is not rendered within the integrity check flow
