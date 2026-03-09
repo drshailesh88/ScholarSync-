@@ -783,6 +783,23 @@ function StudioContent() {
       .filter(Boolean) as { num: number; title: string; author: string }[];
   }, [referenceNumberMap, references]);
 
+  const integritySources = useMemo(() => {
+    return Array.from(referenceNumberMap.entries())
+      .sort(([, a], [, b]) => a - b)
+      .map(([refId]) => references.get(refId))
+      .filter((ref): ref is NonNullable<typeof ref> => Boolean(ref))
+      .map((ref) => ({
+        title: ref.title,
+        doi: ref.doi ?? undefined,
+        pmid: ref.pmid ?? undefined,
+        authors: ref.authors?.map((author) => {
+          if (typeof author === "string") return author;
+          return [author.given, author.family].filter(Boolean).join(" ").trim();
+        }),
+        year: ref.year ?? undefined,
+      }));
+  }, [referenceNumberMap, references]);
+
   return (
     <div className="flex h-[calc(100vh-7rem)] -m-6 -mt-0">
       {/* Left Sidebar */}
@@ -1187,7 +1204,12 @@ function StudioContent() {
 
           {aiTab === "checks" && (
             <IntegrityPanel
-              getEditorText={() => editorRef.current?.getText() ?? ""}
+              getEditorText={() =>
+                editorRef.current?.view.dom.innerText?.trim() ||
+                editorRef.current?.getText({ blockSeparator: "\n\n" }) ||
+                ""
+              }
+              sources={integritySources}
             />
           )}
         </aside>
