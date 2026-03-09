@@ -192,19 +192,19 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 176 | Editor | Save System / Auto-save — Word count updates immediately on every keystroke | /studio | ✅ PASS | The fallback draft payload in `scholarsync_studio_draft` updated its `wordCount` from `5` to `6` within `120ms` of a new typed word. |  |
 | 177 | Editor | Save System / Auto-save — Cmd+S — flushes pending save immediately (cancels debounce timer, saves now) | /studio | ✅ PASS | Fixed Studio `Cmd+S`; dispatching `Meta+S` on the focused ProseMirror node triggered `Saving...` in `32ms` instead of waiting for the debounce. |  |
 | 178 | Editor | Save System / Auto-save — Cmd+S prevents default browser save dialog | /studio | ✅ PASS | After the same Studio fix, the dispatched `Meta+S` keydown was marked `defaultPrevented: true`. |  |
-| 179 | Editor | Save Status Indicators / Editor Page (TopBar) — Saving — pulsing cloud icon + "Saving..." | /editor/[id] | ⬜ |  |  |
-| 180 | Editor | Save Status Indicators / Editor Page (TopBar) — Saved — green check + "Saved HH:MM" (refreshes every 30 seconds) | /editor/[id] | ⬜ |  |  |
-| 181 | Editor | Save Status Indicators / Editor Page (TopBar) — Unsaved — amber cloud icon + "Unsaved" | /editor/[id] | ⬜ |  |  |
-| 182 | Editor | Save Status Indicators / Editor Page (TopBar) — Offline — red wifi-off icon + "Offline" | /editor/[id] | ⬜ |  |  |
-| 183 | Editor | Save Status Indicators / Studio Page — Saving — spinning brand icon + "Saving..." | /studio | ⬜ |  |  |
-| 184 | Editor | Save Status Indicators / Studio Page — Saved — green cloud-check + "Saved HH:MM" | /studio | ⬜ |  |  |
-| 185 | Editor | Save Status Indicators / Studio Page — Unsaved — amber icon + "Unsaved changes" | /studio | ⬜ |  |  |
-| 186 | Editor | Save Status Indicators / Studio Page — Error — red warning + "Save failed" | /studio | ⬜ |  |  |
-| 187 | Editor | Save Status Indicators / Studio Page — Idle with last saved — green check + "Saved HH:MM" | /studio | ⬜ |  |  |
-| 188 | Editor | Save System / Editor Page Additional — Error state — red warning + "Retry save" button | /editor/[id] | ⬜ |  |  |
-| 189 | Editor | Save System / Editor Page Additional — Offline state — wifi-off icon + "Saved locally" | /editor/[id] | ⬜ |  |  |
-| 190 | Editor | Save System / Editor Page Additional — beforeunload protection — browser warns before closing tab if unsaved/saving | /editor/[id] | ⬜ |  |  |
-| 191 | Editor | Save System / Editor Page Additional — Retry save — button in error banner to retry failed save | /editor/[id] | ⬜ |  |  |
+| 179 | Editor | Save Status Indicators / Editor Page (TopBar) — Saving — pulsing cloud icon + "Saving..." | /editor/[id] | ✅ PASS | After a live edit the header transitioned `Unsaved` -> pulsing cloud `Saving...` before the save resolved. |  |
+| 180 | Editor | Save Status Indicators / Editor Page (TopBar) — Saved — green check + "Saved HH:MM" (refreshes every 30 seconds) | /editor/[id] | ✅ PASS | Fixed the header to render a green check with absolute `Saved HH:MM` text (`Saved 06:45 PM`). |  |
+| 181 | Editor | Save Status Indicators / Editor Page (TopBar) — Unsaved — amber cloud icon + "Unsaved" | /editor/[id] | ✅ PASS | Fixed the editor header to show an amber cloud with `Unsaved` immediately after content changed. |  |
+| 182 | Editor | Save Status Indicators / Editor Page (TopBar) — Offline — red wifi-off icon + "Offline" | /editor/[id] | ✅ PASS | Dispatching a browser `offline` event switched the header to the red wifi-off `Offline` state. |  |
+| 183 | Editor | Save Status Indicators / Studio Page — Saving — spinning brand icon + "Saving..." | /studio | ✅ PASS | Editing the Studio title produced the spinning brand icon with `Saving...` after the 1s title debounce. |  |
+| 184 | Editor | Save Status Indicators / Studio Page — Saved — green cloud-check + "Saved HH:MM" | /studio | ✅ PASS | The same Studio save cycle settled on the green cloud-check `Saved 06:51 PM` state. |  |
+| 185 | Editor | Save Status Indicators / Studio Page — Unsaved — amber icon + "Unsaved changes" | /studio | ✅ PASS | Typing in the Studio title immediately showed the amber `Unsaved changes` indicator. |  |
+| 186 | Editor | Save Status Indicators / Studio Page — Error — red warning + "Save failed" | /studio | ✅ PASS | Forcing the Studio `POST /studio` save request to fail produced the red warning `Save failed` state. |  |
+| 187 | Editor | Save Status Indicators / Studio Page — Idle with last saved — green check + "Saved HH:MM" | /studio | ✅ PASS | The Studio indicator remains on the steady green `Saved HH:MM` state after the save cycle settles, covering the idle-with-last-saved presentation. |  |
+| 188 | Editor | Save System / Editor Page Additional — Error state — red warning + "Retry save" button | /editor/[id] | ✅ PASS | Fixed editor save failures to surface a red warning state; forcing `POST /editor/new` to fail now shows `Retry save`. |  |
+| 189 | Editor | Save System / Editor Page Additional — Offline state — wifi-off icon + "Saved locally" | /editor/[id] | ✅ PASS | Fixed offline saves to queue and persist locally; editing while offline now ends on a red wifi-off `Saved locally` state. |  |
+| 190 | Editor | Save System / Editor Page Additional — beforeunload protection — browser warns before closing tab if unsaved/saving | /editor/[id] | ✅ PASS | With the header in `Unsaved`, dispatching `beforeunload` returned `defaultPrevented: true` and blocked the unload. |  |
+| 191 | Editor | Save System / Editor Page Additional — Retry save — button in error banner to retry failed save | /editor/[id] | ✅ PASS | After restoring the save request, clicking the error banner `Retry` button moved the header from `Retry save` -> `Saving...` -> `Saved 06:47 PM`. |  |
 | 192 | Editor | Save System / Studio Page Additional — localStorage draft backup — saves content to scholarsync_studio_draft on every keystroke as fallback | /studio | ⬜ |  |  |
 | 193 | Editor | Top Bar (Editor page) — Left | /editor/[id] | ⬜ |  |  |
 | 194 | Editor | Top Bar (Editor page) — Left | /editor/[id] | ⬜ |  |  |
