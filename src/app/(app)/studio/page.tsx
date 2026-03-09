@@ -211,8 +211,13 @@ function StudioContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [usageStats, setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
+  const [citationNotice, setCitationNotice] = useState<string | null>(null);
   const conversationIdRef = useRef<number | null>(null);
   const editorRef = useRef<Editor | null>(null);
+  const citationSelectionRef = useRef<{ from: number; to: number } | null>(null);
+  const citationNoticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   // Citation system state
   const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
@@ -260,12 +265,21 @@ function StudioContent() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const openCitationDialogWithSelection = useCallback(() => {
+    const editor = editorRef.current;
+    if (editor && !editor.isDestroyed) {
+      const { from, to } = editor.state.selection;
+      citationSelectionRef.current = { from, to };
+    }
+    openCitationDialog();
+  }, [openCitationDialog]);
+
   // Listen for citation dialog open event (from keyboard shortcut + slash command)
   useEffect(() => {
-    const handler = () => openCitationDialog();
+    const handler = () => openCitationDialogWithSelection();
     window.addEventListener("scholarsync:open-citation-dialog", handler);
     return () => window.removeEventListener("scholarsync:open-citation-dialog", handler);
-  }, [openCitationDialog]);
+  }, [openCitationDialogWithSelection]);
 
   // Listen for Cmd+Shift+R to toggle reference sidebar
   useEffect(() => {
@@ -328,35 +342,71 @@ function StudioContent() {
     return () => window.removeEventListener("scholarsync:ai-action", handler);
   }, []);
 
-  // Handle citation insertion from the dialog
+  // Handle citation insertion from the dialog.
+  // Uses requestAnimationFrame to ensure the modal overlay is fully removed
+  // from the DOM before trying to focus the editor — otherwise focus() fails
+  // silently because the dialog backdrop (z-index 100) intercepts it.
   const handleInsertCitation = useCallback((referenceIds: string[]) => {
     const editor = editorRef.current;
     if (!editor || editor.isDestroyed) return;
 
-    // Insert citation node at current cursor position
-    editor
-      .chain()
-      .focus()
-      .insertContent({
-        type: "citation",
-        attrs: { referenceIds },
-      })
-      .run();
+    const savedSelection = citationSelectionRef.current;
 
-    // Ensure bibliography exists at end of document
-    let hasBibliography = false;
-    editor.state.doc.descendants((node) => {
-      if (node.type.name === "bibliography") {
-        hasBibliography = true;
-        return false;
+    requestAnimationFrame(() => {
+      if (editor.isDestroyed) return;
+
+      let chain = editor.chain().focus();
+
+      if (savedSelection) {
+        chain = chain.setTextSelection(savedSelection);
       }
-    });
 
-    if (!hasBibliography) {
-      editor.commands.insertContentAt(editor.state.doc.content.size, {
-        type: "bibliography",
+      const inserted = chain.insertContent({
+          type: "citation",
+          attrs: { referenceIds },
+        })
+        .run();
+
+      citationSelectionRef.current = null;
+      if (!inserted) return;
+
+      // Ensure bibliography exists at end of document
+      let hasBibliography = false;
+      editor.state.doc.descendants((node) => {
+        if (node.type.name === "bibliography") {
+          hasBibliography = true;
+          return false;
+        }
       });
-    }
+
+      if (!hasBibliography) {
+        editor.commands.insertContentAt(editor.state.doc.content.size, {
+          type: "bibliography",
+        });
+      }
+
+      if (citationNoticeTimerRef.current) {
+        clearTimeout(citationNoticeTimerRef.current);
+      }
+
+      setCitationNotice(
+        referenceIds.length === 1
+          ? "Citation inserted"
+          : `${referenceIds.length} citations inserted`
+      );
+
+      citationNoticeTimerRef.current = setTimeout(() => {
+        setCitationNotice(null);
+      }, 2500);
+    });
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (citationNoticeTimerRef.current) {
+        clearTimeout(citationNoticeTimerRef.current);
+      }
+    };
   }, []);
 
   const handleEditorReady = useCallback((editor: Editor) => {
@@ -609,7 +659,10 @@ function StudioContent() {
             <span className="text-xs font-medium text-ink-muted uppercase tracking-wider">
               References ({references.size})
             </span>
-            <button onClick={openCitationDialog} className="text-brand hover:text-brand-hover">
+            <button
+              onClick={openCitationDialogWithSelection}
+              className="text-brand hover:text-brand-hover"
+            >
               <Plus size={14} />
             </button>
           </div>
@@ -747,7 +800,14 @@ function StudioContent() {
           </div>
         )}
         <div className="flex items-center justify-between px-4 py-2 border-b border-border-subtle bg-surface">
-          <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
+          <div className="flex items-center gap-3">
+            <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
+            {citationNotice && (
+              <span className="text-[10px] font-medium text-emerald-500">
+                {citationNotice}
+              </span>
+            )}
+          </div>
           <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
@@ -800,7 +860,7 @@ function StudioContent() {
               onDirty={handleDirty}
               debounceMs={2000}
               onEditorReady={handleEditorReady}
-              onOpenCitationDialog={openCitationDialog}
+              onOpenCitationDialog={openCitationDialogWithSelection}
               onToggleReferenceSidebar={toggleSidebar}
               referenceCount={references.size}
             />
@@ -816,7 +876,7 @@ function StudioContent() {
         <ReferenceSidebar
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
-          onOpenCitationDialog={openCitationDialog}
+          onOpenCitationDialog={openCitationDialogWithSelection}
         />
       ) : (
         <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
