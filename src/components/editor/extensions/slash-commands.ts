@@ -133,6 +133,16 @@ const structuralCommands: SlashCommandItem[] = [
         .focus()
         .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
         .run();
+
+      // The resizable table node view does not preserve HTMLAttributes on insert,
+      // so apply the styling hook directly to the rendered table element.
+      requestAnimationFrame(() => {
+        const tables = editor.view.dom.querySelectorAll(".tableWrapper table");
+        const table = tables[tables.length - 1];
+        if (table) {
+          table.classList.add("academic-table");
+        }
+      });
     },
   },
   {
@@ -145,6 +155,8 @@ const structuralCommands: SlashCommandItem[] = [
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
+      input.style.display = "none";
+      document.body.appendChild(input);
       input.onchange = () => {
         const file = input.files?.[0];
         if (file) {
@@ -152,8 +164,11 @@ const structuralCommands: SlashCommandItem[] = [
           reader.onload = (e) => {
             const src = e.target?.result as string;
             editor.chain().focus().setImage({ src }).run();
+            input.remove();
           };
           reader.readAsDataURL(file);
+        } else {
+          input.remove();
         }
       };
       input.click();

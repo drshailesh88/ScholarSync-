@@ -33,6 +33,7 @@ import { useResearchStore } from "@/stores/research-store";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 import { useStudioDocument, type SaveStatus } from "@/hooks/use-studio-document";
+import { countSectionWords, getDocumentWordCount } from "@/lib/editor/word-counter";
 import {
   GUIDE_STAGES,
   GUIDE_STAGE_LABELS,
@@ -229,6 +230,43 @@ function StudioContent() {
   const references = useReferenceStore((s) => s.references);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
 
+  const submitAiPrompt = useCallback((prompt: string) => {
+    setInput(prompt);
+    setAiTab("chat");
+    setTimeout(() => {
+      setInput(prompt);
+      const form = document.querySelector<HTMLFormElement>("form");
+      form?.requestSubmit();
+    }, 100);
+  }, []);
+
+  const showWordCountBreakdown = useCallback(() => {
+    const editor = editorRef.current;
+    if (!editor || editor.isDestroyed) return;
+
+    const doc = editor.state.doc;
+    const totalWords = getDocumentWordCount(doc);
+    const sectionCounts = countSectionWords(doc);
+    const sectionLines = Object.entries(sectionCounts).map(([key, words]) => {
+      const heading = key.split("__")[0] || "Untitled Section";
+      return `${heading}: ${words} words`;
+    });
+
+    const content = sectionLines.length > 0
+      ? `Section word counts:\n${sectionLines.join("\n")}\n\nTotal: ${totalWords} words`
+      : `Document word count: ${totalWords} words`;
+
+    setAiTab("chat");
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `word-count-${Date.now()}`,
+        role: "assistant",
+        content,
+      },
+    ]);
+  }, []);
+
   // -----------------------------------------------------------------------
   // Real DB persistence via hook
   // -----------------------------------------------------------------------
@@ -304,6 +342,20 @@ function StudioContent() {
         case "continue":
           prompt = `Continue writing from where the user left off. Here is the current text:\n\n${detail.context || ""}`;
           break;
+        case "outline-section":
+          prompt = `Create a concise bullet outline for the current section based on this draft:\n\n${detail.context || ""}`;
+          break;
+        case "check-guidelines":
+          prompt = `Review this draft against the most relevant reporting guideline checklist and list missing or weak items:\n\n${detail.context || ""}`;
+          break;
+        case "ask":
+          setAiTab("chat");
+          setTimeout(() => {
+            document
+              .querySelector<HTMLInputElement>('input[placeholder*="AI research assistant"], input[placeholder*="challenge your thinking"]')
+              ?.focus();
+          }, 0);
+          return;
         case "summarize":
           prompt = `Summarize the following text concisely:\n\n${detail.context || ""}`;
           break;
@@ -329,18 +381,24 @@ function StudioContent() {
           return;
       }
 
-      setInput(prompt);
-      setAiTab("chat");
-      setTimeout(() => {
-        setInput(prompt);
-        const form = document.querySelector<HTMLFormElement>("form");
-        form?.requestSubmit();
-      }, 100);
+      submitAiPrompt(prompt);
     };
 
     window.addEventListener("scholarsync:ai-action", handler);
     return () => window.removeEventListener("scholarsync:ai-action", handler);
-  }, []);
+  }, [submitAiPrompt, toggleSidebar]);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { action?: string };
+      if (detail?.action === "show-word-count") {
+        showWordCountBreakdown();
+      }
+    };
+
+    window.addEventListener("scholarsync:editor-action", handler);
+    return () => window.removeEventListener("scholarsync:editor-action", handler);
+  }, [showWordCountBreakdown]);
 
   // Handle citation insertion from the dialog.
   // Uses requestAnimationFrame to ensure the modal overlay is fully removed
