@@ -48,6 +48,8 @@ export default function EditorPage() {
     setDocumentTitle: setStoreTitle,
     documentType,
     setDocumentType,
+    referenceSidebarOpen: editorReferenceSidebarOpen,
+    setReferenceSidebarOpen: setEditorReferenceSidebarOpen,
   } = useEditorStore();
 
   const {
@@ -67,8 +69,8 @@ export default function EditorPage() {
   const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
   const openCitationDialog = useReferenceStore((s) => s.openCitationDialog);
   const closeCitationDialog = useReferenceStore((s) => s.closeCitationDialog);
-  const sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
-  const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
+  const referenceSidebarOpen = useReferenceStore((s) => s.sidebarOpen);
+  const setReferenceSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
   const addReferences = useReferenceStore((s) => s.addReferences);
   const clearReferences = useReferenceStore((s) => s.clearReferences);
@@ -126,12 +128,35 @@ export default function EditorPage() {
     }
   }, []);
 
+  const sidebarOpen = editorReferenceSidebarOpen || referenceSidebarOpen;
+
+  const handleSetReferenceSidebarOpen = useCallback(
+    (open: boolean) => {
+      setEditorReferenceSidebarOpen(open);
+      setReferenceSidebarOpen(open);
+    },
+    [setEditorReferenceSidebarOpen, setReferenceSidebarOpen]
+  );
+
+  const handleToggleReferenceSidebar = useCallback(() => {
+    handleSetReferenceSidebarOpen(!sidebarOpen);
+  }, [handleSetReferenceSidebarOpen, sidebarOpen]);
+
   useEffect(() => {
     const handler = () => openCitationDialog();
     window.addEventListener("scholarsync:open-citation-dialog", handler);
     return () =>
       window.removeEventListener("scholarsync:open-citation-dialog", handler);
   }, [openCitationDialog]);
+
+  useEffect(() => {
+    if (editorReferenceSidebarOpen === referenceSidebarOpen) return;
+    handleSetReferenceSidebarOpen(editorReferenceSidebarOpen || referenceSidebarOpen);
+  }, [
+    editorReferenceSidebarOpen,
+    handleSetReferenceSidebarOpen,
+    referenceSidebarOpen,
+  ]);
 
   useEffect(() => {
     if (!pendingCitationNotice) return;
@@ -389,7 +414,7 @@ export default function EditorPage() {
                 editorRef.current = editor;
               }}
               onOpenCitationDialog={openCitationDialog}
-              onToggleReferenceSidebar={toggleSidebar}
+              onToggleReferenceSidebar={handleToggleReferenceSidebar}
               referenceCount={references.size}
               debounceMs={2000}
             />
@@ -399,7 +424,7 @@ export default function EditorPage() {
             <div className="w-80 border-l border-border bg-surface shrink-0 overflow-hidden">
               <ReferenceSidebar
                 open={sidebarOpen}
-                onClose={toggleSidebar}
+                onClose={() => handleSetReferenceSidebarOpen(false)}
                 onOpenCitationDialog={openCitationDialog}
               />
             </div>
