@@ -641,4 +641,216 @@ Slide-in panel showing full paper details.
 - [ ] The live search backend uses 4.5-second per-source timeouts in `/api/search/unified`, not the 8-second timeout claimed in the original doc
 - [ ] The live search backend fans out to four sources including OpenAlex and ClinicalTrials.gov, not just PubMed and Semantic Scholar
 
+## Re-Audit Discoveries (Codex Pass 2)
+
+### Unified Search API Internals
+- [ ] `/api/search/unified` rejects unauthenticated requests with `Authentication required`
+- [ ] `/api/search/unified` applies `checkRateLimit(userId, "search", RATE_LIMITS.search)` before parsing query params
+- [ ] `/api/search/unified` returns HTTP 400 with `Query parameter 'q' is required` when `q` is missing
+- [ ] `/api/search/unified` returns HTTP 400 with `Query parameter 'q' must not exceed 500 characters` when `q.length > 500`
+- [ ] `/api/search/unified` defaults `page` to `0` when the query param is absent
+- [ ] `/api/search/unified` defaults `perPage` to `20` when the query param is absent
+- [ ] `/api/search/unified` caps `perPage` at `100` even if a larger value is requested
+- [ ] `/api/search/unified` defaults `sort` to `relevance` when the query param is absent
+- [ ] `/api/search/unified` treats query augmentation as enabled unless the request explicitly sends `augment=false`
+- [ ] `/api/search/unified` only attempts AI query augmentation when `augment !== "false"` and the raw query length is greater than `20`
+- [ ] Query-augmentation failures fall back silently to the raw user query without surfacing an error in the response
+- [ ] `augmentQuery()` aborts its AI call after exactly `5000ms`
+- [ ] `augmentQuery()` asks for three source-specific query strings plus optional `yearStart`, `yearEnd`, and `publicationTypes` suggestions
+- [ ] Unified-search source fan-out computes `neededPerSource` as `Math.min((page + 1) * perPage, 100)`
+- [ ] Unified-search PubMed fan-out always requests `page: 0` and uses `maxResults: neededPerSource`
+- [ ] Unified-search Semantic Scholar fan-out always requests `offset: 0` and uses `limit: neededPerSource`
+- [ ] Unified-search OpenAlex fan-out always requests `page: 1` and uses `limit: neededPerSource`
+- [ ] Unified-search ClinicalTrials fan-out requests only `limit: perPage`, not `neededPerSource`
+- [ ] Each source fan-out call is wrapped in `withTimeout(..., 4500)` with per-source timeout strings like `PubMed timed out after 4500ms`
+- [ ] Unified search uses `Promise.allSettled(...)` so one degraded source does not abort the whole response
+- [ ] Unified search logs per-source degradation warnings instead of surfacing source-specific failures to the page
+- [ ] When all four source result sets are empty in development mode, unified search attempts fixture-based fallback results from `src/lib/search/__tests__/ralph-search/cache`
+- [ ] Development fallback is completely disabled when `NODE_ENV !== "development"`
+- [ ] Development fallback ignores fixtures whose normalized query-match score is below `0.55`
+- [ ] Reciprocal-rank fusion uses `k = 60` when combining source lists
+- [ ] Duplicate papers merged during reciprocal-rank fusion accumulate `rrfScore` contributions from every matched source
+- [ ] Reciprocal-rank fusion appends the new source name into `sources[]` only if that source is not already listed on the merged paper
+- [ ] Cohere reranking is skipped entirely when `COHERE_API_KEY` is missing
+- [ ] Cohere reranking is skipped entirely when the fused results array is empty
+- [ ] Cohere reranking posts to `https://api.cohere.com/v2/rerank` with model `rerank-v3.5`
+- [ ] Cohere reranking truncates `top_n` to `Math.min(results.length, 50)` when no explicit `topN` is passed
+- [ ] Cohere reranking falls back to the original fused order when the Cohere request throws
+- [ ] Unified search infers a missing `evidenceLevel` only when a result already has `studyType` but no evidence grade
+- [ ] Unified search enriches each result with `journalQuartile` and `journalImpactProxy` only when `lookupJournalQuality(journal)` returns a match
+- [ ] Study-type filtering is applied after rank fusion and reranking, not at the per-source adapter level
+- [ ] Open-access filtering is applied after rank fusion and reranking by checking `r.isOpenAccess`
+- [ ] Sort mode `citations` orders results by `(citationCount || 0)` descending
+- [ ] Sort mode `year` orders results by `(year || 0)` descending
+- [ ] Sort mode `evidence` orders results by evidence map `I=1`, `II=2`, `III=3`, `IV=4`, `V=5`
+- [ ] Results with missing or unrecognized evidence level are treated as Level V during backend evidence sorting
+- [ ] Unified search still contains a backend-only `impact` sort branch even though the current `/research` page never sends `sort=impact`
+- [ ] Unified-search pagination slices the filtered array with `start = page * perPage` and `end = start + perPage`
+- [ ] Unified-search `hasMore` becomes `true` only when `start + perPage < total`
+- [ ] Unhandled unified-search failures return HTTP 500 with `{ "error": "Search failed" }`
+
+### Source Adapter Normalization
+- [ ] PubMed result parsing drops any `<PubmedArticle>` chunk whose `<ArticleTitle>` is missing or empty
+- [ ] PubMed structured abstracts concatenate every `<AbstractText>` segment into one string separated by spaces
+- [ ] Labeled PubMed abstract segments are prefixed as `Label: text` during parsing
+- [ ] PubMed author names are normalized to `LastName ForeName`
+- [ ] PubMed journal name prefers `<ISOAbbreviation>` and falls back to `<Title>`
+- [ ] PubMed year parsing prefers `<Year>` inside `<PubDate>` and falls back to `<MedlineDate>`
+- [ ] PubMed year parsing falls back to numeric `0` when no four-digit year can be extracted
+- [ ] PubMed DOI is read from `<ArticleId IdType="doi">`
+- [ ] PubMed publication types are collected from every `<PublicationType>` tag into `publicationTypes[]`
+- [ ] PubMed MeSH terms are collected from every `<DescriptorName>` tag into `meshTerms[]`
+- [ ] PubMed study type uses the first mapped publication type that is not `"other"`
+- [ ] PubMed results always set `citationCount` to `0`
+- [ ] PubMed results always set `isOpenAccess` to `false`
+- [ ] PubMed source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open
+- [ ] PubMed resilient fetch calls use timeout `15000` and `baseDelay: 400`
+- [ ] Semantic Scholar sanitization strips PubMed field tags such as `[MeSH]`, `[tiab]`, `[pt]`, `[au]`, `[ta]`, `[dp]`, and `[mesh]` before querying S2
+- [ ] Semantic Scholar sanitization removes parentheses, double quotes, and boolean operators `AND`, `OR`, and `NOT`
+- [ ] Semantic Scholar year filtering serializes as `YYYY-YYYY`, `YYYY-`, or `-YYYY` depending on which bounds are present
+- [ ] Semantic Scholar results expose `openAccessPdfUrl` separately from `isOpenAccess`
+- [ ] Semantic Scholar results default `fieldsOfStudy` to an empty array when the API omits them
+- [ ] Semantic Scholar result mapping treats `JournalArticle` / `Journal Article` publication types as study type `"other"`
+- [ ] Semantic Scholar source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open
+- [ ] Semantic Scholar resilient fetch calls use timeout `15000` and `baseDelay: 1000`
+- [ ] OpenAlex strips the `https://doi.org/` prefix before storing DOI values on unified results
+- [ ] OpenAlex reconstructs abstract text from `abstract_inverted_index` by sorting word-position pairs numerically
+- [ ] OpenAlex concept chips are limited to concepts whose score is greater than `0.3`
+- [ ] OpenAlex year filtering serializes into the `filter=` query param as `publication_year:start-end`, `publication_year:start-`, or `publication_year:-end`
+- [ ] OpenAlex adds `is_oa:true` to its `filter=` query param only when `onlyOpenAccess` is true
+- [ ] OpenAlex source adapter returns `{ results: [], total: 0 }` immediately when its circuit breaker is open
+- [ ] ClinicalTrials keyword extraction strips punctuation characters including `? . , ! ; : ' " ( ) [ ] { }`
+- [ ] ClinicalTrials keyword extraction drops single-character tokens and a built-in stop-word list before joining the remaining search terms
+- [ ] ClinicalTrials falls back to the raw query string when keyword extraction produces an empty term string
+- [ ] ClinicalTrials requests always include `sort=@relevance`, `format=json`, and `countTotal=true`
+- [ ] ClinicalTrials status filtering only maps `recruiting` to `RECRUITING` and `completed` to `COMPLETED`
+- [ ] ClinicalTrials results always set `journal` to the sponsor organization name or `"ClinicalTrials.gov"` when no organization is present
+- [ ] ClinicalTrials results always set `publicationTypes` to `["clinical_trial_registration"]`
+- [ ] ClinicalTrials results always set `isOpenAccess` to `true`
+- [ ] ClinicalTrials result abstracts concatenate brief summary, `Phase: ...`, and `Status: ...` with ` | ` separators when those pieces exist
+- [ ] Similar-paper recommendation fallback runs a Semantic Scholar title search only when the direct recommendation API returns zero papers and the caller provided `paperTitle`
+- [ ] Similar-paper title-search fallback excludes the original paper ID before slicing the result list back to the requested limit
+
+### Copilot Panel And Research-Agent Internals
+- [ ] Copilot submit uses a normal `<form>` submit path, so pressing `Enter` in the copilot text input triggers `handleChatSubmit(...)`
+- [ ] Copilot submit does not support multi-line drafting because the input is a single-line `<input type="text">`
+- [ ] Copilot submit trims whitespace with `chatInput.trim()` before deciding whether the request is allowed
+- [ ] Copilot submit returns early without calling `sendMessage(...)` when `chatLoading` is already true
+- [ ] `chatLoading` is true for both `chatStatus === "submitted"` and `chatStatus === "streaming"`
+- [ ] The `/research` page clears the copilot input immediately after calling `sendMessage({ text: chatInput })`
+- [ ] The `/research` page does not persist copilot messages in `sessionStorage`
+- [ ] The `/research` page does not persist `showCopilot` open/closed state across refresh
+- [ ] The `/research` page does not pass the current search results, filters, or saved-paper IDs into `useChat(...)` as extra agent context
+- [ ] Copilot message rendering ignores any non-text `msg.parts` emitted by the AI SDK and drops messages whose concatenated text content is empty
+- [ ] The current copilot panel has no `useEffect` auto-scroll-to-bottom behavior for new messages
+- [ ] Research-agent requests are validated against a schema that allows between `1` and `50` messages
+- [ ] Research-agent request schema caps each message `content` string at `50000` characters
+- [ ] Research-agent schema optionally accepts `context.savedPaperIds`, but the current `/research` page never sends that context field
+- [ ] When `context.savedPaperIds.length > 0`, the research-agent system prompt appends `The user has {N} papers saved in their library.`
+- [ ] Research-agent streaming stops automatically when `stepCountIs(12)` is reached
+- [ ] Invalid research-agent request bodies return HTTP 400 with `Invalid request. Messages are required.`
+- [ ] Unhandled research-agent failures return HTTP 500 with `Research agent failed`
+- [ ] `searchPubMed` tool responses are truncated to the first `maxResults` items even if the underlying adapter returned more
+- [ ] `searchPubMed` tool trims each returned author list to the first 3 authors
+- [ ] `searchPubMed` tool trims each returned abstract to the first 300 characters
+- [ ] `searchSemanticScholar` tool includes `citationCount`, `tldr`, `studyType`, and `evidenceLevel` in each tool result
+- [ ] `searchOpenAlex` tool includes `isOpenAccess` and at most 5 concept strings in each tool result
+- [ ] `getPaperDetails` checks Semantic Scholar by raw `s2Id` first, by `DOI:{doi}` second, and by `PMID:{pmid}` third
+- [ ] `getPaperDetails` falls back to `searchPubMed(pmid, { maxResults: 1 })` only when Semantic Scholar lookup by PMID returns no paper
+- [ ] `getPaperDetails` returns `{ error: "Provide at least one identifier" }` when called with no DOI, PMID, or S2 ID
+- [ ] `findSimilarPapers` tool only returns title, first 3 authors, year, journal, doi, s2Id, citationCount, and tldr for each recommended paper
+- [ ] `savePaperToLibrary` tool requires a `source` string and returns only `{ success: true, paperId }` on success
+
+### AI Synthesis Panel Internals
+- [ ] AI synthesis fingerprint uses the exact format `{query}::{top5 titles joined by |}`
+- [ ] AI synthesis does not rerun when only non-title metadata changes on the same top 5 papers because the fingerprint only tracks query text and titles
+- [ ] AI synthesis request body includes only `title`, `authors`, `year`, `journal`, `abstract`, `pmid`, `doi`, and `studyType` for the top 5 papers
+- [ ] AI synthesis sends an empty string for `abstract` when a result has no abstract
+- [ ] AI synthesis aborts any previous streaming request before starting a new one
+- [ ] AI synthesis marks the panel as failed and hides it when `/api/research/synthesize` returns a non-OK response or no response body
+- [ ] AI synthesis treats `AbortError` as a silent cancellation and does not mark the panel as failed
+- [ ] AI synthesis `useEffect` cleanup aborts the in-flight synthesis request on unmount or dependency change
+- [ ] Citation parsing uses the exact regex `/\\[(\\d+)\\]/g`
+- [ ] Citation markers that do not map to one of the top 5 results remain literal bracket text in the rendered synthesis body
+- [ ] Citation labels are built from the last token of the first author string plus optional ` et al.` and the year
+- [ ] A paper with no authors in the top 5 citation map renders the fallback label prefix `Unknown`
+- [ ] Inline synthesis citation buttons set a `title` attribute of `Scroll to: {paper title}`
+- [ ] Clicking a synthesis citation applies `ring-2 ring-brand/50` to the target result card and removes those classes after exactly `2000ms`
+- [ ] Overflow detection uses `contentRef.current.scrollHeight > 96` after render and falls back to `synthesis.length > 400` before the ref is measured
+- [ ] Read-more clamping uses `max-h-24 overflow-hidden`
+- [ ] Free-plan overlay is not shown while the synthesis is still streaming and `synthesis` is empty
+- [ ] Free-plan users never receive the `Read More` / `Show Less` toggle even when the synthesis overflows
+- [ ] The current AI synthesis panel has no retry button, error copy, or recovery CTA after a failed synthesis request
+- [ ] `/api/research/synthesize` requires authentication through `getCurrentUserId()`
+- [ ] `/api/research/synthesize` rate-limits with key `"research"` and `RATE_LIMITS.ai`
+- [ ] `/api/research/synthesize` returns HTTP 400 with `Missing required field: papers` when `papers` is absent or not an array
+- [ ] `/api/research/synthesize` returns HTTP 503 with `AI not configured` when no model is available
+- [ ] `mode === "plan"` uses `getSmallModel()` with temperature `0.3`
+- [ ] `mode !== "plan"` uses `getModel()` with temperature `0.4`
+- [ ] Plan-mode fenced JSON is stripped with `/```(?:json)?\\s*([\\s\\S]*?)```/` before parsing
+- [ ] Invalid plan-mode JSON falls back to `{ sections: [], estimatedWordCount: 0 }`
+- [ ] `buildSynthesisPrompt()` uses default word targets of `250` for `quick_summary`, `800` for `literature_review`, and `500` for `evidence_summary`
+- [ ] `buildSynthesisPrompt()` uses the fallback instruction `Generate a literature synthesis.` when `reportType === "custom"` and `customInstructions` is missing
+- [ ] `buildPaperContext()` truncates author display to the first 3 authors plus optional ` et al.`
+- [ ] `buildPaperContext()` substitutes `Unknown`, `N/A`, and `No abstract available` fallback strings when paper fields are missing
+
+### Save, Cite, History, And Result Edge Cases
+- [ ] `saveSearchQuery()` stores `queryType` as `"user"` by default when the caller does not provide one
+- [ ] `saveSearchQuery()` stores `source` as `"all"` by default when the caller does not provide one
+- [ ] `saveSearchQuery()` stores `augmentedQueries`, `filtersApplied`, and `parentQueryId` as `null` when the caller omits them
+- [ ] `getRecentSearches()` first selects up to 20 history rows, then de-duplicates on lowercase `original_query`, then returns only the 5 most recent unique queries
+- [ ] `getRecentSearches()` returns rows shaped as `{ query, resultCount, searchedAt }`
+- [ ] `getRecentSearches()` serializes `searchedAt` as an ISO string and falls back to `""` when no timestamp is present
+- [ ] `getUserPapers(collection?)` returns paper metadata plus `refId`, `isFavorite`, `collection`, `notes`, `tags`, and `addedAt`
+- [ ] `savePaper()` de-duplicates in this order: DOI, PMID, Semantic Scholar ID, then normalized title+year
+- [ ] `savePaper()` only enriches an existing paper with missing metadata fields or higher citation-related counts; it does not blindly overwrite populated values
+- [ ] New-paper inserts default `authors` to `[]` when the caller omits them
+- [ ] New-paper inserts copy `open_access_url` into `pdf_url`
+- [ ] `savePaper()` creates the user-reference row in collection `"All Papers"` with `isFavorite: false`
+- [ ] User-reference creation uses `.onConflictDoNothing()`, so duplicate saves do not throw when the paper is already in the user library
+- [ ] `savePaper()` always calls `revalidatePath("/library")` after the user-reference insert path
+- [ ] `savePaper()` only queues chunking/embedding work when the saved paper has an abstract or TL;DR
+- [ ] `savePaper()` only queues PDF processing when the saved paper has a DOI or `open_access_url`
+- [ ] `handleSave(result)` chooses the outgoing `source` field as `"pubmed"` first, `"semantic_scholar"` second, and `"openalex"` otherwise based on `result.sources`
+- [ ] `handleSave(result)` forwards `open_access_url: result.openAccessPdfUrl || undefined` to the server action
+- [ ] `Save & Cite` writes only citation metadata into `scholarsync_pending_citation`; it does not persist a saved library `paperId`
+- [ ] When `result.doi` or `result.pmid` is `undefined`, `JSON.stringify(...)` omits that key from the stored `scholarsync_pending_citation` payload
+- [ ] Result author rows still render an empty `<p>` when `authors[]` is empty
+- [ ] Result metadata rows still render the separator format `{journal} · {year}` even when `journal` is blank or `year` is `0`
+- [ ] Result citation text is omitted when `citationCount` is `0` because the render branch checks truthiness rather than nullability
+- [ ] Result cards omit the abstract block completely when `abstract` is falsy
+- [ ] Result cards omit the TL;DR block completely when `tldr` is falsy
+- [ ] Result cards omit the DOI metadata link completely when `doi` is falsy
+- [ ] Result cards omit the Similar button completely when `s2Id` is falsy
+- [ ] Similar-result save buttons do not have a disabled visual state even when `handleSave(...)` will immediately no-op because the paper is already saved or currently saving
+- [ ] Similar-result cards omit authors, DOI, abstract, TL;DR, evidence badges, open-access badges, and relevance text even when those fields exist on the recommended paper
+
+### Behavior Corrections (Pass 2)
+- [ ] The live `/research` route does not render a before-search empty-state string like `Search for academic papers...`; it renders recent searches, recently saved papers, suggestion chips, and a `Loading your history...` helper
+- [ ] The live `/research` route does not disable the main `Search` button when the query input is empty; the button is disabled only while `loading` is true
+- [ ] The live `/research` route does not support `Shift+Enter` multiline query entry because the primary search field is a single-line `<input>`
+- [ ] The live `/research` route does not apply explicit `min` or `max` attributes to the `From` and `To` year inputs
+- [ ] The live copilot sidebar does not auto-scroll to the newest message in the current implementation
+- [ ] The live copilot request path does not send current search results, filters, or saved-paper IDs into `/api/research-agent`; only the chat transcript is sent by the page
+- [ ] The live AI synthesis panel does not show an inline failure banner or retry button; failed synthesis requests simply make the panel disappear
+- [ ] The live augmented-query disclosure labels the Semantic Scholar variant as `S2:`, not `Semantic Scholar:`
+
+### Components Referenced But Not Rendered
+- [ ] `src/components/research/SearchInput.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/ResultsTable.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/ResultRow.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/PaperDetailPanel.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/EvidenceTable.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/SynthesisDialog.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/ResearchSidebar.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/ChatTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/LibraryTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/SearchTab.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/ResearchPlan.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/FilterPanel.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/AISummaryCard.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/VerificationBadge.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/ScopeSelector.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+- [ ] `src/components/research/citation-network.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
+
 *Document generated from source code analysis. Last updated: 2026-03-09.*

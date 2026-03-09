@@ -3,9 +3,9 @@
 **Original doc:** `RESEARCH_FEATURES_TESTING.md`
 **Original checkbox count:** 162
 **Features found in UI:** 241
-**Features found in source code:** 307
-**Missing from doc:** 145
-**Completeness of original doc:** 52.8%
+**Features found in source code:** 503
+**Missing from doc:** 341
+**Completeness of original doc:** 32.2%
 
 ## Missing Features
 
@@ -23,6 +23,13 @@
 - [ ] Floating Research Copilot toggle, chat welcome state, text-only message rendering, and send-button gating
 - [ ] Auto-triggered AI synthesis behavior including citation-marker scrolling, free-plan blur overlay, and `Upgrade to Pro` link
 - [ ] Route-level loading and error boundary copy
+- [ ] Unified-search internals including authentication, request validation, query augmentation conditions, 4.5-second per-source timeout wrappers, development fallback fixtures, RRF scoring, reranking, and pagination math
+- [ ] Source-adapter normalization details for PubMed, Semantic Scholar, OpenAlex, ClinicalTrials.gov, and Semantic Scholar recommendations fallback behavior
+- [ ] Research-copilot internals covering request-schema limits, `stepCountIs(12)`, omitted agent context, tool payload truncation, and exact request/response error strings
+- [ ] AI synthesis internals covering fingerprint logic, request-body shape, citation regex/parsing, overflow rules, free-plan gating, plan-mode parsing, and the no-retry failure path
+- [ ] Search-history/save-paper internals covering de-dup order, enrichment rules, background chunk/PDF queue triggers, and exact session-storage citation payload omissions
+- [ ] Result-card edge cases for empty authors, blank journal/year rendering, citation-count truthiness, and missing DOI/abstract/TLDR/similar controls
+- [ ] Additional corrections for the non-disabled empty-query search button, lack of copilot auto-scroll, and the non-rendered research component stack still present in `src/components/research/`
 
 ## Features in doc that DON'T EXIST in the app
 - The live `/research` route does not use a textarea-based search box; it uses a single-line text input.
@@ -35,3 +42,7 @@
 - The live search backend is `/api/search/unified`, not `/api/research/search`.
 - The live unified search fans out to PubMed, Semantic Scholar, OpenAlex, and ClinicalTrials.gov, not just PubMed and Semantic Scholar.
 - The live unified-search source timeout is 4.5 seconds per source, not 8 seconds.
+- The live `/research` route does not disable the main `Search` button for empty queries; an empty click is ignored only because `handleSearch()` returns early.
+- The live `/research` route does not auto-scroll the copilot panel to the newest message.
+- The live `/research` route does not pass current search results, filters, or saved-paper IDs into the research-agent request body.
+- The live `/research` route does not render `SearchInput.tsx`, `ResearchSidebar.tsx`, `ResultsTable.tsx`, `PaperDetailPanel.tsx`, `EvidenceTable.tsx`, `SynthesisDialog.tsx`, `AISummaryCard.tsx`, or `VerificationBadge.tsx` even though those components still exist in the codebase.
