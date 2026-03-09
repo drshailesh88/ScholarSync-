@@ -511,6 +511,189 @@ Uses the `ErrorDisplay` component:
 - [ ] Editor font size is a local page-state control defaulting to `16`, separate from the saved preference payload
 - [ ] Preferences includes a second `ThemeToggle` inside the tab in addition to the app-shell theme toggle
 
+### Detailed QA Coverage
+
+#### Initial Fetch and Default State
+- [ ] `activeTab` defaults to `account` on first client render
+- [ ] `fontSize` defaults to `"16"` on first client render
+- [ ] Initial page state keeps `loading` true until both `getUser()` and `getUserUsageStats()` finish
+- [ ] While `loading` is true, the page shows the centered text `Loading settings...`
+- [ ] Initial data load calls `getUser()` and `getUserUsageStats()` in parallel with `Promise.all`
+- [ ] If the initial fetch throws, the page logs `Failed to fetch user data:` to the console
+- [ ] If the initial fetch throws, the page still exits loading state and renders the settings UI with fallback values
+- [ ] Fetched `full_name` hydrates both the account summary heading and the Full Name input
+- [ ] Fetched `preferred_language` hydrates the Preferred Language select
+- [ ] Fetched `default_citation_style` hydrates the Default Citation Format select
+- [ ] Fetched `research_interests` only hydrate into chips when the value is an array of strings
+- [ ] Missing usage data falls back to `0` usage counts and a `10,000` token limit
+
+#### Sidebar Navigation
+- [ ] Sidebar title `Settings` is rendered above the tab buttons
+- [ ] `My Account` is the active sidebar button on first render
+- [ ] Clicking `My Account` shows the `My Account` content pane without changing the route
+- [ ] Clicking `Plans & Billing` shows the billing pane without changing the route
+- [ ] Clicking `Usage Tracking` shows the usage pane without changing the route
+- [ ] Clicking `Preferences` shows the preferences pane without changing the route
+- [ ] Sidebar tab buttons remain enabled during normal idle state
+- [ ] `Log Out` stays visible at the bottom of the sidebar while switching tabs
+
+#### Account Summary Card
+- [ ] Account tab renders a 64x64 circular avatar placeholder with a `UserCircle` icon
+- [ ] Account summary heading shows `user.full_name` when present
+- [ ] Account summary heading falls back to `User` when `user.full_name` is null
+- [ ] Account summary email line shows `user.email` when present
+- [ ] Account summary email line falls back to an empty string when no email is available
+- [ ] `Verified Student` badge is always rendered on the account tab in the current implementation
+- [ ] `Verified Student` badge includes a `ShieldCheck` icon and badge text on the same line
+
+#### Full Name Input
+- [ ] `Full Name` label is rendered directly above the first text input
+- [ ] Full Name input placeholder is `Dr. Jane Doe`
+- [ ] Full Name input is prefilled from `user.full_name` when profile data exists
+- [ ] Full Name input falls back to an empty string when `user.full_name` is null
+- [ ] Full Name input is a controlled input bound to `profileName`
+- [ ] Full Name input has no `required` attribute in the current implementation
+- [ ] Full Name input has no `maxLength` attribute in the current implementation
+- [ ] Full Name input uses the shared `focus:ring-2 focus:ring-brand/40` focus style
+
+#### Specialty / Institution Input
+- [ ] `Specialty / Institution` label is rendered above the second text input
+- [ ] Specialty / Institution input placeholder is `e.g. Cardiology, AIIMS New Delhi`
+- [ ] Specialty / Institution input is prefilled from `user.specialty` when profile data exists
+- [ ] Specialty / Institution input falls back to an empty string when `user.specialty` is null
+- [ ] Specialty / Institution input is a controlled input bound to `specialty`
+- [ ] Specialty / Institution input has no `required` attribute in the current implementation
+- [ ] Specialty / Institution input has no `maxLength` attribute in the current implementation
+- [ ] Specialty / Institution input uses the shared `focus:ring-2 focus:ring-brand/40` focus style
+
+#### Country Input
+- [ ] `Country` label is rendered above the third text input
+- [ ] Country input placeholder is `e.g. India`
+- [ ] Country input is prefilled from `user.country` when profile data exists
+- [ ] Country input falls back to an empty string when `user.country` is null
+- [ ] Country input is a controlled input bound to `country`
+- [ ] Country input has no `required` attribute in the current implementation
+- [ ] Country input has no `maxLength` attribute in the current implementation
+- [ ] Country input uses the shared `focus:ring-2 focus:ring-brand/40` focus style
+
+#### Bio Textarea
+- [ ] `Bio` label is rendered above the textarea
+- [ ] Bio textarea placeholder is `A short bio about your research background...`
+- [ ] Bio textarea is prefilled from `user.bio` when profile data exists
+- [ ] Bio textarea falls back to an empty string when `user.bio` is null
+- [ ] Bio textarea uses `rows={3}`
+- [ ] Bio textarea is a controlled field bound to `bio`
+- [ ] Bio textarea is `resize-none` in the current implementation
+- [ ] Bio textarea uses the shared `focus:ring-2 focus:ring-brand/40` focus style
+
+#### Research Interests Chip Input
+- [ ] `Research Interests` label is rendered above the chip area and entry controls
+- [ ] Existing research interests render as chips before the add-interest input
+- [ ] Each existing chip renders the interest text plus an `X` remove button
+- [ ] Add-interest input placeholder is `Type an interest and press Enter`
+- [ ] Add-interest control row contains one text input and one icon-only `Plus` button
+- [ ] Pressing `Enter` inside the interest input prevents default form submission
+- [ ] Pressing `Enter` with a non-empty value adds a new chip immediately in local state
+- [ ] Clicking the `Plus` button with a non-empty value adds a new chip immediately in local state
+- [ ] Interest values are trimmed before duplicate/blank checks run
+- [ ] Blank or whitespace-only interest values are ignored
+- [ ] Duplicate interest values are ignored
+- [ ] Adding a new interest clears the interest input back to an empty string
+- [ ] Removing a chip updates the chip row immediately without waiting for a save
+- [ ] Chip changes are not persisted until `Save Changes` is clicked
+
+#### ORCID Input
+- [ ] `ORCID iD` label is rendered above the ORCID text input
+- [ ] ORCID input placeholder is `0000-0002-1825-0097`
+- [ ] ORCID input is prefilled from `user.orcid_id` when profile data exists
+- [ ] ORCID input falls back to an empty string when `user.orcid_id` is null
+- [ ] ORCID input helper text reads `Your unique researcher identifier from orcid.org`
+- [ ] ORCID input is a controlled input bound to `orcidId`
+- [ ] ORCID input has no `required` attribute in the current implementation
+- [ ] ORCID input uses the shared `focus:ring-2 focus:ring-brand/40` focus style
+
+#### Save Changes Button and Messaging
+- [ ] `Save Changes` button is rendered only on the `My Account` tab
+- [ ] `Save Changes` is enabled on initial render even when no fields have changed
+- [ ] `Save Changes` is disabled only while `saving` is true
+- [ ] While saving, the button label changes from `Save Changes` to `Saving...`
+- [ ] While saving, the button shows text-only loading feedback with no spinner icon
+- [ ] Successful profile saves render the inline message `Profile saved successfully.` next to the button
+- [ ] Failed profile saves render the inline message `Failed to save profile. Please try again.` next to the button
+- [ ] Save success/error feedback is inline text, not a toast or modal
+- [ ] Save messages auto-clear after 3 seconds through `showSaveMessage`
+- [ ] Profile save payload includes `full_name`, `specialty`, `country`, `bio`, `research_interests`, and `orcid_id`
+- [ ] Profile save payload does not include `email`, `plan`, `preferred_language`, or `default_citation_style`
+- [ ] Successful profile saves update the local `user` state so the account summary reflects returned values
+- [ ] Failed profile saves leave the current form field values intact for retry
+
+#### Billing Tab Details
+- [ ] Billing tab main heading reads `Plans & Billing`
+- [ ] Current plan heading is rendered as `{Capitalized plan} Plan`
+- [ ] Free plan pricing renders as the standalone text `Free`
+- [ ] Basic plan pricing renders `₹1,000` with `/month` in muted text
+- [ ] Pro plan pricing renders `₹2,500` with `/month` in muted text
+- [ ] Token quota text uses `toLocaleString("en-IN")` formatting for the numeric limit
+- [ ] `ACTIVE` badge is always shown in the current plan card
+- [ ] `Manage Plan` button has no disabled or loading state in the current page component
+- [ ] Payment Method section always shows the hard-coded card text `Visa •••• •••• •••• 4242`
+- [ ] `Razorpay Secure` helper text is rendered under the card details
+- [ ] `Update` button has no disabled or loading state in the current page component
+- [ ] Invoice History heading renders directly above the `DataTable`
+- [ ] Invoice table actions header cell is intentionally blank
+- [ ] Every invoice row renders a `Download` button with a `DownloadSimple` icon and text label
+- [ ] Invoice table container uses horizontal overflow handling and a rounded bordered wrapper
+
+#### Usage Tracking Details
+- [ ] Usage tab main heading reads `Usage Tracking`
+- [ ] AI Tokens progress row shows the label on the left and `{used} / {max}` text on the right
+- [ ] AI Tokens progress fill uses `var(--brand)` as its bar color
+- [ ] Finite progress bars clamp their fill width to 100% maximum
+- [ ] Deep Searches row shows `{value} (Unlimited)` instead of `{value} / {max}`
+- [ ] Deep Searches fill width is fixed to 30% when `max < 0`
+- [ ] Deep Searches helper text reads `Fair use policy applies for unlimited searches`
+- [ ] Plagiarism Checks progress fill uses `#f59e0b`
+- [ ] `This Month at a Glance` heading renders above the 2x2 usage summary grid
+- [ ] Summary cards render label text, a bold primary value, and a smaller helper line as separate rows
+- [ ] `Exports` summary falls back to `0` when `usageStats?.exports_used` is nullish
+- [ ] Plagiarism limit is derived from `plan` as `3` for free, `10` for basic, and `50` for pro
+
+#### Theme Toggle Details
+- [ ] Preferences tab renders a local `Theme` section label above the page-level `ThemeToggle`
+- [ ] Before client mount, `ThemeToggle` renders a placeholder pill instead of real buttons
+- [ ] Theme toggle contains exactly two buttons: `Daylight` and `Night`
+- [ ] Clicking `Daylight` calls `setTheme("light")`
+- [ ] Clicking `Night` calls `setTheme("dark")`
+- [ ] When `Daylight` is active, the Daylight button uses `bg-surface text-ink shadow-sm`
+- [ ] When `Night` is active, the Night button uses `bg-surface text-ink shadow-sm`
+- [ ] Inactive theme buttons use `text-ink-muted` styling
+- [ ] Active theme icons switch to `weight="fill"` and inactive icons use `weight="regular"`
+- [ ] Clicking `Daylight` sets the `<html>` class list to the light theme state and stores `theme=light` in localStorage
+- [ ] Clicking `Night` sets the `<html>` class list to the dark theme state and stores `theme=dark` in localStorage
+- [ ] Theme changes apply immediately and do not require clicking `Save Preferences`
+- [ ] Theme choice persists after a page refresh through `next-themes` storage
+
+#### Preferences Selects and Save Flow
+- [ ] `Editor Font Size` label is rendered above the first preferences select
+- [ ] Editor Font Size select options are exactly `14px`, `16px (Default)`, `18px`, and `20px`
+- [ ] Editor Font Size select defaults to `16`
+- [ ] Changing Editor Font Size updates only the local `fontSize` state in this page component
+- [ ] Editor Font Size is not included in the `handleSavePreferences` payload
+- [ ] `Default Citation Format` select initializes from `user.default_citation_style` or falls back to `apa7`
+- [ ] Citation Format options are `APA 7th Edition`, `MLA 9th Edition`, `Chicago 17th`, and `Vancouver`
+- [ ] `Preferred Language` select initializes from `user.preferred_language` or falls back to `en`
+- [ ] Preferred Language options are `English`, `Hindi`, `Spanish`, `French`, `German`, `Portuguese`, `Chinese`, `Japanese`, and `Korean`
+- [ ] `Save Preferences` is enabled on initial render even when no select value has changed
+- [ ] `Save Preferences` is disabled only while `savingPrefs` is true
+- [ ] While saving preferences, the button label changes from `Save Preferences` to `Saving...`
+- [ ] Preferences save uses text-only loading feedback with no spinner icon
+- [ ] Successful preferences saves render the inline message `Preferences saved successfully.` next to the button
+- [ ] Failed preferences saves render the inline message `Failed to save preferences. Please try again.` next to the button
+- [ ] Preferences success/error feedback auto-clears after 3 seconds through `showSaveMessage`
+- [ ] Preferences save payload includes only `preferred_language` and `default_citation_style`
+- [ ] Successful preferences saves update the local `user` state for `preferred_language` and `default_citation_style`
+- [ ] Saved citation-format and language values persist after a page refresh
+
 ## Database Schema Reference
 
 ### Users Table (relevant fields)
