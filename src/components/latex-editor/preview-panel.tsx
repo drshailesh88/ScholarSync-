@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import katex from "katex";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import { latexToHtml, escapeHtml } from "@/lib/latex/latex-to-html";
 
@@ -9,82 +10,43 @@ import { latexToHtml, escapeHtml } from "@/lib/latex/latex-to-html";
  * Zero server cost. Updates as you type.
  */
 
-// Render math using KaTeX (loaded dynamically)
-async function renderMath(container: HTMLElement) {
+function renderMathExpression(math: string, displayMode: boolean) {
   try {
-    const katex = (await import("katex")).default;
-
-    // Display math: $$ ... $$ and \[ ... \]
-    const displayMathRegex = /\$\$([\s\S]*?)\$\$|\\\[([\s\S]*?)\\\]/g;
-    container.innerHTML = container.innerHTML.replace(
-      displayMathRegex,
-      (_match, p1, p2) => {
-        const math = p1 || p2;
-        try {
-          return katex.renderToString(math.trim(), {
-            displayMode: true,
-            throwOnError: false,
-            trust: true,
-          });
-        } catch {
-          return `<span class="latex-math-error">${escapeHtml(math)}</span>`;
-        }
-      }
-    );
-
-    // Inline math: $ ... $ (not $$) and \( ... \)
-    const inlineMathRegex = /(?<!\$)\$(?!\$)(.*?)\$(?!\$)|\\\(([\s\S]*?)\\\)/g;
-    container.innerHTML = container.innerHTML.replace(
-      inlineMathRegex,
-      (_match, p1, p2) => {
-        const math = p1 || p2;
-        try {
-          return katex.renderToString(math.trim(), {
-            displayMode: false,
-            throwOnError: false,
-            trust: true,
-          });
-        } catch {
-          return `<span class="latex-math-error">${escapeHtml(math)}</span>`;
-        }
-      }
-    );
-
-    // equation environment
-    const equationRegex = /\\begin\{equation\*?\}([\s\S]*?)\\end\{equation\*?\}/g;
-    container.innerHTML = container.innerHTML.replace(
-      equationRegex,
-      (_match, math) => {
-        try {
-          return `<div class="latex-equation">${katex.renderToString(math.trim(), {
-            displayMode: true,
-            throwOnError: false,
-            trust: true,
-          })}</div>`;
-        } catch {
-          return `<div class="latex-math-error">${escapeHtml(math)}</div>`;
-        }
-      }
-    );
-
-    // align environment
-    const alignRegex = /\\begin\{align\*?\}([\s\S]*?)\\end\{align\*?\}/g;
-    container.innerHTML = container.innerHTML.replace(
-      alignRegex,
-      (_match, math) => {
-        try {
-          return `<div class="latex-equation">${katex.renderToString(
-            `\\begin{aligned}${math.trim()}\\end{aligned}`,
-            { displayMode: true, throwOnError: false, trust: true }
-          )}</div>`;
-        } catch {
-          return `<div class="latex-math-error">${escapeHtml(math)}</div>`;
-        }
-      }
-    );
+    return katex.renderToString(math.trim(), {
+      displayMode,
+      throwOnError: true,
+      trust: true,
+    });
   } catch {
-    // KaTeX not available — skip math rendering
+    return `<span class="latex-math-error">${escapeHtml(math)}</span>`;
   }
+}
+
+function renderMath(html: string) {
+  let rendered = html;
+
+  rendered = rendered.replace(
+    /\\begin\{equation\*?\}([\s\S]*?)\\end\{equation\*?\}/g,
+    (_match, math) => `<div class="latex-equation">${renderMathExpression(math, true)}</div>`
+  );
+
+  rendered = rendered.replace(
+    /\\begin\{align\*?\}([\s\S]*?)\\end\{align\*?\}/g,
+    (_match, math) =>
+      `<div class="latex-equation">${renderMathExpression(`\\begin{aligned}${math.trim()}\\end{aligned}`, true)}</div>`
+  );
+
+  rendered = rendered.replace(
+    /\$\$([\s\S]*?)\$\$|\\\[([\s\S]*?)\\\]/g,
+    (_match, p1, p2) => renderMathExpression(p1 || p2, true)
+  );
+
+  rendered = rendered.replace(
+    /(?<!\$)\$(?!\$)(.*?)\$(?!\$)|\\\(([\s\S]*?)\\\)/g,
+    (_match, p1, p2) => renderMathExpression(p1 || p2, false)
+  );
+
+  return rendered;
 }
 
 interface PreviewPanelProps {
@@ -105,7 +67,7 @@ export function PreviewPanel({ editorTopLine }: PreviewPanelProps) {
   const updatePreview = useCallback((content: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      const html = latexToHtml(content);
+      const html = renderMath(latexToHtml(content));
       setRenderedHtml(html);
     }, 150);
   }, []);
@@ -116,13 +78,6 @@ export function PreviewPanel({ editorTopLine }: PreviewPanelProps) {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [documentContent, updatePreview]);
-
-  // Render math after HTML is set
-  useEffect(() => {
-    if (containerRef.current && renderedHtml) {
-      renderMath(containerRef.current);
-    }
-  }, [renderedHtml]);
 
   // Scroll sync: scroll preview to match editor top line
   useEffect(() => {
@@ -138,7 +93,10 @@ export function PreviewPanel({ editorTopLine }: PreviewPanelProps) {
       }
     }
     if (targetEl) {
-      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrollContainerRef.current.scrollTo({
+        top: Math.max((targetEl as HTMLElement).offsetTop - 24, 0),
+        behavior: "smooth",
+      });
     }
   }, [editorTopLine]);
 
