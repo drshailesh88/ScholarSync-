@@ -17,15 +17,22 @@ import { CharacterCount } from "@tiptap/extension-character-count";
 import { Typography } from "@tiptap/extension-typography";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TaskItem } from "@tiptap/extension-task-item";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { Image as TiptapImage } from "@tiptap/extension-image";
 import { useRef, useCallback, useEffect } from "react";
 import { Toolbar } from "./toolbar";
-import { SlashCommands } from "./slash-commands";
 import { CitationNode } from "./extensions/citation-node";
 import { BibliographyNode } from "./extensions/bibliography-node";
 import { createCitationPlugin } from "./extensions/citation-plugin";
 import { AcademicKeyboardShortcuts } from "./extensions/keyboard-shortcuts";
 import { SelectionToolbar } from "./SelectionToolbar";
 import { LinkPopover } from "./LinkPopover";
+import { SlashCommandsExtension } from "./extensions/slash-commands";
+import { createSlashMenuRenderer } from "./SlashMenu";
+import { Footnote } from "./extensions/footnote-node";
 import { Extension } from "@tiptap/core";
 
 /**
@@ -113,6 +120,19 @@ export function TiptapEditor({
         autolink: true,
         linkOnPaste: true,
       }),
+      Table.configure({
+        resizable: true,
+        HTMLAttributes: {
+          class: "academic-table",
+        },
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      TiptapImage.configure({
+        inline: false,
+        allowBase64: true,
+      }),
       Placeholder.configure({
         placeholder: "Start typing or press '/' for AI commands...",
       }),
@@ -122,7 +142,12 @@ export function TiptapEditor({
       TaskItem.configure({
         nested: true,
       }),
-      SlashCommands,
+      SlashCommandsExtension.configure({
+        suggestion: {
+          render: createSlashMenuRenderer,
+        },
+      }),
+      Footnote,
       AcademicKeyboardShortcuts,
       CitationNode,
       BibliographyNode,
