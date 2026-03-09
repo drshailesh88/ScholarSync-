@@ -356,15 +356,15 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 340 | Editor | Quick Test Workflow / Export Flow — Toggle double-spacing and page numbers | /editor/[id] | ✅ PASS | Both export toggles responded live during the DOCX configuration step. |  |
 | 341 | Editor | Quick Test Workflow / Export Flow — Click Export — verify .docx file downloads | /editor/[id] | ✅ PASS | Export created a DOCX blob (`application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `9045` bytes) and triggered download `QA_Title_a.docx`. |  |
 | 342 | Editor | Quick Test Workflow / Export Flow — Select PDF format — verify print dialog opens | /editor/[id] | ✅ PASS | Switching to `PDF` and exporting called `window.print()`, confirming the browser print path opened. |  |
-| 343 | Editor | Quick Test Workflow / Studio AI Flow — Switch to Write mode | /editor/[id] | ⬜ |  |  |
-| 344 | Editor | Quick Test Workflow / Studio AI Flow — Select AI intensity (Focus/Collaborate/Accelerate) | /editor/[id] | ⬜ |  |  |
-| 345 | Editor | Quick Test Workflow / Studio AI Flow — Type a question in chat — verify streaming response | /editor/[id] | ⬜ |  |  |
-| 346 | Editor | Quick Test Workflow / Studio AI Flow — Switch to Learn mode | /editor/[id] | ⬜ |  |  |
-| 347 | Editor | Quick Test Workflow / Studio AI Flow — Select document type — verify stage progression bar | /editor/[id] | ⬜ |  |  |
-| 348 | Editor | Quick Test Workflow / Studio AI Flow — Click through stages — verify they highlight correctly | /editor/[id] | ⬜ |  |  |
-| 349 | Editor | Quick Test Workflow / Studio AI Flow — Type in chat — verify Socratic teaching response | /editor/[id] | ⬜ |  |  |
-| 350 | Editor | Quick Test Workflow / Studio AI Flow — Click Checks tab — run integrity check | /editor/[id] | ⬜ |  |  |
-| 351 | Editor | Quick Test Workflow / Studio AI Flow — Verify all 4 result sections render correctly | /editor/[id] | ⬜ |  |  |
+| 343 | Editor | Quick Test Workflow / Studio AI Flow — Switch to Write mode | /editor/[id] | ✅ PASS | Studio loaded in `Write` mode and the mode toggle correctly highlighted `Write`. |  |
+| 344 | Editor | Quick Test Workflow / Studio AI Flow — Select AI intensity (Focus/Collaborate/Accelerate) | /editor/[id] | ✅ PASS | I cycled `Focus`, `Collaborate`, and `Accelerate`; each button took the active styling when selected. |  |
+| 345 | Editor | Quick Test Workflow / Studio AI Flow — Type a question in chat — verify streaming response | /editor/[id] | ✅ PASS | Typing a question and submitting from Write mode triggered live `POST /api/chat` requests and streamed an inline assistant answer. |  |
+| 346 | Editor | Quick Test Workflow / Studio AI Flow — Switch to Learn mode | /editor/[id] | ✅ PASS | Switching to `Learn` activated guide mode and changed the prompt to `Ask me to challenge your thinking...`. |  |
+| 347 | Editor | Quick Test Workflow / Studio AI Flow — Select document type — verify stage progression bar | /editor/[id] | ✅ PASS | Choosing `Original Article` replaced the selector with the stage rail `Understand / Plan / Outline / Draft / Revise / Polish`. |  |
+| 348 | Editor | Quick Test Workflow / Studio AI Flow — Click through stages — verify they highlight correctly | /editor/[id] | ✅ PASS | Clicking stages updated the active state correctly, including verified transitions to `Plan` and `Draft`. |  |
+| 349 | Editor | Quick Test Workflow / Studio AI Flow — Type in chat — verify Socratic teaching response | /editor/[id] | ✅ PASS | In Learn mode, submitting a question triggered `POST /api/chat` and returned a Socratic response that asked a clarifying question before explaining the framework. |  |
+| 350 | Editor | Quick Test Workflow / Studio AI Flow — Click Checks tab — run integrity check | /editor/[id] | ✅ PASS | Opening `Checks` and clicking `Run Integrity Check` produced a live integrity report. |  |
+| 351 | Editor | Quick Test Workflow / Studio AI Flow — Verify all 4 result sections render correctly | /editor/[id] | ✅ PASS | The integrity report rendered all four sections: `AI Detection`, `Plagiarism`, `Citations`, and `Writing Quality`. |  |
 | 352 | LaTeX | Project List Page — Page header — "LaTeX Editor" title with subtitle "Write, preview, and compile LaTeX papers" | /latex | ⬜ |  |  |
 | 353 | LaTeX | Project List Page — "New Paper" button — links to /latex/new | /latex | ⬜ |  |  |
 | 354 | LaTeX | Project List Page — Project cards — each shows: | /latex | ⬜ |  |  |
