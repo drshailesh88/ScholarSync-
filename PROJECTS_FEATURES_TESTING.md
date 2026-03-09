@@ -537,3 +537,99 @@ interface Project {
 - [ ] Failed archive requests trigger `fetchProjects()` to restore the server state after optimistic archiving
 - [ ] Failed status updates trigger `fetchProjects()` to restore the server state after optimistic badge changes
 - [ ] Closing the Status Update modal clears the stored `statusTarget` project context
+
+### Detailed QA Coverage
+
+#### Initial Fetch and Defaults
+- [ ] `loading` defaults to `true` before the first `getProjects()` call resolves
+- [ ] `activeTab` defaults to `all`
+- [ ] `search` defaults to an empty string
+- [ ] `statusFilter` defaults to `all`
+- [ ] `viewMode` defaults to `list`
+- [ ] `showNewModal` defaults to `false`
+- [ ] `showStatusModal` defaults to `false`
+- [ ] Initial page fetch calls `getProjects()` through `fetchProjects()`
+- [ ] Initial fetch failure logs `Failed to load projects:` to the console
+- [ ] While `loading` is true, the page shows only a centered `SpinnerGap` icon
+
+#### Header Controls
+- [ ] Header count badge displays `projects.length`, not `filtered.length`
+- [ ] List/Grid toggle is rendered as a two-button segmented control
+- [ ] List toggle is the selected button on first render
+- [ ] Selected view button uses `bg-surface-raised text-ink`
+- [ ] Unselected view button uses `text-ink-muted` with hover text-color change
+- [ ] Clicking `New Project` sets `showNewModal` to `true`
+
+#### Tabs and Filters
+- [ ] Tab switching is entirely client-side through the memoized `filtered` array
+- [ ] Search filtering is case-insensitive through `p.title.toLowerCase().includes(search.toLowerCase())`
+- [ ] Status filter compares `p.status` directly to the selected filter value
+- [ ] Search input and status filter remain unchanged when view mode changes
+- [ ] Search input and status filter remain unchanged when tabs change
+- [ ] Status filter select includes exactly six options: all, planning, drafting, reviewing, completed, archived
+
+#### List View
+- [ ] List view renders through the shared `DataTable` component
+- [ ] Table rows become clickable because `onRowClick` is provided
+- [ ] Clicking a list row navigates to `/studio/{item.id}`
+- [ ] Name column renders type icon plus truncated title text
+- [ ] Type column falls back to `Project` when `project_type` is null or unmapped
+- [ ] Status cell is a button, not static text
+- [ ] Status hover affordance uses a `CaretDown` icon with `opacity-0` until the group is hovered
+- [ ] Edit action button uses `title="Edit project"`
+- [ ] Archive action button uses `title="Archive project"`
+- [ ] Delete action button uses `title="Delete project"`
+- [ ] Archived list rows do not render the Archive action button
+
+#### Grid View
+- [ ] Grid view renders one, two, or three columns through `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
+- [ ] Clicking a grid card navigates to `/studio/{project.id}`
+- [ ] Grid card top bar is a fixed `bg-brand` strip in the current implementation
+- [ ] Grid card title uses `truncate` to prevent wrapping
+- [ ] Grid card subtitle is `{getTypeLabel(project_type)} · {formatDate(updated_at)}`
+- [ ] Grid card paper count pluralizes `paper` vs `papers`
+- [ ] Grid card doc count pluralizes `doc` vs `docs`
+- [ ] Archived grid cards do not render the Archive action button
+
+#### Create Project Modal Defaults
+- [ ] Opening the modal shows the title `New Project`
+- [ ] `Project Name` input defaults to an empty string and has `autoFocus`
+- [ ] `Type` select defaults to `review_article`
+- [ ] `Target Journal` input defaults to an empty string
+- [ ] `Deadline` input defaults to an empty string
+- [ ] `Citation Style` select defaults to `vancouver`
+- [ ] Closing the modal through `onClose` resets every create-form field to its default value
+- [ ] `Create Project` is disabled when `newName.trim()` is empty
+- [ ] `Create Project` is disabled while `creating` is true
+- [ ] Pressing Enter inside `Project Name` triggers `handleCreate()`
+- [ ] Create payload sends `target_journal` only when the trimmed field is non-empty
+- [ ] Create payload sends `deadline` only when the field is non-empty
+- [ ] Successful creation closes the modal before navigating
+- [ ] Successful creation routes to `/editor/new?project={created.id}`
+- [ ] Failed creation logs `Failed to create project:` to the console and leaves the modal open
+
+#### Status Update Modal
+- [ ] Opening the status modal copies the clicked project into `statusTarget`
+- [ ] Opening the status modal initializes `pendingStatus` from `project.status ?? "planning"`
+- [ ] Status modal subtitle renders `Change status for {project title}`
+- [ ] Primary status pipeline renders `planning`, `drafting`, `reviewing`, and `completed` in order
+- [ ] Archived status is rendered in a separate section under a divider
+- [ ] Selected status option shows a trailing `Selected` label
+- [ ] `Update Status` is disabled when `pendingStatus` matches the current project status
+- [ ] `Update Status` is disabled while `updatingStatus` is true
+- [ ] Successful status updates close the modal before awaiting the server action
+- [ ] Failed status updates log `Failed to update project status:` to the console
+- [ ] Failed status updates re-fetch projects to restore canonical server state
+
+#### Archive and Delete Optimism
+- [ ] Delete removes the project from local state before `deleteProject(id)` resolves
+- [ ] Failed delete restores server truth by calling `fetchProjects()`
+- [ ] Archive updates local `status` to `archived` before `archiveProject(id)` resolves
+- [ ] Failed archive restores server truth by calling `fetchProjects()`
+- [ ] Status updates mutate the matching project in local state before `updateProjectStatus()` resolves
+
+#### Empty and Fallback States
+- [ ] Zero-state empty view renders only when `projects.length === 0` and `loading === false`
+- [ ] Filtered-empty state renders only when `projects.length > 0 && filtered.length === 0`
+- [ ] Filtered-empty state does not render a clear-filters button in the current implementation
+- [ ] `formatDate(null)` returns an em dash (`—`)
