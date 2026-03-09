@@ -26,6 +26,7 @@ import {
   Warning,
   WifiSlash,
   ClockCounterClockwise,
+  CloudArrowUp,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -269,7 +270,7 @@ export default function EditorPage() {
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-surface-raised border border-border">
             {saveStatus === "saving" && (
               <>
-                <Spinner size={14} className="animate-spin text-ink-muted" />
+                <CloudArrowUp size={14} className="animate-pulse text-ink-muted" />
                 <span className="text-xs text-ink-muted">Saving...</span>
               </>
             )}
@@ -277,14 +278,18 @@ export default function EditorPage() {
               <>
                 <CheckCircle size={14} className="text-emerald-500" />
                 <span className="text-xs text-ink-muted">
-                  Saved {formatRelativeTime(lastSavedAt)}
+                  Saved{" "}
+                  {lastSavedAt.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </span>
               </>
             )}
             {saveStatus === "unsaved" && (
               <>
-                <Warning size={14} className="text-amber-500" />
-                <span className="text-xs text-ink-muted">Unsaved changes...</span>
+                <CloudArrowUp size={14} className="text-amber-500" />
+                <span className="text-xs text-ink-muted">Unsaved</span>
               </>
             )}
             {saveStatus === "error" && (
@@ -300,7 +305,13 @@ export default function EditorPage() {
             )}
             {saveStatus === "offline" && (
               <>
-                <WifiSlash size={14} className="text-amber-500" />
+                <WifiSlash size={14} className="text-red-500" />
+                <span className="text-xs text-ink-muted">Offline</span>
+              </>
+            )}
+            {saveStatus === "local" && (
+              <>
+                <WifiSlash size={14} className="text-red-500" />
                 <span className="text-xs text-ink-muted">Saved locally</span>
               </>
             )}
@@ -428,17 +439,4 @@ export default function EditorPage() {
       </div>
     </EditorErrorBoundary>
   );
-}
-
-// Helper function for relative time
-function formatRelativeTime(date: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
