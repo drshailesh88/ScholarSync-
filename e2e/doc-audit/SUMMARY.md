@@ -18,20 +18,20 @@
 | Deep Research | 200 | 136 | 336 | 59.5% |
 | Library | 155 | 130 | 285 | 54.4% |
 | Feeds | 185 | 124 | 309 | 59.9% |
-| Analysis | 82 | 149 | 231 | 43.9% |
+| Analysis | 82 | 149 | 231 | 35.5% |
 | Compliance | 235 | 122 | 357 | 65.8% |
 | Projects | 145 | 88 | 233 | 62.2% |
 | Systematic Review | 374 | 237 | 611 | 61.2% |
 | Poster | 212 | 176 | 388 | 54.6% |
 | Presentation | 232 | 206 | 438 | 53.0% |
-| Settings | 87 | 156 | 243 | 49.4% |
+| Settings | 87 | 156 | 243 | 35.8% |
 | Onboarding | 142 | 92 | 234 | 60.7% |
 | **TOTAL** | **4531** | **3038** | **7569** | **59.9%** |
 
 ## Modules with Worst Completeness
-1. Analysis — 43.9% complete
-2. Editor — 47.6% complete
-3. Settings — 49.4% complete
+1. Analysis — 35.5% complete
+2. Settings — 35.8% complete
+3. Editor — 47.6% complete
 
 ## Common Patterns in What Was Missed
 
