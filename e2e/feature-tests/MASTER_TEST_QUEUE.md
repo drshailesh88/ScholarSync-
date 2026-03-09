@@ -86,9 +86,9 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 70 | Editor | Link Management / Link Insertion — Auto-linking — URLs pasted or typed are auto-detected (autolink: true) | /studio | ✅ PASS | Typing `https://example.com ` converted the URL into an inline link automatically. |  |
 | 71 | Editor | Link Management / Link Insertion — Link on paste — pasting a URL over selected text creates a link (linkOnPaste: true) | /studio | ✅ PASS | Pasting `https://paste.example` over selected text converted the selection into `<a href=\"https://paste.example\">Beta</a>`. |  |
 | 72 | Editor | Link Management / Link Insertion — Links do NOT open on click in the editor (openOnClick: false) | /studio | ✅ PASS | Clicking an in-editor link left the browser on `/studio`; no navigation occurred. |  |
-| 73 | Editor | Link Management / LinkPopover (Editor page only) — Clicking a link shows a floating popover with: | /editor/[id] | ⬜ |  |  |
-| 74 | Editor | Link Management / LinkPopover (Editor page only) — Enter key confirms edit, Escape cancels | /editor/[id] | ⬜ |  |  |
-| 75 | Editor | Link Management / LinkPopover (Editor page only) — Popover positions above the clicked link | /editor/[id] | ⬜ |  |  |
+| 73 | Editor | Link Management / LinkPopover (Editor page only) — Clicking a link shows a floating popover with: | /editor/[id] | ✅ PASS | Clicking an editor link opened a popover with URL text plus `Edit link`, `Open in new tab`, and `Remove link` controls. |  |
+| 74 | Editor | Link Management / LinkPopover (Editor page only) — Enter key confirms edit, Escape cancels | /editor/[id] | ✅ PASS | Editing the link URL and pressing Enter updated the href; reopening edit mode and pressing Escape left the existing href unchanged. |  |
+| 75 | Editor | Link Management / LinkPopover (Editor page only) — Popover positions above the clicked link | /editor/[id] | ✅ PASS | Fixed popover placement; runtime bounds now show the popover above the clicked editor link. |  |
 | 76 | Editor | Citation System / Citation Dialog — Opens via Cmd+Shift+C keyboard shortcut | /editor/[id] | ⬜ |  |  |
 | 77 | Editor | Citation System / Citation Dialog — Opens via slash command (if available) | /editor/[id] | ⬜ |  |  |
 | 78 | Editor | Citation System / Citation Dialog — Opens via "+" button in Studio left sidebar references section | /editor/[id] | ⬜ |  |  |
