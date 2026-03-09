@@ -173,12 +173,12 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 157 | Editor | Version History (Editor page only) / Features — Loading state — spinner while fetching versions | /editor/[id] | ✅ PASS | A DOM observer captured the `animate-spin` loading spinner during version-history fetch on reopen. |  |
 | 158 | Editor | Version History (Editor page only) / Features — Empty state — "No versions yet" message | /editor/[id] | ✅ PASS | Before saving any versions, the panel showed the empty-state copy `No versions yet`. |  |
 | 159 | Editor | Version History (Editor page only) / Features — Close — X button in header | /editor/[id] | ✅ PASS | Dispatching a click on the header `X` button removed the `Version History` panel from the DOM. |  |
-| 160 | Editor | Export / Editor Page — Export Dialog — Open — click "Export" button in header bar | /editor/[id] | ⬜ |  |  |
-| 161 | Editor | Export / Editor Page — Export Dialog — Format selection — DOCX or PDF, visual toggle buttons with icons | /editor/[id] | ⬜ |  |  |
-| 162 | Editor | Export / Editor Page — Export Dialog — Options: | /editor/[id] | ⬜ |  |  |
-| 163 | Editor | Export / Editor Page — Export Dialog — Double-spaced toggle (default: on) | /editor/[id] | ⬜ |  |  |
-| 164 | Editor | Export / Editor Page — Export Dialog — Include page numbers toggle (default: on) | /editor/[id] | ⬜ |  |  |
-| 165 | Editor | Export / Editor Page — Export Dialog — DOCX export — uses tiptapToDocx() converter, downloads .docx file | /editor/[id] | ⬜ |  |  |
+| 160 | Editor | Export / Editor Page — Export Dialog — Open — click "Export" button in header bar | /editor/[id] | ✅ PASS | Clicking the header `Export` button opened the `Export Manuscript` modal. |  |
+| 161 | Editor | Export / Editor Page — Export Dialog — Format selection — DOCX or PDF, visual toggle buttons with icons | /editor/[id] | ✅ PASS | The dialog rendered both `DOCX` and `PDF` format buttons with their file icons, and `DOCX` was selected by default. |  |
+| 162 | Editor | Export / Editor Page — Export Dialog — Options: | /editor/[id] | ✅ PASS | The export modal exposed both option checkboxes: `Include page numbers` and `Double-spaced`. |  |
+| 163 | Editor | Export / Editor Page — Export Dialog — Double-spaced toggle (default: on) | /editor/[id] | ✅ PASS | `Double-spaced` loaded checked by default in the export dialog. |  |
+| 164 | Editor | Export / Editor Page — Export Dialog — Include page numbers toggle (default: on) | /editor/[id] | ✅ PASS | `Include page numbers` also loaded checked by default. |  |
+| 165 | Editor | Export / Editor Page — Export Dialog — DOCX export — uses tiptapToDocx() converter, downloads .docx file | /editor/[id] | ✅ PASS | Hooking `URL.createObjectURL` and the generated anchor confirmed DOCX export produced a `.docx` blob and triggered a download (`QA_Title.docx`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`). |  |
 | 166 | Editor | Export / Editor Page — Export Dialog — Includes references from reference store | /editor/[id] | ⬜ |  |  |
 | 167 | Editor | Export / Editor Page — Export Dialog — Includes bibliography entries | /editor/[id] | ⬜ |  |  |
 | 168 | Editor | Export / Editor Page — Export Dialog — Preserves formatting | /editor/[id] | ⬜ |  |  |
