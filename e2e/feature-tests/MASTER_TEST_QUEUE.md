@@ -38,23 +38,23 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 22 | Editor | Text Formatting — Text color | /studio | ✅ PASS | Live Studio editor command applied `style=\"color: rgb(255, 0, 0);\"` to selected text. |  |
 | 23 | Editor | Text Formatting — Font family | /studio | ✅ PASS | Live Studio editor command applied `font-family: Georgia;` to selected text. |  |
 | 24 | Editor | Text Formatting — Text alignment | /studio | ✅ PASS | Live Studio editor command applied left, center, right, and justify paragraph alignment styles. |  |
-| 25 | Editor | Structural Blocks (via Slash Commands) — Text | /studio | ⬜ |  |  |
-| 26 | Editor | Structural Blocks (via Slash Commands) — Heading 1 | /studio | ⬜ |  |  |
-| 27 | Editor | Structural Blocks (via Slash Commands) — Heading 2 | /studio | ⬜ |  |  |
-| 28 | Editor | Structural Blocks (via Slash Commands) — Heading 3 | /studio | ⬜ |  |  |
-| 29 | Editor | Structural Blocks (via Slash Commands) — Heading 4 | /studio | ⬜ |  |  |
-| 30 | Editor | Structural Blocks (via Slash Commands) — Bullet List | /studio | ⬜ |  |  |
-| 31 | Editor | Structural Blocks (via Slash Commands) — Numbered List | /studio | ⬜ |  |  |
-| 32 | Editor | Structural Blocks (via Slash Commands) — Checklist | /studio | ⬜ |  |  |
-| 33 | Editor | Structural Blocks (via Slash Commands) — Block Quote | /studio | ⬜ |  |  |
-| 34 | Editor | Structural Blocks (via Slash Commands) — Divider | /studio | ⬜ |  |  |
-| 35 | Editor | Structural Blocks (via Slash Commands) — Code Block | /studio | ⬜ |  |  |
-| 36 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Menu appears when typing / at start of block or after whitespace | /studio | ⬜ |  |  |
-| 37 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Fuzzy search filtering — typing after / filters commands by title, description, or category | /studio | ⬜ |  |  |
-| 38 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Keyboard navigation — Arrow Up/Down to navigate, Enter to select, Escape to close | /studio | ⬜ |  |  |
-| 39 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Category headers — commands grouped under Basic, Academic, AI, Tools | /studio | ⬜ |  |  |
-| 40 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Menu shows icon + title + description for each command | /studio | ⬜ |  |  |
-| 41 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — "No commands" empty state when filter yields no results | /studio | ⬜ |  |  |
+| 25 | Editor | Structural Blocks (via Slash Commands) — Text | /studio | ✅ PASS | Slash menu `Text` restored the block to an empty paragraph `<p>`. |  |
+| 26 | Editor | Structural Blocks (via Slash Commands) — Heading 1 | /studio | ✅ PASS | Slash menu inserted an empty `<h1>` block for manuscript title formatting. |  |
+| 27 | Editor | Structural Blocks (via Slash Commands) — Heading 2 | /studio | ✅ PASS | Slash menu inserted an empty `<h2>` block for section headings. |  |
+| 28 | Editor | Structural Blocks (via Slash Commands) — Heading 3 | /studio | ✅ PASS | Slash menu inserted an empty `<h3>` block for subsection headings. |  |
+| 29 | Editor | Structural Blocks (via Slash Commands) — Heading 4 | /studio | ✅ PASS | Slash menu inserted an empty `<h4>` block for sub-subsections. |  |
+| 30 | Editor | Structural Blocks (via Slash Commands) — Bullet List | /studio | ✅ PASS | Slash menu inserted `<ul><li><p>...</p></li></ul>` and left the cursor in the first list item. |  |
+| 31 | Editor | Structural Blocks (via Slash Commands) — Numbered List | /studio | ✅ PASS | Slash menu inserted `<ol><li><p>...</p></li></ol>` and left the cursor in the first list item. |  |
+| 32 | Editor | Structural Blocks (via Slash Commands) — Checklist | /studio | ✅ PASS | Slash menu inserted `ul[data-type=\"taskList\"]` with an unchecked checkbox input. |  |
+| 33 | Editor | Structural Blocks (via Slash Commands) — Block Quote | /studio | ✅ PASS | Slash menu wrapped the block in `<blockquote><p>...</p></blockquote>`. |  |
+| 34 | Editor | Structural Blocks (via Slash Commands) — Divider | /studio | ✅ PASS | Slash menu inserted `<hr>` followed by a new editable paragraph. |  |
+| 35 | Editor | Structural Blocks (via Slash Commands) — Code Block | /studio | ✅ PASS | Slash menu inserted `<pre><code>...</code></pre>` for code entry. |  |
+| 36 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Menu appears when typing / at start of block or after whitespace | /studio | ✅ PASS | Menu opened at block start with `/` and also after whitespace when typing ` /` inside a paragraph. |  |
+| 37 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Fuzzy search filtering — typing after / filters commands by title, description, or category | /studio | ✅ PASS | `/table` filtered by title, `/manuscript` filtered to Heading 1 by description, and `/academic` filtered to academic commands by category. |  |
+| 38 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Keyboard navigation — Arrow Up/Down to navigate, Enter to select, Escape to close | /studio | ✅ PASS | ArrowDown twice plus Enter selected Heading 2; Escape closed the menu without inserting a command. |  |
+| 39 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Category headers — commands grouped under Basic, Academic, AI, Tools | /studio | ✅ PASS | Menu rendered grouped sections for `BASIC BLOCKS`, `ACADEMIC`, `AI TOOLS`, and `DOCUMENT TOOLS`. |  |
+| 40 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Menu shows icon + title + description for each command | /studio | ✅ PASS | Menu buttons include an SVG icon plus separate title and description text, for example `Text` and `Plain paragraph text`. |  |
+| 41 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — "No commands" empty state when filter yields no results | /studio | ✅ PASS | Typing `/zzzzzz` showed the empty state message `No commands found`. |  |
 | 42 | Editor | Academic Blocks (via Slash Commands) — Table | /studio | ⬜ |  |  |
 | 43 | Editor | Academic Blocks (via Slash Commands) — Image | /studio | ⬜ |  |  |
 | 44 | Editor | Academic Blocks (via Slash Commands) — Abstract | /studio | ⬜ |  |  |
