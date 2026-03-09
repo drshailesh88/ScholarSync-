@@ -55,20 +55,20 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 39 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Category headers — commands grouped under Basic, Academic, AI, Tools | /studio | ✅ PASS | Menu rendered grouped sections for `BASIC BLOCKS`, `ACADEMIC`, `AI TOOLS`, and `DOCUMENT TOOLS`. |  |
 | 40 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — Menu shows icon + title + description for each command | /studio | ✅ PASS | Menu buttons include an SVG icon plus separate title and description text, for example `Text` and `Plain paragraph text`. |  |
 | 41 | Editor | Structural Blocks (via Slash Commands) / Slash Menu UX — "No commands" empty state when filter yields no results | /studio | ✅ PASS | Typing `/zzzzzz` showed the empty state message `No commands found`. |  |
-| 42 | Editor | Academic Blocks (via Slash Commands) — Table | /studio | ⬜ |  |  |
-| 43 | Editor | Academic Blocks (via Slash Commands) — Image | /studio | ⬜ |  |  |
-| 44 | Editor | Academic Blocks (via Slash Commands) — Abstract | /studio | ⬜ |  |  |
-| 45 | Editor | Academic Blocks (via Slash Commands) — Figure Caption | /studio | ⬜ |  |  |
-| 46 | Editor | Academic Blocks (via Slash Commands) — Table Caption | /studio | ⬜ |  |  |
-| 47 | Editor | Academic Blocks (via Slash Commands) — Footnote | /studio | ⬜ |  |  |
-| 48 | Editor | Academic Blocks (via Slash Commands) / Table Features — Tables are resizable (drag column borders) | /studio | ⬜ |  |  |
-| 49 | Editor | Academic Blocks (via Slash Commands) / Table Features — First row renders as header | /studio | ⬜ |  |  |
-| 50 | Editor | Academic Blocks (via Slash Commands) / Table Features — Tables have CSS class academic-table | /studio | ⬜ |  |  |
-| 51 | Editor | AI Slash Commands — Continue Writing | /studio | ⬜ |  |  |
-| 52 | Editor | AI Slash Commands — Outline Section | /studio | ⬜ |  |  |
-| 53 | Editor | AI Slash Commands — Check Guidelines | /studio | ⬜ |  |  |
-| 54 | Editor | AI Slash Commands — Ask AI | /studio | ⬜ |  |  |
-| 55 | Editor | Document Tools (via Slash Commands) — Word Count | /studio | ⬜ |  |  |
+| 42 | Editor | Academic Blocks (via Slash Commands) — Table | /studio | ✅ PASS | Slash menu inserted a 3x3 table with a header row and `colgroup` sizing scaffolding. |  |
+| 43 | Editor | Academic Blocks (via Slash Commands) — Image | /studio | ✅ PASS | Slash menu opened a file input and inserted `/tmp/codex-test.png` as a base64 `<img>` node. |  |
+| 44 | Editor | Academic Blocks (via Slash Commands) — Abstract | /studio | ✅ PASS | Slash menu inserted `Abstract` H2 plus bold `Background`, `Methods`, `Results`, and `Conclusion` paragraphs. |  |
+| 45 | Editor | Academic Blocks (via Slash Commands) — Figure Caption | /studio | ✅ PASS | Repeated slash inserts auto-numbered captions as `Figure 1.` then `Figure 2.`. |  |
+| 46 | Editor | Academic Blocks (via Slash Commands) — Table Caption | /studio | ✅ PASS | Repeated slash inserts auto-numbered captions as `Table 1.` then `Table 2.`. |  |
+| 47 | Editor | Academic Blocks (via Slash Commands) — Footnote | /studio | ✅ PASS | Prompt-driven slash command inserted a footnote node with text `Footnote body` and superscript marker `1`. |  |
+| 48 | Editor | Academic Blocks (via Slash Commands) / Table Features — Tables are resizable (drag column borders) | /studio | ⚠️ PARTIAL | Resizable table scaffolding rendered, but resize handles did not surface in `agent-browser`, so live drag remains manual to verify. |  |
+| 49 | Editor | Academic Blocks (via Slash Commands) / Table Features — First row renders as header | /studio | ✅ PASS | Inserted table renders the first row as `<th>` header cells. |  |
+| 50 | Editor | Academic Blocks (via Slash Commands) / Table Features — Tables have CSS class academic-table | /studio | ✅ PASS | Fixed slash table insert to render `<table class=\"academic-table\">` in Studio. |  |
+| 51 | Editor | AI Slash Commands — Continue Writing | /studio | ✅ PASS | Slash command submitted the current document text to `POST /api/chat` and received `200` in the Studio chat flow. |  |
+| 52 | Editor | AI Slash Commands — Outline Section | /studio | ✅ PASS | Fixed Studio listener to map `outline-section`; slash command now triggers `POST /api/chat` with an outline-generation prompt. |  |
+| 53 | Editor | AI Slash Commands — Check Guidelines | /studio | ✅ PASS | Fixed Studio listener to map `check-guidelines`; slash command now triggers `POST /api/chat` and returns a guideline review in chat. |  |
+| 54 | Editor | AI Slash Commands — Ask AI | /studio | ✅ PASS | Fixed Studio listener to map `ask`; slash command switches to chat and focuses the AI input without auto-submitting. |  |
+| 55 | Editor | Document Tools (via Slash Commands) — Word Count | /studio | ✅ PASS | Fixed Studio editor-action listener to append a section-by-section word count breakdown in the chat pane. |  |
 | 56 | Editor | Floating Selection Toolbar — Positioning — toolbar appears above the selection, centered horizontally | /studio | ⬜ |  |  |
 | 57 | Editor | Floating Selection Toolbar — Auto-hide — disappears when selection is cleared or editor loses focus (150ms delay for button clicks) | /studio | ⬜ |  |  |
 | 58 | Editor | Floating Selection Toolbar / Toolbar Buttons (left to right) — Style dropdown | /studio | ⬜ |  |  |
