@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   MagnifyingGlass,
@@ -151,47 +151,32 @@ function writeSession(state: PersistedState) {
 
 export default function ResearchPage() {
   const router = useRouter();
-  // Restore session state on first render (synchronous to avoid flash)
-  const cached = useRef(readSession());
 
-  const [query, setQuery] = useState(cached.current?.query ?? "");
-  const [results, setResults] = useState<UnifiedSearchResult[]>(
-    cached.current?.results ?? []
-  );
+  // Initialize with SSR-safe defaults; restore from sessionStorage in useEffect
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<UnifiedSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sourceCounts, setSourceCounts] = useState(
-    cached.current?.sourceCounts ?? {
-      pubmed: 0,
-      semanticScholar: 0,
-      openAlex: 0,
-      clinicalTrials: 0,
-    }
-  );
-  const [filters, setFilters] = useState<FilterState>(
-    cached.current?.filters ?? { ...DEFAULT_FILTERS }
-  );
-  const [sort, setSort] = useState<SortOption>(
-    cached.current?.sort ?? "relevance"
-  );
+  const [sourceCounts, setSourceCounts] = useState({
+    pubmed: 0,
+    semanticScholar: 0,
+    openAlex: 0,
+    clinicalTrials: 0,
+  });
+  const [filters, setFilters] = useState<FilterState>({ ...DEFAULT_FILTERS });
+  const [sort, setSort] = useState<SortOption>("relevance");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [showCopilot, setShowCopilot] = useState(false);
   const [saved, setSaved] = useState<Set<string>>(new Set());
-  const [hasSearched, setHasSearched] = useState(
-    cached.current?.hasSearched ?? false
-  );
-  const [page, setPage] = useState(cached.current?.page ?? 0);
-  const [totalResults, setTotalResults] = useState(
-    cached.current?.totalResults ?? 0
-  );
-  const [hasMore, setHasMore] = useState(cached.current?.hasMore ?? false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [page, setPage] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
   const [augmentedQueries, setAugmentedQueries] = useState<
     SearchResponse["augmentedQueries"] | null
-  >(cached.current?.augmentedQueries ?? null);
+  >(null);
   const [showAugmented, setShowAugmented] = useState(false);
-  const [aiSummary, setAiSummary] = useState<string | null>(
-    cached.current?.aiSummary ?? null
-  );
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [userPlan, setUserPlan] = useState<"free" | "basic" | "pro" | "institutional" | null>(null);
   const [similarResults, setSimilarResults] = useState<
     Record<string, UnifiedSearchResult[]>
@@ -204,7 +189,28 @@ export default function ResearchPage() {
   const perPage = 20;
 
   // Track whether the filter/sort useEffect should skip (during init)
-  const isInitRef = useRef(!!cached.current?.hasSearched);
+  const isInitRef = useRef(false);
+
+  // Restore session state from sessionStorage on client only (prevents hydration mismatch)
+  useEffect(() => {
+    const cached = readSession();
+    if (cached) {
+      setQuery(cached.query);
+      setResults(cached.results);
+      setFilters(cached.filters);
+      setSort(cached.sort);
+      setHasSearched(cached.hasSearched);
+      setPage(cached.page);
+      setTotalResults(cached.totalResults);
+      setHasMore(cached.hasMore);
+      setSourceCounts(cached.sourceCounts);
+      setAugmentedQueries(cached.augmentedQueries);
+      setAiSummary(cached.aiSummary);
+      if (cached.hasSearched) {
+        isInitRef.current = true;
+      }
+    }
+  }, []);
 
   // ── Empty state data ───────────────────────────────────────────────
   const [recentSearches, setRecentSearches] = useState<
@@ -215,11 +221,7 @@ export default function ResearchPage() {
   >([]);
   const [emptyStateLoaded, setEmptyStateLoaded] = useState(false);
 
-  // Pick 4 random suggestions (stable per mount)
-  const suggestions = useMemo(() => {
-    const shuffled = [...SUGGESTED_SEARCHES].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 5);
-  }, []);
+  const suggestions = SUGGESTED_SEARCHES.slice(0, 5);
 
   // Load empty state data only when needed
   useEffect(() => {
@@ -356,9 +358,19 @@ export default function ResearchPage() {
     [query, sort, filters, perPage]
   );
 
+  const abortRef = useRef<AbortController | null>(null);
   const handleSearch = useCallback(
     async (pageNum: number = 0) => {
       if (!query.trim()) return;
+
+      // Cancel any in-flight request
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+
+      // Enforce a 15-second client-side timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
       setLoading(true);
       setError(null);
       setHasSearched(true);
@@ -367,7 +379,7 @@ export default function ResearchPage() {
 
       try {
         const url = buildSearchUrl(pageNum);
-        const res = await fetch(url);
+        const res = await fetch(url, { signal: controller.signal });
         if (!res.ok) {
           const errorBody = await res.json().catch(() => null);
           throw new Error(
@@ -397,12 +409,17 @@ export default function ResearchPage() {
           filtersApplied: { sort, ...filters },
         }).catch(() => {});
       } catch (err) {
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Search failed. Please try again."
-        );
+        if (controller.signal.aborted) {
+          setError("Search timed out. Try a more specific query or check your connection.");
+        } else {
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Search failed. Please try again."
+          );
+        }
       } finally {
+        clearTimeout(timeoutId);
         setLoading(false);
       }
     },

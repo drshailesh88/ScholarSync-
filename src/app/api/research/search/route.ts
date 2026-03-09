@@ -13,6 +13,26 @@ import type { UnifiedSearchResult } from "@/types/search";
 import { getCurrentUserId } from "@/lib/auth";
 import { checkRateLimit, RATE_LIMITS } from "@/lib/rate-limit";
 
+async function withSourceTimeout<T>(
+  label: string,
+  promise: Promise<T>,
+  timeoutMs = 8000
+): Promise<T> {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+        }, timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
+}
+
 interface SearchRequestBody {
   query: string;
   filters?: {
@@ -91,25 +111,29 @@ export async function POST(req: NextRequest) {
 
     if (sources.includes("pubmed")) {
       promises.push(
-        searchPubMed(pmQuery, {
-          maxResults: perPage,
-          page,
-          yearStart: filters.dateFrom,
-          yearEnd: filters.dateTo,
-        }).then(({ results, total }) => ({ source: "pubmed", results, total }))
-          .catch(() => ({ source: "pubmed", results: [], total: 0 }))
+        withSourceTimeout(
+          "PubMed",
+          searchPubMed(pmQuery, {
+            maxResults: perPage,
+            page,
+            yearStart: filters.dateFrom,
+            yearEnd: filters.dateTo,
+          }).then(({ results, total }) => ({ source: "pubmed", results, total }))
+        ).catch(() => ({ source: "pubmed", results: [], total: 0 }))
       );
     }
 
     if (sources.includes("semantic_scholar")) {
       promises.push(
-        searchSemanticScholar(searchQuery, {
-          limit: perPage,
-          offset: page * perPage,
-          yearStart: filters.dateFrom,
-          yearEnd: filters.dateTo,
-        }).then(({ results, total }) => ({ source: "semantic_scholar", results, total }))
-          .catch(() => ({ source: "semantic_scholar", results: [], total: 0 }))
+        withSourceTimeout(
+          "Semantic Scholar",
+          searchSemanticScholar(searchQuery, {
+            limit: perPage,
+            offset: page * perPage,
+            yearStart: filters.dateFrom,
+            yearEnd: filters.dateTo,
+          }).then(({ results, total }) => ({ source: "semantic_scholar", results, total }))
+        ).catch(() => ({ source: "semantic_scholar", results: [], total: 0 }))
       );
     }
 

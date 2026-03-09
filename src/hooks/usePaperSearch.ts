@@ -4,13 +4,14 @@
 
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useResearchStore } from "@/stores/research-store";
 import { parseNaturalLanguageFilters } from "@/lib/research/filter-parser";
 import type { PaperResult } from "@/lib/research/types";
 
 export function usePaperSearch() {
   const store = useResearchStore();
+  const searchAbortRef = useRef<AbortController | null>(null);
 
   /**
    * Parse query for natural language filters, then generate plan or execute search.
@@ -50,10 +51,14 @@ export function usePaperSearch() {
     store.setIsGeneratingPlan(true);
     store.setShowPlan(true);
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     try {
       const res = await fetch("/api/research/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           question: query,
           currentFilters: {
@@ -82,6 +87,7 @@ export function usePaperSearch() {
       store.setShowPlan(false);
       await executeSearch(query);
     } finally {
+      clearTimeout(timeoutId);
       store.setIsGeneratingPlan(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,6 +100,12 @@ export function usePaperSearch() {
     const searchQuery = query ?? store.query;
     const { searchPlan, filters } = useResearchStore.getState();
 
+    // Cancel any in-flight search request
+    searchAbortRef.current?.abort();
+    const controller = new AbortController();
+    searchAbortRef.current = controller;
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     store.setIsSearching(true);
     store.setShowPlan(false);
     store.setHasSearchedBefore(true);
@@ -102,6 +114,7 @@ export function usePaperSearch() {
       const res = await fetch("/api/research/search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           query: searchQuery,
           pubmedQuery: searchPlan?.pubmedQuery,
@@ -140,11 +153,14 @@ export function usePaperSearch() {
       // Trigger async verification for all results
       triggerVerification(results);
     } catch (error) {
+      // Silently ignore aborted requests from superseding searches
+      if (controller.signal.aborted && searchAbortRef.current !== controller) return;
       console.error("Search error:", error);
       if (page === 0) {
         store.setResults([], 0);
       }
     } finally {
+      clearTimeout(timeoutId);
       store.setIsSearching(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
