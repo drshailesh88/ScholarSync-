@@ -33,7 +33,12 @@ import { LinkPopover } from "./LinkPopover";
 import { SlashCommandsExtension } from "./extensions/slash-commands";
 import { createSlashMenuRenderer } from "./SlashMenu";
 import { Footnote } from "./extensions/footnote-node";
+import { FootnoteSection } from "./FootnoteSection";
+import { OutlinePlugin } from "./extensions/outline-plugin";
+import { DocumentOutline } from "./DocumentOutline";
 import { Extension } from "@tiptap/core";
+import { useEditorStore } from "@/stores/editor-store";
+import { getDocumentWordCount } from "@/lib/editor/word-counter";
 
 /**
  * Tiptap extension that wraps the citation numbering ProseMirror plugin.
@@ -86,6 +91,9 @@ export function TiptapEditor({
   const onUpdateRef = useRef(onUpdate);
   const onDirtyRef = useRef(onDirty);
   const onEditorReadyRef = useRef(onEditorReady);
+  const setOutline = useEditorStore((s) => s.setOutline);
+  const setActiveSectionPos = useEditorStore((s) => s.setActiveSectionPos);
+  const setWordCount = useEditorStore((s) => s.setWordCount);
 
   useEffect(() => {
     onUpdateRef.current = onUpdate;
@@ -147,6 +155,12 @@ export function TiptapEditor({
           render: createSlashMenuRenderer,
         },
       }),
+      OutlinePlugin.configure({
+        onOutlineUpdate: (outline) => {
+          setOutline(outline);
+        },
+        debounceMs: 500,
+      }),
       Footnote,
       AcademicKeyboardShortcuts,
       CitationNode,
@@ -164,6 +178,7 @@ export function TiptapEditor({
     onUpdate: ({ editor: ed }) => {
       // Notify parent that content has changed (before debounce)
       onDirtyRef.current?.();
+      setWordCount(getDocumentWordCount(ed.state.doc));
 
       if (!onUpdateRef.current) return;
 
@@ -184,6 +199,23 @@ export function TiptapEditor({
           word_count: wordCount,
         });
       }, debounceMs);
+    },
+    onSelectionUpdate: ({ editor: ed }) => {
+      const { from } = ed.state.selection;
+      let closestHeadingPos: number | null = null;
+      let closestDist = Infinity;
+
+      ed.state.doc.descendants((node, pos) => {
+        if (node.type.name === "heading") {
+          const dist = from - pos;
+          if (dist >= 0 && dist < closestDist) {
+            closestDist = dist;
+            closestHeadingPos = pos;
+          }
+        }
+      });
+
+      setActiveSectionPos(closestHeadingPos);
     },
   });
 
@@ -234,9 +266,36 @@ export function TiptapEditor({
       const currentText = editor.getText();
       if (!currentText.trim()) {
         setContent(content);
+        setWordCount(getDocumentWordCount(editor.state.doc));
       }
     }
-  }, [editor, content, setContent]);
+  }, [editor, content, setContent, setWordCount]);
+
+  useEffect(() => {
+    if (editor && !editor.isDestroyed) {
+      const timer = setTimeout(() => {
+        const items: import("@/stores/editor-store").OutlineItem[] = [];
+        editor.state.doc.descendants((node, pos) => {
+          if (node.type.name === "heading") {
+            items.push({
+              id: `heading-${pos}`,
+              type: "heading",
+              level: node.attrs.level as number,
+              text: node.textContent,
+              pos,
+              wordCount: 0,
+            });
+          }
+        });
+        if (items.length >= 2) {
+          setOutline(items);
+        } else {
+          setOutline([]);
+        }
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [editor, setOutline]);
 
   return (
     <div className={className}>
@@ -251,9 +310,11 @@ export function TiptapEditor({
           <>
             <SelectionToolbar editor={editor} />
             <LinkPopover editor={editor} />
+            <DocumentOutline editor={editor} />
           </>
         )}
         <EditorContent editor={editor} />
+        {editor && <FootnoteSection editor={editor} />}
       </div>
     </div>
   );
