@@ -185,13 +185,13 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 169 | Editor | Export / Editor Page — Export Dialog — PDF export — uses browser window.print() | /editor/[id] | ✅ PASS | Switching the dialog to `PDF` and exporting triggered the patched `window.print()` path. |  |
 | 170 | Editor | Export / Editor Page — Export Dialog — Cancel button closes dialog | /editor/[id] | ✅ PASS | Clicking `Cancel` closed the export modal and removed the format controls from the page. |  |
 | 171 | Editor | Export / Editor Page — Export Dialog — Exporting... disabled state during export | /editor/[id] | ✅ PASS | Fixed the dialog to yield one macrotask before DOCX conversion; a DOM observer then captured the button transition from `Export` to disabled `Exporting...`. |  |
-| 172 | Editor | Export / Studio Page — Export Dropdown — Export as PDF — POST to /api/export/pdf, opens rendered HTML in new window | /studio | ⬜ |  |  |
-| 173 | Editor | Export / Studio Page — Export Dropdown — Export as Word — POST to /api/export/docx, downloads .doc file | /studio | ⬜ |  |  |
-| 174 | Editor | Export / Studio Page — Export Dropdown — Dropdown closes after selecting an option | /studio | ⬜ |  |  |
-| 175 | Editor | Save System / Auto-save — Debounced save — content saved 2 seconds after last keystroke (configurable via debounceMs) | /studio | ⬜ |  |  |
-| 176 | Editor | Save System / Auto-save — Word count updates immediately on every keystroke | /studio | ⬜ |  |  |
-| 177 | Editor | Save System / Auto-save — Cmd+S — flushes pending save immediately (cancels debounce timer, saves now) | /studio | ⬜ |  |  |
-| 178 | Editor | Save System / Auto-save — Cmd+S prevents default browser save dialog | /studio | ⬜ |  |  |
+| 172 | Editor | Export / Studio Page — Export Dropdown — Export as PDF — POST to /api/export/pdf, opens rendered HTML in new window | /studio | ✅ PASS | Intercepting Studio's export hooks showed a `POST` to `/api/export/pdf`, and the returned HTML was written into a new window. |  |
+| 173 | Editor | Export / Studio Page — Export Dropdown — Export as Word — POST to /api/export/docx, downloads .doc file | /studio | ✅ PASS | `Export as Word` posted to `/api/export/docx`, then created and clicked a download anchor for `QA_Title.doc`. |  |
+| 174 | Editor | Export / Studio Page — Export Dropdown — Dropdown closes after selecting an option | /studio | ✅ PASS | After both Studio export actions, the dropdown menu closed and `Export as PDF/Word` no longer remained on screen. |  |
+| 175 | Editor | Save System / Auto-save — Debounced save — content saved 2 seconds after last keystroke (configurable via debounceMs) | /studio | ✅ PASS | A save-status observer recorded `Saving...` at `2018ms` after the last keystroke, matching the 2s debounce. |  |
+| 176 | Editor | Save System / Auto-save — Word count updates immediately on every keystroke | /studio | ✅ PASS | The fallback draft payload in `scholarsync_studio_draft` updated its `wordCount` from `5` to `6` within `120ms` of a new typed word. |  |
+| 177 | Editor | Save System / Auto-save — Cmd+S — flushes pending save immediately (cancels debounce timer, saves now) | /studio | ✅ PASS | Fixed Studio `Cmd+S`; dispatching `Meta+S` on the focused ProseMirror node triggered `Saving...` in `32ms` instead of waiting for the debounce. |  |
+| 178 | Editor | Save System / Auto-save — Cmd+S prevents default browser save dialog | /studio | ✅ PASS | After the same Studio fix, the dispatched `Meta+S` keydown was marked `defaultPrevented: true`. |  |
 | 179 | Editor | Save Status Indicators / Editor Page (TopBar) — Saving — pulsing cloud icon + "Saving..." | /editor/[id] | ⬜ |  |  |
 | 180 | Editor | Save Status Indicators / Editor Page (TopBar) — Saved — green check + "Saved HH:MM" (refreshes every 30 seconds) | /editor/[id] | ⬜ |  |  |
 | 181 | Editor | Save Status Indicators / Editor Page (TopBar) — Unsaved — amber cloud icon + "Unsaved" | /editor/[id] | ⬜ |  |  |
