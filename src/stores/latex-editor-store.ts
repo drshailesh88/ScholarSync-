@@ -54,6 +54,8 @@ interface LatexEditorState {
   // Document content (for preview syncing)
   documentContent: string;
   setDocumentContent: (content: string) => void;
+  bibContent: string;
+  setBibContent: (content: string) => void;
 
   // Compiled PDF URL (blob URL for pdfjs-dist)
   compiledPdfUrl: string | null;
@@ -124,6 +126,8 @@ export const useLatexEditorStore = create<LatexEditorState>((set, get) => ({
   // Document content
   documentContent: "",
   setDocumentContent: (documentContent) => set({ documentContent }),
+  bibContent: "",
+  setBibContent: (bibContent) => set({ bibContent }),
 
   // Compiled PDF
   compiledPdfUrl: null,

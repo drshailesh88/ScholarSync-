@@ -50,6 +50,7 @@ interface LatexWorkspaceProps {
 export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const documentContent = useLatexEditorStore((s) => s.documentContent);
   const setDocumentContent = useLatexEditorStore((s) => s.setDocumentContent);
+  const setBibContent = useLatexEditorStore((s) => s.setBibContent);
   const setSaveState = useLatexEditorStore((s) => s.setSaveState);
   const setLastSavedAt = useLatexEditorStore((s) => s.setLastSavedAt);
   const fileTreeOpen = useLatexEditorStore((s) => s.fileTreeOpen);
@@ -74,6 +75,11 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
   // Managed file list (mutable after create/rename/delete)
   const [files, setFiles] = useState<LatexFile[]>(initialFiles);
+  const filesRef = useRef(files);
+
+  useEffect(() => {
+    filesRef.current = files;
+  }, [files]);
 
   // Get the main file content
   const mainFile = files.find((f) => f.isMain);
@@ -84,6 +90,10 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     const bibFile = files.find((f) => f.path.endsWith(".bib"));
     return bibFile?.content ?? "";
   }, [files]);
+
+  useEffect(() => {
+    setBibContent(getBibContent());
+  }, [getBibContent, setBibContent]);
 
   // Editor scroll position for preview sync
   const [editorTopLine, setEditorTopLine] = useState(1);
@@ -457,7 +467,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
       const detail = (e as CustomEvent).detail as { bibtex: string; citeKey: string };
       if (!detail?.bibtex) return;
 
-      const bibFile = files.find((f) => f.path.endsWith(".bib"));
+      const bibFile = filesRef.current.find((f) => f.path.endsWith(".bib"));
 
       // Auto-create .bib file if it doesn't exist
       if (!bibFile) {
@@ -477,8 +487,11 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           navigator.clipboard.writeText(detail.bibtex);
         }
       } else {
-        // Append to existing .bib file
-        const newContent = (bibFile.content || "") + "\n\n" + detail.bibtex;
+        // Append to the latest .bib content to avoid overwriting unsaved or stale local state.
+        const { getLatexFile } = await import("@/lib/actions/latex");
+        const latestBibFile = await getLatexFile(bibFile.id);
+        const baseContent = latestBibFile?.content ?? bibFile.content ?? "";
+        const newContent = baseContent ? `${baseContent}\n\n${detail.bibtex}` : detail.bibtex;
         updateLatexFile(bibFile.id, { content: newContent }).catch(() => {});
         setFiles((prev) =>
           prev.map((f) => f.id === bibFile!.id ? { ...f, content: newContent } : f)
@@ -492,7 +505,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     };
     window.addEventListener("latex:insert-bibtex", handler);
     return () => window.removeEventListener("latex:insert-bibtex", handler);
-  }, [files, project.id]);
+  }, [project.id]);
 
   // Jump-to-line handler for outline clicks
   const handleJumpToLine = useCallback((line: number) => {
