@@ -6,13 +6,18 @@
 **Claude Code pass 3 count:** 500
 **Total checks added by pass 3:** 61
 **Cumulative checks added beyond original 200:** 300
+**Current workspace checkbox count after Codex final correction pass:** 525
+**Pass 3 verification result:** 58 verified, 2 hallucinated, 1 partially correct
+**Inaccurate assertions removed or rewritten in final pass:** 43
+
+> Note: the prompt's `500 total` reflects the audit milestone being verified. The current workspace file now contains 525 checkbox assertions after subsequent cleanup and source-backed rewrites.
 
 ## Pass 3 Summary (Claude Code)
 
-- [ ] Added execute route STAGE_MAP analysis: documents how engine stages map to frontend stages, revealing that `synthesis-summary` and `synthesis-tables` are never individually activated by SSE events.
+- [ ] Added execute route STAGE_MAP analysis, including the corrected finding that `synthesis-summary` and `synthesis-tables` pass through unchanged and can activate individually.
 - [ ] Added plan route SSE validation detail: `validateTopic()` errors emit as SSE events (not HTTP 400) because validation runs inside the stream.
-- [ ] Added per-route error response bodies for save, sessions, sessions/[id], and open-in-studio routes (400, 401, 500 status codes with exact error strings).
-- [ ] Added open-in-studio route details: project title truncation, References appending, source reference mapping for Tiptap, word count storage, dev user creation.
+- [ ] Added per-route error response bodies for save, sessions, sessions/[id], and open-in-studio routes; Codex also verified missed paths such as malformed-JSON falling through to generic 500s in save/open-in-studio.
+- [ ] Added open-in-studio route details: project title truncation, References appending, source reference mapping for Tiptap, word count storage, and placeholder-user insertion when the authenticated user is missing from the DB.
 - [ ] Added evidence badge label correction: labels are capitalized ("High", "Moderate") not lowercase ("high", "moderate").
 - [ ] Added mobile citations handle bar correction: decorative only, not draggable.
 - [ ] Added export button responsive behavior, tooltip text, render order, and format details (RIS DOI fallback URL, abstract truncation, uncapped clipboard references).
@@ -55,3 +60,10 @@
 - Evidence badge labels are capitalized ("High", "Moderate", "Low", "Unknown"), not lowercase as stated in section 11.
 - Mobile citations panel handle bar is NOT draggable — purely decorative div with no event handlers.
 - `markdownToRichHTML()` clipboard References section is uncapped (all sources), unlike the 50-source cap in rendered references and citations panel.
+
+## Codex Final Verification Additions
+
+- Corrected the active checklist so it no longer claims live streaming sections, a rotating microscope, green completed-stage icons, inline citation-row links, draggable mobile handles, or client-side 5-500 validation.
+- Verified that the execute route does not call `validateTopic()`, but the plan route validates inside the SSE stream and the client surfaces both HTTP errors and SSE error events.
+- Verified that the Open in Studio route's placeholder-user insert is not environment-gated even though the comment frames it as a dev fallback.
+- Added a new payload-shape finding: deep-research UI components read `source.pdfUrl`, while the execute route serializes `openAccessPdfUrl` / `fullTextUrl`, so live report data typically will not surface `PDF` anchors.

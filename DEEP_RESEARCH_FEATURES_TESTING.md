@@ -73,7 +73,7 @@ idle → plan-preview → running → done
 
 ### Topic Input
 - [ ] Text input field with placeholder: "e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management"
-- [ ] Validation: 5–500 characters
+- [ ] Client-side validation only checks for a non-empty trimmed topic; 5–500 character validation is enforced server-side in the plan route
 - [ ] Empty input disables "Start Deep Research" button
 - [ ] Enter key submits (when topic filled, no Shift key held)
 
@@ -101,7 +101,7 @@ idle → plan-preview → running → done
 - [ ] Label: "Start Deep Research"
 - [ ] Disabled when topic is empty
 - [ ] Triggers plan generation on click
-- [ ] Shows loading state while generating plan
+- [ ] Starting research transitions the page into the plan-loading state; the button itself does not show a spinner or loading label
 
 ---
 
@@ -147,7 +147,7 @@ idle → plan-preview → running → done
 
 ### Actions
 - [ ] **Regenerate** button (top right) — re-generates perspectives
-  - [ ] Shows spinner while regenerating
+  - [ ] The page re-fetches perspectives, but it does not pass `isRegenerating`, so the button never shows its built-in spinner state
   - [ ] Replaces perspectives with new set
 - [ ] **Confirm & Start Research** button (bottom right, blue with Play icon)
   - [ ] Sends confirmed perspectives to execute API
@@ -159,7 +159,7 @@ idle → plan-preview → running → done
 ## 5. Running State — Progress & Streaming
 
 ### Progress Stepper (Left Sidebar)
-- [ ] Progress bar at top showing 0–100%
+- [ ] Progress-bar UI exists, but the live execute route does not send numeric `progress`, so the bar stays hidden until the final report sets 100%
 - [ ] 9 stages displayed in vertical timeline:
 
 | # | Stage | Label | Test |
@@ -177,7 +177,7 @@ idle → plan-preview → running → done
 ### Stage Icons
 | Status | Icon | Test |
 |--------|------|------|
-| completed | CheckCircle2 (green) | [ ] Displays for finished stages |
+| completed | CheckCircle2 (blue) | [ ] Displays for finished stages |
 | active | Loader2 (animated spin) | [ ] Displays for current stage |
 | pending | Circle (gray) | [ ] Displays for future stages |
 | error | Circle (red) | [ ] Displays on stage failure |
@@ -187,31 +187,31 @@ idle → plan-preview → running → done
 - [ ] Stages transition: pending → active → completed sequentially
 
 ### Streaming Content (Right Side)
-- [ ] Markdown content streams in progressively
-- [ ] Smooth animation on new content
-- [ ] Loading state shows Microscope icon with rotating animation
-- [ ] Content scrolls as new sections appear
+- [ ] The current live execute route does not emit `section` chunks, so no progressive markdown preview appears during running
+- [ ] A dead `streamingSections` preview path exists in the page, but it is not exercised by the current server routes
+- [ ] Running-state loading UI shows a pulsing Microscope icon (`animate-pulse`)
+- [ ] The right side stays on the loading placeholder until the final `report` event arrives
 
 ### SSE Events Processed
 | Event Type | Data | Test |
 |------------|------|------|
-| progress | stage, message, progress% | [ ] Updates stepper and progress bar |
-| section | markdown chunk | [ ] Appends to streaming content |
+| progress | stage, message | [ ] Updates the stepper and current message; no numeric progress is sent by the live execute route |
+| section | markdown chunk | [ ] The SSE parser supports this event, but the live deep-research routes do not emit it |
 | report | full EnhancedSynthesisReport | [ ] Sets final report data |
-| done | — | [ ] Transitions to `done` state |
+| done | — | [ ] Emitted by the server, but not explicitly handled by the client |
 | error | error message | [ ] Transitions to `error` state |
 
 ### Abort
 - [ ] Stop button (red) visible during running
 - [ ] Clicking Stop aborts fetch request
 - [ ] Returns to `idle` state
-- [ ] Clears progress and streaming content
+- [ ] Stop clears `planPerspectives` and returns to `idle`, but it does not explicitly reset progress/message/streaming state
 
 ---
 
 ## 6. Done State — Report Display
 
-- [ ] Topic header with research mode badge and source count
+- [ ] Topic header shows the topic plus a metadata line with `{mode} mode` and `{totalSources} sources analyzed`
 - [ ] Full report rendered (markdown or legacy card format)
 - [ ] "Start New Research" button (center, secondary style) returns to `idle`
 - [ ] Export buttons visible in header
@@ -257,10 +257,10 @@ idle → plan-preview → running → done
 - [ ] Indentation for h3 (nested under h2)
 
 ### Mobile (Overlay)
-- [ ] Full-screen overlay with handle bar
+- [ ] Left-side drawer overlay (`w-72`), not a full-screen handle-sheet UI
 - [ ] Same heading list as desktop
 - [ ] Click heading scrolls and closes overlay
-- [ ] Swipe handle to open/close
+- [ ] Opens via the floating TOC button and closes on backdrop click or the `X` button
 
 ---
 
@@ -273,7 +273,7 @@ idle → plan-preview → running → done
 
 ### Mobile Layout
 - [ ] Bottom sheet (max-h-[70vh])
-- [ ] Draggable handle bar
+- [ ] Decorative handle bar only (no drag or swipe behavior)
 - [ ] Scrollable content
 
 ### Citation Entries
@@ -286,17 +286,15 @@ idle → plan-preview → running → done
 - [ ] Auto-scroll to highlighted citation
 
 ### Links per Citation
-- [ ] DOI link (if available, opens publisher page)
-- [ ] PubMed link (if PMID available)
-- [ ] PDF link (if available)
-- [ ] Open Access badge (if `isOpenAccess` is true)
+- [ ] Citation-panel rows do not render DOI, PubMed, PDF, or OA links inline
+- [ ] DOI / PubMed / PDF links appear only in the tooltip and report references list when the corresponding source fields exist
 
 ---
 
 ## 10. Citation Markers & Tooltips
 
 ### Inline Markers
-- [ ] `[N]` rendered as superscript blue links (10px)
+- [ ] `[N]` rendered as superscript blue clickable markers (10px), not anchor links
 - [ ] Range expansion: `[5-8]` → `[5]`, `[6]`, `[7]`, `[8]`
 - [ ] Comma-separated: `[5,12,30]` → individual markers
 - [ ] Click marker scrolls to reference in Citations Panel
@@ -311,7 +309,7 @@ idle → plan-preview → running → done
   - [ ] Evidence badge with study design
   - [ ] Abstract (line-clamp-3)
   - [ ] Links: DOI, PubMed, PDF
-  - [ ] Open Access badge
+  - [ ] Open-access `OA` label
 - [ ] Tooltip positions correctly relative to marker
 - [ ] Tooltip dismisses on mouse leave
 
@@ -321,10 +319,10 @@ idle → plan-preview → running → done
 
 | Level | Color | Badge | Example Study Types | Test |
 |-------|-------|-------|---------------------|------|
-| high | Emerald | Green dot + "high" | RCTs, meta-analyses, systematic reviews | [ ] Correct display |
-| moderate | Yellow | Yellow dot + "moderate" | Cohort, case-control, observational, prospective | [ ] Correct display |
-| low | Orange | Orange dot + "low" | Case series, case reports, expert opinions, reviews | [ ] Correct display |
-| unknown | Gray | Gray dot + "unknown" | Unclassified | [ ] Correct display |
+| high | Emerald | Emerald dot + "High" | RCTs, meta-analyses, systematic reviews | [ ] Correct display |
+| moderate | Yellow | Yellow dot + "Moderate" | Cohort, case-control, observational, prospective | [ ] Correct display |
+| low | Orange | Orange dot + "Low" | Case series, case reports, expert opinions, reviews | [ ] Correct display |
+| unknown | Gray | Gray dot + "Unknown" | Unclassified | [ ] Correct display |
 
 - [ ] Evidence level auto-assigned based on study type keywords
 - [ ] Badge shows study design text (if available)
@@ -360,7 +358,7 @@ idle → plan-preview → running → done
 
 ### BibTeX Export (.bib)
 - [ ] Downloads as `{topic}_references.bib`
-- [ ] Citation key format: `{firstName}{year}{firstWord}` (lowercase)
+- [ ] Citation key format: `{firstAuthorFirstSegment}{year}{firstTitleWord}` (lowercase), with fallback `ref{n}`
 - [ ] Fields: author, title, journal, year, doi, pmid, abstract
 - [ ] All sources included
 
@@ -436,7 +434,7 @@ idle → plan-preview → running → done
 - [ ] Converts S2 format to unified result format
 
 ### Data Extraction
-- [ ] Uses Claude Haiku to extract structured data from abstracts:
+- [ ] Uses `getSmallModel()` to extract structured data from abstracts:
   - [ ] Study design
   - [ ] Sample size
   - [ ] Effect sizes
@@ -449,13 +447,13 @@ idle → plan-preview → running → done
 ### Full-Text Extraction
 - [ ] Downloads open-access PDFs
 - [ ] Extracts Results and Discussion sections
-- [ ] Falls back to full text or abstract on failure
+- [ ] Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails
 - [ ] Max file size: 20 MB
 - [ ] Timeout: 15 seconds
 
 ### Synthesis Pipeline
 - [ ] Pass 1: Per-perspective narrative sections (parallel execution)
-- [ ] Pass 2: Executive summary
+- [ ] Pass 2: Executive summary and introduction
 - [ ] Pass 3: Comparison tables, gaps, contradictions, conclusions
 - [ ] Pass 4: Self-critique and revision
 - [ ] Outputs markdown with interactive citation markers `[N]`
@@ -465,8 +463,8 @@ idle → plan-preview → running → done
 ## 17. Error Handling
 
 ### Validation Errors
-- [ ] Topic < 5 characters: shows validation message
-- [ ] Topic > 500 characters: shows validation message
+- [ ] Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message
+- [ ] Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message
 - [ ] Empty topic: Start button disabled
 
 ### Network Errors
@@ -487,7 +485,7 @@ idle → plan-preview → running → done
 - [ ] Session load failure handled gracefully
 
 ### Data Extraction Fallbacks
-- [ ] PDF extraction failure falls back to abstract
+- [ ] PDF extraction failure skips full-text enrichment; abstract-based structured extraction still uses the original abstract when present
 - [ ] Missing fields omitted (not guessed)
 - [ ] Graceful degradation on partial data
 
@@ -496,13 +494,12 @@ idle → plan-preview → running → done
 ## 18. Keyboard & Accessibility
 
 - [ ] Enter key submits topic (idle state, no Shift)
-- [ ] Escape closes modals/overlays
+- [ ] There is no custom `Escape` key handler for the TOC or citations overlays
 - [ ] Tab navigation through all form inputs
-- [ ] Focus management on interactive elements
-- [ ] ARIA labels on buttons and controls
+- [ ] Interactive controls are native buttons, inputs, and anchors; there is no custom focus-trap or focus-restoration logic
+- [ ] The route does not add custom `aria-label` or `aria-live` wiring beyond native element semantics and visible text/title attributes
 - [ ] Semantic HTML structure (headings, lists, sections)
-- [ ] Screen reader compatible progress updates
-- [ ] Color contrast meets WCAG AA standards
+- [ ] No screen-reader-specific live-region updates are implemented for progress changes
 
 ---
 
@@ -517,7 +514,7 @@ idle → plan-preview → running → done
 6. [ ] Review perspectives in Plan Preview
 7. [ ] Click "Confirm & Start Research"
 8. [ ] Watch progress stepper advance through stages
-9. [ ] Wait for streaming content to complete (~1 min)
+9. [ ] Wait for research to complete (~1 min)
 10. [ ] Verify full markdown report displays
 11. [ ] Verify Table of Contents sidebar appears
 12. [ ] Verify Citations Panel shows sources
@@ -874,27 +871,18 @@ idle → plan-preview → running → done
 - [ ] The legacy single-endpoint route `POST /api/deep-research` still exists, but the current `/deep-research` page never calls it.
 - [ ] Even if `section` SSE events were added later, the current streaming-preview path would render them with `sources = []` because `report` is still `null` during the running state.
 
-### Features in Existing Doc That Don't Exist in Code
-- Client-side topic validation is not `5–500 characters`; the page only checks for non-empty trimmed text before enabling start.
-- The start button does not show a loading spinner or loading label while the plan request is in flight.
-- The running-state progress bar does not update through the search; the current server never sends numeric `progress`, so the bar stays hidden until the route leaves the running state.
-- The execute flow does not stream report sections progressively into the UI; there are no `section` SSE emissions from the live server route.
-- The client does not handle `done` SSE events explicitly.
-- Clicking `Stop` does not clear progress state, progress message, or streaming state; it only aborts the request, clears `planPerspectives`, and sets `pageState = "idle"`.
-- The completed progress icon is blue, not green.
-- The running-state microscope icon pulses; it does not rotate.
-- The mobile table of contents is not a full-screen overlay with a handle bar and it has no swipe-open or swipe-close behavior.
-- Citation entries in the citations panel are not clickable source links; DOI, PubMed, and PDF links appear only in the tooltip and references list.
-- The route has no session delete behavior in the page tree or called API routes.
-- The page has no client-side source-selection control.
-- The page has no separate UI controls for depth and breadth beyond the selected research mode.
-- `Start New Research` does not reset the selected mode.
-- The preview regenerate button is not driven by a real loading spinner from the page.
-- There is no route-level `loading.tsx` or `error.tsx` boundary file for `/deep-research`.
-- The open-in-studio client flow does not use `sessionStorage` at all.
-- The page has no `Escape` keyboard handler for the TOC or citations overlays.
-- The route tree has no explicit ARIA labels, `aria-live` progress region, or other custom accessibility wiring beyond native element semantics.
-- Full-text extraction does not fall back to abstract text when PDF extraction fails; it skips the paper's full-text enrichment.
+### Historical Corrections Applied From Earlier Drafts
+- Removed the old client-side `5–500 characters` validation claim; the page only checks for a non-empty trimmed topic before submit.
+- Removed the old start-button spinner claim; plan generation switches the page into a loading state instead.
+- Corrected the running-state progress documentation: the live execute route never sends numeric `progress`, so the bar stays hidden until the final report.
+- Corrected the streaming documentation: the live execute flow does not emit `section` SSE events, so there is no progressive markdown preview.
+- Corrected the stop behavior: aborting returns to `idle` and clears `planPerspectives`, but does not explicitly reset all progress state.
+- Corrected visual details: completed progress icons are blue, and the running-state microscope uses `animate-pulse`.
+- Corrected mobile navigation/panel details: the TOC is a left drawer, and the citations handle bar is decorative only.
+- Corrected citation-row behavior: DOI / PubMed / PDF links do not render inline inside citations-panel rows.
+- Corrected route-tree claims: there is no session delete flow, no source selector, no separate depth/breadth controls, no route-local `loading.tsx` / `error.tsx`, and no `sessionStorage` handoff for Open in Studio.
+- Corrected accessibility claims: there is no Escape handler, no custom aria-live region, and no custom ARIA labeling beyond native semantics.
+- Corrected full-text extraction behavior: PDF failures skip full-text enrichment rather than falling back to abstract text.
 
 ---
 
@@ -907,8 +895,8 @@ idle → plan-preview → running → done
 - [ ] Engine stages `deduplicating` and `unpaywall-lookup` both map to frontend `full-text-extraction`.
 - [ ] Engine stage `synthesizing` maps to `synthesis-perspectives`; engine stage `complete` maps to `synthesis-critique`.
 - [ ] Engine stages `citation-traversal`, `full-text-extraction`, and `data-extraction` are NOT in `STAGE_MAP` and pass through `mapStageId()` unchanged.
-- [ ] Frontend stages `synthesis-summary` and `synthesis-tables` are never individually activated by any SSE progress event — they remain `pending` during execution and jump to `completed` only when the final `report` event marks all 9 stages completed.
-- [ ] During a live research execution, the progress stepper shows stages jumping from `synthesis-perspectives` (active) directly to `synthesis-critique` (active), with `synthesis-summary` and `synthesis-tables` staying as gray pending circles until the report event.
+- [ ] Frontend stages `synthesis-summary` and `synthesis-tables` DO receive individual SSE progress events because synthesis progress is bridged through the execute route and unmapped stage IDs pass through unchanged.
+- [ ] During a live research execution, the progress stepper can activate `synthesis-perspectives` → `synthesis-summary` → `synthesis-tables` → `synthesis-critique` in sequence before the final `report` event completes all stages.
 - [ ] The execute route does NOT call `validateTopic()` — it only checks `!topic || typeof topic !== "string"`. A topic of 2 characters would pass the execute route's validation (but the plan route would have already rejected it).
 - [ ] The execute route accepts an optional `config` field in the request body (`config?: Partial<ResearchConfig>`), but the page client never sends it — this is dead code from the page's perspective.
 
@@ -946,7 +934,7 @@ idle → plan-preview → running → done
 - [ ] Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.
 - [ ] Route builds `SourceReference[]` (with `doi`, `pmid`, `title`) from sources and passes to `markdownToTiptap()` for citation hyperlink mapping.
 - [ ] Route computes `word_count` from the plain text markdown and stores it on the section record.
-- [ ] If the authenticated user does not exist in the DB, the route creates a dev user record with `email: "{userId}@dev.local"` and `full_name: "Dev User"` (for FK constraint satisfaction in dev mode).
+- [ ] If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: "{userId}@dev.local"` and `full_name: "Dev User"`; the comment describes a dev-mode fallback, but the code is not environment-gated.
 - [ ] Unexpected errors return `500 { "error": "Failed to create studio document" }`.
 - [ ] Auth failure returns `401 { "error": "Not authenticated" }`.
 
@@ -1012,3 +1000,10 @@ idle → plan-preview → running → done
 ### Components Referenced But Not Rendered
 
 No new dead-import discoveries — Codex's dead code section (Pass 2) remains accurate and complete.
+
+## Codex Final Verification Discoveries
+
+- The execute route passes `synthesis-summary` and `synthesis-tables` through unchanged, so both stages can become individually active in the live progress stepper.
+- The deep-research UI components read `source.pdfUrl`, but the execute route serializes `openAccessPdfUrl` and `fullTextUrl` instead; as a result, live report data will typically not render `PDF` anchors unless the source objects were populated elsewhere with `pdfUrl`.
+- `POST /api/deep-research/save` and `POST /api/deep-research/open-in-studio` do not special-case malformed JSON bodies; `request.json()` failures fall through to their generic `500` error responses.
+- The Open in Studio placeholder-user insert is documented as a dev fallback in comments, but the actual insert path runs whenever the authenticated user is missing from the DB, regardless of environment.
