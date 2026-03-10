@@ -10,15 +10,15 @@
 - [ ] Page loads and displays existing decks
 - [ ] "New Presentation" button navigates to `/slides/new`
 - [ ] **PPTX Import:**
-  - [ ] "Import PPTX" button opens file picker
+  - [ ] "Import Presentation" button opens file picker
   - [ ] Accepts `.pptx` files up to 50 MB
   - [ ] Rejects files over 50 MB with error message
   - [ ] Detects password-protected files and shows warning
-  - [ ] Shows import preview with up to 6 slide thumbnails
+  - [ ] Shows inline import preview with up to 6 slide preview cards
   - [ ] Displays import warnings (unsupported features, etc.)
   - [ ] "Confirm Import" creates a new deck from the PPTX
-  - [ ] Cancel dismisses the import dialog
-- [ ] Each deck card shows title, thumbnail, slide count
+  - [ ] Close button resets the inline import panel
+- [ ] Each deck card shows title, generic presentation placeholder, slide count
 - [ ] Click a deck to open it in the slides editor
 
 ---
@@ -46,7 +46,7 @@
 - [ ] Clicking a theme selects it (visual highlight)
 - [ ] "Create" button submits and generates the deck
 - [ ] After creation, redirects to the slides editor
-- [ ] Initial title slide is created immediately; remaining slides generate in background
+- [ ] Initial title slide is created immediately; background slide generation only runs when description is provided
 
 ---
 
@@ -794,7 +794,7 @@
 
 ### Workflow C: PPTX Import
 1. [ ] Go to `/slides`
-2. [ ] Click Import PPTX
+2. [ ] Click Import Presentation
 3. [ ] Select a `.pptx` file
 4. [ ] Review preview (up to 6 slides shown)
 5. [ ] Confirm import → deck created with imported slides
@@ -988,7 +988,7 @@
 ### Slide Sorter View (NEW — not in original 536 checks)
 - [ ] Toolbar includes a `Slide Sorter` button (GridFour icon) that opens a full-screen overlay
 - [ ] Slide Sorter header reads `Slide Sorter` with count text `({N} slides — drag to reorder)`
-- [ ] Slide Sorter displays slides in a responsive grid: 2 cols (sm), 3 (md), 4 (lg), 5 (xl), 6 (2xl)
+- [ ] Slide Sorter displays slides in a responsive grid: 2 cols (base), 3 (sm), 4 (md), 5 (lg), 6 (xl)
 - [ ] Slide Sorter uses `rectSortingStrategy` (grid-based) instead of `verticalListSortingStrategy` (filmstrip)
 - [ ] Clicking a slide in the sorter activates that slide AND closes the sorter view
 - [ ] Slide Sorter close button (X icon) has aria-label `Close slide sorter`
@@ -1011,7 +1011,7 @@
 - [ ] Presenter panel includes an `Audience` button that opens a separate window at `/presentation/audience`
 - [ ] Audience window opens with dimensions `width=1280,height=720,menubar=no,toolbar=no`
 - [ ] Presenter uses `BroadcastChannel("presenter-slide-sync")` to sync slide index to audience window
-- [ ] BroadcastChannel sends `init` message with all slide data when audience window sends `audience-ready`
+- [ ] BroadcastChannel sends `init` with slide render payload (`slides`, `masters`, `themeKey`, `themeConfig`, `screenMode`) when audience window sends `audience-ready`
 - [ ] BroadcastChannel sends `slide` message with current index on each slide change
 - [ ] BroadcastChannel sends `screen-mode` message when black/white screen toggles
 - [ ] Fullscreen toggle button (ArrowsOut icon) calls `requestFullscreen()` on the presenter container
@@ -1121,7 +1121,7 @@
 - [ ] Dialog cannot be closed while `submitting` is true
 - [ ] Submit label defaults to `"Regenerate"` (passed from filmstrip)
 
-### API Routes — Validation Schemas
+### API Routes — Validation & Error Handling
 - [ ] `/api/slides/regenerate` validates with zod: `deckId` (positive int), `slideId` (positive int), `instruction` (max 4000 chars), `tone` (1-100 chars), `context` object with optional `prevSlideTitle`/`nextSlideTitle` and required `deckTitle`/`audienceType`
 - [ ] `/api/slides/regenerate` returns 400 with `{ error, details }` on validation failure
 - [ ] `/api/slides/regenerate` returns 404 with `{ error: "Deck not found" }` when deck doesn't exist
@@ -1184,16 +1184,13 @@
 - [ ] Export-all-PNG uses `createRoot` from `react-dom/client` for off-screen rendering
 - [ ] After export-all-PNG completes, root is unmounted and container is removed from DOM
 
-### Slide Canvas Editor — No-Slide State
-- [ ] When no active slide exists, canvas editor shows centered text `Select a slide to start editing`
-
 ### Version History Panel — Restore Behavior
 - [ ] `VersionHistoryPanel` `onDeckRestored` callback closes the right panel and reloads the deck via `loadDeck(deckId)`
 
 ### Delete Master — Cascade
 - [ ] `deleteMaster(id)` removes the master AND sets `masterId` to `undefined` on all slides that used it
 
-### Behavior Corrections (Pass 2)
+### Behavior Corrections (Pass 2 — 10 checkboxes)
 - [ ] The page title on `/slides` is `Presentations` (h1), not `Slides` or `Slide Decks`
 - [ ] The empty-state heading is `No presentations yet`, not `No decks found` or similar
 - [ ] Deck delete confirmation dialog uses native `confirm()` with text `Delete this presentation?` (not a custom modal)
@@ -1205,7 +1202,7 @@
 - [ ] Slide import preview cards show `line-clamp-3` on `previewText` only when `previewText` is truthy (conditional rendering)
 - [ ] Completed StatusChip shows a static dot (`h-2 w-2 rounded-full`), not a checkmark icon
 
-### Components Referenced But Not Rendered in Slides Mode
+### Component Wiring Notes
 - [ ] `showSharePanel` store state is set by Share button but `SlidesModeLayout` does not render a `SharePanel` component
 - [ ] `SlideSorterView` is only rendered when `showSlideSorter` is true (toggled from toolbar GridFour button)
 
