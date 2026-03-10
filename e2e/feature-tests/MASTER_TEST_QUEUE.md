@@ -569,12 +569,12 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 553 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Missing \label after \section — warns on unlabeled sections | /latex/[projectId] | ✅ PASS | The seeded unlabeled sections were reported by the section-label check. | `ee61cb2` |
 | 554 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Package conflicts — detects conflicts: | /latex/[projectId] | ✅ PASS | Check mode detected the intentional `cite + natbib` package conflict in the seeded source. | `ee61cb2` |
 | 555 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Environment matching — validates \begin{}/\end{} balance | /latex/[projectId] | ✅ PASS | Check mode reported the seeded environment mismatch (`2 \begin` vs `1 \end`) correctly. | `ee61cb2` |
-| 556 | LaTeX | Inline AI Bar — Trigger — Cmd+K with text selected in the editor | /latex/[projectId] | ⬜ |  |  |
-| 557 | LaTeX | Inline AI Bar — Positioning — appears near the selection (8px below) | /latex/[projectId] | ⬜ |  |  |
-| 558 | LaTeX | Inline AI Bar — Single AI suggestion — sends selected text for AI rewrite | /latex/[projectId] | ⬜ |  |  |
-| 559 | LaTeX | Inline AI Bar — Replace button — replaces selected text with AI suggestion in editor | /latex/[projectId] | ⬜ |  |  |
-| 560 | LaTeX | Inline AI Bar — Dismiss button — closes the bar without changes | /latex/[projectId] | ⬜ |  |  |
-| 561 | LaTeX | Inline AI Bar — Escape key — dismisses the bar | /latex/[projectId] | ⬜ |  |  |
+| 556 | LaTeX | Inline AI Bar — Trigger — Cmd+K with text selected in the editor | /latex/[projectId] | ✅ PASS | With a non-whitespace CodeMirror selection, `Cmd+K` opened the inline AI surface reliably in the focused probe. | `c42b127` |
+| 557 | LaTeX | Inline AI Bar — Positioning — appears near the selection (8px below) | /latex/[projectId] | ✅ PASS | The focused probe measured the inline AI surface opening just below the selected phrase rather than at a fixed page position. | `c42b127` |
+| 558 | LaTeX | Inline AI Bar — Single AI suggestion — sends selected text for AI rewrite | /latex/[projectId] | ✅ PASS | Submitting `Improve the writing quality` hit the inline-edit path and returned a suggestion for the selected phrase. | `c42b127` |
+| 559 | LaTeX | Inline AI Bar — Replace button — replaces selected text with AI suggestion in editor | /latex/[projectId] | ✅ PASS | Accepting the inline suggestion replaced `clearer academic wording` with `more precise scholarly phrasing` in the editor. | `c42b127` |
+| 560 | LaTeX | Inline AI Bar — Dismiss button — closes the bar without changes | /latex/[projectId] | ✅ PASS | The inline secondary action now dismisses the bar cleanly without mutating the editor content. | `c42b127` |
+| 561 | LaTeX | Inline AI Bar — Escape key — dismisses the bar | /latex/[projectId] | ✅ PASS | `Escape` now closes the inline AI surface instead of leaving it open in a reset state. | `c42b127` |
 | 562 | LaTeX | Slash Command Menu — Cite | /latex/[projectId] | ⬜ |  |  |
 | 563 | LaTeX | Slash Command Menu — Fix | /latex/[projectId] | ⬜ |  |  |
 | 564 | LaTeX | Slash Command Menu — Bibliography | /latex/[projectId] | ⬜ |  |  |
