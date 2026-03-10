@@ -20,6 +20,10 @@
 - [ ] Download Report specifics: request body contents, filename format `integrity-report-YYYY-MM-DD.md`, and silent-failure behavior
 - [ ] `DiffView` implementation details: request-animation-frame scroll guard, exact-excerpt plagiarism highlighting, severity-colored citation `Warning` icons, and the fixed right-column legend labels
 - [ ] Exact `Check New Text` reset surface, including the states that clear versus the states intentionally preserved
+- [ ] Batch-route validation edge cases remain undocumented: `"No files uploaded"`, over-30-file rejection, 5MB limit, empty-file rejection, and unsupported-format rejection
+- [ ] History-route API edge cases remain undocumented: `limit` clamped to `1..100`, `offset` clamped to `>= 0`, 401 unauthenticated response, and 500 `{ error: "Failed to fetch history" }`
+- [ ] Error recovery coverage is still incomplete: `ErrorDisplay` captures route errors to Sentry, exposes a `Try Again` retry button, and the app-level `global-error.tsx` provides a second `reset()` path that is not documented
+- [ ] The project-dropdown `mousedown` listener cleanup and the document-load effect's lack of stale-response protection are still not covered
 
 ## Features in doc that DON'T EXIST in the app
 - Switching to `Paste Text` does not clear the current text in the live implementation.
@@ -28,5 +32,3 @@
 - Copyleaks scan failures other than `503` do not show a dedicated error message in the current UI.
 - Copyleaks `error` status does not have its own rendered error state; the section falls back toward the idle action path.
 - History entries are not reopenable reports in the current implementation; they are read-only summaries.
-- The `/compliance` route does not have a `loading.tsx`; the Pass 1 loading-skeleton bullets described a non-existent component.
-- The `/compliance` route does not have an `error.tsx`; the Pass 1 error-boundary copy bullets described a non-existent component.
