@@ -8,8 +8,11 @@
 **Pass 3 new discoveries:** 179
 **Features found in source code (Claude Code pass 4):** 1222
 **Pass 4 new discoveries:** 123
-**Missing from original doc:** 794
-**Completeness of original doc:** 35.0%
+**Features found after Codex verification cleanup:** 1232
+**Verification-pass new discoveries:** 10
+**Confirmed hallucinations corrected/removed:** 7
+**Missing from original doc:** 804
+**Completeness of original doc:** 34.7%
 
 ## Missing Features
 

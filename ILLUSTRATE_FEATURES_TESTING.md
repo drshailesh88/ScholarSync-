@@ -753,13 +753,13 @@
 | Ellipse | `E` | [ ] Switches to Ellipse |
 | Line | `L` | [ ] Switches to Line |
 | Pen | `P` | [ ] Switches to Pen |
-| Brush | `B` | [ ] Switches to Brush |
+| Brush | — | [ ] No default global Brush shortcut is registered in `useKeyboardShortcuts`, even though the toolbar button advertises `B` |
 | Text | `T` | [ ] Switches to Text |
 | Eyedropper | `I` | [ ] Switches to Eyedropper |
 | Eraser | `Shift+E` | [ ] Switches to Eraser |
 | Scissors | `C` | [ ] Switches to Scissors |
 | Measure | `M` | [ ] Switches to Measure |
-| Zoom | `Z` | [ ] Switches to Zoom |
+| Zoom | — | [ ] No default global Zoom shortcut is registered in `useKeyboardShortcuts`, even though the toolbar button advertises `Z` |
 
 ### Editing
 | Action | Shortcut | Test |
@@ -1464,7 +1464,7 @@
 - [ ] Mermaid generation strips fenced-code wrappers like ```mermaid and ```json and also replaces smart quotes before returning content
 - [ ] Mermaid generation extracts `syntax` from a JSON payload when the model responds with JSON and unescapes `\\n` back into newlines
 - [ ] Gemini generation throws `GEMINI_API_KEY not configured` when the API key is unavailable
-- [ ] Gemini vectorization uses `pngToEditableSVG(..., { colorCount: 16 | 32, minColorRatio: 0.02, filterSpeckle: 4, simplify: true })` based on style
+- [ ] Gemini vectorization uses `pngToEditableSVG(..., { colorCount, minColorRatio: 0.02, filterSpeckle: 4, simplify: true })` where `colorCount` is `16` for `flat`, `32` for `detailed`, and `16` for `schematic` or `photorealistic`
 - [ ] Gemini unavailability during explicit or auto Gemini selection falls back to the SVG backend only when the thrown error message mentions `GEMINI_API_KEY`
 - [ ] SVG-backend failures fall back to Mermaid generation
 - [ ] The success response normalizes output to `illustration.content`, `illustration.backend`, `illustration.format`, `illustration.caption`, and `illustration.domain`, plus optional `pathCount`, `colorPalette`, `rasterPreview`, and `vectorized`
@@ -1572,7 +1572,7 @@
 - The Export dialog filename field is currently ignored by the live export handler, which always exports as `diagram.*`.
 - PNG export collects a quality slider in the UI, but the live editor export handler does not use that value.
 - SVG export toggles for optimize, minify, and embed fonts are largely UI-only in the current implementation; the helper serializes the SVG but does not implement those transforms.
-- LaTeX export from the live editor does not download a `.tex` file; it only reports `LaTeX code ready!`.
+- The main editor export handler still only reports `LaTeX code ready!`, but the `LaTeXOptions` panel separately renders a `Download .tex` button that downloads `diagram.tex`.
 - Drag-and-drop image placement is not pointer-relative; all imported images are centered on the canvas.
 - The icon browser exposes more libraries to search than to browse, so category browsing is not a complete representation of the searchable icon set.
 - No illustrate collaboration provider or Yjs-based real-time sync layer is present in the rendered code path.
@@ -1691,7 +1691,7 @@
 - [ ] Measurement overlay renders when `activeTool === ToolType.MEASURE && measurementOverlay !== null`
 - [ ] Eyedropper preview overlay renders when `activeTool === ToolType.EYEDROPPER && eyedropperPreview.visible`
 - [ ] Eraser cursor overlay renders when `activeTool === ToolType.ERASER && eraserCursor.visible`
-- [ ] `mouse:dblclick` handler enters point editing mode for path objects and enters text editing for text objects
+- [ ] `mouse:dblclick` only reacts while `activeTool === ToolType.DIRECT_SELECT`; double-clicking empty canvas exits point-editing mode, and non-empty targets are ignored
 - [ ] Connector color default is `#6366f1`
 
 ### CanvasContext Operation Details (`CanvasContext.tsx`)
@@ -1740,8 +1740,8 @@
 - [ ] Panel letter auto-increments to next letter after each insertion (e.g., A → B → C)
 - [ ] `ColorConventionManager` applies standardized color conventions to canvas objects via `handleApplyConventions`
 - [ ] Color blind simulation types: `Deuteranopia (green-blind)`, `Protanopia (red-blind)`, `Tritanopia (blue-blind)`
-- [ ] Accessibility check success text: `Colors appear sufficiently distinct...`
-- [ ] Accessibility check fallback text: `Consider using patterns or textures alongside colors...`
+- [ ] Accessibility check success text is `Colors appear sufficiently distinct for the selected simulation type.`
+- [ ] Accessibility check fallback text is `Consider using patterns or textures alongside colors to convey information.`
 
 ### Icon Grid Virtualization (`IconGrid.tsx`)
 - [ ] Icon grid implements scroll-based virtualization with `visibleRange` state tracking start and end indexes
@@ -1756,7 +1756,7 @@
 - [ ] Icon tinting via `applyTint()` replaces `currentColor`, `fill`, and `stroke` attributes in SVG
 - [ ] SVG extraction from React component icons uses `50ms` setTimeout delay before DOM scraping
 - [ ] Library license information displayed per icon in preview details
-- [ ] Keywords display truncated to 8 with `+N more` indicator when more keywords exist
+- [ ] Keywords display truncates to 8 and shows a bare `+N` indicator when more keywords remain
 
 ### Effects Panel Ranges (`EffectsPanel.tsx`)
 - [ ] Shadow blur range: `0` to `50`
@@ -1786,7 +1786,7 @@
 - [ ] `include_scores` parameter: boolean, default `false`
 - [ ] Scoring algorithm: `100` (exact name match), `50` (starts-with), `25` (contains), `20` (category match), `30`/`15`/`10` (keyword exact/starts/contains), `3` (synonym match)
 - [ ] Response includes `expanded_terms` array when `expand_synonyms` is true
-- [ ] Category `medical` maps to `health`/`bioicons`/`anatomy`/`equipment`/`diagnostics` libraries
+- [ ] Category `medical` matches libraries `health`, `bioicons`, `bioicons-full`, or categories `anatomy`, `equipment`, `diagnostics`, `conditions`, `services`, and `biology`
 
 ### API Route: `/api/illustration/icons/generate` (POST)
 - [ ] Schema: `name` (1–100 chars), `style` (`flat`/`outline`/`filled`/`minimal`), `category` (`scientific`/`medical`/`ui`/`arrows`/`shapes`)
@@ -1803,7 +1803,7 @@
 
 ### API Route: `/api/illustration/generate` (POST) — Additional Details
 - [ ] `traceGeneration()` called for observability tracing with `tier`, `modelId`, `feature`, `userId`
-- [ ] Gemini vectorization `colorCount`: `16` for flat/schematic styles, `32` for detailed/photorealistic styles
+- [ ] Gemini vectorization `colorCount` is `16` for `flat`, `32` for `detailed`, and `16` again for `schematic` or `photorealistic`
 
 ### Editor Store Details (`editorStore.ts`)
 - [ ] Editor store uses `subscribeWithSelector` middleware
@@ -1924,7 +1924,7 @@
 - [ ] Selecting `custom` preset does not change width/height; only non-custom presets update dimensions
 
 ### Figure Panel Generator — Full Details (`FigurePanelGenerator.tsx`)
-- [ ] Dialog title text is `Figure Panel Generator` (header at line ~100)
+- [ ] Dialog title text is `Figure Panel Layout`
 - [ ] 9 layout presets in 3-column grid: `1x1` (Single panel), `1x2` (Two panels side by side), `2x1` (Two panels stacked), `2x2` (Four panel grid), `2x3` (Six panel grid), `3x2` (Six panel vertical), `3x3` (Nine panel grid), `2x4` (Eight panel grid), `4x2` (Eight panel vertical)
 - [ ] Each preset button shows a mini visual grid preview matching its rows×cols
 - [ ] Default config: rows=2, cols=2, panelWidth=150, panelHeight=150, gap=20, showLabels=true, labelPosition=`top-left`, labelFontSize=24, strokeWidth=2, strokeColor=`#000000`, fillColor=`#ffffff`
@@ -1934,7 +1934,7 @@
 - [ ] Panel rectangles use Fabric `Rect` objects with configured fill, stroke, and strokeWidth
 - [ ] Generated panels are centered on canvas using `(canvasWidth / 2 - totalWidth / 2)`
 - [ ] Number inputs clamp values between `min` (default 1) and `max` (default 1000)
-- [ ] Footer has `Cancel` and `Generate` buttons
+- [ ] Footer has `Cancel` and `Generate Panels` buttons
 
 ### Character Panel — Full Details (`CharacterPanel.tsx`)
 - [ ] Font weight options: `Light (300)`, `Regular (400)`, `Medium (500)`, `Semi-Bold (600)`, `Bold (700)`, `Black (900)`
@@ -1963,7 +1963,7 @@
 - [ ] Hook returns `{ shortcuts, enabled, isSpacePressed }` for external consumers
 
 ### ToolType Enum — Complete Values (`types/index.ts`)
-- [ ] ToolType enum has 22 values: SELECT, DIRECT_SELECT, PEN, PENCIL, BRUSH, LINE, RECTANGLE, ELLIPSE, POLYGON, STAR, ARROW, BRACKET, CALLOUT, DIMENSION, CONNECTOR, TEXT, TEXT_ON_PATH, HAND, ZOOM, EYEDROPPER, ERASER, SCISSORS, MEASURE
+- [ ] ToolType enum has 23 values: SELECT, DIRECT_SELECT, PEN, PENCIL, BRUSH, LINE, RECTANGLE, ELLIPSE, POLYGON, STAR, ARROW, BRACKET, CALLOUT, DIMENSION, CONNECTOR, TEXT, TEXT_ON_PATH, HAND, ZOOM, EYEDROPPER, ERASER, SCISSORS, MEASURE
 - [ ] BRACKET, CALLOUT, DIMENSION, CONNECTOR, PENCIL, and TEXT_ON_PATH are defined in enum but have no toolbar buttons or keyboard shortcuts
 - [ ] DiagramType union has 11 values: `flowchart`, `sequence`, `class`, `entity-relationship`, `state`, `gantt`, `pie`, `mindmap`, `timeline`, `scientific`, `custom`
 - [ ] ExportDPI type allows exactly 4 values: `72 | 150 | 300 | 600`
@@ -1971,14 +1971,22 @@
 - [ ] ExportStage type has 6 stages: `preparing`, `rendering`, `optimizing`, `encoding`, `complete`, `error`
 
 ### Behavior Corrections (Pass 4)
-1. **B key shortcut**: Section 5 (line 356) and Section 19 (line 756) document `B` as Brush tool shortcut, but `useKeyboardShortcuts.ts` does NOT register a `B` key → Brush mapping in defaultShortcuts. The Brush tool has no keyboard shortcut in the live code.
-2. **Z key shortcut**: Section 5 (line 362) and Section 19 (line 762) document `Z` as Zoom tool shortcut, but `useKeyboardShortcuts.ts` does NOT register a `Z` key → Zoom mapping. The Zoom tool has no keyboard shortcut in the live code.
+1. **Brush keyboard shortcut**: Section 19 documented `B` as a live Brush shortcut, but `useKeyboardShortcuts.ts` does NOT register a plain `B` key handler. The toolbar still advertises `B` in its tooltip metadata.
+2. **Zoom keyboard shortcut**: Section 19 documented `Z` as a live Zoom shortcut, but `useKeyboardShortcuts.ts` does NOT register a plain `Z` key handler. The toolbar still advertises `Z` in its tooltip metadata.
 3. **Document Settings presets**: Section 4 (line 268) describes Canvas Size dialog as "width, height, background color" but omits the 6 preset options (A4, A3, Letter, Instagram, HD, Custom) and the Portrait/Landscape orientation toggle.
 4. **AI Generation style options**: Section 16 describes styles as "FLUX Pro, FLUX Realism" but `AIGenerationTool.tsx` uses `Clean Vector`, `Detailed`, `Sketch`, `Diagram`, `Realistic` — these are IllustrationStyle values passed to `generateScientificDiagram`, NOT the same as agent mode's flat/detailed/schematic/photorealistic.
 5. **AI Generation model options**: Section 16 does not specify the three FLUX model tiers: schnell (Fast), dev (Quality), flux-pro (Pro) with their cost estimates.
-6. **Background Removal**: Section 17 says "Uses MediaPipe" but `BackgroundRemovalTool.tsx` calls `removeImageBackground` from `@/lib/illustration/lib/image` and checks `isBackgroundRemovalSupported()` — the actual implementation may or may not use MediaPipe; the component itself is agnostic to the underlying library.
-7. **Paste offset**: Section 6 and 19 do not mention that pasted objects are offset by +20px left and +20px top from their original position.
+6. **Paste offset**: Section 6 and 19 did not mention that pasted objects are offset by +20px left and +20px top from their original position.
 
-### Components Referenced But Not Rendered (Additions — Pass 4)
-- `CharacterPanel` exists in `src/components/illustration/CharacterPanel/CharacterPanel.tsx` but is not directly imported by any rendered illustrate page; it is imported by `RightPanel.tsx` which IS rendered, so it IS in the render tree (confirmed via RightPanel import chain).
-- `FontPicker` exists in `src/components/illustration/CharacterPanel/FontPicker.tsx` and is imported by CharacterPanel, which is rendered via RightPanel.
+## Codex Verification Pass Discoveries
+
+- [ ] `AIGenerationTool` stores `imageSize` and `model` in component state, but `handleGenerate()` still calls `generateScientificDiagram(prompt, style, undefined, onProgress)` and does not pass either value into the generation request
+- [ ] `BackgroundRemovalTool` gives the drop zone `role="button"` and `tabIndex={0}`, but it does not register any `onKeyDown` handler for Enter or Space keyboard activation
+- [ ] `ExportDialog` registers its Escape handler on `document`, and pressing Escape while the dialog is open calls `onClose()` even if `isExporting` is true
+- [ ] `ExportDialog` blocks backdrop clicks while `isExporting`, but the Escape-key path does not check `isExporting`
+- [ ] `FigurePanelGenerator` closes on backdrop click via `onClick={onClose}`, but it has no Escape-key listener
+- [ ] `IconSearch` debounces `onSearch` by `200` ms by default, clears the query on Escape when text is present, and blurs the input on Escape when the field is already empty
+- [ ] `PropertiesPanel` empty state text is exactly `Select an object to edit its properties`
+- [ ] `PropertiesPanel` debounces transform-panel resync by `40` ms with `window.setTimeout`, clears any pending timeout before rescheduling, and clears the timeout again on unmount
+- [ ] `LayersPanel` refuses to delete the last remaining layer by returning early in the panel handler before the confirm dialog is shown
+- [ ] `LayersPanel` renaming autofocuses and selects the layer-name input on entry, commits on Enter or blur, and restores the original name on Escape
