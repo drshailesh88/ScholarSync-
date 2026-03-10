@@ -1092,6 +1092,146 @@ Shown when chat has no messages.
 - [ ] Sharing is unavailable until a conversation exists because the share button is disabled when `conversationIdRef.current` is null
 - [ ] Shared notebook citations are read-only visual labels; there is no PDF jump-to-source interaction in the shared viewer
 
+## Re-Audit Discoveries (Codex Pass 2)
+
+### Upload and URL Ingestion Internals
+- [ ] Upload temp ids use the exact format `upload_${Date.now()}_${Math.random()}`
+- [ ] Each optimistic upload row is appended with `name: file.name`, `size: formatFileSize(file.size)`, `selected: true`, and `status: "processing"` before any network request starts
+- [ ] `/api/extract-pdf` failure changes only the affected upload row to `status: "error"` and preserves the original byte-size subtitle
+- [ ] Successful metadata extraction plus `savePaper()` swaps the upload subtitle from formatted bytes to ``${extractData.pages} pages``
+- [ ] Uploaded-title fallback strips a trailing `.pdf` case-insensitively via `file.name.replace(/\\.pdf$/i, "")`
+- [ ] Uploaded-author fallback is an empty array when `extractData.info?.author` is missing
+- [ ] Raw PDF storage runs in a fire-and-forget `fetch(/api/papers/${paperId}/pdf)` branch whose `.catch(...)` only logs `PDF storage failed:`
+- [ ] A Docling result with `chunksCreated === 0` logs `Docling extraction produced zero chunks`, marks the row `embed_failed`, and skips the `/api/embed` request via `continue`
+- [ ] `/api/embed` non-OK responses are logged with `await embedRes.text()` before the row is marked `embed_failed`
+- [ ] Exceptions inside the Docling or embed block log `PDF extraction/embedding failed:` and end with `status: "embed_failed"`
+- [ ] Outer upload-pipeline failures mark the row `status: "error"` rather than `embed_failed`
+- [ ] File-input reset happens once after the upload loop with `fileInputRef.current.value = ""`; there is no per-file `finally` reset
+- [ ] URL temp ids use the exact format `url_${Date.now()}`
+- [ ] Each optimistic URL row starts with `name: url`, `size: "URL"`, `selected: true`, `status: "processing"`, and `originalUrl: url`
+- [ ] URL submission clears `urlValue` and hides the composer with `setShowUrlInput(false)` before awaiting `ingestUrl(url)`
+- [ ] Successful URL ingestion rewrites the temp row with `name: result.title`, `size: \`${result.wordCount.toLocaleString()} words\``, `paperId: result.paperId`, and `status: result.status`
+- [ ] URL-ingest failures keep the original URL as the row name and set the subtitle to `error.message` or fallback `Failed to load URL`
+- [ ] Ready URL rows prepend a parsed hostname only when `getHostnameLabel(file.originalUrl)` succeeds
+- [ ] `getHostnameLabel()` strips a leading `www.` from parsed hosts and returns `null` when `new URL(url)` throws
+
+### RAG Chat Internals
+- [ ] Chat routing switches to `/api/rag-chat` only when `selectedPaperIds.length > 0`; otherwise it posts to `/api/chat`
+- [ ] Notebook chat request bodies always include `messages` and `mode`, and include `paperIds` only when at least one selected paper id exists
+- [ ] Outbound notebook requests use a request-level `AbortController` that aborts after exactly `30_000ms`
+- [ ] Non-OK chat responses append an assistant error message with the exact text `Unable to connect to AI. Please check your AI provider API key configuration.`
+- [ ] `X-RAG-Sources` header parsing uses `JSON.parse(...)` inside a `try/catch`; parse failures are silently ignored
+- [ ] Parsed `X-RAG-Sources` data is copied into `currentSources`, and the cited-sources panel auto-opens only when `sources.length > 0`
+- [ ] `X-RAG-Coverage` header parsing also uses `JSON.parse(...)` inside a `try/catch`; malformed JSON leaves the previous UI path intact without an inline error
+- [ ] When `X-RAG-Coverage` is absent, the notebook explicitly clears coverage state with `setCoverageReport(null)`
+- [ ] Streaming starts only when `res.body?.getReader()` returns a reader; a missing body exits early after `setIsLoading(false)`
+- [ ] Each stream read races `reader.read()` against a second `30_000ms` timeout that rejects `new Error("Stream timeout")`
+- [ ] The per-read timeout clears its internal timer in both the read success and read failure paths via `readPromise.then(..., ...)`
+- [ ] Timeout detection treats both `AbortError` and `Error("Stream timeout")` as timeout-class failures
+- [ ] Timeout failures append `The response timed out. Please try again or ask a simpler question.`
+- [ ] Non-timeout failures append `Something went wrong. Please try again.`
+- [ ] Error cleanup cancels the active reader with `await reader.cancel().catch(() => {})`
+
+### Source Notes Panel Internals
+- [ ] Opening the Source Notes drawer sets `animateIn` on a zero-delay `window.setTimeout(..., 0)` tick; closing it resets `animateIn` to `false`
+- [ ] Source Notes stores the prior `document.body.style.overflow` value and restores it on cleanup after forcing `overflow = "hidden"`
+- [ ] Source Notes fetches notes only for rows where `file.paperId` exists and `file.status === "ready"`
+- [ ] When no ready paper ids exist, Source Notes resets to `paperNotes: []`, `loading: false`, and `error: null`
+- [ ] Batch-note load failures show the exact panel-level error `Failed to load paper notes.`
+- [ ] Escape-to-close is implemented with a `document.addEventListener("keydown", ...)` listener that is removed on cleanup
+- [ ] `Generate All` targets only `paperNotes.filter((note) => !note.overview)` rather than regenerating already summarized papers
+- [ ] `Generate All` processes missing overviews in sequential batches of exactly `3`
+- [ ] Each batch runs `Promise.all(batch.map((note) => handleGenerate(note.paperId)))` before moving to the next batch
+- [ ] Paper-note cards are sorted selected-first by mapping selected papers to sort weight `0` and unselected papers to `1`
+- [ ] Clicking a suggested `Ask about this paper` question calls `onSendMessage(question)` and then closes the drawer
+- [ ] Per-paper note-generation failures render inline red text using `generationErrors.get(paperId)`
+
+### Audio Overview Internals
+- [ ] Audio overview auto-generation is guarded by `hasTriggeredRef`, so automatic generation runs only once per panel mount even if options later change
+- [ ] Audio overview resets itself to `idle` whenever `conversationId`, `paperIdsKey`, `mode`, `customPrompt`, or `audioLength` changes
+- [ ] That reset effect clears `audioUrl`, `script`, `durationSeconds`, `currentTime`, `showTranscript`, `errorMessage`, and `isCachedResult`
+- [ ] Transcript visibility defaults to hidden (`showTranscript === false`) and is also forced back to hidden after successful generation
+- [ ] Missing conversation state shows the exact error `Select papers and start a notebook conversation first.`
+- [ ] Missing selected-paper state shows the exact error `Select at least one paper to generate an audio overview.`
+- [ ] Playback speed cycles through the fixed order `1x → 1.25x → 1.5x → 2x → 1x`
+- [ ] `cycleSpeed()` updates both the `speedIndex` state and `audioRef.current.playbackRate`
+- [ ] Download always uses the fixed filename `audio-overview.mp3`
+- [ ] Closing the panel pauses playback and resets `audio.currentTime = 0` before calling `onClose()`
+- [ ] Natural playback end sets audio state back to `ready`, resets `currentTime` to `0`, and rewinds `audio.currentTime = 0`
+- [ ] `Regenerate with new settings` hides the options panel first via `setShowOptions(false)` and then triggers a fresh generation
+
+### Share Dialog Internals
+- [ ] Share dialog initializes with `loading: true` and renders `Loading share settings...` until `getNotebookShareSettings(conversationId)` settles
+- [ ] Share settings are fetched automatically on mount through a `useEffect(() => { loadSettings(); }, [loadSettings])`
+- [ ] Share-dialog load failures log `Failed to load share settings:` to the console and do not render inline error text
+- [ ] Escape-to-close is handled by a document-level `keydown` listener that is removed on unmount
+- [ ] Share toggling calls `enableNotebookSharing(conversationId)` only when `shareEnabled` is currently false
+- [ ] Enabling sharing mutates local state with `setShareEnabled(true)` and `setShareUrl(result.shareUrl)`
+- [ ] Disabling sharing calls `disableNotebookSharing(conversationId)` and flips only `shareEnabled` to `false` in local state
+- [ ] `Save Settings` persists only `{ password: password || null, expiresAt: expiresAt ? new Date(expiresAt) : null }`
+- [ ] `Save Settings` does not re-enable sharing, regenerate a token, or refresh the loaded share URL
+- [ ] Toggle and save failures are console-only via `Failed to toggle sharing:` and `Failed to save share settings:`
+
+### Shared Notebook Viewer Internals
+- [ ] Shared notebook metadata title is generated as `${notebook.title} - ScholarSync`
+- [ ] Missing or disabled share tokens call `notFound()` from `src/app/share/notebook/[token]/page.tsx`
+- [ ] The share route renders `NotebookPasswordGate` only when `notebook.hasPassword` is true; otherwise it renders `SharedNotebookViewer` directly
+- [ ] Password-gate submit is disabled while `loading` is true or while the password field is empty
+- [ ] Incorrect password submissions show `Incorrect password. Please try again.`
+- [ ] Password-gate catch failures show `Something went wrong. Please try again.`
+- [ ] Successful password verification flips local `unlocked` state and swaps directly to `SharedNotebookViewer` without navigation
+- [ ] Shared-viewer citations render as `<span>` pills, not `<button>` elements, so they are read-only and non-clickable
+- [ ] Shared-viewer citation pills omit the interactive notebook `FilePdf` icon even though they reuse the same short-title and page-label truncation logic
+
+### Conversation History Internals
+- [ ] Conversation-history dropdown uses `max-h-32 overflow-y-auto`
+- [ ] `startNewConversation()` clears `conversationIdRef.current` plus messages, sources, coverage, follow-up suggestions, PDF viewer, source notes, share dialog, and audio overview state
+- [ ] `startNewConversation()` does not clear file-selection state and does not explicitly close the history dropdown
+- [ ] `loadConversation()` restores source metadata only from the last assistant message with `sources.length > 0`
+- [ ] `loadConversation()` applies stored `paper_ids` by remapping every file row's `selected` flag
+- [ ] File rows without `paperId` are forced to `selected: false` when stored `paper_ids` are restored
+- [ ] Conversation-mode restoration uses strict learn-mode detection: `convo.mode === "learn"` maps to learn, everything else maps to research
+- [ ] Loading an existing conversation closes the history dropdown via `setShowHistory(false)`
+
+### Follow-Up Suggestion Internals
+- [ ] Server-side follow-up generation returns `[]` immediately when `responseText.length < 100`
+- [ ] Client-side follow-up generation also gates on `assistantMsg.content.trim().length >= 100`
+- [ ] Sending a new message increments `suggestionRequestIdRef.current` before any network work starts
+- [ ] Suggestion generation records the owning assistant message with `setSuggestionsForMessageId(assistantMsg.id)`
+- [ ] `.then(...)`, `.catch(...)`, and `.finally(...)` all reject stale suggestion results by comparing against the captured `suggestionRequestId`
+- [ ] Follow-up chips render only when `msg.id === suggestionsForMessageId`, the message is the last assistant message, and `!isLoading`
+- [ ] Learn-mode follow-up chips use amber classes while research-mode chips use neutral surface classes
+- [ ] Previous follow-up requests are not actually aborted; stale completions are ignored via `suggestionRequestIdRef`
+
+### Chat Message Rendering Internals
+- [ ] The main message list uses `role="log"` with `aria-live="polite"` and `aria-label="Chat messages"`
+- [ ] Interactive citation pills render a `FilePdf` icon with `size={10}` and `weight="bold"`
+- [ ] Citation short-title logic prefers text before the first colon only when that colon appears within the first 40 characters
+- [ ] Colon-less long titles are shortened to 28 characters plus the single-character ellipsis `…`
+- [ ] Copy-to-clipboard removes bracketed citation markers with `/\\[\\d+\\]/g` and collapses repeated spaces with `/\\s{2,}/g`
+- [ ] Copy success resets `copiedMessageId` after exactly `2000ms`
+- [ ] Re-clicking an already selected feedback thumb toggles that rating back off by sending `null`
+- [ ] Helpful feedback uses green styling plus `weight="fill"` on `ThumbsUp`
+- [ ] Unhelpful feedback uses red styling plus `weight="fill"` on `ThumbsDown`
+- [ ] Feedback persistence runs only when `parseInt(messageId.replace("msg_", ""), 10)` yields a numeric id greater than `0`
+
+### Extraction Card Internals
+- [ ] ExtractionCard does not return `null` when no fields are truthy; it renders the muted fallback text `No structured data could be extracted.`
+- [ ] Extraction header text is exactly `Structured Extraction`
+- [ ] Human-verified extractions show a green `ShieldCheck` badge labeled `Verified`
+- [ ] Unverified extractions show a `Verify` button instead of a badge
+- [ ] Evidence level rows render as `Level ${extraction.evidence_level}` when an evidence level exists
+- [ ] `custom_extractions.key_findings` and `custom_extractions.limitations` each render in their own bordered section
+- [ ] While a paper is being extracted, the file-row action slot shows only a spinning `CircleNotch` and no clickable extract button
+
+### Behavior Corrections (Pass 2)
+- [ ] Section 14 says previous follow-up suggestion requests are "cancelled" — the live notebook does not abort them; it only ignores stale completions via `suggestionRequestIdRef`
+- [ ] Section 25 claims the close controls include `aria-label="Close audio overview"` — the audio panel close button currently has `title="Close audio overview"` but no `aria-label`
+- [ ] The file picker accepts `.pdf`, `.txt`, and `.md`, but `handleFileUpload()` routes every uploaded file through `/api/extract-pdf` and `extractUploadedPdf()`; there is no separate text/markdown ingestion branch in `page.tsx`
+
+### Components Referenced But Not Rendered
+- [ ] None — every file under `src/components/notebook` is imported by `/notebook`, `/share/notebook/[token]`, or another rendered notebook component
+
 ---
 
-*Document generated from source code analysis. Last updated: 2026-03-09.*
+*Document generated from source code analysis. Last updated: 2026-03-10.*

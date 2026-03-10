@@ -2,48 +2,31 @@
 
 **Original doc:** `NOTEBOOK_FEATURES_TESTING.md`
 **Original checkbox count:** 374
-**Features found in UI:** 456
-**Features found in source code:** 564
-**Missing from doc:** 190
-**Completeness of original doc:** 66.3%
+**After Codex Pass 1:** 564
+**After Codex Pass 2:** 678
+**Net additions in Pass 2:** 114
+**Missing from original doc:** 304
+**Completeness of original doc:** 55.2%
 
-## Missing Features
+## Pass 2 Coverage Areas
 
-### Route and Initial Hydration
-- [ ] `/notebook` has dedicated route-level loading and error screens separate from the in-page chat UI
-- [ ] The notebook preloads existing library papers from `getUserPapers()` rather than starting from an empty source list
-- [ ] Existing extraction records are pre-hydrated for already extracted papers
-- [ ] Past conversations are loaded and capped at 20 entries on mount
+- Upload and URL ingestion internals: exact temp-id formats, optimistic row payloads, byte-size to page-count swap, `error` vs `embed_failed` transitions, hostname fallback, and file-input reset timing
+- RAG chat internals: `/api/chat` vs `/api/rag-chat` routing, header parsing, request timeout, per-read timeout race, and exact streamed error strings
+- Source Notes drawer internals: body scroll lock, `animateIn` timing, `Generate All` batching by 3, selected-first sort, and ask-question auto-close behavior
+- Audio Overview internals: first-mount auto-generate, option-change reset behavior, speed cycle order, transcript defaults, fixed download filename, and playback reset on close
+- Share dialog internals: mount-time settings fetch, `Loading share settings...`, Escape-to-close, enable/disable toggle behavior, save payload scope, and console-only failures
+- Shared notebook viewer internals: metadata title format, `notFound()` path, password-gate disabled states, exact password errors, and non-clickable citation pills
+- Conversation-history internals: `max-h-32` dropdown, new-conversation reset scope, last-assistant-message source restore, file-row selected-flag restoration, and learn-mode detection
+- Follow-up suggestion internals: 100-character gates, stale-request rejection via `suggestionRequestIdRef`, learn/research chip styling split, and `suggestionsForMessageId` ownership
+- Chat message rendering internals: `role="log"` container, citation-chip shortening logic, copy sanitization, feedback toggle-off, fill weights, and DB persistence gate for positive numeric ids
+- Extraction card internals: non-null fallback rendering, exact header/badge text, `Level X` evidence formatting, bordered custom sections, and spinner replacement during extraction
 
-### Sidebar and Source-Row Details
-- [ ] Sidebar count pill reflects total source rows, including failed and unselected rows
-- [ ] Conversation history toggle and new-conversation reset clear multiple overlay states in addition to messages
-- [ ] Upload and URL rows have precise temporary-id formats and optimistic processing states
-- [ ] URL-ready rows show `hostname · size` when the original URL parses cleanly
-- [ ] Remove actions delete rows locally with no confirmation dialog or server-side delete call
+## Behavior Corrections (Pass 2)
 
-### Upload, RAG, and Chat Request Behavior
-- [ ] Uploaded files update from byte size to page count after `/api/extract-pdf` succeeds
-- [ ] Raw PDF storage failures are logged but do not block Docling extraction and embedding
-- [ ] Notebook switches between `/api/chat` and `/api/rag-chat` based on selected paper ids
-- [ ] Streaming uses both a 30 second request abort and a per-read 30 second timeout race
-- [ ] Coverage and source metadata are driven by `X-RAG-Coverage` and `X-RAG-Sources` response headers
+- Follow-up suggestion requests are not actually cancelled on new sends; stale completions are ignored with `suggestionRequestIdRef`
+- The audio overview close button does not currently expose `aria-label="Close audio overview"`; it uses only a `title`
+- The file picker accepts `.pdf`, `.txt`, and `.md`, but the page routes every upload through PDF extraction and Docling; there is no separate text/markdown ingestion path
 
-### Overlays and Secondary Panels
-- [ ] Source Notes locks body scroll, slides in from the right, and batches `Generate All` requests in groups of 3
-- [ ] Audio Overview auto-generates on first open, supports cached results, speed cycling, transcript toggling, and regeneration with options
-- [ ] Share dialog loads saved settings on mount, supports Escape-to-close, and saves only password/expiration settings once sharing is enabled
-- [ ] Citation clicks branch between opening original URLs in a new tab and opening the PDF viewer at a page number
+## Components Referenced But Not Rendered
 
-### Shared Notebook Viewer
-- [ ] Shared notebook route can render either a password gate or the read-only viewer based on `hasPassword`
-- [ ] Password gate has exact incorrect-password and generic-failure messages
-- [ ] Shared viewer citations are read-only pills and do not support jump-to-source interactions
-- [ ] Shared page metadata title and description are derived from the resolved shared notebook
-
-## Features in doc that DON'T EXIST in the app
-- The main notebook upload area is clickable but does not implement drag-and-drop event handling in the current page component.
-- Source-row remove actions do not currently call a server-side delete action; they only remove rows from local page state.
-- Notebook mode switching does not persist by itself; it affects the UI immediately, but persistence happens only when a conversation is created or updated by later actions.
-- Sharing is not available before a conversation exists because the share button is disabled when `conversationIdRef.current` is null.
-- Shared notebook citations are visual labels only; the shared viewer has no interactive PDF jump-to-source behavior.
+- None. Every file in `src/components/notebook` is imported by `/notebook`, `/share/notebook/[token]`, or another rendered notebook component.
