@@ -518,21 +518,21 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 502 | LaTeX | File Tree Sidebar / Files Tab — Delete file — with confirmation | /latex/[projectId] | ⚠️ PARTIAL | Delete confirmation now exists in code, but the same flaky row-action automation issue prevented a clean end-to-end confirmation-dialog capture. | `6397963` |
 | 503 | LaTeX | File Tree Sidebar / Files Tab — Click file — loads content into editor | /latex/[projectId] | ✅ PASS | Switching between `main.tex` and the nested file swapped the CodeMirror content as expected. |  |
 | 504 | LaTeX | File Tree Sidebar / Document Outline — Extracts headings from LaTeX: \section, \subsection, \subsubsection | /latex/[projectId] | ✅ PASS | The outline panel extracted the seeded section headings from the active LaTeX source. |  |
-| 505 | LaTeX | File Tree Sidebar / Document Outline — Jump-to-line — clicking a heading scrolls editor to that line | /latex/[projectId] | ⬜ |  |  |
-| 506 | LaTeX | File Tree Sidebar / Document Outline — "Draft this section" button — opens Agent Panel Draft tab with section context | /latex/[projectId] | ⬜ |  |  |
-| 507 | LaTeX | File Tree Sidebar / File Sync — Content changes in editor update the local file list | /latex/[projectId] | ⬜ |  |  |
-| 508 | LaTeX | File Tree Sidebar / File Sync — File content persists across tab switches | /latex/[projectId] | ⬜ |  |  |
-| 509 | LaTeX | Image Browser — Upload — accepts PNG, JPG, PDF files (10MB max) | /latex/[projectId] | ⬜ |  |  |
-| 510 | LaTeX | Image Browser — Drag-and-drop — drop files to upload | /latex/[projectId] | ⬜ |  |  |
-| 511 | LaTeX | Image Browser — Image gallery — thumbnail previews with file size | /latex/[projectId] | ⬜ |  |  |
-| 512 | LaTeX | Image Browser — Delete — remove uploaded images | /latex/[projectId] | ⬜ |  |  |
-| 513 | LaTeX | Image Browser — One-click LaTeX insertion — generates and inserts: | /latex/[projectId] | ⬜ |  |  |
-| 514 | LaTeX | Comment Panel — Per-line threaded comments — comments attached to specific line numbers | /latex/[projectId] | ⬜ |  |  |
-| 515 | LaTeX | Comment Panel — Reply chains — threaded replies on each comment | /latex/[projectId] | ⬜ |  |  |
-| 516 | LaTeX | Comment Panel — Resolve/Unresolve — toggle resolution status | /latex/[projectId] | ⬜ |  |  |
-| 517 | LaTeX | Comment Panel — Author tracking — shows who wrote each comment | /latex/[projectId] | ⬜ |  |  |
-| 518 | LaTeX | Comment Panel — Jump-to-line — clicking a comment scrolls editor to that line | /latex/[projectId] | ⬜ |  |  |
-| 519 | LaTeX | Comment Panel — Comment CRUD — create, read, update, delete via /api/latex/comments | /latex/[projectId] | ⬜ |  |  |
+| 505 | LaTeX | File Tree Sidebar / Document Outline — Jump-to-line — clicking a heading scrolls editor to that line | /latex/[projectId] | ✅ PASS | Clicking `Discussion` in the outline moved the active CodeMirror line to `\section{Discussion}`. |  |
+| 506 | LaTeX | File Tree Sidebar / Document Outline — "Draft this section" button — opens Agent Panel Draft tab with section context | /latex/[projectId] | ✅ PASS | The section-draft handoff now persists through store state; live runs hit `POST /api/latex/draft-chat` after clicking the outline draft action, although the upstream Anthropic account returned a low-credit error for the response body. | `54b72d3` |
+| 507 | LaTeX | File Tree Sidebar / File Sync — Content changes in editor update the local file list | /latex/[projectId] | ✅ PASS | Unsaved edits in `background.tex` stayed in the in-memory file list immediately after typing. |  |
+| 508 | LaTeX | File Tree Sidebar / File Sync — File content persists across tab switches | /latex/[projectId] | ✅ PASS | Switching away from the edited nested file and back preserved its unsaved content. |  |
+| 509 | LaTeX | Image Browser — Upload — accepts PNG, JPG, PDF files (10MB max) | /latex/[projectId] | ✅ PASS | Live upload accepted PNG and PDF via file input and JPG via drag-drop. |  |
+| 510 | LaTeX | Image Browser — Drag-and-drop — drop files to upload | /latex/[projectId] | ✅ PASS | Dropping a JPG fixture on the figures panel uploaded it successfully. |  |
+| 511 | LaTeX | Image Browser — Image gallery — thumbnail previews with file size | /latex/[projectId] | ✅ PASS | The gallery now renders real image/PDF previews plus stable file-size metadata. | `ac1b059` |
+| 512 | LaTeX | Image Browser — Delete — remove uploaded images | /latex/[projectId] | ✅ PASS | Deleting an uploaded figure removed it from the gallery and hit the image delete API. | `ac1b059` |
+| 513 | LaTeX | Image Browser — One-click LaTeX insertion — generates and inserts: | /latex/[projectId] | ✅ PASS | Clicking the insert action injected an `\includegraphics[width=\linewidth]{figures/...}` command into the active source file. |  |
+| 514 | LaTeX | Comment Panel — Per-line threaded comments — comments attached to specific line numbers | /latex/[projectId] | ✅ PASS | Creating a comment on line `4` rendered the thread with a `Line 4` jump button. | `54b72d3` |
+| 515 | LaTeX | Comment Panel — Reply chains — threaded replies on each comment | /latex/[projectId] | ✅ PASS | Reply threads rendered under the parent comment after API-backed reply creation. | `54b72d3` |
+| 516 | LaTeX | Comment Panel — Resolve/Unresolve — toggle resolution status | /latex/[projectId] | ✅ PASS | Resolve and unresolve updates round-tripped through the comment API and updated the panel state. | `54b72d3` |
+| 517 | LaTeX | Comment Panel — Author tracking — shows who wrote each comment | /latex/[projectId] | ✅ PASS | Comment threads now display the author name correctly from normalized API payloads. | `54b72d3` |
+| 518 | LaTeX | Comment Panel — Jump-to-line — clicking a comment scrolls editor to that line | /latex/[projectId] | ✅ PASS | Clicking the line badge on a comment moved the editor to the referenced line. |  |
+| 519 | LaTeX | Comment Panel — Comment CRUD — create, read, update, delete via /api/latex/comments | /latex/[projectId] | ✅ PASS | Dedicated probe covered create, fetch, reply, resolve, unresolve, and delete against the live comment APIs. | `54b72d3` |
 | 520 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Streaming chat — real-time AI responses via Claude Sonnet | /latex/[projectId] | ⬜ |  |  |
 | 521 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Smart context windowing: | /latex/[projectId] | ⬜ |  |  |
 | 522 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Extracts current section from document | /latex/[projectId] | ⬜ |  |  |
