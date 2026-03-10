@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
+import Image from "next/image";
 import {
   Image as ImageIcon,
   Upload,
@@ -35,6 +36,10 @@ function formatFileSize(bytes: number): string {
 function getFileIcon(contentType: string) {
   if (contentType === "application/pdf") return FilePdf;
   return ImageIcon;
+}
+
+function isPreviewableImage(contentType: string) {
+  return contentType.startsWith("image/");
 }
 
 export function ImageBrowser({ projectId, onInsertImage }: ImageBrowserProps) {
@@ -243,10 +248,34 @@ export function ImageBrowser({ projectId, onInsertImage }: ImageBrowserProps) {
                   key={image.id}
                   className="group flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-surface-raised transition-colors"
                 >
-                  <Icon size={14} className="text-sky-500 shrink-0" />
+                  <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-border-subtle bg-surface-raised">
+                    {isPreviewableImage(image.contentType) ? (
+                      <Image
+                        src={image.url}
+                        alt={image.filename}
+                        className="object-cover"
+                        loading="lazy"
+                        fill
+                        sizes="40px"
+                        unoptimized
+                      />
+                    ) : image.contentType === "application/pdf" ? (
+                      <iframe
+                        src={image.url}
+                        title={image.filename}
+                        className="h-full w-full pointer-events-none"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <Icon size={14} className="text-sky-500 shrink-0" />
+                      </div>
+                    )}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[11px] text-ink truncate">{image.filename}</p>
-                    <p className="text-[9px] text-ink-muted">{formatFileSize(image.sizeBytes)}</p>
+                    <p className="text-[9px] text-ink-muted">
+                      {formatFileSize(image.sizeBytes ?? 0)}
+                    </p>
                   </div>
 
                   {/* Action buttons */}
@@ -268,7 +297,7 @@ export function ImageBrowser({ projectId, onInsertImage }: ImageBrowserProps) {
                     <button
                       onClick={() => handleDelete(image)}
                       className="p-1 rounded text-ink-muted hover:text-red-400 hover:bg-red-500/10"
-                      title="Delete"
+                      title="Delete image"
                     >
                       <Trash size={12} />
                     </button>
