@@ -1155,9 +1155,6 @@ Each item has a compliance status:
 
 ### Navigation
 
-- [ ] **Tab bar** — keyboard navigable with arrow keys
-- [ ] **Active tab** — `aria-selected="true"` on active tab
-- [ ] **Tab panel** — associated panel has correct `role="tabpanel"`
 - [ ] **Back link** — accessible as standard link
 
 ### Forms
@@ -1169,27 +1166,9 @@ Each item has a compliance status:
 
 ### Buttons
 
-- [ ] **"New Review"** — descriptive `aria-label`
-- [ ] **"Generate Search Strategy"** — descriptive `aria-label`
-- [ ] **"Run AI Screening"** — descriptive `aria-label`
-- [ ] **"Assess All"** — descriptive `aria-label`
-- [ ] **"Run Extraction"** — descriptive `aria-label`
-- [ ] **"Generate Diagram"** — descriptive `aria-label`
-- [ ] **"Download SVG"** — descriptive `aria-label`
-- [ ] **Screening action buttons** (Include/Exclude/Maybe) — `aria-label` per action
-
-### Status Indicators
-
 - [ ] **Stage badges** — include text labels (not color-only)
 - [ ] **Judgment colors** — text labels accompany color coding
-- [ ] **Progress bars** — `role="progressbar"` with `aria-valuenow`
 - [ ] **Compliance status icons** — screen reader text for each status
-
-### Live Regions
-
-- [ ] **Activity feed** — `aria-live="polite"` for new entries
-- [ ] **Screening progress** — live region for progress updates
-- [ ] **AI generation status** — announced to screen readers
 
 ---
 
@@ -2206,7 +2185,7 @@ All items in `Actual Current Behavior Corrections` above were re-verified agains
 - [ ] AI decision text: `Decision: {aiDecision}`
 - [ ] Relevant Sections heading: Crosshair icon (weight duotone) + `Relevant Sections`
 - [ ] Screening reasons shown as bordered cards: inclusion (emerald), exclusion (red)
-- [ ] Jump-to-chunk buttons: ArrowFatLineRight icon + `{sectionType} {pageNumber}`
+- [ ] Jump-to-chunk buttons: ArrowFatLineRight icon + `{sectionType || "p."}{pageNumber ?? "?"}` label text with no inserted separator
 - [ ] High-relevance passages: label `High-relevance passages` with Highlighter icon
 - [ ] High-priority chunks: those with `highlightPriority >= 0.7`, sorted by priority descending, max 8 shown
 - [ ] Priority badge: ≥ 0.9 renders in brand styling, < 0.9 in amber styling
@@ -2230,7 +2209,7 @@ All items in `Actual Current Behavior Corrections` above were re-verified agains
 - [ ] `POST /api/systematic-review/screening-criteria` — replaces all criteria using delete-then-insert transaction
 - [ ] `GET /api/systematic-review/export-references?projectId={id}&format={ris|bibtex|endnote|csv}&filter={all|included|excluded}` — exports references
 - [ ] `POST /api/systematic-review/manuscript-export` — generates DOCX with academic formatting, section ordering, headers/footers, page numbers
-- [ ] `POST /api/systematic-review/pdf-retrieval` — triggers open-access PDF retrieval for specified papers or all included papers
+- [ ] `POST /api/systematic-review/pdf-retrieval` — triggers open-access PDF retrieval for specified papers or, when `paperIds` is omitted, all project papers lacking `pdf_storage_path`
 - [ ] `GET /api/systematic-review/pdf-retrieval?projectId={id}` — returns retrieval status for all papers
 - [ ] `GET /api/systematic-review/revman-export?projectId={id}` — generates RevMan CSV package with 4 files
 - [ ] `POST /api/systematic-review/upload` — uploads PDF file, creates paper record, uploads to R2, triggers background processing
@@ -2288,7 +2267,7 @@ All items in `Actual Current Behavior Corrections` above were re-verified agains
 - [ ] `clearProject()` also resets `criteria` to `[{ type: "inclusion", description: "" }]`, `screeningResults` to `[]`, `screeningSummary` to `null`
 - [ ] `setProject()` sets `reviewStage` from config, `pico` from `config.pico` (falls back to DEFAULT_PICO), and `generatedStrategy` from `config.searchStrategy`
 - [ ] `WorkflowTab` union type includes both `rob2` and `rob` as valid tab keys
-- [ ] Store persistence explicitly excludes `generatedStrategy`, `reviewConfig`, `criteria`, `screeningResults`, `screeningSummary`, `projects`, `isLoadingProjects`
+- [ ] Store persistence keeps only `projectId`, `projectTitle`, `activeTab`, `reviewStage`, and `pico`; `generatedStrategy`, `reviewConfig`, `criteria`, `screeningResults`, `screeningSummary`, `projects`, and `isLoadingProjects` are omitted from the persisted subset
 
 ### Behavior Corrections (Pass 3)
 
@@ -2305,3 +2284,16 @@ These components exist in `src/components/systematic-review/` but are NOT import
 - `AuditTrailPanel.tsx` — Audit trail/transparency logging. Not imported by any rendered component.
 - `PRESSChecklistPanel.tsx` — PRESS 2015 search strategy peer review. Not imported by any rendered component.
 - `EvidenceGapMap.tsx` — Evidence gap map visualization. Not imported by any rendered component (API route exists at `/api/systematic-review/gap-map` but no UI renders it).
+
+## Codex Verification Pass Discoveries
+
+- [ ] Shared `Tabs` renders plain `<button>` elements with no `role="tablist"`, `role="tab"`, `aria-selected`, or arrow-key handlers in the current workflow shell
+- [ ] The inner workflow-page `useEffect` still contains an `isNaN(projectId)` redirect branch, but the outer page component already returns `null` for non-numeric params before that branch can run
+- [ ] Screening PDF viewer chunk loading uses `fetch(/api/systematic-review/paper-chunks...)` inside `useEffect` without `AbortController` cancellation or a stale-response guard
+- [ ] Screening PDF viewer active-chunk clearing uses a bare `setTimeout(() => setActiveChunkId(null), 3000)` with no cleanup when the viewer closes or unmounts
+- [ ] Screening panel best-effort PDF hydration calls `/api/systematic-review/paper-pdf?paperId={paperId}&projectId={projectId}`, but no matching route file exists under `src/app/api/systematic-review/` in the current source tree
+- [ ] Screening PDF viewer fetches `/api/systematic-review/paper-chunks?paperId={paperId}&projectId={projectId}`, but no matching route file exists under `src/app/api/systematic-review/` in the current source tree
+- [ ] Screening PDF viewer resolves stored PDFs through `/api/pdf/serve?path={encodedPath}`, but no matching route file exists under `src/app/api/pdf/` in the current source tree
+- [ ] Screening PDF viewer keeps the hard-coded `w-[70%]` / `w-[30%]` split at all breakpoints; there is no mobile-specific stacked layout
+- [ ] Activity feed open/close behavior has no explicit focus management or focus restoration logic around the drawer toggle button
+- [ ] Route error recovery delegates only to `ErrorDisplay`'s retry callback; it does not clear persisted systematic-review store state or navigate away from the workflow page

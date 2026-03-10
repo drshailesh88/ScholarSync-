@@ -5,8 +5,10 @@
 **Features found in UI:** 507
 **Features found in source code (Codex pass 2):** 915
 **Features found in source code (Claude Code pass 3):** 1105
-**Pass 3 new checks:** 190
-**Completeness of original doc:** 33.8%
+**Features found in source code (Codex verification):** 1100
+**Pass 3 new checks retained after verification:** 190
+**Hallucinated / stale assertions removed during verification:** 15
+**Completeness of original doc:** 34.0%
 
 ## Missing Features
 
