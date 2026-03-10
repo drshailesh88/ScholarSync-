@@ -6,8 +6,10 @@
 **Features found in source code (Codex pass 2):** 920
 **Features found in source code (Claude Code pass 3):** 1099
 **Pass 3 new discoveries:** 179
-**Missing from original doc:** 671
-**Completeness of original doc:** 38.9%
+**Features found in source code (Claude Code pass 4):** 1222
+**Pass 4 new discoveries:** 123
+**Missing from original doc:** 794
+**Completeness of original doc:** 35.0%
 
 ## Missing Features
 

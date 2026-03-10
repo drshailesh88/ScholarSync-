@@ -1830,3 +1830,155 @@
 - `useDiagramGenerator` hook exists in `src/hooks/illustration/useDiagramGenerator.ts` but is not imported by any rendered illustrate component.
 - `useToolSwitching` hook exists in `src/hooks/illustration/useToolSwitching.ts` but is not imported by any rendered illustrate component.
 - `/api/illustration/agent/chat` route exists in `src/app/api/illustration/agent/chat/route.ts` but is not called by any rendered illustrate component (AgentMode calls `/api/illustration/generate` instead).
+
+## Re-Audit Discoveries (Claude Code Pass 4)
+
+### AI Image Generation Tool — Full UI Details (`AIGenerationTool.tsx`)
+- [ ] Panel title text is `AI Image Generation` preceded by a SparklesIcon SVG
+- [ ] Close button has `aria-label="Close"`
+- [ ] API key is persisted to `localStorage['finnish_fal_api_key']`
+- [ ] API key input is `type="password"` with placeholder `Enter your fal.ai API key`
+- [ ] API key section is shown only when `!isApiKeyConfigured`; once configured, it hides
+- [ ] API key hint links to `https://fal.ai/dashboard/keys` with `target="_blank"` and `rel="noopener noreferrer"`
+- [ ] API key label text is `fal.ai API Key` preceded by KeyIcon
+- [ ] `configureFalClient(apiKey)` is called in useEffect; failure sets `isApiKeyConfigured` to false
+- [ ] Prompt textarea placeholder is `e.g., Human heart anatomy with labeled chambers and valves, detailed cross-section view`
+- [ ] Prompt textarea is disabled during generation (`generatingState.isGenerating`)
+- [ ] Style options are 5 buttons in a 3-column grid: `Clean Vector`, `Detailed`, `Sketch`, `Diagram`, `Realistic`
+- [ ] Style option values are `clean`, `detailed`, `sketch`, `diagram`, `photorealistic`
+- [ ] Default style is `clean` (not `flat` as in the agent mode API)
+- [ ] Style buttons are disabled during generation
+- [ ] Size options in dropdown: `Square (1024x1024)`, `Landscape 4:3`, `Portrait 4:3`, `Landscape 16:9`, `Portrait 16:9`
+- [ ] Size option values: `square_hd`, `landscape_4_3`, `portrait_4_3`, `landscape_16_9`, `portrait_16_9`
+- [ ] Default size is `square_hd`
+- [ ] Model options in dropdown: `Fast (~$0.008)`, `Quality (~$0.012)`, `Pro (~$0.03)`
+- [ ] Model option values: `fal-ai/flux/schnell`, `fal-ai/flux/dev`, `fal-ai/flux-pro`
+- [ ] Default model is `fal-ai/flux/schnell`
+- [ ] Cost estimate info box text: `Estimated cost: $X.XXX per image (averageTime)`
+- [ ] Empty prompt error message: `Please enter a prompt`
+- [ ] Missing API key error message: `Please enter your fal.ai API key`
+- [ ] Generic generation error message: `Failed to generate image. Please try again.`
+- [ ] `ImageGenerationError` instances use their own `.message` instead of generic fallback
+- [ ] Progress bar shows during generation with status text and percentage (`Math.round(progress * 100)%`)
+- [ ] Initial progress status text is `Starting...`; completion status text is `Complete!`
+- [ ] Single image result renders as one full-width preview; multiple images render in 2-column grid
+- [ ] Multiple image previews are selectable via click (sets `selectedImageIndex`)
+- [ ] Selected image gets blue border (`borderColor: var(--accent-primary)`, `borderWidth: 2px`)
+- [ ] Result stats show: `width x heightpx`, `Seed: {seed}`, `Generated in {seconds}s`
+- [ ] Generate button disabled when `isGenerating || !prompt.trim() || !isApiKeyConfigured`
+- [ ] Generate button text toggles: `Generate Image` → `Generating...`
+- [ ] After result: two buttons appear — `New Generation` (secondary) and `Apply to Canvas` (primary with CheckIcon)
+- [ ] Apply to Canvas scales image to fit 80% of canvas dimensions, capped at scale 1.0
+- [ ] Apply to Canvas centers image, adds to canvas, sets as active object, then calls `onClose`
+- [ ] Apply to Canvas failure error: `Failed to add image to canvas. Please try again.`
+- [ ] `handleReset` clears prompt, result, selectedImageIndex, and generatingState
+- [ ] Object URL from blob is revoked after FabricImage creation via `URL.revokeObjectURL`
+
+### Background Removal Tool — Full UI Details (`BackgroundRemovalTool.tsx`)
+- [ ] Panel title text is `Background Removal` preceded by a MagicWandIcon SVG
+- [ ] Close button has `aria-label="Close"`
+- [ ] Browser support check via `isBackgroundRemovalSupported()` renders error if unsupported
+- [ ] Unsupported browser error text: `Background removal is not supported in this browser. Please use a modern browser with WebAssembly support.`
+- [ ] Drop zone has `role="button"`, `tabIndex={0}`, and `aria-label="Drop zone for image upload"`
+- [ ] Drop zone default text: `Drag & drop an image, or` followed by styled `browse` link
+- [ ] Drop zone drag-active text: `Drop your image here`
+- [ ] Supported formats text below drop zone: `PNG, JPG, WebP up to 10MB`
+- [ ] Privacy info box text: `AI-powered background removal runs entirely in your browser. No data is sent to any server.`
+- [ ] Hidden file input accepts: `image/png,image/jpeg,image/webp`
+- [ ] Non-image file error: `Please select an image file (PNG, JPG, WebP)`
+- [ ] Processing stages: `loading-model` → `Loading AI model...`, `processing` → `Removing background...`, `encoding` → `Encoding result...`, `complete` → `Complete!`, null → `Processing...`
+- [ ] Preview shows side-by-side: `ORIGINAL` label (left) and `RESULT` label (right)
+- [ ] Result placeholder text before processing: `Click "Remove Background"`
+- [ ] Result placeholder text during processing: `Processing...`
+- [ ] Result preview image background uses checkerboard pattern (transparency indicator)
+- [ ] Generic processing error: `Failed to remove background. Please try again.`
+- [ ] `BackgroundRemovalError` instances use their own `.message`
+- [ ] Result stats show: `Size: width x heightpx`, `Processed in {time}`, `Output: {fileSize}`
+- [ ] `formatFileSize` outputs bytes as `B`, `KB`, or `MB`
+- [ ] `formatTime` outputs ms as `Nms` or `N.Ns`
+- [ ] Before processing: `Reset` button (secondary, disabled during processing) and `Remove Background` button (primary, with MagicWandIcon)
+- [ ] After processing: `Reset` button and `Apply to Canvas` button (primary, with CheckIcon)
+- [ ] Processing button text toggles: `Remove Background` → `Processing...`
+- [ ] Apply to Canvas scales to 80% of canvas, capped at 1.0, centers, sets active
+- [ ] Apply to Canvas failure error: `Failed to add image to canvas. Please try again.`
+- [ ] useEffect cleanup revokes both `originalPreview` and `resultPreview` URLs on unmount
+- [ ] File input value is reset to `''` after each selection to allow re-selecting same file
+
+### Document Settings Dialog — Full Details (`DocumentSettings.tsx`, `document-settings.ts`)
+- [ ] Dialog has `role="dialog"`, `aria-modal="true"`, `aria-label="Document settings"`
+- [ ] Clicking backdrop (outside dialog) calls `onCancel`
+- [ ] Dialog header text is `Document Settings`
+- [ ] Canvas presets: `A4` (2480×3508), `A3` (3508×4960), `Letter` (2550×3300), `1080 x 1080 (Instagram)` (1080×1080), `1920 x 1080 (HD)` (1920×1080), `Custom`
+- [ ] Preset select has `id="canvas-preset-select"` with associated `<label>`
+- [ ] Orientation toggle buttons: `Portrait` and `Landscape`
+- [ ] Changing orientation swaps width and height values
+- [ ] Width input has `id="canvas-width-input"`, `type="number"`, `min={1}`
+- [ ] Height input has `id="canvas-height-input"`, `type="number"`, `min={1}`
+- [ ] Manually editing width or height auto-sets preset to `custom`
+- [ ] Background color input has `id="canvas-background-input"`, `type="color"`
+- [ ] Default background color constant is `#ffffff`
+- [ ] `handleConfirm` clamps width and height to `Math.max(1, Math.round(value))`
+- [ ] Footer buttons: `Cancel` and `Apply`
+- [ ] `detectPreset` auto-identifies the matching preset and orientation from initial dimensions on open
+- [ ] `clampCanvasDimension` returns fallback (default 1) for non-finite values
+- [ ] Selecting `custom` preset does not change width/height; only non-custom presets update dimensions
+
+### Figure Panel Generator — Full Details (`FigurePanelGenerator.tsx`)
+- [ ] Dialog title text is `Figure Panel Generator` (header at line ~100)
+- [ ] 9 layout presets in 3-column grid: `1x1` (Single panel), `1x2` (Two panels side by side), `2x1` (Two panels stacked), `2x2` (Four panel grid), `2x3` (Six panel grid), `3x2` (Six panel vertical), `3x3` (Nine panel grid), `2x4` (Eight panel grid), `4x2` (Eight panel vertical)
+- [ ] Each preset button shows a mini visual grid preview matching its rows×cols
+- [ ] Default config: rows=2, cols=2, panelWidth=150, panelHeight=150, gap=20, showLabels=true, labelPosition=`top-left`, labelFontSize=24, strokeWidth=2, strokeColor=`#000000`, fillColor=`#ffffff`
+- [ ] Label position options: `top-left`, `top-right`, `bottom-left`, `bottom-right`, `center`
+- [ ] Labels use uppercase letters A through Z (max 26 panels)
+- [ ] Labels are IText objects with `fontFamily: 'Arial'`, `fontWeight: 'bold'`
+- [ ] Panel rectangles use Fabric `Rect` objects with configured fill, stroke, and strokeWidth
+- [ ] Generated panels are centered on canvas using `(canvasWidth / 2 - totalWidth / 2)`
+- [ ] Number inputs clamp values between `min` (default 1) and `max` (default 1000)
+- [ ] Footer has `Cancel` and `Generate` buttons
+
+### Character Panel — Full Details (`CharacterPanel.tsx`)
+- [ ] Font weight options: `Light (300)`, `Regular (400)`, `Medium (500)`, `Semi-Bold (600)`, `Bold (700)`, `Black (900)`
+- [ ] Text alignment options: `left`, `center`, `right`, `justify`
+- [ ] `charSpacing` property is exposed for character spacing control
+- [ ] `lineHeight` property is exposed for line height control
+- [ ] `underline` and `linethrough` (strikethrough) toggles are exposed
+- [ ] `fontStyle` toggle for italic (`italic` vs normal)
+- [ ] Fill color and stroke color with stroke width controls are text-specific
+- [ ] Selection-aware: reads `getSelectionStyles()` for partial text formatting
+
+### Keyboard Shortcuts — Additional Details (`useKeyboardShortcuts.ts`)
+- [ ] Shortcuts are ignored when `target.tagName === 'INPUT'`, `'TEXTAREA'`, or `target.isContentEditable`
+- [ ] Space key handler checks `!e.repeat` to prevent re-triggering on held Space
+- [ ] Tool shortcuts are skipped when ctrlOrCmd is pressed (`category === 'tool' && !shortcut.ctrlOrCmd && ctrlOrCmd`)
+- [ ] `Backspace` key also triggers delete (in addition to `Delete`)
+- [ ] `B` key shortcut for Brush tool is NOT registered in default shortcuts (only PEN, not BRUSH)
+- [ ] `Z` key shortcut for Zoom tool is NOT registered in default shortcuts
+- [ ] `getShortcutDisplayString` detects Mac via `navigator.platform.toUpperCase().indexOf('MAC')` and renders `Cmd` instead of `Ctrl`, `Option` instead of `Alt`
+- [ ] `getShortcutDisplayString` formats special keys: Space→`Space`, Delete→`Del`, Backspace→`Delete` (Mac) or `Backspace`
+- [ ] Paste offsets pasted objects by +20px left and +20px top from original position
+- [ ] Copy serializes objects via `obj.toObject()` into `window.__finnishClipboard` array
+- [ ] Paste uses `fabric.util.enlivenObjects` to deserialize clipboard data
+- [ ] `groupSelected` creates group with `name: 'Group'`
+- [ ] `ungroupSelected` calls `_restoreObjectsState()` before re-adding individual items
+- [ ] Hook returns `{ shortcuts, enabled, isSpacePressed }` for external consumers
+
+### ToolType Enum — Complete Values (`types/index.ts`)
+- [ ] ToolType enum has 22 values: SELECT, DIRECT_SELECT, PEN, PENCIL, BRUSH, LINE, RECTANGLE, ELLIPSE, POLYGON, STAR, ARROW, BRACKET, CALLOUT, DIMENSION, CONNECTOR, TEXT, TEXT_ON_PATH, HAND, ZOOM, EYEDROPPER, ERASER, SCISSORS, MEASURE
+- [ ] BRACKET, CALLOUT, DIMENSION, CONNECTOR, PENCIL, and TEXT_ON_PATH are defined in enum but have no toolbar buttons or keyboard shortcuts
+- [ ] DiagramType union has 11 values: `flowchart`, `sequence`, `class`, `entity-relationship`, `state`, `gantt`, `pie`, `mindmap`, `timeline`, `scientific`, `custom`
+- [ ] ExportDPI type allows exactly 4 values: `72 | 150 | 300 | 600`
+- [ ] BlendMode type lists 12 modes: `normal`, `multiply`, `screen`, `overlay`, `darken`, `lighten`, `color-dodge`, `color-burn`, `hard-light`, `soft-light`, `difference`, `exclusion`
+- [ ] ExportStage type has 6 stages: `preparing`, `rendering`, `optimizing`, `encoding`, `complete`, `error`
+
+### Behavior Corrections (Pass 4)
+1. **B key shortcut**: Section 5 (line 356) and Section 19 (line 756) document `B` as Brush tool shortcut, but `useKeyboardShortcuts.ts` does NOT register a `B` key → Brush mapping in defaultShortcuts. The Brush tool has no keyboard shortcut in the live code.
+2. **Z key shortcut**: Section 5 (line 362) and Section 19 (line 762) document `Z` as Zoom tool shortcut, but `useKeyboardShortcuts.ts` does NOT register a `Z` key → Zoom mapping. The Zoom tool has no keyboard shortcut in the live code.
+3. **Document Settings presets**: Section 4 (line 268) describes Canvas Size dialog as "width, height, background color" but omits the 6 preset options (A4, A3, Letter, Instagram, HD, Custom) and the Portrait/Landscape orientation toggle.
+4. **AI Generation style options**: Section 16 describes styles as "FLUX Pro, FLUX Realism" but `AIGenerationTool.tsx` uses `Clean Vector`, `Detailed`, `Sketch`, `Diagram`, `Realistic` — these are IllustrationStyle values passed to `generateScientificDiagram`, NOT the same as agent mode's flat/detailed/schematic/photorealistic.
+5. **AI Generation model options**: Section 16 does not specify the three FLUX model tiers: schnell (Fast), dev (Quality), flux-pro (Pro) with their cost estimates.
+6. **Background Removal**: Section 17 says "Uses MediaPipe" but `BackgroundRemovalTool.tsx` calls `removeImageBackground` from `@/lib/illustration/lib/image` and checks `isBackgroundRemovalSupported()` — the actual implementation may or may not use MediaPipe; the component itself is agnostic to the underlying library.
+7. **Paste offset**: Section 6 and 19 do not mention that pasted objects are offset by +20px left and +20px top from their original position.
+
+### Components Referenced But Not Rendered (Additions — Pass 4)
+- `CharacterPanel` exists in `src/components/illustration/CharacterPanel/CharacterPanel.tsx` but is not directly imported by any rendered illustrate page; it is imported by `RightPanel.tsx` which IS rendered, so it IS in the render tree (confirmed via RightPanel import chain).
+- `FontPicker` exists in `src/components/illustration/CharacterPanel/FontPicker.tsx` and is imported by CharacterPanel, which is rendered via RightPanel.
