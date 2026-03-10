@@ -751,3 +751,169 @@ idle → plan-preview → running → done
 - [ ] Mobile citations use a bottom sheet, but mobile table of contents does not.
 
 *Generated from source code in `src/app/(app)/deep-research/`, `src/components/deep-research/`, `src/lib/deep-research/`, and related API routes — March 2026*
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> **Auditor**: Claude Code (Opus 4.6)
+> **Date**: March 2026
+> **Method**: Full import-tree trace from `src/app/(app)/deep-research/page.tsx` through all components, API routes, and lib modules. Every file read in full.
+
+### New Checks — API Routes
+
+- [ ] `POST /api/deep-research/plan` requires authentication via `getCurrentUserId()`; returns `401` with `{ error: "Not authenticated" }` JSON before SSE stream starts
+- [ ] Plan route has `export const maxDuration = 30` (30-second server timeout)
+- [ ] Plan route validates topic: rejects missing/non-string topic with `400` `{ error: "topic is required" }`
+- [ ] Plan route validates topic server-side via `validateTopic()` which enforces 5–500 character range (the client does NOT)
+- [ ] Plan route accepts optional `mode` field, defaults to `"standard"` if omitted
+- [ ] Plan route calls `generatePerspectives(topic, config)` and emits perspectives with `id`, `name`, `description`, `queries`, and `expectedPaperTypes` fields
+- [ ] Plan route emits a `done` SSE event after perspectives — but the client ignores it (no handler)
+- [ ] `POST /api/deep-research/execute` requires authentication; returns `401` JSON before SSE
+- [ ] Execute route has `export const maxDuration = 300` (5-minute server timeout)
+- [ ] Execute route validates that `perspectives` is a non-empty array; returns `400` `{ error: "perspectives array is required" }`
+- [ ] Execute route has a `STAGE_MAP` that maps engine stage IDs (e.g., `validating`, `building-tree`, `searching`) to frontend stage IDs (e.g., `search-round-1`)
+- [ ] Execute route converts `PlanPerspective[]` to engine `Perspective[]` format, filtering out empty query strings
+- [ ] Execute route calls `runDeepResearch()` with pre-supplied perspectives, skipping AI perspective generation
+- [ ] Execute route source mapping includes `openAccessPdfUrl`, `fullTextUrl`, `perspectiveIds`, `extractedData`, and `sources` (search source provenance) fields
+- [ ] Execute route emits `done` SSE event after `report` — but client ignores `done` events
+- [ ] `POST /api/deep-research/save` stores session in `deepResearchSessions` table with fields: `userId`, `originalQuery`, `finalReport`, `keyFindings`, `gapsIdentified`, `researchPlan` (JSON containing mode + sources), `status = "completed"`, `papersFound`, `papersRead`, `completedAt`
+- [ ] Save route returns `{ id, success: true }` on success
+- [ ] `GET /api/deep-research/sessions` queries with `.limit(20)` in the database query — this is the actual source of the 20-session cap
+- [ ] Sessions route extracts `mode` from `researchPlan` JSON field, defaults to `"standard"`
+- [ ] Sessions route returns `completedAt` ISO string, falling back to `startedAt` if `completedAt` is null
+- [ ] `GET /api/deep-research/sessions/[id]` validates session belongs to authenticated user (ownership check via `and(eq(id), eq(userId))`)
+- [ ] Session detail route returns `{ id, topic, mode, markdownReport, sources, keyFindings, gaps, papersFound, completedAt }`
+- [ ] `POST /api/deep-research/open-in-studio` performs a best-effort save of the research session to DB before creating the studio project (non-fatal on failure)
+- [ ] Open-in-Studio creates project with `project_type: "literature_review"`, `status: "drafting"`, and title `"Literature Review: {topic}"` (truncated to 80 chars with `...`)
+- [ ] Open-in-Studio creates a `synthesisDocuments` row with `document_type: "review_article"`
+- [ ] Open-in-Studio appends a formatted References section to the markdown before Tiptap conversion
+- [ ] Open-in-Studio converts markdown to Tiptap JSON using `markdownToTiptap()` with source references for DOI/PubMed hyperlink resolution
+- [ ] Open-in-Studio stores content as a single `synthesisSections` row with `section_type: "custom"`, `title: "Research Report"`, `sort_order: 0`
+- [ ] Open-in-Studio returns `{ projectId, documentId, redirectUrl }` where redirectUrl is `/studio?projectId={id}`
+- [ ] A legacy `POST /api/deep-research` route exists for single-endpoint flow but is NOT used by the current page component
+- [ ] None of the API routes use Zod schemas — all validation is manual field checks on parsed JSON
+
+### New Checks — SSE & Client State
+
+- [ ] `readSSEStream` in page.tsx is a shared generic SSE parser (lines 81–138) used by both `fetchPlan` and `executeResearch`
+- [ ] The SSE parser switch statement handles: `progress`, `perspectives`, `section`, `report`, `error` — but NOT `done`
+- [ ] `done` SSE events sent by both plan and execute APIs fall through the switch without any handler and are silently ignored
+- [ ] The actual `idle → done` transition for execution happens via the `report` event handler (sets report + flips to done) or the post-stream `setPageState(prev => prev === "running" ? "done" : prev)` fallback
+- [ ] `error` SSE events re-throw as `new Error(event.error || "Research failed")` inside the parser, causing the outer catch block to handle them
+- [ ] Plan phase `onProgress` callback only calls `setProgressMessage(message)` — it does NOT update progress stages or percent
+- [ ] Plan phase `onPerspectives` callback calls `setPlanPerspectives(perspectives)` — fully replaces the array
+- [ ] `handlePlanConfirm` calls `setPlanPerspectives([])` before `executeResearch(perspectives)`, which unmounts the `ResearchPlanPreview` component (since `planPerspectives.length` becomes 0)
+- [ ] `handleAbort` (line 306) clears `planPerspectives` and sets `pageState = "idle"` but does NOT reset `streamingSections`, `progressStages`, `progressPercent`, or `progressMessage` — those persist until the next `executeResearch` call resets them
+
+### New Checks — Streaming Sections (Dead Feature)
+
+- [ ] The execute API route NEVER sends `section` SSE events — it only sends `progress`, `report`, `done`, and `error`
+- [ ] The `onSection` handler in `executeResearch` (page.tsx line 242) exists but is never triggered by current API routes
+- [ ] During the `running` state, `streamingSections` always remains empty in practice
+- [ ] The fallback "Researching: {topic}" panel with pulsing Microscope icon (page.tsx line 556) is always shown during the entire running state
+- [ ] The multiple `ResearchDocument` components for streaming preview (page.tsx lines 539–553) never render because `streamingSections.length` is always 0
+- [ ] Testers cannot test streaming content preview — the feature is wired client-side but not activated server-side
+
+### New Checks — Engine & Backend Details
+
+- [ ] `validateTopic()` in `engine.ts` enforces: `topic.trim().length >= 5` and `<= 500` — returns `{ valid: false, error }` on failure
+- [ ] Engine RESEARCH_MODES config includes `perSourceLimit` per mode: quick=10, standard=15, deep=20, exhaustive=25
+- [ ] Engine RESEARCH_MODES estimated times differ from UI: quick="1-2", standard="3-5", deep="8-12", exhaustive="15-25" (minutes) vs UI's "~1 min", "~3 min", "~5 min", "~10 min"
+- [ ] Round 1 search processes queries in batches of 3 with 500ms pause between batches
+- [ ] Citation graph traversal selects top 5 (quick) or 10 (other modes) seed papers by citation count
+- [ ] Round 2 follow-up search runs only when `config.depth >= 2` (standard, deep, exhaustive)
+- [ ] Round 3 follow-up search runs only when `config.depth >= 3` (deep, exhaustive)
+- [ ] Follow-up queries are generated by AI (`getSmallModel()`) analyzing top 20 papers by citation count
+- [ ] Unpaywall lookup processes up to 100 DOIs for open-access PDF URL resolution
+- [ ] Full-text extraction selects top N papers by citation count: quick=5, standard=10, deep/exhaustive=20
+- [ ] Full-text extraction processes PDFs in batches of 3
+- [ ] Extracted text is truncated to 15,000 characters after section extraction
+- [ ] Data extraction (`extractStructuredData`) processes papers in batches of 5 with 200ms delay between batches
+- [ ] Data extraction limits: quick=10, standard=20, deep/exhaustive=40 papers
+- [ ] Synthesis pipeline uses `getDeepResearchModel()` (not `getSmallModel()`) for all four passes
+- [ ] `EnhancedSynthesisReport` (lib version) has additional fields not in component type: `executiveSummary`, `tablesSection`, `gapsAnalysis`, `contradictionsAnalysis`, `conclusions`, `perspectiveSections`
+
+### New Checks — Component Details
+
+- [ ] `ResearchDocument` uses `react-markdown` with `remarkGfm` plugin (enabling GFM tables, strikethrough, etc.)
+- [ ] `parseCitationsInChildren` recursively walks React children trees to find and replace citation markers — handles mixed element arrays (text + elements)
+- [ ] `reactNodeToText` extracts raw text from React node trees for quick regex testing before the full parse
+- [ ] `TableOfContents` component returns `null` when `items.length === 0` — but the mobile floating button is rendered outside this component, so it still appears
+- [ ] Code block vs inline code detection: inline when `!codeClassName` (no language class from markdown), block when className present
+- [ ] `markdownToRichHTML` (clipboard export) generates a full References section from sources — this means clipboard content includes references even though they're also in the markdown body
+- [ ] `markdownToSimpleHTML` (PDF export) is a much simpler converter: tables rendered as pipe-delimited text, blockquotes as plain paragraphs, no inline formatting preservation
+- [ ] PDF export `citations` array (passed to `/api/export/pdf`) uses format `[N] authors. title. journal (year). DOI: doi`
+- [ ] `CitationTooltip` dismisses on mousedown outside (via document event listener), not just on mouse leave — the marker's `onMouseLeave` also hides it, so both mechanisms exist
+- [ ] `expandCitationNumbers` handles semicolons as separators in addition to commas: `[5;8-10]` works
+- [ ] `expandCitationNumbers` handles en-dash (`\u2013`) and em-dash (`\u2014`) as range separators
+- [ ] `CitationEntry` in `CitationsPanel` truncates authors to first 2 + "et al." (different from References section which uses first 3)
+- [ ] `formatRelativeDate` in `PastResearchSessions` uses `toLocaleDateString("en-US", { month: "short", day: "numeric" })` for dates older than 7 days
+- [ ] `PastResearchSessions` uses a `cancelled` flag (cleanup on unmount) to prevent state updates after unmount
+- [ ] `SaveToLibraryButton` accepts `isLoggedIn` prop (defaults to `true`) but the page never passes it — so logged-out state is never triggered client-side
+- [ ] `SaveToLibraryButton` error state is NOT auto-clearing — clicking "Retry" retries the same save request
+- [ ] `SaveToLibraryButton` tooltip text differs from label text: tooltip says "Save to library" (lowercase l), label says "Save to Library" (capital L)
+
+### Behavior Corrections (Pass 2)
+
+| # | Existing Doc Claim | Actual Behavior | Location |
+|---|---|---|---|
+| 1 | Section 5 line 180: "CheckCircle2 (green)" for completed stages | `CheckCircle2` uses `className="text-blue-400"` — the icon is **blue**, not green | `ProgressStepper.tsx:58` |
+| 2 | Section 5 line 201: `done` SSE event "Transitions to done state" | Client has **no handler** for `done` events; transition happens from `report` event or post-stream fallback | `page.tsx:114` (switch has no `case "done"`) |
+| 3 | Section 5 line 208: Abort "Clears progress and streaming content" | `handleAbort` only clears `planPerspectives` and sets `pageState = "idle"` — does **NOT** clear `streamingSections`, `progressStages`, or `progressPercent` | `page.tsx:306-312` |
+| 4 | Section 9 lines 289-292: Citations Panel entries show DOI/PubMed/PDF/OA links | `CitationEntry` component has **no link rendering** — links only appear in `CitationTooltip` and the References section | `CitationsPanel.tsx:24-73` |
+| 5 | Section 9 line 282: "Authors: first 2 + 'et al.'" | Correct for Citations Panel entries (2 authors), but inconsistent with References section and Tooltip which use **3 authors** + et al. | `CitationsPanel.tsx:30` vs `ResearchDocument.tsx:451` |
+| 6 | Section 12 line 363: BibTeX key format "{firstName}{year}{firstWord}" | Key uses first segment of first author's name (typically **lastName**) + year + first **title** word, with fallback `ref{N}` | `ExportButtons.tsx:14-16` |
+| 7 | Section 16 line 452: Full-text extraction "Falls back to full text or abstract on failure" | `downloadAndExtractPdf` returns `null` on failure; the pipeline **skips** the paper — no fallback to abstract | `full-text-extractor.ts:116-118` |
+| 8 | Codex line 700: "temporary blue-tinted background" for highlighted citations | Highlight **persists** until a different citation is clicked — there is no `setTimeout` to auto-clear `highlightedCitation` state | `ResearchDocument.tsx:197, 237` |
+
+### Components Referenced But Not Rendered
+
+| Component/Feature | Reason Not Rendered |
+|---|---|
+| Streaming `ResearchDocument` instances during `running` state (page.tsx lines 539–553) | Execute API never sends `section` SSE events; `streamingSections` always stays empty |
+| `isRegenerating` spinner on Regenerate button | Parent page never passes `isRegenerating` prop; always defaults to `false` |
+| `isLoggedIn=false` path on `SaveToLibraryButton` | Parent page never passes `isLoggedIn` prop; always defaults to `true` |
+| `done` SSE event handler | No `case "done"` in the client's SSE switch statement |
+| `onSection` SSE callback during execution | Execute API only sends `progress`, `report`, `done`, `error` events |
+| Mode `description` text on mode cards | Page renders `m.label` and `m.estimatedTime` but not `m.description` from `RESEARCH_MODES` |
+
+### Suspected Hallucinations From Existing Doc
+
+These checks in the original document describe features that **do not exist** in the current source code:
+
+| # | Doc Location | Claim | Reality |
+|---|---|---|---|
+| 1 | Section 2, line 76 | "Validation: 5–500 characters" | **No client-side validation range.** Only `topic.trim()` presence check enables the start button. The 5–500 range exists only server-side in `engine.ts:47-56`. |
+| 2 | Section 2, line 104 | "Shows loading state while generating plan" | **Start button shows no loading state.** It immediately transitions to `plan-preview` pageState. |
+| 3 | Section 5, line 180 | "CheckCircle2 (green)" | **Icon is blue** (`text-blue-400`), not green. |
+| 4 | Section 5, lines 189-193 | "Streaming Content: Markdown content streams in progressively, smooth animation on new content" | **Dead feature.** Execute API never sends `section` events. Streaming sections array stays empty. The fallback "Researching: {topic}" panel shows for the entire running state. |
+| 5 | Section 5, line 192 | "Loading state shows Microscope icon with rotating animation" | The Microscope icon has `animate-pulse`, **not** `animate-spin` (rotate). It pulses, not rotates. |
+| 6 | Section 5, line 201 | `done` SSE event "Transitions to done state" | **Client ignores `done` events.** No handler exists. Transition is from `report` event or stream-end fallback. |
+| 7 | Section 5, line 208 | Abort "Clears progress and streaming content" | **Does not clear** `streamingSections`, `progressStages`, `progressPercent`, or `progressMessage`. Only clears `planPerspectives` and `pageState`. |
+| 8 | Section 8, line 260 | Mobile TOC: "Full-screen overlay with handle bar" | **Left-side drawer** (`w-72`, not full-screen). **No handle bar** — has a close button (X icon) instead. |
+| 9 | Section 8, line 263 | "Swipe handle to open/close" | **No swipe handling** exists in the code. TOC opens via a floating `List` icon button. |
+| 10 | Section 9, lines 289-292 | Citations Panel shows DOI/PubMed/PDF/OA links per entry | **Panel entries have no links.** Only index, title, authors, journal/year, and evidence badge. Links exist in `CitationTooltip` and References section only. |
+| 11 | Section 12, line 363 | BibTeX key uses "{firstName}" | Uses **first segment** of first author name (typically last name per academic formatting), not first name. |
+| 12 | Section 16, line 452 | Full-text extraction "Falls back to full text or abstract on failure" | Returns `null` on failure. Pipeline **skips** the paper with no fallback. |
+| 13 | Section 17, lines 468-469 | "Topic < 5 characters: shows validation message" / "Topic > 500 characters: shows validation message" | **Client shows no validation messages.** Validation exists only server-side. Client only disables the start button for empty topics. |
+| 14 | Section 18, line 499 | "Escape closes modals/overlays" | **No escape key handler** exists anywhere in the deep research code. |
+| 15 | Section 18, line 504 | "Screen reader compatible progress updates" | **No `aria-live` regions, `role="status"`, or `aria-label` attributes** found on progress elements. |
+| 16 | Section 18, line 505 | "Color contrast meets WCAG AA standards" | **Unverifiable from code and likely false** for elements like `text-gray-500` on `bg-gray-50` backgrounds. |
+| 17 | Codex line 700 | "temporary blue-tinted background" | **Not temporary.** Highlight persists until another citation is clicked. No auto-clear timer exists. |
+
+### Verified Codex Corrections (All 8 Confirmed Accurate)
+
+All corrections from the Codex pass (lines 743–751) were verified against source code and are accurate:
+1. No client-side 5–500 validation — confirmed
+2. Start button shows no spinner — confirmed
+3. No route-level `loading.tsx` or `error.tsx` — confirmed (glob returned no files)
+4. Past Research cards not capped to 20 in component — confirmed (API uses `.limit(20)`)
+5. Regenerate button never receives `isRegenerating` prop — confirmed
+6. `Start New Research` clears topic but keeps mode — confirmed
+7. Mobile TOC is left-side drawer — confirmed
+8. Mobile citations use bottom sheet, TOC does not — confirmed
+
+---
+
+*Re-audited from full source tree: `page.tsx`, 10 component files, 7 API routes, 7 lib modules — March 2026*
