@@ -3,40 +3,38 @@
 **Original doc:** `STUDIO_FEATURES_TESTING.md`
 **Original checkbox count:** 214
 **After Codex pass 1:** 350
-**After Claude Code pass 2:** 523 (173 new checks + 14 behavior corrections)
-**Completeness estimate:** ~95% of Studio page.tsx import tree covered
+**After Claude Code pass 2:** 523
+**After Codex verification pass:** 705
+**Completeness estimate:** ~98% of the `/studio` import tree is now documented with route-accurate behavior.
 
-## Pass 2 — New Coverage Areas
+## Verification Summary
 
-### Entirely New Components Documented
-- **KeyboardShortcutsDialog** — modal showing 24 shortcuts across 4 categories (17 checks)
-- **CommentSidebar** — inline commenting with threading, resolution, filtering (21 checks)
-- **AcademicKeyboardShortcuts** — 13 additional keyboard bindings not in original section 15
-- **Slash commands full list** — 19 commands across 4 categories with exact titles, descriptions, icons (18 checks)
-- **SlashMenu UI** — positioning, styling, grouping, empty state (10 checks)
-- **Chat API route** — Zod schema, error messages, rate limiting, system prompts (11 checks)
+- Pass 2 assertions reviewed: 173
+- Verified correct: 172
+- Hallucinated / inaccurate: 1
+- Partially correct: 0
+- Accuracy rate: 99.4%
 
-### Significant Corrections Found
-- Left sidebar is 256px (w-64), not 264px
-- Heading levels 1–6 supported, not 1–4
-- Chat messages are plain text, not rendered markdown
-- Heading shortcuts are Cmd+Shift+1-4, not Cmd+Opt+1-4
-- Redo is Cmd+Shift+Z, not Ctrl+Y
-- 5 slash commands in original doc do NOT exist (Summarize, Find Sources, Check Integrity renamed or absent)
-- IntegrityPanel DOES receive `sources` prop (contradicts Codex check #767)
-- `getEditorText` uses `view.dom.innerText` primary with `getText` fallback (not just `getText()`)
-- Cmd+Shift+C keyboard shortcut dispatches unhandled event action
+## Hallucinations Removed Or Corrected
 
-## Features in doc that DON'T EXIST in the app
-- The title input does not show a placeholder when empty in the current implementation.
-- Write/Learn mode does not persist across refreshes unless the URL explicitly includes `?mode=learn`.
-- The Export dropdown does not currently dismiss on outside click.
-- The right-panel `Research` tab does not render inline search results; it launches the external Research Sidebar.
-- The right-panel `Checks` tab does not render the full `/compliance` page UI; it renders the compact `IntegrityPanel`.
-- PDF export does not directly download a PDF from Studio; it opens returned HTML in a new window.
-- Word export currently downloads a `.doc` file, not `.docx`.
-- Chat history is not restored after page refresh in the current Studio route.
-- Section 7 "AI Summarize Selection" is not a slash command — no such entry in `structuralCommands`.
-- Section 7 "Find Sources" is not a slash command — triggered from SelectionToolbar, not slash menu.
-- Section 7 "Check Integrity" is not a slash command — triggered from SelectionToolbar, not slash menu.
-- Section 8 "Messages render markdown content" — messages are plain text in `<p>` tags.
+- Corrected the slash-command inventory from 19 to 23 commands and documented the 7 commands Claude omitted from the supposed "full list".
+- Removed stale `/studio` claims for markdown-rendered chat messages, inline Research-tab results, `.docx` downloads, and a working `Cmd+Shift+C` citation shortcut.
+- Corrected keyboard docs from `Cmd+Opt+1-4` and `Ctrl+Y` to the route's actual `Cmd+Shift+1-4` and `Cmd+Shift+Z` behavior.
+- Corrected the IntegrityPanel wiring notes to reflect the real `getEditorText()` implementation and the existing `sources={integritySources}` prop.
+- Removed the nonexistent Studio-route document-migration subsection; `migrateLocalDocuments()` is not called on `/studio`.
+- Corrected the Reference Sidebar section to match the actual sort modes and available actions.
+
+## Remaining Gaps
+
+- `KeyboardShortcutsDialog` is rendered on `/studio`, but `Cmd+Shift+C` is still broken on this route because `action: "insert-citation"` is never handled by `src/app/(app)/studio/page.tsx`.
+- Left-sidebar reference preview cards are static summary rows; they do not select, focus, or expand references.
+- AI Credits usage is fetched once on mount via `getUserUsageStats()` and does not refresh after chat sends or other AI actions.
+- `ReferenceSidebar` supports sort modes `number`, `author`, `year`, and `added`; it still has no title sort or edit-reference flow.
+- The empty References state still instructs users to use `Cmd+Shift+C`, even though that shortcut is currently non-functional on `/studio`.
+
+## Route Attribution Checks
+
+- `KeyboardShortcutsDialog` is rendered directly in `src/app/(app)/studio/page.tsx`.
+- `CommentSidebar` is conditionally rendered directly in `src/app/(app)/studio/page.tsx`.
+- `ResearchSidebar` is a separate rail rendered between `<main>` and the right-panel conditional, not inside the right panel.
+- `SelectionToolbar`, `LinkPopover`, `DocumentOutline`, `FootnoteSection`, and `Toolbar` are Studio-visible because `src/components/editor/tiptap-editor.tsx` renders them inside `TiptapEditor`.

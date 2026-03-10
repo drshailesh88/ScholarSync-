@@ -50,9 +50,9 @@
 ├──────────┴─────────────────────────────────────┴──────────────────┤
 ```
 
-- [ ] 3-column layout: Left sidebar (264px) | Editor (flex) | Right panel (320px)
+- [ ] Main layout uses a 256px left sidebar (`w-64`), flex editor column, a collapsible ResearchSidebar rail, and a 320px right panel (`w-80`)
 - [ ] Height fills viewport: `h-[calc(100vh-7rem)]`
-- [ ] Right panel toggleable — replaced by Reference Sidebar when open
+- [ ] Right panel can be replaced by the Reference Sidebar or Comment Sidebar
 - [ ] All columns visible on desktop
 - [ ] Layout responsive at different viewport widths
 
@@ -63,7 +63,7 @@
 ### Document Title
 - [ ] Editable title input at top of sidebar
 - [ ] Title updates on change and triggers save
-- [ ] Placeholder text shown when title is empty
+- [ ] Title input has no placeholder in the current implementation
 
 ### Mode Toggle
 - [ ] "Write" button switches to Draft/Write mode
@@ -85,13 +85,13 @@
 - [ ] Top 5 cited references displayed
 - [ ] "View all X references" expandable link
 - [ ] Empty state: "Use Cmd+Shift+C to add citations"
-- [ ] Clicking reference selects it
+- [ ] Reference preview cards are display-only in the left sidebar summary
 
 ### AI Credits
 - [ ] Usage bar displayed at sidebar bottom
 - [ ] Shows tokens used vs. tokens limit
 - [ ] Bar fills proportionally to usage
-- [ ] Updates after AI operations
+- [ ] Falls back to `0 / 50000` if usage stats fail to load
 
 ---
 
@@ -162,7 +162,7 @@
 - [ ] Clicking opens dropdown with options:
   - [ ] "Export as PDF"
   - [ ] "Export as Word"
-- [ ] Dropdown closes on selection or outside click
+- [ ] Dropdown closes on selection; it does not currently dismiss on outside click
 
 ---
 
@@ -174,7 +174,7 @@
 
 ### Text Formatting
 - [ ] Bold, Italic, Underline, Strikethrough
-- [ ] Heading levels 1–4
+- [ ] Heading levels 1–6
 - [ ] Bullet list, Numbered list, Checklist
 - [ ] Blockquote
 - [ ] Code block
@@ -191,7 +191,7 @@
 ### Content Editing
 - [ ] Text selection and editing
 - [ ] Copy/paste preserves formatting
-- [ ] Undo (`Ctrl+Z`) / Redo (`Ctrl+Y`)
+- [ ] Undo (`Cmd+Z`) / Redo (`Cmd+Shift+Z`)
 - [ ] Drag and drop text/blocks
 - [ ] Editor triggers `handleDirty()` on changes (saves to localStorage)
 
@@ -205,27 +205,42 @@
 ## 7. Slash Commands
 
 - [ ] Typing `/` at start of line or after space triggers command menu
-- [ ] Menu shows fuzzy-filtered results as user types
+- [ ] Menu shows case-insensitive filtered results as user types
 
-### AI Action Commands
+### AI / Academic Commands
 | Command | Description | Icon | Action | Test |
 |---------|-------------|------|--------|------|
-| AI Continue Writing | Let AI continue from your cursor | Sparkle | Dispatches `continue` | [ ] Works |
-| AI Summarize Selection | Summarize selected text | Sparkle | Dispatches `summarize` | [ ] Works |
-| Find Sources | Search for related papers | MagnifyingGlass | Opens research sidebar | [ ] Works |
-| Add Citation | Insert a citation from your library | BookOpen | Opens citation dialog | [ ] Works |
-| Check Integrity | Run plagiarism & AI detection check | ShieldCheck | Switches to Checks tab | [ ] Works |
+| Continue Writing | Let AI continue from your cursor | Sparkle | Dispatches `continue` | [ ] Works |
+| Outline Section | Generate a bullet outline for the current section | Sparkle | Dispatches `outline-section` | [ ] Works |
+| Check Guidelines | Review the draft against reporting guidelines | Sparkle | Dispatches `check-guidelines` | [ ] Works |
+| Ask AI | Focus the chat panel for a question | Sparkle | Dispatches `ask` | [ ] Works |
+| Cite | Insert a citation from your library | GraduationCap | Opens citation dialog | [ ] Works |
 
 ### Formatting Commands
 | Command | Action | Test |
 |---------|--------|------|
+| Text | Set plain paragraph text | [ ] Works |
 | Heading 1 | Set heading level 1 | [ ] Works |
 | Heading 2 | Set heading level 2 | [ ] Works |
 | Heading 3 | Set heading level 3 | [ ] Works |
+| Heading 4 | Set heading level 4 | [ ] Works |
 | Bullet List | Toggle bullet list | [ ] Works |
 | Numbered List | Toggle ordered list | [ ] Works |
-| Blockquote | Toggle blockquote | [ ] Works |
+| Checklist | Toggle task list | [ ] Works |
+| Block Quote | Toggle blockquote | [ ] Works |
 | Divider | Insert horizontal rule | [ ] Works |
+| Code Block | Toggle code block | [ ] Works |
+
+### Academic Content Commands
+- [ ] Table inserts a 3x3 table with a header row
+- [ ] Image opens a file picker and inserts an uploaded image
+- [ ] Abstract inserts the structured `Background / Methods / Results / Conclusion` template
+- [ ] Figure Caption inserts the next auto-numbered figure label
+- [ ] Table Caption inserts the next auto-numbered table label
+- [ ] Footnote prompts for text and inserts a footnote
+- [ ] Word Count posts section counts into the chat panel
+
+`Summarize`, `Find Sources`, and `Check Integrity` are not slash commands on `/studio`; they are triggered from selection UI or other route handlers.
 
 - [ ] Menu navigable with Arrow Up/Down
 - [ ] Enter selects highlighted command
@@ -239,7 +254,7 @@
 ### Chat Messages
 - [ ] User messages appear on one side
 - [ ] Assistant messages appear on opposite side
-- [ ] Messages render markdown content
+- [ ] Messages render plain text content
 - [ ] Streaming responses update incrementally
 - [ ] Loading spinner shows during response generation
 
@@ -274,7 +289,7 @@
 ### Quick PubMed Search
 - [ ] Search input with placeholder: "Quick search PubMed..."
 - [ ] "Search" button submits query
-- [ ] Results display inline
+- [ ] Search opens the external `ResearchSidebar`; the right-panel launcher does not render inline results
 
 ### Research Sidebar
 - [ ] Full panel with literature discovery
@@ -376,7 +391,7 @@
 
 ## 11. Citation Dialog
 
-- [ ] Opens via slash command "Add Citation" or `Cmd+Shift+C`
+- [ ] Opens via slash command `Cite` or the left-sidebar `+` button
 - [ ] Modal overlay with close (X) button top-right
 - [ ] Title: "Insert Citation" with BookOpen icon
 
@@ -443,15 +458,15 @@
 
 ### Reference List
 - [ ] All references displayed with metadata
-- [ ] Sortable (by author, year, title)
+- [ ] Sortable (by citation number, author, year, or date added)
 - [ ] Filterable by search
 - [ ] Each reference expandable for full details
-- [ ] Citation number shown for each `[1]`, `[2]`, etc.
+- [ ] Citation number shown for each cited reference `[1]`, `[2]`, etc.; uncited references show `[--]`
 
 ### Actions
-- [ ] Click reference to select
+- [ ] Click reference row to expand or collapse details
 - [ ] Delete reference
-- [ ] Edit reference details
+- [ ] DOI links can be opened or copied when available
 - [ ] Auto-numbering updates when references change
 
 ---
@@ -465,14 +480,14 @@
   - [ ] 1-inch margins
   - [ ] Double-spaced text
   - [ ] Proper heading hierarchy
-- [ ] Downloads PDF file
+- [ ] Opens returned export HTML in a new window for printing or saving
 
 ### DOCX Export
 - [ ] Triggered via "Export as Word"
 - [ ] Calls `POST /api/export/docx`
 - [ ] Styling preserved (headings, lists, formatting)
 - [ ] HTML content parsed and converted
-- [ ] Downloads .docx file
+- [ ] Downloads a `.doc` file
 
 ---
 
@@ -487,17 +502,11 @@
 ### useStudioDocument Hook
 - [ ] Loads document for selected project on mount
 - [ ] `studioDoc` object contains full document state
-- [ ] `saveStatus` transitions: idle → unsaved → saving → saved/error
+- [ ] Title saves transition `idle → unsaved → saving → saved/error`; content saves go directly to `saving` after the editor debounce
 - [ ] `lastSavedAt` timestamp updates on successful save
 - [ ] `docLoading` shows loading state while fetching
 - [ ] `docError` captures error messages
 - [ ] Project switching loads different document
-
-### Document Migration
-- [ ] `migrateLocalDocuments()` runs on Studio mount
-- [ ] Migrates localStorage documents to database
-- [ ] Creates default project if none exists
-- [ ] Runs silently without UI feedback
 
 ---
 
@@ -505,19 +514,21 @@
 
 | Action | Shortcut | Test |
 |--------|----------|------|
-| Open Citation Dialog | `Cmd+Shift+C` | [ ] Opens citation modal |
 | Toggle Reference Sidebar | `Cmd+Shift+R` | [ ] Toggles sidebar visibility |
 | Toggle Research Sidebar | `Cmd+Shift+L` | [ ] Toggles research panel |
+| Toggle Comment Sidebar | `Cmd+/` | [ ] Toggles comments panel |
 | Footnote | `Cmd+Shift+F` | [ ] Inserts footnote |
-| Heading 1 | `Cmd+Opt+1` | [ ] Sets heading level 1 |
-| Heading 2 | `Cmd+Opt+2` | [ ] Sets heading level 2 |
-| Heading 3 | `Cmd+Opt+3` | [ ] Sets heading level 3 |
-| Heading 4 | `Cmd+Opt+4` | [ ] Sets heading level 4 |
+| Heading 1 | `Cmd+Shift+1` | [ ] Sets heading level 1 |
+| Heading 2 | `Cmd+Shift+2` | [ ] Sets heading level 2 |
+| Heading 3 | `Cmd+Shift+3` | [ ] Sets heading level 3 |
+| Heading 4 | `Cmd+Shift+4` | [ ] Sets heading level 4 |
 | Bullet List | `Cmd+Shift+8` | [ ] Toggles bullet list |
 | Numbered List | `Cmd+Shift+7` | [ ] Toggles ordered list |
 | Checklist | `Cmd+Shift+9` | [ ] Toggles task list |
-| Undo | `Ctrl+Z` | [ ] Reverts last change |
-| Redo | `Ctrl+Y` | [ ] Re-applies change |
+| Undo | `Cmd+Z` | [ ] Reverts last change |
+| Redo | `Cmd+Shift+Z` | [ ] Re-applies change |
+
+`Cmd+Shift+C` is displayed in `KeyboardShortcutsDialog`, but on `/studio` it currently dispatches an unhandled `insert-citation` editor action instead of opening the citation dialog.
 
 ---
 
@@ -550,7 +561,7 @@
 4. [ ] Type paragraph text in editor
 5. [ ] Apply heading formatting (select text, use slash command `/Heading 1`)
 6. [ ] Add a bullet list
-7. [ ] Verify save status transitions: unsaved → saving → saved
+7. [ ] Verify title edits show `unsaved → saving → saved`, while content edits debounce directly to `saving → saved`
 8. [ ] Refresh page — verify content persists
 
 ### B. Draft Mode Intensity
@@ -558,7 +569,7 @@
 2. [ ] Click "Focus" — verify AI is passive
 3. [ ] Click "Collaborate" — verify AI assists with completions
 4. [ ] Click "Accelerate" — verify AI is proactive
-5. [ ] Use slash command `/AI Continue Writing` in each mode
+5. [ ] Use slash command `/Continue Writing` in each mode
 6. [ ] Verify AI response matches intensity level
 
 ### C. Guide / Learn Mode
@@ -572,7 +583,7 @@
 8. [ ] Verify AI guidance adapts to each stage
 
 ### D. Citation Workflow
-1. [ ] Press `Cmd+Shift+C` to open Citation Dialog
+1. [ ] Open Citation Dialog from the References `+` button or `/Cite`
 2. [ ] Switch to "Paste DOI/PMID" tab
 3. [ ] Enter a DOI (e.g., "10.1056/NEJMoa2301234")
 4. [ ] Click "Resolve" — verify reference preview appears
@@ -598,18 +609,18 @@
 2. [ ] Verify command menu appears
 3. [ ] Type "heading" — verify filtered results
 4. [ ] Select "Heading 2" — verify formatting applied
-5. [ ] Type `/` again, select "AI Continue Writing"
+5. [ ] Type `/` again, select `Continue Writing`
 6. [ ] Verify AI generates continuation in chat panel
-7. [ ] Type `/`, select "Check Integrity"
-8. [ ] Verify right panel switches to Checks tab
+7. [ ] Type `/`, select `Word Count`
+8. [ ] Verify the assistant posts section and total word counts in the chat panel
 
 ### G. Export Flow
 1. [ ] Write content with headings, lists, and citations
 2. [ ] Click "Export" dropdown in top bar
 3. [ ] Click "Export as PDF"
-4. [ ] Verify PDF downloads with academic formatting
+4. [ ] Verify PDF export opens returned HTML in a new window with academic formatting
 5. [ ] Click "Export" → "Export as Word"
-6. [ ] Verify .docx downloads with styling preserved
+6. [ ] Verify a `.doc` file downloads with styling preserved
 
 ### H. Project Switching
 1. [ ] Create multiple projects (if not existing)
@@ -620,7 +631,7 @@
 6. [ ] Switch back — verify original project content intact
 
 ### I. Manual Citation Entry
-1. [ ] Open Citation Dialog (`Cmd+Shift+C`)
+1. [ ] Open Citation Dialog via the References `+` button or `/Cite`
 2. [ ] Switch to "Manual Entry" tab
 3. [ ] Select Type: "Article"
 4. [ ] Fill in Title (required), Authors, Journal, Year
@@ -632,7 +643,7 @@
 ### J. Error Recovery
 1. [ ] Simulate network disconnect
 2. [ ] Make edits — verify "Save failed" status appears
-3. [ ] Reconnect — verify save recovers automatically
+3. [ ] Reconnect, make another edit, and verify save succeeds again
 4. [ ] Open Integrity Check — trigger error — verify "Retry" button
 5. [ ] Click Retry — verify successful run
 
@@ -727,7 +738,7 @@
 - [ ] Reference Sidebar takes precedence over the Comment Sidebar when `sidebarOpen` is true
 - [ ] Right-panel tabs are hidden while the Reference Sidebar or Comment Sidebar is taking over that column
 - [ ] `Cmd+Shift+R` toggles the Reference Sidebar from anywhere in the page
-- [ ] `Cmd+Shift+C` support depends on the editor emitting `scholarsync:open-citation-dialog`; the page listens for that window event
+- [ ] `Cmd+Shift+C` in the editor dispatches `scholarsync:editor-action` with `action: "insert-citation"`, but `/studio` does not currently handle that action
 - [ ] Citation dialog opening stores the current editor selection in `citationSelectionRef`
 - [ ] Inserted citations restore the saved selection before inserting the citation node
 - [ ] Inserted citation nodes receive only `referenceIds` in their attrs payload
@@ -756,7 +767,7 @@
 - [ ] Research quick-search input placeholder reads `Quick search PubMed...`
 - [ ] Clicking `Search` in the Research tab only acts when the trimmed query is non-empty
 - [ ] Research quick search sets store query, opens the external Research Sidebar, and activates its `search` tab
-- [ ] Checks tab mounts `IntegrityPanel` with `getEditorText={() => editorRef.current?.getText() ?? ""}`
+- [ ] Checks tab mounts `IntegrityPanel` with `getEditorText={() => editorRef.current?.view.dom.innerText?.trim() || editorRef.current?.getText({ blockSeparator: "\n\n" }) || ""}`
 - [ ] IntegrityPanel idle state heading reads `Integrity Check`
 - [ ] IntegrityPanel idle CTA reads `Run Integrity Check`
 - [ ] IntegrityPanel idle helper text promises AI detection, plagiarism, and citation verification
@@ -764,7 +775,7 @@
 - [ ] IntegrityPanel error state shows a `Retry` button that reruns the same check
 - [ ] IntegrityPanel rejects editor text shorter than 50 characters with `Document must have at least 50 characters to check.`
 - [ ] IntegrityPanel trims editor text to 50,000 characters before sending it to `/api/integrity-check`
-- [ ] IntegrityPanel passes no `sources` prop in the current Studio page, so source-aware integrity checking is not wired here
+- [ ] IntegrityPanel receives `sources={integritySources}` assembled from `referenceNumberMap` and stored references
 - [ ] IntegrityPanel free-tier warning reads `Free tier — AI detection only. Upgrade for plagiarism scanning and citation verification.`
 - [ ] IntegrityPanel sections default to expanded for `ai`, `plagiarism`, `citations`, and `quality`
 - [ ] Locked IntegrityPanel sections show `Available on paid plans` and `Upgrade to unlock →`
@@ -861,11 +872,18 @@
 - [ ] `Cmd+Shift+R` in the extension dispatches `scholarsync:editor-action` with `action: "toggle-reference-sidebar"` — the page has a separate `document.addEventListener("keydown")` handler for `Cmd+Shift+R` which calls `toggleSidebar()`
 
 ### Slash Commands — Full List (`src/components/editor/extensions/slash-commands.ts`)
-- [ ] 19 total slash commands defined in `structuralCommands` array
+- [ ] 23 total slash commands defined in `structuralCommands` array
 - [ ] Slash trigger character `/` is allowed at start of parent block (parentOffset === 0) or after a space or newline
 - [ ] Slash command "Text": description "Plain paragraph text", icon `paragraph`, category `basic`
+- [ ] Slash command "Heading 1": description "Manuscript title", icon `h1`, shortcut label `Cmd+Opt+1`, category `basic`
+- [ ] Slash command "Heading 2": description "IMRAD sections", icon `h2`, shortcut label `Cmd+Opt+2`, category `basic`
+- [ ] Slash command "Heading 3": description "Subsections", icon `h3`, shortcut label `Cmd+Opt+3`, category `basic`
 - [ ] Slash command "Heading 4": description "Sub-subsections", icon `h4`, shortcut label `Cmd+Opt+4`, category `basic`
+- [ ] Slash command "Bullet List": description "Unordered list", icon `bullet`, shortcut label `Cmd+Shift+8`, category `basic`, calls `toggleBulletList()`
+- [ ] Slash command "Numbered List": description "Ordered list", icon `numbered`, shortcut label `Cmd+Shift+7`, category `basic`, calls `toggleOrderedList()`
 - [ ] Slash command "Checklist": description "Task checklist", icon `checklist`, shortcut label `Cmd+Shift+9`, category `basic`, calls `toggleTaskList()`
+- [ ] Slash command "Block Quote": description "Quote text", icon `quote`, category `basic`, calls `toggleBlockquote()`
+- [ ] Slash command "Divider": description "Horizontal rule", icon `divider`, category `basic`, calls `setHorizontalRule()`
 - [ ] Slash command "Code Block": description "For statistical code", icon `code`, category `basic`, calls `toggleCodeBlock()`
 - [ ] Slash command "Table": description "Insert data table", icon `table`, category `academic`, inserts `{ rows: 3, cols: 3, withHeaderRow: true }` and applies `academic-table` class via `requestAnimationFrame`
 - [ ] Slash command "Image": description "Insert an image", icon `image`, category `academic`, creates hidden `<input type="file" accept="image/*">`, reads file as DataURL, inserts via `setImage({ src })`
@@ -993,6 +1011,14 @@
 - [ ] **Check #759 `getEditorText`**: Actual code is `() => editorRef.current?.view.dom.innerText?.trim() || editorRef.current?.getText({ blockSeparator: "\n\n" }) || ""` — uses `view.dom.innerText` as primary with `getText` as fallback, not just `getText()`.
 - [ ] **Check #767 "no sources prop"**: IntegrityPanel IS passed `sources={integritySources}` — a computed array assembled from `referenceNumberMap` with title, doi, pmid, authors (as strings), and year for each reference.
 - [ ] **Check #730 "Cmd+Shift+C emits scholarsync:open-citation-dialog"**: The keyboard-shortcuts.ts extension dispatches `scholarsync:editor-action` with `action: "insert-citation"`, NOT `scholarsync:open-citation-dialog`. The page's `scholarsync:editor-action` listener does not handle `insert-citation`. Only the slash command "Cite" dispatches `scholarsync:open-citation-dialog`.
+
+## Codex Verification Pass Discoveries
+
+- [ ] `/studio` renders `KeyboardShortcutsDialog`, but `Cmd+Shift+C` is still a broken route-level shortcut because `action: "insert-citation"` is never handled by the page listener.
+- [ ] Left-sidebar reference preview rows are not clickable selectors; they are static preview cards for the first 5 cited references.
+- [ ] AI Credits usage is fetched once on mount via `getUserUsageStats()` and does not refresh after chat sends or other AI actions.
+- [ ] `ReferenceSidebar` sort modes are `number`, `author`, `year`, and `added`; there is no title sort or edit-reference flow on `/studio`.
+- [ ] `/studio` does not call `migrateLocalDocuments()` on mount; that migration runs in dashboard code, not the Studio route.
 
 ### Components Referenced But Not Rendered
 - `SelectionToolbar` — rendered inside TiptapEditor; may dispatch `summarize`, `find-sources`, `precision-edit`, `integrity-check` AI actions, but these are NOT slash commands
