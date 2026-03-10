@@ -983,4 +983,232 @@
 
 ---
 
-*Document generated from source code analysis. Last updated: 2026-03-09.*
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+### Slide Sorter View (NEW — not in original 536 checks)
+- [ ] Toolbar includes a `Slide Sorter` button (GridFour icon) that opens a full-screen overlay
+- [ ] Slide Sorter header reads `Slide Sorter` with count text `({N} slides — drag to reorder)`
+- [ ] Slide Sorter displays slides in a responsive grid: 2 cols (sm), 3 (md), 4 (lg), 5 (xl), 6 (2xl)
+- [ ] Slide Sorter uses `rectSortingStrategy` (grid-based) instead of `verticalListSortingStrategy` (filmstrip)
+- [ ] Clicking a slide in the sorter activates that slide AND closes the sorter view
+- [ ] Slide Sorter close button (X icon) has aria-label `Close slide sorter`
+- [ ] Slide Sorter overlay uses `backdrop-blur-sm` with `bg-surface/95`
+- [ ] Slides in sorter are drag-to-reorder via dnd-kit `SortableContext`
+
+### Presenter Mode — Additional Keyboard Shortcuts
+- [ ] `Space` key advances to next slide/reveal step (same as ArrowRight)
+- [ ] `Enter` key advances to next slide unless jump buffer is active, in which case it jumps to typed slide number
+- [ ] `Backspace` key goes to previous slide unless jump buffer is active, in which case it deletes last digit
+- [ ] `B` key toggles black screen mode on/off
+- [ ] `W` key toggles white screen mode on/off
+- [ ] `N` key toggles presenter panel visibility on/off
+- [ ] `Home` key jumps to first slide in presenter mode
+- [ ] `End` key jumps to last slide in presenter mode
+- [ ] Number keys typed in presenter mode accumulate in a jump buffer with 1.5s timeout
+- [ ] Jump buffer is displayed in the slide-number input field and submitted via Enter
+
+### Presenter Mode — Audience Window & Fullscreen
+- [ ] Presenter panel includes an `Audience` button that opens a separate window at `/presentation/audience`
+- [ ] Audience window opens with dimensions `width=1280,height=720,menubar=no,toolbar=no`
+- [ ] Presenter uses `BroadcastChannel("presenter-slide-sync")` to sync slide index to audience window
+- [ ] BroadcastChannel sends `init` message with all slide data when audience window sends `audience-ready`
+- [ ] BroadcastChannel sends `slide` message with current index on each slide change
+- [ ] BroadcastChannel sends `screen-mode` message when black/white screen toggles
+- [ ] Fullscreen toggle button (ArrowsOut icon) calls `requestFullscreen()` on the presenter container
+- [ ] Escape in presenter mode exits fullscreen first if `document.fullscreenElement` exists, then calls `onExit`
+
+### Presenter Mode — Empty & Edge States
+- [ ] Zero visible slides shows `No visible slides to present.` with `Exit Presentation` button
+- [ ] Empty speaker notes show italic text `No speaker notes for this slide.`
+- [ ] Last slide shows `End of presentation` italic text in the Next Slide section
+- [ ] Animation progress text reads `Build {current} of {total}` with optional click/auto breakdown
+- [ ] When reveal sequence is complete, progress shows ` • Next click advances slide`
+- [ ] Presenter help text at bottom reads `Keys: Right/Space/Enter next, Left/Backspace prev, Home/End, digits + Enter jump, B black, W white.`
+- [ ] Presenter panel toggle button text alternates between `Hide Panel (N)` and `Show Panel (N)`
+- [ ] Exit button in presenter has hover class `hover:bg-red-600/80`
+
+### Presenter Mode — Notes Font Size
+- [ ] Notes font size buttons are labeled `S`, `M`, `L` (not `Small`, `Medium`, `Large`)
+- [ ] Font size `small` maps to `text-sm`, `medium` to `text-base`, `large` to `text-lg`
+
+### Slide Store — Defaults & Internals
+- [ ] Store default `transition` is `"fade"` (not `"none"`)
+- [ ] Store default `gridSize` is `5`
+- [ ] Store default `agentMode` is `"draft"`
+- [ ] Store default `rightPanel` is `"properties"` (panel open by default)
+- [ ] Store default `showRulers` is `false`
+- [ ] Store default `showGrid` is `false`
+- [ ] Store default `snapToGrid` is `false`
+- [ ] `gridSize` is clamped to range `[1, 100]` and non-finite values fall back to `5`
+- [ ] Undo entries coalesce with a 500ms debounce timer before flushing to the undo stack
+- [ ] Maximum undo history is 50 entries (`MAX_UNDO_HISTORY = 50`)
+- [ ] Any new action clears the redo stack
+- [ ] Debounced save fires 800ms after last `updateSlide` call
+- [ ] Save status transitions: `idle` → `saving` → `saved` → `idle` (auto-reset after 1500ms)
+- [ ] Save status transitions to `error` on server failure with no auto-reset
+- [ ] Agent chat history is capped at 50 messages (`MAX_CHAT_HISTORY = 50`)
+- [ ] `AgentMode` type has four values: `"learn"`, `"draft"`, `"visual"`, `"illustrate"`
+- [ ] `loadDeck` resets `agentChatHistory` to `[]`, `editingBlockIndex` to `null`, `saveStatus` to `"idle"`
+- [ ] `loadDeck` sets `activeSlideId` to the first slide's ID (or `null` if empty)
+- [ ] `loadDeck` sets `selectedSlideIds` to a `Set` containing only the first slide's ID
+
+### Slide Store — Duplicate Slide Behavior
+- [ ] `duplicateSlide` appends ` (copy)` to the source slide's title
+- [ ] `duplicateSlide` preserves source `transition`, `hidden`, `cardBackground`, and `masterId`
+- [ ] `duplicateSlide` activates and selects the newly created slide
+
+### Slide Store — Delete Slide Behavior
+- [ ] `deleteSlide` uses optimistic update: removes from state before server call
+- [ ] `deleteSlide` reverts to previous state (`slides`, `activeSlideId`, `selectedSlideIds`) on server failure
+- [ ] When the deleted slide was active, `activeSlideId` falls back to `filtered[0].id`
+- [ ] After deletion, if `selectedSlideIds` becomes empty and `newActiveId` is not null, the active slide is added to selection
+
+### Slide Store — New Slide Defaults
+- [ ] `addSlide` creates a slide with layout `"title_content"`, title `"New Slide"`, one text block `{ type: "text", data: { text: "Click to add content", style: "body" } }`
+- [ ] `addSlide` failure sets `saveStatus` to `"error"` and returns `null`
+
+### Slide Store — Block Selection State
+- [ ] `setActiveSlide` resets `selectedBlockIndices` to empty, `allBlocksSelected` to `false`, and `editingBlockIndex` to `null`
+- [ ] `selectBlock` with `addToSelection=true` toggles the block in/out of multi-selection
+- [ ] `deleteSelectedBlocks` also resets `editingBlockIndex` to `null`
+
+### Keyboard Shortcuts — Tab Cycling Guard
+- [ ] `Tab` cycling only works when `selectedBlockIndices.size > 0` AND `allBlocksSelected` is false
+- [ ] `Tab` cycling requires a `primarySelectedBlockIndex` to be non-null; otherwise no-op
+- [ ] `Delete`/`Backspace` respects lock: if any selected block has `locked: true`, the entire deletion is skipped
+
+### Handout Export Dialog — Defaults & Details
+- [ ] Handout dialog default layout is `"three_up_notes"` (not `"full_slide"`)
+- [ ] Handout dialog defaults: `includeSlideNumbers: true`, `includeHeader: true`, `includeSpeakerNotes: true`, `paperSize: "letter"`
+- [ ] Speaker notes toggle is disabled unless layout is `"three_up_notes"`
+- [ ] Outline layout description is `Text document, no images`
+- [ ] Six Slides layout description is `3x2 grid`
+- [ ] Dialog title reads `Export PDF Handout` with FilePdf icon
+- [ ] Export button text toggles between `Export PDF` and `Exporting...`
+- [ ] PDF handout filename is `{title}_handout.pdf`
+
+### PPTX Export Details
+- [ ] PPTX export posts to `/api/export/pptx` with JSON payload containing `title`, `themeConfig`, `institutionKit`, and `slides` array
+- [ ] PPTX export filename is `{title}.pptx` (un-sanitized title used directly)
+- [ ] PPTX export error is logged to console only (`PPTX export error:`)
+
+### Find & Replace — Additional Details
+- [ ] Find input placeholder is `Find...`
+- [ ] Replace input placeholder is `Replace with...`
+- [ ] Find input auto-focuses on mount
+- [ ] Dialog is positioned `fixed top-16 right-4` (not centered)
+- [ ] `Enter` key inside the dialog navigates to the next match
+- [ ] `Shift+Enter` inside the dialog navigates to the previous match
+- [ ] Match counter shows `{current} of {total}` when matches exist, `No matches` when query has no results, or non-breaking space when query is empty
+- [ ] Previous match button title is `Previous match (Shift+Enter)`
+- [ ] Next match button title is `Next match (Enter)`
+
+### Accessibility Panel — Additional Details
+- [ ] Accessibility panel header includes a `Re-check` button that increments `runId` to force recomputation
+- [ ] Zero-issue state shows green `CheckCircle` icon with text `No accessibility issues found!`
+- [ ] Score is computed via `calculateAccessibilityScore(issues)` (separate from `checkAccessibility`)
+- [ ] Error severity section defaults to open; warning and info sections default to closed
+- [ ] Auto-fix for `missing-alt-text` navigates to slide, selects the block, and switches right panel to `properties`
+- [ ] Auto-fix for `low-contrast-text` calls `suggestAccessibleColor(textColor, backgroundColor)` and updates theme
+- [ ] Auto-fix for `low-contrast-primary` calls `suggestAccessibleColor(primaryColor, backgroundColor)` and updates theme
+- [ ] Auto-fix for `empty-slide` adds a default text block `{ type: "text", data: { text: "Click to add content", style: "body" } }`
+- [ ] Auto-fixable rule IDs: `missing-alt-text`, `missing-slide-title`, `low-contrast-text`, `low-contrast-primary`, `empty-slide`
+
+### Regenerate Dialog — Additional Details
+- [ ] Default tone is `"keep_similar"`
+- [ ] Dialog resets `instruction`, `tone`, `submitting`, and `error` when closed
+- [ ] Regeneration failure message is `Regeneration failed. The slide was left unchanged.`
+- [ ] Dialog cannot be closed while `submitting` is true
+- [ ] Submit label defaults to `"Regenerate"` (passed from filmstrip)
+
+### API Routes — Validation Schemas
+- [ ] `/api/slides/regenerate` validates with zod: `deckId` (positive int), `slideId` (positive int), `instruction` (max 4000 chars), `tone` (1-100 chars), `context` object with optional `prevSlideTitle`/`nextSlideTitle` and required `deckTitle`/`audienceType`
+- [ ] `/api/slides/regenerate` returns 400 with `{ error, details }` on validation failure
+- [ ] `/api/slides/regenerate` returns 404 with `{ error: "Deck not found" }` when deck doesn't exist
+- [ ] `/api/slides/regenerate` returns 404 with `{ error: "Slide not found" }` when slide doesn't exist
+- [ ] `/api/slides/regenerate` returns 500 with `{ error: "Slide regeneration failed" }` on unexpected error
+- [ ] `/api/slides/generate-image` validates with zod: `prompt` (1-4000 chars), optional `style` enum (`realistic`, `illustration`, `diagram`, `abstract`), optional `aspectRatio` enum (`16:9`, `4:3`, `1:1`, `3:4`)
+- [ ] `/api/slides/generate-image` returns `{ imageUrl, attribution }` on success
+- [ ] `/api/slides/generate-image` returns 500 with `{ error: "Image generation failed" }` on failure
+- [ ] `/api/slides/import-pptx` returns 401 `{ error: "Unauthorized" }` for unauthenticated users
+- [ ] `/api/slides/import-pptx` returns 400 `{ error: "Please upload a .pptx file" }` when no file or wrong type
+- [ ] `/api/slides/import-pptx` returns 400 `{ error: "File exceeds 50MB limit" }` for oversized files
+- [ ] `/api/slides/import-pptx` returns 400 `{ error: "Password-protected files are not supported" }` for encrypted PPTX
+- [ ] `/api/slides/import-pptx` returns 500 `{ error: "Import failed" }` on unexpected server error
+- [ ] `/api/slides/import-pptx` creates deck with description `Imported from {filename}` plus optional theme name
+- [ ] `/api/slides/import-pptx` processes image assets via `storeImportedSlideAsset` and patches image block URLs
+- [ ] `/api/slides/import-pptx` appends `Presentation contains no slides` to warnings when `slideCount === 0`
+- [ ] All three API routes enforce rate limiting via `checkRateLimit` before processing
+
+### Slides Toolbar — Collaboration Avatars
+- [ ] Toolbar renders `CollaborationAvatarsSlot` between the A11y button and the Present button
+- [ ] Avatars slot is imported from `collaboration-slots` as `AvatarsSlot`
+
+### Properties Panel — Block Property Editor Guard
+- [ ] `BlockPropertyEditor` is shown when exactly one block is selected AND the block type is NOT `text`, `bullets`, or `quote`
+- [ ] Single-block alignment buttons are disabled when the selected block has no `position` property
+
+### Mode Selector — Visual Details
+- [ ] `ModeSelector` renders two buttons: `Slides` and `Create` (not `Slides Mode` / `Create Mode`)
+- [ ] Active mode button has classes `bg-brand text-white shadow-sm`
+- [ ] Each mode button includes an inline SVG icon (slides grid icon for Slides, star icon for Create)
+
+### New Presentation Wizard — Progress Dots
+- [ ] Wizard shows 3 progress dots at the top center (for topic, audience, theme steps)
+- [ ] Active step dot is `bg-brand`, completed steps are `bg-brand/40`, future steps are `bg-border`
+- [ ] During generating step, the third dot shows as active (`bg-brand`)
+
+### New Presentation Wizard — Audience Descriptions
+- [ ] Each audience option shows a description beneath the label: `General audience presentation`, `Academic conference talk`, `Dissertation or thesis defense`, `Paper review meeting`, `Teaching or lecture`, `Funding proposal`, `Poster presentation`
+- [ ] Audience options are rendered in a `grid-cols-2` layout (7 options = one orphan cell)
+- [ ] Selected audience card has `border-brand bg-brand/5`
+
+### New Presentation Wizard — Back Navigation
+- [ ] Audience step includes a `Back` button that returns to topic step
+- [ ] Theme step includes a `Back` button that returns to audience step
+- [ ] Topic step has no Back button
+
+### New Presentation Wizard — Generating Step Text
+- [ ] Generating step sub-text is `Setting up your deck and generating initial slides...`
+- [ ] Create button during generation shows spinner + `Creating...` (not `Create Presentation`)
+
+### Import State Card — Phase Copy Details
+- [ ] Parsing phase copy: `Extracting slide structure and preview content...`
+- [ ] Ready phase copy: `Preview the extracted slides before importing them into ScholarSync.`
+- [ ] Importing phase copy: `Uploading assets and creating the imported deck...`
+- [ ] Idle-with-error copy: `The selected file could not be imported.`
+
+### Export — All-Slides ZIP Additional Details
+- [ ] Export-all-PNG timeout before capture is 120ms (after 2 animation frames + `document.fonts.ready`)
+- [ ] Export-all-PNG sorts slides by `sortOrder` before rendering
+- [ ] Export-all-PNG uses `createRoot` from `react-dom/client` for off-screen rendering
+- [ ] After export-all-PNG completes, root is unmounted and container is removed from DOM
+
+### Slide Canvas Editor — No-Slide State
+- [ ] When no active slide exists, canvas editor shows centered text `Select a slide to start editing`
+
+### Version History Panel — Restore Behavior
+- [ ] `VersionHistoryPanel` `onDeckRestored` callback closes the right panel and reloads the deck via `loadDeck(deckId)`
+
+### Delete Master — Cascade
+- [ ] `deleteMaster(id)` removes the master AND sets `masterId` to `undefined` on all slides that used it
+
+### Behavior Corrections (Pass 2)
+- [ ] The page title on `/slides` is `Presentations` (h1), not `Slides` or `Slide Decks`
+- [ ] The empty-state heading is `No presentations yet`, not `No decks found` or similar
+- [ ] Deck delete confirmation dialog uses native `confirm()` with text `Delete this presentation?` (not a custom modal)
+- [ ] The `Visualize` button tooltip reads `Visualize (Ctrl+Shift+V)`, not `Cmd+Shift+V`
+- [ ] F5 (present from beginning) first navigates to the first *sorted* slide before setting `isPresenting`; Shift+F5 keeps the current slide
+- [ ] Global Escape handler cascades in exact order: exit editing → deselect blocks → exit presenting; it does NOT close find/replace
+- [ ] Tab cycling between blocks requires at least one block to be selected first; it does not work from a zero-selection state
+- [ ] The `Properties Panel` width is `w-72`, not `w-80` — agent/defense/comments/versions/analytics panels use `w-80`
+- [ ] Slide import preview cards show `line-clamp-3` on `previewText` only when `previewText` is truthy (conditional rendering)
+- [ ] Completed StatusChip shows a static dot (`h-2 w-2 rounded-full`), not a checkmark icon
+
+### Components Referenced But Not Rendered in Slides Mode
+- [ ] `showSharePanel` store state is set by Share button but `SlidesModeLayout` does not render a `SharePanel` component
+- [ ] `SlideSorterView` is only rendered when `showSlideSorter` is true (toggled from toolbar GridFour button)
+
+---
+
+*Document generated from source code analysis. Last updated: 2026-03-10.*
