@@ -48,7 +48,7 @@ function generateRIS(sources: DeepResearchSource[]): string {
       if (s.doi) lines.push(`DO  - ${s.doi}`);
       if (s.pmid) lines.push(`AN  - PMID:${s.pmid}`);
       if (s.abstract) lines.push(`AB  - ${s.abstract.slice(0, 500)}`);
-      if (s.pdfUrl) lines.push(`UR  - ${s.pdfUrl}`);
+      if (s.openAccessPdfUrl || s.fullTextUrl) lines.push(`UR  - ${s.openAccessPdfUrl || s.fullTextUrl}`);
       else if (s.doi) lines.push(`UR  - https://doi.org/${s.doi}`);
       lines.push(`ER  - `);
       return lines.join("\n");
