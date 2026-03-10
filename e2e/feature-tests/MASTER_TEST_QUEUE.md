@@ -595,10 +595,10 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 579 | LaTeX | AI Code Completion — Context-aware suggestions — considers surrounding LaTeX code | /latex/[projectId] | ✅ PASS | The ghost-text completion request included the surrounding source context line before the current sentence. | `e7d0388` |
 | 580 | LaTeX | AI Code Completion — Streaming responses — suggestions stream in | /latex/[projectId] | ✅ PASS | Mocked `/api/latex/complete` output rendered as inline ghost text after the typing debounce elapsed. | `e7d0388` |
 | 581 | LaTeX | AI Code Completion — Uses /api/latex/complete endpoint | /latex/[projectId] | ✅ PASS | The focused probe intercepted `POST /api/latex/complete` and verified the editor uses that endpoint for inline suggestions. | `e7d0388` |
-| 582 | LaTeX | Spell Check — CodeMirror extension — integrated spell checking | /latex/[projectId] | ⬜ |  |  |
-| 583 | LaTeX | Spell Check — Server-side — uses /api/latex/spell-check endpoint | /latex/[projectId] | ⬜ |  |  |
-| 584 | LaTeX | Spell Check — LaTeX-aware — ignores LaTeX commands, only checks natural text | /latex/[projectId] | ⬜ |  |  |
-| 585 | LaTeX | Spell Check — Dictionary integration — standard dictionary support | /latex/[projectId] | ⬜ |  |  |
+| 582 | LaTeX | Spell Check — CodeMirror extension — integrated spell checking | /latex/[projectId] | ✅ PASS | After the debounce, the source editor rendered blue spell-check diagnostics for the misspelled prose in-place. |  |
+| 583 | LaTeX | Spell Check — Server-side — uses /api/latex/spell-check endpoint | /latex/[projectId] | ✅ PASS | Typing misspelled prose triggered a live `POST /api/latex/spell-check` `200` response from the dev server. |  |
+| 584 | LaTeX | Spell Check — LaTeX-aware — ignores LaTeX commands, only checks natural text | /latex/[projectId] | ✅ PASS | The spell-check response flagged `sentnce` and `speling` while correctly ignoring `\section`. |  |
+| 585 | LaTeX | Spell Check — Dictionary integration — standard dictionary support | /latex/[projectId] | ✅ PASS | The spell-check API did not flag the domain word `Cardiomyopathy`, confirming dictionary-backed validation. |  |
 | 586 | LaTeX | Track Changes / Track Changes Panel — Pending edits list — shows all suggested changes | /latex/[projectId] | ⬜ |  |  |
 | 587 | LaTeX | Track Changes / Track Changes Panel — Per-change actions — Accept / Reject buttons | /latex/[projectId] | ⬜ |  |  |
 | 588 | LaTeX | Track Changes / Track Changes Panel — Batch actions — "Accept All" / "Reject All" | /latex/[projectId] | ⬜ |  |  |
