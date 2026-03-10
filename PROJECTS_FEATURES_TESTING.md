@@ -88,7 +88,7 @@
 | **Thesis & Books** | `"thesis"` | thesis, dissertation, book_chapter |
 
 - [ ] All four tabs render in a horizontal row
-- [ ] Active tab visually distinguished (highlighted/underlined)
+- [ ] Active tab is visually distinguished from inactive tabs
 - [ ] Clicking a tab filters the project list to matching types
 - [ ] "All Projects" tab shows every project regardless of type
 - [ ] Tab switch is immediate (client-side filter, no refetch)
@@ -133,14 +133,14 @@
 | **Papers** | `paper_count` value | [ ] Shows correct count |
 | **Docs** | `doc_count` value | [ ] Shows correct count |
 | **Last Edited** | Relative or formatted `updated_at` date | [ ] Displays readable date |
-| **Actions** | Edit, Archive, Delete buttons | [ ] All three action buttons render |
+| **Actions** | Edit, Archive, Delete buttons | [ ] Edit/Delete always render; Archive only renders when the project is not archived |
 
 ### Row Behavior
 - [ ] Each row represents one project
 - [ ] Rows render in order from API (updated_at DESC)
-- [ ] Hovering a row reveals the `CaretDown` icon on the status badge
+- [ ] Hovering the status button reveals the `CaretDown` icon on the badge control
 - [ ] Clicking the status badge/caret opens the Status Update Modal
-- [ ] Table scrolls if many projects exist
+- [ ] Table is wrapped in a horizontal overflow container
 
 ### Action Buttons (per row)
 
@@ -161,19 +161,19 @@
 
 ### Card Layout
 - [ ] Projects displayed in a responsive grid of cards
-- [ ] Each card has a **colored bar** at the top (accent by type/status)
+- [ ] Each card has a fixed brand-colored bar at the top
 
 ### Card Content
 - [ ] **Type icon** displayed on card
 - [ ] **Status badge** displayed on card
 - [ ] **Project title** prominent
 - [ ] Subtitle line: `"{type} · {lastEdited}"` format
-- [ ] Footer line: `"{paper_count} papers · {doc_count} docs"` with `Files` and `FileText` icons
+- [ ] Footer line uses `Files` and `FileText` icons with singular/plural counts (`paper/papers`, `doc/docs`)
 - [ ] Cards are clickable or have clear navigation affordance
 
 ### Grid Behavior
 - [ ] Grid adapts columns based on viewport width
-- [ ] Cards have consistent height and alignment
+- [ ] Cards share a consistent structure, while final height remains content-driven
 - [ ] Filtering/search/tabs work identically in grid view as in list view
 
 ---
@@ -224,7 +224,7 @@
 
 | Field | Type | Required | Placeholder / Default | Test |
 |-------|------|----------|----------------------|------|
-| **Project Name** | Text input | Yes | "e.g. CRISPR Literature Review" | [ ] Autofocus on open, required validation |
+| **Project Name** | Text input | Yes | "e.g. CRISPR Literature Review" | [ ] Autofocus on open; empty name disables submission |
 | **Type** | Dropdown | Yes | Default: `review_article` | [ ] All options listed below available |
 | **Target Journal** | Text input | No | "e.g. The Lancet, Nature Medicine" | [ ] Optional, accepts freeform text |
 | **Deadline** | Date input | No | (none) | [ ] Date picker functional, optional |
@@ -255,10 +255,10 @@
 - [ ] Button disabled when Project Name is empty
 - [ ] Button disabled while `creating` state is true
 - [ ] Button text changes to **"Creating..."** during submission
-- [ ] Pressing **Enter** key submits the form
-- [ ] Successful creation redirects to the new project (or refreshes list)
+- [ ] Pressing **Enter** inside the Project Name input submits the create action
+- [ ] Successful creation navigates to `/editor/new?project={newProjectId}`
 - [ ] Modal closes after successful creation
-- [ ] New project appears in the project list
+- [ ] Failed creation logs an error and leaves the modal open
 - [ ] Created project defaults to `status="planning"`
 
 ---
@@ -291,9 +291,9 @@
 ### Submit Behavior
 - [ ] **"Update Status"** button displayed
 - [ ] Button disabled when selected status matches current status (no change)
-- [ ] Button text changes to **"Updating..."** during submission
+- [ ] Clicking **"Update Status"** closes the modal before the `"Updating..."` label can render
 - [ ] Successful update reflects immediately in the project list
-- [ ] Modal closes after successful update
+- [ ] Modal closes immediately on submit, before awaiting the server action
 
 ---
 
@@ -355,19 +355,23 @@
 
 ## 14. Loading & Error States
 
-### Loading State
-- [ ] Skeleton header renders while loading
-- [ ] `SkeletonTable` with 6 rows renders while loading
-- [ ] Skeleton replaces the project list area entirely
-- [ ] No flash of empty state before loading completes
-- [ ] Loading state appears on initial page load
+### Route-Level Loading (`loading.tsx`)
+- [ ] Route-level loader renders a skeleton header plus `SkeletonTable` with 6 rows
+- [ ] Route-level loader wraps content in `max-w-5xl mx-auto`
+- [ ] Route-level loader is distinct from the page component's client fetch spinner
 
-### Error State
-- [ ] Title: **"Projects unavailable"**
-- [ ] Message: **"We couldn't load your projects. Please try again."**
-- [ ] Error state renders instead of the project list
-- [ ] No partial or broken UI on error
-- [ ] Error triggers when `getProjects()` server action fails
+### In-Component Loading (`page.tsx`)
+- [ ] While `loading` is true in the page component, a centered `SpinnerGap` renders inside an `h-64` container
+- [ ] No flash of the empty state occurs before the client fetch finishes
+
+### Fetch Failure Handling
+- [ ] A caught `getProjects()` failure logs `Failed to load projects:` and then falls through to the zero-state because `projects` remains `[]`
+- [ ] Route-level `error.tsx` is not used for caught client-side fetch failures
+
+### Route-Level Error Boundary (`error.tsx`)
+- [ ] Route-level error UI title is **"Projects unavailable"**
+- [ ] Route-level error UI message is **"We couldn't load your projects. Please try again."**
+- [ ] Route-level error UI passes `error` and `reset` into `ErrorDisplay`
 
 ---
 
@@ -378,27 +382,27 @@
 | Action | Signature | Behavior | Test |
 |--------|-----------|----------|------|
 | `getProjects()` | `() => Project[]` | Returns all non-deleted projects, ordered by `updated_at` DESC; includes `paper_count` and `doc_count` | [ ] Returns correct list |
-| `getProject(id)` | `(id: string) => Project` | Returns single project with ownership check | [ ] Rejects if not owner |
+| `getProject(id)` | `(id: number) => Project \| null` | Returns a single non-deleted project with ownership check | [ ] Returns `null` if not owned or already deleted |
 | `createProject(data)` | `(data) => Project` | Creates project with `status="planning"`, revalidates `/projects` and `/dashboard` | [ ] Defaults to planning status |
 | `updateProject(id, data)` | `(id, data) => Project` | Partial update, sets `updated_at` to current time | [ ] Only updates provided fields |
-| `updateProjectStatus(id, status)` | `(id, status) => Project` | Convenience wrapper around `updateProject` | [ ] Updates only status field |
+| `updateProjectStatus(id, status)` | `(id, status) => Project` | Convenience wrapper around `updateProject` | [ ] Updates only the status field |
 | `deleteProject(id)` | `(id) => void` | Soft-delete: sets `deleted_at` timestamp | [ ] Project hidden from list |
-| `archiveProject(id)` | `(id) => void` | Sets `status` to `"archived"` | [ ] Status changes to archived |
+| `archiveProject(id)` | `(id) => Project` | Sets `status` to `"archived"` through `updateProject` | [ ] Status changes to archived |
 
 ### Project Interface
 
 ```typescript
 interface Project {
-  id: string;
+  id: number;
   title: string;
-  project_type: ProjectType;
-  status: ProjectStatus;
-  description: string;
-  research_question: string;
-  target_journal: string;
-  deadline: string;
-  citation_style: string;
-  updated_at: string;
+  project_type: ProjectType | null;
+  status: ProjectStatus | null;
+  description: string | null;
+  research_question: string | null;
+  target_journal: string | null;
+  deadline: string | null;
+  citation_style: string | null;
+  updated_at: Date | null;
   paper_count: number;
   doc_count: number;
 }
@@ -418,7 +422,7 @@ interface Project {
 
 ### Path Revalidation
 - [ ] `createProject` revalidates `/projects` and `/dashboard`
-- [ ] Other mutations revalidate as appropriate
+- [ ] `updateProject`, `updateProjectStatus`, `archiveProject`, and `deleteProject` all revalidate `/projects` and `/dashboard`
 
 ---
 
@@ -429,8 +433,8 @@ interface Project {
 2. [ ] Verify "No projects yet" empty state with `FolderOpen` icon
 3. [ ] Click "Create Your First Project"
 4. [ ] Fill in project name, select type, optionally set journal/deadline/citation style
-5. [ ] Submit and verify redirect or list update
-6. [ ] Confirm project appears with status "planning"
+5. [ ] Submit and verify navigation to `/editor/new?project={newProjectId}`
+6. [ ] Return to `/projects` and confirm the new project appears with status "planning"
 
 ### Workflow 2: Create a Project via Header Button
 1. [ ] Click "New Project" button in header
@@ -440,7 +444,7 @@ interface Project {
 5. [ ] Set citation style: AMA
 6. [ ] Set a deadline date
 7. [ ] Click "Create Project"
-8. [ ] Verify project appears in list with correct type icon (`Microscope`) and planning badge
+8. [ ] Verify navigation to `/editor/new?project={newProjectId}` after creation succeeds
 
 ### Workflow 3: Filter and Search
 1. [ ] Create multiple projects of different types and statuses
@@ -471,18 +475,18 @@ interface Project {
 6. [ ] Refresh page -- deleted project does not reappear
 
 ### Workflow 6: View Mode Toggle
-1. [ ] Default view loads (list or grid based on default)
+1. [ ] Default view loads in list mode
 2. [ ] Click the `SquaresFour` (Grid) toggle button
-3. [ ] Verify projects render as cards with colored bars, icons, badges
+3. [ ] Verify projects render as cards with a fixed brand top bar, icons, and badges
 4. [ ] Verify card subtitle format: "{type} · {lastEdited}"
-5. [ ] Verify card footer: "{paper_count} papers · {doc_count} docs"
+5. [ ] Verify card footer pluralizes correctly for `paper/papers` and `doc/docs`
 6. [ ] Click the `List` toggle button
 7. [ ] Verify projects render as table rows with all columns
 8. [ ] Filters and search work identically in both views
 
 ### Workflow 7: Error Recovery
 1. [ ] Simulate network failure during `getProjects()`
-2. [ ] Verify error state: title "Projects unavailable", message about retrying
+2. [ ] Verify the page logs the load failure and falls back to the zero-state UI for a caught client fetch error
 3. [ ] Restore network -- refresh page
 4. [ ] Verify projects load normally
 
@@ -531,12 +535,14 @@ interface Project {
 ### Grid and Action Behavior
 - [ ] Archived projects hide the Archive action button in both list rows and grid cards
 - [ ] Grid footer pluralizes resource counts (`1 paper` vs `2 papers`, `1 doc` vs `2 docs`)
+- [ ] Inline status and action controls call `stopPropagation()` so they do not trigger row/card navigation
 
 ### Optimistic Recovery
 - [ ] Failed delete requests trigger `fetchProjects()` to restore the server state after optimistic removal
 - [ ] Failed archive requests trigger `fetchProjects()` to restore the server state after optimistic archiving
 - [ ] Failed status updates trigger `fetchProjects()` to restore the server state after optimistic badge changes
 - [ ] Closing the Status Update modal clears the stored `statusTarget` project context
+- [ ] Mutation failures only log to the console; the page shows no toast, inline alert, or dialog-level error message
 
 ### Detailed QA Coverage
 
@@ -642,17 +648,17 @@ interface Project {
 
 ### Behavior Corrections (Pass 2)
 
-1. **Grid card top bar (Section 6, line 164)**: The original doc says _"colored bar at the top (accent by type/status)"_. Incorrect — the bar is always `bg-brand` (fixed brand color), not derived from project type or status. Source: `page.tsx:574`.
+1. **Grid card top bar (Section 6)**: The original doc said _"colored bar at the top (accent by type/status)"_. Incorrect — the bar is always `bg-brand` (fixed brand color), not derived from project type or status. Source: `page.tsx:574`.
 
-2. **Project.id type (Section 15)**: Interface shows `id: string` but source code declares `id: number`. All server action parameters (`getProject`, `deleteProject`, `archiveProject`, etc.) accept `number`. Source: `page.tsx:61`, `projects.ts:85,160,169,180`.
+2. **Project.id type (Section 15)**: The interface originally showed `id: string` but source code declares `id: number`. All server action parameters (`getProject`, `deleteProject`, `archiveProject`, etc.) accept `number`. Source: `page.tsx:61`, `projects.ts:85,160,169,180`.
 
-3. **Loading state conflation (Section 14)**: The section describes "Skeleton header" and "SkeletonTable with 6 rows" as the page loading state. Those belong to the route-level `loading.tsx` (Suspense boundary). The page component itself shows a centered `SpinnerGap` spinner inside an `h-64` container while `getProjects()` resolves. These are two distinct loading mechanisms. Source: `page.tsx:446-452`, `loading.tsx:1-13`.
+3. **Loading state conflation (Section 14)**: The original section described "Skeleton header" and "SkeletonTable with 6 rows" as the page loading state. Those belong to the route-level `loading.tsx` (Suspense boundary). The page component itself shows a centered `SpinnerGap` spinner inside an `h-64` container while `getProjects()` resolves. These are two distinct loading mechanisms. Source: `page.tsx:446-452`, `loading.tsx:1-13`.
 
-4. **Enter key scope (Section 9)**: "Pressing Enter key submits the form" is only true when focused on the Project Name input (which has the `onKeyDown` handler). Pressing Enter in Target Journal, Deadline, or Citation Style does NOT submit — there is no `<form>` element. Source: `page.tsx:657-659`.
+4. **Enter key scope (Section 9)**: The original doc implied the whole modal submits on Enter. In reality, Enter submission only works from the Project Name input (which has the `onKeyDown` handler). Pressing Enter in Target Journal, Deadline, or Citation Style does NOT submit because there is no `<form>` element. Source: `page.tsx:657-659`.
 
-5. **"Updating..." text never visible (Section 10)**: The doc says button text changes to "Updating..." during submission. In practice, `setShowStatusModal(false)` fires in the same event handler before the await. With React 18 batching, the modal is already closed when the re-render occurs — the "Updating..." text is never rendered to the user. Source: `page.tsx:302-308`.
+5. **"Updating..." text never visible (Section 10)**: The original doc said button text changes to "Updating..." during submission. In practice, `setShowStatusModal(false)` fires in the same event handler before the await. With React 18 batching, the modal is already closed when the re-render occurs, so the "Updating..." text is never rendered to the user. Source: `page.tsx:302-308`.
 
-6. **Fetch failure shows empty state, not error UI (Section 14)**: When `getProjects()` fails within the page component, the catch block logs the error and leaves `projects` as `[]`, causing the "No projects yet" empty state to render — NOT the error display. The route-level `error.tsx` only catches uncaught rendering/SSR errors, not caught client-side fetch failures. Source: `page.tsx:203-213`.
+6. **Fetch failure shows empty state, not error UI (Section 14)**: When `getProjects()` fails within the page component, the catch block logs the error and leaves `projects` as `[]`, causing the "No projects yet" empty state to render instead of the route error display. The route-level `error.tsx` only catches uncaught rendering/SSR errors, not caught client-side fetch failures. Source: `page.tsx:203-213`.
 
 ### Route-Level Loading (loading.tsx)
 
@@ -749,3 +755,16 @@ interface Project {
 - [ ] `X` icon is not imported by `page.tsx` — it is rendered inside the `Modal` component
 - [ ] `Tabs` component supports an optional `count` property per tab, but the projects page passes no counts — tabs show labels only, no per-tab badge numbers
 - [ ] No API routes exist under `src/app/api/projects/` — all data access uses server actions from `src/lib/actions/projects.ts`
+
+### Codex Verification Pass Discoveries
+
+- [ ] Archived projects can be restored by opening the Status Update modal and selecting a non-archived status
+- [ ] There is no dedicated Restore button — unarchiving is only exposed through the Status Update modal
+- [ ] No bulk selection, bulk archive, or bulk delete controls exist in the projects page or its imported components
+- [ ] No project sharing or collaboration controls exist anywhere in the `/projects` page import tree
+- [ ] List row navigation is mouse-only because `DataTable` binds `onClick` to a `<tr>` without keyboard focus semantics
+- [ ] Grid card navigation is mouse-only because the card root is a clickable `<div>` with no keyboard focus semantics
+- [ ] Grid card icon-only action buttons have no `title` or `aria-label` attributes
+- [ ] View toggle buttons are icon-only and expose no `aria-label` or `aria-pressed` state
+- [ ] Modal close button has no explicit accessible name (`aria-label` or `title`)
+- [ ] Search input and status filter have no explicit associated label in the current UI
