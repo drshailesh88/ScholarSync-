@@ -783,4 +783,222 @@
 - [ ] Word export currently downloads a `.doc` file, not a `.docx` file.
 - [ ] Chat history is not restored on refresh in the current Studio route.
 
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> These checks were found by line-by-line source audit of every file in the studio
+> import tree. Each assertion is verified against the source code listed.
+
+### Page Architecture (`src/app/(app)/studio/page.tsx`)
+- [ ] `StudioPage` default export wraps `StudioContent` in `<Suspense>` with no fallback prop — renders empty fragment during SSR hydration
+- [ ] Left sidebar actual width is `w-64` (Tailwind 16rem = 256px), not 264px as stated in section 1
+- [ ] Editor center column constrained to `max-w-[720px] mx-auto` on the `TiptapEditor` wrapper
+- [ ] `ResearchSidebar` component is rendered between `<main>` and the right-panel conditional — it is not inside the right column
+- [ ] Citation notice renders in the status bar area (between save indicator and export) as `text-[10px] font-medium text-emerald-500`
+- [ ] `requestAnimationFrame` wraps the entire citation insertion logic to ensure modal overlay is removed from DOM before focusing the editor
+- [ ] PDF export silently returns when `/api/export/pdf` responds non-OK (no error UI, no console log on non-OK)
+- [ ] Word export silently returns when `/api/export/docx` responds non-OK (no error UI, no console log on non-OK)
+- [ ] Word export creates a temporary `<a>` element, appends it to `document.body`, triggers `.click()`, removes the element, and revokes the object URL
+- [ ] `getEditorContent()` reads HTML from `document.querySelector(".ProseMirror")?.innerHTML` — returns empty string if no `.ProseMirror` element exists
+- [ ] Content-change save does NOT transition through `unsaved` — goes directly from current status to `saving` when debounce fires (only title changes go through `unsaved`)
+
+### Keyboard Shortcuts Dialog (`src/components/editor/KeyboardShortcutsDialog.tsx`)
+- [ ] Question mark (`?`) button in the status bar (between save indicator and export dropdown) opens `KeyboardShortcutsDialog`
+- [ ] Question button styled: `w-8 h-8 rounded-lg text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border`
+- [ ] Dialog renders as fixed full-screen overlay with `bg-black/50` backdrop at `z-50`
+- [ ] Clicking the backdrop overlay dismisses the dialog (`onClick={onClose}` on wrapper)
+- [ ] Dialog content stops propagation (`e.stopPropagation()`) to prevent backdrop dismiss when clicking inside
+- [ ] Dialog header: `Keyboard` icon (20px, `text-brand`) + title text `Keyboard Shortcuts` (text-lg font-semibold)
+- [ ] Dialog close button: `X` icon (20px) in top-right of header
+- [ ] Dialog max width: `max-w-2xl`, max height: `max-h-[80vh]`, overflow hidden on outer, scrollable content area
+- [ ] Dialog has 4 shortcut categories displayed in order: `Formatting`, `Structure`, `Academic`, `Tools`
+- [ ] "Formatting" category lists 8 shortcuts: Bold `Cmd+B`, Italic `Cmd+I`, Underline `Cmd+U`, Strikethrough `Cmd+Shift+X`, Highlight `Cmd+Shift+H`, Superscript `Cmd+Shift+.`, Subscript `Cmd+Shift+,`, Inline Code `Cmd+E`
+- [ ] "Structure" category lists 8 shortcuts: Heading 1–4 `Cmd+Shift+1-4`, Bullet List `Cmd+Shift+8`, Ordered List `Cmd+Shift+7`, Blockquote `Cmd+Shift+B`, Horizontal Rule `Cmd+Shift+Enter`
+- [ ] "Academic" category lists 3 shortcuts: Insert Citation `Cmd+Shift+C`, Insert Footnote `Cmd+Shift+F`, Insert Link `Cmd+Shift+K`
+- [ ] "Tools" category lists 5 shortcuts: Undo `Cmd+Z`, Redo `Cmd+Shift+Z`, Save `Cmd+S`, Toggle Comments `Cmd+/`, Slash Commands `/`
+- [ ] Shortcuts displayed in 2-column grid (`grid-cols-2 gap-2`) within each category
+- [ ] Each shortcut row shows description text on left and key pills on right (`px-1.5 py-0.5 text-xs font-medium text-ink-muted bg-surface border border-border rounded`)
+- [ ] Category headers styled as uppercase tracking-wider text-xs font-semibold text-ink-muted
+
+### TiptapEditor Extensions (`src/components/editor/tiptap-editor.tsx`)
+- [ ] StarterKit configured with `heading: { levels: [1, 2, 3, 4, 5, 6] }` — supports 6 heading levels, not 4
+- [ ] Highlight extension configured with `multicolor: true`
+- [ ] TextAlign extension configured for types `["heading", "paragraph"]`
+- [ ] TextStyle, Color, and FontFamily extensions loaded — enabling inline color and font changes
+- [ ] Link extension configured: `openOnClick: false`, `autolink: true`, `linkOnPaste: true`
+- [ ] Table extension configured: `resizable: true`, HTMLAttributes class `academic-table`
+- [ ] Image extension configured: `inline: false`, `allowBase64: true`
+- [ ] TaskItem extension configured: `nested: true` — supports nested task lists
+- [ ] Placeholder text reads `Start typing or press '/' for AI commands...`
+- [ ] CharacterCount and Typography extensions loaded
+- [ ] `immediatelyRender: false` set on `useEditor` — prevents server-side rendering mismatch
+- [ ] Editor editorProps attributes class: `academic-editor-content max-w-none focus:outline-none min-h-[calc(100vh-12rem)] px-6 py-4`
+- [ ] Editor `spellcheck` attribute set to `"true"`
+- [ ] `Cmd+S` key handler in editorProps calls `flushSave(view.state.doc)` — saves immediately bypassing debounce timer
+- [ ] `flushSave` extracts content via `doc.toJSON()`, plain text via `doc.textBetween(0, doc.content.size, "\n")`, and word count via `getDocumentWordCount(doc)`
+- [ ] Editor renders sub-components: `Toolbar`, `SelectionToolbar`, `LinkPopover`, `DocumentOutline`, `EditorContent`, `FootnoteSection`
+- [ ] `SelectionToolbar` and `LinkPopover` and `DocumentOutline` only render when `editor` is truthy
+- [ ] OutlinePlugin configured with `debounceMs: 500`
+- [ ] Initial outline computed 300ms after editor ready — heading list only shown if ≥2 headings exist (otherwise outline set to empty)
+- [ ] `contentKey` change triggers `editor.commands.setContent(content)` or `editor.commands.clearContent()` for project switching
+- [ ] Debounced save timer cleaned up on unmount via `useEffect` cleanup
+- [ ] Custom `CitationNumbering` extension wraps `createCitationPlugin()` as a ProseMirror plugin
+
+### Keyboard Shortcuts — AcademicKeyboardShortcuts (`src/components/editor/extensions/keyboard-shortcuts.ts`)
+- [ ] `Cmd+Shift+X` toggles strikethrough
+- [ ] `Cmd+Shift+H` toggles highlight
+- [ ] `Cmd+Shift+K` inserts link — prompts URL via `window.prompt("Enter URL:")`
+- [ ] `Cmd+Shift+.` toggles superscript
+- [ ] `Cmd+Shift+,` toggles subscript
+- [ ] `Cmd+Shift+F` inserts footnote — prompts text via `window.prompt("Footnote text:")`
+- [ ] `Cmd+/` toggles Comment Sidebar — dispatches `scholarsync:editor-action` with `action: "toggle-comment-sidebar"`
+- [ ] `Cmd+S` forces immediate save (handled in editorProps, not in this extension)
+- [ ] `Cmd+Shift+Z` is the redo shortcut (from StarterKit), not `Ctrl+Y` as listed in section 15
+- [ ] `Cmd+Shift+Enter` inserts horizontal rule
+- [ ] Heading shortcuts in the extension use `Mod-Shift-1` through `Mod-Shift-4` (i.e., `Cmd+Shift+1-4`), not `Cmd+Opt+1-4`
+- [ ] `Cmd+Shift+C` in the extension dispatches `scholarsync:editor-action` with `action: "insert-citation"` — however the page's `scholarsync:editor-action` listener does NOT handle `insert-citation`, only `show-word-count`, `add-comment`, and `toggle-comment-sidebar`
+- [ ] `Cmd+Shift+R` in the extension dispatches `scholarsync:editor-action` with `action: "toggle-reference-sidebar"` — the page has a separate `document.addEventListener("keydown")` handler for `Cmd+Shift+R` which calls `toggleSidebar()`
+
+### Slash Commands — Full List (`src/components/editor/extensions/slash-commands.ts`)
+- [ ] 19 total slash commands defined in `structuralCommands` array
+- [ ] Slash trigger character `/` is allowed at start of parent block (parentOffset === 0) or after a space or newline
+- [ ] Slash command "Text": description "Plain paragraph text", icon `paragraph`, category `basic`
+- [ ] Slash command "Heading 4": description "Sub-subsections", icon `h4`, shortcut label `Cmd+Opt+4`, category `basic`
+- [ ] Slash command "Checklist": description "Task checklist", icon `checklist`, shortcut label `Cmd+Shift+9`, category `basic`, calls `toggleTaskList()`
+- [ ] Slash command "Code Block": description "For statistical code", icon `code`, category `basic`, calls `toggleCodeBlock()`
+- [ ] Slash command "Table": description "Insert data table", icon `table`, category `academic`, inserts `{ rows: 3, cols: 3, withHeaderRow: true }` and applies `academic-table` class via `requestAnimationFrame`
+- [ ] Slash command "Image": description "Insert an image", icon `image`, category `academic`, creates hidden `<input type="file" accept="image/*">`, reads file as DataURL, inserts via `setImage({ src })`
+- [ ] Slash command "Abstract": description "Structured abstract (Background, Methods, Results, Conclusion)", icon `academic`, category `academic`, inserts H2 "Abstract" followed by bold labels `Background: `, `Methods: `, `Results: `, `Conclusion: `
+- [ ] Slash command "Figure Caption": description "Insert a figure caption with numbering", icon `image`, category `academic`, counts existing `Figure \d+` paragraphs and inserts bold `Figure {N+1}. ` + "Caption text here"
+- [ ] Slash command "Table Caption": description "Insert a table caption with numbering", icon `table`, category `academic`, counts existing `Table \d+` paragraphs and inserts bold `Table {N+1}. ` + "Caption text here"
+- [ ] Slash command "Footnote": description "Add a footnote reference", icon `footnote`, shortcut label `Cmd+Shift+F`, category `academic`, uses `prompt()` then `editor.commands.insertFootnote(text)`
+- [ ] Slash command "Cite": description "Insert a citation from your library", icon `academic`, shortcut label `Cmd+Shift+C`, category `academic`, dispatches `scholarsync:open-citation-dialog`
+- [ ] Slash command "Continue Writing": description "AI continues from cursor", icon `ai`, category `ai`, dispatches `scholarsync:ai-action` with `action: "continue"` and `context: editor.getText()`
+- [ ] Slash command "Outline Section": description "AI generates bullet outline", icon `ai`, category `ai`, dispatches `action: "outline-section"`
+- [ ] Slash command "Check Guidelines": description "Run reporting guideline check", icon `ai`, category `ai`, dispatches `action: "check-guidelines"`
+- [ ] Slash command "Ask AI": description "Ask a question (no edits)", icon `ai`, category `ai`, dispatches `action: "ask"` with no context
+- [ ] Slash command "Word Count": description "Show section word counts", icon `tools`, category `tools`, dispatches `scholarsync:editor-action` with `action: "show-word-count"`
+- [ ] `filterCommands` uses case-insensitive `includes` matching on title, description, and category — not fuzzy matching
+
+### Slash Menu UI (`src/components/editor/SlashMenu.tsx`)
+- [ ] Empty filter results render "No commands found" text centered in `py-4`
+- [ ] Slash menu max height `max-h-[400px]` with `overflow-y-auto`, width `w-80` (320px)
+- [ ] Slash menu items grouped by category with uppercase labels: `BASIC BLOCKS`, `ACADEMIC`, `AI TOOLS`, `DOCUMENT TOOLS`
+- [ ] Category header shown only when category changes between adjacent items (not repeated per item)
+- [ ] Each command item shows: 32px icon box (w-8 h-8 rounded-md), title (text-sm font-medium), description (text-[11px] text-ink-muted), optional shortcut label (text-[10px])
+- [ ] AI icon items (`icon === "ai"`) use `weight="fill"` on the Sparkle icon; others use `weight="regular"`
+- [ ] Selected item highlights with `bg-brand/10 text-brand` and icon box `bg-brand/15`
+- [ ] Slash menu uses tippy.js for positioning with `placement: "bottom-start"` and `offset: [0, 4]`
+- [ ] Escape key in slash menu hides the tippy popup
+- [ ] Arrow Up/Down wraps around (modular arithmetic on index)
+
+### AI Action Handlers — page.tsx event switch
+- [ ] `outline-section` handler prompt: `Create a concise bullet outline for the current section based on this draft:\n\n{context}`
+- [ ] `check-guidelines` handler prompt: `Review this draft against the most relevant reporting guideline checklist and list missing or weak items:\n\n{context}`
+- [ ] `precision-edit` handler prompt: `Improve the clarity, precision, and academic tone of this selected text while preserving meaning:\n\n{context}`
+- [ ] `cite` handler prompt: `Help me add a citation from my library. What paper should I cite here?`
+- [ ] `ask` handler focuses chat input by querying `input[placeholder*="AI research assistant"], input[placeholder*="challenge your thinking"]` after a `setTimeout(..., 0)`
+
+### Chat API Route (`src/app/api/chat/route.ts`)
+- [ ] Zod schema validates messages as array max 50 items, each with `role` enum `["user", "assistant", "system"]` and `content` string max 50,000 chars
+- [ ] Auth failure returns 401 with `{ error: "Authentication required." }`
+- [ ] Validation failure returns 400 with `{ error: "Invalid request. Please check your input and try again." }`
+- [ ] AI not configured returns 503 with `{ error: "AI service is not configured. Please contact an administrator." }`
+- [ ] Unhandled error returns 500 with `{ error: "An unexpected error occurred. Please try again." }`
+- [ ] Rate limiting checked with `checkRateLimit(userId, "chat", RATE_LIMITS.ai)` before processing
+- [ ] When `mode` is neither `"learn"` nor `"draft"`, standard assistant system prompt used: `"You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone."`
+- [ ] Response produced via `streamText` from `"ai"` SDK, returned as `result.toTextStreamResponse()`
+- [ ] `guideContext` payload from client includes `documentType`, `stage`, and optionally `projectTitle` (omitted when title is `"Untitled Document"`)
+- [ ] `draftContext` payload from client includes `intensity` and optionally `projectTitle` (omitted when title is `"Untitled Document"`)
+- [ ] AI model obtained via dynamic import `getModel()` from `@/lib/ai/models`
+
+### Chat Panel Rendering Details
+- [ ] User message ID format: `msg_${Date.now()}`; assistant message ID: `msg_${Date.now() + 1}`
+- [ ] Streaming uses `new TextDecoder()` with `decode(value, { stream: true })`
+- [ ] During streaming, assistant content accumulated via local variable mutation (`assistantMsg.content += text`) then state updated per chunk with `setMessages` map
+- [ ] After streaming completes, assistant message persisted via `addMessage(...)` only if `content` is non-empty
+- [ ] Messages rendered as plain text in `<p className="whitespace-pre-wrap text-xs leading-relaxed">` — NOT rendered as markdown
+- [ ] User messages styled: `bg-surface-raised text-ink`, max-width 85%
+- [ ] Assistant messages styled: `bg-brand/5 text-ink`, max-width 85%
+- [ ] Assistant avatar: 24px circle (`w-6 h-6 rounded-full bg-brand/20`) with `Sparkle` 12px in `text-brand`
+- [ ] Loading placeholder appears only when `isLoading && messages[messages.length-1]?.role !== "assistant"` (disappears once streaming starts)
+- [ ] Loading placeholder Sparkle icon uses `animate-spin` class
+- [ ] Three bouncing dots are 6px circles (`w-1.5 h-1.5 rounded-full bg-brand/40 animate-bounce`) with staggered delays: 0ms, 150ms, 300ms
+- [ ] Send button uses `PaperPlaneRight` icon (16px), styled `bg-brand text-white hover:bg-brand-hover disabled:opacity-50`
+- [ ] Chat error renders above messages: `p-3 rounded-lg bg-amber-500/10 text-amber-500 text-xs`
+- [ ] Chat input has `focus:ring-2 focus:ring-brand/40` focus ring
+- [ ] `submitAiPrompt` calls `setInput(prompt)` twice — once immediately and once inside the 100ms setTimeout — to ensure React state update before form submission
+
+### Comment Sidebar (`src/components/editor/CommentSidebar.tsx`)
+- [ ] Comment sidebar width: `w-80` (320px), `bg-surface border-l border-border`
+- [ ] Header shows `ChatCircle` 16px icon + "Comments" title (text-sm font-semibold text-ink)
+- [ ] Unresolved comment count badge: `bg-amber-500/15 text-amber-500` rounded-full `text-[10px] font-bold`, only shown when `totalUnresolved > 0`
+- [ ] Close button: `X` 16px icon in header, `p-1 rounded hover:bg-surface-raised text-ink-muted`
+- [ ] Filter bar with `FunnelSimple` 12px icon and three filter buttons: `all`, `unresolved`, `resolved` (capitalized via CSS)
+- [ ] Active filter styled: `bg-brand/10 text-brand`; inactive: `text-ink-muted hover:bg-surface-raised`
+- [ ] Empty state (no comments, no pending inline): `ChatCircle` 32px icon (`text-ink-muted/30`), text "No comments yet", subtext "Select text and click the comment button to start"
+- [ ] Inline comment creation shows "Commenting on selection" with `TextB` 12px icon in brand, uppercase text-[10px]
+- [ ] Inline comment quoted text: blockquote with `border-l-2 border-brand/30 pl-2`, curly quotes, italic
+- [ ] Inline comment form has "Cancel" button (`text-ink-muted hover:bg-surface-raised`) and "Add Comment" button (`bg-brand text-white disabled:opacity-50`)
+- [ ] Comment bubbles show: user avatar (first letter of `userName`, default `"U"`, uppercase, in 20px circle `bg-brand/20 text-brand`), name (default `"User"`), relative timestamp
+- [ ] Relative timestamps: `Just now` (<1m), `{N}m ago` (<1h), `{N}h ago` (<24h), `Yesterday` (1d), `{N}d ago` (<7d), locale `MMM D` (≥7d)
+- [ ] Resolved comments: `"Resolved"` emerald badge (`bg-emerald-500/10 text-emerald-500`), `line-through` on name and content, `opacity-70` on container
+- [ ] Comment actions visible on hover only (`opacity-0 group-hover:opacity-100`): Resolve (`Check` icon + "Resolve") / Unresolve (`ArrowClockwise` icon + "Unresolve"), Reply (`ArrowBendDownRight` icon + "Reply"), Delete (`Trash` icon + "Delete" in red, owner-only)
+- [ ] Resolve/Unresolve only shown on top-level comments, not replies
+- [ ] Reply button only shown on top-level comments
+- [ ] Reply input placeholder: `Write a reply...`
+- [ ] Replies indented with `ml-4`
+- [ ] Enter key submits comment or reply (without Shift); `e.preventDefault()` blocks newline
+- [ ] Comments stored via `document-comments-local` localStorage functions — NOT database API
+- [ ] Comment user ID is hardcoded as `"local-user"`
+- [ ] Clicking a comment's quoted text calls `scrollToComment` which sets editor text selection to the comment's `textRangeStart`/`textRangeEnd` and scrolls into view
+- [ ] New comment input at bottom of sidebar is hidden when inline comment form is active (`replyTo === "new-inline"`)
+
+### Research Reference Builder (`toCitationAuthors` + `buildResearchReference` in page.tsx)
+- [ ] `toCitationAuthors`: empty or whitespace-only author string maps to `{ family: "Unknown", given: "" }`
+- [ ] `toCitationAuthors`: author with comma (e.g. "Smith, John") splits on first comma — first part is family, second is given
+- [ ] `toCitationAuthors`: author without comma splits on spaces — last word is family, rest is given
+- [ ] `toCitationAuthors`: single-word author name maps to `{ family: name, given: "" }`
+- [ ] `buildResearchReference` creates ID `ref-research-${stableKey}` where stableKey is trimmed DOI, trimmed PMID, or slugified title (`toLowerCase().replace(/[^a-z0-9]+/g, "-")`)
+- [ ] Research reference sets `type: "article"`, CSL type `"article-journal"`, and `year` defaults to `0` when missing
+
+### useStudioDocument Hook (`src/hooks/use-studio-document.ts`)
+- [ ] Default document title initialized as `"Untitled Document"`
+- [ ] Document load failure without doc: error set to `"Failed to load or create document."`
+- [ ] Document load network error: error set to `"Failed to load document. Please try again."` and logged as `"Failed to load document:"` to console
+- [ ] After first load (`hasLoadedRef`), `listUserProjects` is re-fetched to catch projects created during `loadStudioDocument`
+- [ ] Title save timer cleaned up on unmount via `useEffect` cleanup
+
+### Guide Types (`src/types/guide.ts`)
+- [ ] `REPORTING_GUIDELINES` constant maps document types to guideline arrays: `case_report` → `["CARE"]`, `original_article` → `["CONSORT", "STROBE", "STARD", "TRIPOD"]`, `review_article` → `["PRISMA", "Narrative review best practices"]`, `meta_analysis` → `["PRISMA 2020", "Cochrane Handbook"]`
+- [ ] `book_chapter`, `academic_draft`, and `letter` have empty reporting guidelines arrays
+
+### Draft Types (`src/types/draft.ts`)
+- [ ] `PrecisionEditAction` type defines 14 precision edit actions: `rephrase`, `shorten`, `expand`, `make_academic`, `active_voice`, `simplify`, `strengthen_claim`, `add_transition`, `split_paragraph`, `merge_paragraphs`, `reorder`, `add_citation`, `flag_unsupported`, `check_guidelines`
+- [ ] `ScholarRules` interface defines project-level AI configuration including `dialect` (British/American English), `voice` options, `tense` per section, `max_sentence_length`, `avoid_terms`, `prefer_terms`, and `ghost_text` settings
+
+### Behavior Corrections (Pass 2)
+
+- [ ] **Section 1 check "264px"**: Left sidebar is `w-64` which is **256px** (16rem), not 264px.
+- [ ] **Section 6 check "Heading levels 1–4"**: `StarterKit` is configured with `heading: { levels: [1, 2, 3, 4, 5, 6] }` — **6 heading levels**, not 4.
+- [ ] **Section 8 check "Messages render markdown content"**: Messages are rendered as **plain text** inside `<p className="whitespace-pre-wrap">`, not as rendered markdown.
+- [ ] **Section 15 checks "Cmd+Opt+1-4" for headings**: `AcademicKeyboardShortcuts` binds `Mod-Shift-1` through `Mod-Shift-4` (i.e., **Cmd+Shift+1-4**). The slash command metadata labels show "Cmd+Opt+1-4" but the actual keyboard bindings are Cmd+Shift.
+- [ ] **Section 15 check "Redo Ctrl+Y"**: Redo is bound as **Cmd+Shift+Z** (from StarterKit and shown in KeyboardShortcutsDialog). No `Ctrl+Y` binding exists.
+- [ ] **Section 7 "AI Summarize Selection"**: This is **NOT a slash command**. No entry named "AI Summarize Selection" or "Summarize" exists in `structuralCommands`. The `summarize` action exists in the page handler but is triggered from elsewhere (e.g., SelectionToolbar), not the slash menu.
+- [ ] **Section 7 "Find Sources"**: This is **NOT a slash command**. No entry named "Find Sources" exists in `structuralCommands`. The `find-sources` action is triggered from elsewhere, not the slash menu.
+- [ ] **Section 7 "Check Integrity"**: This is **NOT a slash command**. No entry named "Check Integrity" exists in `structuralCommands`. The `integrity-check` action is triggered from elsewhere, not the slash menu.
+- [ ] **Section 7 "Add Citation"**: The actual slash command title is **"Cite"**, not "Add Citation".
+- [ ] **Section 7 "AI Continue Writing"**: The actual slash command title is **"Continue Writing"**, not "AI Continue Writing".
+- [ ] **Check #759 `getEditorText`**: Actual code is `() => editorRef.current?.view.dom.innerText?.trim() || editorRef.current?.getText({ blockSeparator: "\n\n" }) || ""` — uses `view.dom.innerText` as primary with `getText` as fallback, not just `getText()`.
+- [ ] **Check #767 "no sources prop"**: IntegrityPanel IS passed `sources={integritySources}` — a computed array assembled from `referenceNumberMap` with title, doi, pmid, authors (as strings), and year for each reference.
+- [ ] **Check #730 "Cmd+Shift+C emits scholarsync:open-citation-dialog"**: The keyboard-shortcuts.ts extension dispatches `scholarsync:editor-action` with `action: "insert-citation"`, NOT `scholarsync:open-citation-dialog`. The page's `scholarsync:editor-action` listener does not handle `insert-citation`. Only the slash command "Cite" dispatches `scholarsync:open-citation-dialog`.
+
+### Components Referenced But Not Rendered
+- `SelectionToolbar` — rendered inside TiptapEditor; may dispatch `summarize`, `find-sources`, `precision-edit`, `integrity-check` AI actions, but these are NOT slash commands
+- `LinkPopover` — rendered inside TiptapEditor; handles link editing hover UI
+- `DocumentOutline` — rendered inside TiptapEditor; displays heading outline in sidebar
+- `FootnoteSection` — rendered inside TiptapEditor; displays footnote references at bottom of editor
+- `Toolbar` — rendered inside TiptapEditor; the main formatting toolbar above the editor
+
 *Generated from source code in `src/app/(app)/studio/`, `src/components/integrity/`, `src/components/citations/`, and related modules — March 2026*

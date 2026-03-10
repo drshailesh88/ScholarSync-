@@ -2,24 +2,30 @@
 
 **Original doc:** `STUDIO_FEATURES_TESTING.md`
 **Original checkbox count:** 214
-**Features found in UI:** 286
-**Features found in source code:** 350
-**Missing from doc:** 136
-**Completeness of original doc:** 61.1%
+**After Codex pass 1:** 350
+**After Claude Code pass 2:** 523 (173 new checks + 14 behavior corrections)
+**Completeness estimate:** ~95% of Studio page.tsx import tree covered
 
-## Missing Features
+## Pass 2 — New Coverage Areas
 
-### Detailed QA Coverage
-- [ ] Actual document-hook behavior for project loading, initial section selection, title debouncing, content auto-save, and localStorage draft fallback
-- [ ] Save-indicator state details including icon differences between `saved`, `idle with lastSavedAt`, `unsaved`, and `error`
-- [ ] Real sidebar replacement priority between Reference Sidebar, Comment Sidebar, and the standard right-panel tabs
-- [ ] Citation insertion flow details: selection capture, bibliography auto-insertion, temporary success notice, and research-origin citation events
-- [ ] Chat lifecycle details for conversation creation, streaming assistant messages, message persistence calls, auto-scroll, and current non-persistence on refresh
-- [ ] Actual Research tab behavior as a launcher into the external Research Sidebar rather than an embedded search experience
-- [ ] Embedded IntegrityPanel behavior in the Checks tab, including its shorter-form UI and paid-feature locks
-- [ ] Export implementation details showing PDF opens a new window and Word currently downloads a `.doc` file with a sanitized title
-- [ ] Learn-mode gating for the stage tracker and the fact that stage/document-type state is local UI state only
-- [ ] Route-level loading and error boundary copy
+### Entirely New Components Documented
+- **KeyboardShortcutsDialog** — modal showing 24 shortcuts across 4 categories (17 checks)
+- **CommentSidebar** — inline commenting with threading, resolution, filtering (21 checks)
+- **AcademicKeyboardShortcuts** — 13 additional keyboard bindings not in original section 15
+- **Slash commands full list** — 19 commands across 4 categories with exact titles, descriptions, icons (18 checks)
+- **SlashMenu UI** — positioning, styling, grouping, empty state (10 checks)
+- **Chat API route** — Zod schema, error messages, rate limiting, system prompts (11 checks)
+
+### Significant Corrections Found
+- Left sidebar is 256px (w-64), not 264px
+- Heading levels 1–6 supported, not 1–4
+- Chat messages are plain text, not rendered markdown
+- Heading shortcuts are Cmd+Shift+1-4, not Cmd+Opt+1-4
+- Redo is Cmd+Shift+Z, not Ctrl+Y
+- 5 slash commands in original doc do NOT exist (Summarize, Find Sources, Check Integrity renamed or absent)
+- IntegrityPanel DOES receive `sources` prop (contradicts Codex check #767)
+- `getEditorText` uses `view.dom.innerText` primary with `getText` fallback (not just `getText()`)
+- Cmd+Shift+C keyboard shortcut dispatches unhandled event action
 
 ## Features in doc that DON'T EXIST in the app
 - The title input does not show a placeholder when empty in the current implementation.
@@ -30,3 +36,7 @@
 - PDF export does not directly download a PDF from Studio; it opens returned HTML in a new window.
 - Word export currently downloads a `.doc` file, not `.docx`.
 - Chat history is not restored after page refresh in the current Studio route.
+- Section 7 "AI Summarize Selection" is not a slash command — no such entry in `structuralCommands`.
+- Section 7 "Find Sources" is not a slash command — triggered from SelectionToolbar, not slash menu.
+- Section 7 "Check Integrity" is not a slash command — triggered from SelectionToolbar, not slash menu.
+- Section 8 "Messages render markdown content" — messages are plain text in `<p>` tags.
