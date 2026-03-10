@@ -16,6 +16,7 @@
 12. [Error State (error.tsx)](#12-error-state-errortsx)
 13. [Icons](#13-icons)
 14. [Styling & Theming](#14-styling--theming)
+15. [Codex Verification Pass Discoveries](#15-codex-verification-pass-discoveries)
 
 ---
 
@@ -23,13 +24,13 @@
 
 | Property | Value |
 |---|---|
-| Route | `src/app/(app)/onboarding/page.tsx` |
+| Route | `/onboarding` |
+| Source file | `src/app/(app)/onboarding/page.tsx` |
 | Directive | `"use client"` |
-| State variables | `step` (0-3), `name`, `institution`, `selectedSpecialties` (string[]), `selectedGoals` (string[]), `saving`, `totalSteps` (4) |
+| State variables | `step` (0-3), `name`, `institution`, `selectedSpecialties` (string[]), `selectedGoals` (string[]), `saving` |
+| Derived values / constants | `totalSteps` (`4`), `canNext` |
 
 - [ ] Page renders without errors
-- [ ] All state variables initialize to correct defaults (step=0, name="", institution="", selectedSpecialties=[], selectedGoals=[], saving=false)
-- [ ] totalSteps is 4
 - [ ] Page is client-rendered (`"use client"` directive)
 
 ---
@@ -179,7 +180,7 @@
 
 - [ ] Heading text matches: "Here's what you can do"
 - [ ] Description text matches exactly
-- [ ] 5 features are listed in a numbered list
+- [ ] 5 feature rows are rendered from the `FEATURES` array with numbered badges
 - [ ] Feature 1: "Literature Search" with description "Search 282M+ papers across PubMed, Semantic Scholar, and OpenAlex"
 - [ ] Feature 2: "The Studio" with description "AI-powered editor with Learn Mode and Draft Mode"
 - [ ] Feature 3: "Citation Manager" with description "Auto-format citations in 10,000+ styles"
@@ -274,20 +275,12 @@
 
 | Step | Action |
 |---|---|
-| 1 | `updateUserProfile({ full_name: name, specialty: selectedSpecialties.join(", "), bio: institution })` |
+| 1 | `updateUserProfile({ full_name: name \|\| undefined, specialty: selectedSpecialties.join(", ") \|\| undefined, bio: institution \|\| undefined })` |
 | 2 | `POST /api/onboarding/complete` |
 | 3 | `router.push("/dashboard")` |
 | On error | `console.error` + still redirect to `/dashboard` |
 
 - [ ] Clicking "Start Using ScholarSync" sets saving=true
-- [ ] updateUserProfile is called with correct payload: full_name from name input, specialty as comma-separated string, bio from institution input
-- [ ] POST request is made to `/api/onboarding/complete`
-- [ ] On success: user is redirected to `/dashboard`
-- [ ] On API error: error is logged to console
-- [ ] On API error: user is still redirected to `/dashboard`
-- [ ] selectedSpecialties are joined with ", " (comma + space) for the specialty field
-- [ ] Institution value is stored in the bio field
-- [ ] Profile update happens before the onboarding-complete API call
 - [ ] Empty name and institution are handled gracefully
 
 ---
@@ -297,19 +290,12 @@
 | Property | Expected |
 |---|---|
 | Method | POST |
-| Auth | Required |
+| Auth | Required via `getCurrentUserId()` |
 | Success response | `{ success: true }` |
-| Error response | `500 { error: "Failed to complete onboarding" }` |
+| Error response | `500 { error: "Failed to complete onboarding" }` for any thrown error, including auth failures |
 | DB update | `users.onboarding_completed = true, updated_at = now()` |
 
-- [ ] Endpoint requires authentication
-- [ ] Unauthenticated request returns appropriate error
-- [ ] Authenticated request updates `users.onboarding_completed` to `true`
-- [ ] Authenticated request updates `users.updated_at` to current timestamp
-- [ ] Successful response returns `{ success: true }`
-- [ ] On database error, returns 500 with `{ error: "Failed to complete onboarding" }`
-- [ ] Endpoint only accepts POST method
-- [ ] Repeated calls are idempotent (calling again when already completed does not error)
+- [ ] Repeated calls keep `onboarding_completed = true` but are not fully idempotent because `updated_at` changes on every call
 
 ---
 
@@ -336,14 +322,7 @@
 |---|---|
 | Progress bar skeletons | 4 bars, `h-1 rounded-full` |
 | Content skeleton | `h-80 rounded-2xl` |
-| Navigation skeletons | `h-10 w-20` (back) + `h-12 w-36` (continue) |
-
-- [ ] 4 progress bar skeletons render with `h-1 rounded-full`
-- [ ] Content area skeleton renders with `h-80 rounded-2xl`
-- [ ] Back button skeleton renders with `h-10 w-20`
-- [ ] Continue button skeleton renders with `h-12 w-36`
-- [ ] Skeletons animate (pulse or shimmer)
-- [ ] Loading state layout matches the actual page layout
+| Navigation skeletons | `h-10 w-20 rounded-xl` (back) + `h-12 w-36 rounded-xl` (continue) |
 
 ---
 
@@ -354,13 +333,9 @@
 | Component | ErrorDisplay |
 | Title | "Onboarding unavailable" |
 | Message | "We couldn't load the onboarding flow. Please try again." |
-| Icon | WarningCircle (32px, red) |
+| Icon | WarningCircle (32px) inside a tinted `bg-red-500/10 text-red-500` container |
 | Retry icon | ArrowCounterClockwise (16px) |
 
-- [ ] ErrorDisplay component renders on error
-- [ ] Title shows "Onboarding unavailable"
-- [ ] Message shows "We couldn't load the onboarding flow. Please try again."
-- [ ] WarningCircle icon renders at 32px in red
 - [ ] Retry button is present with ArrowCounterClockwise icon (16px)
 - [ ] Clicking retry button attempts to reload the onboarding flow
 - [ ] Error boundary catches rendering errors correctly
@@ -417,7 +392,6 @@
 - [ ] Selected goal uses `bg-brand/5 border-brand/30`
 - [ ] Unselected items use `bg-surface-raised text-ink-muted border-border`
 - [ ] Page is responsive and centered
-- [ ] Theme tokens resolve correctly in both light and dark modes (if applicable)
 
 ---
 
@@ -544,104 +518,62 @@
 
 ---
 
-## Re-Audit Discoveries (Claude Code Pass 2)
+## 15. Codex Verification Pass Discoveries
 
-> Source files verified: `page.tsx`, `route.ts`, `loading.tsx`, `error.tsx`,
+> Source-verified against `page.tsx`, `route.ts`, `loading.tsx`, `error.tsx`,
 > `error-display.tsx`, `user.ts`, `auth.ts`, `skeleton.tsx`, `app-shell.tsx`,
-> `(app)/layout.tsx`, `schema/core.ts`
+> and `(app)/layout.tsx`.
 
-### New Checks (Pass 2)
+### App Shell & Auth Context
+- [ ] `(app)/layout.tsx` authenticates onboarding with `getCurrentUserId()` and redirects failures to `/sign-in`
+- [ ] Onboarding content is rendered inside `AppShell` `<main className="flex-1 overflow-y-auto p-6">`
+- [ ] `AppHeader` and `CommandPalette` are mounted by `AppShell` during onboarding
+- [ ] Desktop sidebar chrome is part of onboarding at `md+` breakpoints; mobile sidebar stays closed until opened
 
-#### App Shell & Auth Context
-- [ ] Onboarding page renders inside `AppShell` — sidebar, header, and command palette are all present
-- [ ] Auth is enforced by `(app)/layout.tsx` via `getCurrentUserId()` — unauthenticated users redirect to `/sign-in`
-- [ ] No middleware or page-level guard prevents already-onboarded users from re-accessing `/onboarding`
-- [ ] Page content sits inside `<main className="flex-1 overflow-y-auto p-6">` from AppShell
-
-#### Error Display Internals
+### Error Display Internals
 - [ ] `error.tsx` has its own `"use client"` directive
-- [ ] ErrorDisplay calls `Sentry.captureException(error)` in a `useEffect` on mount — onboarding errors are reported to Sentry
-- [ ] Error retry button text is "Try Again" (not generic "Retry")
+- [ ] `ErrorDisplay` calls `Sentry.captureException(error)` in `useEffect`
+- [ ] Error retry button text is `Try Again`
 - [ ] Error retry button uses `bg-brand text-white rounded-xl hover:bg-brand-hover transition-colors`
-- [ ] ErrorDisplay `onRetry` button only renders when `onRetry` prop is provided (conditional `{onRetry && (...)}`)
-- [ ] ErrorDisplay icon wrapper uses `w-16 h-16 rounded-2xl bg-red-500/10 text-red-500` (red tinted, not raw red)
+- [ ] `ErrorDisplay` only renders the retry button when `onRetry` is provided
+- [ ] Error icon wrapper uses `w-16 h-16 rounded-2xl bg-red-500/10 text-red-500`
 
-#### Goal Selection Details
-- [ ] Check icon in goal cards uses `weight="bold"` prop (heavier than default)
-- [ ] Goal icon container dimensions: `w-10 h-10 rounded-lg` with conditional background
+### Goal Selection Details
+- [ ] Goal-card check icon uses `weight="bold"`
+- [ ] Goal icon container uses `w-10 h-10 rounded-lg` with conditional background styling
 - [ ] Selected goal icon container changes to `bg-brand/10 text-brand`; unselected uses `bg-surface-raised text-ink-muted`
-- [ ] Goal card uses `text-left` to prevent button text alignment issues
+- [ ] Goal cards use `text-left` so label and description alignment stay left-aligned
 
-#### Completion Flow Internals
+### Completion Flow Internals
 - [ ] `handleComplete` is wrapped in `useCallback` with deps `[name, institution, selectedSpecialties, router]`
-- [ ] `selectedGoals` is deliberately excluded from `useCallback` deps — confirms it is unused in the callback
-- [ ] `updated_at` is written twice during completion: once by `updateUserProfile` (always sets `updated_at: new Date()`) and once by the `/api/onboarding/complete` API route
-- [ ] HTTP 500 response from API does NOT trigger client-side catch block — `fetch()` only throws on network errors, not HTTP error status codes
-- [ ] `updateUserProfile` signature accepts 8 optional fields (`full_name`, `specialty`, `country`, `bio`, `research_interests`, `preferred_language`, `default_citation_style`, `orcid_id`) but onboarding only sends 3
-- [ ] `updateUserProfile` builds a clean payload object and only `SET`s columns that are not `undefined` — guarded by individual `if (data.X !== undefined)` checks
+- [ ] `selectedGoals` is excluded from the dependency array because `handleComplete` does not reference it
+- [ ] Successful completion writes `updated_at` twice: once in `updateUserProfile` and once in `/api/onboarding/complete`
+- [ ] HTTP error responses from `/api/onboarding/complete` do not enter the client `catch` unless `fetch()` itself throws
+- [ ] `updateUserProfile` accepts 8 optional profile fields, but onboarding sends only `full_name`, `specialty`, and `bio`
+- [ ] `updateUserProfile` builds a sparse payload and only sets columns whose values are not `undefined`
 
-#### Step Transitions & Persistence
-- [ ] Step content transitions are instant — conditional rendering (`step === N && (...)`) with no CSS animation or transition wrapper
-- [ ] Progress bar color changes DO animate via `transition-all` on each bar div
-- [ ] No progress persistence mechanism — wizard state (step, name, institution, selections) resets entirely on page refresh
-- [ ] State is ephemeral `useState` only — no `localStorage`, `sessionStorage`, or server fetch on mount
+### Step Transitions & Persistence
+- [ ] Step panels swap via conditional rendering with no animation wrapper around the content
+- [ ] Progress bar state changes animate via `transition-all`
+- [ ] Wizard progress and form state reset on page refresh
+- [ ] Onboarding state is `useState` only; there is no `localStorage`, `sessionStorage`, or mount-time restore
 
-#### Button & Input Styling (Undocumented Details)
+### Button & Input Styling
 - [ ] Continue and Complete buttons both use `hover:bg-brand-hover transition-colors`
-- [ ] Complete button uses `disabled:opacity-50` when saving (same disabled style as Continue)
-- [ ] Back button uses `hover:text-ink transition-colors` for hover text darkening
-- [ ] Loading skeleton navigation items include `rounded-xl` class (not documented in section 11)
-- [ ] Input fields use `rounded-xl` border radius (differs from container `rounded-2xl` and skeleton `rounded-lg`)
-- [ ] Input fields use `px-4 py-3` padding, `bg-surface-raised border border-border`, `text-sm text-ink`, `focus:outline-none`
-- [ ] Labels use `block text-xs font-medium text-ink-muted mb-1.5`
+- [ ] Complete button uses `disabled:opacity-50` while saving
+- [ ] Back button uses `hover:text-ink transition-colors`
+- [ ] Loading navigation skeletons include `rounded-xl`
+- [ ] Welcome-step inputs use `rounded-xl`, distinct from the card's `rounded-2xl`
+- [ ] Welcome-step inputs use `px-4 py-3 bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40`
+- [ ] Welcome-step labels use `block text-xs font-medium text-ink-muted mb-1.5`
 
-#### Skeleton Component Internals
-- [ ] `Skeleton` base class is `animate-pulse rounded-lg bg-surface-raised` — loading progress bars override shape with `rounded-full`
-- [ ] Animation type is Tailwind `animate-pulse` (opacity fade), not shimmer/gradient
+### Skeleton Component Internals
+- [ ] `Skeleton` base classes are `animate-pulse rounded-lg bg-surface-raised`
+- [ ] Loading placeholders use Tailwind `animate-pulse`, not a shimmer gradient
 
-#### Auth Edge Cases (getCurrentUserId)
-- [ ] In production with missing Clerk keys, `getCurrentUserId` throws a configuration error ("Authentication is not configured"), not an auth error
-- [ ] In dev mode, missing session always falls back to `DEV_USER_ID = "dev_user_001"`
+### Auth Edge Cases
+- [ ] In production without valid Clerk keys, `getCurrentUserId()` throws a configuration error instead of an auth error
+- [ ] In development, a missing session falls back to `DEV_USER_ID = "dev_user_001"`
 
-#### Naming Inconsistencies
-- [ ] Feature tour uses property names `title` / `desc`; goals use `label` / `description` — no consistent naming convention across constants
-
-### Behavior Corrections (Pass 2)
-
-| # | Section | Existing Claim | Actual Behavior |
-|---|---------|---------------|-----------------|
-| 1 | §1 table | `totalSteps` listed as "State variable" | `const totalSteps = 4` — a plain constant, not `useState` |
-| 2 | §8 table step 1 | `updateUserProfile({ full_name: name, specialty: ..., bio: institution })` | Actual code uses `name \|\| undefined`, `selectedSpecialties.join(", ") \|\| undefined`, `institution \|\| undefined` — empty strings become `undefined` and are omitted from the DB update |
-| 3 | §5 | "5 features are listed in a numbered list" | Not an `<ol>` — uses `<div>` elements with numbered `<span>` badges (`{i + 1}`) |
-| 4 | §9 | "Repeated calls are idempotent" | `onboarding_completed = true` is idempotent, but `updated_at` changes on every call — not fully idempotent |
-| 5 | §11 table | Navigation skeletons `h-10 w-20` / `h-12 w-36` | Also include `rounded-xl` class not shown in the table |
-| 6 | §12 table | "Icon: WarningCircle (32px, red)" | Rendered inside a `bg-red-500/10 text-red-500` container (tinted background, not raw red icon) |
-
-### Components Referenced But Not Rendered
-
-| Component | Status | Notes |
-|-----------|--------|-------|
-| `selectedGoals` | Collected but dropped | State is maintained, UI toggles work, but value is never sent to server. Not in `handleComplete` payload, not in `useCallback` deps. |
-| Onboarding guard | Missing | No check prevents completed users from re-entering `/onboarding`. No redirect based on `onboarding_completed` status. |
-| Form validation | Missing | No `required`, `maxLength`, `pattern`, or custom validation on any input. No error messages. No trimming of whitespace. |
-| Pre-fill from profile | Missing | Page always starts with empty state. Even if user has existing `full_name`/`specialty`/`bio` in DB, onboarding inputs start blank. |
-
-### Suspected Hallucinations From Existing Doc
-
-| # | Location | Check | Verdict |
-|---|----------|-------|---------|
-| 1 | §1 table | `totalSteps` as "State variable" | **WRONG** — it's `const`, not `useState`. Misclassification, not a hallucination per se. |
-| 2 | §8 table | Simplified `updateUserProfile` payload without `\|\| undefined` | **MISLEADING** — omits the conditional-undefined pattern that changes actual DB behavior (empty strings are NOT written). Codex §"Completion Button and Save Flow" correctly describes this, creating a contradiction within the doc. |
-| 3 | §9 | "Repeated calls are idempotent" | **PARTIALLY FALSE** — `onboarding_completed` update is idempotent, but `updated_at` is mutated on every call. |
-| 4 | §14 | "Theme tokens resolve correctly in both light and dark modes (if applicable)" | **UNVERIFIABLE FROM SOURCE** — speculative check, cannot be confirmed without runtime testing. Qualifier "(if applicable)" softens it, but it's still untestable from code alone. |
-
-### Duplicate Checks Across Sections
-
-The following checks appear in both the original sections (§1–§14) and the "Additional Features" section, inflating the total count:
-
-- State variable defaults (§1 lines 31 vs §Additional lines 432–437): **6 duplicates**
-- Completion payload details (§8 lines 283–290 vs §Additional lines 511–518): **7 duplicates**
-- API behavior (§9 lines 305–311 vs §Additional lines 525–531): **6 duplicates**
-- Loading/error descriptions (§11–12 vs §Additional lines 534–539): **4 duplicates**
-
-**~23 duplicate checks** account for most of the negative AST delta. These are not hallucinations — they are redundant re-statements of the same behavior.
+### Naming Inconsistency
+- [ ] Feature tour constants use `title` / `desc`, while goal constants use `label` / `description`

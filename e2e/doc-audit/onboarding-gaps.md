@@ -1,33 +1,20 @@
-# Onboarding — Feature Doc Gaps
+# Onboarding — Final Audit Counts
 
-**Original doc:** `ONBOARDING_FEATURES_TESTING.md`
 **Original checkbox count:** 142
-**Features found in UI:** 176
-**Features found in source code:** 219
-**Missing from doc:** 77
-**Completeness of original doc:** 64.8%
+**After Codex additions:** 234
+**After Claude Code Pass 2 additions:** 270
+**Final corrected checkbox count:** 242
+**Net reduction from 270:** 28
 
-## Missing Features
+## Cleanup Breakdown
 
-### Detailed QA Coverage
-- [ ] `step` defaults to `0`, `name` and `institution` default to empty strings, `selectedSpecialties` and `selectedGoals` default to empty arrays, and `saving` defaults to `false`
-- [ ] `canNext` is derived from `step` and selection counts rather than stored independently
-- [ ] Only one step panel is rendered at a time while progress bars and navigation remain mounted
-- [ ] Step 0 inputs are controlled, unprefilled, and have no `required`, `maxLength`, or inline validation behavior
-- [ ] Step 1 specialty buttons append/remove values from `selectedSpecialties` in click order and have no max selection count
-- [ ] Step 2 goal buttons append/remove IDs from `selectedGoals`, but goals are not persisted in the completion payload
-- [ ] Step 3 feature tour rows are numbered badges rendered from the `FEATURES` array, not semantic ordered-list items
-- [ ] Back button stays mounted on every step, uses `disabled:opacity-0` on step 0, and preserves all prior input/selection state
-- [ ] Continue button exists only on steps 0-2, is disabled solely via `canNext`, and does not add any loading treatment
-- [ ] Completion button exists only on step 3, keeps the `ArrowRight` icon while saving, and changes only its text to `Setting up...`
-- [ ] Completion payload sends `full_name`, `specialty`, and `bio` conditionally, with specialties serialized via `join(", ")`
-- [ ] Completion posts to `/api/onboarding/complete` with no request body after `updateUserProfile()`
-- [ ] Completion failures log `Onboarding save failed:` and still redirect to `/dashboard`
-- [ ] API route catches all failures and returns generic `500 { error: "Failed to complete onboarding" }`
-- [ ] Unauthenticated onboarding-complete failures do not produce a dedicated `401` response in the current implementation
-- [ ] Loading and error boundary wrappers mirror the page layout rather than using a distinct shell
+- Direct duplicates removed: 23
+- Stale or unverifiable assertions corrected/removed: 4
+- Additional broad restatement removed during loading/error cleanup: 1
 
-## Features in doc that DON'T EXIST in the app
-- The page overview currently documents the route as the source file path instead of the actual route `/onboarding`.
-- The onboarding completion API does not implement a custom unauthenticated response; auth failures fall into the generic `500` catch path.
-- The completion payload does not persist selected goals anywhere, despite the onboarding flow collecting them in UI state.
+## Final Status
+
+- `ONBOARDING_FEATURES_TESTING.md` now documents the route as `/onboarding` and separates source-backed constants from state.
+- The completion flow description now matches the actual sparse payload and non-idempotent `updated_at` behavior.
+- The loading and error sections now reflect the real `rounded-xl` skeleton buttons and tinted error icon container.
+- Claude Code Pass 2 contributed 36 source-backed checks; 34 were exact matches and 2 were partially correct.
