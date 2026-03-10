@@ -248,7 +248,7 @@
 
 - [ ] Opens with `Cmd+K` (Mac) / `Ctrl+K` (Windows/Linux)
 - [ ] Search input for filtering commands
-- [ ] Navigation commands to all major features listed
+- [ ] Navigation commands available: Dashboard, Studio, Literature Search, Notebook, Library, Archive, Compliance, Presentation, Settings
 - [ ] Quick actions available: Toggle theme, New Project
 - [ ] Typing filters visible commands
 - [ ] Enter selects highlighted command
@@ -266,7 +266,7 @@
 - [ ] Skeleton for projects section header
 - [ ] SkeletonTable with 4 rows (icon, content, badge placeholders)
 - [ ] Pulse animation on all skeleton elements
-- [ ] No layout shift when real content replaces skeleton
+- [ ] Stats overview, recent searches, and recent activity have no skeletons and will pop in after load
 
 ---
 
@@ -276,7 +276,7 @@
 - [ ] On error: `ErrorDisplay` component renders
 - [ ] Title: "Dashboard unavailable"
 - [ ] Message: "We couldn't load your dashboard. This might be a temporary issue."
-- [ ] Error details shown from error object
+- [ ] Error object is passed into `ErrorDisplay` for logging/reporting, but raw error details are not rendered in the UI
 - [ ] "Try Again" button calls `reset()` to retry page load
 - [ ] After retry, page re-fetches data and renders normally
 
@@ -304,13 +304,13 @@
 ## 13. Document Migration
 
 - [ ] `migrateLocalDocuments()` called on dashboard mount via `useEffect`
-- [ ] Reads documents from localStorage (if any exist)
+- [ ] Dashboard mount currently calls `migrateLocalDocuments()` with zero arguments
 - [ ] Creates default "My Research" project if user has no projects
 - [ ] Migrates each document to `synthesisDocuments` + `synthesisSections` tables
 - [ ] Skips "new" template documents
 - [ ] Runs silently (no UI feedback — errors caught and logged)
 - [ ] Runs only once per page load
-- [ ] Already-migrated documents are not re-migrated
+- [ ] No deduplication guard exists; repeated migration calls would create duplicate rows
 
 ---
 
@@ -623,3 +623,8 @@ These components are part of the dashboard user experience via the AppShell layo
 | `ClerkUserButton` | `AppSidebar` (dynamic) | `@clerk/nextjs` |
 
 *Re-audited from source code — Claude Code Pass 2, March 2026*
+
+## Codex Verification Pass Discoveries
+
+- No additional high-signal, source-backed feature gaps remained after verifying all 65 Claude Code Pass 2 checkboxes.
+- This verification pass cleaned 5 stale assertions from earlier sections: command palette coverage, loading-state pop-in, error-detail rendering, zero-arg migration behavior, and migration deduplication.

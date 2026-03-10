@@ -5,6 +5,8 @@
 **After Codex Pass 1:** 213
 **After Claude Code Pass 2:** 278
 **New checks added (Pass 2):** 65
+**After Codex Verification Pass:** 278
+**Hallucinations removed in verification:** 5
 
 ## Audit History
 
@@ -13,6 +15,19 @@
 | Initial | Claude Code | 131 | 131 | Core feature inventory |
 | Pass 1 | Codex | +82 | 213 | Detailed QA coverage |
 | Pass 2 | Claude Code | +65 | 278 | Deep source read — icon sizes, edge cases, ThemeToggle, loading gaps, Sentry, query filters |
+| Verification | Codex | +0 | 278 | Verified all 65 Pass 2 checks and removed 5 stale assertions from earlier sections |
+
+## Verification Pass
+
+- Verified every checkbox in `Re-Audit Discoveries (Claude Code Pass 2)`: 65 of 65 correct, 0 hallucinated, 0 partial.
+- Confirmed all highlighted corrections: ThemeToggle segmented pill + SSR placeholder, zero-arg migration no-op, no migration deduplication, `Sentry.captureException(error)`, missing command-palette routes, incomplete loading skeleton, `w-64` sidebar, `backdrop-blur-sm`, and stat icon sizing.
+- No additional high-signal source gaps remained after the verification sweep.
+- Cleaned 5 stale assertions from earlier sections:
+  - command palette lists all major features
+  - no layout shift during loading
+  - raw error details shown in UI
+  - migration reads from `localStorage`
+  - already-migrated documents are not re-migrated
 
 ## Pass 2 — Key Discoveries
 
@@ -26,7 +41,8 @@
 ### Behavior Corrections (Pass 2)
 1. `migrateLocalDocuments()` is a server action that does NOT read localStorage — the dashboard calls it with no arguments, so it always returns 0
 2. No deduplication in migration — calling with same documents twice creates duplicates (doc incorrectly stated "Already-migrated documents are not re-migrated")
-3. Header border class is `border-border-subtle` (lighter), not `border-border`
+3. Loading skeleton covers only action cards + manuscripts, so stats/searches/activity pop in after load
+4. Header border class is `border-border-subtle` (lighter), not `border-border`
 
 ### Granular Additions
 - Stats icon containers `w-9 h-9` with `size={18}` icons (different from action card icons)
