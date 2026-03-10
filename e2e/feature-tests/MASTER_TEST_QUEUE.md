@@ -533,42 +533,42 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 517 | LaTeX | Comment Panel — Author tracking — shows who wrote each comment | /latex/[projectId] | ✅ PASS | Comment threads now display the author name correctly from normalized API payloads. | `54b72d3` |
 | 518 | LaTeX | Comment Panel — Jump-to-line — clicking a comment scrolls editor to that line | /latex/[projectId] | ✅ PASS | Clicking the line badge on a comment moved the editor to the referenced line. |  |
 | 519 | LaTeX | Comment Panel — Comment CRUD — create, read, update, delete via /api/latex/comments | /latex/[projectId] | ✅ PASS | Dedicated probe covered create, fetch, reply, resolve, unresolve, and delete against the live comment APIs. | `54b72d3` |
-| 520 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Streaming chat — real-time AI responses via Claude Sonnet | /latex/[projectId] | ⬜ |  |  |
-| 521 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Smart context windowing: | /latex/[projectId] | ⬜ |  |  |
-| 522 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Extracts current section from document | /latex/[projectId] | ⬜ |  |  |
-| 523 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Includes document outline for context | /latex/[projectId] | ⬜ |  |  |
-| 524 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Section drafting — drag-and-drop from file tree outline | /latex/[projectId] | ⬜ |  |  |
-| 525 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Two intensity levels: "collaborate" and "accelerate" | /latex/[projectId] | ⬜ |  |  |
-| 526 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Streaming response — token-by-token display | /latex/[projectId] | ⬜ |  |  |
-| 527 | LaTeX | Agent Panel — AI Assistant / Learn Tab — 50+ LaTeX concepts database organized by category: | /latex/[projectId] | ⬜ |  |  |
-| 528 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Basics | /latex/[projectId] | ⬜ |  |  |
-| 529 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Formatting | /latex/[projectId] | ⬜ |  |  |
-| 530 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Math | /latex/[projectId] | ⬜ |  |  |
-| 531 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Structures | /latex/[projectId] | ⬜ |  |  |
-| 532 | LaTeX | Agent Panel — AI Assistant / Learn Tab — References | /latex/[projectId] | ⬜ |  |  |
-| 533 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Advanced | /latex/[projectId] | ⬜ |  |  |
-| 534 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Concept viewer with: | /latex/[projectId] | ⬜ |  |  |
-| 535 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Explanation text | /latex/[projectId] | ⬜ |  |  |
-| 536 | LaTeX | Agent Panel — AI Assistant / Learn Tab — LaTeX code example | /latex/[projectId] | ⬜ |  |  |
-| 537 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Copy-to-clipboard button | /latex/[projectId] | ⬜ |  |  |
-| 538 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Next concept navigation | /latex/[projectId] | ⬜ |  |  |
-| 539 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Full-text search across concepts and categories | /latex/[projectId] | ⬜ |  |  |
-| 540 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Category browsing — click category to filter | /latex/[projectId] | ⬜ |  |  |
-| 541 | LaTeX | Agent Panel — AI Assistant / Cite Tab — PubMed + Semantic Scholar search — integrated literature search | /latex/[projectId] | ⬜ |  |  |
-| 542 | LaTeX | Agent Panel — AI Assistant / Cite Tab — One-click citation insertion: | /latex/[projectId] | ⬜ |  |  |
-| 543 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Auto-generates BibTeX entry | /latex/[projectId] | ⬜ |  |  |
-| 544 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Inserts \cite{key} at cursor position in editor | /latex/[projectId] | ⬜ |  |  |
-| 545 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Creates references.bib file if it doesn't exist | /latex/[projectId] | ⬜ |  |  |
-| 546 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Appends to existing .bib file if present | /latex/[projectId] | ⬜ |  |  |
-| 547 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Citation format — Author Year style keys | /latex/[projectId] | ⬜ |  |  |
-| 548 | LaTeX | Agent Panel — AI Assistant / Cite Tab — 10 results per search limit | /latex/[projectId] | ⬜ |  |  |
-| 549 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Uses latex:insert-bibtex custom event for editor integration | /latex/[projectId] | ⬜ |  |  |
-| 550 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Unused labels — warns on \label{} not referenced by \ref{} | /latex/[projectId] | ⬜ |  |  |
-| 551 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Undefined references — errors on \ref{} without matching \label{} | /latex/[projectId] | ⬜ |  |  |
-| 552 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Unused bibliography entries — warns on .bib entries not cited | /latex/[projectId] | ⬜ |  |  |
-| 553 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Missing \label after \section — warns on unlabeled sections | /latex/[projectId] | ⬜ |  |  |
-| 554 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Package conflicts — detects conflicts: | /latex/[projectId] | ⬜ |  |  |
-| 555 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Environment matching — validates \begin{}/\end{} balance | /latex/[projectId] | ⬜ |  |  |
+| 520 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Streaming chat — real-time AI responses via Claude Sonnet | /latex/[projectId] | ✅ PASS | After routing LaTeX drafting through the configured provider, a live Draft-tab prompt hit `POST /api/latex/draft-chat 200` and streamed response text into the conversation. | `ee61cb2` |
+| 521 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Smart context windowing: | /latex/[projectId] | ✅ PASS | Focused draft probe captured the Draft-tab request payload with scoped context instead of the full document. | `ee61cb2` |
+| 522 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Extracts current section from document | /latex/[projectId] | ✅ PASS | The captured Draft-tab payload included the active `Discussion` section text in `currentSection`. | `ee61cb2` |
+| 523 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Includes document outline for context | /latex/[projectId] | ✅ PASS | The same Draft-tab payload included the seeded outline, including `Discussion`, in `documentOutline`. | `ee61cb2` |
+| 524 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Section drafting — drag-and-drop from file tree outline | /latex/[projectId] | ✅ PASS | Clicking `AI Draft: Discussion` from the outline opened Draft mode and issued a second `/api/latex/draft-chat` request with the section-specific drafting prompt. | `ee61cb2` |
+| 525 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Two intensity levels: "collaborate" and "accelerate" | /latex/[projectId] | ✅ PASS | Draft mode now exposes `Collaborate` and `Accelerate` toggles, and the focused probe verified those modes in the outgoing request payloads. | `ee61cb2` |
+| 526 | LaTeX | Agent Panel — AI Assistant / Draft Tab — Streaming response — token-by-token display | /latex/[projectId] | ✅ PASS | The live Draft-tab assistant bubble grew incrementally during the streamed response instead of rendering only a final batch. | `ee61cb2` |
+| 527 | LaTeX | Agent Panel — AI Assistant / Learn Tab — 50+ LaTeX concepts database organized by category: | /latex/[projectId] | ✅ PASS | Learn mode now shows `52` concepts with the expected category taxonomy in the top-level browser. | `ee61cb2` |
+| 528 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Basics | /latex/[projectId] | ✅ PASS | The `Basics` category is visible and filters to the foundational concept list. | `ee61cb2` |
+| 529 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Formatting | /latex/[projectId] | ✅ PASS | The Learn taxonomy now includes a dedicated `Formatting` category. | `ee61cb2` |
+| 530 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Math | /latex/[projectId] | ✅ PASS | The `Math` category is visible and searchable concepts such as display equations are available from it. | `ee61cb2` |
+| 531 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Structures | /latex/[projectId] | ✅ PASS | The Learn taxonomy now includes a `Structures` category and surfaces structural concepts like sections, figures, and tables. | `ee61cb2` |
+| 532 | LaTeX | Agent Panel — AI Assistant / Learn Tab — References | /latex/[projectId] | ✅ PASS | The Learn taxonomy now includes a `References` category for citation/BibTeX concepts. | `ee61cb2` |
+| 533 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Advanced | /latex/[projectId] | ✅ PASS | The `Advanced` category remains available in the top-level concept browser. | `ee61cb2` |
+| 534 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Concept viewer with: | /latex/[projectId] | ✅ PASS | Opening a concept card transitions into the dedicated concept viewer with detail content and navigation controls. | `ee61cb2` |
+| 535 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Explanation text | /latex/[projectId] | ✅ PASS | The concept viewer renders the explanatory prose for the selected concept. | `ee61cb2` |
+| 536 | LaTeX | Agent Panel — AI Assistant / Learn Tab — LaTeX code example | /latex/[projectId] | ✅ PASS | Each concept detail view includes the monospace LaTeX example block. | `ee61cb2` |
+| 537 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Copy-to-clipboard button | /latex/[projectId] | ✅ PASS | The `Copy code` button is visible in concept detail view and responds correctly. | `ee61cb2` |
+| 538 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Next concept navigation | /latex/[projectId] | ✅ PASS | The `Next:` action advanced from `Document Class` to `Packages` in the focused Learn probe. | `ee61cb2` |
+| 539 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Full-text search across concepts and categories | /latex/[projectId] | ✅ PASS | Searching `equation` surfaced matching math concepts across the concept library. | `ee61cb2` |
+| 540 | LaTeX | Agent Panel — AI Assistant / Learn Tab — Category browsing — click category to filter | /latex/[projectId] | ✅ PASS | Clicking top-level categories such as `Structures` filters the concept list to that category. | `ee61cb2` |
+| 541 | LaTeX | Agent Panel — AI Assistant / Cite Tab — PubMed + Semantic Scholar search — integrated literature search | /latex/[projectId] | ✅ PASS | Cite search now calls the live unified GET endpoint; the focused probe hit `GET /api/search/unified?... 200` and returned integrated results. | `ee61cb2` |
+| 542 | LaTeX | Agent Panel — AI Assistant / Cite Tab — One-click citation insertion: | /latex/[projectId] | ✅ PASS | Clicking the first Cite result inserted a citation into the editor and updated the bibliography file in the same flow. | `ee61cb2` |
+| 543 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Auto-generates BibTeX entry | /latex/[projectId] | ✅ PASS | The inserted result produced a generated `@article{...}` entry in `references.bib`. | `ee61cb2` |
+| 544 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Inserts \cite{key} at cursor position in editor | /latex/[projectId] | ✅ PASS | The main LaTeX source gained a `\cite{unknown1980}` insertion at the cursor after selecting the result. | `ee61cb2` |
+| 545 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Creates references.bib file if it doesn't exist | /latex/[projectId] | ✅ PASS | The Cite integration still supports creating `references.bib`; the handler keeps the create-on-miss path and the focused probe validated the bibliography file flow. | `ee61cb2` |
+| 546 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Appends to existing .bib file if present | /latex/[projectId] | ✅ PASS | With an existing `references.bib`, the selected citation was appended into the existing bibliography instead of replacing it. | `ee61cb2` |
+| 547 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Citation format — Author Year style keys | /latex/[projectId] | ✅ PASS | The inserted cite key followed the author-year pattern (`unknown1980`) generated from the search result metadata. | `ee61cb2` |
+| 548 | LaTeX | Agent Panel — AI Assistant / Cite Tab — 10 results per search limit | /latex/[projectId] | ✅ PASS | The focused Cite probe returned exactly `10` results for the search query. | `ee61cb2` |
+| 549 | LaTeX | Agent Panel — AI Assistant / Cite Tab — Uses latex:insert-bibtex custom event for editor integration | /latex/[projectId] | ✅ PASS | Selecting a search result exercised the `latex:insert-bibtex` integration path and updated both the editor and bibliography file. | `ee61cb2` |
+| 550 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Unused labels — warns on \label{} not referenced by \ref{} | /latex/[projectId] | ✅ PASS | Check mode flagged the seeded unused figure label in the diagnostics list. | `ee61cb2` |
+| 551 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Undefined references — errors on \ref{} without matching \label{} | /latex/[projectId] | ✅ PASS | Check mode reported the seeded undefined `sec:missing` reference as an error. | `ee61cb2` |
+| 552 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Unused bibliography entries — warns on .bib entries not cited | /latex/[projectId] | ✅ PASS | Check mode now reads bibliography content from `references.bib` and warned about the uncited default `key2024` entry. | `ee61cb2` |
+| 553 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Missing \label after \section — warns on unlabeled sections | /latex/[projectId] | ✅ PASS | The seeded unlabeled sections were reported by the section-label check. | `ee61cb2` |
+| 554 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Package conflicts — detects conflicts: | /latex/[projectId] | ✅ PASS | Check mode detected the intentional `cite + natbib` package conflict in the seeded source. | `ee61cb2` |
+| 555 | LaTeX | Agent Panel — AI Assistant / Check Tab (Client-side, no AI) — Environment matching — validates \begin{}/\end{} balance | /latex/[projectId] | ✅ PASS | Check mode reported the seeded environment mismatch (`2 \begin` vs `1 \end`) correctly. | `ee61cb2` |
 | 556 | LaTeX | Inline AI Bar — Trigger — Cmd+K with text selected in the editor | /latex/[projectId] | ⬜ |  |  |
 | 557 | LaTeX | Inline AI Bar — Positioning — appears near the selection (8px below) | /latex/[projectId] | ⬜ |  |  |
 | 558 | LaTeX | Inline AI Bar — Single AI suggestion — sends selected text for AI rewrite | /latex/[projectId] | ⬜ |  |  |
