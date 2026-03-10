@@ -2,65 +2,49 @@
 
 **Original doc:** `LIBRARY_FEATURES_TESTING.md`
 **Original checkbox count:** 155
-**Features found in UI:** 223
-**Features found in source code (Codex pass 1):** 285
-**Features found in source code (Claude Code pass 2):** 383
-**New checks added in pass 2:** 98
-**Missing from original doc:** 228
-**Completeness of original doc:** 40.5%
+**After Codex Pass 1:** 285
+**After Claude Code Pass 2:** 383
+**After Codex Verification Pass:** 402
+**Checks added in verification:** 19
+**Hallucinations removed in verification:** 39
 
-## Missing Features
+## Audit History
 
-### Detailed QA Coverage
-- [ ] Default state coverage for `loading`, `search`, `sortBy`, `activeCollection`, modal visibility, and upload state
-- [ ] Conditional rendering coverage for project filter, study-type filter, and year-range inputs when metadata is absent
-- [ ] Sidebar count behavior tied to the current fetched paper set rather than a global library total
-- [ ] Client-side collection filtering behavior layered on top of server-side search/sort/filter results
-- [ ] Search debounce timing and the exact server-side fields searched (`title`, `journal`, serialized `authors`)
-- [ ] Exact sort-direction behavior where only `Title A-Z` uses ascending order
-- [ ] `Clear Filters` behavior that resets only non-search filters and stays hidden for search-only states
-- [ ] Paper-card fallback rendering for missing authors, journal, year, citation count, and study type
-- [ ] Conditional visibility rules for `View PDF` and `DOI` actions
-- [ ] Optimistic favorite and delete flows, including rollback behavior and lack of user-facing error messaging
-- [ ] Exact `Cite in Editor` payload shape stored in `sessionStorage`
-- [ ] Citation modal reset behavior, disabled states, `BibTeX`-specific button differences, and clipboard feedback timing
-- [ ] Upload flow details for cancel/no-file, extracted-title fallback, empty-author fallback, and hidden-input reset in `finally`
-- [ ] Real PDF viewer behavior including missing title slot, zoom bounds, document/page loading states, and 404-specific error copy
-- [ ] Route-level loading skeleton composition and route-level error-boundary copy
-- [ ] Negative assertions covering missing toasts, missing confirmation dialog, missing upload progress UI, and missing infinite scroll
+| Pass | Agent | Checks Added | Total | Focus |
+|------|-------|-------------|-------|-------|
+| Initial | Claude Code | 155 | 155 | Core library feature inventory |
+| Pass 1 | Codex | +130 | 285 | Detailed QA coverage across page state, filters, upload flow, PDF viewer, and optimistic mutations |
+| Pass 2 | Claude Code | +98 | 383 | Deep source read: modal behavior, icon details, API routes, loading structure, Sentry, server-action specifics |
+| Verification | Codex | +19 | 402 | Full re-audit: pass-2 verification, stale-claim cleanup, accessibility gaps, async races, and PDF-route auth/validation edge cases |
+
+## Verification Pass
+
+- Reviewed every checkbox in `Re-Audit Discoveries (Claude Code Pass 2)`: 98 assertions total, 95 correct, 0 hallucinated, 3 partial.
+- The 3 partials were wording-level issues only: `ErrorDisplay` uses a rounded container rather than a circle, and `/api/papers/[id]/pdf` uses R2/local storage semantics instead of an active signed-GCS path.
+- Added 19 new checks covering `Tabs` semantics/styling, modal/search/filter/icon-button accessibility gaps, collection-name exact matching, upload concurrency, async race conditions, dedup edge cases, missing PDF MIME validation, and missing ownership checks on `/api/papers/[id]/pdf`.
+- Cleaned 39 stale assertions from older sections, including non-rendered Citation Dialog / Reference Store coverage, auto-inserted citations, spinner/toast claims that do not exist, PDF title expectations, GCS-specific wording, and extract-PDF DOI claims.
+
+## Codex Verification Pass Discoveries
+
+### Added Coverage
+- Accessibility & shared UI: 7 checks
+- Edge cases & cleanup: 5 checks
+- Async races, dedup limits, and PDF-route auth/validation: 7 checks
+
+### Most Important New Findings
+1. `/api/papers/[id]/pdf` authenticates users but does not verify a `userReferences` ownership link before serving or storing a PDF.
+2. `POST /api/papers/[id]/pdf` does not validate uploaded MIME type or `.pdf` extension before writing storage.
+3. `fetchPapers()` and `openCiteModal()` both lack request sequencing/cancellation, so stale responses can overwrite newer UI state.
+4. Citation tabs use shared `Tabs` buttons with no `role="tablist"`, `role="tab"`, or `aria-selected`, and the shared `Modal` lacks `role="dialog"` / `aria-modal`.
+5. `copied` feedback is timer-based and not reset on modal reopen or tab change, so `Copied!` can briefly linger across citation-context changes.
 
 ## Features in doc that DON'T EXIST in the app
-- The page is not infinite-scroll in the current implementation; it renders a normal scrollable column.
-- The `Loading papers...` state does not include a spinner in the current page component.
-- Arrow-key page navigation is not implemented in the current `PDFViewer`.
-- The Library page does not render the shared Citation Dialog UI described in section 12 of the original doc.
-- The Library page does not render the Reference Store UI/state described in section 13 of the original doc.
-- `Cite in Editor` does not prove automatic citation insertion on the Library page; it only stores `{ paperId, title }` in `sessionStorage` and redirects to `/editor/new`.
-- Upload success does not show a toast/notification in the current UI.
-- Upload processing side effects like background extraction, embedding, and `full_text_available = true` are not observable from the `/library` UI itself.
 
-## Pass 2 Discoveries Summary
-
-### Behavior Corrections (8 checks)
-- Paper title uses `font-medium` not `font-bold`, and has no truncation
-- Error retry button says "Try Again" not "Retry"
-- Clear Filters uses translucent red, not solid red
-- Cite button icon is `BookOpen`, not clipboard
-- Sidebar heading is CSS-uppercased `Collections`
-- `toPaperData()` omits volume/issue/pages from citation formatting
-- `View PDF` button doesn't check `open_access_url` despite API fallback support
-
-### New Discoveries by Category
-- Citation Modal (Modal component behaviors): 6 checks
-- Search Input component details: 4 checks
-- Error Display component details: 3 checks
-- Paper Card action button icons: 5 checks
-- PDF Viewer additional details: 10 checks
-- Skeleton loading composition: 5 checks
-- Layout & styling extras: 8 checks
-- `/api/extract-pdf` route: 8 checks
-- `/api/papers/save` route: 5 checks
-- `/api/papers/[id]/pdf` route: 12 checks
-- `/api/references/resolve` route: 12 checks
-- Server action details: 9 checks
-- Components referenced but not rendered: 3 checks
+- The Library page does not render the shared Citation Dialog or Reference Store UI; those belong to editor/studio flows.
+- Library does not auto-insert citations into the editor; it stores `{ paperId, title }` in `sessionStorage`, and the editor shows a pending-citation notice.
+- Results loading shows text only, not a spinner icon.
+- Library PDF viewer does not show a document title because `/library` does not pass a `title` prop.
+- Arrow-key PDF page navigation is not implemented.
+- Upload success does not show a toast, and `/api/extract-pdf` does not extract DOI metadata.
+- The upload pipeline is storage-backed via `uploadPdf(...)` to R2/local storage, not a GCS-specific implementation.
+- The page remains a simple scrollable column; infinite scroll is not implemented.

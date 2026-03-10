@@ -19,8 +19,8 @@
 9. [PDF Upload](#9-pdf-upload)
 10. [Cite in Editor Integration](#10-cite-in-editor-integration)
 11. [Paper Deletion](#11-paper-deletion)
-12. [Citation Dialog (Shared Component)](#12-citation-dialog-shared-component)
-13. [Reference Store](#13-reference-store)
+12. [Citation Dialog (Not Rendered on `/library`)](#12-citation-dialog-not-rendered-on-library)
+13. [Reference Store (Not Rendered on `/library`)](#13-reference-store-not-rendered-on-library)
 14. [Data Fetching & Server Actions](#14-data-fetching--server-actions)
 15. [Loading & Error States](#15-loading--error-states)
 16. [Quick Test Workflows](#16-quick-test-workflows)
@@ -42,7 +42,7 @@
 │  Sidebar     ├────────────────────────────────────────────┤
 │  (w-64)      │                                            │
 │              │  Paper Cards List                          │
-│  - All Papers│  (scrollable, infinite)                    │
+│  - All Papers│  (scrollable column)                       │
 │  - Favorites │                                            │
 │  - Custom    │                                            │
 │              │                                            │
@@ -61,7 +61,7 @@
 ## 2. Collections Sidebar
 
 ### Header
-- [ ] "COLLECTIONS" label (uppercase, tracking-widest, muted text)
+- [ ] Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)
 
 ### Navigation Items
 - [ ] **All Papers** button — shows total paper count
@@ -125,14 +125,14 @@
 - [ ] Entering values filters papers within range (inclusive)
 
 ### Clear Filters Button
-- [ ] Red background/hover when filters are active
-- [ ] Clicking resets all filters to defaults
-- [ ] Hidden or neutral when no filters active
+- [ ] Translucent red background/hover when filters are active
+- [ ] Clicking resets non-search filters to defaults
+- [ ] Hidden when no non-search filters are active
 
 ### Filter Behavior
 - [ ] All filters are AND'd together (combined filtering)
 - [ ] Filters trigger server-side re-fetch
-- [ ] Filter state persists during session
+- [ ] Filter state persists while the page remains mounted
 
 ---
 
@@ -143,7 +143,7 @@
 - [ ] Left icon: PDF icon (if `source === "user_upload"`) or Globe icon
 
 ### Card Content
-- [ ] **Title** — bold, truncated to 1 line
+- [ ] **Title** — `font-medium`, wraps naturally (no truncation class)
 - [ ] **Authors** — comma-separated, truncated
 - [ ] **Metadata row** — "Journal · Year · Citation Count · Study Type"
 - [ ] Missing metadata fields show fallback text (e.g., "Unknown journal" for missing journal — no raw "null" shown)
@@ -152,14 +152,14 @@
 | Button | Color/Style | Condition | Test |
 |--------|-------------|-----------|------|
 | Cite | Teal/brand | Always | [ ] Opens citation modal |
-| Cite in Editor | Neutral | Always | [ ] Navigates to `/editor/new` with citation |
-| View PDF | Neutral | Only if paper has PDF | [ ] Opens PDF viewer overlay |
+| Cite in Editor | Neutral | Always | [ ] Navigates to `/editor/new` with pending citation data in `sessionStorage` |
+| View PDF | Neutral | Only if `source === "user_upload"` or `pdf_storage_path` / `pdf_url` exists | [ ] Opens PDF viewer overlay |
 | DOI | External link | Only if paper has DOI | [ ] Opens `https://doi.org/{doi}` |
 | Favorite ★ | Amber-500 when active | Always | [ ] Toggles favorite status |
 | Delete 🗑 | Red hover | Always | [ ] Soft-deletes paper |
 
 ### Empty States
-- [ ] Loading: "Loading papers..." with spinner
+- [ ] Loading: "Loading papers..." text-only state
 - [ ] No results (with filters/search): "No papers match your search or filters."
 - [ ] Empty library: BookOpen icon + "Your library is empty. Add papers from Discover."
 
@@ -221,7 +221,7 @@
 - [ ] **Zoom percentage** display (e.g., "100%")
 - [ ] **Zoom in** button (max 3.0×, step 0.25)
 - [ ] **Fit width** button (resets to 1.0×)
-- [ ] **Document title** (center, hidden on mobile)
+- [ ] No document title is shown in Library usage because `/library` does not pass a `title` prop
 - [ ] **Close** button (or press Escape)
 
 ### PDF Rendering
@@ -236,7 +236,7 @@
 
 ### Keyboard
 - [ ] Escape closes viewer
-- [ ] Arrow keys for page navigation (if supported)
+- [ ] Arrow-key page navigation is not implemented in the current `PDFViewer`
 
 ---
 
@@ -249,9 +249,9 @@
 
 ### Upload Process (3 Steps)
 1. [ ] **Extract metadata** — `POST /api/extract-pdf` with PDF file
-   - [ ] Extracts title, authors, DOI from PDF content
+   - [ ] Extracts PDF text plus title/author metadata when available
 2. [ ] **Save paper** — Creates paper record with extracted metadata
-3. [ ] **Upload to GCS** — `POST /api/papers/{paperId}/pdf` with file
+3. [ ] **Upload to PDF storage route** — `POST /api/papers/{paperId}/pdf` with file
    - [ ] Triggers background text extraction and embedding
    - [ ] Sets `full_text_available = true`
 
@@ -259,7 +259,6 @@
 - [ ] Paper appears in library list
 - [ ] PDF icon shown (source = "user_upload")
 - [ ] "View PDF" button available on the paper card
-- [ ] Toast/notification on success
 - [ ] Error handling if any step fails
 
 ---
@@ -270,7 +269,7 @@
 - [ ] Stores pending citation in `sessionStorage`
 - [ ] Navigates to `/editor/new`
 - [ ] Editor retrieves citation from sessionStorage on load
-- [ ] Citation inserted into document automatically
+- [ ] Editor shows a pending-citation notice after consuming sessionStorage; citation is not auto-inserted
 
 ---
 
@@ -287,42 +286,15 @@
 
 ---
 
-## 12. Citation Dialog (Shared Component)
+## 12. Citation Dialog (Not Rendered on `/library`)
 
-> Also used in Studio. Full test coverage in STUDIO_FEATURES_TESTING.md.
-
-### Tabs
-- [ ] **Your References** — search existing references, DOI/PMID detection
-- [ ] **Library** — search saved papers, add as references
-- [ ] **Paste DOI/PMID** — resolve identifier to metadata
-- [ ] **Manual Entry** — form with type, title, authors, journal, year, etc.
-
-### Bottom Bar
-- [ ] Selected count: "Selected (X)"
-- [ ] Selected reference badges with remove buttons
-- [ ] "Cancel" and "Insert Citation" buttons
+> Removed from Library scope during verification. `/library` does not import or render the shared Citation Dialog; coverage belongs in the editor/studio docs.
 
 ---
 
-## 13. Reference Store
+## 13. Reference Store (Not Rendered on `/library`)
 
-### State
-- [ ] `references` — Map of all references (id → Reference)
-- [ ] `citationStyle` — Current style (vancouver, apa, ama, icmje, harvard, chicago-author-date, ieee)
-- [ ] `referenceNumberMap` — Map of reference IDs to citation numbers
-- [ ] `bibliographyEntries` — Formatted bibliography array
-- [ ] `citationDisplayMap` — Node key to display text mapping
-- [ ] `sidebarOpen` — Boolean for Reference Sidebar visibility
-- [ ] `citationDialogOpen` — Boolean for Citation Dialog visibility
-
-### Actions
-- [ ] `addReference(ref)` — adds single reference
-- [ ] `addReferences(refs)` — bulk add
-- [ ] `updateReference(id, updates)` — partial update
-- [ ] `removeReference(id)` — remove by ID
-- [ ] `setCitationStyle(styleId)` — change citation format
-- [ ] `clearReferences()` — remove all
-- [ ] `toggleSidebar()` / `openCitationDialog()` / `closeCitationDialog()`
+> Removed from Library scope during verification. Reference store state/actions belong to editor/studio citation workflows, not the `/library` page.
 
 ---
 
@@ -360,15 +332,7 @@
 - [ ] If found: enriches existing paper with new metadata
 - [ ] If not found: creates new paper record
 - [ ] Creates `userReference` link
-- [ ] Auto-triggers: chunking, embedding, PDF processing (background)
-
-### `POST /api/references/resolve`
-- [ ] Resolves DOI, PMID, PMCID, or URL to full reference metadata
-- [ ] DOI → CrossRef API
-- [ ] PMID → PubMed E-utilities
-- [ ] PMCID → converts to PMID → PubMed
-- [ ] URL → attempts DOI extraction
-- [ ] Returns: `{ success, reference, source, confidence }`
+- [ ] Conditionally auto-triggers abstract chunking/embedding and DOI/open-access PDF processing in background
 
 ---
 
@@ -376,16 +340,14 @@
 
 | State | Display | Test |
 |-------|---------|------|
-| Page loading | 5 skeleton cards + sidebar skeletons | [ ] Renders correctly |
-| Papers loading | "Loading papers..." + spinner | [ ] Shows while fetching |
+| Page loading | 5 skeleton cards + sidebar/search/sort skeletons | [ ] Renders correctly |
+| Papers loading | "Loading papers..." text only | [ ] Shows while fetching |
 | Empty library | BookOpen icon + "Your library is empty. Add papers from Discover." | [ ] Shows when no papers |
 | No results | "No papers match your search or filters." | [ ] Shows with active filters |
 | PDF loading | Spinner "Loading PDF..." | [ ] Shows while PDF loads |
 | Citation loading | "Formatting citations..." + pulse | [ ] Shows while generating |
-| DOI resolving | Spinner in Resolve button | [ ] Shows during resolution |
 | PDF error | "Failed to load PDF" header + detailed message below | [ ] Shows on PDF load failure |
-| DOI error | Red box with error + "Try manual entry" | [ ] Shows on resolution failure |
-| Page error | ErrorDisplay: "Library unavailable" + "Retry" | [ ] Shows on page error |
+| Page error | ErrorDisplay: "Library unavailable" + "Try Again" | [ ] Shows on page error |
 
 ---
 
@@ -406,7 +368,7 @@
 4. [ ] Select a project from Project Filter — verify scoped results
 5. [ ] Select a study type — verify further filtering
 6. [ ] Enter year range (2020–2024) — verify year filtering
-7. [ ] Click "Clear Filters" — verify all filters reset
+7. [ ] Click "Clear Filters" — verify non-search filters reset while search text stays intact
 
 ### C. Sort Papers
 1. [ ] Default sort: "Recently Added" — verify newest first
@@ -420,8 +382,8 @@
 3. [ ] Check formatted citation text
 4. [ ] Switch to Vancouver tab — verify numeric format
 5. [ ] Switch to BibTeX tab — verify machine-readable format
-6. [ ] Click "Copy Citation" — verify clipboard content
-7. [ ] Click "Copy In-Text" — verify in-text citation copied
+6. [ ] Click "Copy Citation" on BibTeX — verify clipboard content
+7. [ ] Switch back to a non-BibTeX tab and click "Copy In-Text" — verify in-text citation copied
 8. [ ] Verify "Copied!" feedback appears for 2 seconds
 
 ### E. View PDF
@@ -431,7 +393,7 @@
 4. [ ] Zoom in, zoom out, fit width
 5. [ ] Verify page counter "X / Y"
 6. [ ] Press Escape — verify viewer closes
-7. [ ] Try viewing a paper without PDF — verify error message
+7. [ ] Open a paper whose PDF route resolves to 404 / missing file — verify the unavailable-PDF error message
 
 ### F. Upload PDF
 1. [ ] Click "Upload PDF" in sidebar
@@ -465,7 +427,7 @@
 1. [ ] Click "Cite in Editor" on a paper
 2. [ ] Verify navigation to `/editor/new`
 3. [ ] Verify citation data stored in sessionStorage
-4. [ ] Verify editor loads with citation inserted
+4. [ ] Verify editor shows the pending-citation notice instead of auto-inserting a citation
 
 ---
 
@@ -648,7 +610,7 @@
 ### Error Display Component Details
 
 - [ ] ErrorDisplay reports the error to Sentry via `Sentry.captureException(error)` on mount (error-display.tsx:24-26)
-- [ ] ErrorDisplay renders a `WarningCircle` icon (red, size 32) in a `bg-red-500/10` circle (error-display.tsx:35-36)
+- [ ] ErrorDisplay renders a `WarningCircle` icon (red, size 32) in a `bg-red-500/10` rounded container (error-display.tsx:35-36)
 - [ ] ErrorDisplay retry button shows `ArrowCounterClockwise` icon (size 16) next to "Try Again" text, styled as `bg-brand text-white` (error-display.tsx:41-45)
 
 ### Paper Card Action Button Icons
@@ -715,12 +677,12 @@
 - [ ] GET validates `id` param as numeric (`/^\d+$/`); returns 400 `"Invalid paper ID"` (papers/[id]/pdf/route.ts:22-23)
 - [ ] GET requires authentication; returns 401 `"Authentication required"` (papers/[id]/pdf/route.ts:28-31)
 - [ ] GET applies rate limiting with `RATE_LIMITS.export` bucket (papers/[id]/pdf/route.ts:35-36)
-- [ ] GET fallback chain: signed GCS URL (redirect) → local buffer (streamed with `Content-Type: application/pdf`, `Content-Disposition: inline`, `Cache-Control: private, max-age=3600`) → `pdf_url` redirect → `open_access_url` redirect → 404 (papers/[id]/pdf/route.ts:42-79)
+- [ ] GET first attempts `getSignedPdfUrl(...)`; with the current R2/local helper this resolves to `null`, so the effective runtime fallback is local buffer (streamed with `Content-Type: application/pdf`, `Content-Disposition: inline`, `Cache-Control: private, max-age=3600`) → `pdf_url` redirect → `open_access_url` redirect → 404 (papers/[id]/pdf/route.ts:42-79)
 - [ ] GET returns 404 `"PDF not found for this paper"` when no PDF source found (papers/[id]/pdf/route.ts:77-80)
 - [ ] GET returns 500 `"Failed to serve PDF"` on server errors (papers/[id]/pdf/route.ts:83-86)
 - [ ] POST validates Content-Type must include `multipart/form-data`; returns 400 (papers/[id]/pdf/route.ts:121-127)
 - [ ] POST validates `id` param as numeric; returns 400 `"Invalid paper ID"` (papers/[id]/pdf/route.ts:102-103)
-- [ ] POST stores PDF in GCS, sets `pdf_storage_path` and `full_text_available = true` on paper record (papers/[id]/pdf/route.ts:143-152)
+- [ ] POST stores PDF via `uploadPdf(...)` to the app's R2/local storage layer, then sets `pdf_storage_path` and `full_text_available = true` on the paper record (papers/[id]/pdf/route.ts:143-152)
 - [ ] POST triggers `queuePdfProcessing(paperId, buffer)` for background text extraction and embedding (papers/[id]/pdf/route.ts:155)
 - [ ] POST returns `{ success: true, paperId: string, storagePath: string }` on success (papers/[id]/pdf/route.ts:157-161)
 - [ ] POST returns 500 `"Failed to store PDF file"` on server errors (papers/[id]/pdf/route.ts:164-168)
@@ -757,3 +719,32 @@
 - [ ] Sections 12 (Citation Dialog) and 13 (Reference Store) describe shared components NOT imported or rendered by `/library/page.tsx` — they are Studio/Editor features only
 - [ ] Section 14 describes `POST /api/references/resolve` which is called by the Citation Dialog component, not by the Library page itself
 - [ ] Original section 5 claims infinite scroll — not implemented; Library renders a flat scrollable column via `overflow-y-auto` (page.tsx:405)
+
+---
+
+## Codex Verification Pass Discoveries
+
+### Accessibility & Shared UI
+- [ ] Citation tabs are rendered by the shared `Tabs` component, which uses plain `<button>` elements without `role="tablist"`, `role="tab"`, or `aria-selected`
+- [ ] Active citation tab styling is `bg-surface-raised text-ink border border-border-subtle`; inactive tabs use `text-ink-muted hover:text-ink hover:bg-surface-raised/50`
+- [ ] The shared `Modal` component used for citations does not set `role="dialog"` or `aria-modal`
+- [ ] The shared `Modal` close button has no `aria-label`
+- [ ] Search input relies on placeholder text only; it has no associated `<label>` or `aria-label`
+- [ ] Project, Study Type, and year filter controls have no explicit `<label>` or `aria-label`
+- [ ] Favorite and delete icon-only buttons have no `aria-label` or `title`
+
+### Edge Cases & Cleanup
+- [ ] Search debounce effect clears its pending timeout in cleanup via `return () => clearTimeout(timer)`
+- [ ] Custom collection names are keyed and matched by the raw string value; names differing only by case or whitespace are treated as separate collections
+- [ ] Special characters in collection names are rendered verbatim with no slugging or normalization layer
+- [ ] Upload concurrency is gated only by the disabled `Upload PDF` trigger button, preventing a second sidebar-initiated upload while `uploading` is true
+- [ ] If `/api/papers/{paperId}/pdf` fails after `savePaper(...)` succeeds, the paper record remains saved and the page still refreshes papers + metadata without rollback
+
+### Async Edge Cases & Authorization
+- [ ] `fetchPapers()` has no request-cancellation or sequence guard, so slower older responses can overwrite newer search/filter results if requests resolve out of order
+- [ ] `openCiteModal()` has no request-cancellation or sequencing guard, so citation results from an earlier paper can overwrite a later-opened modal if responses resolve out of order
+- [ ] `copied` feedback state is not reset on modal open or tab switch, so `Copied!` can linger briefly across a quick reopen or citation-style change until its 2-second timer clears
+- [ ] `findExistingPaper()` only performs normalized title deduplication when BOTH `title` and `year` are present; title-only duplicates are not collapsed by that fallback path
+- [ ] `POST /api/papers/[id]/pdf` accepts any uploaded `File` object and does not validate PDF MIME type or `.pdf` extension before storage
+- [ ] `GET /api/papers/[id]/pdf` authenticates the requester but does not verify a `userReferences` ownership link before serving redirects or streamed PDF content
+- [ ] `POST /api/papers/[id]/pdf` authenticates the requester but does not verify paper ownership before allowing a PDF upload to that paper ID
