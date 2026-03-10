@@ -895,3 +895,120 @@ idle → plan-preview → running → done
 - The page has no `Escape` keyboard handler for the TOC or citations overlays.
 - The route tree has no explicit ARIA labels, `aria-live` progress region, or other custom accessibility wiring beyond native element semantics.
 - Full-text extraction does not fall back to abstract text when PDF extraction fails; it skips the paper's full-text enrichment.
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 3)
+
+### Execute Route Stage Mapping (`src/app/api/deep-research/execute/route.ts`)
+
+- [ ] `STAGE_MAP` maps engine stages `validating`, `generating-perspectives`, `building-tree`, and `searching` to the single frontend stage `search-round-1`.
+- [ ] Engine stage `search-round-3` maps to frontend `search-round-2` (no separate round-3 indicator on the frontend).
+- [ ] Engine stages `deduplicating` and `unpaywall-lookup` both map to frontend `full-text-extraction`.
+- [ ] Engine stage `synthesizing` maps to `synthesis-perspectives`; engine stage `complete` maps to `synthesis-critique`.
+- [ ] Engine stages `citation-traversal`, `full-text-extraction`, and `data-extraction` are NOT in `STAGE_MAP` and pass through `mapStageId()` unchanged.
+- [ ] Frontend stages `synthesis-summary` and `synthesis-tables` are never individually activated by any SSE progress event — they remain `pending` during execution and jump to `completed` only when the final `report` event marks all 9 stages completed.
+- [ ] During a live research execution, the progress stepper shows stages jumping from `synthesis-perspectives` (active) directly to `synthesis-critique` (active), with `synthesis-summary` and `synthesis-tables` staying as gray pending circles until the report event.
+- [ ] The execute route does NOT call `validateTopic()` — it only checks `!topic || typeof topic !== "string"`. A topic of 2 characters would pass the execute route's validation (but the plan route would have already rejected it).
+- [ ] The execute route accepts an optional `config` field in the request body (`config?: Partial<ResearchConfig>`), but the page client never sends it — this is dead code from the page's perspective.
+
+### Plan Route SSE Validation (`src/app/api/deep-research/plan/route.ts`)
+
+- [ ] `validateTopic()` runs inside the SSE stream (after the 200 response is already sent), so a 5–500 character violation is emitted as an SSE error event `{ type: "error", error: "Topic must be at least 5 characters long" }`, not as an HTTP 400 response.
+- [ ] The plan route emits the first progress message as `{ stage: "generating-perspectives", message: "Generating research perspectives..." }` before calling `generatePerspectives()`.
+- [ ] After perspective generation completes, the plan route emits `{ stage: "generating-perspectives", message: "Generated {N} perspectives" }` before the perspectives event.
+
+### Save Route Validation (`src/app/api/deep-research/save/route.ts`)
+
+- [ ] Missing or non-string `topic` returns `400 { "error": "Topic is required" }`.
+- [ ] Auth failure returns `401 { "error": "Not authenticated" }`.
+- [ ] Unexpected errors return `500 { "error": "Failed to save research session" }`.
+
+### Sessions Listing Route (`src/app/api/deep-research/sessions/route.ts`)
+
+- [ ] Mode is extracted from `researchPlan` JSON via `(s.researchPlan as { mode?: string })?.mode` with fallback `"standard"`.
+- [ ] `completedAt` for each session falls back to `startedAt?.toISOString()` when `completedAt` is null.
+- [ ] Unexpected errors return `500 { "error": "Failed to fetch sessions" }`.
+- [ ] Auth failure returns `401 { "error": "Not authenticated" }` (the client handles 401 silently by hiding the section).
+
+### Sessions [id] Route (`src/app/api/deep-research/sessions/[id]/route.ts`)
+
+- [ ] Mode defaults to `"standard"` when `researchPlan.mode` is absent from the stored JSON.
+- [ ] `markdownReport` defaults to `session.finalReport || ""` — an empty string, not null/undefined.
+- [ ] Unexpected errors return `500 { "error": "Failed to fetch session" }`.
+- [ ] Auth failure returns `401 { "error": "Not authenticated" }`.
+
+### Open in Studio Route Details (`src/app/api/deep-research/open-in-studio/route.ts`)
+
+- [ ] Project title format: `Literature Review: {topic}`, with topic truncated to 77 chars + `"..."` when `topic.length > 80`.
+- [ ] Project description: `Deep research report on: {topic}`.
+- [ ] Document title is the same truncated string as the project title.
+- [ ] Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.
+- [ ] Route builds `SourceReference[]` (with `doi`, `pmid`, `title`) from sources and passes to `markdownToTiptap()` for citation hyperlink mapping.
+- [ ] Route computes `word_count` from the plain text markdown and stores it on the section record.
+- [ ] If the authenticated user does not exist in the DB, the route creates a dev user record with `email: "{userId}@dev.local"` and `full_name: "Dev User"` (for FK constraint satisfaction in dev mode).
+- [ ] Unexpected errors return `500 { "error": "Failed to create studio document" }`.
+- [ ] Auth failure returns `401 { "error": "Not authenticated" }`.
+
+### Evidence Badge Labels (`src/components/deep-research/CitationReference.tsx`, `CitationsPanel.tsx`)
+
+- [ ] `EVIDENCE_BADGE_STYLES` in CitationReference.tsx renders evidence labels as capitalized: `"High"`, `"Moderate"`, `"Low"`, `"Unknown"`.
+- [ ] CitationsPanel.tsx renders evidence labels via `level.charAt(0).toUpperCase() + level.slice(1)` — also capitalized.
+- [ ] EvidenceBadge tooltip text is `"{Label} evidence — {designLabel}"` or `"{Label} evidence"` (no design label).
+
+### Citations Panel Initialization (`src/components/deep-research/ResearchDocument.tsx`)
+
+- [ ] `citationsPanelOpen` is initialized to `true` — the citations panel starts open by default.
+- [ ] Desktop TOC component (`TableOfContents`) returns `null` when `items.length === 0`, but the mobile floating TOC button still renders.
+
+### Mobile Citations Handle Bar (`src/components/deep-research/CitationsPanel.tsx`)
+
+- [ ] The handle bar element (`<div className="w-10 h-1 bg-gray-300 ...">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.
+
+### Export Button UI Details (`src/components/deep-research/ExportButtons.tsx`)
+
+- [ ] Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.
+- [ ] Buttons render in this order: `.md` → `PDF` → `Copy` → vertical divider → `Open in Studio` → vertical divider → `.bib` → `.ris`.
+- [ ] Markdown button `title` attribute: `"Download as Markdown"`.
+- [ ] Copy button `title` attribute: `"Copies formatted text — paste into Google Docs, Word, or any editor with formatting preserved"`.
+- [ ] BibTeX button `title` attribute: `"Download references as BibTeX"`.
+- [ ] RIS button `title` attribute: `"Download references as RIS (EndNote/Mendeley)"`.
+
+### Export Format Details (`src/components/deep-research/ExportButtons.tsx`)
+
+- [ ] RIS export: when `pdfUrl` is absent but `doi` is present, uses `UR  - https://doi.org/{doi}` as fallback URL.
+- [ ] BibTeX `abstract` field is truncated to 500 characters via `s.abstract.slice(0, 500)`.
+- [ ] RIS `AB` field is truncated to 500 characters via `s.abstract.slice(0, 500)`.
+- [ ] `markdownToRichHTML()` generates a clipboard References section from ALL sources — no 50-source cap, unlike the rendered references list and citations panel.
+- [ ] `markdownToRichHTML()` applies inline bold (`**text**` → `<strong>`), italic (`*text*` → `<em>`), and citation superscript (`[N]` → styled `<sup>`) formatting via `applyInlineFormatting()`.
+- [ ] `markdownToRichHTML()` renders horizontal rules as `<hr>` with inline styles, while `markdownToSimpleHTML()` skips them entirely.
+
+### Markdown Rendering Details (`src/components/deep-research/ResearchDocument.tsx`)
+
+- [ ] `h2` headings render with a bottom border: `border-b border-gray-200 dark:border-gray-700/50`.
+- [ ] `h4` headings render with `italic` class applied.
+- [ ] Heading ID generation: lowercased, strips `[^a-z0-9\s-]`, replaces `\s+` with `-`.
+- [ ] `IntersectionObserver` for active heading tracking: `rootMargin: "-80px 0px -60% 0px"`, `threshold: 0.1`.
+- [ ] `<hr>` elements render with `my-8 border-gray-200 dark:border-gray-700/50`.
+
+### Print Styles (`src/components/deep-research/ResearchDocument.tsx`)
+
+- [ ] Even table rows: `background: #f9fafb` in print.
+- [ ] Blockquotes in print: border `#666`, text `#555`, background transparent.
+- [ ] Code elements in print: background `#f3f4f6`, text `#333`.
+- [ ] Links in print: color `#1a56db`.
+
+### SSE Stream Headers (both `plan/route.ts` and `execute/route.ts`)
+
+- [ ] Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.
+- [ ] Both routes export `dynamic = "force-dynamic"` (disables Next.js static caching).
+
+### Behavior Corrections (Pass 3)
+
+- Section 11 evidence badge labels are rendered capitalized ("High", "Moderate", "Low", "Unknown") in both the tooltip badge and the citations panel — not lowercase ("high", etc.) as stated in the Evidence Level System table.
+- The mobile citations panel handle bar (section 9) is NOT draggable — it is a purely decorative `<div>` with no drag handlers, touch listeners, or swipe behavior.
+- `markdownToRichHTML()` clipboard output includes a References section from ALL sources (uncapped), while the rendered references list and citations panel are capped at 50 sources.
+
+### Components Referenced But Not Rendered
+
+No new dead-import discoveries — Codex's dead code section (Pass 2) remains accurate and complete.
