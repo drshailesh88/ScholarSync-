@@ -480,36 +480,36 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 464 | LaTeX | Preview Panel / Live Preview (KaTeX) — Scroll sync — preview follows editor scroll position | /latex/[projectId] | ✅ PASS | Preview scroll follow now works with heading `data-line` anchors. | `30a1f2d` |
 | 465 | LaTeX | Preview Panel / Live Preview (KaTeX) — Error handling — graceful fallback when math rendering fails | /latex/[projectId] | ⚠️ PARTIAL | Fallback rendering is now implemented with `throwOnError: true` in [`src/components/latex-editor/preview-panel.tsx`](/Users/shaileshsingh/ScholarSync/src/components/latex-editor/preview-panel.tsx), but the headless harness failed to place the invalid test math inside a stable live document line for final visual verification. | `30a1f2d` |
 | 466 | LaTeX | Preview Panel / Live Preview (KaTeX) — Dark mode support — adapts colors | /latex/[projectId] | ✅ PASS | Toggling dark mode changed preview text colors from light-mode ink to dark-mode ink. |  |
-| 467 | LaTeX | Preview Panel / PDF Preview — Embedded PDF viewer — shows compiled PDF | /latex/[projectId] | ⬜ |  |  |
-| 468 | LaTeX | Preview Panel / PDF Preview — Displayed after successful compilation | /latex/[projectId] | ⬜ |  |  |
-| 469 | LaTeX | Preview Panel / PDF Preview — Auto-switches to PDF mode on compilation success | /latex/[projectId] | ⬜ |  |  |
-| 470 | LaTeX | Compilation System / Compile Trigger — Compile button in top bar | /latex/[projectId] | ⬜ |  |  |
-| 471 | LaTeX | Compilation System / Compile Trigger — Cmd+Enter keyboard shortcut | /latex/[projectId] | ⬜ |  |  |
-| 472 | LaTeX | Compilation System / Compile Trigger — /fix slash command — triggers compilation | /latex/[projectId] | ⬜ |  |  |
-| 473 | LaTeX | Compilation System / Compile Trigger — Auto-saves current file before compiling | /latex/[projectId] | ⬜ |  |  |
-| 474 | LaTeX | Compilation System / Compilation Pipeline — Save current file to database | /latex/[projectId] | ⬜ |  |  |
-| 475 | LaTeX | Compilation System / Compilation Pipeline — POST to /api/latex/compile with project ID | /latex/[projectId] | ⬜ |  |  |
-| 476 | LaTeX | Compilation System / Compilation Pipeline — Server-side Docker compilation (respects selected compiler) | /latex/[projectId] | ⬜ |  |  |
-| 477 | LaTeX | Compilation System / Compilation Pipeline — Return PDF blob + error diagnostics | /latex/[projectId] | ⬜ |  |  |
-| 478 | LaTeX | Compilation System / Compilation Pipeline — Display in preview panel or show errors | /latex/[projectId] | ⬜ |  |  |
-| 479 | LaTeX | Compilation System / Compilation Status — Idle — compile button ready | /latex/[projectId] | ⬜ |  |  |
-| 480 | LaTeX | Compilation System / Compilation Status — Compiling — loading state on button | /latex/[projectId] | ⬜ |  |  |
-| 481 | LaTeX | Compilation System / Compilation Status — Success — success indicator, auto-switches preview to PDF mode | /latex/[projectId] | ⬜ |  |  |
-| 482 | LaTeX | Compilation System / Compilation Status — Error — error indicator, diagnostics displayed in error gutter | /latex/[projectId] | ⬜ |  |  |
-| 483 | LaTeX | Compilation System / Retry Logic — Rate limit (429) — waits Retry-After seconds, retries up to 2 times | /latex/[projectId] | ⬜ |  |  |
-| 484 | LaTeX | Compilation System / Retry Logic — Service unavailable (502/503/504) — retries with 2s delay, up to 2 times | /latex/[projectId] | ⬜ |  |  |
-| 485 | LaTeX | Compilation System / Retry Logic — Network error — retries up to 2 times with 2s delay | /latex/[projectId] | ⬜ |  |  |
-| 486 | LaTeX | Error Gutter Panel — Error/warning count — summary bar at top | /latex/[projectId] | ⬜ |  |  |
-| 487 | LaTeX | Error Gutter Panel — Scrollable list — max-height 48 lines | /latex/[projectId] | ⬜ |  |  |
-| 488 | LaTeX | Error Gutter Panel — Each diagnostic shows: | /latex/[projectId] | ⬜ |  |  |
-| 489 | LaTeX | Error Gutter Panel — Line number | /latex/[projectId] | ⬜ |  |  |
-| 490 | LaTeX | Error Gutter Panel — Error message | /latex/[projectId] | ⬜ |  |  |
-| 491 | LaTeX | Error Gutter Panel — Severity (error = red, warning = amber) | /latex/[projectId] | ⬜ |  |  |
-| 492 | LaTeX | Error Gutter Panel — Click to jump — clicking a diagnostic scrolls editor to that line | /latex/[projectId] | ⬜ |  |  |
-| 493 | LaTeX | Error Gutter Panel / AI Error Intelligence — Error categorization — Syntax, Package, Math, Reference, Font, File, Other | /latex/[projectId] | ⬜ |  |  |
-| 494 | LaTeX | Error Gutter Panel / AI Error Intelligence — Human-readable explanations — AI-enriched error descriptions | /latex/[projectId] | ⬜ |  |  |
-| 495 | LaTeX | Error Gutter Panel / AI Error Intelligence — Suggested fixes — actionable fix suggestions | /latex/[projectId] | ⬜ |  |  |
-| 496 | LaTeX | Error Gutter Panel / AI Error Intelligence — "Fix this error" button — calls /api/latex/generate with error context: | /latex/[projectId] | ⬜ |  |  |
+| 467 | LaTeX | Preview Panel / PDF Preview — Embedded PDF viewer — shows compiled PDF | /latex/[projectId] | ✅ PASS | Successful compile rendered the embedded `Compiled PDF` iframe. |  |
+| 468 | LaTeX | Preview Panel / PDF Preview — Displayed after successful compilation | /latex/[projectId] | ✅ PASS | Mocked PDF compile result displayed immediately in the preview panel. |  |
+| 469 | LaTeX | Preview Panel / PDF Preview — Auto-switches to PDF mode on compilation success | /latex/[projectId] | ✅ PASS | Successful compile switched the preview toggle from Live to PDF automatically. |  |
+| 470 | LaTeX | Compilation System / Compile Trigger — Compile button in top bar | /latex/[projectId] | ✅ PASS | Top-bar Compile button triggered `/api/latex/compile`. |  |
+| 471 | LaTeX | Compilation System / Compile Trigger — Cmd+Enter keyboard shortcut | /latex/[projectId] | ✅ PASS | Fresh targeted Playwright probe hit compile once from `Ctrl+Enter`. |  |
+| 472 | LaTeX | Compilation System / Compile Trigger — /fix slash command — triggers compilation | /latex/[projectId] | ✅ PASS | Typing `/fix` and selecting the slash action triggered a compile request. |  |
+| 473 | LaTeX | Compilation System / Compile Trigger — Auto-saves current file before compiling | /latex/[projectId] | ✅ PASS | Compile flow issued a save POST before the compile request. |  |
+| 474 | LaTeX | Compilation System / Compilation Pipeline — Save current file to database | /latex/[projectId] | ✅ PASS | After reload, the pre-compile text change persisted from the database save. |  |
+| 475 | LaTeX | Compilation System / Compilation Pipeline — POST to /api/latex/compile with project ID | /latex/[projectId] | ✅ PASS | Live compile request posted the active project ID to `/api/latex/compile`. |  |
+| 476 | LaTeX | Compilation System / Compilation Pipeline — Server-side Docker compilation (respects selected compiler) | /latex/[projectId] | ⚠️ PARTIAL | Compile route and compiler service currently ignore the selected compiler and only send project files through the Tectonic service. |  |
+| 477 | LaTeX | Compilation System / Compilation Pipeline — Return PDF blob + error diagnostics | /latex/[projectId] | ✅ PASS | Success path returned a PDF blob; failure path returned diagnostics, and retry/failure text is now surfaced in the workspace. | `8d453b1` |
+| 478 | LaTeX | Compilation System / Compilation Pipeline — Display in preview panel or show errors | /latex/[projectId] | ✅ PASS | Successful compiles showed the PDF preview; failed compiles showed the error gutter. |  |
+| 479 | LaTeX | Compilation System / Compilation Status — Idle — compile button ready | /latex/[projectId] | ✅ PASS | Default compile button state was ready and clickable before requests. |  |
+| 480 | LaTeX | Compilation System / Compilation Status — Compiling — loading state on button | /latex/[projectId] | ✅ PASS | Compile button switched to the spinning `Compiling...` state during the request. |  |
+| 481 | LaTeX | Compilation System / Compilation Status — Success — success indicator, auto-switches preview to PDF mode | /latex/[projectId] | ✅ PASS | Success state turned both Compile and PDF toggles emerald. |  |
+| 482 | LaTeX | Compilation System / Compilation Status — Error — error indicator, diagnostics displayed in error gutter | /latex/[projectId] | ✅ PASS | Failed compile turned the button red and rendered diagnostics in the gutter panel. |  |
+| 483 | LaTeX | Compilation System / Retry Logic — Rate limit (429) — waits Retry-After seconds, retries up to 2 times | /latex/[projectId] | ✅ PASS | Earlier targeted probe confirmed the 429 path honored `Retry-After` and retried up to the third attempt. |  |
+| 484 | LaTeX | Compilation System / Retry Logic — Service unavailable (502/503/504) — retries with 2s delay, up to 2 times | /latex/[projectId] | ✅ PASS | Fresh targeted probe showed `calls=3` over `4763ms` with visible unavailable retry messaging. | `8d453b1` |
+| 485 | LaTeX | Compilation System / Retry Logic — Network error — retries up to 2 times with 2s delay | /latex/[projectId] | ✅ PASS | Fresh targeted probe showed `calls=3` over `5384ms` before succeeding and showing the PDF. | `8d453b1` |
+| 486 | LaTeX | Error Gutter Panel — Error/warning count — summary bar at top | /latex/[projectId] | ✅ PASS | Summary bar showed separate error and warning counts. |  |
+| 487 | LaTeX | Error Gutter Panel — Scrollable list — max-height 48 lines | /latex/[projectId] | ✅ PASS | Diagnostic list rendered inside the capped scroll container. |  |
+| 488 | LaTeX | Error Gutter Panel — Each diagnostic shows: | /latex/[projectId] | ✅ PASS | Diagnostic rows rendered the expected line, message, severity styling, and expandable metadata. |  |
+| 489 | LaTeX | Error Gutter Panel — Line number | /latex/[projectId] | ✅ PASS | Diagnostics rendered clickable `Lxx` line-number pills. |  |
+| 490 | LaTeX | Error Gutter Panel — Error message | /latex/[projectId] | ✅ PASS | Diagnostic rows showed the raw message or enriched explanation text. |  |
+| 491 | LaTeX | Error Gutter Panel — Severity (error = red, warning = amber) | /latex/[projectId] | ✅ PASS | Error and warning rows rendered with distinct red and amber severity styling. |  |
+| 492 | LaTeX | Error Gutter Panel — Click to jump — clicking a diagnostic scrolls editor to that line | /latex/[projectId] | ✅ PASS | Clicking a diagnostic jumped the editor selection to the referenced line. |  |
+| 493 | LaTeX | Error Gutter Panel / AI Error Intelligence — Error categorization — Syntax, Package, Math, Reference, Font, File, Other | /latex/[projectId] | ✅ PASS | Math and Reference badges now render correctly for compiler diagnostics using matching backticks. | `8dec2ad` |
+| 494 | LaTeX | Error Gutter Panel / AI Error Intelligence — Human-readable explanations — AI-enriched error descriptions | /latex/[projectId] | ✅ PASS | Enriched explanations replaced raw compiler phrasing with readable guidance. |  |
+| 495 | LaTeX | Error Gutter Panel / AI Error Intelligence — Suggested fixes — actionable fix suggestions | /latex/[projectId] | ✅ PASS | Expanded diagnostics displayed actionable fix suggestions. |  |
+| 496 | LaTeX | Error Gutter Panel / AI Error Intelligence — "Fix this error" button — calls /api/latex/generate with error context: | /latex/[projectId] | ✅ PASS | Clicking `AI fix` hit `/api/latex/generate` with error context from the selected diagnostic. |  |
 | 497 | LaTeX | File Tree Sidebar / Files Tab — Hierarchical file browser — folder nesting support | /latex/[projectId] | ⬜ |  |  |
 | 498 | LaTeX | File Tree Sidebar / Files Tab — File icons by type: | /latex/[projectId] | ⬜ |  |  |
 | 499 | LaTeX | File Tree Sidebar / Files Tab — Main file indicator — marks the main .tex file | /latex/[projectId] | ⬜ |  |  |
