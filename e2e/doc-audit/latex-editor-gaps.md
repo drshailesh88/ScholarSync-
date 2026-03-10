@@ -2,10 +2,10 @@
 
 **Original doc:** `LATEX_EDITOR_FEATURES_TESTING.md`
 **Original checkbox count:** 241
-**Features found in UI:** 321
-**Features found in source code:** 386
-**Missing from doc:** 145
-**Completeness of original doc:** 62.4%
+**After Codex pass 1:** 386
+**After Claude Code pass 2:** 554
+**New checks added in pass 2:** 168
+**Pass 2 focus:** deep-dive source reads (compile API, CodeMirror extensions, slash commands, inline AI bar, agent panel tabs, file tree, preview pane, mobile behavior, save flow, project list page)
 
 ## Missing Features
 

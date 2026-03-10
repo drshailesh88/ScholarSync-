@@ -964,3 +964,213 @@ Three export formats available from the top bar dropdown:
 - [ ] Slash-command menu has no explicit `No commands` empty-state row; it simply unmounts when there are no matches
 - [ ] Draft-tab and cite-tab request failures are largely silent in the current UI instead of surfacing inline error banners
 - [ ] The workspace mobile experience relies on full-screen overlays and an Editor/Preview switcher rather than a simultaneous multi-column layout
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+### Editor Page (`[projectId]/page.tsx`) — Loading & Error States
+- [ ] Error card title text is exactly "Unable to open this paper"
+- [ ] Error card fallback text when `error` state is null: "This LaTeX workspace could not be loaded yet. Try again once the project finishes initializing."
+- [ ] Catch block uses the thrown error's `.message` when it is an Error instance; otherwise shows "Unable to load this LaTeX workspace right now."
+- [ ] Error card "Retry" button includes an ArrowClockwise icon (size 16)
+- [ ] Error card "Back to Papers" button text is exactly "Back to Papers"
+- [ ] useEffect cleanup sets a `cancelled` flag to prevent state updates after unmount
+- [ ] Loading spinner text below the CircleNotch reads "Loading editor..."
+
+### Workspace — Compile Error Banner
+- [ ] A separate amber compile-error banner renders above the editor (below the top bar) whenever `compileError` is non-null
+- [ ] Compile-error banner uses a WarningCircle icon (size 14) and 11px amber text
+- [ ] Compile-error banner is distinct from the error-gutter panel below the editor
+
+### Workspace — BibTeX Sync
+- [ ] `getBibContent` callback finds the first file in the `files` array whose path ends with `.bib`
+- [ ] `setBibContent` store action is called via useEffect whenever the files array changes, keeping store bib content in sync
+
+### Workspace — AI Error Fix Flow (`handleFixError`)
+- [ ] Error fix extracts context as error line ±2 lines (5 lines total: `errorLineIdx - 2` to `errorLineIdx + 3`)
+- [ ] Error fix POSTs to `/api/latex/generate` with `{ command: "fix", description: context, errorMessage: diagnostic.message }`
+- [ ] Error fix streams the response body and replaces the context range in the CodeMirror editor
+- [ ] When the editor view is unavailable, the fix text is copied to the clipboard as fallback
+- [ ] Error fix errors are caught silently (no toast or error banner)
+
+### Error Gutter Panel — Expanded Details
+- [ ] Error gutter panel returns `null` (renders nothing) when the diagnostics array is empty
+- [ ] Fix button appears only for errors (not warnings), only when `onFixError` is provided, and only when the diagnostic has a non-null line number
+- [ ] Fix button icon sequence: Wrench → spinning CircleNotch (2000ms) → green Check (2000ms) → resets
+- [ ] Clicking an error row toggles expanded/collapsed state (CaretRight → CaretDown)
+- [ ] Expanded detail shows raw error message in monospace font when enriched explanation differs from raw
+- [ ] Expanded detail shows a Lightbulb icon + suggestion in emerald text when a fix suggestion is available
+- [ ] Line number link displays as "L{line}" format (e.g., "L42") and is clickable to jump
+- [ ] Category badge (e.g., "Syntax", "Package", "Math") appears only when enriched explanation differs from raw message
+- [ ] Category label mapping: syntax→"Syntax", package→"Package", math→"Math", reference→"Reference", font→"Font", file→"File", other→"General"
+- [ ] Error-gutter fix button context extraction (in the panel itself) uses ±5 lines (11 lines total), but the workspace handler re-extracts its own ±2 line context
+
+### Error Intelligence (`error-intelligence.ts`)
+- [ ] 20+ regex patterns organized into 7 categories: syntax, package, math, reference, font, file, other
+- [ ] Pattern matching substitutes regex capture groups ($1, $2) into explanation and suggestion templates
+- [ ] Unmatched errors return the raw message as the explanation, null suggestion, and "other" category
+- [ ] Specific patterns include: "Undefined control sequence" (with and without command name), "Missing $ inserted", "Missing \\begin{document}", "Missing { or } inserted", "Extra }", "Misplaced alignment tab character &", "\\begin{X} ended by \\end{Y}", "Environment X undefined", "File not found", "Unknown option for package", "Package Error", "Option clash", "Display math should end with $$", "Double subscript/superscript", "Extra alignment tab", "Citation undefined", "Reference undefined", "Label multiply defined", "undefined references", "Font not found/unavailable", "Encoding scheme unknown", "can't write on file", "Emergency stop", "Overfull \\hbox (with pt value)", "Underfull \\hbox"
+
+### Spell Check Extension (`spell-check-extension.ts`)
+- [ ] Spell check linter calls POST `/api/latex/spell-check` with `{ content }` body
+- [ ] Spell check debounce delay is 2000ms
+- [ ] Spell check skips documents shorter than 10 characters (returns empty array)
+- [ ] Spell check diagnostics use severity "info" (blue squiggly underlines, not red)
+- [ ] Each misspelling message reads `Unknown word: "{word}"`
+- [ ] Up to 3 replacement suggestions shown per misspelled word as CodeMirror lint actions
+- [ ] Suggestion actions directly replace the misspelled word in the editor via `view.dispatch`
+- [ ] `createAddToDictionaryAction` function exists and POSTs to `/api/latex/spell-check/add` with `{ word }`
+- [ ] Spell check fetch errors are caught silently (returns empty diagnostics)
+
+### Visual Editor — Theme & Decorations
+- [ ] Visual editor hides line number gutters entirely via CSS `display: "none"`
+- [ ] Visual editor uses sans-serif font stack: `'Inter', 'SF Pro Text', system-ui, -apple-system, sans-serif`
+- [ ] Visual editor content area has `maxWidth: "680px"` with auto margins for centered layout
+- [ ] Visual editor content padding is `24px 32px` (vs source editor's `16px 0`)
+- [ ] Visual editor base font size is 14px with line-height 1.7
+- [ ] `\emph{}` is rendered identically to `\textit{}` (italic decoration)
+- [ ] `\cite[tp]?{}` matches receive brand-colored background styling (`.cm-visual-cite` class)
+- [ ] `\item` lines receive 24px left padding (`.cm-visual-list-item` class)
+- [ ] `\begin{equation|align|figure|table|itemize|enumerate}` and corresponding `\end{}` lines get a 2px brand-colored left border at 0.6 opacity and 0.85em font size
+- [ ] `findMatchingBrace()` correctly handles nested brace depth counting
+- [ ] Visual editor includes `closeBrackets()` and `autocompletion()` extensions explicitly
+- [ ] Visual editor active line has transparent background (no highlight)
+
+### Collaboration Provider
+- [ ] Collaboration gracefully degrades (no WebSocket connection) when `NEXT_PUBLIC_COLLABORATION_WS_URL` env var is not set
+- [ ] Room ID format: `latex-project-{sanitized}` where non-alphanumeric characters become hyphens
+- [ ] 8 collaborator colors: `#FF6B6B`, `#4ECDC4`, `#45B7D1`, `#96CEB4`, `#FFEAA7`, `#DDA0DD`, `#98D8C8`, `#F7DC6F`
+- [ ] Color assignment is deterministic: character code sum of userId modulo 8
+- [ ] Default current user name is "You"
+- [ ] Typing status auto-resets to false after 2000ms timeout via `setIsTyping`
+
+### Collaboration Cursors & Typing
+- [ ] CollaboratorAvatars displays max 4 user avatars; overflow shown as "+{N}" badge
+- [ ] CollaboratorAvatars returns null when not connected OR when no users present (including current user)
+- [ ] Avatar fallback: first character of user name (uppercased) when no avatar URL exists
+- [ ] Avatar has a CSS hover tooltip showing the full user name
+- [ ] TypingIndicator text for 1 user: "{name} is typing..."
+- [ ] TypingIndicator text for 2 users: "{name1} and {name2} are typing..."
+- [ ] TypingIndicator text for 3+ users: "{name1} and others are typing..."
+- [ ] TypingIndicator displays max 2 names before collapsing to "and others"
+
+### Comment Panel — Full Behavior
+- [ ] Default comment filter is "unresolved" (not "all")
+- [ ] New comment form includes a numeric line number input field (type="number", min=1)
+- [ ] Comment header badge shows count of unresolved comments (not total)
+- [ ] Reply input placeholder is "Write a reply..."
+- [ ] Reply triggered by pressing Enter in the reply input field
+- [ ] Reply submit button uses PaperPlaneTilt icon
+- [ ] "Reply" link is hidden on resolved comments
+- [ ] Thread expansion toggle text: "Show {N} replies" / "Hide {N} replies"
+- [ ] Resolved badge shows "Resolved {relative time}" with a Check icon
+- [ ] Context menu: "Resolve"/"Unresolve" toggle (Check icon) and "Delete" option (X icon, red text)
+- [ ] Relative time format: <60s → "just now", <60m → "{N}m ago", <24h → "{N}h ago", <7d → "{N}d ago", else `toLocaleDateString()`
+- [ ] Replies are submitted with `lineNumber: 0` (not the parent's line)
+- [ ] Author name falls back to "Anonymous" when `userName` is null or empty string
+- [ ] Loading state shows "Loading..." text
+- [ ] Empty state shows "No comments yet" with a ChatCircle icon (opacity 30%)
+
+### Image Browser — Full Behavior
+- [ ] Image list loads lazily on first `onFocus` or `onMouseEnter` of the browser container (not on mount)
+- [ ] Upload validates file type: `image/png`, `image/jpeg`, `image/jpg`, `application/pdf` only
+- [ ] Upload validates size: max 10MB (`10 * 1024 * 1024` bytes)
+- [ ] Type validation error: "Invalid file type. Supported: PNG, JPG, PDF"
+- [ ] Size validation error: "File too large. Maximum size is 10MB"
+- [ ] Upload error message has a dismiss X button
+- [ ] Upload button shows Spinner icon (animated) while uploading, Upload icon otherwise
+- [ ] Generated LaTeX insert code: `\includegraphics[width=\linewidth]{figures/{baseName}.{ext}}` — NOT wrapped in a figure environment
+- [ ] Copy-path copies `figures/{baseName}.{ext}` to clipboard
+- [ ] Drag-over state changes container background styling
+- [ ] Empty state: "Drag & drop images here" with subtext "PNG, JPG, or PDF (max 10MB)"
+- [ ] Footer hint "Click to insert \\includegraphics" appears only when images.length > 0
+- [ ] Delete sends DELETE to `/api/latex/images?storageKey={encodedKey}`
+- [ ] PDF thumbnails render as inline iframe; images use Next.js `<Image>` with `unoptimized` flag
+- [ ] File input accept attribute: `.png,.jpg,.jpeg,.pdf`
+
+### Compile API Route (`/api/latex/compile`)
+- [ ] Request body validated via zod: `projectId` must be a UUID string
+- [ ] Invalid body → 400 `{ error: "Invalid request" }`
+- [ ] Project not found or not owned by current user → 404 `{ error: "Project not found" }`
+- [ ] No files in project → 400 `{ error: "No files in project" }`
+- [ ] No main file found → 400 `{ error: "No main .tex file found" }`
+- [ ] Server-side compile timeout: 60 seconds per attempt (`AbortSignal.timeout(60_000)`)
+- [ ] Server-side retry: up to 2 retries on 503/504 or fetch errors, with progressive backoff (1s × attempt)
+- [ ] 429 from upstream compiler is passed through directly to the client
+- [ ] 422 (compilation failure) saves an error compilation record to DB and returns `{ error: "Compilation failed", log, errors, durationMs }`
+- [ ] Successful compilation saves record to DB and returns PDF binary with headers: `Content-Disposition`, `X-Compilation-Status`, `X-Compilation-Duration`
+- [ ] Compilation log is decoded from base64 `X-Compilation-Log` response header
+- [ ] Compiler authenticated via `Authorization: Bearer {secret}` when `LATEX_COMPILER_SECRET` env var is set
+- [ ] Compile payload includes `projectId` for persistent build cache on the compiler service
+- [ ] Unexpected status codes → 502 `{ error: "Compilation service error" }`
+- [ ] Unhandled exceptions → 500 `{ error: "Internal server error" }`
+
+### Live Preview — LaTeX-to-HTML (`latex-to-html.ts`)
+- [ ] Preview handles `\part` (centered, 1.8em) and `\chapter` sectioning commands in addition to section/subsection/subsubsection
+- [ ] Preview handles `\paragraph` and `\subparagraph` as inline bold text (not block headings)
+- [ ] `\footnote{text}` renders as superscript `[*]` with title tooltip showing the footnote text
+- [ ] `\textcolor{color}{text}` renders with inline `color` style
+- [ ] `\colorbox{color}{text}` renders with inline `background-color` style and padding
+- [ ] 10 font size commands handled: `\tiny` (0.6em) through `\Huge` (2.5em)
+- [ ] `\href{url}{text}` renders as anchor with `target="_blank" rel="noopener"`
+- [ ] `\url{url}` renders as code-styled link with same attributes
+- [ ] `\LaTeX` and `\TeX` render as styled logo elements with sup/sub tags
+- [ ] `\today` renders current date in `en-US` locale with `{ year: "numeric", month: "long", day: "numeric" }`
+- [ ] Smart quote conversion: ` `` ` → left double quote, `''` → right double quote, `` ` `` → left single quote
+- [ ] `---` → em-dash (U+2014), `--` → en-dash (U+2013)
+- [ ] `\newpage`/`\clearpage`/`\cleardoublepage` render as `<hr>` with pagebreak class
+- [ ] `\tableofcontents` → italic "Table of Contents" placeholder, `\listoffigures` → "List of Figures", `\listoftables` → "List of Tables"
+- [ ] `\vspace{X}` → div with `margin-top:X`, `\hspace{X}` → span with `margin-left:X`
+- [ ] `\textsc{text}` → `font-variant: small-caps`
+- [ ] `~` (tilde) renders as non-breaking space (U+00A0)
+- [ ] LaTeX comments (`%...`) stripped but escaped `\%` preserved via placeholder swap
+- [ ] `\protect`, `\noindent`, `\centering`, `\vfill`, `\hfill` silently removed
+- [ ] `\pagenumbering`, `\pagestyle`, `\thispagestyle`, `\setcounter` silently removed
+- [ ] Special characters: `\$`→$, `\&`→&amp;, `\#`→#, `\_`→_, `\{`→{, `\}`→}
+- [ ] `\\` (double backslash) renders as `<br />` line break
+- [ ] Double newlines converted to paragraph breaks (`</p><p>`)
+- [ ] Preamble (everything before `\begin{document}`) and everything after `\end{document}` is stripped
+- [ ] `\includegraphics` renders as actual `<img>` tag with src `/api/latex/images/serve?path={encoded}`
+- [ ] `\ref{key}` → styled span `[ref:key]`, `\eqref{key}` → `(key)`, `\cite[p|t|author]?{keys}` → `[key1, key2]`
+
+### Environment Conversions (`latex-environments.ts`)
+- [ ] Figure environment extracts `\caption{}` and `\includegraphics{}`, renders as `<figure>` with text placeholder (not actual image)
+- [ ] Table environment extracts `\caption{}` and nested tabular
+- [ ] Tabular column spec: `l/L`→left, `c/C`→center, `r/R`→right alignment
+- [ ] `\multicolumn{N}{align}{content}` handled inside tabular cells with correct colspan
+- [ ] First tabular row renders as `<th>`, subsequent rows as `<td>`
+- [ ] Standalone tabular (not inside `\begin{table}`) also converted
+- [ ] `verbatim` → `<pre>`, `lstlisting` → `<pre><code>`
+- [ ] `quote`/`quotation` → `<blockquote>`
+- [ ] `center` → centered div, `flushleft` → left-aligned div, `flushright` → right-aligned div
+- [ ] `minipage` → inline-block div (width parameter consumed but not applied)
+- [ ] 10 theorem-like environments: theorem, lemma, definition, corollary, proposition, remark, example, conjecture, notation, axiom — each renders as styled div with bold label
+- [ ] `proof` → div with italic "Proof." and QED symbol ∎ (float right)
+- [ ] `titlepage` → centered padded div
+- [ ] `thebibliography` → ordered list with "References" heading, splitting on `\bibitem{key}`
+
+### useMediaQuery Hook
+- [ ] Mobile breakpoint: `<768px`, minTouchTarget = 44px
+- [ ] Tablet breakpoint: `768–1024px`, minTouchTarget = 32px
+- [ ] Desktop breakpoint: `>1024px`, minTouchTarget = 24px
+- [ ] Resize listener debounced by 100ms
+- [ ] Server-side rendering default assumes desktop (1024×768)
+
+### Zustand Store — Track Changes Server Sync
+- [ ] `acceptChange(id)` optimistically updates local state AND sends PATCH to `/api/latex/track-changes` with `{ id, status: "accepted" }`
+- [ ] `rejectChange(id)` same pattern: local update + PATCH with `{ id, status: "rejected" }`
+- [ ] `acceptAllChanges()` batch-updates all pending changes locally and fires individual PATCH requests for each change
+- [ ] `rejectAllChanges()` same batch pattern
+- [ ] All track-change server sync errors are caught silently
+
+### Behavior Corrections (Pass 2)
+- [ ] **Image insert code is NOT a figure environment**: source generates only `\includegraphics[width=\linewidth]{figures/basename.ext}` — the existing doc section 12 incorrectly shows a full `\begin{figure}...\end{figure}` wrapper
+- [ ] **New-file input placeholder is `filename or folder/name`**, not `filename.tex` as stated in the Codex audit section
+- [ ] **File delete DOES have a confirmation dialog**: `window.confirm("Delete {path}?")` is called in file-tree.tsx — the Codex audit statement "Project and file deletions currently have no confirmation dialog" is only correct for project deletion (page.tsx), not file deletion
+- [ ] **Draft-tab auto-send for section drafting uses a 50ms setTimeout**, not a custom event dispatch — the existing doc mentions `latex:draft-section` event but the actual mechanism is `pendingDraftSection` store state consumed by a useEffect
+
+### Components Referenced But Not Rendered
+- [ ] `TrackChangesPanel` (`track-changes-panel.tsx`) exists as a fully built component but is NOT imported or rendered by `latex-workspace.tsx` — it is not in the active import chain
+- [ ] `VersionHistoryPanel` (`version-history-panel.tsx`) exists as a fully built component but is NOT imported or rendered by `latex-workspace.tsx` — it is not in the active import chain
+- [ ] `TypingIndicator` (`collaboration-cursors.tsx`) is exported but NOT imported or rendered anywhere in the workspace — only `CollaboratorAvatars` is used
