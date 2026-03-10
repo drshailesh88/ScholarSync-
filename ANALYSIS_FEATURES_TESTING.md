@@ -1,6 +1,6 @@
 # ScholarSync Analysis Page — Complete Feature Inventory & Testing Checklist
 
-> **Purpose**: Manual testing reference for every feature built into the Analysis page (`/analysis`), including writing quality metrics, AI detection, plagiarism scanning, and the real-time integrity hook.
+> **Purpose**: Manual testing reference for every feature built into the Analysis page (`/analysis`), including writing quality metrics, AI detection, and plagiarism scanning.
 > **Generated**: March 2026
 
 ---
@@ -23,7 +23,7 @@
 14. [AI Detection Engine](#14-ai-detection-engine)
 15. [Plagiarism Engine](#15-plagiarism-engine)
 16. [Server Actions](#16-server-actions)
-17. [Real-Time Integrity Hook](#17-real-time-integrity-hook)
+17. [Unused Adjacent Modules](#17-unused-adjacent-modules)
 18. [CircularGauge Component](#18-circulargauge-component)
 19. [Loading & Error States](#19-loading--error-states)
 20. [Error Handling & Edge Cases](#20-error-handling--edge-cases)
@@ -46,7 +46,6 @@ The Analysis page provides a standalone writing quality, AI detection, and plagi
 | **API Endpoint** | `POST /api/integrity-check` (`src/app/api/integrity-check/route.ts`) |
 | **AI Detection** | `src/lib/integrity/ai-detection.ts` |
 | **Plagiarism** | `src/lib/integrity/plagiarism-engine.ts` |
-| **Real-Time Hook** | `src/hooks/useRealtimeIntegrity.ts` |
 | **Gauge UI** | `src/components/ui/circular-gauge.tsx` |
 
 ### Key State Variables
@@ -80,15 +79,16 @@ The Analysis page provides a standalone writing quality, AI detection, and plagi
 
 ## 3. Source Mode Toggle
 
-Two toggle buttons in the header, styled with the FileText icon:
+Two toggle buttons in the header. Only the `From Document` button includes the `FileText` icon.
 
 | Button | Label | Test |
 |--------|-------|------|
 | **From Document** | "From Document" | [ ] Switches `sourceMode` to `"document"`, shows project selector |
-| **Paste Text** | "Paste Text" | [ ] Switches `sourceMode` to `"paste"`, shows empty textarea |
+| **Paste Text** | "Paste Text" | [ ] Switches `sourceMode` to `"paste"`, shows editable textarea |
 
 - [ ] Active button is visually highlighted
-- [ ] Switching modes preserves any previously entered text (if applicable)
+- [ ] Switching from document mode to paste mode preserves the current textarea content
+- [ ] Switching back to document mode can overwrite the textarea with the selected document content
 
 ---
 
@@ -133,7 +133,7 @@ A 320px-wide panel that appears on the right side when `clientMetrics` is availa
 
 ### Readability Gauge
 - [ ] **CircularGauge** — 110px, displays `clientMetrics.fleschReadingEase`
-- [ ] **Readability label** — shown below the gauge (Excellent / Good / Needs Improvement / Poor)
+- [ ] **Readability label** — shown below the gauge (Easy / Standard / Difficult / Very Difficult)
 
 ### Metric Counts Grid (3 columns)
 | Metric | Source | Test |
@@ -169,7 +169,7 @@ A 320px-wide panel that appears on the right side when `clientMetrics` is availa
 ## 7. Analyze Writing Button & Submission
 
 - [ ] **Button label** — "Analyze Writing" with Sparkle icon
-- [ ] **Loading label** — "Analyzing..." with spinner (CircleNotch icon)
+- [ ] **Loading label** — "Analyzing..." while the button keeps the `Sparkle` icon in the current implementation
 - [ ] **Disabled when** — `loading` is true OR `inputText.length < 50`
 - [ ] **Submission** — sends text to the `/api/integrity-check` endpoint
 - [ ] **Success** — populates `result`, switches to results mode, parses `paragraphs`
@@ -191,7 +191,7 @@ After analysis completes, the left panel displays paragraphs with color-coded hi
 ### Paragraph Details
 - [ ] **Glass panel** — rounded-2xl styling
 - [ ] **Flags** — displayed below each paragraph in 10px text
-- [ ] **Back link** — "Back to Analyze New Text" link to return to input mode
+- [ ] **Back link** — "← Analyze New Text" button to return to input mode
 
 ---
 
@@ -312,10 +312,10 @@ The legend explains the paragraph color coding:
 ### Readability Labels
 | Flesch Reading Ease | Label | Test |
 |---------------------|-------|------|
-| >= 80 | "Excellent" | [ ] Label assigned correctly |
-| >= 60 | "Good" | [ ] Label assigned correctly |
-| >= 40 | "Needs Improvement" | [ ] Label assigned correctly |
-| < 40 | "Poor" | [ ] Label assigned correctly |
+| >= 60 | "Easy" | [ ] Label assigned correctly |
+| >= 40 | "Standard" | [ ] Label assigned correctly |
+| >= 20 | "Difficult" | [ ] Label assigned correctly |
+| < 20 | "Very Difficult" | [ ] Label assigned correctly |
 
 ### Library Dependencies
 - [ ] **write-good** — used for passive voice, weasel word, adverb, and other writing issue detection
@@ -340,7 +340,7 @@ The legend explains the paragraph color coding:
 
 ### Rate Limiting
 - [ ] **Limit** — 20 requests per hour per user
-- [ ] **Exceeded** — returns 503 status
+- [ ] **Exceeded** — returns 429 status
 
 ### Plan Gating
 | Plan | Available Features | Test |
@@ -353,7 +353,8 @@ The legend explains the paragraph color coding:
 |--------|-----------|------|
 | **401** | Unauthenticated | [ ] Returns 401 for unauthenticated requests |
 | **400** | Validation failure (text too short/long) | [ ] Returns 400 for invalid text length |
-| **503** | Not configured or rate limit exceeded | [ ] Returns 503 when rate limited |
+| **429** | Rate limit exceeded | [ ] Returns 429 when rate limited |
+| **503** | AI service not configured or AI detection failure | [ ] Returns 503 for upstream AI availability problems |
 | **500** | Internal server error | [ ] Returns 500 for unexpected errors |
 
 ---
@@ -374,7 +375,7 @@ The legend explains the paragraph color coding:
 - [ ] **Weighting** — 60% Binoculars, 40% LLM in combined score
 
 ### Hedging Phrases
-- [ ] **Count** — 23+ hedging phrases tracked (e.g., "it is important to note", "arguably", etc.)
+- [ ] **Count** — exactly 35 hedging phrases tracked
 - [ ] **Detection** — phrases counted and reported in text statistics
 
 ### Text Statistics Computed
@@ -397,7 +398,7 @@ The legend explains the paragraph color coding:
 
 **File**: `src/lib/integrity/plagiarism-engine.ts`
 
-- [ ] **Paid feature only** — locked for free-tier users
+- [ ] **Paid feature only** — plagiarism engine runs only for paid plans in the API
 - [ ] **Similarity score** — percentage of matched content
 - [ ] **Source matching** — identifies potential source documents
 - [ ] **Severity levels** — high, medium, low risk classifications
@@ -412,32 +413,19 @@ The legend explains the paragraph color coding:
 | Action | Description | Test |
 |--------|-------------|------|
 | `getActiveDocumentForAnalysis(projectId?)` | Loads the most recent document for a project | [ ] Returns document content for the given project |
-| `runWritingAnalysis(projectId?)` | Runs local (client-side) writing analysis on a project document | [ ] Returns WritingMetrics and WritingIssues |
-| `analyzeText(text)` | Analyzes arbitrary text input | [ ] Returns analysis results for pasted text |
 | `listProjectsForAnalysis()` | Returns the authenticated user's projects | [ ] Returns array of `{id, title}` objects |
 
 ---
 
-## 17. Real-Time Integrity Hook
+## 17. Unused Adjacent Modules
 
-**File**: `src/hooks/useRealtimeIntegrity.ts`
+These modules exist in the repo but are **not** imported by `src/app/(app)/analysis/page.tsx`, so they should not be treated as current `/analysis` page features.
 
-### Hook Signature
-`useRealtimeIntegrity(text: string, enabled: boolean)`
-
-### Behavior
-| Parameter | Value | Test |
-|-----------|-------|------|
-| **Debounce** | 2,000ms | [ ] Analysis does not fire until 2s after last keystroke |
-| **Minimum text length** | 100 characters | [ ] No analysis triggered for text < 100 chars |
-| **Minimum change** | 10 characters changed | [ ] No re-analysis if fewer than 10 chars changed |
-
-### Return Values
-| Field | Type | Description | Test |
-|-------|------|-------------|------|
-| `score` | `number \| null` | Human probability score (0-100) | [ ] Returns numeric score after analysis |
-| `loading` | `boolean` | Whether analysis is in progress | [ ] True while debounced request is pending |
-| `error` | `string \| null` | Error message if analysis fails | [ ] Returns error string on failure |
+| Module | Status |
+|--------|--------|
+| `src/hooks/useRealtimeIntegrity.ts` | Exists, but `/analysis` uses its own local 500ms debounced `useEffect` instead |
+| `runWritingAnalysis(projectId?)` | Exists in `src/lib/actions/analysis.ts`, but is not imported by `/analysis` |
+| `analyzeText(text)` | Exists in `src/lib/actions/analysis.ts`, but is not imported by `/analysis` |
 
 ---
 
@@ -485,13 +473,13 @@ The legend explains the paragraph color coding:
 
 ### API Errors
 - [ ] **Unauthenticated (401)** — appropriate error message displayed
-- [ ] **Rate limited (503)** — error message indicates rate limit exceeded
+- [ ] **Rate limited (429)** — error message indicates rate limit exceeded
 - [ ] **Server error (500)** — generic error message displayed
 - [ ] **Network failure** — error state shown with retry guidance
 
 ### Plan Restrictions
-- [ ] **Free tier** — only AI detection results shown, plagiarism and citation audit locked
-- [ ] **Upgrade prompt** — free-tier users see indication that full suite requires paid plan
+- [ ] **Free tier API** — plagiarism and citation engines are not executed for free plans
+- [ ] **Current `/analysis` UI** — no upgrade prompt or locked-state card is implemented
 
 ### Document Mode Edge Cases
 - [ ] **No projects** — project selector hidden, user guided to paste mode
@@ -516,7 +504,7 @@ The legend explains the paragraph color coding:
 11. [ ] Verify Issues tab displays on the right with suggestion count
 12. [ ] Switch to "Detailed Metrics" tab and verify all four sections render
 13. [ ] Verify color legend (Red, Yellow, Emerald) is displayed
-14. [ ] Click "Back to Analyze New Text" to return to input mode
+14. [ ] Click "← Analyze New Text" to return to input mode
 
 ---
 
@@ -560,6 +548,11 @@ The legend explains the paragraph color coding:
 7. [ ] Verify instant metrics panel populates
 8. [ ] Click "Analyze Writing" and verify full analysis results
 
+### Integration Risks
+- [ ] The page-local `AnalysisResult` type expects top-level `humanScore`, `aiScore`, `paragraphAnalysis`, and `plagiarismIndicators`
+- [ ] `POST /api/integrity-check` returns those values under nested `aiDetection` and `plagiarism` objects instead
+- [ ] Result-mode AI detection, paragraph breakdown, and plagiarism indicator views are therefore out of contract until the page normalizes the API payload
+
 ### AI Detection Results Flow
 1. [ ] Submit text for analysis
 2. [ ] In results, switch to "Detailed Metrics" tab
@@ -572,7 +565,7 @@ The legend explains the paragraph color coding:
 ### Instant Metrics Validation Flow
 1. [ ] Enter text in paste mode
 2. [ ] Verify CircularGauge shows Flesch Reading Ease score
-3. [ ] Verify readability label matches the score range (Excellent/Good/Needs Improvement/Poor)
+3. [ ] Verify readability label matches the score range (Easy/Standard/Difficult/Very Difficult)
 4. [ ] Verify Words, Sentences, Paragraphs counts in the 3-column grid
 5. [ ] Verify Flesch-Kincaid Grade, Gunning Fog Index, Flesch Reading Ease, Avg Sentence Length
 6. [ ] Verify Passive Voice (yellow), Weasel Words (orange), Adverbs (blue), Complex Sentences (red) in the 2x2 grid
@@ -582,8 +575,8 @@ The legend explains the paragraph color coding:
 1. [ ] Log in as a free-tier user
 2. [ ] Submit text for analysis
 3. [ ] Verify AI detection results are returned
-4. [ ] Verify plagiarism section is locked with upgrade prompt
-5. [ ] Verify citation audit section is locked with upgrade prompt
+4. [ ] Verify the current `/analysis` UI does not render a locked-state upgrade prompt
+5. [ ] Verify paid-tier API responses include nested `plagiarism` and `citationAudit` objects
 6. [ ] Log in as a paid-tier user
 7. [ ] Submit same text for analysis
 8. [ ] Verify full suite results (AI detection + plagiarism + citation audit) are returned
@@ -592,7 +585,7 @@ The legend explains the paragraph color coding:
 1. [ ] Try to analyze with less than 50 characters — button should be disabled
 2. [ ] Submit analysis and simulate network failure — verify error state displays
 3. [ ] Verify error message is shown with guidance to retry
-4. [ ] Submit rapid requests to trigger rate limiting — verify 503 error handled gracefully
+4. [ ] Submit rapid requests to trigger rate limiting — verify 429 error handled gracefully
 5. [ ] Navigate to `/analysis` while unauthenticated — verify 401 handling
 
 ### Icons Reference
@@ -600,9 +593,9 @@ The legend explains the paragraph color coding:
 |------|-------|
 | **ArrowLeft** | Back navigation to `/studio` |
 | **Sparkle** | Analyze button, API suggestion items |
-| **CircleNotch** | Loading spinner during analysis |
+| **CircleNotch** | Document-loading state in document mode |
 | **CaretDown** | Project dropdown indicator |
-| **FileText** | Source mode toggle buttons |
+| **FileText** | `From Document` toggle and empty-document state |
 
 ### Detailed QA Coverage
 
@@ -769,3 +762,165 @@ The legend explains the paragraph color coding:
 - [ ] `CircularGauge` color thresholds are green >= 80, yellow >= 60, orange >= 40, and red below 40
 - [ ] Results gauge readability label uses `Excellent`, `Good`, `Needs Improvement`, and `Poor`
 - [ ] Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> These checks were found by reading every file in the import tree line by line.
+> Every item traces to a specific file and approximate line number.
+
+### `src/lib/integrity/index.ts` — AI Writing Suggestions (buildWritingSuggestions)
+
+The API generates actionable writing suggestions based on statistical text features. Each condition below is an independent code branch that produces a distinct suggestion string displayed in the Issues tab.
+
+- [ ] When `stats.avgSentenceLength > 28`, the API returns the suggestion: "Your average sentence length is high. Consider breaking long sentences for readability." (~line 129)
+- [ ] When `stats.sentenceLengthStdDev < 3`, the API returns: "Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure." (~line 133)
+- [ ] When `stats.passiveVoicePercent > 30`, the API returns: "{N}% of sentences use passive voice. Consider using more active voice." where N is `Math.round(passiveVoicePercent)` (~line 139)
+- [ ] When `stats.typeTokenRatio < 0.35` and `> 0`, the API returns: "Vocabulary diversity is low. Use more varied word choices to strengthen your writing." (~line 144)
+- [ ] When `stats.hedgingPhraseCount > 5`, the API returns: "Found {N} hedging phrases (e.g. \"It is important to note\"). These are common in AI-generated text — consider being more direct." (~line 149)
+- [ ] When `stats.readabilityGrade > 16`, the API returns: "Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility." (~line 154)
+- [ ] When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the "No issues detected" message (~line 124-159)
+
+### `src/app/api/integrity-check/route.ts` — Error Responses (exact text)
+
+- [ ] 401 response body is `{ error: "Not authenticated" }` (~line 47)
+- [ ] 400 response body is `{ error: "Invalid request", details: <fieldErrors> }` where details come from Zod validation (~line 72)
+- [ ] 503 when AI is not configured returns `{ error: "AI service is not configured." }` (~line 62)
+- [ ] 503 when AI detection throws returns `{ error: "AI detection service is unavailable. Please try again later." }` (~line 102)
+- [ ] 500 catch-all returns `{ error: "Failed to analyze text" }` (~line 159)
+- [ ] Rate limit exceeded returns status **429** (not 503) with `{ error: "Rate limit exceeded. Please try again later." }` and `X-RateLimit-Remaining` header (`src/lib/rate-limit.ts` ~line 77)
+- [ ] Rate limit key format is `{userId}:integrity-check` using `RATE_LIMITS.analysis` config (`src/lib/rate-limit.ts` ~line 56, route ~line 53)
+- [ ] API checks `isAIConfigured()` before processing and returns 503 if false (~line 59)
+- [ ] API persists results to `integrityChecks` database table after every successful check (~line 120)
+- [ ] Database persistence failure is non-fatal — results are still returned to the client (~line 148-150)
+- [ ] `contentChecked` field in DB is truncated to first 5000 characters of submitted text (~line 125)
+- [ ] Zod `sources` schema validates an array of objects with optional fields: `title`, `doi`, `pmid`, `authors` (string array), `year` (number) (~line 23-31)
+
+### `src/lib/integrity/index.ts` — Tier Gating and Response Shape
+
+- [ ] Paid plans are `["basic", "pro", "institutional"]` — the `PAID_PLANS` set at ~line 22
+- [ ] Free plan users get AI detection only; plagiarism, citation audit, and self-plagiarism engines are skipped (~lines 37-40)
+- [ ] Response includes `tier` field ("free" or "paid"), `checkedAt` ISO timestamp, and optional `selfPlagiarism` and `citationAudit` fields (~line 104-120)
+- [ ] `writingQuality.passiveVoiceCount` in the API response is derived from `(passiveVoicePercent / 100) * sentenceCount`, not from write-good (~line 111-113)
+- [ ] `writingQuality.readabilityGrade` in the API response comes from the AI detection engine's Flesch-Kincaid grade, not from the client-side `fleschReadingEase` (~line 116)
+
+### `src/lib/writing-analysis.ts` — Metric Formatting Precision
+
+- [ ] `fleschReadingEase` is clamped to 0-100 range and rounded to integer with `Math.round()` (~line 170-178)
+- [ ] `fleschKincaidGrade` is clamped to >= 0 and rounded to 1 decimal place: `Math.round(rawGrade * 10) / 10` (~line 183-186)
+- [ ] `gunningFogIndex` is clamped to >= 0 and rounded to 1 decimal place: `Math.round(... * 10) / 10` (~line 191-196)
+- [ ] `automatedReadabilityIndex` is clamped to >= 0 and rounded to 1 decimal: `Math.round(... * 10) / 10` (~line 259-262)
+- [ ] `colemanLiauIndex` is clamped to >= 0 and rounded to 1 decimal: `Math.round(... * 10) / 10` (~line 268-271)
+- [ ] `vocabularyDiversity` is a type-token ratio rounded to 2 decimal places: `Math.round(... * 100) / 100` (~line 275)
+- [ ] `avgSyllablesPerWord` is rounded to 2 decimal places: `Math.round(... * 100) / 100` (~line 292)
+- [ ] `avgWordsPerSentence` and `avgSentenceLength` are identical values, both `Math.round(avgWordsPerSentence * 10) / 10` (~line 282-283)
+- [ ] `complexWordPercentage` is rounded to 1 decimal: `Math.round(... * 1000) / 10` (~line 290)
+
+### `src/lib/writing-analysis.ts` — Issue Generation Details
+
+- [ ] `classifyReason()` maps write-good reasons: "passive voice" → type `passive` / severity `warning`; "weasel" → type `weasel` / severity `warning`; "adverb" → type `adverb` / severity `info`; all others → type `readability` / severity `info` (~line 94-112)
+- [ ] Complex sentence issues have reason `"This sentence has {N} words. Consider breaking it up for clarity."` and suggestion `"Break this into shorter sentences for better readability."` (~line 241-248)
+- [ ] `isComplexWord()` requires 3+ syllables AND excludes words ending in "ed", "es", or "ing" (~line 118-127)
+
+### `src/lib/integrity/ai-detection.ts` — Detection Engine Details
+
+- [ ] `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)
+- [ ] `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)
+- [ ] `overallRisk` derivation: humanScore >= 70 → "low", >= 40 → "medium", < 40 → "high" (~line 1090-1097)
+- [ ] `aiScore` is computed as `100 - humanScore` after clamping (~line 1088)
+- [ ] Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)
+- [ ] Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)
+- [ ] `computeTextStatistics` rounds `avgSentenceLength` to 2 decimal places, `typeTokenRatio` to 3 decimal places, `formulaicTransitionDensity` to 3 decimal places (~line 421-431)
+
+### `src/lib/integrity/plagiarism-engine.ts` — Severity Thresholds
+
+- [ ] Plagiarism severity: Jaccard similarity >= 0.4 → "high", >= 0.2 → "medium", < 0.2 → "low" (~line 500-504)
+- [ ] Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)
+- [ ] Scholarly API searches have a 12-second abort timeout (~line 547)
+- [ ] Paragraph excerpts in plagiarism results are truncated to 120 characters with "..." suffix (~line 540-541)
+
+### `src/components/ui/circular-gauge.tsx` — Implementation Details
+
+- [ ] Gauge SVG stroke width is 10 pixels (~line 26)
+- [ ] Gauge SVG is rotated with `-rotate-90` class so arc starts at 12 o'clock position (~line 38)
+- [ ] Active arc uses `strokeLinecap="round"` for rounded ends (~line 55)
+- [ ] Arc fill animates with `transition-all duration-1000` (~line 58)
+- [ ] Gauge color hex values: green `#22c55e` (>= 80), yellow `#eab308` (>= 60), orange `#f97316` (>= 40), red `#ef4444` (< 40) (~line 12-17)
+- [ ] Center value text uses `text-2xl font-bold text-ink` (~line 62)
+- [ ] Label text below gauge uses `text-sm font-medium text-ink-muted` (~line 65)
+
+### `src/components/ui/tabs.tsx` — Tabs Component Details
+
+- [ ] Active tab button style: `bg-surface-raised text-ink border border-border-subtle` (~line 36)
+- [ ] Inactive tab button style: `text-ink-muted hover:text-ink hover:bg-surface-raised/50` (~line 37)
+- [ ] Active tab count badge: `bg-brand/10 text-brand` (~line 48)
+- [ ] Inactive tab count badge: `bg-surface-raised text-ink-muted` (~line 49)
+- [ ] Count badge is rendered only when `tab.count !== undefined` (~line 41)
+
+### `src/components/ui/error-display.tsx` — Error Page Details
+
+- [ ] Error page reports errors to Sentry via `Sentry.captureException(error)` in a `useEffect` (~line 23-27)
+- [ ] Error page displays a `WarningCircle` icon (size 32) inside a red-tinted rounded container (~line 35-36)
+- [ ] Retry button text is "Try Again" with an `ArrowCounterClockwise` icon (size 16) (~line 43-46)
+
+### `src/app/(app)/analysis/loading.tsx` — Loading Skeleton Structure
+
+- [ ] Loading skeleton renders exactly 4 `Skeleton` elements: back-button placeholder (h-8 w-8 rounded-lg), title placeholder (h-6 w-40), textarea placeholder (flex-1 rounded-2xl), and a footer row with word-count placeholder (h-4 w-20) plus button placeholder (h-12 w-40 rounded-xl) (~lines 6-15)
+- [ ] Loading skeleton mirrors the page layout height: `h-[calc(100vh-7rem)]` (~line 5)
+
+### `src/app/(app)/analysis/page.tsx` — Additional UI Details
+
+- [ ] Page container uses `h-[calc(100vh-7rem)]` for viewport height minus header (~line 203)
+- [ ] Analyze button uses `rounded-xl px-6 py-3` — not rounded-lg (~line 344)
+- [ ] Legend swatches in results mode use `w-3 h-3 rounded` with both `bg-{color}-500/30` AND `border border-{color}-500` (~lines 245-255)
+- [ ] Results-mode reset button text is `← Analyze New Text` (using `&larr;` HTML entity), not "Back to Analyze New Text" (~line 464)
+- [ ] Results-mode reset button is styled as text link: `text-xs text-brand hover:text-brand-hover font-medium` (~line 462)
+- [ ] Results gauge value comes from `result.writingQuality.readabilityGrade` (API's Flesch-Kincaid grade), while instant gauge value comes from `clientMetrics.fleschReadingEase` (~line 500 vs ~line 360)
+- [ ] Results-mode Writing Quality `Passive Voice` MetricBar uses dynamic max: `Math.max(value, 10)` (~line 679)
+- [ ] Results-mode `Weasel Words` and `Adverbs` MetricBars use dynamic max: `Math.max(value, 10)` (~lines 688, 693)
+- [ ] Results-mode `Complex Sentences` MetricBar uses dynamic max: `Math.max(value, 5)` (~line 699)
+- [ ] Results-mode Readability Grade MetricBar has max of `100` (~line 642)
+- [ ] Results-mode Overall Risk is capitalized from raw value: `result.overallRisk.charAt(0).toUpperCase() + result.overallRisk.slice(1)` — displays "Low", "Medium", or "High" (~line 723)
+- [ ] Paragraph breakdown score pills use `px-2 py-0.5 rounded-full text-xs font-medium` with three color tiers matching the left-panel highlighting thresholds (~lines 741-748)
+- [ ] Plagiarism indicator cards include a `Sparkle` icon before the severity label, using the severity color (~line 615-616)
+- [ ] Plagiarism indicator concern line is plain text: `text-xs text-ink-muted` (~line 623)
+- [ ] Issues tab count in input mode (before results) shows `clientIssues.length` when clientIssues > 0, or `undefined` (hidden) when no issues (~line 147)
+- [ ] `ToneBadge` helper renders label left / colored badge right with three color options: emerald → `bg-emerald-500/10 text-emerald-500`, yellow → `bg-yellow-500/10 text-yellow-500`, red → `bg-red-500/10 text-red-500` (~lines 785-795)
+- [ ] `IssueBadge` helper renders count as `text-lg font-semibold` and label as `text-[10px]` with four color options: yellow → `text-yellow-600`, orange → `text-orange-600`, blue → `text-blue-600`, red → `text-red-600` (~lines 798-811)
+- [ ] `MetricBar` bar track is `h-1.5 rounded-full bg-surface-raised`; fill bar is `h-full rounded-full bg-brand transition-all` (~lines 774-779)
+- [ ] `MetricBar` value label format is `{value}{suffix}` with no space before the suffix string (~line 772)
+
+### `src/hooks/useRealtimeIntegrity.ts` — Hook Internals
+
+- [ ] Hook cancels in-flight requests via `AbortController` before starting a new check (~line 35-37)
+- [ ] Hook sends `mode: "ai_detection"` in the request body, not `"full"` (~line 49)
+- [ ] Hook extracts `result.aiDetection?.humanScore` from the API response (~line 59)
+- [ ] Hook ignores `AbortError` exceptions (cancelled requests are not treated as errors) (~line 62-65)
+- [ ] Hook cleanup on unmount aborts any pending request and clears the debounce timer (~line 107-116)
+
+---
+
+### Behavior Corrections (Pass 2)
+
+1. **Section 12 readability labels are WRONG for the library function.** The existing doc (lines 313-318) says the `writing-analysis.ts` labels are "Excellent" (>= 80) / "Good" (>= 60) / "Needs Improvement" (>= 40) / "Poor" (< 40). The ACTUAL `getReadabilityLabel` function in `src/lib/writing-analysis.ts` (lines 133-138) returns: **"Easy"** (>= 60) / **"Standard"** (>= 40) / **"Difficult"** (>= 20) / **"Very Difficult"** (< 20). Different labels AND different thresholds. The Additional Features section (line 706) already has the correct labels, but Section 12 was never corrected.
+
+2. **Rate limit returns 429, not 503.** The existing doc (line 356) says rate limiting returns status 503. The actual `checkRateLimit` function in `src/lib/rate-limit.ts` (lines 77, 94) returns **status 429** with `NextResponse.json`. The 503 status in the route is used for "AI not configured" and "AI detection failure" — two separate error paths.
+
+3. **Reset button text is "← Analyze New Text", not "Back to Analyze New Text".** Section 8 (line 194) says the link text is "Back to Analyze New Text". The actual JSX at `page.tsx` line 464 renders `&larr; Analyze New Text` — a left arrow followed by "Analyze New Text". There is no word "Back" in the button text.
+
+4. **Hedging phrases count is 35, not "23+".** Section 14 (line 377) says "23+ hedging phrases tracked". The actual `HEDGING_PHRASES` array in `ai-detection.ts` (lines 144-182) contains exactly **35** phrases. While "23+" is technically not false, it understates the count by 12.
+
+5. **Section 6 Readability label description is inconsistent.** Line 136 says the readability label is "Excellent / Good / Needs Improvement / Poor" but the instant metrics panel uses labels from `clientMetrics.readabilityLabel` which comes from `analyzeWriting()` — the library function that returns "Easy / Standard / Difficult / Very Difficult". The Additional Features section (lines 704-706) correctly documents this, but Section 6 was never updated.
+
+6. **The `Paste Text` toggle button has both modes using `bg-brand text-white` when active.** Line 633 says "Selected toggle uses `bg-brand text-white`" which is correct. However, the Paste Text button class (page.tsx lines 231-236) applies the same `bg-brand text-white` style when active — confirming both toggles share the exact same active style.
+
+7. **The page's `AnalysisResult` interface does not match the API's `IntegrityCheckResult` response shape.** The page defines `humanScore`, `aiScore`, `paragraphAnalysis`, `plagiarismIndicators` at the top level (page.tsx lines 29-41), but the API returns these nested under `aiDetection` and `plagiarism` (integrity/types.ts lines 145-165). This is a data contract mismatch — the page reads `result.humanScore` but the API sends `result.aiDetection.humanScore`.
+
+### Components Referenced But Not Rendered
+
+1. **`useRealtimeIntegrity` hook** — Listed in Section 17 and the Page Overview table (line 49), but the analysis page does NOT import or call this hook. The page implements its own debounced analysis via a local `useEffect` with `setTimeout` at 500ms. The hook (with 2000ms debounce and 100-char minimum) is designed for the Studio editor, not the standalone analysis page.
+
+2. **`analyzeText()` server action** — Listed in Section 16 (line 416), but the analysis page never calls this action. The page calls `analyzeWriting()` directly from the client-side library import, not through the server action.
+
+3. **`runWritingAnalysis()` server action** — Listed in Section 16 (line 415), but the analysis page never calls this action. It is available for other consumers but unused on `/analysis`.
