@@ -129,19 +129,19 @@ const ERROR_PATTERNS: ErrorPattern[] = [
 
   // ---- Reference/citation errors ----
   {
-    pattern: /Citation `([^']+)' on page \d+ undefined/,
+    pattern: /Citation [`']([^`']+)[`'] on page \d+ undefined/,
     explanation: "The citation key '$1' was not found in any .bib file.",
     suggestion: "Check that '$1' exists in your .bib file. Run BibTeX/Biber, then compile twice.",
     category: "reference",
   },
   {
-    pattern: /Reference `([^']+)' on page \d+ undefined/,
+    pattern: /Reference [`']([^`']+)[`'] on page \d+ undefined/,
     explanation: "The label '$1' referenced by \\ref or \\eqref does not exist.",
     suggestion: "Add \\label{$1} to the target element, or fix the label name in \\ref{$1}.",
     category: "reference",
   },
   {
-    pattern: /Label `([^']+)' multiply defined/,
+    pattern: /Label [`']([^`']+)[`'] multiply defined/,
     explanation: "The label '$1' is defined more than once. Labels must be unique.",
     suggestion: "Rename one of the duplicate \\label{$1} entries.",
     category: "reference",
