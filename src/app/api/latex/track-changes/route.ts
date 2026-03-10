@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getCurrentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { latexTrackChanges } from "@/lib/db/schema/editor";
 import { eq } from "drizzle-orm";
@@ -19,10 +19,7 @@ import { eq } from "drizzle-orm";
  */
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await getCurrentUserId();
 
     const searchParams = req.nextUrl.searchParams;
     const fileId = searchParams.get("fileId");
@@ -53,10 +50,7 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const userId = await getCurrentUserId();
 
     const body = await req.json();
     const {
@@ -116,10 +110,7 @@ export async function POST(req: NextRequest) {
  */
 export async function PATCH(req: NextRequest) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await getCurrentUserId();
 
     const body = await req.json();
     const { id, status } = body;
@@ -168,10 +159,7 @@ export async function PATCH(req: NextRequest) {
  */
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    await getCurrentUserId();
 
     const searchParams = req.nextUrl.searchParams;
     const id = searchParams.get("id");

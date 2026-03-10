@@ -18,6 +18,8 @@ import {
   latexEnvironmentCompletion,
 } from "./completions";
 import { aiCompletions } from "./ai-completion-extension";
+import { trackChanges, trackChangesCompartment, syncTrackChanges } from "./track-changes-extension";
+import type { TrackChange } from "@/types/track-changes";
 
 // Custom LaTeX-friendly highlight style
 const latexHighlightStyle = HighlightStyle.define([
@@ -132,6 +134,11 @@ const lightTheme = EditorView.theme({
 
 const themeCompartment = new Compartment();
 const highlightCompartment = new Compartment();
+const defaultTrackChangesAuthor: TrackChange["author"] = {
+  id: "local",
+  name: "You",
+  color: "#f59e0b",
+};
 
 /** Handle exposed by SourceEditor via forwardRef */
 export interface SourceEditorHandle {
@@ -165,10 +172,26 @@ interface SourceEditorProps {
   onSlashDismiss?: () => void;
   /** Called with the top visible line number when the editor scrolls */
   onScrollLine?: (line: number) => void;
+  trackChangesEnabled?: boolean;
+  trackChangesFileId?: string;
+  trackChangesAuthor?: TrackChange["author"];
+  pendingTrackChanges?: TrackChange[];
 }
 
 export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
-  function SourceEditor({ initialContent, onChange, className, getBibContent, onSlashTrigger, onSlashDismiss, onScrollLine }, ref) {
+  function SourceEditor({
+    initialContent,
+    onChange,
+    className,
+    getBibContent,
+    onSlashTrigger,
+    onSlashDismiss,
+    onScrollLine,
+    trackChangesEnabled = false,
+    trackChangesFileId = "",
+    trackChangesAuthor = defaultTrackChangesAuthor,
+    pendingTrackChanges = [],
+  }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
     const onChangeRef = useRef(onChange);
@@ -366,6 +389,13 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
             ],
           }),
           ...aiCompletions,
+          trackChangesCompartment.of(
+            trackChanges({
+              enabled: trackChangesEnabled,
+              fileId: trackChangesFileId,
+              author: trackChangesAuthor,
+            })
+          ),
 
           // Native browser spellcheck support for the editable surface
           EditorView.contentAttributes.of({
@@ -442,6 +472,27 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+      const view = viewRef.current;
+      if (!view) return;
+
+      view.dispatch({
+        effects: trackChangesCompartment.reconfigure(
+          trackChanges({
+            enabled: trackChangesEnabled,
+            fileId: trackChangesFileId,
+            author: trackChangesAuthor,
+          })
+        ),
+      });
+    }, [trackChangesAuthor, trackChangesEnabled, trackChangesFileId]);
+
+    useEffect(() => {
+      const view = viewRef.current;
+      if (!view) return;
+      syncTrackChanges(view, pendingTrackChanges, view.state.doc.toString());
+    }, [pendingTrackChanges]);
 
     return (
       <div

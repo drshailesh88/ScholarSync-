@@ -17,11 +17,14 @@ import { InlineAiBar } from "./inline-ai-bar";
 import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
 import { YjsCollaborationProvider } from "./collaboration-provider";
 import { CommentPanel } from "./comment-panel";
+import { TrackChangesPanel } from "./track-changes-panel";
+import { acceptTrackChange, computeDiff, rejectTrackChange } from "./track-changes-extension";
 import {
   SidebarSimple,
   ChatCircle,
   FolderOpen,
   Image as ImageIcon,
+  GitBranch,
   X,
   Eye,
   Code,
@@ -48,9 +51,18 @@ interface LatexWorkspaceProps {
 }
 
 export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
+  const setActiveFileId = useLatexEditorStore((s) => s.setActiveFileId);
   const documentContent = useLatexEditorStore((s) => s.documentContent);
   const setDocumentContent = useLatexEditorStore((s) => s.setDocumentContent);
   const setBibContent = useLatexEditorStore((s) => s.setBibContent);
+  const activeFileId = useLatexEditorStore((s) => s.activeFileId);
+  const pendingChanges = useLatexEditorStore((s) => s.pendingChanges);
+  const setPendingChanges = useLatexEditorStore((s) => s.setPendingChanges);
+  const acceptChange = useLatexEditorStore((s) => s.acceptChange);
+  const rejectChange = useLatexEditorStore((s) => s.rejectChange);
+  const acceptAllChanges = useLatexEditorStore((s) => s.acceptAllChanges);
+  const rejectAllChanges = useLatexEditorStore((s) => s.rejectAllChanges);
+  const setShadowDocument = useLatexEditorStore((s) => s.setShadowDocument);
   const setSaveState = useLatexEditorStore((s) => s.setSaveState);
   const setLastSavedAt = useLatexEditorStore((s) => s.setLastSavedAt);
   const fileTreeOpen = useLatexEditorStore((s) => s.fileTreeOpen);
@@ -63,6 +75,8 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const setCompiledPdfUrl = useLatexEditorStore((s) => s.setCompiledPdfUrl);
   const setPreviewMode = useLatexEditorStore((s) => s.setPreviewMode);
   const viewMode = useLatexEditorStore((s) => s.viewMode);
+  const editingMode = useLatexEditorStore((s) => s.editingMode);
+  const setProjectTitle = useLatexEditorStore((s) => s.setProjectTitle);
 
   // Responsive hook
   const { isMobile, isTablet, minTouchTarget } = useMediaQuery();
@@ -76,6 +90,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   // Managed file list (mutable after create/rename/delete)
   const [files, setFiles] = useState<LatexFile[]>(initialFiles);
   const filesRef = useRef(files);
+  const loadedTrackChangesFileIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     filesRef.current = files;
@@ -102,7 +117,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const [editorTopLine, setEditorTopLine] = useState(1);
 
   // Sidebar tab state (files vs figures vs comments)
-  const [sidebarTab, setSidebarTab] = useState<"files" | "figures" | "comments">("files");
+  const [sidebarTab, setSidebarTab] = useState<"files" | "figures" | "comments" | "changes">("files");
 
   // Error diagnostics from compilation
   const [diagnostics, setDiagnostics] = useState<CompilationDiagnostic[]>([]);
@@ -124,18 +139,160 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   // Debounced auto-save
   const saveTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
+  useEffect(() => {
+    const main = files.find((f) => f.isMain) ?? files[0];
+    if (!main) return;
+    setProjectTitle(project.title);
+    if (!activeFileId) {
+      setActiveFileId(main.id);
+      setDocumentContent(main.content ?? "");
+      setShadowDocument(main.content ?? "");
+    }
+  }, [activeFileId, files, project.title, setActiveFileId, setDocumentContent, setProjectTitle, setShadowDocument]);
+
+  useEffect(() => {
+    if (!activeFileId) return;
+    if (loadedTrackChangesFileIdRef.current === activeFileId) return;
+    loadedTrackChangesFileIdRef.current = activeFileId;
+
+    let cancelled = false;
+    fetch(`/api/latex/track-changes?fileId=${activeFileId}`)
+      .then(async (res) => {
+        if (!res.ok) return { changes: [] };
+        return res.json() as Promise<{
+          changes: Array<{
+            id: string;
+            type: "insert" | "delete" | "replace";
+            fromPos: number;
+            toPos: number;
+            insertedText: string | null;
+            deletedText: string | null;
+            authorId: string;
+            authorName: string;
+            status: "pending" | "accepted" | "rejected";
+            createdAt: string;
+          }>;
+        }>;
+      })
+      .then((data) => {
+        if (cancelled) return;
+        setPendingChanges(
+          data.changes.map((change) => ({
+            id: change.id,
+            type: change.type,
+            from: change.fromPos,
+            to: change.toPos,
+            insertedText: change.insertedText ?? undefined,
+            deletedText: change.deletedText ?? undefined,
+            author: {
+              id: change.authorId,
+              name: change.authorName,
+              color: "#f59e0b",
+            },
+            timestamp: new Date(change.createdAt).getTime(),
+            status: change.status,
+          }))
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setPendingChanges([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeFileId, setPendingChanges]);
+
+  const persistTrackChanges = useCallback(async (fileId: string, changes: import("@/types/track-changes").TrackChange[]) => {
+    for (const change of changes) {
+      try {
+        const res = await fetch("/api/latex/track-changes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileId,
+            type: change.type,
+            fromPos: change.from,
+            toPos: change.to,
+            insertedText: change.insertedText,
+            deletedText: change.deletedText,
+            authorName: change.author.name,
+          }),
+        });
+
+        if (!res.ok) continue;
+        const data = await res.json() as {
+          change: {
+            id: string;
+            type: "insert" | "delete" | "replace";
+            fromPos: number;
+            toPos: number;
+            insertedText: string | null;
+            deletedText: string | null;
+            authorId: string;
+            authorName: string;
+            status: "pending" | "accepted" | "rejected";
+            createdAt: string;
+          };
+        };
+
+        const state = useLatexEditorStore.getState();
+        state.setPendingChanges(
+          state.pendingChanges.map((pending) =>
+            pending.id === change.id
+              ? {
+                  id: data.change.id,
+                  type: data.change.type,
+                  from: data.change.fromPos,
+                  to: data.change.toPos,
+                  insertedText: data.change.insertedText ?? undefined,
+                  deletedText: data.change.deletedText ?? undefined,
+                  author: {
+                    id: data.change.authorId,
+                    name: data.change.authorName,
+                    color: change.author.color,
+                  },
+                  timestamp: new Date(data.change.createdAt).getTime(),
+                  status: data.change.status,
+                }
+              : pending
+          )
+        );
+      } catch {
+        // Keep the local pending change even if persistence fails.
+      }
+    }
+  }, []);
+
   const handleEditorChange = useCallback(
     (content: string) => {
+      const state = useLatexEditorStore.getState();
+      const previousContent = state.documentContent;
       setDocumentContent(content);
       setSaveState("unsaved");
 
       // Also update the local file list so FileTree stays in sync
-      const currentFileId = useLatexEditorStore.getState().activeFileId;
+      const currentFileId = state.activeFileId;
       if (currentFileId) {
         setFiles((prev) =>
           prev.map((f) => f.id === currentFileId ? { ...f, content } : f)
         );
       }
+
+      if (editingMode === "suggest" && content !== previousContent && currentFileId) {
+        const newChanges = computeDiff(previousContent, content, {
+          id: "local-user",
+          name: "You",
+          color: "#f59e0b",
+        }).filter((change) => change.insertedText || change.deletedText);
+
+        if (newChanges.length > 0) {
+          setPendingChanges([...state.pendingChanges, ...newChanges]);
+          void persistTrackChanges(currentFileId, newChanges);
+        }
+      }
+
+      setShadowDocument(content);
 
       // Debounce save to DB
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -152,8 +309,52 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         }
       }, 1500);
     },
-    [setDocumentContent, setSaveState, setLastSavedAt]
+    [editingMode, persistTrackChanges, setDocumentContent, setLastSavedAt, setPendingChanges, setSaveState, setShadowDocument]
   );
+
+  const handleAcceptChange = useCallback((id: string) => {
+    const state = useLatexEditorStore.getState();
+    const change = state.pendingChanges.find((entry) => entry.id === id);
+    if (!change) return;
+    const view = editorRef.current?.getView();
+    if (view) {
+      acceptTrackChange(view, change);
+    }
+    acceptChange(id);
+  }, [acceptChange]);
+
+  const handleRejectChange = useCallback((id: string) => {
+    const state = useLatexEditorStore.getState();
+    const change = state.pendingChanges.find((entry) => entry.id === id);
+    if (!change) return;
+    const view = editorRef.current?.getView();
+    if (view) {
+      rejectTrackChange(view, change);
+    }
+    rejectChange(id);
+  }, [rejectChange]);
+
+  const handleAcceptAllChanges = useCallback(() => {
+    const state = useLatexEditorStore.getState();
+    const view = editorRef.current?.getView();
+    const active = state.pendingChanges.filter((change) => change.status === "pending");
+    if (view) {
+      active.forEach((change) => acceptTrackChange(view, change));
+    }
+    acceptAllChanges();
+  }, [acceptAllChanges]);
+
+  const handleRejectAllChanges = useCallback(() => {
+    const state = useLatexEditorStore.getState();
+    const view = editorRef.current?.getView();
+    const active = state.pendingChanges
+      .filter((change) => change.status === "pending")
+      .sort((a, b) => b.from - a.from);
+    if (view) {
+      active.forEach((change) => rejectTrackChange(view, change));
+    }
+    rejectAllChanges();
+  }, [rejectAllChanges]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -670,6 +871,19 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                 <ChatCircle size={12} />
                 Comments
               </button>
+              <button
+                onClick={() => setSidebarTab("changes")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 text-[10px] font-medium transition-colors",
+                  sidebarTab === "changes"
+                    ? "text-brand border-b-2 border-brand -mb-px"
+                    : "text-ink-muted hover:text-ink"
+                )}
+                style={{ minHeight: isMobile ? minTouchTarget : undefined }}
+              >
+                <GitBranch size={12} />
+                Changes
+              </button>
             </div>
 
             {/* Tab content */}
@@ -684,6 +898,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                 }}
                 onFileSelect={(file) => {
                   editorRef.current?.setContent(file.content ?? "");
+                  setShadowDocument(file.content ?? "");
                   if (isMobile) toggleFileTree(); // Close on mobile after selection
                 }}
                 onDraftSection={(title) => {
@@ -701,7 +916,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                   if (isMobile) toggleFileTree(); // Close on mobile after insertion
                 }}
               />
-            ) : (
+            ) : sidebarTab === "comments" ? (
               <CommentPanel
                 fileId={mainFile?.id ?? ""}
                 projectId={project.id}
@@ -710,6 +925,15 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                   handleJumpToLine(line);
                   if (isMobile) toggleFileTree(); // Close on mobile after selection
                 }}
+              />
+            ) : (
+              <TrackChangesPanel
+                _fileId={activeFileId ?? mainFile?.id ?? ""}
+                changes={pendingChanges}
+                onAccept={handleAcceptChange}
+                onReject={handleRejectChange}
+                onAcceptAll={handleAcceptAllChanges}
+                onRejectAll={handleRejectAllChanges}
               />
             )}
           </aside>
@@ -747,6 +971,9 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                   setSlashMenu({ visible: false, filter: "", position: { top: 0, left: 0 } })
                 }
                 onScrollLine={setEditorTopLine}
+                trackChangesEnabled={editingMode === "suggest"}
+                trackChangesFileId={activeFileId ?? mainFile?.id ?? ""}
+                pendingTrackChanges={pendingChanges}
               />
             )}
           </div>

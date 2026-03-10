@@ -5,7 +5,7 @@
  */
 
 import { Compartment, type Range } from "@codemirror/state";
-import { EditorView, Decoration, DecorationSet, ViewPlugin, ViewUpdate } from "@codemirror/view";
+import { EditorView, Decoration, DecorationSet, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 import { type TrackChange } from "@/types/track-changes";
 
 // DiffMatchPatch for computing diffs
@@ -118,7 +118,7 @@ function createDecorations(changes: TrackChange[]): DecorationSet {
 }
 
 /**
- * View plugin to handle track changes mode
+ * View plugin to render track changes decorations
  */
 const trackChangesPlugin = ViewPlugin.fromClass(
   class {
@@ -128,110 +128,16 @@ const trackChangesPlugin = ViewPlugin.fromClass(
       const config = view.state.facet(trackChangesConfigFacet);
       const state = view.state.field(trackChangesField);
 
-      // Initialize shadow doc if not set
-      if (!state.shadowDoc) {
-        view.dispatch({
-          effects: setShadowDoc.of(view.state.doc.toString()),
-        });
-      }
-
       this.decorations = config.enabled
-        ? createDecorations(view.state.field(trackChangesField).changes)
+        ? createDecorations(state.changes)
         : Decoration.none;
     }
 
     update(update: ViewUpdate) {
       const config = update.state.facet(trackChangesConfigFacet);
-      const state = update.state.field(trackChangesField);
-
-      // If track changes is disabled, clear decorations
-      if (!config.enabled) {
-        this.decorations = Decoration.none;
-
-        // Update shadow doc when not in track changes mode
-        if (update.docChanged) {
-          const newShadowDoc = update.state.doc.toString();
-          if (state.shadowDoc !== newShadowDoc) {
-            update.view.dispatch({
-              effects: setShadowDoc.of(newShadowDoc),
-            });
-          }
-        }
-        return;
-      }
-
-      // Track changes is enabled
-      if (update.docChanged && state.shadowDoc) {
-        const currentDoc = update.state.doc.toString();
-
-        // Only compute diffs if shadow doc is set
-        if (state.shadowDoc) {
-          // Compute diff between shadow doc and current doc
-          const diffs = dmp.diff_main(state.shadowDoc, currentDoc);
-          dmp.diff_cleanupSemantic(diffs);
-
-          // Convert diffs to TrackChange objects
-          const newChanges: TrackChange[] = [];
-          let pos = 0;
-          for (const [operation, text] of diffs) {
-            const textLen = text.length;
-
-            if (operation === DiffMatchPatch.DIFF_INSERT) {
-              // Insertion
-              const change: TrackChange = {
-                id: crypto.randomUUID(),
-                type: "insert",
-                from: pos,
-                to: pos + textLen,
-                insertedText: text,
-                author: config.author,
-                timestamp: Date.now(),
-                status: "pending",
-              };
-              newChanges.push(change);
-              pos += textLen;
-            } else if (operation === DiffMatchPatch.DIFF_DELETE) {
-              // Deletion
-              const change: TrackChange = {
-                id: crypto.randomUUID(),
-                type: "delete",
-                from: pos,
-                to: pos, // Deletions don't take up space in new doc
-                deletedText: text,
-                author: config.author,
-                timestamp: Date.now(),
-                status: "pending",
-              };
-              newChanges.push(change);
-            } else {
-              // Equal - no change
-              pos += textLen;
-            }
-          }
-
-          // Notify parent of new changes
-          if (newChanges.length > 0) {
-            config.onChangesDetected?.(newChanges);
-
-            // Add changes to state and revert document
-            update.view.dispatch({
-              effects: [
-                setTrackChanges.of([...state.changes, ...newChanges]),
-                setShadowDoc.of(state.shadowDoc), // Keep shadow doc
-              ],
-              // Revert the document to shadow doc
-              changes: {
-                from: 0,
-                to: update.state.doc.length,
-                insert: state.shadowDoc,
-              },
-            });
-          }
-        }
-      }
-
-      // Update decorations
-      this.decorations = createDecorations(update.state.field(trackChangesField).changes);
+      this.decorations = config.enabled
+        ? createDecorations(update.state.field(trackChangesField).changes)
+        : Decoration.none;
     }
   },
   {
@@ -281,26 +187,14 @@ export function acceptTrackChange(
   view: EditorView,
   change: TrackChange
 ) {
-  const { from, to, insertedText, type } = change;
-
-  if (type === "insert" && insertedText) {
-    // Apply insertion
-    view.dispatch({
-      changes: { from, to, insert: insertedText },
-      effects: [setShadowDoc.of(view.state.doc.toString() + insertedText)],
-    });
-  } else if (type === "delete") {
-    // Apply deletion - remove the text
-    view.dispatch({
-      changes: { from, to, insert: "" },
-      effects: [setShadowDoc.of(view.state.doc.toString())],
-    });
-  } else if (type === "replace" && insertedText) {
-    view.dispatch({
-      changes: { from, to, insert: insertedText },
-      effects: [setShadowDoc.of(view.state.doc.toString())],
-    });
-  }
+  const state = view.state.field(trackChangesField);
+  const updatedChanges = state.changes.filter((c) => c.id !== change.id);
+  view.dispatch({
+    effects: [
+      setTrackChanges.of(updatedChanges),
+      setShadowDoc.of(view.state.doc.toString()),
+    ],
+  });
 }
 
 /**
@@ -308,14 +202,55 @@ export function acceptTrackChange(
  */
 export function rejectTrackChange(
   view: EditorView,
-  changeId: string
+  change: TrackChange
 ) {
   const state = view.state.field(trackChangesField);
-  const updatedChanges = state.changes.filter((c) => c.id !== changeId);
+  const updatedChanges = state.changes.filter((c) => c.id !== change.id);
+
+  if (change.type === "insert" && change.insertedText) {
+    view.dispatch({
+      changes: { from: change.from, to: change.to, insert: "" },
+      effects: [
+        setTrackChanges.of(updatedChanges),
+        setShadowDoc.of(view.state.doc.sliceString(0, change.from) + view.state.doc.sliceString(change.to)),
+      ],
+    });
+    return;
+  }
+
+  if (change.type === "delete" && change.deletedText) {
+    view.dispatch({
+      changes: { from: change.from, to: change.from, insert: change.deletedText },
+      effects: [
+        setTrackChanges.of(updatedChanges),
+        setShadowDoc.of(
+          view.state.doc.sliceString(0, change.from) +
+          change.deletedText +
+          view.state.doc.sliceString(change.from)
+        ),
+      ],
+    });
+    return;
+  }
 
   view.dispatch({
-    effects: setTrackChanges.of(updatedChanges),
+    effects: [
+      setTrackChanges.of(updatedChanges),
+      setShadowDoc.of(view.state.doc.toString()),
+    ],
   });
+}
+
+export function syncTrackChanges(
+  view: EditorView,
+  changes: TrackChange[],
+  shadowDoc?: string
+) {
+  const effects: Array<StateEffect<TrackChange[]> | StateEffect<string>> = [setTrackChanges.of(changes)];
+  if (shadowDoc != null) {
+    effects.push(setShadowDoc.of(shadowDoc));
+  }
+  view.dispatch({ effects });
 }
 
 /**
