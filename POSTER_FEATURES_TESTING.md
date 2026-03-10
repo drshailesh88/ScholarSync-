@@ -811,3 +811,215 @@
 - [ ] Invalid or inaccessible poster loads redirect toward `/poster` rather than rendering a dedicated recovery page with a retry action
 - [ ] There is no `src/app/api/export/poster-pdf/route.ts` in the current source tree even though the editor posts to that endpoint
 - [ ] There are no route-level `loading.tsx` or `error.tsx` files under `src/app/(app)/poster`
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+### Wizard Step Subcopy
+
+- [ ] Step 0 renders subcopy "Choose where to generate your poster from" below the heading
+- [ ] Step 1 renders subcopy "Choose dimensions and a poster template" below the heading
+- [ ] Step 3 renders subcopy "AI is creating your conference poster" below the heading
+
+### Source Card Descriptions
+
+- [ ] "From Papers" source card description reads "Select papers from your library"
+- [ ] "From Document" source card description reads "Use a synthesis document"
+- [ ] "From Text" source card description reads "Paste content directly"
+- [ ] "Reference Library" source card description reads "Import from Zotero, BibTeX, DOI"
+- [ ] "From URL" source card description reads "Paste a link to any web page"
+- [ ] "Import Deck" source card description reads "Upload an existing PowerPoint"
+- [ ] Source card descriptions render at `text-[10px] opacity-60` below the label
+
+### Deep Research Card Details
+
+- [ ] Deep Research card description text reads "Import findings from a Deep Research session"
+- [ ] Deep Research active state: icon and label text change to `text-brand`
+- [ ] Deep Research inactive state: icon uses `text-ink-muted`, label uses `text-ink`
+
+### Wizard Field Labels
+
+- [ ] Step 1 "Poster Size" field label renders as `text-sm font-medium text-ink`
+- [ ] Step 1 "Grid Layout" field label renders as `text-sm font-medium text-ink`
+- [ ] Step 1 "Poster Template" label appends `(optional)` in `text-ink-muted font-normal`
+- [ ] Step 2 "Theme" field label renders as `text-sm font-medium text-ink`
+- [ ] Step 2 "Additional Instructions" label appends `(optional)` in `text-ink-muted font-normal`
+- [ ] Step 2 "Poster Title" field label renders as `text-sm font-medium text-ink`
+
+### Poster Size Exact Labels
+
+- [ ] `a0_portrait` label string is "A0 Portrait (841 x 1189 mm)"
+- [ ] `a0_landscape` label string is "A0 Landscape (1189 x 841 mm)"
+- [ ] `a1_portrait` label string is "A1 Portrait (594 x 841 mm)"
+- [ ] `a1_landscape` label string is "A1 Landscape (841 x 594 mm)"
+- [ ] `48x36` label string is "48 x 36 inches (US Standard)"
+- [ ] `36x24` label string is "36 x 24 inches (Small)"
+
+### Grid Layout Exact Labels & Descriptions
+
+- [ ] `three_column` label is "Three Column" with description "Classic 3-column academic poster layout"
+- [ ] `two_column_wide` label is "Two Column (Wide)" with description "Two wide columns for text-heavy posters"
+- [ ] `four_column` label is "Four Column" with description "Four narrow columns for data-dense posters"
+- [ ] `two_plus_one` label is "2 + 1 Split" with description "Two narrow columns + one wide results column"
+
+### Template Exact Descriptions
+
+- [ ] Clinical Research template description is "Standard IMRAD poster for clinical studies with emphasis on results"
+- [ ] Basic Science template description is "Lab research poster with detailed methodology and data visualization"
+- [ ] Systematic Review template description is "PRISMA-compliant poster for systematic reviews and meta-analyses"
+- [ ] Engineering/CS template description is "Technical poster for engineering and computer science research"
+- [ ] Engineering/CS template key in `POSTER_TEMPLATES` is `engineering` (not `engineering_cs`)
+
+### Step Indicator Rendering Details
+
+- [ ] Non-completed steps display their 1-based number (`i + 1`) inside the circle
+- [ ] Future step circles use `bg-surface-raised text-ink-muted border border-border`
+- [ ] Current step circle uses `bg-brand/10 text-brand border border-brand`
+- [ ] Steps are separated by `w-8 h-px bg-border mx-1` horizontal divider lines
+- [ ] Current step label uses `text-ink font-medium`; non-current labels use `text-ink-muted`
+
+### Wizard Selection Grid Responsiveness
+
+- [ ] Poster size selection grid uses `grid-cols-2 sm:grid-cols-3` (responsive)
+- [ ] Grid layout selection grid uses `grid-cols-2`
+- [ ] Template selection grid uses `grid-cols-2`
+
+### Template Structure Preview Details
+
+- [ ] Template structure expanded list has `max-h-64 overflow-y-auto` for scrollable content
+- [ ] Template section numbers use `font-mono w-5 shrink-0 text-right` styling
+- [ ] Template guidance text uses `line-clamp-1` to truncate to one line
+
+### Theme Count
+
+- [ ] `PRESET_THEMES` contains more than 7 themes (approximately 32 total); the 7-column wizard grid and 4-column editor grid wrap to multiple rows
+
+### PosterRenderer Root & Typography
+
+- [ ] PosterRenderer root element has `shadow-lg` class for drop shadow
+- [ ] Poster body text uses `fontFamily: theme.fontFamily ?? "Inter, sans-serif"`
+- [ ] Poster title and section headings use `theme.headingFontFamily`
+- [ ] Poster content container has `padding: "1.5em"`
+
+### Title Section Identification Logic
+
+- [ ] Title section is determined by finding the first section where `colSpan >= columns` (the grid column count)
+- [ ] Content sections are filtered as those where `!colSpan || colSpan < columns`
+- [ ] Fallback title bar (no full-width section found) uses solid `primaryColor` background with no gradient, and renders only the title text (no authors or affiliations)
+
+### Title Bar Rendering Specifics
+
+- [ ] Title bar gradient renders only when BOTH `theme.gradientFrom` and `theme.gradientTo` exist; otherwise solid `primaryColor`
+- [ ] Authors are joined with `", "` separator
+- [ ] Affiliations are joined with `"; "` separator
+- [ ] Authors text uses `opacity-90`
+- [ ] Affiliations text uses `opacity-75`
+- [ ] Title section renders its own `contentBlocks` below affiliations if any exist, with text forced to white
+- [ ] Title bar has `rounded-[0.4em]` with `mb-[1em]` bottom margin and `p-[1.2em]` padding
+
+### Section Card Rendering Specifics
+
+- [ ] Section card body background is `theme.surfaceColor ?? theme.backgroundColor`
+- [ ] Section header has a bottom border: `2px solid ${theme.primaryColor}30` (separate from the outer card border)
+- [ ] Section heading renders at `text-[1em] font-bold` in `theme.primaryColor`
+- [ ] Sections with `colSpan` use CSS `gridColumn: span N` to span multiple grid columns
+- [ ] Section content area has `p-[0.8em]` padding
+
+### Content Block Enhancements
+
+- [ ] Image blocks render via `next/Image` with `unoptimized` prop when a URL is present
+- [ ] Image placeholder box is `h-[6em]` tall (smaller than the `max-h-[12em]` for actual images)
+- [ ] Image blocks support an optional `caption` below the image at `text-[0.55em] opacity-50`
+- [ ] Chart blocks display an optional `title` above the chart in `text-[0.7em] font-medium` styled in `primaryColor`
+- [ ] Chart types beyond bar/line/pie (scatter, area, radar, funnel, forest_plot, donut, stacked_bar, waterfall, gauge, treemap) all render as horizontal bars via the same non-pie code path
+- [ ] Citation block shows source attribution as `"— {source}"` below the cited text at `text-[0.85em] opacity-60`
+- [ ] Quote block wraps content in a `<blockquote>` element with `accentColor` left border and shows `"— {attribution}"` below
+- [ ] Math block renders inside a container box with `surfaceColor` background and themed border
+- [ ] Math block supports `displayMode` boolean property (inline vs. display mode rendering in KaTeX)
+- [ ] Math block uses `throwOnError: false` so invalid expressions render as red "Invalid LaTeX" text instead of throwing
+- [ ] Math, diagram, and code blocks all support an optional `caption` rendered below their content
+- [ ] Code block uses `theme.codeBackground ?? "#1E1E2E"` for background and `#E2E8F0` for text color
+- [ ] Callout block supports an optional `title` rendered in bold (`text-[0.7em] font-bold`) with the callout type's border color
+- [ ] Stat result block displays `{label}: {value}` with the value in `text-[0.9em] font-bold` styled in `theme.primaryColor`
+- [ ] Stat result block shows optional CI (`CI: {ci}`) and p-value (`p = {pValue}`) as sub-details at `text-[0.55em] opacity-60`
+- [ ] Stat result block shows optional `interpretation` in italic below CI/p-value
+- [ ] Bibliography entries format as `[{id}] {formatted}` where `id` falls back to `i + 1` when the entry id is non-numeric
+- [ ] Bibliography entries show an optional `doi:{doi}` suffix at `opacity-60`
+- [ ] Timeline entry dots are colored by status: `completed` = `#10B981`, `in_progress` = `theme.primaryColor`, other/upcoming = `#9CA3AF`
+- [ ] Timeline entries show label, optional date (at `text-[0.55em] opacity-50`), and optional description
+- [ ] Timeline block supports an optional `title` above entries in `text-[0.7em] font-medium` styled in `primaryColor`
+- [ ] Divider block supports a `style` property with values `"solid"`, `"dashed"`, or `"gradient"` (defaults to `"solid"`)
+
+### Editor Right Sidebar Headers
+
+- [ ] Right sidebar theme section header reads `THEME` in `text-xs font-semibold text-ink-muted tracking-wide`
+- [ ] Editor theme tiles render a `w-3 h-3 rounded-full` colored circle in `primaryColor` (not the theme name text used in the wizard)
+- [ ] Right sidebar section details header reads `SECTION DETAILS` in `text-xs font-semibold text-ink-muted tracking-wide`
+- [ ] Content blocks label in section details shows count: `Content Blocks ({N})`
+- [ ] Block type in section details is displayed in `font-mono text-brand` styling
+
+### Editor Toolbar Dividers
+
+- [ ] A `w-px h-5 bg-border mx-1` vertical divider separates zoom controls from the panel toggle buttons
+- [ ] A second identical vertical divider separates panel toggle buttons from the Export PDF button
+
+### Editor Layout Structure
+
+- [ ] Editor page root uses `h-[calc(100vh-5rem)]` with `-m-6` for full-height layout
+- [ ] Canvas area has `p-8` padding around the scaled poster
+
+### Fallback Reconstruction Specifics
+
+- [ ] Fallback reconstruction gives the first content section (sortOrder=1) `colSpan: 3` in addition to the title bar
+- [ ] Fallback reconstruction section IDs use format `section_${slide.id}`
+- [ ] Fallback reconstruction section titles fall back to `Section ${i + 1}` when slide title is null
+- [ ] Fallback reconstruction calculates position as `column: i % 3`, `row: Math.floor(i / 3) + 1`
+
+### API Route Implementation Details
+
+- [ ] API creates deck with `audienceType: "poster_session"` and `sourceType: "custom"`
+- [ ] API stores `generationPrompt: body.additionalInstructions` during the "processing" status update
+- [ ] API strips markdown code fences from AI response before `JSON.parse`
+- [ ] Metadata slide (sortOrder 0) is created with `layout: "title_slide"`
+- [ ] Section slides (sortOrder 1+) are created with `layout: "title_content"`
+- [ ] API updates `totalSlides: sections.length + 1` and `theme: themeKey` on completion
+- [ ] On generation failure, deck status is updated to `"failed"` (in addition to processing/completed)
+- [ ] 400 validation error response body: `{ error: "Invalid request body", details: parseResult.error.flatten().fieldErrors }`
+- [ ] `projectId` is validated as `z.number().int().positive().optional()` (must be a positive integer if provided)
+
+### ProgressItem & Success Icon Details
+
+- [ ] ProgressItem loading state text uses `text-brand` color
+- [ ] ProgressItem done state text uses `text-ink` color
+- [ ] ProgressItem error state text uses `text-red-500` color
+- [ ] ProgressItem pending state text uses `text-ink-muted` color
+- [ ] ProgressItem done state `Check` icon uses `weight="bold"` with `text-green-500`
+- [ ] Generation success banner `Check` icon uses `weight="bold"`
+
+### Error Message Exact Strings
+
+- [ ] Non-OK preprocess HTTP response throws `"Preprocessing failed"`
+- [ ] Missing response body reader throws `"No response body"`
+- [ ] Non-OK generate HTTP response throws `"Poster generation failed"`
+- [ ] Preprocess catch fallback error message is `"Preprocessing failed"`
+- [ ] Generate catch fallback error message is `"Generation failed"`
+
+### POSTER_SIZES pdfPoints Dimensions
+
+- [ ] Each poster size in `POSTER_SIZES` defines a `pdfPoints` object with `width` and `height` in PDF point units
+- [ ] `a0_portrait` pdfPoints: width 2384, height 3370
+- [ ] `a0_landscape` pdfPoints: width 3370, height 2384
+- [ ] `a1_portrait` pdfPoints: width 1684, height 2384
+- [ ] `a1_landscape` pdfPoints: width 2384, height 1684
+- [ ] `48x36` pdfPoints: width 3456, height 2592
+- [ ] `36x24` pdfPoints: width 2592, height 1728
+
+### Behavior Corrections (Pass 2)
+
+All Codex pass 1 behavior corrections verified as still accurate — no changes needed.
+
+### Components Referenced But Not Rendered
+
+- `ReferenceImportPanel` is imported by `source-selector.tsx` but never renders in the poster wizard because `NewPosterPage` does not pass `onReferencesSelected` to `SourceSelector`
+- `UrlSourceInput` (internal to `source-selector.tsx`) never renders in the poster wizard because `NewPosterPage` does not pass `onUrlSourcesChange` to `SourceSelector`

@@ -3,22 +3,39 @@
 **Original doc:** `POSTER_FEATURES_TESTING.md`
 **Original checkbox count:** 212
 **Features found in UI:** 311
-**Features found in source code:** 388
-**Missing from doc:** 176
-**Completeness of original doc:** 54.6%
+**Features found in source code (Codex pass 1):** 388
+**Features found in source code (Claude Code pass 2):** 515
+**Missing from doc (before Codex pass 1):** 176
+**Added by Codex pass 1:** 176
+**Added by Claude Code pass 2:** 127
+**Completeness of original doc:** 41.2%
 
-## Missing Features
+## Missing Features (Addressed by Pass 2)
 
-### Detailed QA Coverage
-- [ ] Real Step 0 defaults and gating, including `From Text` as the default source, disabled `Next` on first load, and the exact `> 50` trimmed-character threshold
-- [ ] Source-specific field behavior for paper IDs, document ID, deep-research session ID, and imported `.pptx` decks, including parse errors, imported slide preview limits, and title/raw-text hydration
-- [ ] The fact that `Reference Library` and `From URL` render as source cards in the poster wizard but their interactive panels are not wired in `NewPosterPage`
-- [ ] Step 1 selection persistence, template toggle-off behavior, and the exact size/layout card rendering states
-- [ ] Step 2 title validation, theme-swatch generation from `PRESET_THEMES`, template-structure expand/collapse details, and immediate Step 3 transition behavior
-- [ ] Step 3 streaming preprocess logic, 500 ms auto-triggered generation, retry branching, inline success/error banners, and exact request payloads for preprocess and generate calls
-- [ ] Poster editor loading and reconstruction flow, including metadata-first hydration, slide-based fallback reconstruction, and redirect behavior for missing decks
-- [ ] Toolbar clamp behavior, panel default visibility, right-sidebar read-only section details, local-only theme changes, and non-persistent editor state
-- [ ] Renderer-level behavior for title-bar fallbacks, QR footer gating, placeholder images, pie/bar chart rendering, KaTeX fallback text, Mermaid loading/error states, and the actual export request/download naming rules
+### Detailed QA Coverage Added
+- Wizard step subcopy text for Steps 0, 1, and 3
+- Source card description text for all 7 source types
+- Deep Research card active/inactive styling and description
+- Wizard field labels with exact text and styling
+- Poster size exact label strings from `POSTER_SIZES`
+- Grid layout exact labels and descriptions from `POSTER_GRID_LAYOUTS`
+- Template exact descriptions and the `engineering` key name
+- Step indicator number rendering, dividers, and precise styling per state
+- Wizard selection grid responsive breakpoints
+- Template structure preview scroll behavior and guidance truncation
+- Theme count (~32 PRESET_THEMES vs. original 7 assumption)
+- PosterRenderer root shadow, typography, padding, title section identification logic
+- Title bar gradient conditions, author/affiliation separators, opacity, and contentBlock rendering
+- Section card body background fallback, header bottom border, heading styling
+- Content block enhancements: image captions, chart titles, chart type fallback behavior, citation/quote attributions, math container/displayMode/throwOnError, code colors, callout titles, stat result sub-fields, bibliography format/doi, timeline status colors/details, divider style property
+- Editor right sidebar "THEME" and "SECTION DETAILS" headers, tile rendering difference (circles vs. text), content block count label, font-mono type display
+- Editor toolbar vertical dividers
+- Editor layout structure (full-height calc, canvas padding)
+- Fallback reconstruction specifics (first content colSpan, ID format, title fallback, position calc)
+- API route implementation (audienceType, sourceType, generationPrompt, code fence stripping, slide layouts, totalSlides, failed status, 400 error shape, projectId validation)
+- ProgressItem text color per state, Check icon weight
+- Error message exact strings for preprocess and generate failures
+- POSTER_SIZES pdfPoints dimensions for all 6 sizes
 
 ## Features in doc that DON'T EXIST in the app
 - `/poster` does not have a page file under `src/app/(app)/poster`; the existing routes in source are `/poster/new` and `/poster/[posterId]`.
@@ -28,3 +45,7 @@
 - The editor does not persist theme changes to the backend or across refresh.
 - There is no `src/app/api/export/poster-pdf/route.ts` in the current source tree even though the editor posts to that endpoint.
 - The route does not have dedicated `loading.tsx` or `error.tsx` files under `src/app/(app)/poster`.
+
+## Components Referenced But Not Rendered
+- `ReferenceImportPanel` imported by `source-selector.tsx` but not used in poster context (`onReferencesSelected` not passed)
+- `UrlSourceInput` internal to `source-selector.tsx` but not triggered in poster context (`onUrlSourcesChange` not passed)
