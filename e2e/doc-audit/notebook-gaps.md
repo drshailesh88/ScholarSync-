@@ -5,9 +5,20 @@
 **After Codex Pass 1:** 564
 **After Codex Pass 2:** 678
 **After Claude Code Pass 3:** 832
+**After Codex Verification:** 840
 **Net additions in Pass 3:** 154
-**Missing from original doc:** 458
-**Completeness of original doc:** 45.0%
+**Net additions in verification pass:** 8
+**Confirmed hallucinations removed:** 1
+**Missing from original doc:** 466
+**Completeness of original doc:** 44.5%
+
+## Verification Summary
+
+- Claude Code Pass 3 assertions reviewed: 154
+- Verified correct: 150
+- Hallucinated / inaccurate: 1
+- Partially correct: 3
+- Corrected in main doc: signed-URL redirect claim removed, storage-backend wording tightened, assistant-prompt text made exact, and the old audio-close `aria-label` assertion fixed
 
 ## Pass 3 Coverage Areas
 
@@ -16,8 +27,8 @@
 - `/api/extract-pdf` internals: 20MB file size limit, content-type validation, missing file/non-PDF/oversized error messages with exact text and status codes, response shape
 - `/api/embed` internals: positive integer validation, `RATE_LIMITS.embed` tier, exact error messages
 - `/api/extract-facts` internals: batch mode with paperIds array, missing paperId error, projectId support
-- `/api/audio-overview` internals: Zod schema (paperIds min 1 max 25, customPrompt max 500, length enum), cache key formula, no-source-notes 400, GET streaming endpoint, MIME type detection, TTS voice "nova", R2 storage, author normalization
-- `/api/papers/[id]/pdf` internals: GET signed URL → buffer → pdf_url/open_access_url fallback chain, POST storage + pipeline trigger, response headers, exact error messages
+- `/api/audio-overview` internals: Zod schema (paperIds min 1 max 25, customPrompt max 500, length enum), cache key formula, no-source-notes 400, GET streaming endpoint, MIME type detection, TTS voice "nova", storage via `uploadAudioOverview` (R2 in Workers / local `.data/audio-overviews` fallback), author normalization
+- `/api/papers/[id]/pdf` internals: GET signed-url helper check → buffer stream → `pdf_url`/`open_access_url` fallback chain, POST storage + pipeline trigger via `uploadPdf` (R2 in Workers / local `.data/pdfs` fallback), response headers, exact error messages
 - PDF Viewer component: full toolbar (page nav, zoom 0.5-3.0 in 0.25 steps, fit-width, close), page display "N / M", 404-specific error message, loading states, aria-labels (Previous/Next page, Zoom in/out, Fit width, Close PDF viewer), role="dialog" aria-modal="true", initialPage clamping, escape key, title truncation
 - Notebook page rendering: learn subtitle "Select your papers and start exploring", conditional plural in research mode, suggestion-loading dot differences (1.5x1.5 brand/30 vs 2x2 brand/40), audio overview auto-creates conversation titled "Audio Overview", history "Untitled" fallback, opacity-50 vs opacity-30 disabled styles, highlightedSource set before null check, copy/feedback on error messages, coverage badge truncation differences
 - Share actions: token reuse on re-enable, token preservation on disable, password hashing, legacy plain-text password fallback, no-password returns true, expiration check, title/owner fallbacks, message ordering, share URL env var
@@ -53,6 +64,17 @@
 - Coverage badge unused-paper truncation differs from citation truncation: no 40-char colon position cap, no ellipsis on 30-char fallback
 - Suggestion-loading dots (1.5x1.5, brand/30, 0/100/200ms) differ from main loading dots (2x2, brand/40, 0/150/300ms)
 - Loading skeleton sidebar is `w-72` while the actual notebook sidebar is `w-80` — intentional or not, they differ
+
+## Codex Verification Discoveries
+
+- `/notebook` route-level error boundary behavior is now explicitly documented
+- `/share/notebook/[token]/not-found.tsx` 404 screen copy and `/` return link are now documented
+- Share dialog modal semantics gap (`Escape`/backdrop close but no `role="dialog"` or `aria-modal`) is now documented
+- Empty/null `paper_ids` conversation loads preserving current file selection is now documented
+- Audio overview generation has no request-abort cleanup on close/input changes
+- Audio overview reset preserves `showOptions`, so the options panel can remain open after resets
+- Initial notebook mount silently swallows paper/history load failures
+- Notebook import tree has no WebSocket/Yjs/realtime client
 
 ## Components Referenced But Not Rendered
 

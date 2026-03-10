@@ -745,7 +745,7 @@ Shown when chat has no messages.
 - [ ] **Upload button** — `aria-label="Upload files"`
 - [ ] **Audio overview button** — `aria-label="Audio Overview"`
 - [ ] **Share button** — `aria-label="Share notebook"`
-- [ ] **Close buttons** — `aria-label="Close source notes"`, `"Close share dialog"`, `"Close audio overview"`
+- [ ] **Close buttons** — `aria-label="Close source notes"` and `aria-label="Close share dialog"` are present; the audio overview close control uses only `title="Close audio overview"`
 - [ ] **Remove file** — `aria-label="Remove {filename}"`
 - [ ] **Extract PICO** — `aria-label="Extract PICO data from {filename}"`
 - [ ] **View extraction** — `aria-label="View extraction for {filename}"`
@@ -1264,7 +1264,7 @@ Shown when chat has no messages.
 - [ ] Validation failure returns `{ error: "Invalid request. Please check your input and try again." }` with status 400
 - [ ] AI not configured returns `{ error: "AI service is not configured. Please contact an administrator." }` with status 503
 - [ ] Mode `"learn"` in `/api/chat` triggers the Socratic guide system prompt via `getGuideSystemPrompt()` or `getDefaultGuidePrompt()`
-- [ ] Mode `"notebook"` (research mode) falls through to the standard assistant prompt: `"You are ScholarSync's AI research assistant for medical students..."`
+- [ ] Mode `"notebook"` (research mode) falls through to the standard assistant prompt: `"You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone."`
 - [ ] Server error returns `{ error: "An unexpected error occurred. Please try again." }` with status 500
 
 ### `/api/extract-pdf/route.ts` — PDF Extraction API Internals
@@ -1304,15 +1304,15 @@ Shown when chat has no messages.
 - [ ] GET returns audio with `Cache-Control: private, max-age=3600` and `Content-Length` headers
 - [ ] GET MIME type detection: `mp3→audio/mpeg`, `wav→audio/wav`, `opus→audio/opus`, `aac→audio/aac`, `flac→audio/flac`; unknown extensions default to `audio/mpeg`
 - [ ] TTS uses OpenAI provider with voice `"nova"` and format `"mp3"`
-- [ ] Audio stored to R2 via `uploadAudioOverview(conversationId, audioId, buffer, extension)`
+- [ ] Audio stored via `uploadAudioOverview(conversationId, audioId, buffer, extension)` from `@/lib/storage/r2` — R2 in Workers, `.data/audio-overviews` on the local Node fallback
 - [ ] Paper authors normalized: supports string values, objects with `name`/`full_name`/`author` fields; empty strings filtered; sliced to max 5
 
 ### `/api/papers/[id]/pdf/route.ts` — PDF Storage & Serving Internals
 
-- [ ] GET tries signed URL first (returns 302 redirect), then direct buffer stream, then falls back to paper's `pdf_url` or `open_access_url`
 - [ ] GET direct stream headers: `Content-Type: application/pdf`, `Content-Disposition: inline; filename="paper-{id}.pdf"`, `Cache-Control: private, max-age=3600`
 - [ ] GET 404 when no PDF found: `{ error: "PDF not found for this paper" }`
-- [ ] POST stores PDF to R2, updates paper record with `pdf_storage_path` and `full_text_available: true`, then queues background processing pipeline
+- [ ] GET calls `getSignedPdfUrl(paperId)` first and redirects only if it returns a URL; the current storage helper returns `null`, so the route normally falls through to direct streaming or `pdf_url` / `open_access_url` redirects
+- [ ] POST stores PDF via `uploadPdf(paperId, buffer)` from `@/lib/storage/r2` — R2 in Workers, `.data/pdfs` on the local Node fallback — then updates `pdf_storage_path`, sets `full_text_available: true`, and queues background processing
 - [ ] POST success returns `{ success: true, paperId, storagePath }`
 - [ ] POST failure returns 500 with `{ error: "Failed to store PDF file" }`
 - [ ] Both GET and POST validate paper ID as digits-only via regex `/^\d+$/`
@@ -1443,6 +1443,17 @@ Shown when chat has no messages.
 ### Components Referenced But Not Rendered (Pass 3)
 
 - [ ] No change — all `src/components/notebook` files remain in active import chains
+
+## Codex Verification Pass Discoveries
+
+- [ ] `/notebook` route error boundary renders `ErrorDisplay` with title `Notebook unavailable`, message `We couldn't load your notebook. Please try again.`, and passes `reset` through `onRetry`
+- [ ] `/share/notebook/[token]/not-found.tsx` renders a dedicated 404 view with heading `404`, subtitle `Notebook not found`, body text `This shared notebook link may have expired, been disabled by the owner, or the notebook may no longer exist.`, and a `Go to ScholarSync` link to `/`
+- [ ] `NotebookShareDialog` is closed by Escape and backdrop click, but the rendered overlay has no `role="dialog"` or `aria-modal="true"` attributes
+- [ ] `loadConversation()` only reapplies file `selected` state when `convo.paper_ids` exists and has length > 0; conversations with `null` or empty `paper_ids` leave the current file-selection state untouched
+- [ ] `AudioOverviewPanel` posts to `/api/audio-overview` without an `AbortController`; closing the panel or changing inputs does not cancel an in-flight generation request
+- [ ] `AudioOverviewPanel` reset effect clears audio/script/error state on `conversationId`, `paperIdsKey`, `mode`, `customPrompt`, or `audioLength` changes, but it does not reset `showOptions`, so the options panel can stay open across those resets
+- [ ] Initial notebook mount suppresses library and history load failures with empty `.catch(() => {})` handlers on `getUserPapers()` and `getConversations("notebook")`, so those failures produce no inline error or retry UI
+- [ ] No WebSocket, SSE subscription, Yjs provider, or other realtime collaboration client is imported anywhere in the `/notebook` or `/share/notebook/[token]` render tree; notebook sync is request/response and server-action based only
 
 ---
 
