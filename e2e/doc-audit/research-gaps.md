@@ -2,34 +2,36 @@
 
 **Original doc:** `RESEARCH_FEATURES_TESTING.md`
 **Original checkbox count:** 162
-**Features found in UI:** 241
-**Features found in source code:** 503
-**Missing from doc:** 341
-**Completeness of original doc:** 32.2%
+**After Codex Pass 1:** 241
+**After Codex Pass 2:** 503
+**After Claude Code Pass 3:** 658
+**Net additions Pass 3:** 155 (145 new discoveries + 10 behavior corrections)
+**Completeness of original doc:** 24.6% (162/658)
 
-## Missing Features
+## Pass 3 Coverage Areas
 
-### Detailed QA Coverage
-- [ ] Real search-bar implementation details for the single-line input, button-disable rules, timeout handling, and persisted session restore
-- [ ] Empty-state composition for recent searches, recently saved papers, limited suggested searches, and the `Loading your history...` helper
-- [ ] Exact filter-to-query-param wiring, including `openAccessOnly`, `studyTypes`, `Last 5 Years`, and the `High Impact` override to citation sort
-- [ ] Sort-dropdown behavior, including the lack of outside-click dismissal and the fact that sort changes only auto-search after a first search exists
-- [ ] Actual source-count line and AI-optimized-query disclosure tied to `/api/search/unified`
-- [ ] Real loading and error presentation for the live route, which uses pulsing result cards and a `GlassPanel` error state
-- [ ] Result-card specifics for DOI/PMID title links, metadata fallbacks, abstract/TLDR visibility, and relevance helpers
-- [ ] Save-button keying, optimistic local saved-state transitions, silent save failures, and `Save & Cite` redirect payload behavior
-- [ ] Similar-paper request/empty/error states, cache short-circuiting, and retry behavior
-- [ ] Previous/Next pagination behavior replacing the load-more pattern described in the original doc
-- [ ] Floating Research Copilot toggle, chat welcome state, text-only message rendering, and send-button gating
-- [ ] Auto-triggered AI synthesis behavior including citation-marker scrolling, free-plan blur overlay, and `Upgrade to Pro` link
-- [ ] Route-level loading and error boundary copy
-- [ ] Unified-search internals including authentication, request validation, query augmentation conditions, 4.5-second per-source timeout wrappers, development fallback fixtures, RRF scoring, reranking, and pagination math
-- [ ] Source-adapter normalization details for PubMed, Semantic Scholar, OpenAlex, ClinicalTrials.gov, and Semantic Scholar recommendations fallback behavior
-- [ ] Research-copilot internals covering request-schema limits, `stepCountIs(12)`, omitted agent context, tool payload truncation, and exact request/response error strings
-- [ ] AI synthesis internals covering fingerprint logic, request-body shape, citation regex/parsing, overflow rules, free-plan gating, plan-mode parsing, and the no-retry failure path
-- [ ] Search-history/save-paper internals covering de-dup order, enrichment rules, background chunk/PDF queue triggers, and exact session-storage citation payload omissions
-- [ ] Result-card edge cases for empty authors, blank journal/year rendering, citation-count truthiness, and missing DOI/abstract/TLDR/similar controls
-- [ ] Additional corrections for the non-disabled empty-query search button, lack of copilot auto-scroll, and the non-rendered research component stack still present in `src/components/research/`
+### New categories not covered by Passes 1-2:
+- S2 Recommendations API internals (GET + POST handlers, validation, error responses)
+- Research Agent system prompt details (4-phase strategy, role definition, stopping criteria)
+- Rate limiting module specifics (key format, limits, in-memory vs Upstash, cleanup interval)
+- Evidence level mapping function (exact studyType → Level mapping)
+- Dedup & rank fusion internals (identity matching order, normalizeTitle, merge strategy, RRF formula)
+- Cohere reranking internals (document construction, resilientFetch config, return_documents flag)
+- Type definition gaps (openalexId, clinical trial fields, pico, rerankScore, journalQuartile)
+- Accessibility gaps (11 missing aria-* attributes, no role attributes on interactive widgets)
+- Empty-state UI heading text and icon details
+- Save paper data flow (full field list forwarded to savePaper)
+- Session state gap analysis (which fields are NOT persisted)
+- Page layout/CSS details (fixed height, overflow scroll, z-indices)
+
+### Behavior corrections (Pass 3):
+- Section 21: Scroll position restoration claim is wrong (searchScrollPosition not in page.tsx)
+- Section 2: NLP parsed filter chips claim is wrong (only static toggle chips exist)
+- Section 5: Skeleton loader count is wrong (4 cards, not 5)
+- Section 7: Author truncation threshold is wrong (>3, not >5)
+- Section 7: Study type badge, source badge, PMID badge, DOI badge claims are wrong (not rendered)
+- Section 17: Synthesis temperature claim is misleading (0.3 for plan, 0.4 for generate)
+- Section 20: Verification system claim is wrong for this page (never calls /api/research/verify)
 
 ## Features in doc that DON'T EXIST in the app
 - The live `/research` route does not use a textarea-based search box; it uses a single-line text input.
@@ -46,3 +48,7 @@
 - The live `/research` route does not auto-scroll the copilot panel to the newest message.
 - The live `/research` route does not pass current search results, filters, or saved-paper IDs into the research-agent request body.
 - The live `/research` route does not render `SearchInput.tsx`, `ResearchSidebar.tsx`, `ResultsTable.tsx`, `PaperDetailPanel.tsx`, `EvidenceTable.tsx`, `SynthesisDialog.tsx`, `AISummaryCard.tsx`, or `VerificationBadge.tsx` even though those components still exist in the codebase.
+- The live `/research` route does not persist or restore scroll position (no `searchScrollPosition` in page.tsx).
+- The live `/research` route does not render NLP-parsed filter chips below the search input.
+- The live `/research` route does not render study type badges, source badges, or PMID badges on result cards.
+- The live `/research` route does not call `/api/research/verify` for paper verification.

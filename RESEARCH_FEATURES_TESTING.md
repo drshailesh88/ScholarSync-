@@ -853,4 +853,218 @@ Slide-in panel showing full paper details.
 - [ ] `src/components/research/ScopeSelector.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
 - [ ] `src/components/research/citation-network.tsx` exists in the codebase but is not imported by `src/app/(app)/research/page.tsx`
 
-*Document generated from source code analysis. Last updated: 2026-03-09.*
+## Re-Audit Discoveries (Claude Code Pass 3)
+
+### Session & State Behavior
+
+- [ ] `readSession()` returns `null` when stored JSON is corrupt or cannot be parsed — the `catch` block silently swallows `JSON.parse` errors
+- [ ] `writeSession()` catch block comment documents the failure reason as `quota exceeded — ignore`
+- [ ] Session persistence does NOT include `similarResults`, `similarErrors`, `similarEmpty`, `loadingSimilar`, `showCopilot`, `showSortDropdown`, `showAugmented`, `chatInput`, or `chatMessages` — these all reset on page refresh
+- [ ] The `saved` Set (tracking which papers the user has saved this session) is not persisted in sessionStorage and resets on refresh
+- [ ] `showAugmented` (augmented-queries disclosure state) is not persisted in session; the disclosure collapses on refresh even if previously expanded
+- [ ] `userPlan` initializes as `null` before `getUserUsageStats()` resolves, meaning `isFree` in AISynthesisPanel evaluates to `false` during the initial render window
+- [ ] `similarResults` is stored as a `Record<string, UnifiedSearchResult[]>` keyed by `r.s2Id || r.doi || r.title`, not by a numeric index
+
+### Empty-State UI Details
+
+- [ ] Empty-state data load useEffect has a `cancelled` boolean race-condition guard; the cleanup function sets `cancelled = true` to prevent state updates after unmount
+- [ ] Empty-state `getRecentSearches()` failure silently returns empty array `[]` via `.catch(() => [])`
+- [ ] Empty-state `getUserPapers()` failure silently returns empty array `[]` via `.catch(() => [])`
+- [ ] When the `authors` field on a recently saved paper is not an array, the author mapping falls back to empty string `""`
+- [ ] `emptyStateLoaded` is set to `true` inside a `finally` block, ensuring it updates even when the data-load promise rejects
+- [ ] Empty-state "Recent Searches" heading text reads exactly `Recent Searches` with `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling
+- [ ] Empty-state "Recently Saved" heading text reads exactly `Recently Saved`
+- [ ] Empty-state "Try searching for" heading text reads exactly `Try searching for`
+- [ ] Empty-state "Recent Searches" heading is prefixed with a `ClockCounterClockwise` icon (size 14)
+- [ ] Empty-state "Recently Saved" heading is prefixed with a `BookmarkSimple` icon (size 14)
+- [ ] Empty-state "Try searching for" heading is prefixed with a `Lightbulb` icon (size 14)
+- [ ] Recently saved papers are rendered in a 2-column grid layout (`grid grid-cols-2 gap-3`)
+- [ ] Recently saved paper titles are clamped to 2 lines via `line-clamp-2`
+- [ ] Recently saved journal and year are joined with `" · "` separator, with falsy values filtered out via `filter(Boolean)` before joining
+- [ ] Recent search rows show a `MagnifyingGlass` icon (size 14) on the left of each query text
+- [ ] Recent search result-count suffix is formatted with `toLocaleString()` so numbers include thousands separators
+
+### Search Mechanics
+
+- [ ] `Last 5 Years` filter dynamically computes yearStart as `new Date().getFullYear() - 5` — it is not hardcoded to a specific year
+- [ ] Filter/sort auto-re-search useEffect dependency array is exactly `[filters, sort]` — changes to `query` alone do NOT trigger auto-re-search
+- [ ] When the API returns a non-OK status and no JSON error body can be parsed, the error message fallback is `Search failed (status ${statusCode})` — not `Search failed. Please try again.`
+- [ ] The fallback `Search failed. Please try again.` only appears for non-`Error` exception types in the catch block (when `err instanceof Error` is false)
+- [ ] `highImpact` filter overrides `sort` in the URL by calling `params.set("sort", "citations")` after the original sort is already set — this means the API receives `sort=citations` even if the user selected a different sort option
+- [ ] `buildSearchUrl` includes `perPage` as `perPage.toString()` (always `"20"`) in every search request URL
+- [ ] `handleSearch` clears `aiSummary` to `null` before each new search, forcing the AISynthesisPanel to re-synthesize even if the same query is rerun
+- [ ] The search-history `saveSearchQuery` call uses `.catch(() => {})` so history-save failures are completely silent and non-blocking
+
+### Result Card Rendering
+
+- [ ] DOI link in the metadata row calls `e.stopPropagation()` on click to prevent triggering any parent click handlers
+- [ ] Result card wrapper includes `id="paper-result-{idx}"` as a DOM id for scroll-to targeting from synthesis citations
+- [ ] Result card wrapper has `transition-[box-shadow] duration-500` enabling smooth 500ms ring highlight transitions when synthesis citations target it
+- [ ] Result card React `key` attribute is `${identityKey}-${idx}` — the array index is appended for uniqueness in case duplicate identity keys exist
+- [ ] When `citationCount` is exactly `0`, the " · N citations" suffix is omitted because the render branch checks truthiness (`r.citationCount ? ...`)
+- [ ] Saving state button uses `cursor-wait` class to show the wait cursor while a save is in progress
+- [ ] Similar-paper `key` is derived as `r.s2Id || r.doi || r.title`, which differs from the save `key` that uses `r.doi || r.pmid || r.s2Id || r.title` — the ID lookup order is different for save vs similar
+- [ ] Similar-paper section header reads `Similar Papers` in `text-[10px] text-ink-muted uppercase tracking-wider font-medium`
+- [ ] Result author row renders `r.authors.slice(0, 3).join(", ")` — if the original `authors` array is empty, an empty `<p>` element still renders
+
+### Copilot Sidebar
+
+- [ ] Copilot sidebar is rendered as an `<aside>` HTML element, not a `<div>`
+- [ ] Copilot sidebar width is exactly `w-96` (384px / 24rem)
+- [ ] Copilot sidebar close button uses the `X` icon from Phosphor Icons (size 16)
+- [ ] Copilot send button uses the `PaperPlaneTilt` icon from Phosphor Icons (size 16)
+- [ ] User chat messages are styled with `bg-brand/10 text-ink ml-8` (indented from left)
+- [ ] Assistant chat messages are styled with `bg-surface-raised text-ink mr-4` (indented from right)
+- [ ] Chat message text renders with `whitespace-pre-wrap` preserving line breaks and whitespace in AI responses
+- [ ] Copilot welcome card shows a `Sparkle` icon (size 14) with uppercase `Research Assistant` label text
+- [ ] Copilot welcome message body reads exactly `Ask me to find papers on any topic. I'll search across PubMed, Semantic Scholar, and OpenAlex using systematic search strategies.`
+- [ ] Copilot AI status indicator shows a pulsing emerald dot (`w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse`) with `AI` text in `text-emerald-500`
+- [ ] Copilot header uses `Brain` icon (size 18) in `text-brand` color
+
+### AISynthesisPanel Internals
+
+- [ ] Synthesis streaming uses `ReadableStream.getReader()` with `TextDecoder` `stream: true` option for progressive multi-chunk decoding
+- [ ] "Generating..." indicator text appears next to the header during streaming, shown as a pulsing brand dot + `text-[10px] text-brand/70` label
+- [ ] Citation `et al.` suffix is added when a paper has more than 1 author (`p.authors.length > 1`), not the 2-author or 3-author threshold used elsewhere in the codebase
+- [ ] AISynthesisPanel `paperCount` is computed as `Math.min(results.length, 5)` — if fewer than 5 results exist, the header reads `Answer from top {actual count} papers`
+- [ ] Free-plan blur overlay gradient direction is `bg-gradient-to-t from-surface via-surface/90 to-transparent` (bottom-to-top fade)
+- [ ] Free-plan upgrade link text reads `Upgrade to Pro` with `text-brand hover:text-brand-hover` styling
+- [ ] AISynthesisPanel outer container uses a gradient background: `bg-gradient-to-br from-brand/[0.04] via-transparent to-brand/[0.02]` with `backdrop-blur-sm`
+- [ ] `onSynthesisChange` callback is called progressively during streaming with each accumulated text chunk, not just once at the end
+- [ ] Skeleton placeholder during initial streaming shows exactly 4 lines with widths `w-full`, `w-[92%]`, `w-[85%]`, `w-[60%]`
+
+### S2 Recommendations API (`/api/search/s2-recommendations`)
+
+- [ ] GET handler requires authentication, returns 401 `{ error: "Authentication required" }` when unauthenticated
+- [ ] GET handler applies rate limit with key `"search"` and `RATE_LIMITS.search` (120 req/hour)
+- [ ] GET handler returns 400 `{ error: "Query parameter 'paperId' is required" }` when `paperId` query param is missing
+- [ ] GET handler accepts optional `paperTitle` query parameter used as fallback for title-based search
+- [ ] GET handler defaults `limit` to `10` and caps it at `100` via `Math.min(parseInt(...), 100)`
+- [ ] GET handler returns 500 `{ error: "S2 recommendations failed" }` on unhandled errors
+- [ ] POST handler exists on the same endpoint for list-based recommendations using positive/negative paper IDs
+- [ ] POST handler requires a non-empty `positivePaperIds` array, returns 400 `{ error: "positivePaperIds is required" }` when empty or missing
+- [ ] POST handler accepts optional `negativePaperIds` array (defaults to `[]`) and optional `limit` (defaults to `10`, caps at `100`)
+- [ ] POST handler returns 500 `{ error: "S2 recommendations failed" }` on unhandled errors
+
+### Research Agent API (`/api/research-agent`)
+
+- [ ] Research-agent rate limit uses key `"research-agent"` with `RATE_LIMITS.ai` (60 req/hour), not `RATE_LIMITS.search`
+- [ ] Research-agent uses `getModel()` (main model) for streaming, not `getSmallModel()`
+- [ ] Research-agent response is streamed via `result.toTextStreamResponse()`
+- [ ] System prompt defines the agent role as `a medical research librarian AI` that conducts `systematic literature searches`
+- [ ] System prompt specifies a 4-phase search strategy: BROAD SWEEP (3-4 tool calls), ASSESS COVERAGE, TARGETED SEARCH (2-3 tool calls), SYNTHESIZE
+- [ ] System prompt instructs "Try at least 2 different query formulations per source"
+- [ ] System prompt instructs to "ALWAYS include the openAccessUrl if one is available" when saving papers to the library
+- [ ] System prompt stopping criterion: "new searches return mostly papers already found, OR all key aspects covered"
+- [ ] System prompt instructs to "Always cite paper titles and key findings when discussing results"
+- [ ] When `context.savedPaperIds` is provided and non-empty, the system prompt appends only a count (`The user has {N} papers saved in their library.`), not the actual paper IDs or titles
+
+### Synthesize API (`/api/research/synthesize`)
+
+- [ ] Unhandled synthesis errors return 500 `{ error: "Synthesis failed" }` — error is logged via `console.error`, not the structured `logger`
+- [ ] Synthesize request body also accepts optional `customInstructions` (string) and `targetWordCount` (number) fields beyond `papers`, `reportType`, and `mode`
+- [ ] Synthesize streaming response for generate mode is returned via `result.toTextStreamResponse()`
+
+### Rate Limiting Module
+
+- [ ] Rate limit error response body is exactly `{ error: "Rate limit exceeded. Please try again later." }` with HTTP 429 status
+- [ ] Rate limit response includes `X-RateLimit-Remaining` header with the remaining request count as a string
+- [ ] Rate limit key format is `${userId}:${endpoint}` — e.g., `user_123:search`
+- [ ] `RATE_LIMITS.search` allows 120 requests per 3600 seconds (120/hour)
+- [ ] `RATE_LIMITS.ai` allows 60 requests per 3600 seconds (60/hour)
+- [ ] In-memory rate limiter (development/Upstash-unavailable fallback) uses a fixed sliding window with a `Map<string, { count, resetAt }>` store
+- [ ] In-memory rate limiter cleans up expired entries every 60 seconds via a `setInterval` loop
+- [ ] Production rate limiter uses Upstash Redis with `@upstash/ratelimit` sliding window and prefix `"scholarsync"`
+- [ ] Rate limiter falls through to in-memory when Upstash Redis env vars (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`) are missing or when the Upstash request throws
+
+### Evidence Level Mapping
+
+- [ ] `getEvidenceLevel()` maps `meta_analysis` and `systematic_review` to Level I
+- [ ] `getEvidenceLevel()` maps `rct` to Level II
+- [ ] `getEvidenceLevel()` maps `cohort` and `observational` to Level III
+- [ ] `getEvidenceLevel()` maps `case_control` and `case_report` to Level IV
+- [ ] `getEvidenceLevel()` maps all other study types (including `review`, `other`, and unknown values) to Level V
+- [ ] `mapPubMedPublicationType()` maps "clinical trial" publications to `rct` study type
+- [ ] `mapPubMedPublicationType()` maps a bare "review" (that doesn't match "systematic review") to `review` study type, which then maps to Level V
+- [ ] `mapS2PublicationType()` maps `editorial` and `letter` to `other` study type
+
+### Dedup & Rank Fusion Internals
+
+- [ ] `isSamePaper()` checks identity in order: DOI match (case-insensitive), then PMID match, then S2 ID match, then normalized title + year match
+- [ ] `normalizeTitle()` lowercases, strips all non-alphanumeric characters except spaces, normalizes whitespace, trims, and truncates to 150 characters
+- [ ] `mergeMetadata()` keeps the primary paper's fields and fills in missing values from the secondary paper — primary always wins for populated fields
+- [ ] `mergeMetadata()` takes `Math.max(primary.citationCount || 0, secondary.citationCount || 0)` — the higher citation count always wins
+- [ ] `mergeMetadata()` merges `publicationTypes`, `fieldsOfStudy`, and `concepts` arrays via Set-based deduplication
+- [ ] `mergeMetadata()` prefers primary `meshTerms` when it has entries (`primary.meshTerms?.length`), otherwise falls back to secondary
+- [ ] RRF contribution formula is `1 / (k + rank + 1)` where `k` defaults to `60` and `rank` is the 0-indexed position in the source list
+- [ ] RRF output is sorted by accumulated `rrfScore` descending before pagination
+
+### Cohere Reranking Internals
+
+- [ ] Cohere rerank documents are constructed by concatenating `${title}. ${abstract || tldr || ""}` for each result
+- [ ] Cohere rerank request uses `resilientFetch` with `timeout: 10000` (10s) and `maxRetries: 2`
+- [ ] Cohere rerank request sends `return_documents: false` — only index + relevance_score are returned
+- [ ] Cohere reranked results have `rerankScore` set from the Cohere `relevance_score` field
+
+### Save Paper Data Flow
+
+- [ ] `handleSave(result)` forwards `abstract`, `mesh_terms`, `publication_types`, `fields_of_study`, `study_type`, `evidence_level`, `influential_citation_count`, and `reference_count` to the `savePaper()` server action — not just title, authors, journal, year, doi, source
+- [ ] `handleSave(result)` sends `pubmed_id: result.pmid` and `semantic_scholar_id: result.s2Id` as separate identifier fields
+- [ ] `handleSave(result)` sends `citation_count: result.citationCount` — not `citations` or `citation_count`
+- [ ] `handleSave(result)` derives `open_access_url` from `result.openAccessPdfUrl || undefined` — the `|| undefined` ensures `null` is converted to `undefined`
+
+### Type Definitions & Response Shapes
+
+- [ ] `UnifiedSearchResult` type includes `openalexId?: string` field for OpenAlex-originated results
+- [ ] `UnifiedSearchResult` type includes clinical trial fields: `nctId?: string`, `trialStatus?: string`, `trialPhase?: string` — only populated for ClinicalTrials.gov results
+- [ ] `UnifiedSearchResult` type includes `rerankScore?: number` field, populated only when Cohere reranking is active
+- [ ] `UnifiedSearchResult` type includes optional `pico` object with `population`, `intervention`, `comparison`, `outcome` string fields
+- [ ] `SearchResponse.augmentedQueries` type includes `pubmed`, `semanticScholar`, `openAlex` keys but NOT a ClinicalTrials variant — ClinicalTrials always receives the raw user query
+- [ ] `EvidenceLevel` type is defined as the exact union `"I" | "II" | "III" | "IV" | "V"`
+- [ ] `UnifiedSearchResult.journalQuartile` type is `"Q1" | "Q2" | "Q3" | "Q4" | null`
+- [ ] `SearchFilters` interface includes `minCitations?: number` field, currently unused by the research page UI
+
+### Page Layout & CSS Behavior
+
+- [ ] Page layout uses `h-[calc(100vh-7rem)]` as the overall container height constraint
+- [ ] Main content area uses `overflow-y-auto pr-2` for scrolling within the fixed-height container
+- [ ] Active filter chip styling: `bg-brand/10 text-brand border-brand/30`
+- [ ] Inactive filter chip styling: `bg-surface-raised text-ink-muted border-border hover:text-ink`
+- [ ] Sort dropdown overlay uses `z-20` z-index
+- [ ] Copilot floating toggle button uses `z-40` z-index
+- [ ] Pagination total-pages display clamps minimum to 1 via `Math.max(totalPages, 1)`, ensuring "Page 1 of 1" is shown even when there are 0 results in the filtered set
+- [ ] Sort dropdown menu has `min-w-[140px]` minimum width
+
+### Accessibility Gaps (Missing Attributes)
+
+- [ ] Search input has no `aria-label` or accessible name attribute
+- [ ] Filter chip buttons have no `aria-pressed` attribute to indicate toggle state to assistive technology
+- [ ] Sort dropdown trigger has no `aria-expanded` or `aria-haspopup` attribute
+- [ ] Sort dropdown menu has no `role="listbox"` or `role="menu"` attribute
+- [ ] Sort dropdown items have no `role="option"` or `role="menuitem"` attributes
+- [ ] Copilot close button has no `aria-label` attribute
+- [ ] Copilot chat input has no `aria-label` attribute
+- [ ] Copilot send button has no `aria-label` attribute
+- [ ] No `aria-live` region exists for search result count updates or loading/error state transitions
+- [ ] Pagination Previous/Next buttons have no `aria-label` attributes (e.g., "Go to previous page")
+- [ ] Evidence level badges have no `title` or `aria-label` explaining the evidence level meaning
+
+### Route-Level Loading & Error Verified
+
+- [ ] Route-level `loading.tsx` renders `ResearchLoading` — one `Skeleton` title bar (`h-8 w-48`), one `Skeleton` search bar (`h-12 w-full rounded-xl`), and exactly 3 `SkeletonCard` placeholders
+- [ ] Route-level `error.tsx` renders `ErrorDisplay` component with `onRetry={reset}` prop, providing a retry button
+
+### Behavior Corrections (Pass 3)
+
+- [ ] Section 21 line 397 claims "Scroll position — restored from `searchScrollPosition`" — **WRONG**. No scroll position state or restoration logic exists in page.tsx. The `searchScrollPosition` identifier does not appear anywhere in the research page; it exists only in the unused `research-store.ts` and `ResultsTable.tsx` which are not imported by this page.
+- [ ] Section 2 lines 71-73 claim "Parsed filter chips — appear below input when natural language filters detected" with sub-items for X buttons and chip types — **WRONG**. No NLP-parsed filter chips exist in the current implementation. Only 6 static toggle chips (Last 5 Years, PDF Available, High Impact, RCTs Only, Reviews, Meta-Analyses) are rendered.
+- [ ] Section 5 line 135 claims "Skeleton loader — 5 placeholder cards during search" — **WRONG**. The in-page loading state renders exactly 4 skeleton cards (`Array.from({ length: 4 })`). The route-level `loading.tsx` renders 3 `SkeletonCard`s — neither uses 5.
+- [ ] Section 7 line 165 claims authors are truncated with "et al." if >5 — **WRONG**. Result card authors use `r.authors.slice(0, 3)` and show " et al." when `r.authors.length > 3` (threshold is 3, not 5).
+- [ ] Section 7 line 169 claims a "Study type badge" is rendered on each result card — **WRONG**. No study type badge is rendered by the current page. The `studyType` field exists on results but is not displayed.
+- [ ] Section 7 line 171 claims a "Source badge" (`pubmed`, `semantic_scholar`, or `both`) is rendered — **WRONG**. No source badge is rendered by the current page.
+- [ ] Section 7 line 173 claims a "PMID badge" is rendered — **WRONG**. PMID is not displayed anywhere on result cards. It is used internally for title link construction and save payload only.
+- [ ] Section 7 line 174 claims a "DOI badge" is rendered — **WRONG**. DOI is rendered as a text link ("DOI") in the metadata row, not as a badge component.
+- [ ] Section 17 line 345 claims "Temperature — 0.3 for consistent output" for synthesis generation — **MISLEADING**. Plan mode uses temperature 0.3, but the primary streaming synthesis (generate mode) uses temperature 0.4 (correctly documented at lines 788-789 from Pass 2).
+- [ ] Section 20 (Verification System) claims "Per-paper verification — calls `/api/research/verify`" — **WRONG for this page**. The `/research` page never calls `/api/research/verify`. The verification endpoint and VerificationBadge exist in the codebase but are not imported or invoked by `page.tsx`.
+
+*Document generated from source code analysis. Last updated: 2026-03-10.*
