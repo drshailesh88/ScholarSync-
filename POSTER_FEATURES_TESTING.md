@@ -252,8 +252,6 @@
 - [ ] Scale cannot go below 0.1 (minimum)
 - [ ] Scale cannot exceed 1.0 (maximum)
 - [ ] Default scale on load is 0.25
-- [ ] Zoom out button is disabled at minimum scale (0.1)
-- [ ] Zoom in button is disabled at maximum scale (1.0)
 - [ ] Zoom percentage updates in real time as scale changes
 
 ---
@@ -423,16 +421,13 @@
 | Property | Value |
 |---|---|
 | Endpoint | `POST /api/export/poster-pdf` |
-| Filename | `{title}_poster.pdf` |
+| Filename | `{sanitizedTitle}_poster.pdf` |
 | Trigger | "Export PDF" button (DownloadSimple icon) |
 
 - [ ] Clicking "Export PDF" sends POST request to `/api/export/poster-pdf`
 - [ ] Downloaded file is named `{title}_poster.pdf` with the poster's title
 - [ ] PDF download initiates automatically after successful response
-- [ ] Export handles large posters without timeout
 - [ ] Export handles special characters in title for filename
-- [ ] Export shows loading state while generating PDF
-- [ ] Export shows error message on failure
 
 ---
 
@@ -616,7 +611,6 @@
 - [ ] Editor handles poster with special characters in title
 - [ ] Generation handles timeout from AI model
 - [ ] Generation handles malformed JSON response from AI
-- [ ] Export handles concurrent export requests
 - [ ] Zoom controls handle rapid clicking without visual glitches
 - [ ] Section panel handles poster with many sections (scrolling)
 - [ ] Theme changes apply immediately to the rendered poster
@@ -893,7 +887,7 @@
 
 ### Theme Count
 
-- [ ] `PRESET_THEMES` contains more than 7 themes (approximately 32 total); the 7-column wizard grid and 4-column editor grid wrap to multiple rows
+- [ ] `PRESET_THEMES` contains 26 themes; the 7-column wizard grid and 4-column editor grid wrap to multiple rows
 
 ### PosterRenderer Root & Typography
 
@@ -937,19 +931,19 @@
 - [ ] Quote block wraps content in a `<blockquote>` element with `accentColor` left border and shows `"— {attribution}"` below
 - [ ] Math block renders inside a container box with `surfaceColor` background and themed border
 - [ ] Math block supports `displayMode` boolean property (inline vs. display mode rendering in KaTeX)
-- [ ] Math block uses `throwOnError: false` so invalid expressions render as red "Invalid LaTeX" text instead of throwing
+- [ ] Math block sets `throwOnError: false` and separately catches thrown render errors to fall back to red "Invalid LaTeX" text
 - [ ] Math, diagram, and code blocks all support an optional `caption` rendered below their content
 - [ ] Code block uses `theme.codeBackground ?? "#1E1E2E"` for background and `#E2E8F0` for text color
 - [ ] Callout block supports an optional `title` rendered in bold (`text-[0.7em] font-bold`) with the callout type's border color
 - [ ] Stat result block displays `{label}: {value}` with the value in `text-[0.9em] font-bold` styled in `theme.primaryColor`
 - [ ] Stat result block shows optional CI (`CI: {ci}`) and p-value (`p = {pValue}`) as sub-details at `text-[0.55em] opacity-60`
 - [ ] Stat result block shows optional `interpretation` in italic below CI/p-value
-- [ ] Bibliography entries format as `[{id}] {formatted}` where `id` falls back to `i + 1` when the entry id is non-numeric
+- [ ] Bibliography entries format as `[{id}] {formatted}` where `id` falls back to `i + 1` when the entry id is not a number
 - [ ] Bibliography entries show an optional `doi:{doi}` suffix at `opacity-60`
 - [ ] Timeline entry dots are colored by status: `completed` = `#10B981`, `in_progress` = `theme.primaryColor`, other/upcoming = `#9CA3AF`
 - [ ] Timeline entries show label, optional date (at `text-[0.55em] opacity-50`), and optional description
 - [ ] Timeline block supports an optional `title` above entries in `text-[0.7em] font-medium` styled in `primaryColor`
-- [ ] Divider block supports a `style` property with values `"solid"`, `"dashed"`, or `"gradient"` (defaults to `"solid"`)
+- [ ] Divider block data accepts a `style` property and defaults to `"solid"`; the renderer interpolates that value directly into `borderTop`
 
 ### Editor Right Sidebar Headers
 

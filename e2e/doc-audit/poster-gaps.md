@@ -9,6 +9,10 @@
 **Added by Codex pass 1:** 176
 **Added by Claude Code pass 2:** 127
 **Completeness of original doc:** 41.2%
+**Codex verification pass reviewed:** 127 assertions
+**Pass 2 verified correct:** 123
+**Pass 2 hallucinated / inaccurate:** 1
+**Pass 2 partially correct:** 3
 
 ## Missing Features (Addressed by Pass 2)
 
@@ -23,11 +27,11 @@
 - Step indicator number rendering, dividers, and precise styling per state
 - Wizard selection grid responsive breakpoints
 - Template structure preview scroll behavior and guidance truncation
-- Theme count (~32 PRESET_THEMES vs. original 7 assumption)
+- Theme count (26 PRESET_THEMES vs. original 7 assumption)
 - PosterRenderer root shadow, typography, padding, title section identification logic
 - Title bar gradient conditions, author/affiliation separators, opacity, and contentBlock rendering
 - Section card body background fallback, header bottom border, heading styling
-- Content block enhancements: image captions, chart titles, chart type fallback behavior, citation/quote attributions, math container/displayMode/throwOnError, code colors, callout titles, stat result sub-fields, bibliography format/doi, timeline status colors/details, divider style property
+- Content block enhancements: image captions, chart titles, chart type fallback behavior, citation/quote attributions, math container/displayMode/error fallback, code colors, callout titles, stat result sub-fields, bibliography format/doi, timeline status colors/details, divider style interpolation
 - Editor right sidebar "THEME" and "SECTION DETAILS" headers, tile rendering difference (circles vs. text), content block count label, font-mono type display
 - Editor toolbar vertical dividers
 - Editor layout structure (full-height calc, canvas padding)
@@ -49,3 +53,9 @@
 ## Components Referenced But Not Rendered
 - `ReferenceImportPanel` imported by `source-selector.tsx` but not used in poster context (`onReferencesSelected` not passed)
 - `UrlSourceInput` internal to `source-selector.tsx` but not triggered in poster context (`onUrlSourcesChange` not passed)
+
+## Remaining Gaps After Codex Verification
+- Imported deck slide preview rows also show each slide layout label (`slide.layout.replace(/_/g, " ")`), which is still not called out in `POSTER_FEATURES_TESTING.md`.
+- Metadata reconstruction in the editor prefers `data.themeConfig`, then `PRESET_THEMES[data.theme ?? "modern"]`, then `PRESET_THEMES.modern`; the current doc does not capture that theme fallback chain.
+- `PosterRenderer`'s fallback title header (when no full-width section exists) is not clickable and cannot receive the active blue ring highlight, unlike the full-width title-section branch.
+- Section detail rows only add a supplemental preview string for `text`, `bullets`, `chart`, and `table` blocks; other block types render only the monospace type label in the sidebar.
