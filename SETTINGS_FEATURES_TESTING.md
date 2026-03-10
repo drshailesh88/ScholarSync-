@@ -267,7 +267,7 @@ Creates a Razorpay payment order for plan upgrade.
 | 500 | "Failed to create payment order" | [ ] On Razorpay API failure |
 
 - [ ] **Rate limiting** — uses `RATE_LIMITS.analysis`
-- [ ] **Auth required** — returns 401 if not authenticated
+- [ ] **Auth failure path** — auth errors from `getCurrentUserId()` fall through the generic catch and return 500 with `"Failed to create payment order"`
 
 ### POST `/api/billing/verify-payment`
 
@@ -308,7 +308,7 @@ Verifies Razorpay payment signature and activates subscription.
 1. Validates all required fields present
 2. Calls `verifyPaymentSignature()` (HMAC SHA256)
 3. Creates/updates subscription in DB
-4. Updates user plan field
+4. On new subscription creation, updates the user plan field
 5. Sets subscription period: now → 30 days from now
 
 ### GET `/api/billing/subscription`
@@ -359,7 +359,7 @@ Handles Razorpay webhook events.
 | `subscription.cancelled` | Sets subscription status to "cancelled", user plan to "free" | [ ] Verify plan downgrade |
 | `subscription.halted` | Same as cancelled | [ ] Verify plan downgrade |
 
-- [ ] **Invalid signature** — returns 400
+- [ ] **Invalid signature** — returns 401
 - [ ] **Unknown event** — returns 200 (acknowledged but no action)
 
 ---
@@ -400,7 +400,7 @@ Handles Razorpay webhook events.
 **File:** `src/lib/actions/billing.ts`
 
 - [ ] Creates or updates subscription record
-- [ ] Also updates user plan field
+- [ ] Also updates user plan field when inserting a new subscription record
 - [ ] Sets status to "active", period start to now, period end to now + 30 days
 
 ### `cancelSubscription()`
@@ -417,7 +417,7 @@ Handles Razorpay webhook events.
 ### Loading State (`loading.tsx`)
 
 - [ ] **Skeleton layout** — renders animated skeleton placeholders for each section
-- [ ] **Skeleton component** — uses `animation-pulse` with `bg-surface-raised`
+- [ ] **Skeleton component** — uses `animate-pulse` with `bg-surface-raised`
 - [ ] Skeletons mirror the layout of the actual settings page
 
 ### Error State (`error.tsx`)
@@ -427,7 +427,7 @@ Uses the `ErrorDisplay` component:
 - [ ] **Title** — "Settings unavailable"
 - [ ] **Message** — "We couldn't load your settings. Please try again."
 - [ ] **Warning icon** — `WarningCircle` (32px) in red
-- [ ] **Retry button** — with `ArrowCounterClockwise` icon (16px)
+- [ ] **Retry button** — label text `Try Again` with `ArrowCounterClockwise` icon (16px)
 - [ ] **Sentry capture** — error is captured to Sentry if error prop provided
 
 ### Page Loading State
@@ -479,7 +479,7 @@ Uses the `ErrorDisplay` component:
 ### Navigation & Logout
 1. [ ] Click each tab — verify correct content displays
 2. [ ] Verify active tab highlighting (bg-surface-raised)
-3. [ ] Click "Log Out" button — verify sign out behavior
+3. [ ] Verify `Log Out` button is rendered; current implementation has no click handler or sign-out action
 
 ---
 
@@ -760,7 +760,7 @@ Uses the `ErrorDisplay` component:
 
 ### Plan Fallback (page.tsx:234)
 
-- [ ] When `user.plan` is null or undefined, `displayPlan` defaults to `"free"` — all billing and usage displays show free-tier values
+- [ ] When `user.plan` is null or undefined, `displayPlan` defaults to `"free"` — plan-derived UI falls back to free-tier pricing and plagiarism limits, while token quota and usage totals still come from `usageStats`
 
 ### Sidebar Tab Hover (page.tsx:261)
 
@@ -863,7 +863,7 @@ Uses the `ErrorDisplay` component:
 | # | Location | Doc Says | Actual Source |
 |---|----------|----------|---------------|
 | 1 | §10 line 421 | Skeleton uses `animation-pulse` | Actual class is `animate-pulse` (skeleton.tsx:6) |
-| 2 | §10 line 431 | "Retry button" | Button label text is `Try Again` (error-display.tsx:44) |
+| 2 | §10 line 431 | "Retry button" | Actual button label text is `Try Again` (the original doc named the control but did not record the literal label) |
 | 3 | §8 line 362 | "Invalid signature — returns 400" | Webhook returns **401** for both missing and invalid signatures (webhook/route.ts:17, 39) |
 | 4 | §11 line 483 | "Click 'Log Out' button — verify sign out behavior" | Log Out button has **no onClick handler** — clicking does nothing (page.tsx:270–273) |
 | 5 | §7 line 271 | "Auth required — returns 401 if not authenticated" | Auth errors are caught by generic catch → returns **500** with "Failed to create payment order" (create-order/route.ts:37–43) |
@@ -876,3 +876,7 @@ None — all components documented in the existing doc are part of the import ch
 ### Existing "Actual Current Behavior Corrections" Verification
 
 The Codex audit section (lines 486–695) is accurate. All assertions were verified against source. No corrections needed in that section.
+
+### Codex Verification Note
+
+- `displayPlan` only controls plan-derived UI (`Free`/`Basic`/`Pro` pricing text and the plagiarism limit). Token quota and usage counters continue to render from `getUserUsageStats()`.

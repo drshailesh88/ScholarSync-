@@ -4,6 +4,7 @@
 **Original checkbox count:** 87
 **After Codex pass 1:** 243
 **After Claude Code pass 2:** 297 (54 new checks, 6 behavior corrections)
+**After Codex verification:** 297 documented checks, with 53/54 Pass 2 additions verified and 1 clarified
 
 ## Audit History
 
@@ -12,6 +13,20 @@
 | Original | Claude Code | 87 | — | 87 |
 | Pass 1 | Codex | 156 | 0 | 243 |
 | Pass 2 | Claude Code | 54 | 6 | 297 |
+
+## Codex Verification Summary
+
+- Reviewed all 54 checkboxes under `Re-Audit Discoveries (Claude Code Pass 2)`.
+- Result: 53 verified correct, 0 hallucinated, 1 partially correct.
+- The only partial claim was the broad statement that `displayPlan = user?.plan || "free"` makes all billing and usage displays free-tier. In reality, plan-derived UI falls back to free, but token quota and usage counters still render from `getUserUsageStats()`.
+- Cleaned stale assertions in `SETTINGS_FEATURES_TESTING.md` for:
+  - `create-order` auth failures returning 500, not 401
+  - verify-payment / `createSubscription()` user-plan sync being insert-only, not unconditional
+  - webhook invalid-signature responses returning 401, not 400
+  - skeleton using `animate-pulse`, not `animation-pulse`
+  - the settings-page `Log Out` button being rendered without a handler
+  - the ErrorDisplay action label being `Try Again`
+- High-priority product issue confirmed: `src/app/(app)/settings/page.tsx` renders a plain `Log Out` button with no `onClick` handler and no Clerk wrapper.
 
 ## Pass 2 Summary
 
