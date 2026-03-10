@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { SignOutButton } from "@clerk/nextjs";
 import {
   UserCircle,
   CreditCard,
@@ -267,10 +268,12 @@ export default function SettingsPage() {
             );
           })}
         </nav>
-        <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors mt-4">
-          <SignOut size={18} />
-          Log Out
-        </button>
+        <SignOutButton redirectUrl="/">
+          <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-500 hover:bg-red-500/10 transition-colors mt-4">
+            <SignOut size={18} />
+            Log Out
+          </button>
+        </SignOutButton>
       </aside>
 
       {/* Settings Content */}
