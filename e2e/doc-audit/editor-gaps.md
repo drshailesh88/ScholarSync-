@@ -6,6 +6,7 @@
 **After Codex Pass 2:** 989
 **After Claude Code Pass 3:** 1203
 **After Codex Verification Pass:** 1211
+**After Claude Code Pass 4:** 1301
 **Hallucinations removed from Claude Pass 3:** 5
 **Partially-correct Claude assertions rewritten via Codex verification:** 1
 **New checks added in Codex verification:** 14

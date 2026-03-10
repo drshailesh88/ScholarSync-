@@ -1949,3 +1949,154 @@ The editor recognizes these markdown patterns via the `Typography` extension and
 - [ ] CommentSidebar registers `scholarsync:new-inline-comment` on mount and removes that window listener on unmount
 - [ ] `useStudioDocument` clears its debounced title-save timer on unmount
 - [ ] Studio citation insertion flow clears any existing dismissal timer before starting a new 2500 ms timer, so rapid successive citation inserts restart the countdown instead of stacking multiple timers
+
+## Re-Audit Discoveries (Claude Code Pass 4)
+
+> Line-by-line source audit of every file in the editor/studio import tree, cross-referenced against the 1211 existing checks from Passes 1-3 and Codex verification.
+
+### Studio Toolbar Component (`src/components/editor/toolbar.tsx`)
+
+- [ ] Studio `Toolbar` renders 8 formatting buttons in order: Heading 1 (`TextHOne`), Heading 2 (`TextHTwo`), Heading 3 (`TextHThree`), Bold (`TextB`), Italic (`TextItalic`), Bullet List (`ListBullets`), Ordered List (`ListNumbers`), Blockquote (`Quotes`)
+- [ ] Studio `Toolbar` formatting button icons use size `18`
+- [ ] Studio `Toolbar` "Cite" button uses `BookOpen` icon (size 16) with title `"Insert Citation (Cmd+Shift+C)"`
+- [ ] Studio `Toolbar` "Cite" label text `"Cite"` is hidden below `sm` breakpoint via `hidden sm:inline` class
+- [ ] Studio `Toolbar` "Cite" button only renders when `onOpenCitationDialog` prop is provided
+- [ ] Studio `Toolbar` "References" button uses `Books` icon (size 16) with title `"Toggle Reference Sidebar (Cmd+Shift+R)"`
+- [ ] Studio `Toolbar` reference count badge renders only when `referenceCount > 0`
+- [ ] Studio `Toolbar` reference count badge uses `bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-medium rounded-full px-1.5 py-0.5 leading-none`
+- [ ] Studio `Toolbar` returns `null` (renders nothing) when `editor` prop is null
+- [ ] Studio `Toolbar` container uses `glass-panel` CSS class with `border-b border-border`
+- [ ] Studio `Toolbar` has a `w-px h-5 bg-border mx-1` separator div between formatting buttons and citation buttons
+- [ ] All Studio `Toolbar` buttons use `onMouseDown` with `event.preventDefault()` to preserve text selection
+- [ ] Active Studio `Toolbar` buttons use `bg-brand/10 text-brand` styling; inactive use `text-ink-muted hover:text-ink hover:bg-surface-raised`
+
+### TiptapEditor Renders Floating Overlays on Studio
+
+- [ ] `TiptapEditor` mounts `SelectionToolbar`, `LinkPopover`, `DocumentOutline`, and `FootnoteSection` as sibling components alongside `EditorContent` — making all four available on `/studio`
+- [ ] `TiptapEditor` floating overlays (`SelectionToolbar`, `LinkPopover`, `DocumentOutline`) are conditionally rendered only when `editor` is non-null
+- [ ] `FootnoteSection` is rendered outside the overlay conditional, after the `EditorContent` container
+
+### TiptapEditor Save Behavior Details
+
+- [ ] `TiptapEditor` `flushSave` (Cmd+S path) extracts plain text via `doc.textBetween(0, doc.content.size, "\n")` using newline as block separator
+- [ ] `TiptapEditor` debounced save extracts plain text via `ed.getText()` with no block separator argument — producing different plain text output from `flushSave`
+- [ ] `TiptapEditor` debounced save computes word count inline with `text.split(/\s+/).filter((w) => w.length > 0).length` rather than using `getDocumentWordCount()` helper
+- [ ] `TiptapEditor` `flushSave` computes word count via `getDocumentWordCount(doc)` (ProseMirror-level), while debounced save uses string-level splitting — potentially producing different counts
+- [ ] `TiptapEditor` content key change with null `content` calls `editor.commands.clearContent()` to reset the editor for a fresh document
+
+### Editor Page vs Studio Loading State Icons
+
+- [ ] Editor page loading spinner uses `Spinner` icon (from `@phosphor-icons/react`) with size 32, `animate-spin text-brand` class, and `mb-3` margin below
+- [ ] Studio loading spinner uses `CircleNotch` icon with size 28 and `animate-spin text-brand` class — a different icon from the editor page
+
+### SelectionToolbar Rendering Details
+
+- [ ] `SelectionToolbar` icon weight changes dynamically: `weight={active ? "bold" : "regular"}` for each `ToolbarButton` icon
+- [ ] `SelectionToolbar` icon size is `16` for all formatting buttons
+- [ ] `SelectionToolbar` Y position is calculated as `start.top - 8` (8px gap above selection)
+- [ ] `SelectionToolbar` container uses `fixed z-50` positioning with CSS `transform: translate(-50%, -100%)`
+- [ ] `SelectionToolbar` style dropdown popup width is `w-44` (176px)
+- [ ] Highlight color circle buttons are `w-5 h-5 rounded-full` (20px diameter) with `hover:scale-110` animation
+- [ ] `SelectionToolbar` inner container classes: `bg-surface border border-border rounded-lg shadow-lg px-1 py-0.5`
+- [ ] `SelectionToolbar` `Separator` component renders `w-px h-5 bg-border mx-0.5`
+
+### Studio KeyboardShortcutsDialog Availability
+
+- [ ] Studio page renders its own `KeyboardShortcutsDialog` component, triggered by a `Question` icon button in the center toolbar — keyboard shortcuts help is available on both `/editor/[id]` and `/studio`
+- [ ] Studio keyboard shortcuts button `title` is `"Keyboard shortcuts"` — without the `"(Cmd+/)"` suffix used by the Editor page TopBar
+
+### Studio AI Panel Mutual Exclusion
+
+- [ ] Studio right panel shows `ReferenceSidebar` when `sidebarOpen` is true, `CommentSidebar` when reference sidebar is closed but `commentSidebarOpen` is true, or the AI chat panel as fallback — only one of these three renders at a time
+- [ ] Studio `CommentSidebar` requires both `studioDoc?.id` AND `editorRef.current` to be truthy before rendering (in addition to `commentSidebarOpen`)
+- [ ] Studio `ResearchSidebar` renders as a direct child of the main flex container, between the center editor column and the right panel — it is NOT inside the AI panel
+
+### Studio Chat UI Specifics
+
+- [ ] Studio chat send button icon is `PaperPlaneRight` (size 16) with `bg-brand text-white hover:bg-brand-hover` styling
+- [ ] Chat message text uses `whitespace-pre-wrap text-xs leading-relaxed` class for multiline rendering
+- [ ] Chat message container max width is `max-w-[85%]` of the panel width
+- [ ] User message bubble style: `bg-surface-raised text-ink`; assistant message bubble style: `bg-brand/5 text-ink`
+- [ ] Loading animation sparkle avatar uses `animate-spin` class (spinning sparkle icon) — distinct from the bouncing dots below it
+- [ ] Loading animation bouncing dots are `w-1.5 h-1.5 rounded-full bg-brand/40` with animation delays `0ms`, `150ms`, and `300ms`
+- [ ] Chat input has `rounded-xl` border radius with `focus:ring-2 focus:ring-brand/40` focus ring
+- [ ] Chat form uses `<form onSubmit>` pattern — Enter key in the input triggers form submission
+
+### Studio Export Dropdown Icon Details
+
+- [ ] Export dropdown container uses `glass-panel` class with `w-48` (192px) width
+- [ ] PDF export button icon `FilePdf` uses `text-red-400` color class
+- [ ] Word export button icon `FileDoc` uses `text-blue-400` color class
+- [ ] PDF export button has `rounded-t-lg` border radius; Word export button has `rounded-b-lg`
+
+### Editor Page Fallback Values and Conditions
+
+- [ ] `CitationDialog` receives `documentId={String(dbDocumentId || "default")}` — falls back to literal string `"default"` when no DB document ID exists
+- [ ] `ExportDialog` receives `content={dbContent || editorContent || { type: "doc", content: [] }}` — ultimate fallback is an empty Tiptap document node
+- [ ] `VersionHistory` panel only renders when all three conditions are true: `showVersionHistory && dbDocumentId && sectionId !== null`
+
+### Editor Page Reference Sidebar Dual-Store Sync
+
+- [ ] Editor page computes `sidebarOpen` as logical OR of `editorReferenceSidebarOpen` (editor store) and `referenceSidebarOpen` (reference store)
+- [ ] `handleSetReferenceSidebarOpen` updates BOTH the editor store and the reference store simultaneously
+- [ ] A `useEffect` syncs the two stores when they fall out of sync — if either store value changes, both are set to the OR of their current values
+- [ ] Reference sidebar container on editor page uses `w-80 border-l border-border bg-surface shrink-0`
+
+### AcademicEditor Internal Save Status vs External Persistence
+
+- [ ] `AcademicEditor.onUpdate` sets editor store `saveStatus` to `{ state: "saving" }` immediately on every content change (before debounce fires)
+- [ ] After debounce timer fires, `AcademicEditor` sets `{ state: "saved", lastSavedAt: new Date() }` — this happens before the parent's actual DB persistence completes
+- [ ] This means the TopBar save indicator shows "Saved" after the debounce delay, even though the actual server save triggered by `handleEditorUpdate` may still be in progress or may fail
+
+### Footnote Node HTML Serialization
+
+- [ ] Footnote node `parseHTML` matches selector `span[data-footnote-id]`
+- [ ] Footnote `id` attribute maps to `data-footnote-id` HTML attribute
+- [ ] Footnote `text` attribute maps to `data-footnote-text` HTML attribute
+- [ ] Footnote `number` attribute maps to `data-footnote-number` HTML attribute, parsed with `parseInt(value, 10)` defaulting to string `"1"`
+- [ ] Footnote `renderHTML` outputs: `<span class="footnote-marker" contenteditable="false"><sup>{number}</sup></span>`
+
+### Citation Node HTML Serialization
+
+- [ ] Citation node `parseHTML` matches selector `span[data-type="citation"]`
+- [ ] `referenceIds` attribute serialized as JSON string in `data-reference-ids` HTML attribute
+- [ ] `overrides` attribute serialized as JSON string in `data-overrides` HTML attribute; omitted entirely from HTML when `overrides` is null
+- [ ] Both `referenceIds` and `overrides` use `JSON.parse()` with fallback (`[]` and `null` respectively) on parse error
+- [ ] Citation extension `addKeyboardShortcuts` registers `"Mod-Shift-c"` (lowercase `c`), not uppercase `C`
+
+### Studio Research Citation Author Parsing
+
+- [ ] `toCitationAuthors()` handles comma-separated names (e.g. `"Smith, John"`) by splitting on `","` with first part as family name
+- [ ] `toCitationAuthors()` handles space-separated names (e.g. `"John Smith"`) by taking the last word as family name and remaining words as given name
+- [ ] Single-word author names use the word as family name with empty string for given name
+- [ ] Empty or whitespace-only author strings return `{ family: "Unknown", given: "" }`
+- [ ] `buildResearchReference()` always creates CSL data with `type: "article-journal"` regardless of actual source type
+- [ ] Research reference `stableKey` falls back to a slugified title (`title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")`) when neither DOI nor PMID is available
+
+### Document Outline Header and Styling Details
+
+- [ ] Outline panel header text is `"Document Outline"` (full phrase, not abbreviated)
+- [ ] Outline header uses `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling
+- [ ] Collapsed outline toggle button `title` attribute is `"Document Outline"`
+- [ ] Heading item base padding uses inline style `paddingLeft: ${12 + indent}px` — 12px base plus level-dependent indent
+- [ ] Word count per heading visibility uses `opacity-0 group-hover:opacity-100 transition-opacity` CSS opacity transition (not conditional rendering)
+- [ ] Total word count in footer uses `wordCount.toLocaleString()` for thousands-separator formatting
+
+### TopBar SaveStatusIndicator vs Editor Page Header Save Icons
+
+- [ ] TopBar `SaveStatusIndicator` saved state uses `Check` icon (size 12) — the editor page header bar uses `CheckCircle` icon (size 14) for the same state
+- [ ] TopBar saving state uses `CloudArrowUp` (size 12) with `text-brand animate-pulse` — the editor page header uses `CloudArrowUp` (size 14) with `animate-pulse text-ink-muted` (muted color, not brand)
+- [ ] TopBar `SaveStatusIndicator` default case (unknown state) returns `null` — it does not render any indicator for unrecognized states
+
+### Behavior Corrections (Pass 4)
+
+- [ ] CORRECTION: Existing doc section 15 states Document Outline is "Editor page only" — `TiptapEditor` (`tiptap-editor.tsx:338`) also renders `DocumentOutline`, making it available on both `/editor/[id]` and `/studio`
+- [ ] CORRECTION: Existing doc section 9 describes the Floating Selection Toolbar implicitly as an editor-page-only feature — `TiptapEditor` (`tiptap-editor.tsx:336`) also renders `SelectionToolbar` on `/studio`
+- [ ] CORRECTION: Existing doc section 10 describes LinkPopover as "Editor page only" — `TiptapEditor` (`tiptap-editor.tsx:337`) renders `LinkPopover` on `/studio` as well
+- [ ] CORRECTION: Existing doc section 14 describes FootnoteSection implicitly as editor-page-only — `TiptapEditor` (`tiptap-editor.tsx:342`) also renders `FootnoteSection` on `/studio`
+- [ ] CORRECTION: Existing doc line 1491 states bottom new-comment input placeholder is `"Add a general comment about this document..."` — a Pass 3 correction already flagged this as `"Add a comment..."`, but line 1908 then re-states it as `"Add a comment..."` while the Pass 2 doc at line 1491 remains uncorrected
+
+### Components Referenced But Not Rendered (Pass 4)
+
+- [ ] `toolbar.tsx` `ToolbarProps` interface defines only `{ editor: Editor | null }` but the actual `ToolbarExtendedProps` adds `onOpenCitationDialog`, `onToggleReferenceSidebar`, and `referenceCount` — the narrow `ToolbarProps` interface is dead code
+- [ ] `editor-config.ts` `EDITOR_SHORTCUTS.clearFormatting` defines `"Mod-\\"` but no extension registers this shortcut — confirmed still unwired in Pass 4
