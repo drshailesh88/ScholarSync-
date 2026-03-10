@@ -1234,4 +1234,216 @@ Shown when chat has no messages.
 
 ---
 
+## Re-Audit Discoveries (Claude Code Pass 3)
+
+### `/api/rag-chat/route.ts` — RAG Chat API Internals
+
+- [ ] Request body validated by Zod: `messages` array min(1) max(50), each with `role` enum `["user","assistant","system"]` and `content` string max(50000)
+- [ ] `paperIds` validated as optional array of numbers max(50); `mode` optional string; `ragConfig` optional record
+- [ ] Authentication failure returns `{ error: "Authentication required." }` with status 401
+- [ ] Rate-limited via `checkRateLimit(userId, "rag-chat", RATE_LIMITS.ai)`; rate limit hit returns the rate-limit response directly
+- [ ] Validation failure returns `{ error: "Invalid request. Please check your input and try again." }` with status 400
+- [ ] When AI is not configured (`!isAIConfigured()`), returns a deterministic fallback via `buildFallbackNotebookAnswer()` with the same `X-RAG-Sources` and `X-RAG-Coverage` headers
+- [ ] RAG retrieval failure is caught and logged as warning `"RAG retrieval failed, falling back to no-context mode"`; streaming continues without context chunks
+- [ ] `streamText` error falls back to `buildFallbackNotebookAnswer()` with source headers intact (second fallback path)
+- [ ] Outer catch returns `{ error: "An error occurred while processing your request. Please try again." }` with status 500
+- [ ] System prompt base text is `"You are ScholarSync, an AI research assistant for academic writing. You help students and researchers analyze their papers and answer questions."`
+- [ ] Notebook mode appends `" You are in Notebook mode — analyzing uploaded research sources."` to the system prompt
+- [ ] System prompt includes 5 CRITICAL RULES for citation behavior when context chunks are present, starting with `"For EVERY factual claim, cite the source number in brackets like [1] or [1][2]."`
+- [ ] Default RAG pipeline config: `topK: 8`, `useMultiQuery: true`, `useHyDE: true`, `useSelfQuery: true`, `useRerank: true`, `useCompression: false`
+- [ ] Fallback answer with zero chunks: `"I couldn't retrieve grounded source passages for that question.\n\nTry selecting more sources or ask a narrower question tied to the uploaded papers."`
+- [ ] Fallback answer with chunks uses top 4 chunks as evidence lines, each snippet truncated to 280 characters
+- [ ] Coverage report `unusedPapers` array contains objects with `id` and `title` fields, filtered from papers where `contributed` is false
+- [ ] Source metadata array entries include `chunkId` alongside `sourceIndex`, `paperId`, `paperTitle`, `paperAuthors`, `pageNumber`, and `sectionType`
+
+### `/api/chat/route.ts` — General Chat API Internals
+
+- [ ] Request body validated by Zod: `messages` array max(50) with no minimum (unlike rag-chat which requires min 1)
+- [ ] Authentication failure returns `{ error: "Authentication required." }` with status 401
+- [ ] Rate-limited via `checkRateLimit(userId, "chat", RATE_LIMITS.ai)`
+- [ ] Validation failure returns `{ error: "Invalid request. Please check your input and try again." }` with status 400
+- [ ] AI not configured returns `{ error: "AI service is not configured. Please contact an administrator." }` with status 503
+- [ ] Mode `"learn"` in `/api/chat` triggers the Socratic guide system prompt via `getGuideSystemPrompt()` or `getDefaultGuidePrompt()`
+- [ ] Mode `"notebook"` (research mode) falls through to the standard assistant prompt: `"You are ScholarSync's AI research assistant for medical students..."`
+- [ ] Server error returns `{ error: "An unexpected error occurred. Please try again." }` with status 500
+
+### `/api/extract-pdf/route.ts` — PDF Extraction API Internals
+
+- [ ] Max file size limit is 20MB (`20 * 1024 * 1024` bytes)
+- [ ] Content-Type must include `"multipart/form-data"` or returns 400 with `{ error: "Content-Type must be multipart/form-data" }`
+- [ ] Missing file field returns 400 with `{ error: "No PDF file provided. Include a 'file' field in the form data." }`
+- [ ] Non-PDF file returns 400 with `{ error: "Uploaded file must be a PDF" }` — validated by MIME type containing `"pdf"` OR filename ending `.pdf` case-insensitively
+- [ ] Oversized file returns 413 with `{ error: "File size exceeds the 20MB limit. Uploaded file is X.XMB." }` showing actual size
+- [ ] Successful extraction returns `{ text, pages, info: { title?, author? } }` where title and author come from PDF metadata
+- [ ] Server error returns 500 with `{ error: "Failed to extract text from PDF" }`
+
+### `/api/embed/route.ts` — Embed API Internals
+
+- [ ] Zod schema requires `paperId` to be `z.number().int().positive()` — negative, zero, or non-integer values rejected
+- [ ] Validation failure returns 400 with `{ error: "Invalid input", issues: [...] }` including Zod issue details
+- [ ] Rate-limited via `RATE_LIMITS.embed` — a different rate limit tier than the `RATE_LIMITS.ai` used by chat/rag-chat
+- [ ] Server error returns 500 with `{ error: "Failed to embed paper" }`
+
+### `/api/extract-facts/route.ts` — Extract Facts API Internals
+
+- [ ] Supports batch extraction via `paperIds` array (max 50) in addition to single `paperId`
+- [ ] Missing `paperId` when no `paperIds` array provided returns 400 with `{ error: "paperId (number) is required" }`
+- [ ] Optional `projectId` parameter accepted in request body
+- [ ] Server error returns 500 with `{ error: "Extraction failed" }`
+
+### `/api/audio-overview/route.ts` — Audio Overview API Internals
+
+- [ ] Zod schema: `conversationId` positive int; `paperIds` positive int array min(1) max(25); `mode` enum `["research","learn"]` optional; `customPrompt` string max(500) optional; `length` enum `["brief","default","detailed"]` optional
+- [ ] Validation error returns the first Zod issue message as `{ error: message }` with status 400
+- [ ] Conversation not found or not owned by user returns 404 with `{ error: "Conversation not found" }`
+- [ ] Cache key format: `${mode}:${length}:${customPrompt.slice(0,50)}:${sorted paperIds.join(",")}` — customPrompt changes invalidate the cache
+- [ ] No paper overviews available returns 400 with `{ error: "No source notes available. Generate source notes first (View Source Notes panel)." }`
+- [ ] Server error returns 500 with `{ error: "Failed to generate audio overview. Please try again." }`
+- [ ] GET endpoint streams stored audio files; requires `stream` query parameter with path format `{conversationId}/{audioId}.{extension}`
+- [ ] GET validates conversation ownership via user auth and conversation `user_id` match
+- [ ] GET returns audio with `Cache-Control: private, max-age=3600` and `Content-Length` headers
+- [ ] GET MIME type detection: `mp3→audio/mpeg`, `wav→audio/wav`, `opus→audio/opus`, `aac→audio/aac`, `flac→audio/flac`; unknown extensions default to `audio/mpeg`
+- [ ] TTS uses OpenAI provider with voice `"nova"` and format `"mp3"`
+- [ ] Audio stored to R2 via `uploadAudioOverview(conversationId, audioId, buffer, extension)`
+- [ ] Paper authors normalized: supports string values, objects with `name`/`full_name`/`author` fields; empty strings filtered; sliced to max 5
+
+### `/api/papers/[id]/pdf/route.ts` — PDF Storage & Serving Internals
+
+- [ ] GET tries signed URL first (returns 302 redirect), then direct buffer stream, then falls back to paper's `pdf_url` or `open_access_url`
+- [ ] GET direct stream headers: `Content-Type: application/pdf`, `Content-Disposition: inline; filename="paper-{id}.pdf"`, `Cache-Control: private, max-age=3600`
+- [ ] GET 404 when no PDF found: `{ error: "PDF not found for this paper" }`
+- [ ] POST stores PDF to R2, updates paper record with `pdf_storage_path` and `full_text_available: true`, then queues background processing pipeline
+- [ ] POST success returns `{ success: true, paperId, storagePath }`
+- [ ] POST failure returns 500 with `{ error: "Failed to store PDF file" }`
+- [ ] Both GET and POST validate paper ID as digits-only via regex `/^\d+$/`
+
+### PDF Viewer Component (`pdf-viewer.tsx`) — Full Feature Set
+
+- [ ] Toolbar: page navigation (CaretLeft/CaretRight), page display, zoom controls (MagnifyingGlassPlus/MagnifyingGlassMinus), fit-width (ArrowsOutSimple), title, close (X)
+- [ ] Page display format: `"{pageNumber} / {numPages}"` when loaded, `"..."` while loading
+- [ ] Zoom range: minimum 0.5x (50%), maximum 3.0x (300%), step 0.25 per click
+- [ ] Zoom display: `"{Math.round(scale * 100)}%"` — e.g., "100%", "125%"
+- [ ] Fit-width button resets scale to 1.0 (not a responsive width calculation)
+- [ ] Previous page button disabled when `pageNumber <= 1`; next page disabled when `pageNumber >= numPages`
+- [ ] Zoom out disabled when `scale <= 0.5`; zoom in disabled when `scale >= 3.0`
+- [ ] `initialPage` clamped to valid range on document load: must be `>= 1` and `<= total`; out-of-range or missing values fall back to page 1
+- [ ] Document load error with "404", "Not Found", or "Missing" in message shows specific text: `"The original PDF is not available for this paper. It may have been imported from search without a PDF upload."`
+- [ ] Other document load errors show the raw `err.message`, falling back to `"Failed to load PDF"`
+- [ ] Error display: red circle (`bg-red-500/10`) with X icon (`text-red-500`) + `"Failed to load PDF"` heading + error detail text
+- [ ] Document loading state: spinner (`border-brand border-t-transparent animate-spin`) + `"Loading PDF..."` text
+- [ ] Document component error fallback (react-pdf internal error): `"Failed to load PDF document."`
+- [ ] Per-page loading state: smaller spinner within the page render area
+- [ ] Escape key listener registered only when `onClose` prop is provided; removed on cleanup
+- [ ] `role="dialog"`, `aria-modal="true"`, `aria-label` includes title when provided: `"PDF Viewer: {title}"`, otherwise `"PDF Viewer"`
+- [ ] Navigation aria-labels: `"Previous page"`, `"Next page"`
+- [ ] Zoom aria-labels: `"Zoom out"`, `"Zoom in"`, `"Fit width"`
+- [ ] Close button `aria-label="Close PDF viewer"`
+- [ ] Title shown in toolbar: truncated with `max-w-[40%]`, hidden on small screens via `hidden sm:block`
+- [ ] PDF page rendered with `shadow-xl rounded-lg`; content area has `bg-surface/50` background
+- [ ] Returns `null` when neither `url` nor `file` prop is provided
+
+### Notebook Page — Additional Rendering Details
+
+- [ ] Learn mode empty state subtitle is exactly `"Select your papers and start exploring"`
+- [ ] Research mode empty state uses conditional plural without parentheses: `"Ready to analyze 1 source"` (singular) vs `"Ready to analyze 2 sources"` (plural)
+- [ ] Suggestion-loading bouncing dots are `w-1.5 h-1.5 bg-brand/30` with delays 0ms/100ms/200ms — different from main loading dots which are `w-2 h-2 bg-brand/40` with delays 0ms/150ms/300ms
+- [ ] `handleOpenAudioOverview` auto-creates a conversation with title `"Audio Overview"` if no conversation exists yet
+- [ ] Audio overview auto-creation prepends the new conversation to `pastConversations` and slices list to 20 maximum
+- [ ] `handleOpenAudioOverview` failure logs `"Failed to open audio overview:"` to console with no inline UI error
+- [ ] Conversation history entries with null titles display `"Untitled"` as both visible text and HTML `title` attribute
+- [ ] Send button disabled state uses `disabled:opacity-50`; audio/share disabled buttons use `disabled:opacity-30 disabled:cursor-not-allowed`
+- [ ] `handleCitationClick` sets `highlightedSource` BEFORE checking if source exists — a missing source still updates the highlight index
+- [ ] Copy and feedback action buttons appear on ALL assistant messages including error messages (ids starting with `err_`), but feedback persistence is a no-op for error messages due to id parsing
+- [ ] Coverage badge unused-paper title truncation has no length limit for colon truncation and no ellipsis for the 30-char fallback — different from citation short-title truncation which caps colon position at 40 chars and appends `"…"`
+- [ ] Coverage badge "not referenced" suffix: unused paper titles are joined with `", "` and followed by literal text `" not referenced"`
+
+### Notebook Share Actions (`notebook-share.ts`) — Server-Side Details
+
+- [ ] `enableNotebookSharing` reuses existing `share_token` if present; only generates new `crypto.randomUUID()` when no prior token exists
+- [ ] `disableNotebookSharing` preserves the existing share token; only sets `share_enabled: false` and updates `updated_at`
+- [ ] `updateNotebookShareSettings` hashes passwords via `hashPassword()` before storing; `null` password stores null (removes protection)
+- [ ] `verifyNotebookSharePassword` supports both hashed passwords (detected via `isHashedPassword()`) and legacy plain-text passwords via direct comparison
+- [ ] `verifyNotebookSharePassword` returns `true` without comparison when `sharePassword` is null (no password set)
+- [ ] `getNotebookByShareToken` returns null for expired shares by checking `new Date() > convo.shareExpiresAt`
+- [ ] `getNotebookByShareToken` falls back to `"Untitled Notebook"` for null conversation titles
+- [ ] `getNotebookByShareToken` falls back to `"A researcher"` for missing owner names
+- [ ] `getNotebookByShareToken` orders messages by `created_at` ascending
+- [ ] Share URL constructed from `process.env.NEXT_PUBLIC_APP_URL`, falling back to `"http://localhost:3000"`
+
+### Share Dialog — Additional Details
+
+- [ ] Password field in share dialog uses `type="text"` (visible while typing), NOT `type="password"` — different from the password gate which uses `type="password"`
+- [ ] Share toggle has `aria-label="Toggle notebook sharing"`
+- [ ] Toggle and Save Settings share the same `saving` state — toggling disables Save, and saving disables the toggle
+- [ ] `handleCopy` is a no-op when `shareUrl` is null (guard before clipboard write)
+
+### Shared Notebook — Additional Details
+
+- [ ] `generateMetadata` returns `{ title: "Not Found - ScholarSync" }` when token lookup returns null
+- [ ] `generateMetadata` returns `{ description: "Shared notebook by {ownerName}" }` for valid notebooks
+- [ ] Shared viewer uses hardcoded hex colors: `bg-[#020617]`, `text-[#f1f5f9]`, `text-[#64748b]`, `bg-[#6366f1]/5` — not the `brand`/`ink`/`surface` design tokens used in the main notebook
+- [ ] Shared viewer citation pills use `bg-[#6366f1]/10 border-[#6366f1]/20 text-[#818cf8]` — hardcoded values, not brand token classes
+- [ ] Shared viewer user messages use `bg-white/5` (not `bg-surface-raised` like the main notebook)
+- [ ] Shared viewer date in header uses `toLocaleDateString` with `{ year: "numeric", month: "long", day: "numeric" }`
+- [ ] `NotebookPasswordGate` clears error state (`setError("")`) on each new submission before setting loading
+- [ ] Shared viewer defensively checks `Array.isArray(msg.retrieved_chunks)` before casting to source metadata; non-array values result in empty sources array
+
+### Source Notes Panel — Additional Details
+
+- [ ] Paper cards start expanded by default (`useState(true)` for `expanded`)
+- [ ] `getErrorMessage()` utility returns `error.message` for Error instances, otherwise `"Unable to generate notes right now. Please try again."`
+- [ ] Panel backdrop opacity transitions from `opacity-0` to `opacity-100` with `duration-200`
+- [ ] Panel slide-in transform transitions from `translate-x-full` to `translate-x-0` with `duration-200`
+- [ ] Panel max-width is `max-w-md` (not full sidebar width)
+- [ ] Panel uses `glass-panel` class with `shadow-2xl`
+- [ ] Paper notes fetch uses a `cancelled` flag pattern via useEffect cleanup to prevent stale data updates after unmount
+- [ ] `Generate All` button disabled when `generatingPapers.size > 0` (any paper generating), with `disabled:opacity-50`
+- [ ] Panel header count uses singular/plural: `"1 paper"` vs `"N papers"`
+- [ ] Suggested questions section header: `ChatCircleDots` icon (size 10) + `"Ask about this paper"` label
+- [ ] Question items use `ArrowRight` icon (not generic arrow) with `text-brand/50` default, `group-hover:text-brand` on hover
+- [ ] Question text is line-clamped to 1 line via `line-clamp-1`
+
+### Audio Overview Panel — Additional Details
+
+- [ ] `normalizedPaperIds` deduplicates via `new Set`, sorts numerically, then filters out non-positive and non-integer values
+- [ ] Play/Pause button has dynamic `title`: `"Pause"` when playing, `"Play"` otherwise
+- [ ] Play icon and Pause icon both use `weight="fill"` (not the default regular weight)
+- [ ] Speed button has `title="Playback speed"`
+- [ ] Download button has `title="Download audio"`
+- [ ] Audio element uses `preload="auto"` attribute
+- [ ] Seek slider value clamped: `Math.min(currentTime, durationSeconds)` for value, `Math.max(durationSeconds, 0)` for max
+- [ ] Options toggle link text is literally `"Options"` — visible only when `canControlAudio && !showOptions`
+- [ ] `formatTime` returns `"0:00"` for non-finite, zero, or negative values; formats as `M:SS` with zero-padded seconds
+- [ ] Time display elements use `tabular-nums` class and fixed `w-8` width for stable layout
+- [ ] Reset effect clears `audioUrl`, `script`, `durationSeconds`, `currentTime`, `showTranscript`, `errorMessage`, `isCachedResult` — but preserves `speedIndex`
+- [ ] In idle state (before first generation), no Generate/Regenerate button appears — generation is purely automatic via `hasTriggeredRef`
+- [ ] Download creates a temporary anchor element appended to `document.body`, sets `anchor.rel = "noopener"`, clicks it, then removes it
+
+### Conversation Actions — Server-Side Details
+
+- [ ] `createConversation` defaults title to `"New Conversation"` when title param is falsy
+- [ ] `createConversation` defaults `paper_ids` to empty array when not provided
+- [ ] `addMessage` updates the parent conversation's `updated_at` timestamp after inserting the message
+- [ ] `submitMessageFeedback` accepts an optional `comment` parameter in addition to the numeric rating
+- [ ] `getConversations` orders results by `updated_at` descending (most recent first)
+
+### Loading Skeleton — Additional Details
+
+- [ ] Loading skeleton sidebar width is `w-72` — narrower than the actual notebook page sidebar which is `w-80`
+- [ ] Loading skeleton renders exactly 3 file placeholder rows, each with `p-3 rounded-lg bg-surface-raised/50`
+- [ ] Loading skeleton chat area uses `SkeletonText` component with `lines={6}`
+
+### Behavior Corrections (Pass 3)
+
+- [ ] Section 21 states password gate has a `type="password"` input — confirmed correct. However, the Share Dialog (section 19) password field is `type="text"` (plaintext visible), which is not noted in any existing check
+- [ ] Existing check says the audio close button has `title="Close audio overview"` but no `aria-label` — confirmed still accurate as of this pass
+- [ ] Section 12 describes coverage badge unused-paper truncation generically — the actual truncation differs from citation truncation: no 40-char colon cap, no ellipsis on 30-char fallback, and "not referenced" suffix text
+- [ ] Section 9 states "3 dots (2x2 rounded-full, brand/40 color)" for loading — this is correct for the main loading indicator; the suggestion-loading dots are different (1.5x1.5, brand/30, different delays) and should not be confused
+
+### Components Referenced But Not Rendered (Pass 3)
+
+- [ ] No change — all `src/components/notebook` files remain in active import chains
+
+---
+
 *Document generated from source code analysis. Last updated: 2026-03-10.*
