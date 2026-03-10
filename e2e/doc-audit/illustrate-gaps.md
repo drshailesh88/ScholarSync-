@@ -3,9 +3,9 @@
 **Original doc:** `ILLUSTRATE_FEATURES_TESTING.md`  
 **Original checkbox count:** 428  
 **Features found in UI:** 561  
-**Features found in source code:** 648  
-**Missing from doc:** 220  
-**Completeness of original doc:** 66.0%
+**Features found in source code:** 920  
+**Missing from doc:** 492  
+**Completeness of original doc:** 46.5%
 
 ## Missing Features
 

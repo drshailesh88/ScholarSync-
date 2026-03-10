@@ -1268,3 +1268,319 @@
 - The current editor Save/Save As flows download files locally; they do not update recent-diagram localStorage entries in the live route.
 - `POST /api/illustration/save` is a placeholder mock endpoint in the current source tree, not a finished persistent save path.
 - Help > Keyboard Shortcuts currently shows a toast summary; it does not open the richer `ShortcutsHelp` modal component that exists elsewhere in the codebase.
+
+## Re-Audit Discoveries (Codex Pass 2)
+
+### Fabric.js Canvas Internals
+- [ ] `Canvas` initializes Fabric with `width`, `height`, `backgroundColor`, `selection: true`, `preserveObjectStacking: true`, `renderOnAddRemove: true`, `stopContextMenu: true`, and `fireRightClick: true`
+- [ ] The live canvas initialization does not pass Fabric `selectionColor`, `selectionBorderColor`, or `selectionLineWidth`
+- [ ] `useCanvas()` throws `useCanvas must be used within a CanvasProvider` when consumed outside the provider
+- [ ] `CanvasProvider.clearCanvas()` clears all objects and resets the Fabric background color to `#ffffff`
+- [ ] `CanvasProvider.importSVG()` uses `loadSVGFromString`, groups all parsed SVG objects with `util.groupSVGElements`, scales the group to fit within 90% of canvas width and height, and centers it on the canvas
+- [ ] `CanvasProvider.selectAll()` filters out grid objects before constructing the `ActiveSelection`
+- [ ] `CanvasProvider.copy()` stores serialized `obj.toObject()` payloads in memory only; it does not use the system clipboard
+- [ ] `CanvasProvider.paste()` re-enlivens each serialized object independently, offsets each pasted object by `+20` left and `+20` top, and logs `Failed to paste object:` on per-object failure
+- [ ] `CanvasProvider.zoomToFit()` ignores grid objects, fits the remaining content into 90% of the canvas viewport, and clamps the resulting zoom to a maximum of `2`
+- [ ] `CanvasProvider.setZoom()` clamps requested zoom between `0.1` and `10`
+- [ ] `CanvasProvider.centerView()` resets the viewport transform to `[1, 0, 0, 1, 0, 0]` instead of computing a content-aware center point
+- [ ] Grid rendering is implemented as an overlay via `registerGridOverlay()` and not as persisted Fabric line objects
+- [ ] Grid overlay registration adds `before:render` and `after:render` listeners, clears the top context before each render, and removes those listeners during cleanup
+- [ ] Grid overlay lines use color `rgba(200, 200, 200, 0.3)` and 1px crisp-line drawing on the top canvas context
+- [ ] Grid spacing is calculated as `gridSize * zoom`, with offsets derived from `viewportTransform[4]` and `viewportTransform[5]`
+- [ ] Snap-to-grid snaps `left` and `top` to the nearest multiple of the current `gridSize`; it does not snap width, height, or rotation
+- [ ] Guide snapping uses a hard threshold of `5` pixels and checks object left edge, center, and right edge or top edge, center, and bottom edge against guide positions
+- [ ] `selection:created` and `selection:updated` both forward `e.selected` into the editor selection callback
+- [ ] `selection:cleared` forwards an empty array into the editor selection callback
+- [ ] The live canvas does not register a Fabric `object:selected` listener; selection state is driven by `selection:created` and `selection:updated`
+- [ ] `object:modified` pushes history only when `shouldPushHistoryForEvent('object:modified', _isDrawing)` returns true, so in-progress drawing updates are excluded
+- [ ] Hand-pan behavior updates `viewportTransform[4]` and `viewportTransform[5]` from pointer deltas in client coordinates and mirrors those values into the editor store pan state
+- [ ] Status-bar zoom buttons and editor-store zoom clamp between `0.1` and `10`, while the agent preview zoom/store clamp to `25` through `400`, so zoom bounds are not uniform across illustrate
+
+### Shape Defaults and Object Lifecycle
+- [ ] The rendered editor has no dedicated `circle` creation tool; ellipse creation uses Fabric `Ellipse`
+- [ ] The rendered editor has no dedicated `textbox` creation tool; the Text tool creates Fabric `IText`, and `textbox` support only applies to loaded or imported objects
+- [ ] Rectangle draw start creates a Fabric rect with `width: 0`, `height: 0`, `fill: 'rgba(0, 120, 212, 0.1)'`, `stroke: '#0078d4'`, `strokeWidth: 2`, `selectable: false`, and `evented: false`
+- [ ] Ellipse draw start creates a Fabric ellipse with `rx: 0`, `ry: 0`, `fill: 'rgba(0, 120, 212, 0.1)'`, `stroke: '#0078d4'`, `strokeWidth: 2`, `selectable: false`, and `evented: false`
+- [ ] Line draw start creates a Fabric line whose `x1`, `y1`, `x2`, and `y2` all start at the pointer position, with `fill: undefined`, `stroke: '#0078d4'`, `strokeWidth: 2`, `selectable: false`, and `evented: false`
+- [ ] Arrow draw start reuses the line defaults during drag, then finalizes into a Fabric `Group` containing the line plus a triangle arrowhead
+- [ ] The arrowhead defaults to `width: 15`, `height: 15`, `fill: '#0078d4'`, and `angle = atan2(...) * 180 / Math.PI + 90`
+- [ ] Polygon draw start creates a Fabric polygon from `generatePolygonPoints(0, 0, 0, polygonSides)`, so the initial radius is `0`
+- [ ] Star draw start creates a Fabric polygon from `generateStarPoints(0, 0, 0, 0, starPoints)`, so both outer and inner radii start at `0`
+- [ ] Polygon and star drawing use the same default `fill`, `stroke`, and `strokeWidth` as rect/ellipse, and holding `Shift` forces the radius to `max(abs(dx), abs(dy))`
+- [ ] Star drawing fixes the inner radius to exactly `outerRadius * 0.5`
+- [ ] None of the live shape-tool constructors explicitly set `opacity`, so opacity falls through to Fabric defaults until edited later
+- [ ] The Text tool creates `IText` with literal content `Type here`, `width: 200`, `fontFamily: 'Arial'`, `fontSize: 16`, `fill: '#333333'`, `lineHeight: 1.16`, and `charSpacing: 0`
+- [ ] Eyedropper sampling reads object fill when the pointer is over an object and falls back to the canvas background color when it is not
+- [ ] Eyedropper apply mode writes the sampled color back to the `fill` property of the previously selected objects, fires `object:modified`, shows info toast `Color sampled: {HEX}`, and returns the active tool to Select
+- [ ] Brush activation shows info toast `Loading brush engine...` if the freehand module has not finished lazy-loading
+- [ ] Rough auto-conversion on shape finalize only applies to freshly drawn rectangle, ellipse, and line objects; polygon, star, arrow, and text are not auto-converted
+- [ ] `convertObjectToRough()` only supports object types `rect`, `ellipse`, and `line`
+
+### Properties Panel
+- [ ] With no active selection, the Properties tab shows exact empty-state text `Select an object to edit its properties`
+- [ ] Transform field synchronization listens to `selection:created`, `selection:updated`, `selection:cleared`, `object:moving`, `object:scaling`, `object:rotating`, and `object:modified`
+- [ ] Transform field synchronization is deferred through `setTimeout(..., 40)` and clears that timeout during effect cleanup
+- [ ] Mixed transform values render as the literal glyph `—`
+- [ ] X, Y, W, H, Rotation, and Opacity are all text inputs, not native `type="number"` controls
+- [ ] Invalid numeric transform input is ignored on change, the draft text remains visible until blur, and the underlying Fabric property is not updated until the value parses
+- [ ] Focusing a mixed-value transform field clears the draft string instead of pre-filling a sentinel value
+- [ ] Aspect-ratio lock toggles `lockUniScaling` on the selected objects and fires `object:modified`
+- [ ] The common shape Appearance section exposes fill mode buttons `Solid`, `Linear`, and `Radial`
+- [ ] Solid fill uses a color picker, while linear and radial fill modes delegate to `GradientEditor`
+- [ ] Shape stroke controls expose a color picker, a slider plus number input for width `1..20`, dash presets `Solid`, `Dashed`, `Dotted`, `Dash-Dot`, and `Long Dash`, line-cap options `butt`, `round`, `square`, and line-join options `miter`, `round`, `bevel`
+- [ ] Rect-only corner-radius controls include a slider plus number input from `0` to the computed safe max and four per-corner fields labeled `Top Left`, `Top Right`, `Bottom Right`, and `Bottom Left`
+- [ ] All four rect corner fields still write the same uniform Fabric `rx/ry` value because the implementation does not support independent per-corner radii
+- [ ] Line objects expose only Appearance color plus the shared Stroke controls; there is no fill editor for lines
+- [ ] Text and textbox objects expose a Character panel with Font picker, Weight select, font size `1..999`, Bold/Italic/Underline/Strikethrough buttons, align buttons `Left`, `Center`, `Right`, `Justify`, line height `0.5..3`, character spacing `-200..1000`, fill color, stroke color, and stroke width `0..20`
+- [ ] Character panel weight options are `Light (300)`, `Regular (400)`, `Medium (500)`, `Semi-Bold (600)`, `Bold (700)`, and `Black (900)`
+- [ ] Image objects expose only read-only Width, Height, and Aspect ratio display rows; the live panel does not expose crop, recolor, or filter controls for images
+- [ ] Group objects expose only a single `Ungroup` action in their type-specific section
+- [ ] Unknown single-object types show exact fallback text `No editable properties for this object type`
+- [ ] Multi-select mode shows Transform, Align, Pathfinder, Effects, a count label like `{n} objects selected`, helper text `Mixed values are shown as —`, and common lock/clipping indicators
+- [ ] Align controls only render when at least 2 objects are selected, and Distribute controls only render when at least 3 objects are selected
+- [ ] Pathfinder controls only render when at least 2 objects are selected
+- [ ] The Common Actions lock button label switches between `🔒 Unlock` and `🔓 Lock`
+- [ ] Brush settings appear whenever the active tool is Brush, even if no object is selected
+- [ ] Brush settings expose Preset select values `Pen`, `Marker`, `Highlighter`, `Brush`, and `Calligraphy`, size `1..100`, thinning `0..1` step `0.05`, smoothing `0..1` step `0.05`, streamline `0..1` step `0.05`, a color picker, and opacity `0..1` step `0.05`
+
+### Export Pipeline
+- [ ] `ExportDialog` defaults to the `png` tab, resets its filename and local error state every time the dialog opens, and closes on `Escape` via a document-level keydown listener
+- [ ] Clicking the export overlay closes the dialog only when `e.target === e.currentTarget` and `isExporting` is false
+- [ ] The export button label changes from `Export` to `Exporting...` while `isExporting` is true
+- [ ] `FormatTabs` exposes exactly five formats with labels and descriptions: `PNG / Raster image`, `SVG / Vector graphic`, `PDF / Document`, `PPTX / PowerPoint`, and `LaTeX / TikZ code`
+- [ ] PNG export settings expose DPI presets `72`, `150`, `300`, and `600`, quality range `1..100`, and background choices `transparent` and `white`
+- [ ] SVG export settings expose toggles for `Optimize SVG`, `Minify Output`, and `Embed Fonts`
+- [ ] PDF export settings expose page sizes `A4`, `Letter`, and `Custom`, orientation `Portrait` or `Landscape`, custom width and height clamped to `50..1000` mm, and per-edge margins clamped to `0..100` mm
+- [ ] PPTX export settings expose layouts `16:9`, `16:10`, `4:3`, and `Custom`, resolution choices `1x`, `2x`, and `4x`, background `white` or `transparent`, `centerImage`, plus optional title and author
+- [ ] LaTeX export settings expose `standalone` and `includePreamble` toggles plus a TikZ preview textarea
+- [ ] The LaTeX preview copy button enters a copied-success state for `2000` ms before resetting
+- [ ] Editor-mode export hardcodes the basename `diagram` for every format, so the editable filename field in `ExportDialog` is currently ignored by the actual export handler
+- [ ] Editor-mode PNG export uses `exportAsPng()` with `scale = dpi / 72`
+- [ ] Editor-mode PNG export maps `background: 'transparent'` to `backgroundColor: undefined` and any non-transparent choice to `#ffffff`
+- [ ] The PNG quality slider value is collected in the dialog but ignored by the editor export handler
+- [ ] Editor-mode SVG export passes only `minify` and `embedFonts` into `exportAsSvg()`, and the helper currently ignores those options internally
+- [ ] The SVG `optimize` toggle is UI-only in the current editor flow; it is never consumed by the export helper
+- [ ] `exportAsSvg()` prepends an XML declaration and downloads a serialized clone of the SVG but does not actually implement optimization, minification, font embedding, or text-to-path conversion
+- [ ] Editor-mode PDF export passes page size, orientation, and margins into `exportAsPdf()`
+- [ ] `exportAsPdf()` uses a local `svg2pdf` stub that only warns and resolves when the full SVG-to-PDF library is not installed
+- [ ] Editor-mode PPTX export calls `exportAsPptx(canvas, 'diagram', ...)` and therefore rasterizes the Fabric canvas instead of exporting vectors
+- [ ] `exportAsPptx()` converts the canvas to a PNG data URL using `canvas.toDataURL({ format: 'png', quality, multiplier })`
+- [ ] PPTX export defaults to slide layout `16x9`, multiplier `2`, quality `1`, company `FINNISH`, subject `Scientific Illustration`, and slide padding `0.5` inches
+- [ ] PPTX export normalizes background `transparent` to an undefined slide background and `white` to hex `FFFFFF`
+- [ ] Editor-mode LaTeX export does not generate or download a `.tex` file; it only shows success toast `LaTeX code ready!`
+- [ ] The live editor export path has no empty-canvas guard and will still attempt to export the serialized empty canvas SVG
+- [ ] Editor-mode export appends the temporary SVG element to `document.body` and removes it only on the success path; an exception before cleanup leaves no `finally` block to guarantee removal
+
+### Scientific Shapes
+- [ ] The scientific shapes panel exposes exactly 15 generator categories: `dna`, `membrane`, `cellLayer`, `arrow`, `neuron`, `mitochondria`, `nucleus`, `ribosome`, `vesicle`, `virus`, `bacteria`, `golgi`, `er`, `microtubule`, and `protein`
+- [ ] DNA defaults are `length: 200`, `basePairs: 10`, `twist: 36`, `width: 40`, `style: 'simple'`, `showBasePairs: true`, `stroke: '#3B82F6'`, and `strokeWidth: 2`
+- [ ] Membrane defaults are `length: 300`, `phospholipidCount: 15`, `bilayer: true`, `showHeadGroups: true`, `showTails: true`, `stroke: '#6B7280'`, and `fill: '#FEF3C7'`
+- [ ] Cell-layer defaults are `rows: 2`, `columns: 5`, `cellWidth: 40`, `cellHeight: 50`, `cellType: 'cuboidal'`, `showNuclei: true`, `junctions: true`, `stroke: '#6B7280'`, and `fill: '#FEF3C7'`
+- [ ] Scientific arrow defaults are `type: 'activation'`, `curved: false`, `start: { x: 10, y: 50 }`, `end: { x: 190, y: 50 }`, `stroke: '#374151'`, and `strokeWidth: 2`
+- [ ] Neuron defaults are `type: 'pyramidal'`, `dendrites: 5`, `axonLength: 150`, `showMyelin: true`, `stroke: '#374151'`, and `fill: '#FEF3C7'`
+- [ ] Mitochondria defaults are `width: 120`, `height: 60`, `cristaCount: 5`, `showMatrix: true`, `stroke: '#374151'`, and `fill: '#FEF3C7'`
+- [ ] Nucleus defaults are `diameter: 100`, `pores: 8`, `envelopeStyle: 'solid'`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#e2e8f0'`
+- [ ] Ribosome defaults are `size: 60`, `subunits: 'both'`, `showRna: true`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#fcd34d'`
+- [ ] Vesicle defaults are `diameter: 80`, `cargo: 'dots'`, `membraneStyle: 'solid'`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#c4b5fd'`
+- [ ] Virus defaults are `diameter: 100`, `type: 'icosahedral'`, `spikeLength: 15`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#10b981'`
+- [ ] Bacteria defaults are `type: 'bacillus'`, `length: 100`, `width: 40`, `flagella: 2`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#34d399'`
+- [ ] Golgi defaults are `size: 120`, `cisternae: 5`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#f472b6'`
+- [ ] ER defaults are `type: 'rough'`, `size: 120`, `branches: 5`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#fbbf24'`
+- [ ] Microtubule defaults are `length: 200`, `protofilaments: 13`, `showDimer: false`, `stroke: '#4a5568'`, and `strokeWidth: 2`
+- [ ] Protein defaults are `type: 'alpha-helix'`, `length: 150`, `strands: 3`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#60a5fa'`
+- [ ] Scientific shape previews are rendered with raw SVG strings through `dangerouslySetInnerHTML`
+- [ ] Scientific shape insertion rasterizes the generated SVG through `Blob` plus `FabricImage.fromURL()` instead of inserting editable vector paths
+- [ ] Inserted scientific shapes are scaled to fit within 60% of the current canvas width and height and then centered
+- [ ] Successful scientific-shape insertion closes the panel but does not show a toast
+- [ ] Scientific-shape insertion failures are only logged to `console.error('Failed to insert shape:', error)`
+
+### Icon Panel
+- [ ] Icon search input placeholder is exactly `Search all icons...`
+- [ ] Icon search debounces query emission by `200` ms
+- [ ] Pressing `Escape` in the icon search field clears the current query, and pressing `Escape` again when already empty blurs the input
+- [ ] Search results label renders as `{n} result(s) for "{inputValue}"`
+- [ ] The icon panel header title is exactly `Icon Library`
+- [ ] The icon panel count label uses `{iconCounts.total} icons`
+- [ ] Main icon categories are `All`, `Medical`, `Science`, `General`, and `Brands`
+- [ ] Personal icon categories are `Favorites`, `Recent`, and `Collections`
+- [ ] The quick-access button label is `Recent ({recentIconIds.length})`
+- [ ] Category browsing loads only `health`, `science`, `iconpark`, and `simple` library collections into the visible panel dataset
+- [ ] Global icon search additionally queries `bioicons`, `bioicons-full`, and `scidraw`, so some searchable icons are not reachable through category browsing alone
+- [ ] `searchAllIcons('')` returns an empty result set instead of all icons
+- [ ] Search results merge `searchAllIcons(query)` with a local fuzzy search over icon names, de-duplicate the combined list, and cap visible results at `100`
+- [ ] Recent empty state text is `No recent icons. Select an icon to add it here.`
+- [ ] Search empty state text is `No icons matching "{searchQuery}"`
+- [ ] Favorites empty state text is `No favorites yet. Click the heart icon on any icon to save it here.`
+- [ ] Collections-empty text with a selected collection is `This collection is empty.`
+- [ ] Collections-empty text without a selected collection is `Select a collection or create a new one.`
+- [ ] Collections panel empty-state helper is `No collections yet. Create one to organize your icons!`
+- [ ] Generic category empty-state text is `No icons in this category`
+- [ ] The help text below icon actions reads `Click to select, then Insert to add to canvas`
+- [ ] AI icon generation is only offered when the search query is non-empty, the current results list is empty, and `isAIGenerationAvailable()` returns true
+- [ ] The AI icon generation button label changes from `Generate AI Icon` to `Generating...` while the request is in flight
+- [ ] AI icon generation calls `generateIconFromQuery(searchQuery, { size: 64, style: 'outline' })`
+- [ ] AI icon generation failure text is `Failed to generate icon. Please try again.`
+- [ ] The collection-create prompt text is `Enter collection name:`
+- [ ] The collection-delete confirm text is `Delete collection "{collection.name}"?`
+- [ ] `IconPreview` shows exact empty-state text `Hover over an icon to preview`
+- [ ] `IconPreview` waits `50` ms before scraping the rendered `<svg>` from React-component icons for copy/tint actions
+- [ ] Copy-SVG success UI in `IconPreview` resets after `2000` ms
+- [ ] Right-panel icon insertion warns `Cannot add icon: canvas not ready` when the editor canvas or SVG payload is missing
+- [ ] Right-panel icon insertion warns `No valid objects found in SVG` when Fabric parses zero non-null SVG objects
+- [ ] Right-panel icon insertion groups parsed SVG objects, scales the group so the max dimension becomes `64`, centers it using `(canvasWidth - 64) / 2` and `(canvasHeight - 64) / 2`, and sets `name: icon.name`
+
+### Style, Journal, and Layers Panels
+- [ ] The Style tab is hand-drawn-style controls only; journal presets are not implemented inside `StylePanel`
+- [ ] Style toggle only mutates the hand-drawn settings object; existing canvas objects do not change until `Apply to Selection` runs
+- [ ] Hand-drawn presets are `clean` (`roughness: 0`, `bowing: 0`, `fillStyle: 'solid'`), `sketch` (`roughness: 1`, `bowing: 1`, `fillStyle: 'hachure'`), and `rough` (`roughness: 2`, `bowing: 1.5`, `fillStyle: 'cross-hatch'`)
+- [ ] Hand-drawn roughness slider range is `0..3` step `0.1`
+- [ ] Hand-drawn bowing slider range is `0..3` step `0.1`
+- [ ] Hand-drawn stroke-width slider range is `0.5..8` step `0.5`
+- [ ] Hand-drawn fill patterns are exactly `solid`, `hachure`, `cross-hatch`, `dots`, `zigzag`, and `dashed`
+- [ ] `Apply to Selection` is disabled whenever there is no current selection or hand-drawn mode is disabled
+- [ ] `settingsToRoughOptions()` maps the style panel to Rough.js with `roughness`, `bowing`, `strokeWidth`, `fillStyle`, and optional `seed`
+- [ ] The separate Journal tab provides figure-label, scale-bar, panel-letter, copyright, color-convention, and accessibility tools; it is not a theme/style preset tab
+- [ ] Layer store persistence key is `finnish-layer-store`
+- [ ] Layer store persists only `layers`, `activeLayerId`, and `isPanelExpanded`
+- [ ] The initial persisted layer stack contains exactly one layer with `id: 'default'`, `name: 'Layer'`, `visible: true`, `locked: false`, `objects: []`, and `order: 0`
+- [ ] Layers panel empty-state text is `No layers yet`
+- [ ] Layers panel empty-state helper text is `Click + to add a layer`
+- [ ] New layers default to `Layer {layers.length + 1}`
+- [ ] Layer delete confirm text is exactly `Delete this layer?`
+- [ ] Deleting the only remaining layer is silently blocked in the store and does not show an error or warning
+- [ ] Layer rename starts on double-click, commits on `Enter`, cancels on `Escape`, and also commits on blur
+- [ ] Visibility button titles are `Hide layer` and `Show layer`
+- [ ] Lock button titles are `Unlock layer` and `Lock layer`
+- [ ] Layer rows are rendered in reversed order so the highest-order layer appears first in the panel
+- [ ] Layer drag reordering uses native HTML5 drag events and `reorderLayers(reorderedIds)`; it does not move Fabric object z-order on the canvas
+- [ ] The live Layers panel is not synchronized with Fabric object membership, selection, visibility, or lock state on the canvas
+
+### Agent Route and Agent Store
+- [ ] `POST /api/illustration/generate` validates `prompt` with `.min(1).max(4000)`, `backend` as `mermaid | svg | gemini | auto`, `style` as `flat | detailed | schematic | photorealistic`, `geminiModel` as `pro | flash`, optional `domain`, optional `slideContext`, and optional `existingDiagram`
+- [ ] Auth lookup failure in `/api/illustration/generate` returns `401` with JSON `{ error: "Unauthorized" }`
+- [ ] The generate route applies the `illustrations` AI rate limit immediately after auth and returns the limiter response directly when blocked
+- [ ] Validation failure returns `400` with JSON `{ error: "Invalid request", details: parseResult.error.flatten().fieldErrors }`
+- [ ] Backend `auto` mode calls `detectBestBackend(prompt, domain)` and logs `Auto-selected backend: {selectedBackend}`
+- [ ] Mermaid generation strips fenced-code wrappers like ```mermaid and ```json and also replaces smart quotes before returning content
+- [ ] Mermaid generation extracts `syntax` from a JSON payload when the model responds with JSON and unescapes `\\n` back into newlines
+- [ ] Gemini generation throws `GEMINI_API_KEY not configured` when the API key is unavailable
+- [ ] Gemini vectorization uses `pngToEditableSVG(..., { colorCount: 16 | 32, minColorRatio: 0.02, filterSpeckle: 4, simplify: true })` based on style
+- [ ] Gemini unavailability during explicit or auto Gemini selection falls back to the SVG backend only when the thrown error message mentions `GEMINI_API_KEY`
+- [ ] SVG-backend failures fall back to Mermaid generation
+- [ ] The success response normalizes output to `illustration.content`, `illustration.backend`, `illustration.format`, `illustration.caption`, and `illustration.domain`, plus optional `pathCount`, `colorPalette`, `rasterPreview`, and `vectorized`
+- [ ] Route-level failure returns `500` with JSON `{ error: "Illustration generation failed", details: error.message || "Unknown error" }`
+- [ ] Agent store persistence key is `finnish-agent-storage`
+- [ ] Agent store initial state is `messages: []`, `isLoading: false`, `currentDiagram: null`, `selectedCategory: 'medicine'`, `templateSearchQuery: ''`, `isSidebarCollapsed: false`, and `previewZoom: 100`
+- [ ] Agent store persists only the last 50 messages plus `selectedCategory`
+- [ ] Agent store does not persist `isLoading`, `currentDiagram`, `templateSearchQuery`, `isSidebarCollapsed`, or `previewZoom`
+- [ ] `addMessage()` generates ids in the shape `msg_{Date.now()}_{random}` and stamps `timestamp` with `new Date().toISOString()`
+- [ ] `addMessage()` updates `currentDiagram` only when the newly added message contains a `diagram`
+- [ ] `updateMessage()` shallow-merges updates into the matching message id and does not recompute `currentDiagram`
+- [ ] `clearMessages()` clears both `messages` and `currentDiagram`
+- [ ] `setPreviewZoom()` clamps values between `25` and `400`
+
+### Editor Store and Keyboard Shortcuts
+- [ ] Editor-store history depth is capped at `50` serialized JSON states
+- [ ] Undo and redo store full serialized canvas JSON strings, not command-level patches
+- [ ] Editor store is not persisted, so zoom, pan, tool, selection, guides, and history reset on refresh
+- [ ] The clipboard used by `CanvasProvider` lives in provider memory, while the `useKeyboardShortcuts` copy/paste path uses `window.__finnishClipboard`; clipboard state is not stored in `editorStore`
+- [ ] Grid defaults are `gridVisible: true`, `snapToGrid: false`, and `gridSize: 20`
+- [ ] Guide defaults are `showRulers: true`, `showGuides: true`, and empty horizontal and vertical guide arrays
+- [ ] `addGuide()` rounds guide positions to 2 decimals, clamps them to non-negative values, and ignores duplicate positions
+- [ ] `setGridSize()` ignores zero or negative values
+- [ ] Pressing `Space` temporarily switches the active tool to Hand on keydown and restores the previous tool on keyup
+- [ ] `Ctrl/Cmd+N` triggers New
+- [ ] `Ctrl/Cmd+O` triggers Open
+- [ ] `Ctrl/Cmd+S` triggers Save
+- [ ] `Ctrl/Cmd+Shift+S` triggers Save As
+- [ ] `Ctrl/Cmd+E` triggers Export
+- [ ] `Ctrl/Cmd+Shift+B` opens Background Removal
+- [ ] `Ctrl/Cmd+Shift+A` opens AI Generate Image
+- [ ] `Ctrl/Cmd+Shift+P` opens Place Image
+- [ ] `Ctrl/Cmd+Z` triggers Undo
+- [ ] `Ctrl/Cmd+Shift+Z` triggers Redo
+- [ ] `Ctrl/Cmd+Y` also triggers Redo
+- [ ] `Ctrl/Cmd+C` copies the current Fabric selection into `window.__finnishClipboard`
+- [ ] `Ctrl/Cmd+V` pastes from `window.__finnishClipboard`
+- [ ] `Ctrl/Cmd+X` cuts via copy plus delete
+- [ ] `Ctrl/Cmd+A` selects all non-grid objects
+- [ ] `Delete` and `Backspace` delete the current Fabric selection except while Direct Select is active
+- [ ] `Escape` clears the current selection
+- [ ] `V` switches to Select
+- [ ] `H` switches to Hand
+- [ ] `R` switches to Rectangle
+- [ ] `E` switches to Ellipse
+- [ ] `Shift+E` switches to Eraser
+- [ ] `L` switches to Line
+- [ ] `A` switches to Direct Select
+- [ ] `Shift+A` switches to Arrow
+- [ ] `P` switches to Pen
+- [ ] `T` switches to Text
+- [ ] `I` switches to Eyedropper
+- [ ] `C` switches to Scissors
+- [ ] `M` switches to Measure
+- [ ] Numeric shortcuts `1` through `8` map to Select, Hand, Rectangle, Ellipse, Line, Arrow, Pen, and Text respectively
+- [ ] `+` and `=` zoom in by `0.1`
+- [ ] `-` zooms out by `0.1`
+- [ ] `Ctrl/Cmd+0` resets the viewport
+- [ ] `Ctrl/Cmd+1` triggers zoom-to-fit
+- [ ] `Ctrl/Cmd+'` toggles grid visibility
+- [ ] `Ctrl/Cmd+Shift+;` toggles snap-to-grid
+- [ ] `Ctrl/Cmd+R` toggles rulers
+- [ ] `Ctrl/Cmd+Shift+R` toggles guides
+- [ ] `Ctrl/Cmd+G` groups the current selection
+- [ ] `Ctrl/Cmd+Shift+G` ungroups the selected group
+- [ ] `Ctrl/Cmd+7` makes a clipping mask
+- [ ] `Ctrl/Cmd+Alt+7` releases a clipping mask
+- [ ] `Ctrl/Cmd+8` makes a compound path
+- [ ] `Ctrl/Cmd+Alt+8` releases a compound path
+- [ ] `Shift+H` flips the current selection horizontally
+- [ ] `Shift+V` flips the current selection vertically
+- [ ] While the Eraser tool is active, `[` decreases eraser size and `]` increases eraser size
+- [ ] While the point-editing overlay is active, `Delete` or `Backspace` removes the selected anchor points and fires `object:modified`
+- [ ] While the scientific text toolbar is open, `Escape` closes the toolbar
+- [ ] Inline layer rename input commits on `Enter` and cancels on `Escape`
+
+### Drag, Drop, Guides, and Toast System
+- [ ] Supported image imports are `image/png`, `image/jpeg`, `image/jpg`, and `image/svg+xml`, plus filenames ending with `.png`, `.jpg`, `.jpeg`, or `.svg`
+- [ ] Dropped or pasted images are always centered on the canvas by `centerImageOnCanvas()`; drop coordinates are not used for placement
+- [ ] Imported images are scaled down only when their source width exceeds 50% of the canvas width
+- [ ] Drag-and-drop import scans `event.dataTransfer.files` and picks the first supported image file; additional supported files in the same drop are ignored
+- [ ] Guide dragging uses window-level `pointermove` and `pointerup` listeners and cleans both up when the drag ends or the component unmounts
+- [ ] Dragging a horizontal guide back above the canvas overlay deletes it when `localY < 0`
+- [ ] Dragging a vertical guide back left of the canvas overlay deletes it when `localX < 0`
+- [ ] Double-clicking a horizontal guide prompts `Set horizontal guide position (px)`
+- [ ] Double-clicking a vertical guide prompts `Set vertical guide position (px)`
+- [ ] Toast provider defaults each toast to duration `5000`, keeps at most `5` visible toasts, and makes them dismissible by default
+- [ ] Toast manual dismiss waits `200` ms before removing the toast from state so the exit animation can finish
+- [ ] `Editor ready. Start creating!` is an info toast with explicit duration `3000`
+- [ ] Help > Keyboard Shortcuts uses an info toast with duration `10000`
+- [ ] Help > About FINNISH uses an info toast with duration `8000`
+- [ ] Canvas eyedropper sampling uses an info toast `Color sampled: {HEX}`
+- [ ] Canvas brush lazy-load uses an info toast `Loading brush engine...`
+- [ ] Properties-panel pathfinder warning toast is `Select at least 2 objects for pathfinder operations`
+- [ ] Properties-panel pathfinder failure toasts are `Operation produced no result`, `Unable to convert one or more selected objects for pathfinder`, and `Pathfinder operation failed` or the thrown message
+- [ ] Right-panel icon insertion warning toast `No valid objects found in SVG` exists in the live code even though Pass 1 did not enumerate it
+- [ ] There is no Yjs collaboration provider, awareness/cursor sync, or conflict-resolution layer wired into the rendered illustrate routes
+
+### Behavior Corrections (Pass 2)
+- The live editor does not configure Fabric selection highlight colors or border widths; any doc text claiming custom `selectionColor`, `selectionBorderColor`, or `selectionLineWidth` is inaccurate.
+- The rendered editor has no dedicated circle tool and no dedicated textbox tool; ellipse creation uses `Ellipse`, and text creation uses `IText`.
+- Scientific shapes are inserted as raster `FabricImage` objects generated from SVG blobs, not as editable vector groups or paths.
+- The Layers panel is not connected to Fabric canvas object ordering, visibility, or locking; it is a separate persisted UI list.
+- The Style tab does not contain journal style presets; journal tooling lives in the separate Journal tab, and export-time journal presets live in `ExportDialog`.
+- The Export dialog filename field is currently ignored by the live export handler, which always exports as `diagram.*`.
+- PNG export collects a quality slider in the UI, but the live editor export handler does not use that value.
+- SVG export toggles for optimize, minify, and embed fonts are largely UI-only in the current implementation; the helper serializes the SVG but does not implement those transforms.
+- LaTeX export from the live editor does not download a `.tex` file; it only reports `LaTeX code ready!`.
+- Drag-and-drop image placement is not pointer-relative; all imported images are centered on the canvas.
+- The icon browser exposes more libraries to search than to browse, so category browsing is not a complete representation of the searchable icon set.
+- No illustrate collaboration provider or Yjs-based real-time sync layer is present in the rendered code path.
+
+### Components Referenced But Not Rendered
+- `ShortcutsHelp` exists in `src/components/illustration/ShortcutsHelp.tsx`, is referenced by exports and docs, but is not imported by the rendered illustrate routes.
+- `ImportDialog` exists in `src/components/illustration/ImportDialog`, but no rendered illustrate page imports it.
+- `NewFromTemplate` exists in `src/components/illustration/NewFromTemplate`, but no rendered illustrate page imports it.
+- `IconBrowser` exists in `src/components/illustration/IconBrowser`, but the live editor imports `IconPicker` instead.
+- `JournalPresets` exists in `src/components/illustration/JournalPresets.tsx`, but no rendered illustrate page imports it.
+- `shapes/ShapeGeneratorModal` exists in `src/components/illustration/shapes`, but the live editor uses `tools/ShapeGeneratorPanel` instead.
