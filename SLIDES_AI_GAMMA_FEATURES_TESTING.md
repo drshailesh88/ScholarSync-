@@ -93,7 +93,7 @@
   - [ ] "Add caption"
   - [ ] "Improve formatting"
   - [ ] "Convert to chart"
-- [ ] Clicking a chip sends the action as a message
+- [ ] Clicking a chip sets the input text and focuses the textarea; the user still has to send it
 
 #### Chat Interface
 - [ ] Message history area with auto-scroll on new messages
@@ -336,8 +336,8 @@
 - [ ] Each card has:
   - [ ] Rounded corners (xl)
   - [ ] Shadow (base)
-  - [ ] Active card: blue border + ring effect
-  - [ ] Primary-colored accent bar at top (1px)
+  - [ ] Active card: `border-brand ring-1 ring-brand/30`
+  - [ ] Primary-colored accent bar at top (`h-1`, 4px)
   - [ ] Background from `cardBackground` or theme default
 
 #### Background Image Handling
@@ -378,7 +378,7 @@
 - [ ] Styled with theme heading font and primary color
 
 #### Subtitle Editing
-- [ ] Editable when card is active
+- [ ] Existing subtitle becomes editable when card is active
 - [ ] `EditableTextBlock` with subtitle style
 - [ ] Placeholder: "Subtitle..."
 
@@ -445,8 +445,8 @@
 - [ ] Each swatch: 6x6 circle with check mark on selection
 
 #### Image Background
-- [ ] Image URL text input
-- [ ] Shows only when URL is entered
+- [ ] Image URL text input is always shown
+- [ ] Image position + overlay controls only appear after an image URL is entered
 
 #### Image Position Selector (5 Options)
 - [ ] **None** — no image
@@ -530,7 +530,7 @@
 - [ ] Loading state: "Thinking..." with spinner
 
 #### Input Area
-- [ ] Multiline textarea (rows=1, grows)
+- [ ] Textarea starts at `rows=1` and does not auto-resize
 - [ ] Placeholder: "Ask the AI to change your deck..."
 - [ ] Send button (brand background, paper plane icon)
 - [ ] Enter sends message; Shift+Enter for new line
@@ -568,7 +568,7 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] Loading spinner during generation
 
 #### Step 2: Outline Editor
-- [ ] Grid of editable outline cards
+- [ ] Scrollable vertical list of editable outline cards
 - [ ] Each card row shows:
   - [ ] Card title input (editable)
   - [ ] Bullet point inputs (editable, add/remove)
@@ -580,7 +580,7 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] "Choose Theme" button → advances to Step 3
 
 #### Step 3: Theme Selection
-- [ ] 4-column grid of large theme swatches (120x72px)
+- [ ] Flex-wrapped row of large theme swatches (120x72px)
 - [ ] Theme name label on each swatch
 - [ ] Selected theme: brand border + ring + check mark
 - [ ] Hover: scale 1.03 effect
@@ -723,7 +723,7 @@ Shown when Gamma mode is entered with no existing slides.
 
 #### PDF Export
 - [ ] POST to `/api/export/presentation-pdf`
-- [ ] Same payload format as PPTX
+- [ ] Sends title + mapped slides, but does not include `themeConfig`
 - [ ] Downloads as `.pdf` file
 - [ ] Loading spinner during export
 
@@ -756,7 +756,7 @@ Shown when Gamma mode is entered with no existing slides.
 2. [ ] Select a text block on a slide
 3. [ ] Open Agent panel (right panel → Agent)
 4. [ ] Verify quick actions show TEXT_ACTIONS (Rewrite, Shorten, etc.)
-5. [ ] Click "Rewrite" chip → message sent, response streams in
+5. [ ] Click "Rewrite" chip → input prefills; press Enter to send and verify the response streams in
 6. [ ] Verify suggested changes appear with "Apply" button
 7. [ ] Click "Apply" → block content updates
 8. [ ] Type a custom message and press Enter
@@ -797,9 +797,9 @@ Shown when Gamma mode is entered with no existing slides.
 ### Workflow E: Gamma Agent Panel — Deck-Wide Changes
 1. [ ] Open a deck in Create mode
 2. [ ] Click "Agent" button in toolbar → panel opens
-3. [ ] Click "Restructure deck" chip
-4. [ ] Verify message sent, "Thinking..." appears
-5. [ ] AI responds with summary, slides are modified
+3. [ ] Click "Restructure deck" chip → verify the input is prefilled
+4. [ ] Press Enter → verify "Thinking..." appears
+5. [ ] Verify AI responds with summary and slides are modified
 6. [ ] Type "Add a conclusions card" → Enter
 7. [ ] Verify new card added to the deck
 8. [ ] Close agent panel via toggle button
@@ -963,7 +963,7 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] `setActiveSlide` clears `selectedBlockIndices`, `allBlocksSelected`, and `editingBlockIndex`
 - [ ] `addSlide` creates a slide with title `"New Slide"` and one text block `{ type: "text", data: { text: "Click to add content", style: "body" } }`
 - [ ] `duplicateSlide` appends `" (copy)"` to the original slide's title
-- [ ] `deleteSlide` is optimistic: removes from local state first, reverts all state on server failure
+- [ ] `deleteSlide` is optimistic: removes from local state first, then restores `slides`, `activeSlideId`, and `selectedSlideIds` on server failure
 - [ ] `reorderSlides` is optimistic: applies new order locally, reverts on server failure
 - [ ] Undo stack is capped at `MAX_UNDO_HISTORY = 50` entries
 - [ ] Undo coalesces rapid changes to the same slide within a 500ms debounce window, keeping the original before-state
@@ -1006,7 +1006,7 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] 401 response: `{ error: "Unauthorized" }`
 - [ ] 400 response: `{ error: "Invalid request body", details: <fieldErrors> }`
 - [ ] 500 response: `{ error: "Agent operation failed" }`
-- [ ] Uses model `"claude-sonnet-4-20250514"` for all modes
+- [ ] Uses provider-dependent `getModel()` for all modes; with the default Anthropic provider this resolves to `"claude-sonnet-4-20250514"`
 - [ ] Rate limited via `checkRateLimit(userId, "presentations", RATE_LIMITS.ai)`
 
 #### `/api/slides/chat`
@@ -1014,7 +1014,7 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] 401 response: `{ error: "Unauthorized" }`
 - [ ] 400 response: `{ error: "Invalid request body", details: <fieldErrors> }`
 - [ ] 500 response: `{ error: "Chat operation failed" }`
-- [ ] Uses model `"claude-sonnet-4-20250514"`
+- [ ] Uses provider-dependent `getModel()`; with the default Anthropic provider this resolves to `"claude-sonnet-4-20250514"`
 
 #### `/api/slides/outline`
 - [ ] Request validated by Zod: `title` max 500 chars, `description` max 5000, `cardCount` min 3 max 30 (server allows up to 30, UI limits to 20)
@@ -1036,7 +1036,7 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] 500 response: `{ error: "Slide regeneration failed" }`
 
 #### `/api/presentations/edit-slide`
-- [ ] Uses model `"claude-haiku-4-5-20251001"` (smaller model for speed)
+- [ ] Uses provider-dependent `getSmallModel()`; with the default Anthropic provider this resolves to `"claude-haiku-4-5-20251001"`
 - [ ] `action` field min 1 char, `contentBlocks` min 1 item
 - [ ] Each of the 14 AI actions has a distinct system prompt from `getSlideEditorSystemPrompt(action)`
 - [ ] 500 response: `{ error: "Slide editing failed" }`
@@ -1044,7 +1044,7 @@ Shown when Gamma mode is entered with no existing slides.
 #### `/api/presentations/coach`
 - [ ] `slides` array validated min 1, max 100
 - [ ] `audienceType` is enum-validated (same 10 values as generate-stream)
-- [ ] Response `suggestions` include `autoFixAvailable: boolean` per suggestion
+- [ ] Prompt/type contract allows `suggestions[].autoFixAvailable?: boolean`, but the coach route does not Zod-validate that response field
 - [ ] 500 response: `{ error: "Coach evaluation failed" }`
 
 #### `/api/export/pptx`
@@ -1100,7 +1100,7 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] Loading overlay shows `"AI is working..."` text alongside spinner (not just spinner)
 - [ ] Dropdown has `role="menu"`, each action button has `role="menuitem"`
 - [ ] Trigger button has `aria-label="AI card actions"` and `aria-expanded={open}`
-- [ ] Trigger button uses `ImageSquare` icon (not just `Sparkle`) — correction: trigger IS `Sparkle`, `ImageSquare` is the background button
+- [ ] Trigger button uses `Sparkle`; `ImageSquare` belongs to `CardBackgroundButton`
 
 ### CardBackgroundPicker — Additional Details (`card-background-picker.tsx`)
 
@@ -1120,7 +1120,7 @@ Shown when Gamma mode is entered with no existing slides.
 
 ### CardEditor — Additional Details (`card-editor.tsx`)
 
-- [ ] Subtitle is editable in active state via `EditableTextBlock` with `style="subtitle"` and placeholder `"Subtitle..."`
+- [ ] Existing subtitles are editable in active state via `EditableTextBlock` with `style="subtitle"` and placeholder `"Subtitle..."`
 - [ ] Non-active cards show `"Untitled Card"` when title is empty
 - [ ] Empty state (active card, 0 content blocks): italic muted text `"Click here to start typing, or type / for commands"`
 - [ ] Text block inline editing supports `fontFamily`, `fontSize`, and `color` properties from block data
@@ -1197,6 +1197,13 @@ Shown when Gamma mode is entered with no existing slides.
 - [ ] Only PPTX export receives `themeConfig` from Gamma mode's `export-deck.ts`; PDF export does not send theme
 - [ ] Server-side `cardCount` validation allows up to 30 (`z.number().int().min(3).max(30)`), while UI slider limits to 20
 - [ ] No `loading.tsx` or `error.tsx` route-level files exist under `src/app/(app)/slides/`; all loading/error UI is handled within `SlidesWorkspace` component
+
+## Codex Verification Pass Discoveries
+
+- [ ] `HandoutExportDialog` opens with UI defaults `layout="three_up_notes"` and `paperSize="letter"` even though the PDF route schema defaults `layout` to `"full_slide"`
+- [ ] `HandoutExportDialog` disables the `Include speaker notes` checkbox unless `layout === "three_up_notes"`
+- [ ] Slides-mode PPTX/PDF export failures only log to `console.error`; unlike Gamma export, there is no user-facing alert, toast, or inline error state
+- [ ] `CardBackgroundPicker` always renders the image URL input; only image-position and overlay controls are conditional on a populated `imageUrl`
 
 ---
 
