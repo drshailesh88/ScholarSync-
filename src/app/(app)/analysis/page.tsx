@@ -6,39 +6,14 @@ import { ArrowLeft, Sparkle, CircleNotch, CaretDown, FileText } from "@phosphor-
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
 import { CircularGauge } from "@/components/ui/circular-gauge";
+import type { IntegrityCheckResult } from "@/lib/integrity/types";
 import { analyzeWriting, type WritingIssue, type WritingMetrics } from "@/lib/writing-analysis";
 import {
   getActiveDocumentForAnalysis,
   listProjectsForAnalysis,
   type DocumentForAnalysis,
 } from "@/lib/actions/analysis";
-
-interface ParagraphAnalysis {
-  paragraphIndex: number;
-  humanProbability: number;
-  flags: string[];
-  suggestion?: string;
-}
-
-interface PlagiarismIndicator {
-  excerpt: string;
-  concern: string;
-  severity: "low" | "medium" | "high";
-}
-
-interface AnalysisResult {
-  humanScore: number;
-  aiScore: number;
-  overallRisk: "low" | "medium" | "high";
-  paragraphAnalysis: ParagraphAnalysis[];
-  plagiarismIndicators: PlagiarismIndicator[];
-  writingQuality: {
-    passiveVoiceCount: number;
-    averageSentenceLength: number;
-    readabilityGrade: number;
-    suggestions: string[];
-  };
-}
+type AnalysisResult = IntegrityCheckResult;
 
 type SourceMode = "document" | "paste";
 
@@ -471,7 +446,7 @@ export default function AnalysisPage() {
               </div>
               <div className="font-serif text-ink leading-relaxed space-y-4">
                 {paragraphs.map((p, i) => {
-                  const analysis = result.paragraphAnalysis.find(
+                  const analysis = result.aiDetection.paragraphs.find(
                     (a) => a.paragraphIndex === i
                   );
                   const humanProb = analysis?.humanProbability ?? 100;
@@ -589,14 +564,14 @@ export default function AnalysisPage() {
                   )}
 
                   {/* Plagiarism Indicators */}
-                  {result.plagiarismIndicators.length > 0 && (
+                  {(result.plagiarism?.matches.length ?? 0) > 0 && (
                     <>
                       <div className="border-t border-border pt-3 mt-3">
                         <p className="text-xs font-medium text-ink-muted uppercase tracking-wider mb-3">
                           Plagiarism Indicators
                         </p>
                       </div>
-                      {result.plagiarismIndicators.map((indicator, i) => {
+                      {result.plagiarism!.matches.map((indicator, i) => {
                         const severityColor =
                           indicator.severity === "high"
                             ? "text-red-500"
@@ -620,7 +595,7 @@ export default function AnalysisPage() {
                             <p className="text-xs text-ink-muted italic mb-1">
                               &ldquo;{indicator.excerpt}&rdquo;
                             </p>
-                            <p className="text-xs text-ink-muted">{indicator.concern}</p>
+                            <p className="text-xs text-ink-muted">{Math.round(indicator.similarity * 100)}% similarity with {indicator.source.title}</p>
                           </div>
                         );
                       })}
@@ -710,29 +685,29 @@ export default function AnalysisPage() {
                     <div className="space-y-2">
                       <ToneBadge
                         label="Human Score"
-                        value={`${result.humanScore}%`}
-                        color={result.humanScore >= 70 ? "emerald" : result.humanScore >= 40 ? "yellow" : "red"}
+                        value={`${result.aiDetection.humanScore}%`}
+                        color={result.aiDetection.humanScore >= 70 ? "emerald" : result.aiDetection.humanScore >= 40 ? "yellow" : "red"}
                       />
                       <ToneBadge
                         label="AI Score"
-                        value={`${result.aiScore}%`}
-                        color={result.aiScore <= 30 ? "emerald" : result.aiScore <= 60 ? "yellow" : "red"}
+                        value={`${result.aiDetection.aiScore}%`}
+                        color={result.aiDetection.aiScore <= 30 ? "emerald" : result.aiDetection.aiScore <= 60 ? "yellow" : "red"}
                       />
                       <ToneBadge
                         label="Overall Risk"
-                        value={result.overallRisk.charAt(0).toUpperCase() + result.overallRisk.slice(1)}
-                        color={result.overallRisk === "low" ? "emerald" : result.overallRisk === "medium" ? "yellow" : "red"}
+                        value={result.aiDetection.overallRisk.charAt(0).toUpperCase() + result.aiDetection.overallRisk.slice(1)}
+                        color={result.aiDetection.overallRisk === "low" ? "emerald" : result.aiDetection.overallRisk === "medium" ? "yellow" : "red"}
                       />
                     </div>
                   </div>
                   {/* Per-paragraph breakdown */}
-                  {result.paragraphAnalysis.length > 0 && (
+                  {result.aiDetection.paragraphs.length > 0 && (
                     <div>
                       <h4 className="text-xs font-medium text-ink-muted uppercase tracking-wider mb-3">
                         Paragraph Breakdown
                       </h4>
                       <div className="space-y-2">
-                        {result.paragraphAnalysis.map((p) => (
+                        {result.aiDetection.paragraphs.map((p) => (
                           <div key={p.paragraphIndex} className="flex items-center justify-between">
                             <span className="text-xs text-ink-muted">
                               Paragraph {p.paragraphIndex + 1}
