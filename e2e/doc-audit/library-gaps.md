@@ -3,9 +3,11 @@
 **Original doc:** `LIBRARY_FEATURES_TESTING.md`
 **Original checkbox count:** 155
 **Features found in UI:** 223
-**Features found in source code:** 285
-**Missing from doc:** 130
-**Completeness of original doc:** 54.4%
+**Features found in source code (Codex pass 1):** 285
+**Features found in source code (Claude Code pass 2):** 383
+**New checks added in pass 2:** 98
+**Missing from original doc:** 228
+**Completeness of original doc:** 40.5%
 
 ## Missing Features
 
@@ -36,3 +38,29 @@
 - `Cite in Editor` does not prove automatic citation insertion on the Library page; it only stores `{ paperId, title }` in `sessionStorage` and redirects to `/editor/new`.
 - Upload success does not show a toast/notification in the current UI.
 - Upload processing side effects like background extraction, embedding, and `full_text_available = true` are not observable from the `/library` UI itself.
+
+## Pass 2 Discoveries Summary
+
+### Behavior Corrections (8 checks)
+- Paper title uses `font-medium` not `font-bold`, and has no truncation
+- Error retry button says "Try Again" not "Retry"
+- Clear Filters uses translucent red, not solid red
+- Cite button icon is `BookOpen`, not clipboard
+- Sidebar heading is CSS-uppercased `Collections`
+- `toPaperData()` omits volume/issue/pages from citation formatting
+- `View PDF` button doesn't check `open_access_url` despite API fallback support
+
+### New Discoveries by Category
+- Citation Modal (Modal component behaviors): 6 checks
+- Search Input component details: 4 checks
+- Error Display component details: 3 checks
+- Paper Card action button icons: 5 checks
+- PDF Viewer additional details: 10 checks
+- Skeleton loading composition: 5 checks
+- Layout & styling extras: 8 checks
+- `/api/extract-pdf` route: 8 checks
+- `/api/papers/save` route: 5 checks
+- `/api/papers/[id]/pdf` route: 12 checks
+- `/api/references/resolve` route: 12 checks
+- Server action details: 9 checks
+- Components referenced but not rendered: 3 checks

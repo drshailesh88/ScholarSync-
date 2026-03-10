@@ -607,3 +607,153 @@
 - [ ] Shared Citation Dialog and Reference Store UI described later in the original document are not rendered by `/library` in the current implementation
 
 *Generated from source code in `src/app/(app)/library/`, `src/components/ui/pdf-viewer.tsx`, `src/lib/actions/papers.ts`, and related modules — March 2026*
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> Cross-referenced against `src/app/(app)/library/page.tsx`, `src/components/ui/pdf-viewer.tsx`,
+> `src/components/ui/modal.tsx`, `src/components/ui/search-input.tsx`, `src/components/ui/skeleton.tsx`,
+> `src/components/ui/error-display.tsx`, `src/lib/actions/papers.ts`, `src/lib/actions/citations.ts`,
+> `src/lib/citations.ts`, `src/app/api/extract-pdf/route.ts`, `src/app/api/papers/save/route.ts`,
+> `src/app/api/papers/[id]/pdf/route.ts`, and `src/app/api/references/resolve/route.ts`.
+
+### Behavior Corrections (Pass 2)
+
+- [ ] Paper title uses `font-medium` class, not `font-bold` — original section 5 says "bold" but code renders `<h3 className="font-medium ...">` (page.tsx:539)
+- [ ] Paper title has NO truncation — original says "truncated to 1 line" but the `<h3>` has no `truncate` or `line-clamp` class; only the authors `<p>` has `truncate` (page.tsx:542)
+- [ ] Error boundary retry button reads `Try Again` (with ArrowCounterClockwise icon), not `Retry` — original section 15 says "Retry" (error-display.tsx:43)
+- [ ] Clear Filters uses translucent red styling `bg-red-500/10 hover:bg-red-500/20`, not solid red background — original says "Red background/hover" (page.tsx:503)
+- [ ] Cite button icon is `BookOpen` (size 14), not a clipboard or citation-specific icon (page.tsx:561)
+- [ ] Sidebar heading source text is `Collections` (first-letter capitalized), transformed to "COLLECTIONS" by the CSS `uppercase` class — not a literal "COLLECTIONS" string in markup (page.tsx:334)
+- [ ] `toPaperData()` only passes `title`, `authors`, `journal`, `year`, `doi` to the citation formatter — `volume`, `issue`, and `pages` are never mapped even though `PaperData` supports them (page.tsx:79-87, citations.ts:18-27)
+- [ ] `View PDF` button condition does NOT check `open_access_url`, only `source === "user_upload" || pdf_storage_path || pdf_url` — yet the GET API route falls back to `open_access_url` if no other PDF source exists (page.tsx:581 vs route.ts:74)
+
+### Citation Modal — Modal Component Behaviors
+
+- [ ] Escape key closes the citation modal — inherited from Modal component keydown listener (modal.tsx:17-21)
+- [ ] Clicking the dark backdrop overlay closes the citation modal — backdrop div has `onClick={onClose}` (modal.tsx:39)
+- [ ] Body scroll is locked when citation modal is open — `document.body.style.overflow = "hidden"` set in Modal useEffect, restored on unmount (modal.tsx:27-30)
+- [ ] Modal header renders a close X button (Phosphor `X` icon, size 18) on the right side (modal.tsx:50-55)
+- [ ] Modal max width is `max-w-lg` with `mx-4` horizontal margin (modal.tsx:43-45)
+- [ ] Citation formatted text uses `whitespace-pre-wrap` class — preserves line breaks in multi-line output like BibTeX (page.tsx:642)
+
+### Search Input Component Details
+
+- [ ] Search input renders a `MagnifyingGlass` icon (size 18) absolutely positioned on the left (search-input.tsx:21-24)
+- [ ] Search input has `pl-10` left padding to accommodate the icon (search-input.tsx:30)
+- [ ] Search input shows focus ring: `focus:ring-2 focus:ring-brand/40` (search-input.tsx:30)
+- [ ] Search input uses `rounded-xl bg-surface-raised border border-border` base styling (search-input.tsx:30)
+
+### Error Display Component Details
+
+- [ ] ErrorDisplay reports the error to Sentry via `Sentry.captureException(error)` on mount (error-display.tsx:24-26)
+- [ ] ErrorDisplay renders a `WarningCircle` icon (red, size 32) in a `bg-red-500/10` circle (error-display.tsx:35-36)
+- [ ] ErrorDisplay retry button shows `ArrowCounterClockwise` icon (size 16) next to "Try Again" text, styled as `bg-brand text-white` (error-display.tsx:41-45)
+
+### Paper Card Action Button Icons
+
+- [ ] Cite in Editor button uses `ClipboardText` icon (size 14) and has `title="Cite in Editor"` tooltip attribute (page.tsx:576-577)
+- [ ] View PDF button uses `Eye` icon (size 14) from Phosphor icons (page.tsx:586)
+- [ ] DOI link uses `GlobeSimple` icon (size 14), same icon as the non-upload paper card left indicator (page.tsx:596)
+- [ ] Favorite button uses `Star` with `weight="fill"` when favorited, `weight="regular"` (outlined) when not (page.tsx:610)
+- [ ] Delete button uses `Trash` icon (size 16) with `hover:text-red-500 hover:bg-red-500/10` (page.tsx:614)
+
+### PDF Viewer Additional Details
+
+- [ ] PDF viewer `aria-label` is `"PDF Viewer"` when no title prop is passed — Library does not pass `title` (pdf-viewer.tsx:122, page.tsx:685)
+- [ ] PDF viewer accepts `initialPage` prop to set starting page, clamped to 1..numPages range (pdf-viewer.tsx:55-57)
+- [ ] PDF viewer close button only renders when `onClose` prop is provided (pdf-viewer.tsx:183)
+- [ ] PDF content area uses `overflow-auto` for scrolling when zoomed beyond viewport (pdf-viewer.tsx:195)
+- [ ] PDF page element rendered with `shadow-xl rounded-lg` class (pdf-viewer.tsx:228)
+- [ ] PDF viewer uses `pdfjs-dist/build/pdf.worker.min.mjs` as the PDF.js web worker (pdf-viewer.tsx:18-21)
+- [ ] PDF viewer toolbar background is `bg-surface border-b border-border` (pdf-viewer.tsx:125)
+- [ ] Previous/Next page buttons use `disabled:opacity-30 disabled:cursor-not-allowed` styling (pdf-viewer.tsx:130-131)
+- [ ] Page counter uses `tabular-nums min-w-[5rem] text-center` for fixed-width numeric display (pdf-viewer.tsx:135)
+- [ ] Zoom percentage uses `tabular-nums min-w-[3rem] text-center` for fixed-width display (pdf-viewer.tsx:163)
+
+### Skeleton Loading Composition Details
+
+- [ ] `loading.tsx` sidebar skeleton: one `h-4 w-20` heading placeholder + 5 `h-9 w-full rounded-lg` row placeholders (loading.tsx:7-12)
+- [ ] `loading.tsx` search skeleton: `h-11 flex-1 rounded-xl` placeholder (loading.tsx:16)
+- [ ] `loading.tsx` sort skeleton: `h-11 w-40 rounded-xl` placeholder (loading.tsx:17)
+- [ ] `SkeletonCard` composition: `glass-panel rounded-2xl p-6` container with `h-12 w-12 rounded-xl` icon + `h-4 w-3/4` title + `h-3 w-1/2` subtitle + 2-line `SkeletonText` (skeleton.tsx:26-38)
+- [ ] `SkeletonText` last line renders at `60%` width, all others at `100%` (skeleton.tsx:19)
+
+### Layout & Styling Extras
+
+- [ ] Filter row uses `flex-wrap` so filter controls wrap to next line on narrow viewports (page.tsx:427)
+- [ ] Paper card hover effect uses `hover:bg-surface-raised/30 transition-all` (page.tsx:529)
+- [ ] Sidebar bottom section has `border-t border-border-subtle` divider above Upload/New Collection buttons (page.tsx:387)
+- [ ] Sidebar nav uses `space-y-0.5` for minimal gap between collection items (page.tsx:336)
+- [ ] Upload button disabled styling uses `disabled:opacity-50` (page.tsx:392)
+- [ ] Sort dropdown styling: `rounded-xl bg-surface-raised border border-border text-ink text-sm` (page.tsx:417)
+- [ ] Paper card left icon container: `w-10 h-10 rounded-lg bg-surface-raised` (page.tsx:531)
+- [ ] `All Papers` active state: `bg-surface-raised text-ink font-medium`; inactive: `text-ink-muted hover:text-ink hover:bg-surface-raised/50` (page.tsx:341-344)
+
+### `/api/extract-pdf` Route Details
+
+- [ ] Requires authentication; returns 401 `"Authentication required"` if unauthenticated (extract-pdf/route.ts:27-29)
+- [ ] Applies rate limiting with `RATE_LIMITS.ai` bucket (extract-pdf/route.ts:34)
+- [ ] Validates Content-Type header must include `multipart/form-data`; returns 400 `"Content-Type must be multipart/form-data"` (extract-pdf/route.ts:41-46)
+- [ ] Validates file field exists and is a File instance; returns 400 `"No PDF file provided. Include a 'file' field in the form data."` (extract-pdf/route.ts:51-56)
+- [ ] Validates file has PDF MIME type or `.pdf` extension; returns 400 `"Uploaded file must be a PDF"` (extract-pdf/route.ts:58-63)
+- [ ] Enforces 20 MB max file size; returns 413 with message `"File size exceeds the 20MB limit. Uploaded file is {N}MB."` including actual file size (extract-pdf/route.ts:65-72)
+- [ ] Response shape on success: `{ text: string, pages: number, info: { title?: string, author?: string } }` (extract-pdf/route.ts:85-92)
+- [ ] Returns 500 `"Failed to extract text from PDF"` on parse errors (extract-pdf/route.ts:100-103)
+
+### `/api/papers/save` Route Details
+
+- [ ] Validates request body with Zod schema: `title` (string, min 1 required), `source` (enum `"semantic_scholar" | "pubmed"` only), `authors` (string[] optional, default []) (papers/save/route.ts:7-25)
+- [ ] Returns 400 `{ error: "Invalid paper payload", details: <flattened Zod errors> }` on validation failure (papers/save/route.ts:52-56)
+- [ ] Applies rate limiting with `RATE_LIMITS.write` bucket (papers/save/route.ts:43-48)
+- [ ] Returns `{ paperId: number }` on success (papers/save/route.ts:79)
+- [ ] Returns 500 `"Failed to save paper"` on server errors (papers/save/route.ts:82-86)
+
+### `/api/papers/[id]/pdf` Route Details
+
+- [ ] GET validates `id` param as numeric (`/^\d+$/`); returns 400 `"Invalid paper ID"` (papers/[id]/pdf/route.ts:22-23)
+- [ ] GET requires authentication; returns 401 `"Authentication required"` (papers/[id]/pdf/route.ts:28-31)
+- [ ] GET applies rate limiting with `RATE_LIMITS.export` bucket (papers/[id]/pdf/route.ts:35-36)
+- [ ] GET fallback chain: signed GCS URL (redirect) → local buffer (streamed with `Content-Type: application/pdf`, `Content-Disposition: inline`, `Cache-Control: private, max-age=3600`) → `pdf_url` redirect → `open_access_url` redirect → 404 (papers/[id]/pdf/route.ts:42-79)
+- [ ] GET returns 404 `"PDF not found for this paper"` when no PDF source found (papers/[id]/pdf/route.ts:77-80)
+- [ ] GET returns 500 `"Failed to serve PDF"` on server errors (papers/[id]/pdf/route.ts:83-86)
+- [ ] POST validates Content-Type must include `multipart/form-data`; returns 400 (papers/[id]/pdf/route.ts:121-127)
+- [ ] POST validates `id` param as numeric; returns 400 `"Invalid paper ID"` (papers/[id]/pdf/route.ts:102-103)
+- [ ] POST stores PDF in GCS, sets `pdf_storage_path` and `full_text_available = true` on paper record (papers/[id]/pdf/route.ts:143-152)
+- [ ] POST triggers `queuePdfProcessing(paperId, buffer)` for background text extraction and embedding (papers/[id]/pdf/route.ts:155)
+- [ ] POST returns `{ success: true, paperId: string, storagePath: string }` on success (papers/[id]/pdf/route.ts:157-161)
+- [ ] POST returns 500 `"Failed to store PDF file"` on server errors (papers/[id]/pdf/route.ts:164-168)
+
+### `/api/references/resolve` Route Details
+
+- [ ] Uses 10-second `AbortSignal.timeout` on CrossRef and PubMed external API calls (references/resolve/route.ts:87,135)
+- [ ] Returns 504 on CrossRef timeout: `"CrossRef request timed out. Try again."` (references/resolve/route.ts:118-120)
+- [ ] Returns 504 on PubMed timeout: `"PubMed request timed out. Try again."` (references/resolve/route.ts:169-174)
+- [ ] DOI 404 returns status 200 with `{ success: false, error: "Could not find a reference for this DOI. Check the DOI and try again, or add the reference manually." }` (references/resolve/route.ts:91-96)
+- [ ] Non-404 DOI failure returns 502 `"CrossRef returned status {N}"` (references/resolve/route.ts:97-103)
+- [ ] Bad PMID returns `"No PubMed record found for this ID."` — checks both HTTP error and XML `<ERROR>` tag (references/resolve/route.ts:139-152)
+- [ ] Unparseable PubMed record returns `"Could not parse PubMed record."` (references/resolve/route.ts:156-159)
+- [ ] Unresolvable PMCID returns `"Could not resolve PMCID. Try using the PMID or DOI instead."` (references/resolve/route.ts:198-201)
+- [ ] PMCID converter failure returns `"Failed to convert PMCID. Try using the PMID or DOI instead."` (references/resolve/route.ts:203-206)
+- [ ] URL without extractable DOI returns `"Could not extract a DOI from this URL. Try pasting the DOI directly."` (references/resolve/route.ts:49-56)
+- [ ] Unknown identifier type returns `"Could not determine identifier type. Try a DOI (starting with 10.) or a PMID (numeric)."` (references/resolve/route.ts:59-66)
+- [ ] Returns 500 `"Internal server error"` on unexpected exceptions (references/resolve/route.ts:70-74)
+
+### Server Action Additional Details
+
+- [ ] `savePaper` creates userReference with `collection: "All Papers"` as default collection value (papers.ts:464)
+- [ ] `savePaper` creates userReference with `isFavorite: false` as default (papers.ts:465)
+- [ ] `savePaper` uses `onConflictDoNothing()` on userReference insert, silently deduplicating user-paper links (papers.ts:467)
+- [ ] `savePaper` auto-triggers background `autoChunkPaper` + `embedPaperChunks` for papers with abstract or tldr (papers.ts:472-487)
+- [ ] `savePaper` auto-triggers background `queuePdfProcessing` for papers with DOI or `open_access_url` (papers.ts:494-502)
+- [ ] `toggleFavorite` server action verifies both `refId` AND `userId` match before updating — prevents cross-user mutations (papers.ts:577-583)
+- [ ] `removePaper` server action verifies both `refId` AND `userId` match before soft-deleting (papers.ts:596-602)
+- [ ] `getAllCitationFormats` is a server action (not API route) — called via React Server Action protocol from client (citations.ts:1)
+- [ ] `getAllCitationFormats` iterates all five non-BibTeX styles in a `for` loop, generating both `full` and `inText` for each; BibTeX is generated separately via `_generateBibTeX` (citations.ts:43-56)
+
+### Components Referenced But Not Rendered
+
+- [ ] Sections 12 (Citation Dialog) and 13 (Reference Store) describe shared components NOT imported or rendered by `/library/page.tsx` — they are Studio/Editor features only
+- [ ] Section 14 describes `POST /api/references/resolve` which is called by the Citation Dialog component, not by the Library page itself
+- [ ] Original section 5 claims infinite scroll — not implemented; Library renders a flat scrollable column via `overflow-y-auto` (page.tsx:405)
