@@ -671,11 +671,10 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
                   if (isMobile) toggleFileTree(); // Close on mobile after selection
                 }}
                 onDraftSection={(title) => {
-                  useLatexEditorStore.getState().setAgentPanelOpen(true);
-                  useLatexEditorStore.getState().setAgentTab("draft");
-                  window.dispatchEvent(
-                    new CustomEvent("latex:draft-section", { detail: { sectionTitle: title } })
-                  );
+                  const store = useLatexEditorStore.getState();
+                  store.setPendingDraftSection(title);
+                  store.setAgentPanelOpen(true);
+                  store.setAgentTab("draft");
                 }}
               />
             ) : sidebarTab === "figures" ? (

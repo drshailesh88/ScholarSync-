@@ -48,6 +48,8 @@ interface LatexEditorState {
   // Agent panel active tab
   agentTab: "draft" | "learn" | "cite" | "check";
   setAgentTab: (tab: "draft" | "learn" | "cite" | "check") => void;
+  pendingDraftSection: string | null;
+  setPendingDraftSection: (section: string | null) => void;
 
   // Document content (for preview syncing)
   documentContent: string;
@@ -116,6 +118,8 @@ export const useLatexEditorStore = create<LatexEditorState>((set, get) => ({
   // Agent panel tab
   agentTab: "draft",
   setAgentTab: (agentTab) => set({ agentTab }),
+  pendingDraftSection: null,
+  setPendingDraftSection: (pendingDraftSection) => set({ pendingDraftSection }),
 
   // Document content
   documentContent: "",

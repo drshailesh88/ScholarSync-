@@ -35,6 +35,21 @@ interface Comment {
   replies?: Comment[];
 }
 
+interface ApiComment {
+  id: string;
+  lineNumber: number;
+  userId: string;
+  userName?: string | null;
+  userAvatar?: string | null;
+  content: string;
+  parentId?: string | null;
+  resolved: boolean;
+  resolvedAt?: string | null;
+  resolvedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface CommentPanelProps {
   fileId: string;
   projectId: string;
@@ -263,7 +278,7 @@ export function CommentPanel({
         if (res.ok) {
           const data = await res.json();
           // Group replies under parent comments
-          const grouped = groupComments(data.comments);
+          const grouped = groupComments((data.comments ?? []).map(normalizeComment));
           setComments(grouped);
         }
       } catch (error) {
@@ -294,7 +309,7 @@ export function CommentPanel({
 
       if (res.ok) {
         const data = await res.json();
-        setComments((prev) => [data.comment, ...prev]);
+        setComments((prev) => [normalizeComment(data.comment), ...prev]);
         setNewCommentText("");
         setShowNewComment(false);
       }
@@ -321,13 +336,14 @@ export function CommentPanel({
 
         if (res.ok) {
           const data = await res.json();
+          const normalizedReply = normalizeComment(data.comment);
           // Add reply to parent comment
           setComments((prev) =>
             prev.map((c) => {
               if (c.id === parentId) {
                 return {
                   ...c,
-                  replies: [...(c.replies ?? []), data.comment],
+                  replies: [...(c.replies ?? []), normalizedReply],
                 };
               }
               return c;
@@ -609,6 +625,25 @@ function groupComments(flatComments: Comment[]): Comment[] {
     ...root,
     replies: repliesByParent.get(root.id) ?? [],
   }));
+}
+
+function normalizeComment(comment: ApiComment): Comment {
+  return {
+    id: comment.id,
+    lineNumber: comment.lineNumber,
+    author: {
+      id: comment.userId,
+      name: comment.userName?.trim() || "Anonymous",
+      avatar: comment.userAvatar ?? undefined,
+    },
+    content: comment.content,
+    parentId: comment.parentId ?? undefined,
+    resolved: comment.resolved,
+    resolvedAt: comment.resolvedAt ?? undefined,
+    resolvedBy: comment.resolvedBy ?? undefined,
+    createdAt: comment.createdAt,
+    updatedAt: comment.updatedAt,
+  };
 }
 
 function groupByLine(comments: Comment[]): Map<number, { count: number; hasUnresolved: boolean }> {

@@ -40,17 +40,17 @@ function DraftTab() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const documentContent = useLatexEditorStore((s) => s.documentContent);
+  const pendingDraftSection = useLatexEditorStore((s) => s.pendingDraftSection);
+  const setPendingDraftSection = useLatexEditorStore((s) => s.setPendingDraftSection);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Listen for "Draft this section" events from the file tree outline
   useEffect(() => {
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail as { sectionTitle: string };
-      if (!detail?.sectionTitle) return;
-      const prompt = `Write the "${detail.sectionTitle}" section for this paper. Use the document outline and existing content as context. Output LaTeX code only.`;
+    const triggerDraftSection = (sectionTitle: string) => {
+      if (!sectionTitle) return;
+      const prompt = `Write the "${sectionTitle}" section for this paper. Use the document outline and existing content as context. Output LaTeX code only.`;
       setInput(prompt);
       // Auto-send after a tick so the input state is updated
       setTimeout(() => {
@@ -93,9 +93,12 @@ function DraftTab() {
         })();
       }, 50);
     };
-    window.addEventListener("latex:draft-section", handler);
-    return () => window.removeEventListener("latex:draft-section", handler);
-  }, [documentContent, messages]);
+
+    if (pendingDraftSection) {
+      triggerDraftSection(pendingDraftSection);
+      setPendingDraftSection(null);
+    }
+  }, [documentContent, messages, pendingDraftSection, setPendingDraftSection]);
 
   const sendMessage = useCallback(async () => {
     if (!input.trim() || isLoading) return;
