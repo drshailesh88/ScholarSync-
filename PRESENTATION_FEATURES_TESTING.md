@@ -98,7 +98,6 @@
 - [ ] **3.7** Source option: References
 - [ ] **3.8** Source option: URL
 - [ ] **3.9** Source option: Import Deck
-- [ ] **3.10** Selecting a source advances to Step 1
 
 #### Source Selector Details
 
@@ -114,7 +113,7 @@
 - [ ] **3.51** Papers helper: "Enter the IDs of papers from your library to generate slides from" (`source-selector.tsx:157`)
 - [ ] **3.52** Document path: numeric ID input with placeholder "Enter document ID" (`source-selector.tsx:162`, `:164`, `:168`, `:169`)
 - [ ] **3.53** Document helper: "Enter the ID of a synthesis document to generate slides from" (`source-selector.tsx:173`)
-- [ ] **3.54** Text path: textarea with placeholder "Paste your research content..." and character count (`source-selector.tsx:178`, `:180`, `:183-184`, `:188`)
+- [ ] **3.54** Text path: textarea with placeholder "Paste your research content, abstract, or notes here..." and character count (`source-selector.tsx:178`, `:180`, `:183-184`, `:188`)
 - [ ] **3.55** URL path: UrlSourceInput component with per-URL rows (`source-selector.tsx:192-193`)
 - [ ] **3.56** URL helper: "Paste a URL to any article, blog post, or documentation page" (`source-selector.tsx:450`)
 - [ ] **3.57** URL input placeholder: "https://example.com/article" (`source-selector.tsx:503`)
@@ -129,7 +128,7 @@
 - [ ] **3.66** Import upload button: "Choose .pptx file" / "Parsing presentation..." while loading (`source-selector.tsx:311`, `:314-315`)
 - [ ] **3.67** Import errors: WarningCircle icon with error text (`source-selector.tsx:318`, `:320`)
 - [ ] **3.68** Password-protected PPTX error: "Password-protected files are not supported" (`source-selector.tsx:264`)
-- [ ] **3.69** Import preview: shows "N slides from {title}" with Clear button (`source-selector.tsx:325`, `:331`, `:337`, `:343`)
+- [ ] **3.69** Import preview: shows deck title plus "N slides from {fileName}" with Clear button (`source-selector.tsx:325`, `:329-331`, `:337`, `:343`)
 - [ ] **3.70** Import slide preview: up to 6 slides shown with "Slide N" label (`source-selector.tsx:348`, `:351`)
 - [ ] **3.71** Import preview text truncated per slide (`source-selector.tsx:356`)
 - [ ] **3.72** "Showing 6 of N imported slide previews." when > 6 slides (`source-selector.tsx:363`, `:365`)
@@ -179,7 +178,6 @@
 - [ ] **3.36** Step 3 header displays "Generate"
 - [ ] **3.37** Preprocess stream initiates and shows progress
 - [ ] **3.38** Generation step runs after preprocessing
-- [ ] **3.39** On success, navigates to `/presentation/{deckId}`
 - [ ] **3.40** Error during generation shows meaningful message
 - [ ] **3.41** Back button works to return to previous steps
 
@@ -192,8 +190,6 @@
 - [ ] **4.3** Right panel is ~w-72 width
 - [ ] **4.4** Center canvas fills remaining space
 - [ ] **4.5** Editor loads deck data from deckId route param
-- [ ] **4.6** Invalid deckId shows error state
-- [ ] **4.7** Save status indicator is visible (saved/saving/unsaved)
 
 ---
 
@@ -274,19 +270,17 @@
 
 ### Per-Layout Rendering Details
 
-- [ ] **8.22** title_slide: renders SlideTitle + ContentBlockList for body content (`slide-renderer.tsx:152`)
+- [ ] **8.22** title_slide: renders a centered custom title/subtitle block plus ContentBlockList for body content (`slide-renderer.tsx:139-152`)
 - [ ] **8.23** title_content: renders SlideTitle + separate subtitle + ContentBlockList in two regions (`slide-renderer.tsx:186`, `:189`)
 - [ ] **8.24** two_column: renders SlideTitle + left ContentBlockList + right ContentBlockList (`slide-renderer.tsx:192`)
-- [ ] **8.25** section_header: subtitle conditional, body ContentBlockList below (`slide-renderer.tsx:172`)
 - [ ] **8.26** quote_slide: renders quote block attribution conditionally (`slide-renderer.tsx:212`)
-- [ ] **8.27** comparison: renders SlideTitle + left ContentBlockItem + right ContentBlockItem, with fallback ContentBlockList (`slide-renderer.tsx:374`, `:384`, `:395`)
 - [ ] **8.28** image_text: renders SlideTitle + image (or placeholder "Image placeholder") + text ContentBlockList (`slide-renderer.tsx:246`, `:265`, `:270`)
 - [ ] **8.29** chart_slide: renders SlideTitle + SimpleChartPreview (or "Chart placeholder") + ContentBlockList (`slide-renderer.tsx:282`, `:285`, `:288`)
 - [ ] **8.30** table_slide: renders SlideTitle + SimpleTablePreview or ContentBlockList fallback (`slide-renderer.tsx:305`, `:307-308`)
 - [ ] **8.31** bibliography_slide: renders SlideTitle + BibliographyBlockRenderer or ContentBlockList fallback (`slide-renderer.tsx:333`, `:335-336`)
 - [ ] **8.32** results_summary: renders SlideTitle + stat blocks grid (2/3/4 cols adaptive) + chart blocks grid + callout blocks + other blocks (`slide-renderer.tsx:438`, `:441-479`)
 - [ ] **8.33** key_findings: renders SlideTitle + numbered items list + bottom callout conditional (`slide-renderer.tsx:509`, `:530`, `:545`)
-- [ ] **8.34** methodology: renders SlideTitle + ContentBlockList in two regions (methodology steps) (`slide-renderer.tsx:617`, `:620-626`)
+- [ ] **8.34** methodology: renders SlideTitle + left methodology block or fallback list, plus right detail/callout cards or fallback list (`slide-renderer.tsx:374-418`)
 - [ ] **8.35** timeline_slide: renders SlideTitle + TimelineBlockRenderer or ContentBlockList fallback (`slide-renderer.tsx:558`, `:560-561`)
 - [ ] **8.36** stat_overview: renders stat blocks in responsive grid (3 cols for ≤3, 2x2 for 4, 3-col+rows for 5+) with optional bottom content (`slide-renderer.tsx:581-602`)
 - [ ] **8.37** big_number: renders large stat value (3.5em) if stat_result block exists, otherwise large title (2em) with body content (`slide-renderer.tsx:638`)
@@ -309,7 +303,7 @@
 | 9.7 | quote | Blockquote styling | |
 | 9.8 | math | KaTeX rendered math | |
 | 9.9 | diagram | Mermaid diagram rendering | |
-| 9.10 | code | Code block with highlighting | |
+| 9.10 | code | Monospace code block | |
 | 9.11 | callout | Highlighted callout box | |
 | 9.12 | stat_result | Statistical result display | |
 | 9.13 | bibliography | Bibliography list | |
@@ -327,7 +321,6 @@
 - [ ] **9.24** Each block type is editable in edit mode
 - [ ] **9.25** KaTeX math renders valid LaTeX expressions
 - [ ] **9.26** Mermaid diagram renders valid Mermaid syntax
-- [ ] **9.27** Code block applies syntax highlighting
 
 ### Content Block Editor -- Inline Editing UI
 
@@ -412,7 +405,7 @@
 
 #### Bibliography Block Editor
 
-- [ ] **9.71** Header shows "Bibliography (N)" with count (`content-block-editor.tsx:597`, `:599`)
+- [ ] **9.71** Header shows "Bibliography ({style.toUpperCase()})" (`content-block-editor.tsx:597`, `:599`)
 - [ ] **9.72** Entry list renders all entries (`content-block-editor.tsx:603`)
 
 #### Timeline Block Editor
@@ -422,7 +415,6 @@
 - [ ] **9.75** Date field with placeholder "Date" (`content-block-editor.tsx:646`, `:652`)
 - [ ] **9.76** Description field editable when present (`content-block-editor.tsx:655`, `:658`)
 - [ ] **9.77** Date and description shown in read mode (`content-block-editor.tsx:669`, `:670`)
-- [ ] **9.78** Remove entry button when active (`content-block-editor.tsx:675`)
 - [ ] **9.79** "+ Add milestone" button to append entry (`content-block-editor.tsx:677`, `:686`)
 - [ ] **9.80** Timeline entry status colors: completed=#22C55E, in_progress=theme.primaryColor, default=#94A3B8 (`content-block-editor.tsx:627-628`)
 
@@ -449,32 +441,28 @@
 - [ ] **9.93** Treemap: Treemap with custom TreemapContent, Tooltip (`chart-block.tsx:384-391`)
 - [ ] **9.94** Gauge: SVG arc with color thresholds (red <33%, amber <66%, green >=66%) (`chart-block.tsx:410`, `:418`)
 - [ ] **9.95** Forest plot: table layout with Study/Effect Size/ES columns, per-study rows, Overall summary diamond (`chart-block.tsx:473-525`)
-- [ ] **9.96** Horizontal bar chart: rotated BarChart with horizontal bars (`chart-block.tsx:543-549`)
 - [ ] **9.97** "No chart data" empty state text (`chart-block.tsx:68`)
 - [ ] **9.98** Title shown conditionally above chart (`chart-block.tsx:89`)
 - [ ] **9.99** ResponsiveContainer wrapping (except forest_plot and gauge) (`chart-block.tsx:98`, `:101`)
 - [ ] **9.100** xAxisLabel and yAxisLabel conditionally displayed (`chart-block.tsx:203-204`)
 - [ ] **9.101** Legend shown conditionally when `showLegend !== false` (`chart-block.tsx:206`, `:220`, `:304`, `:320`, `:332`)
-- [ ] **9.102** Bar value labels shown conditionally when bar width > 40 and height > 20 (`chart-block.tsx:170`)
 
 ### Infographic Block Rendering Details
 
 #### Infographic Variants
 
-- [ ] **9.103** Process: horizontal bars with connector lines between items (`infographic-block.tsx:132`, `:138`)
+- [ ] **9.103** Process flow: circular steps with connector lines/arrows between items (`infographic-block.tsx:131-166`)
 - [ ] **9.104** Cycle: circular layout with items positioned around circumference (`infographic-block.tsx:177`)
 - [ ] **9.105** Hierarchy: root node at top with child nodes below, connected by lines (`infographic-block.tsx:216`, `:225`)
 - [ ] **9.106** Pyramid: stacked layers narrowing upward (`infographic-block.tsx:256`)
 - [ ] **9.107** Comparison grid: side-by-side items for comparison (`infographic-block.tsx:310`)
 - [ ] **9.108** Venn diagram: overlapping circles (`infographic-block.tsx:346`)
-- [ ] **9.109** Quadrant: four-quadrant grid layout (`infographic-block.tsx:382`, `:418`)
-- [ ] **9.110** Hub & spoke: center node with radiating spokes to outer items (`infographic-block.tsx:450`, `:459`)
-- [ ] **9.111** Hexagon grid: hexagonal tile layout (`infographic-block.tsx:486`)
-- [ ] **9.112** Progress tracker: items with done/active/pending states, connector bars, checkmark on done (`infographic-block.tsx:526`, `:534`, `:538`, `:541`)
-- [ ] **9.113** Fishbone (cause-effect): effect node with branching causes (`infographic-block.tsx:574`, `:583`)
-- [ ] **9.114** Icon grid: grid of icon items (`infographic-block.tsx:631`)
+- [ ] **9.109** Matrix: four-quadrant grid layout (`infographic-block.tsx:404-438`)
+- [ ] **9.110** Radial: center node with radiating spokes to outer items (`infographic-block.tsx:442-476`)
+- [ ] **9.112** Checklist: items with done/active/pending states, alternating row bands, and checkmark on done (`infographic-block.tsx:521-563`)
+- [ ] **9.113** Cause-effect: effect node with branching causes (`infographic-block.tsx:566-600`)
+- [ ] **9.114** Icon array: grid of repeated icon items with legend counts (`infographic-block.tsx:604-657`)
 - [ ] **9.115** Pictograph: repeated icon units with fractional last unit for ratio display (`infographic-block.tsx:643`, `:674`, `:688`, `:700`)
-- [ ] **9.116** Custom: free-form positioned text/shape elements (`infographic-block.tsx:800`)
 
 #### Common Infographic Properties
 
@@ -487,8 +475,8 @@
 - [ ] **9.123** Title shown conditionally above infographic (`infographic-block.tsx:856`)
 - [ ] **9.124** Caption shown conditionally below (`infographic-block.tsx:870`)
 - [ ] **9.125** Interactive mode renders SvgTooltip for hover details (`infographic-block.tsx:868`)
-- [ ] **9.126** Progress tracker done items show strikethrough text (`infographic-block.tsx:550`)
-- [ ] **9.127** Progress tracker active items show filled circle indicator (`infographic-block.tsx:541`)
+- [ ] **9.126** Checklist done items show strikethrough text (`infographic-block.tsx:544-550`)
+- [ ] **9.127** Checklist active items show filled circle indicator (`infographic-block.tsx:541-542`)
 
 ---
 
@@ -506,7 +494,7 @@
 | 10.8 | Export PPTX | -- | Exports deck as .pptx file | |
 | 10.9 | Export PDF | -- | Exports deck as .pdf file | |
 | 10.10 | Share | ShareNetwork | Opens SharePanel | |
-| 10.11 | Presenter Mode | -- | Enters fullscreen presenter mode | |
+| 10.11 | Presenter Mode | -- | Opens presenter mode overlay | |
 
 - [ ] **10.12** Comments badge shows unresolved count
 - [ ] **10.13** Only one right panel is open at a time
@@ -604,7 +592,7 @@
 - [ ] **13.29** Default difficulty is "moderate" (`defense-prep-panel.tsx:95`)
 - [ ] **13.30** Default focus areas is empty array (`defense-prep-panel.tsx:96`)
 - [ ] **13.31** Session summary screen shows Trophy icon and "Session Complete" header (`defense-prep-panel.tsx:365`, `:366`)
-- [ ] **13.32** Summary score displays "X out of 10" (`defense-prep-panel.tsx:373`)
+- [ ] **13.32** Summary score displays a large numeric score with separate "out of 10" label (`defense-prep-panel.tsx:371-374`)
 - [ ] **13.33** "Strengths" list with Target icon (`defense-prep-panel.tsx:379`, `:381`, `:385`)
 - [ ] **13.34** "Areas for Improvement" list with Lightning icon (`defense-prep-panel.tsx:399`, `:401`, `:405`)
 - [ ] **13.35** "Suggested Talking Points" list shown when talkingPoints > 0 (`defense-prep-panel.tsx:417`, `:420`, `:423`)
@@ -617,14 +605,14 @@
 - [ ] **13.42** Reviewer messages show GraduationCap icon (`defense-prep-panel.tsx:486`)
 - [ ] **13.43** Category badge shown on reviewer messages when category exists (`defense-prep-panel.tsx:498`, `:500`)
 - [ ] **13.44** Slide reference badge "Slide N" shown when relatedSlideIndex exists (`defense-prep-panel.tsx:505`, `:507`)
-- [ ] **13.45** Suggested answer reveal: "Show/Hide suggested answer" toggle with Eye/EyeSlash icons (`defense-prep-panel.tsx:525`, `:528`, `:531`, `:536`)
+- [ ] **13.45** Suggested answer reveal uses "Show suggested answer" / "Hide suggested answer" toggle text with Eye/EyeSlash icons (`defense-prep-panel.tsx:525`, `:528`, `:531`, `:536`)
 - [ ] **13.46** Revealed answer content shown when toggle active (`defense-prep-panel.tsx:538`)
 - [ ] **13.47** Loading state "Reviewing your response..." with CircleNotch spinner (`defense-prep-panel.tsx:550`, `:553`, `:557`)
 - [ ] **13.48** Error state shows Warning icon with error message (`defense-prep-panel.tsx:567`, `:570`)
 - [ ] **13.49** Answer input: placeholder "Type your answer...", disabled while loading (`defense-prep-panel.tsx:581-583`)
 - [ ] **13.50** Send button: PaperPlaneRight when idle, CircleNotch when loading (`defense-prep-panel.tsx:592`, `:595`, `:600-603`)
 - [ ] **13.51** Send button disabled when loading or input empty (`defense-prep-panel.tsx:592`)
-- [ ] **13.52** Footer shows "Question N - {difficulty} difficulty" (`defense-prep-panel.tsx:608`)
+- [ ] **13.52** Footer shows "Question N · {difficulty} difficulty" (`defense-prep-panel.tsx:608`)
 - [ ] **13.53** API calls to /api/presentations/defense-prep (`defense-prep-panel.tsx:139`)
 - [ ] **13.54** Focus areas omitted from request when none selected (`defense-prep-panel.tsx:152`)
 
@@ -677,7 +665,6 @@
 - [ ] **17.3** Version list shows saved versions with timestamps
 - [ ] **17.4** Restore version replaces current deck with selected version
 - [ ] **17.5** Delete version removes it from the list
-- [ ] **17.6** Compare versions shows diff between two versions
 
 ---
 
@@ -698,7 +685,6 @@
 
 ### Display & Layout
 
-- [ ] **19.1** Entering presenter mode goes fullscreen
 - [ ] **19.2** Two-panel layout: main slide (2/3) + presenter panel (1/3)
 - [ ] **19.3** Presenter panel shows speaker notes
 - [ ] **19.4** Presenter panel shows timer
@@ -723,8 +709,8 @@
 | 19.13 | Escape | Exit presenter mode | |
 | 19.14 | B | Black screen | |
 | 19.15 | W | White screen | |
-| 19.16 | T | Toggle timer | |
-| 19.17 | N | Toggle notes | |
+| 19.16 | N | Toggle presenter panel | |
+| 19.17 | Home / End | Jump to first / last slide | |
 
 ### Broadcasting
 
@@ -751,7 +737,7 @@
 - [ ] **19.35** Next slide preview labeled "Next Slide" with SlideRenderer at small scale (`presenter-mode.tsx:918`, `:921`, `:927`)
 - [ ] **19.36** "End of presentation" shown when on last slide (`presenter-mode.tsx:941`)
 - [ ] **19.37** Prev button disabled when currentIndex <= 0 (`presenter-mode.tsx:950`, `:954`)
-- [ ] **19.38** Next button disabled when on last slide and all reveals complete (`presenter-mode.tsx:958-959`, `:964`)
+- [ ] **19.38** Next button disabled when on the last slide and `maxRevealOrder === 0 || revealedOrder >= maxRevealOrder` (`presenter-mode.tsx:958-960`, `:964`)
 - [ ] **19.39** Jump-to-slide form: input with placeholder "Slide #", "Jump" button (`presenter-mode.tsx:970`, `:981`, `:987`, `:988`, `:995`)
 - [ ] **19.40** Jump input accepts only digits (`presenter-mode.tsx:981`)
 - [ ] **19.41** Keyboard help text rendered at bottom (`presenter-mode.tsx:1000`)
@@ -941,12 +927,12 @@
 ### Colors Section
 
 - [ ] **26.3** Colors section header displays "Colors" (`custom-theme-builder.tsx:226`)
-- [ ] **26.4** Primary Color picker via ThemeColorField (`custom-theme-builder.tsx:228`)
-- [ ] **26.5** Secondary Color picker via ThemeColorField (`custom-theme-builder.tsx:229`)
-- [ ] **26.6** Background Color picker via ThemeColorField (`custom-theme-builder.tsx:230`)
-- [ ] **26.7** Text Color picker via ThemeColorField (`custom-theme-builder.tsx:231`)
-- [ ] **26.8** Accent Color picker via ThemeColorField (`custom-theme-builder.tsx:232`)
-- [ ] **26.9** Surface Color picker via ThemeColorField (`custom-theme-builder.tsx:233`)
+- [ ] **26.4** Primary picker via ThemeColorField (`custom-theme-builder.tsx:228`)
+- [ ] **26.5** Secondary picker via ThemeColorField (`custom-theme-builder.tsx:229`)
+- [ ] **26.6** Background picker via ThemeColorField (`custom-theme-builder.tsx:230`)
+- [ ] **26.7** Text picker via ThemeColorField (`custom-theme-builder.tsx:231`)
+- [ ] **26.8** Accent picker via ThemeColorField (`custom-theme-builder.tsx:232`)
+- [ ] **26.9** Surface picker via ThemeColorField (`custom-theme-builder.tsx:233`)
 
 ### Typography Section
 
@@ -1023,7 +1009,7 @@
 
 ### Export Options
 
-- [ ] **27.15** "Show Created with ScholarSync branding" checkbox (`social-export-modal.tsx:278`, `:281`)
+- [ ] **27.15** "Show “Created with ScholarSync” branding" checkbox (`social-export-modal.tsx:278`, `:281`)
 - [ ] **27.16** Slide limit warning when format has maxSlides < total slides (`social-export-modal.tsx:283`)
 - [ ] **27.17** Preview grid shows "Preview (N slides)" header (`social-export-modal.tsx:292`)
 - [ ] **27.18** Preview uses SocialSlideRenderer component (`social-export-modal.tsx:329`, `:358`)
@@ -1040,7 +1026,7 @@
 - [ ] **27.26** Title conditionally rendered (`social-slide-renderer.tsx:124`)
 - [ ] **27.27** Subtitle conditionally rendered (`social-slide-renderer.tsx:141`)
 - [ ] **27.28** Bullet lists support ordered (numbered) and unordered (bullet) (`social-slide-renderer.tsx:199`)
-- [ ] **27.29** Excess bullets show "more..." text (`social-slide-renderer.tsx:204`, `:212`)
+- [ ] **27.29** Excess bullets show `+N more...` text (`social-slide-renderer.tsx:204`, `:212`)
 - [ ] **27.30** Quote attribution conditionally shown (`social-slide-renderer.tsx:262`)
 - [ ] **27.31** Callout title conditionally shown (`social-slide-renderer.tsx:289`)
 - [ ] **27.32** Stat result interpretation conditionally shown (`social-slide-renderer.tsx:346`)
@@ -1054,7 +1040,7 @@
 
 ### Tabs
 
-- [ ] **28.1** Three import tabs: File, Zotero, DOI (`reference-import-panel.tsx:299`, `:302`)
+- [ ] **28.1** Three import tabs: File Upload, Zotero, DOI Lookup (`reference-import-panel.tsx:299`, `:302`)
 - [ ] **28.2** Active tab shows white bg with shadow (`reference-import-panel.tsx:308`)
 
 ### File Tab
@@ -1110,7 +1096,7 @@
 - [ ] **28.39** Journal name shown when present (`reference-import-panel.tsx:593`)
 - [ ] **28.40** Remove button with X icon per reference (`reference-import-panel.tsx:602`, `:608`)
 - [ ] **28.41** "No references match your filter." empty filter state (`reference-import-panel.tsx:613`, `:615`)
-- [ ] **28.42** "Use N Selected References" button, disabled when 0 selected (`reference-import-panel.tsx:622-623`, `:626`, `:631-632`)
+- [ ] **28.42** "Use N Selected Reference{plural}" button, disabled when 0 selected (`reference-import-panel.tsx:622-623`, `:626`, `:631-632`)
 
 ---
 
@@ -1120,13 +1106,13 @@
 |---------|-------------|
 | 1. List Page | 14 |
 | 2. Blank Mode | 15 |
-| 3. AI GenerationWizard | 77 |
-| 4. Editor Layout | 7 |
+| 3. AI GenerationWizard | 75 |
+| 4. Editor Layout | 5 |
 | 5. Slide Outline Sidebar | 10 |
 | 6. Slide Canvas | 9 |
 | 7. Design Panel | 7 |
-| 8. Slide Layouts | 40 |
-| 9. Content Block Types | 127 |
+| 8. Slide Layouts | 38 |
+| 9. Content Block Types | 120 |
 | 10. Toolbar Actions | 14 |
 | 11. Agent Panel | 16 |
 | 12. Coach Panel | 11 |
@@ -1134,9 +1120,9 @@
 | 14. Comments Panel | 10 |
 | 15. Analytics Panel | 8 |
 | 16. Share Panel | 7 |
-| 17. Version History Panel | 6 |
+| 17. Version History Panel | 5 |
 | 18. Recordings Panel | 8 |
-| 19. Presenter Mode | 53 |
+| 19. Presenter Mode | 52 |
 | 20. Audience View | 9 |
 | 21. AI Per-Slide Tools | 18 |
 | 22. Preset Themes | 25 |
@@ -1146,7 +1132,7 @@
 | 26. Custom Theme Builder | 38 |
 | 27. Social Export | 33 |
 | 28. Reference Import Panel | 42 |
-| **Total** | **705** |
+| **Total** | **690** |
 
 ---
 
@@ -1504,7 +1490,7 @@
 - [ ] Title placeholder `"Presentation title"` with `autoFocus`; slide count label `"Target Slide Count: {slideCount}"` range min=5 max=30
 - [ ] Citation style label `"Citation Style"` as pill buttons; theme label `"Theme"` in `grid grid-cols-7 gap-2`
 - [ ] Theme tiles: `aspect-video` with name at `text-[8px] font-bold`; selected: `border-brand ring-1 ring-brand/30`
-- [ ] Structure preview toggle: `"Template Structure Preview ({name})"` with CaretUp/CaretDown; `max-h-64 overflow-y-auto`; shows slot#, title, (optional), guidance (line-clamp-1), layout name
+- [ ] Structure preview toggle: `"Template Structure Preview ({name})"` with CaretUp/CaretDown; `max-h-64 overflow-y-auto`; shows numeric slot index, title, (optional), guidance (line-clamp-1), layout name
 - [ ] Instructions label `"Additional Instructions"` `"(optional)"`; placeholder `"e.g., Focus on methodology, include more charts..."`; 3 rows; empty sent as `undefined`
 - [ ] Generate button: `Sparkle` icon + `"Generate"`; disabled when `title.trim().length === 0`
 
@@ -1558,7 +1544,7 @@
 - [ ] Items in `max-h-64 overflow-y-auto`; selected: `bg-brand/5 border-brand/30`; checkbox `w-4 h-4 rounded`
 - [ ] Title `text-xs font-medium line-clamp-2`; authors: first 3 + `" et al."` when >3; year in parens; journal italic
 - [ ] Remove X uses `stopPropagation`; empty filter: `"No references match your filter."`
-- [ ] Use button: `"Use {count} Selected Reference(s)"` with Check; disabled at 0 selected
+- [ ] Use button: `"Use {count} Selected Reference{plural}"` with Check; disabled at 0 selected
 
 #### Loading & Error
 - [ ] Loading: `"Processing..."` with CircleNotch in `bg-brand/5 border-brand/20`
@@ -1596,7 +1582,7 @@
 - [ ] Header `"Next Slide"`; shows title or `"Slide {n+1}"`; `SlideRenderer` at `scale={0.42}`; last slide: `"End of presentation"`
 
 #### Navigation
-- [ ] Prev disabled at index 0; Next disabled at last slide when fully revealed
+- [ ] Prev disabled at index 0; Next disabled at last slide when `maxRevealOrder === 0 || revealedOrder >= maxRevealOrder`
 - [ ] Jump input: `inputMode="numeric" pattern="[0-9]*"` placeholder `"Slide #"` + `"Jump"` button
 
 #### Keyboard
@@ -1627,3 +1613,17 @@
 - [ ] Click-triggered steps on user input; auto-triggered steps via timers with relative delays
 - [ ] Reveal resets to order 0 on slide change; auto-step timers cleared on change/unmount
 - [ ] Clicking main slide area calls `goNext`
+
+---
+
+## Codex Verification Pass Discoveries
+
+- [ ] `src/app/(app)/presentation/error.tsx` is a real module error boundary and was not documented directly: it renders `ErrorDisplay` with title `Presentations unavailable`, passes the thrown `error`, and wires retry to `reset`
+- [ ] `src/app/(app)/presentation/loading.tsx` is a real loading route and was not documented directly: it renders one `Skeleton` header plus six `SkeletonCard` placeholders in a responsive `1 / 2 / 3` column grid
+- [ ] `src/app/presentation/audience/page.tsx` remains undercovered as its own file: it creates `BroadcastChannel("presenter-slide-sync")`, posts `{ type: "audience-ready" }` on mount, waits for `init`, and applies black/white screen overlays without presenter notes or controls
+- [ ] `/api/presentations/preprocess` internals remain underdocumented: auth + rate limiting run before a zod schema check, references are accepted as `rawText` or `referenceContent`, empty source material returns `400 "No source content provided"`, and preprocessing failures return `500 "Preprocessing failed"`
+- [ ] `/api/presentations/generate` internals remain underdocumented: the deck is created before generation, `generationStatus` transitions through `processing` / `completed` / `failed`, unsupported slide layouts fall back to `title_content`, and route-level failures return `500 "Generation failed"`
+- [ ] Cleanup behavior still lacks explicit coverage: `generation-wizard.tsx` clears the `AutoTrigger` timeout, `presenter-mode.tsx` clears the timer interval, auto-step timers, jump-buffer timeout, keydown listener, and `BroadcastChannel`, `slide-renderer.tsx` cancels Mermaid updates via a `cancelled` flag, and the audience view closes its broadcast channel on unmount
+- [ ] Accessibility coverage is still incomplete: `SourceSelector` source cards and `ReferenceImportPanel` tabs are button groups without `role="tablist"` / `role="tab"` or `aria-selected`, while `presenter-mode.tsx` does provide `aria-label`s on fullscreen, exit, timer, and jump controls
+- [ ] Mobile/responsive behavior is still lightly documented: `SourceSelector` changes from `grid-cols-2` to `md:grid-cols-3` to `xl:grid-cols-6`, `NewPresentationPage` uses `grid-cols-2 sm:grid-cols-3` for audience options, `ReferenceImportPanel` keeps a fixed two-column Zotero form, and `presentation/loading.tsx` shifts from 1 to 2 to 3 columns
+- [ ] Import-tree files still not covered by dedicated sections include `template-selector.tsx`, `speaker-notes-panel.tsx`, `recordings-panel.tsx`, `src/app/(app)/presentation/error.tsx`, `src/app/(app)/presentation/loading.tsx`, `src/app/presentation/audience/page.tsx`, `/api/presentations/preprocess`, and `/api/presentations/generate`
