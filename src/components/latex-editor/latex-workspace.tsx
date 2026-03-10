@@ -87,13 +87,16 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
   // Getter for .bib file content (used by citation autocompletion)
   const getBibContent = useCallback(() => {
-    const bibFile = files.find((f) => f.path.endsWith(".bib"));
-    return bibFile?.content ?? "";
-  }, [files]);
+    return filesRef.current
+      .filter((f) => f.path.endsWith(".bib"))
+      .map((f) => f.content ?? "")
+      .filter(Boolean)
+      .join("\n\n");
+  }, []);
 
   useEffect(() => {
     setBibContent(getBibContent());
-  }, [getBibContent, setBibContent]);
+  }, [files, getBibContent, setBibContent]);
 
   // Editor scroll position for preview sync
   const [editorTopLine, setEditorTopLine] = useState(1);

@@ -5,12 +5,19 @@ import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection, re
 import { EditorState, Compartment } from "@codemirror/state";
 import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
 import { syntaxHighlighting, indentOnInput, foldGutter, foldKeymap, defaultHighlightStyle, HighlightStyle, bracketMatching } from "@codemirror/language";
-import { closeBracketsKeymap } from "@codemirror/autocomplete";
+import { autocompletion, closeBracketsKeymap, completionKeymap, startCompletion } from "@codemirror/autocomplete";
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import { lintKeymap, lintGutter, setDiagnostics, type Diagnostic } from "@codemirror/lint";
 import { latex } from "codemirror-lang-latex";
 import { tags } from "@lezer/highlight";
 import { createSpellCheckLinter } from "./spell-check-extension";
+import {
+  createCitationCompletion,
+  createRefCompletion,
+  latexCommandCompletion,
+  latexEnvironmentCompletion,
+} from "./completions";
+import { aiCompletions } from "./ai-completion-extension";
 
 // Custom LaTeX-friendly highlight style
 const latexHighlightStyle = HighlightStyle.define([
@@ -313,6 +320,13 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
               onSlashDismissRef.current?.();
             }
           }
+
+          if (
+            /\\cite[tp]?\{[^}\s]*$/.test(lineTextBeforeCursor) ||
+            /\\(?:eq|page|auto|c)?ref\{[^}\s]*$/.test(lineTextBeforeCursor)
+          ) {
+            startCompletion(update.view);
+          }
         }
       });
 
@@ -341,8 +355,17 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
           createSpellCheckLinter(),
 
           // LaTeX language support (includes autocompletion, bracket matching, close brackets)
-          latex(),
+          latex({ enableAutocomplete: false }),
           bracketMatching(),
+          autocompletion({
+            override: [
+              latexCommandCompletion,
+              latexEnvironmentCompletion,
+              createCitationCompletion(() => getBibContentRef.current?.() ?? ""),
+              createRefCompletion(() => viewRef.current?.state.doc.toString() ?? ""),
+            ],
+          }),
+          ...aiCompletions,
 
           // Native browser spellcheck support for the editable surface
           EditorView.contentAttributes.of({
@@ -363,6 +386,7 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
             ...defaultKeymap,
             ...historyKeymap,
             ...closeBracketsKeymap,
+            ...completionKeymap,
             ...searchKeymap,
             ...foldKeymap,
             ...lintKeymap,
