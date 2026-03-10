@@ -381,12 +381,7 @@ Accessible from the **Figures** tab in the file tree sidebar.
 - [ ] **Delete** — remove uploaded images
 - [ ] **One-click LaTeX insertion** — generates and inserts:
   ```latex
-  \begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{filename}
-    \caption{Caption text here}
-    \label{fig:filename}
-  \end{figure}
+  \includegraphics[width=\linewidth]{figures/filename.ext}
   ```
 
 ---
@@ -414,7 +409,7 @@ Right sidebar with **four tabs**: Draft, Learn, Cite, Check.
   - [ ] Extracts current section from document
   - [ ] Includes document outline for context
 - [ ] **Section drafting** — drag-and-drop from file tree outline
-  - File tree "Draft this section" button dispatches `latex:draft-section` event
+  - File tree "Draft this section" button stores `pendingDraftSection`, opens the Draft tab, and the tab auto-sends after a 50ms `setTimeout`
 - [ ] **Two intensity levels**: "collaborate" and "accelerate"
 - [ ] **Streaming response** — token-by-token display
 
@@ -498,23 +493,14 @@ Command palette triggered by typing `/` in the editor.
 
 ## 17. LaTeX Autocompletion
 
-Built-in completions for LaTeX editing (no AI required).
-
-- [ ] **100+ LaTeX commands** — `\section`, `\begin`, `\usepackage`, etc.
-- [ ] **Environment completions** — `\begin{...}\end{...}` pairs
-- [ ] **Citation key completions** — reads from `.bib` file content
-- [ ] **Label/reference completions** — auto-completes `\ref{}` from existing `\label{}`
-- [ ] **Boost scoring** — frequently used commands ranked higher
+Current `SourceEditor` behavior comes from `codemirror-lang-latex` plus CodeMirror built-ins.
+The custom completions module in `src/components/latex-editor/completions.ts` exists on disk but is not wired into the active editor import chain.
 
 ---
 
 ## 18. AI Code Completion
 
-AI-powered intelligent code completion.
-
-- [ ] **Context-aware suggestions** — considers surrounding LaTeX code
-- [ ] **Streaming responses** — suggestions stream in
-- [ ] Uses `/api/latex/complete` endpoint
+`ai-completion-extension.ts` exists on disk, but the ghost-text AI completion extension is not imported into the active `SourceEditor`.
 
 ---
 
@@ -529,30 +515,13 @@ AI-powered intelligent code completion.
 
 ## 20. Track Changes
 
-Available when editing mode is set to "Suggest".
-
-### Track Changes Panel
-- [ ] **Pending edits list** — shows all suggested changes
-- [ ] **Per-change actions** — Accept / Reject buttons
-- [ ] **Batch actions** — "Accept All" / "Reject All"
-- [ ] **Status filtering** — filter by: pending, accepted, rejected, all
-- [ ] **Change details** — shows context of each change
-
-### Track Changes Extension
-- [ ] **Visual highlighting** — pending changes highlighted in editor
-- [ ] **CodeMirror extension** — integrates with editor state
-- [ ] **Sync with store** — changes tracked in Zustand store
-- [ ] **Server sync** — accept/reject synced via `/api/latex/track-changes`
+Track-changes store actions and UI components exist on disk, but neither `TrackChangesPanel` nor `track-changes-extension.ts` is wired into `latex-workspace.tsx` today.
 
 ---
 
 ## 21. Version History
 
-- [ ] **Snapshot-based** — save/restore full file snapshots
-- [ ] **Load versions** from server via `/api/latex/versions`
-- [ ] **Restore version** — replace current content with snapshot
-- [ ] **Delete old versions** — clean up
-- [ ] **Timestamp tracking** — each version stamped with date/time
+`VersionHistoryPanel` and the related version routes exist on disk, but the panel is not imported or rendered by the current LaTeX workspace.
 
 ---
 
@@ -566,15 +535,12 @@ Built on **Yjs + WebSocket** for real-time multi-user editing.
 - [ ] **Connection status tracking** — connected/disconnected states
 
 ### Collaboration Cursors
-- [ ] **Remote cursor display** — see other users' cursor positions
-- [ ] **Color-coded** — each collaborator has a unique color
-- [ ] **Real-time tracking** — cursors move as users type
+Remote cursor UI is not currently rendered in the active LaTeX workspace.
 
 ### Collaborator Awareness
 - [ ] **User presence** — see who is currently editing
 - [ ] **Avatars in top bar** — collaborator profile pictures/initials
-- [ ] **Typing status** — indication when others are typing
-- [ ] **Selection awareness** — see what others have selected
+Typing and selection awareness are tracked in the collaboration provider but are not currently rendered in the active workspace UI.
 
 ---
 
@@ -607,7 +573,7 @@ Three export formats available from the top bar dropdown:
 - [ ] Downloads the compiled PDF blob
 - [ ] Filename: `{projectTitle}.pdf` (sanitized)
 - [ ] Requires successful compilation first
-- [ ] Button disabled if no compiled PDF available
+- [ ] Export handler no-ops if no compiled PDF URL is available yet
 
 ### Download .tex
 - [ ] Downloads the current editor content as `.tex` file
@@ -632,7 +598,7 @@ Three export formats available from the top bar dropdown:
 - [ ] Save state managed in Zustand store
 
 ### Manual Save
-- [ ] **Cmd+S** — saves immediately, cancels pending debounce
+- [ ] **Cmd+S** — saves immediately from store-backed content (without explicitly clearing any pending autosave timer)
 - [ ] Calls `updateLatexFile()` server action
 
 ### Save Status Indicators
@@ -722,7 +688,7 @@ Three export formats available from the top bar dropdown:
 
 ### Editor Cleanup
 - [ ] **Save timer cleanup** on component unmount
-- [ ] **PDF blob URL cleanup** — `URL.revokeObjectURL` for downloaded exports
+- [ ] `.tex` and `.zip` export handlers revoke their temporary blob URLs after download
 
 ---
 
@@ -885,7 +851,7 @@ Three export formats available from the top bar dropdown:
 ### File Tree and Sidebar Details
 - [ ] File-tree panel tab state defaults to `files`
 - [ ] File-tree panel header label is uppercase `Files`
-- [ ] New-file inline input placeholder is `filename.tex`
+- [ ] New-file inline input placeholder is `filename or folder/name`
 - [ ] New-file creation seeds `.bib` files with `% Add references here\\n` and all other files with an empty string
 - [ ] Creating a new file selects it immediately after it is added
 - [ ] Empty new-file input closes on blur without creating a file
@@ -898,7 +864,7 @@ Three export formats available from the top bar dropdown:
 - [ ] Outline empty-state text is `No sections found`
 - [ ] Outline indent increases by 12 px per section depth level
 - [ ] Outline rows expose a hover-only sparkle action when `onDraftSection` is available
-- [ ] Clicking an outline sparkle opens the agent panel, switches to the `draft` tab, and dispatches `latex:draft-section`
+- [ ] Clicking an outline sparkle opens the agent panel, switches to the `draft` tab, stores `pendingDraftSection`, and Draft auto-sends after a 50ms delay
 
 ### Mobile and Overlay Behavior
 - [ ] Mobile editor/preview toggle bar is rendered only when `isMobile` is true
@@ -960,7 +926,7 @@ Three export formats available from the top bar dropdown:
 - [ ] Export PDF downloads only when a compiled PDF blob URL already exists; the export action does not trigger a fresh compile automatically
 - [ ] Source mode is the real default editor mode; visual mode is opt-in
 - [ ] Live preview is the real default preview mode; PDF preview is selected automatically only after a successful compile
-- [ ] Project and file deletions currently have no confirmation dialog in the page components
+- [ ] Project deletion is still confirmation-free on the list page, but file deletion in `file-tree.tsx` does use `window.confirm(...)`
 - [ ] Slash-command menu has no explicit `No commands` empty-state row; it simply unmounts when there are no matches
 - [ ] Draft-tab and cite-tab request failures are largely silent in the current UI instead of surfacing inline error banners
 - [ ] The workspace mobile experience relies on full-screen overlays and an Editor/Preview switcher rather than a simultaneous multi-column layout
@@ -1047,13 +1013,13 @@ Three export formats available from the top bar dropdown:
 
 ### Collaboration Cursors & Typing
 - [ ] CollaboratorAvatars displays max 4 user avatars; overflow shown as "+{N}" badge
-- [ ] CollaboratorAvatars returns null when not connected OR when no users present (including current user)
+- [ ] CollaboratorAvatars returns `null` only when collaboration is disconnected; once connected it still renders the local current user even if no other collaborators are present
 - [ ] Avatar fallback: first character of user name (uppercased) when no avatar URL exists
 - [ ] Avatar has a CSS hover tooltip showing the full user name
 - [ ] TypingIndicator text for 1 user: "{name} is typing..."
 - [ ] TypingIndicator text for 2 users: "{name1} and {name2} are typing..."
-- [ ] TypingIndicator text for 3+ users: "{name1} and others are typing..."
-- [ ] TypingIndicator displays max 2 names before collapsing to "and others"
+- [ ] TypingIndicator slices the displayed name list to at most 2 users before building its status text
+- [ ] Because TypingIndicator slices to 2 names first, its intended `"and others"` branch is unreachable in the current implementation
 
 ### Comment Panel — Full Behavior
 - [ ] Default comment filter is "unresolved" (not "all")
@@ -1144,7 +1110,7 @@ Three export formats available from the top bar dropdown:
 - [ ] `verbatim` → `<pre>`, `lstlisting` → `<pre><code>`
 - [ ] `quote`/`quotation` → `<blockquote>`
 - [ ] `center` → centered div, `flushleft` → left-aligned div, `flushright` → right-aligned div
-- [ ] `minipage` → inline-block div (width parameter consumed but not applied)
+- [ ] `minipage` → plain `<div class="latex-minipage">` wrapper (width parameter consumed but not applied)
 - [ ] 10 theorem-like environments: theorem, lemma, definition, corollary, proposition, remark, example, conjecture, notation, axiom — each renders as styled div with bold label
 - [ ] `proof` → div with italic "Proof." and QED symbol ∎ (float right)
 - [ ] `titlepage` → centered padded div
@@ -1152,16 +1118,16 @@ Three export formats available from the top bar dropdown:
 
 ### useMediaQuery Hook
 - [ ] Mobile breakpoint: `<768px`, minTouchTarget = 44px
-- [ ] Tablet breakpoint: `768–1024px`, minTouchTarget = 32px
-- [ ] Desktop breakpoint: `>1024px`, minTouchTarget = 24px
+- [ ] Tablet breakpoint: `768px <= width < 1024px`, minTouchTarget = 32px
+- [ ] Desktop breakpoint: `width >= 1024px`, minTouchTarget = 24px
 - [ ] Resize listener debounced by 100ms
 - [ ] Server-side rendering default assumes desktop (1024×768)
 
 ### Zustand Store — Track Changes Server Sync
 - [ ] `acceptChange(id)` optimistically updates local state AND sends PATCH to `/api/latex/track-changes` with `{ id, status: "accepted" }`
 - [ ] `rejectChange(id)` same pattern: local update + PATCH with `{ id, status: "rejected" }`
-- [ ] `acceptAllChanges()` batch-updates all pending changes locally and fires individual PATCH requests for each change
-- [ ] `rejectAllChanges()` same batch pattern
+- [ ] `acceptAllChanges()` batch-updates every change currently stored in `pendingChanges` and fires individual PATCH requests for each entry
+- [ ] `rejectAllChanges()` follows the same all-entries batch pattern
 - [ ] All track-change server sync errors are caught silently
 
 ### Behavior Corrections (Pass 2)
@@ -1171,6 +1137,20 @@ Three export formats available from the top bar dropdown:
 - [ ] **Draft-tab auto-send for section drafting uses a 50ms setTimeout**, not a custom event dispatch — the existing doc mentions `latex:draft-section` event but the actual mechanism is `pendingDraftSection` store state consumed by a useEffect
 
 ### Components Referenced But Not Rendered
-- [ ] `TrackChangesPanel` (`track-changes-panel.tsx`) exists as a fully built component but is NOT imported or rendered by `latex-workspace.tsx` — it is not in the active import chain
-- [ ] `VersionHistoryPanel` (`version-history-panel.tsx`) exists as a fully built component but is NOT imported or rendered by `latex-workspace.tsx` — it is not in the active import chain
-- [ ] `TypingIndicator` (`collaboration-cursors.tsx`) is exported but NOT imported or rendered anywhere in the workspace — only `CollaboratorAvatars` is used
+- `TrackChangesPanel` (`track-changes-panel.tsx`) exists as a fully built component but is not imported or rendered by `latex-workspace.tsx`.
+- `VersionHistoryPanel` (`version-history-panel.tsx`) exists as a fully built component but is not imported or rendered by `latex-workspace.tsx`.
+- `TypingIndicator` (`collaboration-cursors.tsx`) is exported but not imported or rendered anywhere in the workspace; only `CollaboratorAvatars` is mounted today.
+
+---
+
+## Codex Verification Pass Discoveries
+
+- [ ] `SourceEditor` does not import the custom completions from `completions.ts`; current editor behavior comes from `codemirror-lang-latex` plus CodeMirror built-ins
+- [ ] `SourceEditor` does not import `ai-completion-extension.ts`; ghost-text AI completion is not active in the current workspace
+- [ ] `SourceEditor` does not import `track-changes-extension.ts`; switching to `Suggest` mode changes store state only and does not mount inline diff decorations
+- [ ] `Cmd/Ctrl+S` manual save does not clear `saveTimerRef`, so a pending autosave can still fire after the manual save completes
+- [ ] Export PDF is not visually disabled when no compiled PDF exists; `handleExportPdf()` simply returns early when `compiledPdfUrl` is null
+- [ ] Compiled PDF blob URLs created after successful compile are never revoked on replacement or unmount; only ad hoc `.tex` / `.zip` export URLs are cleaned up
+- [ ] `createAddToDictionaryAction()` points at `/api/latex/spell-check/add`, but there is no matching API route under `src/app/api/latex/spell-check/add`
+- [ ] `/latex`, `/latex/new`, and `/latex/[projectId]` currently have no route-level `loading.tsx` or `error.tsx`; recovery is handled inline at the page and component level
+- [ ] Several icon-only controls rely on `title` tooltips instead of explicit `aria-label`s; the new-file type select is the notable exception with a dedicated accessibility label
