@@ -2,36 +2,41 @@
 
 **Original doc:** `DASHBOARD_FEATURES_TESTING.md`
 **Original checkbox count:** 131
-**Features found in UI:** 171
-**Features found in source code:** 214
-**Missing from doc:** 67
-**Completeness of original doc:** 61.2%
+**After Codex Pass 1:** 213
+**After Claude Code Pass 2:** 278
+**New checks added (Pass 2):** 65
 
-## Missing Features
+## Audit History
 
-### Detailed QA Coverage
-- [ ] `DashboardPage` is server-rendered and passes four data props into `DashboardClient`
-- [ ] `getDashboardData()` ensures the user exists, then runs all dashboard queries in parallel
-- [ ] Recent-projects, recent-searches, and recent-activity queries are capped at 4, 5, and 8 rows respectively
-- [ ] Dashboard stats include extra usage fields that are not yet rendered by this page
-- [ ] `DashboardClient` runs `migrateLocalDocuments()` on mount and logs migration failures to the console
-- [ ] Action cards are driven by a config array and are rendered as `Link` elements, not imperative buttons
-- [ ] Action card icon containers are 48px rounded squares with `size={24}` icons
-- [ ] Stats cards are hard-coded panels using `glass-panel rounded-2xl p-5 border border-border`
-- [ ] Active Manuscripts rows navigate with `router.push(`/studio/${project.id}`)`
-- [ ] `formatProjectType(null)` falls back to `Project`
-- [ ] `formatRelativeTime(null)` falls back to `Never`
-- [ ] Reviewing status currently uses the `active` badge variant
-- [ ] Recent Searches rows show `No results` when `result_count` is null
-- [ ] Search/activity rows have hover styling but no click navigation in the current implementation
-- [ ] Activity metadata omits the separator when `entity_type` is missing
-- [ ] Header greeting comes from `getGreeting()` and changes by time of day
-- [ ] Notification bell is presentational only in the current implementation
-- [ ] Sidebar active matching supports nested routes through `pathname.startsWith(...)`
-- [ ] Sidebar footer conditionally renders `ClerkUserButton` or a fallback placeholder
-- [ ] Command palette is closed by default and toggled by both `Cmd+K` and `Ctrl+K`
-- [ ] Palette `New Project` action routes to `/projects`
-- [ ] Palette commands close the palette before executing their action
+| Pass | Agent | Checks Added | Total | Focus |
+|------|-------|-------------|-------|-------|
+| Initial | Claude Code | 131 | 131 | Core feature inventory |
+| Pass 1 | Codex | +82 | 213 | Detailed QA coverage |
+| Pass 2 | Claude Code | +65 | 278 | Deep source read — icon sizes, edge cases, ThemeToggle, loading gaps, Sentry, query filters |
+
+## Pass 2 — Key Discoveries
+
+### Major Findings
+1. **ThemeToggle is a segmented pill** with "Daylight"/"Night" labeled buttons and SSR placeholder — NOT a simple icon toggle as previously described
+2. **Loading skeleton is incomplete** — covers only 2 of 5 dashboard sections (action cards + manuscripts), missing stats/searches/activity
+3. **ErrorDisplay reports to Sentry** via `Sentry.captureException(error)` — not documented previously
+4. **Migration is a no-op on dashboard mount** — called with zero args, always early-returns 0
+5. **Command palette omits 4 sidebar items** — Deep Research, LaTeX Editor, Journal Feed, Systematic Review are sidebar-only
+
+### Behavior Corrections (Pass 2)
+1. `migrateLocalDocuments()` is a server action that does NOT read localStorage — the dashboard calls it with no arguments, so it always returns 0
+2. No deduplication in migration — calling with same documents twice creates duplicates (doc incorrectly stated "Already-migrated documents are not re-migrated")
+3. Header border class is `border-border-subtle` (lighter), not `border-border`
+
+### Granular Additions
+- Stats icon containers `w-9 h-9` with `size={18}` icons (different from action card icons)
+- Project status defaults to "drafting" when null
+- Soft-delete filters on projects and papers queries; NO soft-delete on searches/conversations
+- Stats default values: `tokens_limit → 10000`, `plan → "free"`
+- Sidebar: w-64 width, h-20 logo area, backdrop-blur-sm, nav onClick closes mobile, ClerkUserButton afterSignOutUrl="/"
+- Command palette: cmdk library, top-[20%] position, "No results found." empty state, Navigation/Actions group headings
+- Logo: SquaresFour icon, sky-to-indigo gradient, "ScholarSync" text
+- Badge: rounded-full pill shape, unused `issues`/`popular` variants
 
 ## Features in doc that DON'T EXIST in the app
 - Recent Searches rows are not clickable in the current implementation.

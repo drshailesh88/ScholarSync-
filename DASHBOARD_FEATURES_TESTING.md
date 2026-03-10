@@ -497,4 +497,129 @@
 - [ ] `New Project` action routes to `/projects`, not directly to a create modal
 - [ ] Running any command closes the palette before executing the router/theme action
 
-*Generated from source code in `src/app/(app)/dashboard/`, `src/lib/actions/dashboard.ts`, and related modules — March 2026*
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> Deep line-by-line re-read of every file in the dashboard import tree.
+> Only assertions verified against source are included.
+
+#### Stats Cards — Icon Details
+- [ ] Stats icon containers use `w-9 h-9 rounded-lg` (smaller than action card icon containers which are `w-12 h-12`)
+- [ ] Stats icons render at `size={18}` (smaller than action card icons at `size={24}`)
+- [ ] Each stat card icon + number are in a `flex items-center gap-3 mb-2` row
+
+#### Active Manuscripts — Edge Cases
+- [ ] When `project.status` is null or falsy, status defaults to `"drafting"` badge (line 262: `|| "drafting"`)
+- [ ] Status badge labels are exact strings: `"Planning"`, `"Drafting"`, `"Reviewing"`, `"Completed"`, `"Archived"`
+- [ ] Project title has `truncate` class (text-overflow ellipsis on long titles)
+- [ ] FileText icon in project rows uses `size={20}`
+- [ ] ArrowRight icon in row arrow affordance uses `size={14}`
+- [ ] Project document icon transitions from `text-ink-muted` to `text-ink` on row hover via `group-hover:text-ink`
+- [ ] Empty manuscripts state padding is `p-8`
+
+#### Recent Searches — Format Details
+- [ ] MagnifyingGlass icon in search rows uses `size={16}`
+- [ ] Search metadata line joins values with ` · ` (middle dot) separator: `{count} results · {time}` or `No results · {time}`
+- [ ] Empty search state padding is `p-6`
+
+#### Recent Activity — Structural
+- [ ] Recent Activity section header contains NO action link (unlike Recent Searches which has "Search →")
+- [ ] ClockCounterClockwise icon in activity rows uses `size={16}`
+- [ ] `formatActivityAction()` is reused for BOTH `action` field AND `entity_type` field formatting
+
+#### Bottom Grid
+- [ ] Recent Searches + Recent Activity side-by-side breakpoint is `lg:grid-cols-2` (1024px+), single column below
+
+#### ThemeToggle — Full Implementation (MAJOR)
+- [ ] ThemeToggle is a **segmented pill control** with two labeled buttons, not a single icon toggle
+- [ ] Light mode button shows Sun icon with label `"Daylight"`
+- [ ] Dark mode button shows Moon icon with label `"Night"`
+- [ ] Active theme segment has `bg-surface text-ink shadow-sm` styling
+- [ ] Inactive theme segment has `text-ink-muted hover:text-ink` styling
+- [ ] ThemeToggle icons use `size={14}` with `weight="fill"` when active, `"regular"` when inactive
+- [ ] ThemeToggle renders a skeleton placeholder (`h-9 w-[156px] rounded-full bg-surface-raised`) before client mount to prevent hydration mismatch
+- [ ] ThemeToggle uses `useSyncExternalStore` for SSR-safe mounting detection
+
+#### Sidebar — Additional Details
+- [ ] Desktop sidebar width is `w-64` (256px)
+- [ ] Mobile overlay backdrop has `backdrop-blur-sm` blur effect
+- [ ] Sidebar logo area has `h-20` height with `border-b border-border-subtle`
+- [ ] Nav section labels (WORKSPACE, LIBRARY, TOOLS) use `text-[10px]` font size with `text-ink-muted/60` opacity
+- [ ] Clicking any sidebar nav link calls `onClose` — automatically closes mobile sidebar on navigation
+- [ ] `ClerkUserButton` is dynamically imported and shows `w-8 h-8 rounded-full bg-surface-raised` loading placeholder
+- [ ] `ClerkUserButton` receives `afterSignOutUrl="/"` prop
+- [ ] Sidebar nav area has `overflow-y-auto` for scrollable navigation when items overflow
+- [ ] Sidebar fallback placeholder (no Clerk) uses specific styling: `bg-brand/20 border border-brand/30`
+
+#### Command Palette — Additional Details
+- [ ] Command palette is built on the `cmdk` library (`Command` from `"cmdk"`)
+- [ ] Palette is positioned at `top-[20%]` of viewport, horizontally centered, with `max-w-lg` width
+- [ ] When no commands match the search filter, empty state shows `"No results found."`
+- [ ] Commands are organized under `"Navigation"` and `"Actions"` group headings
+- [ ] Selected command item is highlighted via `data-[selected=true]:bg-surface-raised`
+- [ ] Command palette does NOT include Deep Research, LaTeX Editor, Journal Feed, or Systematic Review (these are sidebar-only navigation items)
+- [ ] Search input area shows a `MagnifyingGlass` icon at `size={18}` before the text input
+- [ ] Command list has `max-h-72` max height with overflow scrolling
+- [ ] Toggle Theme action icon is contextual: shows `Sun` when current theme is dark, `Moon` when light
+- [ ] New Project action uses `PenNib` icon
+
+#### Loading Skeleton — Completeness
+- [ ] Loading skeleton renders only 2 of 5 dashboard sections: action cards grid and manuscripts table — NO skeleton for stats overview, recent searches, or recent activity
+- [ ] Each card skeleton contains: icon placeholder (`h-12 w-12 rounded-xl`), title placeholder (`h-5 w-2/3`), description placeholder (`h-3 w-full`)
+- [ ] SkeletonTable rows contain: icon (`h-10 w-10 rounded-lg`), title line (`h-4 w-2/3`), subtitle line (`h-3 w-1/3`), badge placeholder (`h-6 w-20 rounded-full`)
+- [ ] Loading skeleton grid uses same breakpoints as actual page (`sm:grid-cols-2 lg:grid-cols-4`)
+
+#### Error Handling — Additional
+- [ ] `ErrorDisplay` reports errors to Sentry via `Sentry.captureException(error)` in a `useEffect` on mount
+- [ ] Error icon is `WarningCircle` at `size={32}` inside a `bg-red-500/10` rounded container
+- [ ] "Try Again" button includes `ArrowCounterClockwise` icon at `size={16}` with `bg-brand text-white` styling
+
+#### Data Fetching — Query Details
+- [ ] `getDashboardData()` calls `getCurrentUserId()` first for the userId variable, then calls `ensureUser()` separately before `Promise.all`
+- [ ] Recent projects query includes `isNull(projects.deleted_at)` soft-delete filter
+- [ ] Paper count query includes `isNull(userReferences.deletedAt)` soft-delete filter
+- [ ] Search count and conversation count queries have NO soft-delete filter (count all records for user)
+- [ ] User query selects all columns from `users` table (`db.select().from(users)`) not just needed fields
+- [ ] Stats default values when user row is null: `tokens_limit → 10000`, `plan → "free"`, all numeric usage fields → `0`
+
+#### Logo Component
+- [ ] Logo icon is `SquaresFour` with `weight="fill"` at `size={18}`
+- [ ] Logo background is a gradient: `bg-gradient-to-tr from-sky-500 to-indigo-500`
+- [ ] Logo text reads `"ScholarSync"` with `font-semibold tracking-tight`
+
+#### AppShell Structure
+- [ ] AppShell root container uses `flex h-screen` layout
+- [ ] Main content area has `p-6` padding and `overflow-y-auto` scrolling
+- [ ] `CommandPalette` is rendered as a direct child of the root flex container, outside the content column
+
+#### Badge Component
+- [ ] Badge uses `rounded-full` shape (pill style, not rounded rectangle)
+- [ ] Badge component defines `issues` (red) and `popular` (sky) variants that are NOT used by the dashboard
+
+---
+
+### Behavior Corrections (Pass 2)
+
+1. **Migration is a no-op on dashboard mount.** `migrateLocalDocuments()` is a server action that accepts `localDocs` as a parameter — it does NOT read localStorage from the server. The dashboard calls it with zero arguments (`migrateLocalDocuments()`), which hits the early-return path (`!localDocs || localDocs.length === 0`) and returns `0`. The Section 13 description of "Reads documents from localStorage" is inaccurate for the server action.
+
+2. **No deduplication in migration.** The existing doc states "Already-migrated documents are not re-migrated" — this is incorrect. The `migrateLocalDocuments` function has no dedup check; calling it twice with the same documents would create duplicate rows.
+
+3. **Loading skeleton is incomplete.** The loading state covers only action cards + manuscripts (2 of 5 sections). Stats overview, recent searches, and recent activity have no skeleton representation, meaning those areas will jump in when data loads.
+
+4. **Header border class is `border-border-subtle`** (not `border-border`). This is a lighter border than the sidebar's `border-border`.
+
+### Components Referenced But Not Rendered (by dashboard-client.tsx)
+
+These components are part of the dashboard user experience via the AppShell layout but are NOT imported by `dashboard-client.tsx`:
+
+| Component | Rendered By | File |
+|-----------|-------------|------|
+| `ThemeToggle` | `AppHeader` | `src/components/ui/theme-toggle.tsx` |
+| `Logo` | `AppSidebar` | `src/components/ui/logo.tsx` |
+| `CommandPalette` | `AppShell` | `src/components/ui/command-palette.tsx` |
+| `ErrorDisplay` | `error.tsx` (boundary) | `src/components/ui/error-display.tsx` |
+| `Skeleton` / `SkeletonTable` | `loading.tsx` | `src/components/ui/skeleton.tsx` |
+| `ClerkUserButton` | `AppSidebar` (dynamic) | `@clerk/nextjs` |
+
+*Re-audited from source code — Claude Code Pass 2, March 2026*
