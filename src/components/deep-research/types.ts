@@ -26,6 +26,8 @@ export interface DeepResearchSource {
   source: string;
   isOpenAccess: boolean;
   pdfUrl?: string;
+  openAccessPdfUrl?: string | null;
+  fullTextUrl?: string | null;
   semanticScholarId?: string;
   studyType?: string;
   evidenceLevel?: string;
