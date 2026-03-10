@@ -1,11 +1,12 @@
 # Systematic Review — Feature Doc Gaps
 
 **Original doc:** `SYSTEMATIC_REVIEW_FEATURES_TESTING.md`  
-**Original checkbox count:** 374  
-**Features found in UI:** 507  
-**Features found in source code:** 915  
-**Missing from doc:** 541  
-**Completeness of original doc:** 40.9%
+**Original checkbox count:** 374
+**Features found in UI:** 507
+**Features found in source code (Codex pass 2):** 915
+**Features found in source code (Claude Code pass 3):** 1105
+**Pass 3 new checks:** 190
+**Completeness of original doc:** 33.8%
 
 ## Missing Features
 
@@ -83,6 +84,23 @@
 - [ ] Projects API ordering and screening-progress calculation were missing
 - [ ] Config POST defaults (`project_type`, `status`, `searchDatabases`, `reviewStage`) were missing
 - [ ] Config GET/PUT validation and selective update semantics were missing
+
+### Re-Audit Pass 3 Coverage (Claude Code)
+- [ ] ActivityFeed sidebar rendering: collapsed toggle button, expanded sidebar (320px), entry count badge (9+ overflow), empty state copy, max 50 entries, per-type icon colors, time formatting thresholds, GlassPanel wrapping
+- [ ] ForestPlot SVG internals: study label truncation (28 chars), weight-proportional squares, null line labels (1 vs 0), prediction interval dashed diamond, axis labels, heterogeneity footer format
+- [ ] FunnelPlot Recharts: real vs imputed study rendering, Egger's test display, significant asymmetry text
+- [ ] NetworkPlot SVG: circular vs force-directed layout, 12-color palette, hover highlighting, node/edge sizing, label truncation (18 chars), legend text
+- [ ] LeagueTable SVG: responsive cell widths, diagonal P-score display, significance highlighting, reading guide
+- [ ] NMAForestPlot SVG: reference treatment selector, significance asterisk, diamond estimates, P-score column, model footer
+- [ ] ScreeningPDFViewer: full-screen overlay, 70/30 split pane, stage toggle, zoom controls (0.5-3.0x), 11 exclusion reasons, AI assessment section, chunk highlighting with 3s auto-clear, section jump navigation
+- [ ] 20 undocumented API routes: alerts CRUD, screening-criteria, export-references, manuscript-export, pdf-retrieval, revman-export, upload, press, prisma-flow, prisma-checklist, import
+- [ ] Screen API: 300s timeout, rate limiting, criteria-required 400, batch summary
+- [ ] Extract API: 4 discriminated modes, schema max 50, textContent 50-100k chars, batch max 50
+- [ ] Screening queue: stage param, unblind mode, verifyProjectAccess, parallel progress promises
+- [ ] Liveblocks: empty storage, auth endpoint, 5 broadcast helpers, entry ID format
+- [ ] Store: clearProject resets criteria/screeningResults/screeningSummary, setProject hydrates from config, WorkflowTab includes both rob2/rob
+- [ ] 4 components not in import chain: AMSTAR2Panel, AuditTrailPanel, PRESSChecklistPanel, EvidenceGapMap
+- [ ] Accessibility corrections: aria-live not implemented on ActivityFeed or screening progress
 
 ## Features in doc that DON'T EXIST in the app
 

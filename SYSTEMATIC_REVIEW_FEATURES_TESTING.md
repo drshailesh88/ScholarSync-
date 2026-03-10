@@ -2056,3 +2056,252 @@ All items in `Actual Current Behavior Corrections` above were re-verified agains
 - [ ] Alerts route supports `update_frequency`, but the panel only offers `pause`, `resume`, `check_now`, and `delete`
 - [ ] Data Extraction inline edits do not call `GET` or `POST /api/systematic-review/extract`; edited values are session-local until a new extraction or reload replaces them
 - [ ] NMA saved-result loading failure is intentionally non-blocking; the UI falls back to manual entry without a blocking error state
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 3)
+
+### Activity Feed — Sidebar Rendering Details
+
+- [ ] Activity feed is a collapsible sidebar, not inline in the page layout
+- [ ] Collapsed state renders a fixed button on the right side of the viewport at vertical center
+- [ ] Collapsed button uses Lightning icon (weight bold, size 16) and title `Open activity feed`
+- [ ] Collapsed button entry count badge shows exact count when ≤ 9, or `9+` when entries exceed 9
+- [ ] Expanded sidebar is 320px wide (`w-80`), slides in from right with `animate-in slide-in-from-right` animation
+- [ ] Expanded sidebar header text is exactly `Activity Feed` with Lightning icon in brand color
+- [ ] Expanded sidebar header shows entry count badge in brand styling when entries exist
+- [ ] Expanded sidebar close button uses X icon (weight bold, size 14)
+- [ ] Empty feed text is `No activity yet. Actions by collaborators will appear here in real time.`
+- [ ] Empty feed shows a large Lightning icon (weight light, size 32) above the text
+- [ ] Maximum activity entries retained in memory is 50 (oldest trimmed on overflow)
+- [ ] Entries are prepended (newest first) to the activity feed array
+- [ ] `decision-made` entry: include = emerald-500, exclude = red-400, maybe = amber-400
+- [ ] `decision-made` text format: `{userName} screened Paper #{paperId} as {decision}`
+- [ ] `decision-made` shows paperTitle as truncated secondary line when available
+- [ ] `extraction-complete` icon is Table (weight fill) in blue-400
+- [ ] `extraction-complete` text format: `{userName} completed data extraction for Paper #{paperId}`
+- [ ] `rob2-assessed` icon is ShieldCheck (weight fill) in purple-400
+- [ ] `rob2-assessed` text shows `Overall risk: {overallRisk}` as secondary line
+- [ ] `stage-advanced` icon is ArrowFatUp (weight fill) in brand color
+- [ ] `stage-advanced` text shows `{fromStage}` → `{toStage}` with CaretRight separator, toStage in brand color
+- [ ] `papers-imported` icon is DownloadSimple (weight fill) in teal-400
+- [ ] `papers-imported` text format: `{userName} imported {count} papers from {source}`
+- [ ] Time formatting: `just now` (< 5s), `{N}s ago`, `{N}m ago`, `{N}h ago`, `{N}d ago`
+- [ ] Each entry is wrapped in a GlassPanel with `!rounded-xl` override
+- [ ] Unknown event types render `null` (no fallback entry)
+
+### Forest Plot — SVG Rendering Details
+
+- [ ] Forest plot is pure SVG rendering (no charting library dependency)
+- [ ] Column headers are `Study`, `{effectType} (95% CI)`, and `Weight`
+- [ ] Study labels truncated at 28 characters with `...` suffix
+- [ ] Effect size rendered as indigo (#6366f1) filled square, size proportional to weight (3-10px range)
+- [ ] CI whisker end caps only render when the CI bound is within the visible x-axis range
+- [ ] Alternating row backgrounds: even rows get 0.03 opacity fill
+- [ ] Null line is dashed (strokeDasharray 4,4) at 0.4 opacity
+- [ ] Null line label shows `1` for OR/RR effect types, `0` for MD/SMD/RD
+- [ ] OR and RR values displayed via `Math.exp()` transformation; MD/SMD/RD displayed raw
+- [ ] Pooled effect row labeled `Pooled` in bold text
+- [ ] Pooled effect diamond fill color is #dc2626 (red) at 0.85 opacity
+- [ ] Separator line above pooled row at 0.2 opacity
+- [ ] Prediction interval row renders only when `predictionInterval` prop is provided
+- [ ] Prediction interval label is italic text `Prediction interval` at 0.55 opacity
+- [ ] Prediction interval diamond is outline-only (no fill), dashed stroke (4,3), red (#dc2626)
+- [ ] Footer axis labels: `Favours control` (left 25%) and `Favours treatment` (right 75%)
+- [ ] Heterogeneity footer format: `Heterogeneity: I² = {val}%, τ² = {val}, p = {val}`
+- [ ] Heterogeneity p-value formatted as `<0.001` when below 0.001
+- [ ] Weight column values displayed as `{val}%` with 1 decimal place
+
+### Funnel Plot — Recharts Rendering Details
+
+- [ ] Funnel plot uses Recharts ScatterChart (not custom SVG)
+- [ ] Chart height is fixed at 350px in a ResponsiveContainer
+- [ ] X-axis label is the full effect type name: `Odds Ratio`, `Risk Ratio`, `Std. Mean Difference`, `Mean Difference`, or `Risk Difference`
+- [ ] Y-axis label is `SE`, reversed axis (0 at top)
+- [ ] Real studies rendered as filled indigo (#6366f1) circles (radius 4)
+- [ ] Imputed studies rendered as hollow amber (#f59e0b) circles with 1.5px stroke
+- [ ] Pooled effect vertical reference line: dashed indigo (#6366f1) at 1.5px width
+- [ ] Custom tooltip shows study name, effect value (3 decimal places), SE (3 decimal places)
+- [ ] Tooltip shows `Imputed (trim-and-fill)` in amber text for imputed studies
+- [ ] Egger's test result displays below the chart: `Egger's test: intercept = {val}, p = {val}`
+- [ ] Egger's test shows `(significant asymmetry detected)` in amber font-medium when p < 0.05
+
+### Network Plot — SVG Rendering Details
+
+- [ ] Network plot supports two layout algorithms: `circular` (default) and `force-directed` (via `forceLayout` prop)
+- [ ] Force-directed layout runs 120 iterations with spring-charge model (Coulomb repulsion + Hooke attraction)
+- [ ] 12-color palette for nodes: indigo, pink, teal, amber, violet, emerald, orange, cyan, red, lime, purple, sky
+- [ ] Default SVG dimensions are 600×500
+- [ ] Node hover highlights connected nodes and edges; dims unconnected to 0.15 opacity
+- [ ] Hovered node gets white stroke (2.5px) instead of self-color stroke
+- [ ] Edge weight labels only shown when weight > 1
+- [ ] Node labels truncated at 18 characters with `...` suffix
+- [ ] Node size range: 12px to 36px, proportional to sample size ratio
+- [ ] Edge thickness range: 1.5px to ~6.5px, proportional to weight ratio
+- [ ] Legend text: `Node size = total sample size | Edge thickness = number of studies`
+- [ ] Glass background rect at 0.02 opacity with 12px border radius
+
+### League Table — SVG Rendering Details
+
+- [ ] League table is SVG-based rendering (not HTML table)
+- [ ] Cell width responsive to treatment count: 140px (≤4), 120px (≤6), 105px (≤8), 90px (>8)
+- [ ] Cell height is fixed at 52px
+- [ ] Diagonal cells: indigo (#6366f1) background at 0.15 opacity
+- [ ] Diagonal cells show treatment name truncated at 14 characters + P-score as `P = {val}`
+- [ ] Statistically significant cells (95% CI excludes 0): green (#22c55e) background at 0.08 opacity
+- [ ] Hover increases cell background opacity (0.18 for significant, 0.08 for non-significant)
+- [ ] Upper triangle cells show abbreviated comparison label (first 3 chars of each treatment)
+- [ ] Legend has 3 items: `Statistically significant (95% CI excludes 0)`, `Not significant`, `Diagonal (treatment + P-score)`
+- [ ] Reading guide text: `Read row vs column. Upper triangle: row treatment vs column treatment. Lower triangle: mirrored (reversed sign).`
+
+### NMA Forest Plot — SVG Rendering Details
+
+- [ ] NMA forest plot reference treatment selector label is `Reference treatment:`
+- [ ] Default reference treatment is the first treatment in the result array
+- [ ] Comparisons sortable by `effect` (default) or `pscore`
+- [ ] Statistically significant comparisons marked with `*` asterisk (bold, 0.6 opacity)
+- [ ] Treatment labels truncated at 24 characters
+- [ ] Point estimates rendered as diamond shapes (not squares)
+- [ ] Significant rows: 0.9 fill opacity; non-significant: 0.5 fill opacity
+- [ ] Reference treatment row at bottom: labeled `{ref} (reference)`, red (#dc2626) diamond at null line
+- [ ] Reference treatment shows `0.00 (reference)` in stats column
+- [ ] P-score column in rightmost position with `P-score` sub-header
+- [ ] Column headers: `Treatment`, `Effect vs {ref} (95% CI)`, `Estimate [95% CI]`
+- [ ] Footer model info: `Random-effects NMA (tau² = {val})` or `Fixed-effect NMA` followed by `| * = statistically significant`
+- [ ] Axis labels: `Favours {selectedRef}` (left) / `Favours treatment` (right)
+
+### Screening PDF Viewer — Full Component Details
+
+- [ ] PDF viewer renders as full-screen fixed overlay (z-50 with `bg-black/60 backdrop-blur-sm`)
+- [ ] Split pane layout: 70% left (PDF/abstract viewer), 30% right (controls)
+- [ ] Stage toggle buttons: `Title/Abstract` (TextAlignLeft icon) and `Full Text` (FileText icon)
+- [ ] Full Text toggle disabled with `opacity-30 cursor-not-allowed` when no PDF exists
+- [ ] Default stage is `full-text` when paper has pdfUrl or pdfStoragePath, otherwise `title-abstract`
+- [ ] PDF page navigation: CaretLeft/CaretRight buttons with aria-labels `Previous page` / `Next page`
+- [ ] Page display format: `{pageNumber} / {numPages}` or `...` while PDF loading
+- [ ] Zoom controls: MagnifyingGlassMinus/Plus with aria-labels, range 0.5x to 3.0x in 0.25 steps
+- [ ] Fit-width button uses ArrowsOutSimple icon with aria-label `Fit width`, resets to 1.0x
+- [ ] Zoom percentage display: `{Math.round(scale * 100)}%`
+- [ ] PDF loading state: spinner with `Loading PDF...` text
+- [ ] No-PDF state: FileText icon + `No PDF available` + clickable `View title/abstract instead` link
+- [ ] PDF error state: red X in circle + `Failed to load PDF` + error message text
+- [ ] Close button: X icon (size 18) with aria-label `Close screening viewer`
+- [ ] Paper title shown in toolbar truncated to `max-w-md`
+- [ ] Title/Abstract view: paper title as h1 bold, authors, journal/year, DOI link, PubMed link
+- [ ] Abstract rendered in GlassPanel with TextAlignLeft icon + heading `Abstract`
+- [ ] No-abstract state: `No abstract available for this paper.`
+- [ ] `Open Full-Text PDF` button visible in title-abstract view only when PDF exists
+- [ ] AI highlight overlays on PDF for relevant chunks: active chunk pulses in brand color (auto-clears after 3 seconds)
+- [ ] Passive chunk highlights: `bg-yellow-400/15` with yellow left border
+- [ ] Right panel heading: `Screening Decision`
+- [ ] Current decision badge shows icon + `Currently: {decision}` with color-coded background
+- [ ] Decision buttons: `Include` (CheckCircle, emerald), `Exclude` (XCircle, red), `Uncertain` (Warning, amber)
+- [ ] Exclude in full-text mode opens exclusion reason form; in title-abstract mode submits immediately without reason
+- [ ] 11 predefined exclusion reasons: `Wrong study design`, `Wrong population`, `Wrong intervention/exposure`, `Wrong comparator`, `Wrong outcome`, `Wrong setting`, `Duplicate`, `Not primary research`, `Not in English`, `Full text unavailable`, `Other`
+- [ ] Exclusion form: dropdown selector + free-text textarea with placeholder `Additional details (optional)...`
+- [ ] Exclusion reason format when free text provided: `{dropdown}: {freeText}`
+- [ ] `Confirm Exclusion` button in red (bg-red-500)
+- [ ] AI Assessment section: Robot icon (weight duotone) + heading `AI Assessment`
+- [ ] AI decision badge color-coded same as screening decisions (emerald/red/amber)
+- [ ] AI decision text: `Decision: {aiDecision}`
+- [ ] Relevant Sections heading: Crosshair icon (weight duotone) + `Relevant Sections`
+- [ ] Screening reasons shown as bordered cards: inclusion (emerald), exclusion (red)
+- [ ] Jump-to-chunk buttons: ArrowFatLineRight icon + `{sectionType} {pageNumber}`
+- [ ] High-relevance passages: label `High-relevance passages` with Highlighter icon
+- [ ] High-priority chunks: those with `highlightPriority >= 0.7`, sorted by priority descending, max 8 shown
+- [ ] Priority badge: ≥ 0.9 renders in brand styling, < 0.9 in amber styling
+- [ ] Chunk text preview truncated at 150 characters
+- [ ] Section overview fallback (when no reasons/highlights): `Jump to section:` with section buttons
+- [ ] Paper metadata footer: shows `Previous reason:` when `screeningReason` exists
+- [ ] Keyboard shortcuts hint: `Esc` Close, `I` Include, `E` Exclude, `U` Uncertain
+- [ ] Chunks loaded from `/api/systematic-review/paper-chunks?paperId={}&projectId={}`
+- [ ] Chunk load failure is silent (does not block viewer)
+- [ ] PDF served via `/api/pdf/serve?path={encodedPath}` for stored PDFs
+
+### API Routes — Undocumented Endpoints
+
+- [ ] `GET /api/systematic-review/alerts?projectId={id}` — lists search alerts for a project
+- [ ] `POST /api/systematic-review/alerts` — creates search alert; Zod validates searchString min 3, max 2000 chars
+- [ ] `PUT /api/systematic-review/alerts` — updates alert; action enum: `pause`, `resume`, `update_frequency`, `check_now`
+- [ ] `PUT /api/systematic-review/alerts` with `update_frequency` requires `frequency` field or returns 400
+- [ ] `DELETE /api/systematic-review/alerts?alertId={id}` — deletes alert by query param
+- [ ] Alerts POST/GET verify project ownership via user_id check; returns 404 if not found
+- [ ] `GET /api/systematic-review/screening-criteria?projectId={id}` — loads criteria for a project
+- [ ] `POST /api/systematic-review/screening-criteria` — replaces all criteria using delete-then-insert transaction
+- [ ] `GET /api/systematic-review/export-references?projectId={id}&format={ris|bibtex|endnote|csv}&filter={all|included|excluded}` — exports references
+- [ ] `POST /api/systematic-review/manuscript-export` — generates DOCX with academic formatting, section ordering, headers/footers, page numbers
+- [ ] `POST /api/systematic-review/pdf-retrieval` — triggers open-access PDF retrieval for specified papers or all included papers
+- [ ] `GET /api/systematic-review/pdf-retrieval?projectId={id}` — returns retrieval status for all papers
+- [ ] `GET /api/systematic-review/revman-export?projectId={id}` — generates RevMan CSV package with 4 files
+- [ ] `POST /api/systematic-review/upload` — uploads PDF file, creates paper record, uploads to R2, triggers background processing
+- [ ] `POST /api/systematic-review/press` — validates search strategy using PRESS 2015 framework; rate limited
+- [ ] `GET /api/systematic-review/prisma-flow?projectId={id}` — returns PRISMA flow data in JSON or SVG format
+- [ ] `POST /api/systematic-review/prisma-flow` — updates specific PRISMA flow stages
+- [ ] `GET /api/systematic-review/prisma-checklist` — returns static checklist items
+- [ ] `POST /api/systematic-review/prisma-checklist` — verifies manuscript compliance against PRISMA 2020 (27 items); supports CSV export
+- [ ] `POST /api/systematic-review/import` — imports papers from search databases (pubmed, semantic_scholar, openalex); max results 1-500
+- [ ] `GET /api/systematic-review/import?projectId={id}` — fetches papers with full details
+
+### API Route — Screening Internals
+
+- [ ] `POST /api/systematic-review/screen` sets `maxDuration = 300` (5-minute timeout for batch operations)
+- [ ] Screen API is rate-limited via `checkRateLimit(userId, "systematic-review", RATE_LIMITS.ai)`
+- [ ] Screen API returns 400 with message `No screening criteria found. Define inclusion/exclusion criteria first.` when no criteria exist
+- [ ] Screen batch mode Zod validates papers array: min 1, max 100 items
+- [ ] Screen batch response includes `summary` object: `{ total, included, excluded, conflicts }`
+- [ ] `GET /api/systematic-review/screen?projectId={id}` returns screening summary (separate from queue)
+
+### API Route — Extraction Internals
+
+- [ ] Extract API supports 4 discriminated modes: `single`, `single-fulltext`, `batch`, `batch-fulltext`
+- [ ] Extract schema allows max 50 fields per extraction
+- [ ] `single` mode textContent Zod: min 50, max 100000 characters
+- [ ] `batch` and `batch-fulltext` modes allow max 50 papers per request
+- [ ] `single-fulltext` mode returns `{ extractions, chunks }` for source linking
+- [ ] `GET /api/systematic-review/extract?paperId={id}` returns chunks for a specific paper
+- [ ] `GET /api/systematic-review/extract?projectId={id}` returns the full extraction table; returns 404 when no data exists
+
+### API Route — Screening Queue Internals
+
+- [ ] Screening queue GET supports `stage` parameter: `title_abstract` (default) or `full_text`
+- [ ] Screening queue GET supports `mode` parameter: `conflicts` or `unblind`
+- [ ] Screening queue verifies project access via `verifyProjectAccess(projectId, userId)` (owner or collaborator)
+- [ ] `mode=conflicts` returns `{ conflicts, total }` from `detectConflicts(projectId, stage)`
+- [ ] `mode=unblind` returns results with `{ results, summary: { total, withBothDecisions, agreements, conflicts } }`
+- [ ] Standard queue GET returns `{ queue, progress, agreement, reviewerProgress }` from 4 parallel promises
+- [ ] Queue POST discriminates actions via `z.union([resolveSchema, decisionSchema])`
+- [ ] Resolve action calls `resolveConflict(projectId, paperId, stage, resolution, userId, reason)`
+- [ ] Decision action calls `recordHumanDecision` with both `userId` and `reviewerId` set to current user
+- [ ] Queue PUT recomputes priorities via `updateScreeningPriorities(projectId)` from active-learning module
+
+### Liveblocks Configuration Details
+
+- [ ] Liveblocks SR rooms use empty storage (`SRStorage = Record<string, never>`) — all data persisted in DB
+- [ ] Liveblocks auth endpoint is `/api/liveblocks-auth`
+- [ ] `SRUserMeta` includes `id: string` and `info: { name, avatar, color }`
+- [ ] `SRRoomEvent` is a 5-variant discriminated union on `type` field
+- [ ] `useCollaborativeReview` hook exposes 5 broadcast helpers: `broadcastDecision`, `broadcastExtraction`, `broadcastRoB2`, `broadcastStageAdvanced`, `broadcastPapersImported`
+- [ ] Activity feed entry ID format: `activity-{timestamp}-{incrementingCounter}`
+
+### Zustand Store — Additional Details
+
+- [ ] `clearProject()` also resets `criteria` to `[{ type: "inclusion", description: "" }]`, `screeningResults` to `[]`, `screeningSummary` to `null`
+- [ ] `setProject()` sets `reviewStage` from config, `pico` from `config.pico` (falls back to DEFAULT_PICO), and `generatedStrategy` from `config.searchStrategy`
+- [ ] `WorkflowTab` union type includes both `rob2` and `rob` as valid tab keys
+- [ ] Store persistence explicitly excludes `generatedStrategy`, `reviewConfig`, `criteria`, `screeningResults`, `screeningSummary`, `projects`, `isLoadingProjects`
+
+### Behavior Corrections (Pass 3)
+
+- The `CollaboratorPresence` TAB_LABELS map includes `rob2` → `Risk of Bias` but does NOT include `rob` or `nma` as keys. Both fall back to raw key text.
+- The doc section 24 describes entry types with CheckCircle, Table, ShieldCheck, ArrowFatUp, DownloadSimple icons — these are correct per source, but the icon colors were not specified. Actual colors: decision-made varies by decision, extraction-complete=blue-400, rob2-assessed=purple-400, stage-advanced=brand, papers-imported=teal-400.
+- The doc states "Activity feed — aria-live='polite' for new entries" in section 28 — this is NOT implemented in the current source. The ActivityFeed component has no aria-live attribute.
+- The doc states screening progress live region exists — NOT implemented in current source. No `aria-live` on any screening progress element.
+
+### Components Referenced But Not Rendered
+
+These components exist in `src/components/systematic-review/` but are NOT imported by any tab panel or page component in the current import chain:
+
+- `AMSTAR2Panel.tsx` — AMSTAR 2 self-assessment (16 items). Not imported by any rendered component.
+- `AuditTrailPanel.tsx` — Audit trail/transparency logging. Not imported by any rendered component.
+- `PRESSChecklistPanel.tsx` — PRESS 2015 search strategy peer review. Not imported by any rendered component.
+- `EvidenceGapMap.tsx` — Evidence gap map visualization. Not imported by any rendered component (API route exists at `/api/systematic-review/gap-map` but no UI renders it).
