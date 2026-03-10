@@ -737,3 +737,142 @@ Uses the `ErrorDisplay` component:
 | Pro | 200,000 | "₹2,000/month" |
 
 > **Note**: Settings page displays Pro as "₹2,500/month" while Razorpay config has 200,000 paise (₹2,000). This discrepancy should be verified.
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> **Method**: Read every file in the import tree from `src/app/(app)/settings/page.tsx` line by line.
+> Cross-referenced each finding against all 243 existing checks. Only genuinely new discoveries below.
+
+### Log Out Button (page.tsx:270–273)
+
+- [ ] Log Out button has NO `onClick` handler — clicking it performs no action in the current implementation
+- [ ] Log Out button hover state shows `bg-red-500/10` translucent red background
+
+### Save Flow — Message Clearing (page.tsx:147, 184)
+
+- [ ] `handleSaveProfile` clears `saveMessage` to null before starting the save request, removing any prior success/error feedback
+- [ ] `handleSavePreferences` clears `prefsSaveMessage` to null before starting the preferences save request
+- [ ] Profile save failure logs `Failed to save profile:` with the error to `console.error` (page.tsx:174)
+- [ ] Preferences save failure logs `Failed to save preferences:` with the error to `console.error` (page.tsx:204)
+- [ ] Both profile and preferences saves call the same `updateUserProfile` server action with different field subsets
+
+### Plan Fallback (page.tsx:234)
+
+- [ ] When `user.plan` is null or undefined, `displayPlan` defaults to `"free"` — all billing and usage displays show free-tier values
+
+### Sidebar Tab Hover (page.tsx:261)
+
+- [ ] Inactive sidebar tab buttons show `hover:bg-surface-raised/50` translucent background on hover
+- [ ] Inactive sidebar tab buttons transition text from `text-ink-muted` to `text-ink` on hover
+
+### Account vs Preferences Label Styling (page.tsx:301, 551, 556)
+
+- [ ] Account tab form labels use `text-xs font-medium text-ink-muted mb-1.5` styling (12px, muted)
+- [ ] Preferences tab section labels use `text-sm font-medium text-ink` styling (14px, full ink color)
+
+### Research Interest Chip Styling (page.tsx:354)
+
+- [ ] Research interest chips use `bg-brand/10 text-brand` color scheme (brand-tinted background with brand text)
+- [ ] Plus button for adding interests has explicit `type="button"` attribute to prevent form submission
+- [ ] Chip remove (X) buttons have explicit `type="button"` attribute to prevent form submission
+
+### Save Button Disabled Styling (page.tsx:409)
+
+- [ ] Save Changes button renders with `disabled:opacity-50` when `saving` is true
+- [ ] Save Changes button uses `rounded-xl` border radius (not `rounded-lg`)
+- [ ] Save Preferences button uses identical `disabled:opacity-50` and `rounded-xl` styling (page.tsx:607)
+
+### Content Pane Layout (page.tsx:277, 280)
+
+- [ ] Content pane uses `overflow-y-auto` allowing vertical scroll when tab content exceeds viewport height
+- [ ] Each tab content area is constrained to `max-w-2xl` (672px maximum width)
+
+### Usage Summary Number Formatting (page.tsx:521–537)
+
+- [ ] Tokens Used summary card formats both value and limit with `toLocaleString("en-IN")` (Indian English locale)
+- [ ] Searches summary card displays the raw `searchesUsed` number without any locale formatting
+- [ ] Plagiarism Checks summary card displays the raw `plagiarismChecks` number without any locale formatting
+- [ ] Exports summary card displays the raw `usageStats?.exports_used ?? 0` number without any locale formatting
+- [ ] Plagiarism limit in summary helper text (`of {plagiarismLimit}`) is a raw number without `toLocaleString`
+
+### ProgressBar Component (progress-bar.tsx:29–30)
+
+- [ ] ProgressBar formats values with `value.toLocaleString()` using browser default locale (no explicit locale argument)
+- [ ] ProgressBar formats max with `max.toLocaleString()` using browser default locale (no explicit locale argument)
+- [ ] ProgressBar fill bar uses `transition-all duration-500` for a 500ms animated transition
+- [ ] When `max` is exactly 0, ProgressBar fill percentage is 0% (guarded by `max > 0` check)
+
+### ThemeToggle SSR Placeholder (theme-toggle.tsx:16–17)
+
+- [ ] ThemeToggle SSR placeholder has exact dimensions `h-9 w-[156px]` (36px height × 156px width)
+- [ ] ThemeToggle uses `useSyncExternalStore` with a server snapshot of `false` to detect client mount
+- [ ] Inactive theme buttons have `hover:text-ink` hover transition to full ink color
+
+### DataTable Component (data-table.tsx:31, 43–45)
+
+- [ ] DataTable header cells use `text-left` alignment
+- [ ] DataTable rows without an `onRowClick` prop do not receive `cursor-pointer` or hover styling
+- [ ] DataTable `Description` column renders via the default `String(item[col.key] ?? "")` path (no custom render function)
+
+### ErrorDisplay Component (error-display.tsx:35, 44)
+
+- [ ] ErrorDisplay retry button label text is `Try Again` (not "Retry")
+- [ ] ErrorDisplay `WarningCircle` icon sits inside a `w-16 h-16 rounded-2xl bg-red-500/10` container (not bare icon)
+
+### Skeleton Component (skeleton.tsx:6)
+
+- [ ] Skeleton base CSS class is `animate-pulse` (Tailwind standard), not `animation-pulse`
+
+### Loading Skeleton Dimensions (loading.tsx:7–21)
+
+- [ ] Sidebar title skeleton has dimensions `h-5 w-16` with `mb-4 mx-3` spacing
+- [ ] Sidebar renders exactly 4 tab skeleton placeholders, each `h-10 w-full rounded-lg`
+- [ ] Content avatar skeleton is `h-16 w-16 rounded-full`
+- [ ] Content area includes exactly two `h-10 w-full rounded-lg` input skeletons
+- [ ] Content button skeleton is `h-10 w-32 rounded-xl`
+- [ ] Content heading skeleton is `h-7 w-40`
+
+### Billing Server Actions (billing.ts:36–49, 75–81)
+
+- [ ] `createSubscription` only updates the `users.plan` field when creating a NEW subscription record — updating an existing subscription does NOT sync `users.plan`
+- [ ] `cancelSubscription` only targets subscriptions with `status: "active"` — non-active subscriptions are unaffected and the function returns null
+
+### API Route: verify-payment (verify-payment/route.ts:13–14)
+
+- [ ] `verify-payment` route applies rate limiting using `RATE_LIMITS.analysis` (same limiter as `create-order`)
+- [ ] `verify-payment` exact error for missing fields is `"Missing required fields: orderId, paymentId, signature, plan"`
+
+### API Route: webhook (webhook/route.ts:10–11, 17, 39, 74, 77)
+
+- [ ] Webhook returns 503 with `"Webhook not configured"` when `RAZORPAY_WEBHOOK_SECRET` env var is not set
+- [ ] Webhook returns 401 with `"Missing signature"` when `x-razorpay-signature` header is absent
+- [ ] Webhook returns 401 with `"Invalid signature"` when signature verification fails (not 400 as previously documented)
+- [ ] Webhook success response body is `{ received: true }` (not empty 200)
+- [ ] Webhook server error returns 500 with `"Webhook processing failed"`
+
+### API Route: create-order Auth (create-order/route.ts:37–43)
+
+- [ ] `create-order` auth failure (from `getCurrentUserId()` throwing) is caught by the generic catch block and returns 500 with `"Failed to create payment order"` — not a dedicated 401 response
+
+---
+
+### Behavior Corrections (Pass 2)
+
+| # | Location | Doc Says | Actual Source |
+|---|----------|----------|---------------|
+| 1 | §10 line 421 | Skeleton uses `animation-pulse` | Actual class is `animate-pulse` (skeleton.tsx:6) |
+| 2 | §10 line 431 | "Retry button" | Button label text is `Try Again` (error-display.tsx:44) |
+| 3 | §8 line 362 | "Invalid signature — returns 400" | Webhook returns **401** for both missing and invalid signatures (webhook/route.ts:17, 39) |
+| 4 | §11 line 483 | "Click 'Log Out' button — verify sign out behavior" | Log Out button has **no onClick handler** — clicking does nothing (page.tsx:270–273) |
+| 5 | §7 line 271 | "Auth required — returns 401 if not authenticated" | Auth errors are caught by generic catch → returns **500** with "Failed to create payment order" (create-order/route.ts:37–43) |
+| 6 | §9 line 403 | `createSubscription` "Also updates user plan field" | Only updates `users.plan` when **creating** a new record, not when updating existing (billing.ts:36–49 vs 52–71) |
+
+### Components Referenced But Not Rendered
+
+None — all components documented in the existing doc are part of the import chain from `/settings`.
+
+### Existing "Actual Current Behavior Corrections" Verification
+
+The Codex audit section (lines 486–695) is accurate. All assertions were verified against source. No corrections needed in that section.
