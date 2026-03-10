@@ -25,6 +25,7 @@ import {
   X,
   Eye,
   Code,
+  WarningCircle,
 } from "@phosphor-icons/react";
 
 type LatexProject = {
@@ -56,6 +57,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const agentPanelOpen = useLatexEditorStore((s) => s.agentPanelOpen);
   const toggleAgentPanel = useLatexEditorStore((s) => s.toggleAgentPanel);
   const setCompileStatus = useLatexEditorStore((s) => s.setCompileStatus);
+  const compileError = useLatexEditorStore((s) => s.compileError);
   const setCompileError = useLatexEditorStore((s) => s.setCompileError);
   const setCompiledPdfUrl = useLatexEditorStore((s) => s.setCompiledPdfUrl);
   const setPreviewMode = useLatexEditorStore((s) => s.setPreviewMode);
@@ -705,6 +707,12 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
             isMobile && mobileShowPreview && "hidden"
           )}
         >
+          {compileError && (
+            <div className="flex items-start gap-2 border-b border-border-subtle bg-amber-500/10 px-4 py-2 text-[11px] text-amber-300">
+              <WarningCircle size={14} className="mt-0.5 shrink-0" />
+              <p>{compileError}</p>
+            </div>
+          )}
           <div className="flex-1 overflow-hidden">
             {viewMode === "visual" ? (
               <VisualEditor
