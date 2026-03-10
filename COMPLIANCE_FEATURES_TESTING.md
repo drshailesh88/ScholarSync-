@@ -932,3 +932,49 @@ Suggestions generated when:
 - [ ] `Check New Text` is a partial reset and does not restore the source-mode selection to `From Document`
 - [ ] Copyleaks scan failures other than `503` do not show a dedicated error state in the current implementation
 - [ ] History entries are read-only summaries; the current page does not let the user reopen or diff a historical report
+
+---
+
+## Re-Audit Discoveries (Codex Pass 2)
+
+### Behavior Corrections (Pass 2)
+- [ ] Realtime integrity waits exactly `2000` ms after the last eligible edit before firing a check
+- [ ] Realtime integrity does not run until the pasted text reaches at least `100` characters
+- [ ] After the first realtime check, subsequent checks require an absolute text-length delta of at least `10` characters
+- [ ] Realtime integrity posts `{"text": textToCheck, "mode": "ai_detection"}` to `/api/integrity-check`
+- [ ] The realtime hook aborts the previous in-flight request with `AbortController` before starting a newer check
+- [ ] Realtime score is stored in the hook-local `score` state from `result.aiDetection?.humanScore`
+- [ ] Disabling `Live` mid-flight does not abort an already-started realtime request; the score may still update if that request resolves
+- [ ] Full-check paragraph display is frozen from `inputText.split(/\n\n+/).filter((p) => p.trim().length > 0)` before the network request completes
+- [ ] Full integrity checks post `{"text": inputText, "mode": "full"}` to `/api/integrity-check`
+- [ ] The main integrity check uses a `30000` ms abort timeout
+- [ ] Non-OK full-check responses surface `data.error` when present, otherwise fall back to `Integrity check failed. Please try again.`
+- [ ] Full-check timeout errors render `The check took too long. Please try again with shorter text.`
+- [ ] Full-check network failures render `Failed to connect to the analysis service. Please try again.`
+- [ ] Copyleaks scan submission posts `{"action": "scan", "text": inputText}` to `/api/copyleaks`
+- [ ] A Copyleaks `503` response sets `copyleaksAvailable` to `false`, clears loading, and does not keep a `scanId`
+- [ ] Copyleaks polling runs once immediately after a scan starts, then every `5000` ms
+- [ ] Copyleaks polling stops and clears its interval when status becomes `"completed"` or `"error"`
+- [ ] Copyleaks completed state with zero sources renders `No matching sources found.`
+- [ ] Copyleaks source-title links are truncated with `truncate max-w-[70%]`
+- [ ] Copyleaks `"error"` status has no dedicated rendered error message; the section falls back to the idle button branch
+- [ ] Humanize actions render only for paragraphs where `humanProbability < 40`
+- [ ] Humanize loading copy reads `Humanizing...`, and failed humanize requests stay silent in the UI
+- [ ] Successful humanize output starts with `Humanized Version:` and renders one green change chip per `changes[]` entry
+- [ ] Paraphrase requests post `{"text": text, "sourceTitle": sourceTitle, "sourceDoi": sourceDoi}` from the page layer
+- [ ] Paraphrase loading copy reads `Paraphrasing...`, and failed paraphrase requests stay silent in the UI
+- [ ] Citation Audit is omitted when `result.citationAudit` is missing, truncates to `issues.slice(0, 8)`, and only shows `Ref: ...` when `issue.reference` exists
+- [ ] `Add Citation` uses `navigator.clipboard.writeText(...)`, and `Copied!` feedback resets after `2000` ms
+- [ ] History fetches `/api/integrity-check/history?limit=20`, and the sparkline renders only when there are at least `2` entries using `h.aiScore ?? 50`
+- [ ] History AI scores use orange text only above `50`, plagiarism scores use red text only above `15`, and the empty state reads `No integrity checks found. Run your first check to see history here.`
+- [ ] Writing Quality always renders the `Passive Voice`, `Avg Words/Sentence`, and `Grade` metric cards; numeric sentence-length and readability values use `toFixed(1)`
+- [ ] Writing suggestions stay hidden when `result.writingQuality.suggestions.length === 0`
+- [ ] Download Report posts the current `result`, the page `inputText` as the `text` field, and the optional `documentTitle`; the downloaded filename is `integrity-report-YYYY-MM-DD.md`
+- [ ] Download Report failures are silent and do not render a toast or inline error
+- [ ] `DiffView` scroll sync uses a `requestAnimationFrame` release guard, plagiarism highlights require an exact matched excerpt in the paragraph text, citation `Warning` icons use severity colors, and the legend reads `AI (high)`, `AI (med)`, `Plagiarism`
+- [ ] `Check New Text` clears `result`, `paragraphs`, `copyleaksResult`, `copyleaksScanId`, `copyleaksAvailable`, `humanizeResults`, and `paraphraseResults`, but preserves `inputText`, `sourceMode`, `pageTab`, `viewMode`, and `copiedCitation`
+
+### Components Referenced But Not Rendered
+- `IntegrityPanel` is a separate Studio-embed component rendered from `src/app/(app)/studio/page.tsx`, not from the `/compliance` page.
+- There is no route-level `src/app/(app)/compliance/loading.tsx`, so the Pass 1 loading-skeleton bullets describe a non-existent render path.
+- There is no route-level `src/app/(app)/compliance/error.tsx`, so the Pass 1 error-boundary copy bullets also describe a non-existent render path.
