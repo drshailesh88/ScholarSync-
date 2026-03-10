@@ -510,14 +510,14 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 494 | LaTeX | Error Gutter Panel / AI Error Intelligence — Human-readable explanations — AI-enriched error descriptions | /latex/[projectId] | ✅ PASS | Enriched explanations replaced raw compiler phrasing with readable guidance. |  |
 | 495 | LaTeX | Error Gutter Panel / AI Error Intelligence — Suggested fixes — actionable fix suggestions | /latex/[projectId] | ✅ PASS | Expanded diagnostics displayed actionable fix suggestions. |  |
 | 496 | LaTeX | Error Gutter Panel / AI Error Intelligence — "Fix this error" button — calls /api/latex/generate with error context: | /latex/[projectId] | ✅ PASS | Clicking `AI fix` hit `/api/latex/generate` with error context from the selected diagnostic. |  |
-| 497 | LaTeX | File Tree Sidebar / Files Tab — Hierarchical file browser — folder nesting support | /latex/[projectId] | ⬜ |  |  |
-| 498 | LaTeX | File Tree Sidebar / Files Tab — File icons by type: | /latex/[projectId] | ⬜ |  |  |
-| 499 | LaTeX | File Tree Sidebar / Files Tab — Main file indicator — marks the main .tex file | /latex/[projectId] | ⬜ |  |  |
-| 500 | LaTeX | File Tree Sidebar / Files Tab — Create new file — with file type selection | /latex/[projectId] | ⬜ |  |  |
-| 501 | LaTeX | File Tree Sidebar / Files Tab — Rename file — inline rename | /latex/[projectId] | ⬜ |  |  |
-| 502 | LaTeX | File Tree Sidebar / Files Tab — Delete file — with confirmation | /latex/[projectId] | ⬜ |  |  |
-| 503 | LaTeX | File Tree Sidebar / Files Tab — Click file — loads content into editor | /latex/[projectId] | ⬜ |  |  |
-| 504 | LaTeX | File Tree Sidebar / Document Outline — Extracts headings from LaTeX: \section, \subsection, \subsubsection | /latex/[projectId] | ⬜ |  |  |
+| 497 | LaTeX | File Tree Sidebar / Files Tab — Hierarchical file browser — folder nesting support | /latex/[projectId] | ✅ PASS | Creating `sections/background` produced a nested `sections/` folder and expandable child file row. |  |
+| 498 | LaTeX | File Tree Sidebar / Files Tab — File icons by type: | /latex/[projectId] | ✅ PASS | Live DOM probe confirmed `.tex` rows use emerald file icons and `.bib` rows use amber code icons. |  |
+| 499 | LaTeX | File Tree Sidebar / Files Tab — Main file indicator — marks the main .tex file | /latex/[projectId] | ✅ PASS | The main file row renders the `main` badge beside `main.tex`. |  |
+| 500 | LaTeX | File Tree Sidebar / Files Tab — Create new file — with file type selection | /latex/[projectId] | ✅ PASS | File creation now exposes an explicit type selector and appends the chosen extension when needed. | `6397963` |
+| 501 | LaTeX | File Tree Sidebar / Files Tab — Rename file — inline rename | /latex/[projectId] | ⚠️ PARTIAL | Row-action markup and context-menu handling were fixed in [`src/components/latex-editor/file-tree.tsx`](/Users/shaileshsingh/ScholarSync/src/components/latex-editor/file-tree.tsx), but the inline rename state still did not surface reliably in repeated browser-automation passes. | `6397963` |
+| 502 | LaTeX | File Tree Sidebar / Files Tab — Delete file — with confirmation | /latex/[projectId] | ⚠️ PARTIAL | Delete confirmation now exists in code, but the same flaky row-action automation issue prevented a clean end-to-end confirmation-dialog capture. | `6397963` |
+| 503 | LaTeX | File Tree Sidebar / Files Tab — Click file — loads content into editor | /latex/[projectId] | ✅ PASS | Switching between `main.tex` and the nested file swapped the CodeMirror content as expected. |  |
+| 504 | LaTeX | File Tree Sidebar / Document Outline — Extracts headings from LaTeX: \section, \subsection, \subsubsection | /latex/[projectId] | ✅ PASS | The outline panel extracted the seeded section headings from the active LaTeX source. |  |
 | 505 | LaTeX | File Tree Sidebar / Document Outline — Jump-to-line — clicking a heading scrolls editor to that line | /latex/[projectId] | ⬜ |  |  |
 | 506 | LaTeX | File Tree Sidebar / Document Outline — "Draft this section" button — opens Agent Panel Draft tab with section context | /latex/[projectId] | ⬜ |  |  |
 | 507 | LaTeX | File Tree Sidebar / File Sync — Content changes in editor update the local file list | /latex/[projectId] | ⬜ |  |  |
