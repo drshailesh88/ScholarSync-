@@ -505,9 +505,9 @@ export function ResearchDocument({
                             PubMed
                           </a>
                         )}
-                        {source.pdfUrl && (
+                        {(source.openAccessPdfUrl || source.fullTextUrl) && (
                           <a
-                            href={source.pdfUrl}
+                            href={source.openAccessPdfUrl || source.fullTextUrl || undefined}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-emerald-400 hover:text-emerald-300 text-xs underline"
