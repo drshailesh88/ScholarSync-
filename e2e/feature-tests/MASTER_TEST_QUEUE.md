@@ -587,14 +587,14 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 571 | LaTeX | Slash Command Menu / Slash Menu UX — Positioned near cursor using screen coordinates | /latex/[projectId] | ✅ PASS | The slash palette rendered just below the typed slash rather than at a fixed viewport position. |  |
 | 572 | LaTeX | Slash Command Menu / Slash Menu UX — Escape dismisses the menu | /latex/[projectId] | ✅ PASS | Pressing `Escape` closed the slash palette cleanly. |  |
 | 573 | LaTeX | Slash Command Menu / Slash Menu UX — After selecting command, the / text is removed from editor | /latex/[projectId] | ✅ PASS | After selecting commands like `/cite` and `/fix`, the literal slash command text was removed from the source. |  |
-| 574 | LaTeX | LaTeX Autocompletion — 100+ LaTeX commands — \section, \begin, \usepackage, etc. | /latex/[projectId] | ⬜ |  |  |
-| 575 | LaTeX | LaTeX Autocompletion — Environment completions — \begin{...}\end{...} pairs | /latex/[projectId] | ⬜ |  |  |
-| 576 | LaTeX | LaTeX Autocompletion — Citation key completions — reads from .bib file content | /latex/[projectId] | ⬜ |  |  |
-| 577 | LaTeX | LaTeX Autocompletion — Label/reference completions — auto-completes \ref{} from existing \label{} | /latex/[projectId] | ⬜ |  |  |
-| 578 | LaTeX | LaTeX Autocompletion — Boost scoring — frequently used commands ranked higher | /latex/[projectId] | ⬜ |  |  |
-| 579 | LaTeX | AI Code Completion — Context-aware suggestions — considers surrounding LaTeX code | /latex/[projectId] | ⬜ |  |  |
-| 580 | LaTeX | AI Code Completion — Streaming responses — suggestions stream in | /latex/[projectId] | ⬜ |  |  |
-| 581 | LaTeX | AI Code Completion — Uses /api/latex/complete endpoint | /latex/[projectId] | ⬜ |  |  |
+| 574 | LaTeX | LaTeX Autocompletion — 100+ LaTeX commands — \section, \begin, \usepackage, etc. | /latex/[projectId] | ✅ PASS | Typing `\sec` opened the LaTeX command menu with `\section` ranked first among the suggestions. | `e7d0388` |
+| 575 | LaTeX | LaTeX Autocompletion — Environment completions — \begin{...}\end{...} pairs | /latex/[projectId] | ✅ PASS | Completing `\begin{ite` inserted a full `itemize` block with the matching `\end{itemize}` pair. | `e7d0388` |
+| 576 | LaTeX | LaTeX Autocompletion — Citation key completions — reads from .bib file content | /latex/[projectId] | ✅ PASS | Typing `\cite{ke` surfaced the seeded bibliography key `key2024` from the project `.bib` content. | `e7d0388` |
+| 577 | LaTeX | LaTeX Autocompletion — Label/reference completions — auto-completes \ref{} from existing \label{} | /latex/[projectId] | ✅ PASS | Typing `\ref{sec` suggested the in-document label `sec:intro` from the current source. | `e7d0388` |
+| 578 | LaTeX | LaTeX Autocompletion — Boost scoring — frequently used commands ranked higher | /latex/[projectId] | ✅ PASS | The command list consistently ranked `\section` above lower-priority matches for the same prefix. | `e7d0388` |
+| 579 | LaTeX | AI Code Completion — Context-aware suggestions — considers surrounding LaTeX code | /latex/[projectId] | ✅ PASS | The ghost-text completion request included the surrounding source context line before the current sentence. | `e7d0388` |
+| 580 | LaTeX | AI Code Completion — Streaming responses — suggestions stream in | /latex/[projectId] | ✅ PASS | Mocked `/api/latex/complete` output rendered as inline ghost text after the typing debounce elapsed. | `e7d0388` |
+| 581 | LaTeX | AI Code Completion — Uses /api/latex/complete endpoint | /latex/[projectId] | ✅ PASS | The focused probe intercepted `POST /api/latex/complete` and verified the editor uses that endpoint for inline suggestions. | `e7d0388` |
 | 582 | LaTeX | Spell Check — CodeMirror extension — integrated spell checking | /latex/[projectId] | ⬜ |  |  |
 | 583 | LaTeX | Spell Check — Server-side — uses /api/latex/spell-check endpoint | /latex/[projectId] | ⬜ |  |  |
 | 584 | LaTeX | Spell Check — LaTeX-aware — ignores LaTeX commands, only checks natural text | /latex/[projectId] | ⬜ |  |  |
