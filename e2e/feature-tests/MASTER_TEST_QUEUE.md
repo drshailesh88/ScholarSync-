@@ -599,15 +599,15 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 583 | LaTeX | Spell Check — Server-side — uses /api/latex/spell-check endpoint | /latex/[projectId] | ✅ PASS | Typing misspelled prose triggered a live `POST /api/latex/spell-check` `200` response from the dev server. |  |
 | 584 | LaTeX | Spell Check — LaTeX-aware — ignores LaTeX commands, only checks natural text | /latex/[projectId] | ✅ PASS | The spell-check response flagged `sentnce` and `speling` while correctly ignoring `\section`. |  |
 | 585 | LaTeX | Spell Check — Dictionary integration — standard dictionary support | /latex/[projectId] | ✅ PASS | The spell-check API did not flag the domain word `Cardiomyopathy`, confirming dictionary-backed validation. |  |
-| 586 | LaTeX | Track Changes / Track Changes Panel — Pending edits list — shows all suggested changes | /latex/[projectId] | ⬜ |  |  |
-| 587 | LaTeX | Track Changes / Track Changes Panel — Per-change actions — Accept / Reject buttons | /latex/[projectId] | ⬜ |  |  |
-| 588 | LaTeX | Track Changes / Track Changes Panel — Batch actions — "Accept All" / "Reject All" | /latex/[projectId] | ⬜ |  |  |
-| 589 | LaTeX | Track Changes / Track Changes Panel — Status filtering — filter by: pending, accepted, rejected, all | /latex/[projectId] | ⬜ |  |  |
-| 590 | LaTeX | Track Changes / Track Changes Panel — Change details — shows context of each change | /latex/[projectId] | ⬜ |  |  |
-| 591 | LaTeX | Track Changes / Track Changes Extension — Visual highlighting — pending changes highlighted in editor | /latex/[projectId] | ⬜ |  |  |
-| 592 | LaTeX | Track Changes / Track Changes Extension — CodeMirror extension — integrates with editor state | /latex/[projectId] | ⬜ |  |  |
-| 593 | LaTeX | Track Changes / Track Changes Extension — Sync with store — changes tracked in Zustand store | /latex/[projectId] | ⬜ |  |  |
-| 594 | LaTeX | Track Changes / Track Changes Extension — Server sync — accept/reject synced via /api/latex/track-changes | /latex/[projectId] | ⬜ |  |  |
+| 586 | LaTeX | Track Changes / Track Changes Panel — Pending edits list — shows all suggested changes | /latex/[projectId] | ✅ PASS | In Suggest mode, typed insertions appeared in the new Changes sidebar as pending entries with author/timestamp previews. | `93922ae` |
+| 587 | LaTeX | Track Changes / Track Changes Panel — Per-change actions — Accept / Reject buttons | /latex/[projectId] | ✅ PASS | Individual Accept and Reject actions are now wired from the Changes sidebar into the editor and the track-changes API. | `93922ae` |
+| 588 | LaTeX | Track Changes / Track Changes Panel — Batch actions — "Accept All" / "Reject All" | /latex/[projectId] | ⚠️ PARTIAL | Batch action buttons render and are wired, but repeated browser runs degraded before I got a clean end-to-end Accept All / Reject All confirmation. | `93922ae` |
+| 589 | LaTeX | Track Changes / Track Changes Panel — Status filtering — filter by: pending, accepted, rejected, all | /latex/[projectId] | ⚠️ PARTIAL | Filter tabs render with the expected states, but the browser session became unstable before a clean full filter-cycle verification completed. | `93922ae` |
+| 590 | LaTeX | Track Changes / Track Changes Panel — Change details — shows context of each change | /latex/[projectId] | ✅ PASS | Expanding a change row now reveals its type, position, and inserted/deleted content details. | `93922ae` |
+| 591 | LaTeX | Track Changes / Track Changes Extension — Visual highlighting — pending changes highlighted in editor | /latex/[projectId] | ✅ PASS | Pending insertions are now decorated inline in CodeMirror with visible `ins.cm-track-change-insert` markup. | `93922ae` |
+| 592 | LaTeX | Track Changes / Track Changes Extension — CodeMirror extension — integrates with editor state | /latex/[projectId] | ✅ PASS | The Source editor now mounts the track-changes CodeMirror extension and syncs it with Suggest mode state. | `93922ae` |
+| 593 | LaTeX | Track Changes / Track Changes Extension — Sync with store — changes tracked in Zustand store | /latex/[projectId] | ✅ PASS | Detected LaTeX changes now flow into the Zustand `pendingChanges` store and drive the sidebar/UI state. | `93922ae` |
+| 594 | LaTeX | Track Changes / Track Changes Extension — Server sync — accept/reject synced via /api/latex/track-changes | /latex/[projectId] | ✅ PASS | Live `POST` and `PATCH` requests to `/api/latex/track-changes` succeeded after wiring the workspace and dev-safe auth path. | `93922ae` |
 | 595 | LaTeX | Version History — Snapshot-based — save/restore full file snapshots | /latex/[projectId] | ⬜ |  |  |
 | 596 | LaTeX | Version History — Load versions from server via /api/latex/versions | /latex/[projectId] | ⬜ |  |  |
 | 597 | LaTeX | Version History — Restore version — replace current content with snapshot | /latex/[projectId] | ⬜ |  |  |
