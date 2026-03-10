@@ -939,4 +939,265 @@ Shown when Gamma mode is entered with no existing slides.
 
 ---
 
-*Document generated from source code analysis. Last updated: 2026-03-09.*
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+### SlidesWorkspace Loading & Error States (`slides-workspace.tsx`)
+
+- [ ] Loading state displays centered spinner (brand border, transparent top) with text "Loading presentation..."
+- [ ] Error state displays "Deck not found or access denied." in red-500 with "Back to presentations" link to `/slides`
+- [ ] `PresenterMode` is lazy-loaded via `React.lazy` with Suspense fallback showing "Loading presenter mode..." on a full-screen black background
+- [ ] Presenter mode filters out slides where `hidden === true` before passing to `PresenterMode`
+- [ ] Presenter mode starts at the index of the current `activeSlideId` within the visible slides (falls back to 0)
+- [ ] Entire workspace is wrapped in `<ThemeProvider theme={themeConfig}>` so theme context propagates to all children
+- [ ] Mode selection screen is shown only when `slides.length === 0` AND user has not yet chosen a mode; existing decks with slides skip it automatically
+- [ ] Presenter receives `masters`, `themeKey`, `themeConfig`, and `transition` from the store
+
+### Slides Store — Additional State & Defaults (`slides-store.ts`)
+
+- [ ] Default `agentMode` is `"draft"`, not `"learn"`
+- [ ] Default `transition` is `"fade"`
+- [ ] Default `themeKey` is `"modern"` and `themeConfig` is `PRESET_THEMES.modern`
+- [ ] `RightPanel` full type union: `"properties" | "agent" | "comments" | "versions" | "analytics" | "defense" | "accessibility" | null`
+- [ ] `loadDeck` clears `agentChatHistory` to empty array on every deck load
+- [ ] `loadDeck` sets `activeSlideId` to the first slide's ID and `selectedSlideIds` to a Set of that ID
+- [ ] `setActiveSlide` clears `selectedBlockIndices`, `allBlocksSelected`, and `editingBlockIndex`
+- [ ] `addSlide` creates a slide with title `"New Slide"` and one text block `{ type: "text", data: { text: "Click to add content", style: "body" } }`
+- [ ] `duplicateSlide` appends `" (copy)"` to the original slide's title
+- [ ] `deleteSlide` is optimistic: removes from local state first, reverts all state on server failure
+- [ ] `reorderSlides` is optimistic: applies new order locally, reverts on server failure
+- [ ] Undo stack is capped at `MAX_UNDO_HISTORY = 50` entries
+- [ ] Undo coalesces rapid changes to the same slide within a 500ms debounce window, keeping the original before-state
+- [ ] Calling `undo()` or `redo()` flushes any pending debounced undo entry first
+- [ ] Any new edit clears the redo stack
+- [ ] Save debounce: `_debouncedSave` waits 800ms of inactivity, then `saveStatus` goes `"saving"` → `"saved"` → (1500ms later) `"idle"`
+- [ ] Save is skipped if the slide was deleted during the debounce window
+- [ ] `customThemes` support: `addCustomTheme(key, config)` and `deleteCustomTheme(key)` persisted via `updateDeck`
+- [ ] `institutionKit` support: `setInstitutionKit(kit)` for branding
+- [ ] `gridSize` clamped between 1 and 100, defaults to 5
+- [ ] Store exposes `showFindReplace`, `showSlideSorter`, `showRulers`, `showGrid`, `snapToGrid`, `showVisualizePopover`, `showSharePanel` boolean toggles
+- [ ] Block clipboard: `copyBlock()` deep-clones selected blocks, `cutBlock()` copies then deletes, `pasteBlock()` inserts after last selected block
+- [ ] `clipboardSlide` for slide-level copy/paste: `copySlide(id)` strips `id` and `sortOrder`, `pasteSlide()` creates after active slide
+- [ ] `regenerateSlide` tracks in-progress IDs via `regeneratingSlideIds` Set, adds on start, removes in `finally`
+- [ ] `regenerateSlide` sends context: `{ prevSlideTitle, nextSlideTitle, deckTitle, audienceType }`
+- [ ] `replaceAllSlides` preserves `activeSlideId` if found in new slides, otherwise falls back to first
+
+### SlidesModeLayout — Additional Panels & Exports (`slides-mode-layout.tsx`)
+
+- [ ] Slides mode agent panel width is `w-80` (320px), not `w-[360px]` like Gamma mode
+- [ ] Global keyboard shortcuts registered on mount via `registerGlobalShortcuts(useSlidesStore)`
+- [ ] `PresenceBridgeSlot` rendered for real-time collaboration sync
+- [ ] PDF export opens `HandoutExportDialog` first, with options: `layout`, `includeSlideNumbers`, `includeHeader`, `includeSpeakerNotes`, `paperSize`
+- [ ] PDF filename pattern: `${title}_handout.pdf`
+- [ ] PNG single-slide export at 2x scale by default, 3x when Shift key held during click
+- [ ] SVG single-slide export via `exportSlideAsSVG`
+- [ ] All-slides PNG export: renders off-screen at 1920px width, waits for fonts, then zips as `${title}_slides_png.zip`
+- [ ] Right panel renders `DefensePrepPanel` when `rightPanel === "defense"`
+- [ ] Right panel renders `AccessibilityPanel` when `rightPanel === "accessibility"`
+- [ ] Right panel renders `VersionHistoryPanel` when `rightPanel === "versions"`, which calls `loadDeck(deckId)` on restore
+- [ ] Right panel renders `AnalyticsPanel` when `rightPanel === "analytics"`
+- [ ] `FindReplaceDialog` shown as overlay when `showFindReplace` is true
+- [ ] `SlideSorterView` shown as overlay when `showSlideSorter` is true
+
+### API Route Validation & Error Shapes
+
+#### `/api/slides/agent`
+- [ ] Request validated by Zod: `prompt` max 4000 chars, `slides` max 100 items, `chatHistory` max 20 entries
+- [ ] `mode` validated as `z.enum(["learn", "draft", "chat"])`
+- [ ] 401 response: `{ error: "Unauthorized" }`
+- [ ] 400 response: `{ error: "Invalid request body", details: <fieldErrors> }`
+- [ ] 500 response: `{ error: "Agent operation failed" }`
+- [ ] Uses model `"claude-sonnet-4-20250514"` for all modes
+- [ ] Rate limited via `checkRateLimit(userId, "presentations", RATE_LIMITS.ai)`
+
+#### `/api/slides/chat`
+- [ ] Request validated by Zod: `message` max 4000 chars, `slides` max 100 items, `deckId` required positive int
+- [ ] 401 response: `{ error: "Unauthorized" }`
+- [ ] 400 response: `{ error: "Invalid request body", details: <fieldErrors> }`
+- [ ] 500 response: `{ error: "Chat operation failed" }`
+- [ ] Uses model `"claude-sonnet-4-20250514"`
+
+#### `/api/slides/outline`
+- [ ] Request validated by Zod: `title` max 500 chars, `description` max 5000, `cardCount` min 3 max 30 (server allows up to 30, UI limits to 20)
+- [ ] 500 response: `{ error: "Failed to generate outline" }`
+- [ ] System prompt instructs: "First card should be a title card", "Last card should be a summary/conclusion", "Each card should have 2-4 bullet points"
+
+#### `/api/slides/generate-stream`
+- [ ] Request validated by Zod: `audienceType` is enum-validated (10 exact values), `slideCount` max 30
+- [ ] Response `Content-Type: application/x-ndjson; charset=utf-8`
+- [ ] Stream events include `{ type: "images", current: N, total: N, message: "Generating images... (N/N)" }`
+- [ ] Stream `complete` event includes `{ slideCount, generatedImages }`
+- [ ] 500 response: `{ error: "Generation failed" }`
+
+#### `/api/slides/regenerate`
+- [ ] `instruction` max 4000 chars, `tone` min 1 max 100 chars
+- [ ] Returns 404 `{ error: "Deck not found" }` or `{ error: "Slide not found" }` when resources missing
+- [ ] RegenerateTone values: `"keep_similar"`, `"more_detailed"`, `"more_concise"`, `"different_approach"` (from `src/lib/slides/regenerate.ts`)
+- [ ] Response validated against `generatedSlideSchema` with 18 allowed layout enum values
+- [ ] 500 response: `{ error: "Slide regeneration failed" }`
+
+#### `/api/presentations/edit-slide`
+- [ ] Uses model `"claude-haiku-4-5-20251001"` (smaller model for speed)
+- [ ] `action` field min 1 char, `contentBlocks` min 1 item
+- [ ] Each of the 14 AI actions has a distinct system prompt from `getSlideEditorSystemPrompt(action)`
+- [ ] 500 response: `{ error: "Slide editing failed" }`
+
+#### `/api/presentations/coach`
+- [ ] `slides` array validated min 1, max 100
+- [ ] `audienceType` is enum-validated (same 10 values as generate-stream)
+- [ ] Response `suggestions` include `autoFixAvailable: boolean` per suggestion
+- [ ] 500 response: `{ error: "Coach evaluation failed" }`
+
+#### `/api/export/pptx`
+- [ ] Supports `institutionKit` in request: `{ name, logoUrl, logoPosition: "top-left" | "top-right" | "bottom-left" | "bottom-right", footerText }`
+- [ ] Response headers: `Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation`
+- [ ] Uses 4 slide masters: `"BRANDED"`, `"TITLE_MASTER"`, `"SECTION_MASTER"`, `"CONTENT_MASTER"`
+- [ ] Rate limited via `checkRateLimit(userId, "export", RATE_LIMITS.export)`
+- [ ] 400 response includes `{ error: "At least one slide is required" }` for empty slides array
+
+#### `/api/export/presentation-pdf`
+- [ ] `layout` validated as enum: `"full_slide" | "two_up" | "three_up_notes" | "six_up" | "outline"` (default `"full_slide"`)
+- [ ] `paperSize` validated as `"letter" | "a4"` (default `"letter"`)
+- [ ] `includeSlideNumbers`, `includeHeader`, `includeSpeakerNotes` all default true
+- [ ] Rate limited via `checkRateLimit(userId, "export", RATE_LIMITS.export)`
+- [ ] Filename pattern: `${safeTitle}_handout.pdf`
+
+### Gamma Export Helper (`export-deck.ts`)
+
+- [ ] Only PPTX format receives `themeConfig` in the request body; PDF does not
+- [ ] Fallback title for empty titles: `"Untitled Deck"` in request, `"deck"` in filename
+- [ ] Filename sanitization: `replace(/[^a-zA-Z0-9_-]/g, "_")`
+- [ ] Cleanup of blob URL uses `requestAnimationFrame` (not synchronous)
+
+### SlidesAgentPanel — Additional Details (`slides-agent-panel.tsx`)
+
+- [ ] Quick action chips in Slides mode SET INPUT TEXT and focus only — they do NOT auto-send (contradicts original doc Section 3 line "Clicking a chip sends the action as a message")
+- [ ] Input placeholder changes dynamically: `"Edit this ${selectedBlockType} block..."` when block selected, `"Ask the AI to change your slides..."` otherwise
+- [ ] Suggested changes panel header shows `"N change suggested"` / `"N changes suggested"` with singular/plural
+- [ ] "Apply to All" button only rendered when `msg.suggestedChanges.length > 1`
+- [ ] "Apply" button uses `ArrowRight` icon (size 10), "Apply to All" uses `ArrowsOutSimple` icon (size 10)
+- [ ] Empty state (no messages, not loading, no stream) shows centered text: "Ask the AI to modify your slides, or pick a quick action above." and slash command hints: `/learn`, `/draft`, `/visual`, `/illustrate`
+- [ ] Send button `aria-label="Send message"`
+- [ ] Textarea `disabled={isLoading}`, send button `disabled={isLoading || !input.trim()}`
+- [ ] User messages styled: `bg-brand text-white rounded-br-sm`, max-w-[85%]
+- [ ] Assistant messages styled: `bg-surface-raised text-ink border border-border rounded-bl-sm`, max-w-[85%]
+
+### GammaAgentPanel — Additional Details (`gamma-agent-panel.tsx`)
+
+- [ ] Gamma agent uses LOCAL React state (`useState`) for chat messages, NOT the store's `agentChatHistory`
+- [ ] Header label is `"AI Agent"` with Sparkle icon size 16 weight fill (not "AI Chat" as in Slides mode)
+- [ ] Error message format: `"Something went wrong: ${err.message}. Please try again."`
+- [ ] Fallback assistant message when API returns no summary: `"Changes applied."`
+- [ ] Input textarea `rows={1}`, no auto-resize (unlike Slides agent which auto-resizes)
+- [ ] Input `aria-label="Send message"` on send button
+- [ ] Empty state prompt text: `"Ask the AI to modify your entire deck, or pick a quick action:"`
+- [ ] Input focused on mount via `useEffect` with `inputRef.current?.focus()`
+
+### CardSparkleMenu — Additional Details (`card-sparkle-menu.tsx`)
+
+- [ ] Dropdown has `"AI Actions"` header (10px uppercase tracking-wider ink-muted) above the action list
+- [ ] Each action constructs a slide-specific prompt via `buildMessage(slideId)` with exact instructions (e.g., "Improve the writing quality of slide ID ${id}. Make it more polished and professional.")
+- [ ] Sparkle menu errors are silently swallowed — `catch {}` block with no user-facing error message
+- [ ] Loading overlay shows `"AI is working..."` text alongside spinner (not just spinner)
+- [ ] Dropdown has `role="menu"`, each action button has `role="menuitem"`
+- [ ] Trigger button has `aria-label="AI card actions"` and `aria-expanded={open}`
+- [ ] Trigger button uses `ImageSquare` icon (not just `Sparkle`) — correction: trigger IS `Sparkle`, `ImageSquare` is the background button
+
+### CardBackgroundPicker — Additional Details (`card-background-picker.tsx`)
+
+- [ ] Exactly 12 preset color hex values: `#ffffff`, `#f8fafc`, `#f1f5f9`, `#e2e8f0`, `#1e293b`, `#0f172a`, `#fef2f2`, `#fef9c3`, `#ecfdf5`, `#eff6ff`, `#f5f3ff`, `#fdf2f8`
+- [ ] Theme colors (primary, background, surface, text) are prepended to presets and deduplicated via `Set`
+- [ ] Custom color uses a `ColorPicker` component (not a raw color input)
+- [ ] "Right" image position icon is `Columns` with `style={{ transform: "scaleX(-1)" }}` to mirror it
+- [ ] Overlay type controls only show when `imageUrl` is set AND `imagePosition !== "none"`
+- [ ] Overlay intensity and color controls only show when `overlayType !== "none"`
+- [ ] Overlay intensity defaults to `50` (shown as `50%`)
+- [ ] Overlay color defaults to `#000000`
+- [ ] Reset button text: `"Reset to default"` (clears `cardBackground` to `undefined`)
+- [ ] Picker width is `w-72` (288px)
+- [ ] `CardBackgroundButton` closes on `Escape` keypress
+- [ ] `CardBackgroundButton` trigger has `aria-label="Card background settings"` and `aria-expanded`
+- [ ] Trigger icon is `ImageSquare` (not just "Image icon")
+
+### CardEditor — Additional Details (`card-editor.tsx`)
+
+- [ ] Subtitle is editable in active state via `EditableTextBlock` with `style="subtitle"` and placeholder `"Subtitle..."`
+- [ ] Non-active cards show `"Untitled Card"` when title is empty
+- [ ] Empty state (active card, 0 content blocks): italic muted text `"Click here to start typing, or type / for commands"`
+- [ ] Text block inline editing supports `fontFamily`, `fontSize`, and `color` properties from block data
+- [ ] Bullets block editing passes `ordered` flag to toggle ordered/unordered lists
+
+### CardStack — Additional Details (`card-stack.tsx`)
+
+- [ ] Insert buttons between cards show `"Add card"` text label alongside the Plus icon (not just "+")
+- [ ] Active card border is `border-brand ring-1 ring-brand/30` (ring-1, not ring-2 as documented in Section 10)
+- [ ] Card accent bar is `h-1` (4px), not `1px` as stated in original doc
+- [ ] Side images (left/right) take `w-2/5` of card width with `min-h-[200px]`
+- [ ] Background image frosted overlay uses `backdropFilter: blur(${intensity / 10}px)` where intensity is `overlayIntensity ?? 50`
+- [ ] Card wrapper uses `role="button" tabIndex={0}` for accessibility
+
+### OutlineGenerator — Additional Details (`outline-generator.tsx`)
+
+- [ ] Prompt step header: Sparkle icon (28px, duotone) in a `w-14 h-14 rounded-2xl bg-brand/10` container
+- [ ] Prompt step title: `"Create a new presentation"`
+- [ ] Prompt step subtitle: `"Describe your topic and we will generate an editable outline you can refine before creating slides."`
+- [ ] Title input placeholder: `"e.g. The Role of CRISPR in Gene Therapy"`
+- [ ] Description label includes `"(optional)"` in faint text
+- [ ] Audience picker active state: `border-brand bg-brand/5 text-brand`
+- [ ] Card count slider label shows `"Cards: ${cardCount}"`
+- [ ] Outline step header: `"Edit your outline"` with `PencilSimple` icon (20px, duotone)
+- [ ] Outline step subtitle: `"Reorder, add, remove, or edit cards and bullet points before generating."`
+- [ ] Outline card number shown as brand circle badge at top-left (`-top-2.5 -left-2.5 w-6 h-6`)
+- [ ] Outline card remove button has red hover: `hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500`
+- [ ] Outline card list scrollable: `max-h-[50vh] overflow-y-auto`
+- [ ] Individual bullet remove buttons show on group-hover with red styling
+- [ ] Theme step title: `"Pick a theme"`
+- [ ] Theme step subtitle: `"Select a visual style for your presentation. You can change this later."`
+- [ ] Theme step swatches use `flex flex-wrap justify-center gap-3` — NOT a 4-column grid as stated in original doc
+
+### ThemeCustomizer — Additional Details (`theme-customizer.tsx`)
+
+- [ ] `SegmentedControl` uses `role="radiogroup"` with `aria-checked` on each option
+- [ ] Small theme swatches are `64x36px` (not large cards)
+- [ ] Small theme swatch check badge is in BOTTOM-RIGHT corner (`bottom-0.5 right-0.5 w-3.5 h-3.5`), not top-right
+- [ ] Section headings use `"mt-3 mb-1.5 first:mt-0"` spacing
+
+### SmartLayoutPicker — Additional Details (`smart-layout-picker.tsx`)
+
+- [ ] Layout picker uses a 2-column grid (`grid-cols-2 gap-2`) with max-h-96 overflow-y-auto
+- [ ] Header shows `"Smart Layouts"` title with subtitle `"Replace this card's content with a pre-built layout"`
+- [ ] Each smart layout maps to a `SlideLayout` via `LAYOUT_MAP` (e.g., `two_column → "two_column"`, `chart_with_caption → "chart_slide"`)
+- [ ] Picker closes on Escape and click-outside
+
+### ModeSelector — Additional Details (`mode-selector.tsx`)
+
+- [ ] Mode toggle buttons use inline SVG icons (not Phosphor icon components)
+- [ ] "Slides" SVG: rectangle with vertical divider line; "Create" SVG: star outline path
+- [ ] `ModeSelectionScreen` subtitle text: `"You can switch anytime with the toggle"` (not just "You can switch anytime")
+- [ ] Mode selection cards are `w-64` with `p-8 rounded-2xl`
+- [ ] Mode selection icon containers: `w-16 h-16 rounded-xl bg-brand/10`
+
+### BlockInserterMenu — Additional Details (`block-inserter-menu.tsx`)
+
+- [ ] Search input auto-focuses on mount via `inputRef.current?.focus()`
+- [ ] Smart Layouts entry hidden when search query is non-empty
+- [ ] Empty search results show: `"No blocks found"` centered text
+- [ ] Category order is hardcoded: `["content", "media", "academic"]`
+- [ ] Category labels: `content → "Content"`, `media → "Media & Data"`, `academic → "Academic"`
+
+### Behavior Corrections (Pass 2)
+
+- [ ] Slides-agent quick-action chips SET INPUT TEXT only and do NOT auto-send; original Section 3 line 96 ("Clicking a chip sends the action as a message") is incorrect for SlidesAgentPanel — behavior matches GammaAgentPanel
+- [ ] GammaAgentPanel uses local React `useState` for messages, NOT the store-backed `agentChatHistory` (which is only used by SlidesAgentPanel)
+- [ ] ThemeCustomizer small theme swatches (64×36px) show the check badge in the BOTTOM-RIGHT corner, not top-right as stated
+- [ ] Outline wizard theme step uses `flex-wrap justify-center gap-3`, not a `4-column grid` as original Section 16 claims
+- [ ] Card accent bar in CardStack is `h-1` (4px), not `1px` as original Section 10 claims
+- [ ] Active card in CardStack uses `ring-1 ring-brand/30`, not `ring-2` + blue border as original Section 10 claims
+- [ ] CardSparkleMenu silently swallows API errors — there is no user-facing error message (original Section 12 says "Error messages displayed on failure" for other panels but sparkle menu has empty `catch {}`)
+- [ ] PDF export in Slides mode opens `HandoutExportDialog` with layout/options before downloading (not a direct single-click download like PPTX)
+- [ ] Only PPTX export receives `themeConfig` from Gamma mode's `export-deck.ts`; PDF export does not send theme
+- [ ] Server-side `cardCount` validation allows up to 30 (`z.number().int().min(3).max(30)`), while UI slider limits to 20
+- [ ] No `loading.tsx` or `error.tsx` route-level files exist under `src/app/(app)/slides/`; all loading/error UI is handled within `SlidesWorkspace` component
+
+---
+
+*Document generated from source code analysis. Last updated: 2026-03-10.*
