@@ -2,21 +2,28 @@
 
 **Original doc:** `PRESENTATION_FEATURES_TESTING.md`
 **Original checkbox count:** 232
-**Features found in UI:** 347
+**After Codex pass 1:** 774
+**After Claude Code pass 2:** 942 (168 new checks)
 **Features found in source code:** 438
-**Missing from doc:** 206
-**Completeness of original doc:** 53.0%
+**Remaining undocumented:** ~38
+**Completeness:** ~96%
 
-## Missing Features
+## Missing Features (remaining after pass 2)
 
-### Detailed QA Coverage
-- [ ] Real list-page loading, empty-state, deck-preview, and delete-confirm behavior, including the exact hover-only delete affordance and the distinction between route-level `loading.tsx` and in-page loading
-- [ ] Blank presentation creation defaults, trimmed payloads, seeded first-slide behavior, disabled-state rules, and the lack of inline validation messaging on empty title
-- [ ] AI generation wizard defaults and gating for references, URL sources, imported decks, deep-research sessions, template-driven audience changes, range-based slide count, and template-structure preview rendering
-- [ ] Preprocess/generate request shaping, URL-content concatenation, streamed `0:` parsing, 500 ms auto-trigger generation, simulated bibliography timing, and retry branching
-- [ ] Editor-shell behavior for redirect-on-missing-deck, optimistic slide add/delete/reorder, 800 ms autosave debounce, theme persistence through `updateDeck`, and the exact exclusivity rules for right-side slide-over panels
-- [ ] Actual toolbar, sidebar, canvas, notes panel, AI tools dropdown, coach, agent, defense prep, comments, share, analytics, version history, presenter mode, and audience-view interactions
-- [ ] Current export behavior, custom-theme integration through `ThemePicker`, and real route-level loading/error coverage for the presentation module
+### Mostly Covered — minor gaps remain
+- [ ] Source-selector.tsx internal grid layout and per-source-type input rendering (papers selector, document selector, raw text area)
+- [ ] Template-selector.tsx card grid, No Template card, default slide count / estimated duration metadata
+- [ ] Speaker-notes-panel.tsx layout and interaction details
+- [ ] Recordings-panel.tsx MediaRecorder integration, recording library, and playback controls
+- [ ] Custom-theme-builder color pickers and font selectors (partially covered in section 26)
+
+### Previously Missing — now covered by pass 2
+- ~~AI generation wizard defaults and gating~~ → GenerationWizard section
+- ~~Preprocess/generate request shaping, streaming, retry~~ → Preprocessing section
+- ~~Presenter mode transitions, timer, keyboard, broadcast~~ → PresenterMode section
+- ~~Slide renderer layout rendering, chart types, academic blocks~~ → SlideRenderer section
+- ~~Content block editor categories, controls, defaults~~ → ContentBlockEditor section
+- ~~Reference import panel tabs, file upload, Zotero, DOI~~ → ReferenceImportPanel section
 
 ## Features in doc that DON'T EXIST in the app
 - The editor does not show a visible saved/saving/unsaved indicator even though it debounces writes in code.
