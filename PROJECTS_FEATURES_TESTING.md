@@ -633,3 +633,119 @@ interface Project {
 - [ ] Filtered-empty state renders only when `projects.length > 0 && filtered.length === 0`
 - [ ] Filtered-empty state does not render a clear-filters button in the current implementation
 - [ ] `formatDate(null)` returns an em dash (`—`)
+
+---
+
+## Re-Audit Discoveries (Claude Code Pass 2)
+
+> Source-verified against every file in the import tree of `src/app/(app)/projects/page.tsx`.
+
+### Behavior Corrections (Pass 2)
+
+1. **Grid card top bar (Section 6, line 164)**: The original doc says _"colored bar at the top (accent by type/status)"_. Incorrect — the bar is always `bg-brand` (fixed brand color), not derived from project type or status. Source: `page.tsx:574`.
+
+2. **Project.id type (Section 15)**: Interface shows `id: string` but source code declares `id: number`. All server action parameters (`getProject`, `deleteProject`, `archiveProject`, etc.) accept `number`. Source: `page.tsx:61`, `projects.ts:85,160,169,180`.
+
+3. **Loading state conflation (Section 14)**: The section describes "Skeleton header" and "SkeletonTable with 6 rows" as the page loading state. Those belong to the route-level `loading.tsx` (Suspense boundary). The page component itself shows a centered `SpinnerGap` spinner inside an `h-64` container while `getProjects()` resolves. These are two distinct loading mechanisms. Source: `page.tsx:446-452`, `loading.tsx:1-13`.
+
+4. **Enter key scope (Section 9)**: "Pressing Enter key submits the form" is only true when focused on the Project Name input (which has the `onKeyDown` handler). Pressing Enter in Target Journal, Deadline, or Citation Style does NOT submit — there is no `<form>` element. Source: `page.tsx:657-659`.
+
+5. **"Updating..." text never visible (Section 10)**: The doc says button text changes to "Updating..." during submission. In practice, `setShowStatusModal(false)` fires in the same event handler before the await. With React 18 batching, the modal is already closed when the re-render occurs — the "Updating..." text is never rendered to the user. Source: `page.tsx:302-308`.
+
+6. **Fetch failure shows empty state, not error UI (Section 14)**: When `getProjects()` fails within the page component, the catch block logs the error and leaves `projects` as `[]`, causing the "No projects yet" empty state to render — NOT the error display. The route-level `error.tsx` only catches uncaught rendering/SSR errors, not caught client-side fetch failures. Source: `page.tsx:203-213`.
+
+### Route-Level Loading (loading.tsx)
+
+- [ ] Route-level `ProjectsLoading` is a server component (no `"use client"` directive)
+- [ ] Route-level skeleton wraps content in `max-w-5xl mx-auto`
+- [ ] Route-level skeleton renders a title placeholder (`Skeleton` with `h-8 w-40`) and a button placeholder (`Skeleton` with `h-10 w-36 rounded-xl`)
+- [ ] Route-level skeleton renders `SkeletonTable` with exactly 6 rows
+- [ ] Route-level skeleton is distinct from the page component's own `SpinnerGap` loading spinner
+- [ ] `SkeletonTable` rows each contain a square icon placeholder (`h-10 w-10 rounded-lg`), two text lines, and a badge placeholder (`h-6 w-20 rounded-full`)
+
+### Route-Level Error (error.tsx)
+
+- [ ] `error.tsx` is a client component (`"use client"` directive)
+- [ ] Error page renders `ErrorDisplay` with `title="Projects unavailable"` and `message="We couldn't load your projects. Please try again."`
+- [ ] Error page passes `error` and `reset` (as `onRetry`) to `ErrorDisplay`
+- [ ] `ErrorDisplay` shows a `WarningCircle` icon inside a `w-16 h-16 rounded-2xl bg-red-500/10` container
+- [ ] `ErrorDisplay` shows a "Try Again" button with `ArrowCounterClockwise` icon when `onRetry` is provided
+- [ ] `ErrorDisplay` calls `Sentry.captureException(error)` on mount to report the error
+
+### Modal Component Behavior
+
+- [ ] Modal prevents background scrolling by setting `document.body.style.overflow = "hidden"` when open
+- [ ] Modal restores `document.body.style.overflow` to `""` on close or unmount (cleanup in useEffect)
+- [ ] Modal backdrop uses `bg-black/50 backdrop-blur-sm`
+- [ ] Modal content panel constrained to `max-w-lg` width with `glass-panel` class
+- [ ] Modal Escape key listener is attached at the `document` level (global keydown), not scoped to the modal element
+- [ ] Modal renders `null` when `open` is false (conditional rendering, not CSS hidden)
+
+### Fallback Behaviors
+
+- [ ] `getIcon(null)` and `getIcon("unknown_type")` both fall back to `FileText` icon
+- [ ] `getStatus(null)` and `getStatus("unknown_status")` both fall back to `statusMap.planning` (brand-colored "Planning" badge)
+
+### Grid Card Differences from List View
+
+- [ ] Grid card action buttons have no `title` attributes (list view uses `title="Edit project"`, `title="Archive project"`, `title="Delete project"`)
+- [ ] Grid card action icons render at `size={14}` vs list view's `size={16}`
+- [ ] Grid card `CaretDown` icon renders at `size={10}` vs list view's `size={12}`
+- [ ] Grid card title changes to brand color on hover via `group-hover:text-brand transition-colors`
+- [ ] Grid card uses `glass-panel rounded-2xl overflow-hidden cursor-pointer hover:bg-surface-raised/30 transition-all group` styling
+
+### Create Modal Form Details
+
+- [ ] Deadline and Citation Style fields are side-by-side in a 2-column grid layout (`grid grid-cols-2 gap-3`)
+- [ ] Target Journal label includes `(optional)` hint styled with `text-ink-muted/60`
+- [ ] Deadline label includes `(optional)` hint styled with `text-ink-muted/60`
+- [ ] `citation_style` is always included in the create payload (not conditional like `target_journal` and `deadline`)
+- [ ] `creating` state resets to `false` in a `finally` block — the Create Project button re-enables even after a failed creation attempt
+- [ ] Both "Create Project" and "Update Status" buttons use `disabled:opacity-50 disabled:cursor-not-allowed` when disabled
+
+### DataTable Internals
+
+- [ ] DataTable wraps the `<table>` in `overflow-x-auto rounded-xl border border-border`
+- [ ] DataTable header row uses `bg-surface-raised/50` background with `font-medium text-ink-muted` column headers
+- [ ] DataTable body rows use index-based keys (`key={idx}`), not project IDs
+- [ ] DataTable rows without `onRowClick` have no cursor or hover styles; rows with `onRowClick` get `cursor-pointer hover:bg-surface-raised/50`
+
+### Server Action Internals
+
+- [ ] `getProjects()` returns `[]` immediately if the initial query finds zero rows (skips paper/doc count queries)
+- [ ] `getProjects()` doc count query filters by `isNull(synthesisDocuments.deleted_at)` — only non-deleted documents count toward `doc_count`
+- [ ] `updateProject()` revalidates both `/projects` and `/dashboard` (so `updateProjectStatus()` and `archiveProject()` also revalidate both)
+- [ ] `deleteProject()` revalidates both `/projects` and `/dashboard`
+- [ ] `createProject()` has server-side fallbacks: `project_type` defaults to `"review_article"` if falsy, `citation_style` defaults to `"vancouver"` if falsy
+
+### Timing and State Edge Cases
+
+- [ ] `fetchProjects()` sets `loading` to `true` on every invocation — error recovery after failed delete/archive briefly shows the loading spinner across the entire page
+- [ ] `handleStatusUpdate` clears `statusTarget` to `null` in its `finally` block (runs after the server call), in addition to the modal `onClose` handler
+- [ ] Status update: `setShowStatusModal(false)` fires before `await updateProjectStatus()` — the server call runs after the modal is already closed
+
+### formatRelativeTime Details
+
+- [ ] Returns `"Just now"` for timestamps less than 1 minute ago
+- [ ] Returns `"{N}m ago"` for timestamps between 1–59 minutes ago
+- [ ] Returns `"{N}h ago"` for timestamps between 1–23 hours ago
+- [ ] Returns `"{N}d ago"` for timestamps between 1–6 days ago
+- [ ] Returns locale-formatted date (`en-IN`, short month + numeric day) for timestamps 7+ days old
+
+### Styling Details
+
+- [ ] Active tab uses `bg-surface-raised text-ink border border-border-subtle`; inactive tab uses `text-ink-muted hover:text-ink hover:bg-surface-raised/50`
+- [ ] Status pipeline selected option uses `border-brand bg-brand/5 text-ink`; unselected uses `border-border bg-surface-raised text-ink-muted hover:border-brand/40 hover:text-ink`
+- [ ] Name column icon rendered at `size={18}` with `text-ink-muted shrink-0`
+- [ ] Type column text uses `text-ink-muted text-xs` styling
+- [ ] View toggle container has `border border-border rounded-lg overflow-hidden`
+- [ ] Empty state `FolderOpen` icon wrapped in `w-16 h-16 rounded-2xl bg-surface-raised` container
+- [ ] "Create Your First Project" empty-state button includes a `Plus` icon alongside the text
+- [ ] Status modal project title in subtitle uses `font-medium text-ink` to distinguish it from surrounding muted text
+
+### Components Referenced But Not Rendered Directly
+
+- [ ] `MagnifyingGlass` icon is not imported by `page.tsx` — it is rendered inside the `SearchInput` component
+- [ ] `X` icon is not imported by `page.tsx` — it is rendered inside the `Modal` component
+- [ ] `Tabs` component supports an optional `count` property per tab, but the projects page passes no counts — tabs show labels only, no per-tab badge numbers
+- [ ] No API routes exist under `src/app/api/projects/` — all data access uses server actions from `src/lib/actions/projects.ts`

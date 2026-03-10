@@ -2,10 +2,9 @@
 
 **Original doc:** `PROJECTS_FEATURES_TESTING.md`
 **Original checkbox count:** 145
-**Features found in UI:** 182
-**Features found in source code:** 214
-**Missing from doc:** 69
-**Completeness of original doc:** 67.8%
+**After Codex pass 1:** 233 checks
+**After Claude Code pass 2:** 293 checks (60 new)
+**Behavior corrections in pass 2:** 6
 
 ## Missing Features
 
@@ -67,3 +66,27 @@
 - The grid-card top accent bar is currently a fixed brand-colored strip, not a bar derived from project type or status.
 - The generated doc does not distinguish between the route-level skeleton loader and the page component's own centered spinner while `getProjects()` is fetching.
 - Successful project creation does not route directly to `/studio/{id}`; the live page sends users to `/editor/new?project={id}`.
+
+## Pass 2 — New Coverage Areas
+
+### Behavior Corrections
+1. Grid card bar is fixed `bg-brand`, not accent by type/status (Section 6)
+2. `Project.id` is `number` not `string` (Section 15)
+3. Loading section conflates route-level skeleton with component-level spinner (Section 14)
+4. Enter key only submits from Project Name input, not the whole form (Section 9)
+5. "Updating..." text never visible — modal closes before re-render (Section 10)
+6. Fetch failure shows empty state, not error UI — catch block handles it (Section 14)
+
+### New Sections Added
+- Route-level loading.tsx (6 checks)
+- Route-level error.tsx with Sentry reporting (6 checks)
+- Modal component behavior (6 checks)
+- Fallback behaviors for getIcon/getStatus (2 checks)
+- Grid card vs list view differences (5 checks)
+- Create modal form layout details (6 checks)
+- DataTable internals (4 checks)
+- Server action internals (5 checks)
+- Timing and state edge cases (3 checks)
+- formatRelativeTime specifics (5 checks)
+- Styling details (8 checks)
+- Components referenced but not rendered directly (4 checks)
