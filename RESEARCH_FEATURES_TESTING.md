@@ -62,15 +62,11 @@
 
 ## 2. Search Input & Query
 
-- [ ] **Textarea input** — auto-resizing (max 120px height)
-- [ ] **Placeholder** — "Ask a research question or enter keywords..."
+- [ ] **Single-line input** — primary query field is a single-line text `<input>`
+- [ ] **Placeholder** — "Search 200M+ papers — try 'CRISPR sickle cell gene therapy'"
 - [ ] **Enter key** — submits search (without Shift)
-- [ ] **Shift+Enter** — adds new line
-- [ ] **Search button** — MagnifyingGlass icon, disabled when empty or searching
-- [ ] **Loading state** — "Searching..." text + spinner during search
-- [ ] **Parsed filter chips** — appear below input when natural language filters detected
-  - [ ] Each chip has X button to remove
-  - [ ] Chip types: studyType, dateRange, population, keyword
+- [ ] **Search button** — text-only button, disabled only while searching
+- [ ] **Loading state** — button label changes to "Searching..." during search
 
 ---
 
@@ -88,14 +84,9 @@
 | **Meta-Analyses** | off | [ ] Toggle on/off |
 
 ### Year Range
-- [ ] **Year Start** — number input, min 1900, max current year
-- [ ] **Year End** — number input, min 1900, max current year
-
-### Advanced Filters (Research Store — FilterPanel component)
-- [ ] **Study Type buttons** — toggle: RCT, Systematic Review, Meta-Analysis, Cohort, Case-Control, Clinical Trial, Case Report, Guideline
-- [ ] **Full Text Only** — checkbox
-- [ ] **Sources** — checkboxes: PubMed, Semantic Scholar (at least one required)
-- [ ] **Language** — "english" or "all"
+- [ ] **Year Start** — number input with placeholder `From`
+- [ ] **Year End** — number input with placeholder `To`
+- [ ] **Year inputs** — current implementation does not apply explicit `min` or `max` attributes
 
 ### Filter Behavior
 - [ ] Changing filters triggers new search automatically (after init)
@@ -122,20 +113,18 @@ Dropdown with 4 sort modes:
 
 ## 5. Search Results
 
-### API (`POST /api/research/search`)
-- [ ] **Multi-source search** — PubMed + Semantic Scholar searched in parallel
-- [ ] **8-second timeout** per source
+### API (`GET /api/search/unified`)
+- [ ] **Multi-source search** — PubMed, Semantic Scholar, OpenAlex, and ClinicalTrials.gov searched in parallel
+- [ ] **4.5-second timeout** per source
 - [ ] **Reciprocal Rank Fusion** — merges results across sources
 - [ ] **Rate limiting** — enforced per user
 - [ ] **Per page** — 20 results per request
 
 ### Results Display
-- [ ] **Header** — "Showing X of Y results" with checkbox for select all
-- [ ] **Selected count badge** — shows when papers are selected
-- [ ] **Skeleton loader** — 5 placeholder cards during search
+- [ ] **Skeleton loader** — 4 placeholder cards during in-page search
 - [ ] **Source counts** — PubMed, Semantic Scholar, OpenAlex, Clinical Trials counts
-- [ ] **Empty state (before search)** — "Search for academic papers..."
-- [ ] **Empty state (no results)** — "No results found..."
+- [ ] **Empty state (before search)** — recent searches, recently saved papers, suggested searches, and optional `Loading your history...`
+- [ ] **Empty state (no results)** — "No results found. Try a different query."
 
 ---
 
@@ -158,23 +147,19 @@ Color-coded evidence grading (I–V):
 
 ## 7. Paper Result Cards
 
-Each result card (`ResultRow`) shows:
+Each live result card shows:
 
-- [ ] **Checkbox** — for multi-select (evidence table, synthesis)
-- [ ] **Title** — clickable, opens paper detail panel
-- [ ] **Authors** — truncated with "et al." if >5
+- [ ] **Title** — links to DOI when available, otherwise to PubMed when PMID exists
+- [ ] **Authors** — truncated with "et al." if more than 3 authors
 - [ ] **Journal** — journal name
 - [ ] **Year** — publication year
 - [ ] **Evidence level badge** — color-coded (see Section 6)
-- [ ] **Study type badge** — e.g., "RCT", "SR", "Meta-Analysis" with type-specific colors
 - [ ] **Citation count** — number of citations
-- [ ] **Source badge** — "pubmed", "semantic_scholar", or "both"
-- [ ] **Verification status** — verified/partial/unverified/retracted/pending
-- [ ] **PMID badge** — if available
-- [ ] **DOI badge** — if available
+- [ ] **DOI link** — text link labeled `DOI` in the metadata row when DOI exists
 - [ ] **Open Access indicator** — if applicable
 - [ ] **Save button** — FloppyDisk icon, saves to library
-- [ ] **Insert Citation button** — dispatches citation event
+- [ ] **Save & Cite button** — saves the paper and routes to `/editor/new`
+- [ ] **Similar button** — shown only when Semantic Scholar ID exists
 
 ---
 
@@ -188,7 +173,7 @@ Each result card (`ResultRow`) shows:
 
 ## 9. AI Summary
 
-- [ ] **AISummaryCard component** — displays AI-generated summary of search results
+- [ ] **AISynthesisPanel component** — displays AI-generated summary of search results
 - [ ] **Loading state** — shown during generation
 - [ ] **Generated after search** — summarizes key findings across results
 - [ ] **Persisted** — saved in session storage
@@ -197,23 +182,13 @@ Each result card (`ResultRow`) shows:
 
 ## 10. Suggested Searches
 
-15 pre-built medical/research topic suggestions shown in empty state:
+15 pre-built medical/research topics exist in source, but the empty state renders only the first 5:
 
 - [ ] "SGLT2 inhibitors cardiovascular outcomes"
 - [ ] "CAR-T cell therapy solid tumors"
 - [ ] "GLP-1 agonists weight management"
 - [ ] "mRNA vaccine technology advances"
 - [ ] "AI-assisted diagnostic imaging accuracy"
-- [ ] "Immune checkpoint inhibitors biomarkers"
-- [ ] "CRISPR sickle cell gene therapy"
-- [ ] "Gut microbiome mental health"
-- [ ] "Liquid biopsy early cancer detection"
-- [ ] "Ketamine treatment-resistant depression"
-- [ ] "Wearable devices atrial fibrillation detection"
-- [ ] "Fecal microbiota transplant C. difficile"
-- [ ] "Psilocybin-assisted psychotherapy PTSD"
-- [ ] "Dapagliflozin heart failure outcomes"
-- [ ] "Whole genome sequencing rare diseases"
 
 - [ ] Clicking a suggestion populates query and triggers search
 
@@ -262,129 +237,44 @@ Right-side panel togglable from the main page.
 
 ## 15. Paper Detail Panel
 
-Slide-in panel showing full paper details.
-
-### Header
-- [ ] **Back button** — returns to results list
-- [ ] **Title** — full paper title
-- [ ] **Authors** — with "et al." if >5
-- [ ] **Journal and year**
-
-### Badges
-- [ ] **PMID** — if available
-- [ ] **DOI** — if available
-- [ ] **Study Type** — colored badge
-- [ ] **Citation Count** — number
-- [ ] **Verification Status** — verified/partial/unverified/retracted
-- [ ] **Open Access** — indicator if applicable
-
-### Tabs: Summary | Abstract | Details
-- [ ] **Summary tab** — extraction fields (see below)
-- [ ] **Abstract tab** — full abstract text
-- [ ] **Details tab** — additional metadata
-
-### Extraction Fields (Summary tab)
-| Field | Test |
-|-------|------|
-| Population | [ ] Shows value + toggleable source quote |
-| Intervention | [ ] Shows value + toggleable source quote |
-| Comparator | [ ] Shows value + toggleable source quote |
-| Primary Outcome | [ ] Shows value + toggleable source quote |
-| Effect Size | [ ] Shows value + toggleable source quote |
-| Sample Size | [ ] Shows value + toggleable source quote |
-| Follow-up | [ ] Shows value + toggleable source quote |
-| Study Design | [ ] Shows value + toggleable source quote |
-| Limitations | [ ] Shows value + toggleable source quote |
-
-- [ ] **[src] toggle** — shows/hides exact source quote for each field
-- [ ] **"Not stated"** — shown when field value is empty
-
-### Action Buttons
-- [ ] **"Insert Citation"** — Plus icon, dispatches citation event
-- [ ] **"Add to Library"** — changes style when already in library
+The live `/research` page does not render `PaperDetailPanel.tsx`; see `### Components Referenced But Not Rendered`.
 
 ---
 
 ## 16. Evidence Table
 
-### Evidence Table Action Bar
-- [ ] **Appears when** — 2+ papers selected
-- [ ] **Shows count** — "N papers selected"
-- [ ] **"Build Evidence Table" button** — opens setup
-
-### Evidence Table Setup
-- [ ] **Preset templates**:
-  - [ ] **RCT** — Study Design, Population(n), Intervention, Comparator, Primary Outcome, Effect Size, p-value, Follow-up, Risk of Bias
-  - [ ] **Systematic Review** — Included Studies, Total Participants, Quality Assessment, Main Findings, Heterogeneity, Limitations
-  - [ ] **Drug Safety** — Drug/Dose, Population, Adverse Events, Serious AEs, Discontinuation, Contraindications
-  - [ ] **Diagnostic** — Test, Reference Standard, Population, Sensitivity, Specificity, PPV, NPV, AUC
-- [ ] **Click preset** — creates table and runs batch extraction
-
-### Evidence Table View
-- [ ] **Grid display** — papers as rows, extraction fields as columns
-- [ ] **Batch extraction** — AI extracts data from each paper
-- [ ] **Progress tracking** — shows current/total during extraction
-- [ ] **Export options** — CSV and BibTeX export via `/api/research/evidence-table/export`
-- [ ] **Back button** — returns to results
+The live `/research` page does not render the evidence-table flow from the alternate research component stack; see `### Components Referenced But Not Rendered`.
 
 ---
 
 ## 17. Synthesis Report
 
-### Synthesis Dialog
-- [ ] **Report type selection**:
-  - [ ] Quick Summary
-  - [ ] Literature Review
-  - [ ] Evidence Summary
-  - [ ] Custom (with custom instructions input)
-- [ ] **Papers** — uses selected papers from results + library
-
-### Generation (`POST /api/research/synthesize`)
+### Live Synthesis Behavior (`POST /api/research/synthesize`)
 - [ ] **Streaming response** — text streams progressively via TextDecoder
 - [ ] **Markdown output** — with `[N]` citation markers
-- [ ] **Temperature** — 0.3 for consistent output
+- [ ] **Temperature** — generate mode uses `0.4`; plan mode uses `0.3`
 - [ ] **Plan mode** — can generate plan before full synthesis
 - [ ] **Rate limiting** — enforced
-
-### Synthesis Plan
-- [ ] **Sections** — title + description for each planned section
-- [ ] **Estimated word count**
-- [ ] **Papers per section** — which papers will be cited where
 
 ---
 
 ## 18. Citation Insertion
 
-- [ ] **Custom event** — `scholarsync:insert-citation` dispatched on window
-- [ ] **Payload** — title, authors, year, journal, doi, pmid
-- [ ] **Consumed by** — editor/studio citation system listeners
-- [ ] **Triggered from** — result card button, paper detail panel button
+- [ ] **Save & Cite persistence** — writes `scholarsync_pending_citation` to sessionStorage
+- [ ] **Save & Cite payload** — includes title, authors, journal, year, doi, and pmid when present
+- [ ] **Editor handoff** — routes to `/editor/new` after the citation payload is stored
 
 ---
 
 ## 19. Paper Chat
 
-### Chat Tab (Research Store sidebar)
-- [ ] **Scope selector** — dropdown: "paper" | "selected" | "library"
-- [ ] **Messages display** — user right-aligned, assistant left-aligned with Sparkle avatar
-- [ ] **Copy button** — on assistant messages
-- [ ] **Empty state** — "Ask questions about your papers" with scope context
-- [ ] **Form input** — textarea + Send button (PaperPlaneRight icon)
-- [ ] **Auto-scroll** — to newest message
-- [ ] **Loading state** — `isChatLoading` indicator
-- [ ] **Clear chat** — reset button
-- [ ] **Papers used** — shows which papers were referenced in response
+The live `/research` page does not render the tabbed paper-chat flow from the alternate research component stack. The current route uses the right-side copilot sidebar described in Section 14.
 
 ---
 
 ## 20. Verification System
 
-- [ ] **Per-paper verification** — calls `/api/research/verify`
-- [ ] **Verification statuses**: verified, partial, unverified, retracted, pending
-- [ ] **Checks**: PMID verified, DOI verified, metadata matches (title, year, journal, authors)
-- [ ] **Retraction detection** — isRetracted flag, retractionDate, reason, URL
-- [ ] **VerificationBadge** — visual display of status
-- [ ] **Cache** — results stored in `verificationCache` in store
+The live `/research` page does not call `/api/research/verify` or render `VerificationBadge.tsx`; those belong to non-rendered research components.
 
 ---
 
@@ -394,16 +284,15 @@ Slide-in panel showing full paper details.
 - [ ] **Persisted fields**: query, results, filters, sort, hasSearched, page, totalResults, hasMore, sourceCounts, augmentedQueries, aiSummary
 - [ ] **Restored on mount** — hydrates state from session
 - [ ] **Updated on changes** — writes to session after each search/filter change
-- [ ] **Scroll position** — restored from `searchScrollPosition`
 
 ---
 
 ## 22. Pagination & Load More
 
 - [ ] **20 results per page** (`perPage = 20`)
-- [ ] **"Load more results..." button** — shown when `hasMore === true`
-- [ ] **Appends results** — new results added to existing list
-- [ ] **Page counter** — increments with each load
+- [ ] **Previous / Next buttons** — shown when `hasSearched` and `totalResults > 0`
+- [ ] **Replacing results** — each page navigation replaces the current result list instead of appending
+- [ ] **Page counter** — status text reads `Page {current} of {total}`
 - [ ] **Total results** — displayed in header
 
 ---
@@ -412,7 +301,7 @@ Slide-in panel showing full paper details.
 
 - [ ] **Search API error** — error state displayed
 - [ ] **Rate limiting** — enforced, error shown to user
-- [ ] **Source timeout** — 8s per source, graceful fallback if one source fails
+- [ ] **Source timeout** — 4.5s per source in `/api/search/unified`, with graceful degradation when one source fails
 - [ ] **Session quota exceeded** — sessionStorage write silently ignored
 - [ ] **Similar paper errors** — tracked per paper, non-blocking
 - [ ] **Synthesis failure** — error thrown, state reset
@@ -427,8 +316,8 @@ Slide-in panel showing full paper details.
 1. [ ] Navigate to `/research`
 2. [ ] Verify suggested searches displayed in empty state
 3. [ ] Click a suggested search — verify query populates and search runs
-4. [ ] Verify results appear with evidence level badges and source badges
-5. [ ] Verify source counts (PubMed, Semantic Scholar) displayed
+4. [ ] Verify results appear with evidence level badges and Save / Save & Cite actions
+5. [ ] Verify source counts (PubMed, Semantic Scholar, OpenAlex, ClinicalTrials.gov) displayed
 6. [ ] Change sort to "Citations" — verify reorder
 7. [ ] Change sort to "Year (Newest)" — verify reorder
 
@@ -440,50 +329,23 @@ Slide-in panel showing full paper details.
 5. [ ] Toggle "Meta-Analyses" — verify filter applied
 6. [ ] Navigate away and back — verify filters persist from session
 
-### Workflow C: Paper Detail & Extraction
-1. [ ] Click a paper title in results
-2. [ ] Verify detail panel slides in with full metadata
-3. [ ] Check Summary tab — verify extraction fields displayed
-4. [ ] Toggle [src] on a field — verify source quote shown
-5. [ ] Check Abstract tab — verify abstract text
-6. [ ] Click "Add to Library" — verify button state changes
-7. [ ] Click Back — verify return to results list
-
-### Workflow D: Evidence Table
-1. [ ] Select 3+ papers using checkboxes
-2. [ ] Verify action bar appears: "N papers selected"
-3. [ ] Click "Build Evidence Table"
-4. [ ] Select "RCT" preset
-5. [ ] Verify batch extraction starts with progress indicator
-6. [ ] Verify table populates with extracted data
-7. [ ] Export as CSV — verify file downloads
-
-### Workflow E: Synthesis Report
-1. [ ] Select 3+ papers
-2. [ ] Open synthesis dialog
-3. [ ] Select "Literature Review" report type
-4. [ ] Verify streaming text appears progressively
-5. [ ] Verify `[N]` citation markers in output
-6. [ ] Verify report completes
-
-### Workflow F: Save & Citation
+### Workflow C: Save & Citation
 1. [ ] Click save icon on a result card — verify saved state
-2. [ ] Click "Insert Citation" — verify `scholarsync:insert-citation` event dispatched
-3. [ ] Verify saved papers appear in library
+2. [ ] Click `Save & Cite` — verify `scholarsync_pending_citation` is stored
+3. [ ] Verify editor navigation goes to `/editor/new`
 
-### Workflow G: Find Similar
-1. [ ] Click "Find Similar" on a result
+### Workflow D: Find Similar
+1. [ ] Click `Similar` on a result with an S2 ID
 2. [ ] Verify loading indicator for that paper
 3. [ ] Verify similar papers appear below the result
 4. [ ] Verify error handling if similar search fails
 
-### Workflow H: Paper Chat
-1. [ ] Open chat tab
-2. [ ] Select scope (paper/selected/library)
-3. [ ] Type a question and send
-4. [ ] Verify streaming response with paper references
-5. [ ] Verify copy button works on assistant messages
-6. [ ] Clear chat — verify messages reset
+### Workflow E: Copilot
+1. [ ] Click the floating copilot button
+2. [ ] Verify the sidebar opens with the welcome card
+3. [ ] Ask a question and submit with Enter
+4. [ ] Verify streaming response appears in the sidebar
+5. [ ] Close and reopen the sidebar — verify messages are still present during the same page session
 
 ---
 
@@ -903,7 +765,7 @@ Slide-in panel showing full paper details.
 - [ ] Result card React `key` attribute is `${identityKey}-${idx}` — the array index is appended for uniqueness in case duplicate identity keys exist
 - [ ] When `citationCount` is exactly `0`, the " · N citations" suffix is omitted because the render branch checks truthiness (`r.citationCount ? ...`)
 - [ ] Saving state button uses `cursor-wait` class to show the wait cursor while a save is in progress
-- [ ] Similar-paper `key` is derived as `r.s2Id || r.doi || r.title`, which differs from the save `key` that uses `r.doi || r.pmid || r.s2Id || r.title` — the ID lookup order is different for save vs similar
+- [ ] Similar-paper lookup key uses `r.s2Id || r.doi || r.title`, which differs from the save key that uses `r.doi || r.pmid || r.s2Id || r.title`
 - [ ] Similar-paper section header reads `Similar Papers` in `text-[10px] text-ink-muted uppercase tracking-wider font-medium`
 - [ ] Result author row renders `r.authors.slice(0, 3).join(", ")` — if the original `authors` array is empty, an empty `<p>` element still renders
 
@@ -972,7 +834,7 @@ Slide-in panel showing full paper details.
 - [ ] Rate limit key format is `${userId}:${endpoint}` — e.g., `user_123:search`
 - [ ] `RATE_LIMITS.search` allows 120 requests per 3600 seconds (120/hour)
 - [ ] `RATE_LIMITS.ai` allows 60 requests per 3600 seconds (60/hour)
-- [ ] In-memory rate limiter (development/Upstash-unavailable fallback) uses a fixed sliding window with a `Map<string, { count, resetAt }>` store
+- [ ] In-memory rate limiter (development/Upstash-unavailable fallback) uses a fixed-window counter with a `Map<string, { count, resetAt }>` store
 - [ ] In-memory rate limiter cleans up expired entries every 60 seconds via a `setInterval` loop
 - [ ] Production rate limiter uses Upstash Redis with `@upstash/ratelimit` sliding window and prefix `"scholarsync"`
 - [ ] Rate limiter falls through to in-memory when Upstash Redis env vars (`UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`) are missing or when the Upstash request throws
@@ -1010,7 +872,7 @@ Slide-in panel showing full paper details.
 
 - [ ] `handleSave(result)` forwards `abstract`, `mesh_terms`, `publication_types`, `fields_of_study`, `study_type`, `evidence_level`, `influential_citation_count`, and `reference_count` to the `savePaper()` server action — not just title, authors, journal, year, doi, source
 - [ ] `handleSave(result)` sends `pubmed_id: result.pmid` and `semantic_scholar_id: result.s2Id` as separate identifier fields
-- [ ] `handleSave(result)` sends `citation_count: result.citationCount` — not `citations` or `citation_count`
+- [ ] `handleSave(result)` sends `citation_count: result.citationCount` — not `citations` or `citationCount`
 - [ ] `handleSave(result)` derives `open_access_url` from `result.openAccessPdfUrl || undefined` — the `|| undefined` ensures `null` is converted to `undefined`
 
 ### Type Definitions & Response Shapes
@@ -1032,7 +894,7 @@ Slide-in panel showing full paper details.
 - [ ] Inactive filter chip styling: `bg-surface-raised text-ink-muted border-border hover:text-ink`
 - [ ] Sort dropdown overlay uses `z-20` z-index
 - [ ] Copilot floating toggle button uses `z-40` z-index
-- [ ] Pagination total-pages display clamps minimum to 1 via `Math.max(totalPages, 1)`, ensuring "Page 1 of 1" is shown even when there are 0 results in the filtered set
+- [ ] Pagination total-pages display clamps the rendered denominator with `Math.max(totalPages, 1)` whenever the pagination block is visible
 - [ ] Sort dropdown menu has `min-w-[140px]` minimum width
 
 ### Accessibility Gaps (Missing Attributes)
@@ -1066,5 +928,18 @@ Slide-in panel showing full paper details.
 - [ ] Section 7 line 174 claims a "DOI badge" is rendered — **WRONG**. DOI is rendered as a text link ("DOI") in the metadata row, not as a badge component.
 - [ ] Section 17 line 345 claims "Temperature — 0.3 for consistent output" for synthesis generation — **MISLEADING**. Plan mode uses temperature 0.3, but the primary streaming synthesis (generate mode) uses temperature 0.4 (correctly documented at lines 788-789 from Pass 2).
 - [ ] Section 20 (Verification System) claims "Per-paper verification — calls `/api/research/verify`" — **WRONG for this page**. The `/research` page never calls `/api/research/verify`. The verification endpoint and VerificationBadge exist in the codebase but are not imported or invoked by `page.tsx`.
+
+## Codex Verification Pass Discoveries
+
+- [ ] `ResearchPage` never aborts `abortRef.current` on component unmount, so an in-flight `/api/search/unified` request can continue after navigation away from `/research`
+- [ ] `handleSearch(...)` has no stale-request guard beyond `AbortController`, so an older aborted search can still enter `catch` / `finally` and overwrite `error` or `loading` state for a newer search
+- [ ] Failed searches do not clear the prior `results` array, so an error banner can render above stale results from the previous successful search
+- [ ] `handleSearch(...)` sets `hasSearched` to `true` before the fetch resolves, so a failed first search skips the rich pre-search empty state on the next render
+- [ ] Main search button remains enabled for whitespace-only input; the no-op happens inside `handleSearch()` because it returns early on `!query.trim()`
+- [ ] Similar-paper cards use unstable React keys (`key={simIdx}`) instead of a paper identity field
+- [ ] `handleFindSimilar(...)` does not use an `AbortController` or timeout, so similar-paper fetches cannot be cancelled when the user retries or leaves the page
+- [ ] Copilot opening does not move focus into the chat input, and closing it does not restore focus to the floating toggle button
+- [ ] `AISynthesisPanel.triggerSynthesis()` has no stale-request guard, so an earlier request's `finally { setIsStreaming(false) }` can clear the streaming state of a newer synthesis run
+- [ ] Pagination UI is hidden entirely when `totalResults === 0`, even though the inner page-count text uses `Math.max(totalPages, 1)`
 
 *Document generated from source code analysis. Last updated: 2026-03-10.*
