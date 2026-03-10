@@ -1584,3 +1584,249 @@
 - `IconBrowser` exists in `src/components/illustration/IconBrowser`, but the live editor imports `IconPicker` instead.
 - `JournalPresets` exists in `src/components/illustration/JournalPresets.tsx`, but no rendered illustrate page imports it.
 - `shapes/ShapeGeneratorModal` exists in `src/components/illustration/shapes`, but the live editor uses `tools/ShapeGeneratorPanel` instead.
+
+## Re-Audit Discoveries (Claude Code Pass 3)
+
+### MenuBar Operation Toast Messages (`MenuBar.tsx`)
+- [ ] Flip selection with no objects selected shows warning toast `Select at least 1 object to flip`
+- [ ] Flip operation calls `toggleObjectFlip()` for each selected object and fires `object:modified` event
+- [ ] Offset Path prompt reads `Offset distance in pixels (positive = outward, negative = inward):` with default value `10`
+- [ ] Offset Path with selection count ≠ 1 shows warning toast `Select exactly 1 path or line`
+- [ ] Offset Path success toast reads `Offset path created (${distance}px)`
+- [ ] Offset Path supports both `FabricPath` and `Line` object types
+- [ ] Clipping mask creation with < 2 objects shows warning toast `Select at least 2 objects. Topmost object will be used as clip shape.`
+- [ ] Clipping mask creation success toast reads `Clipping mask created`
+- [ ] Release clipping mask on non-clipped object shows warning toast `Select a clipped group to release its clipping mask.`
+- [ ] Release clipping mask success toast reads `Clipping mask released`
+- [ ] Compound path creation with < 2 objects shows warning toast `Select at least 2 paths to create a compound path.`
+- [ ] Compound path creation success toast reads `Compound path created`
+- [ ] Release compound path on non-compound object shows warning toast `Select a compound path to release it.`
+- [ ] Release compound path success toast reads `Compound path released`
+- [ ] `canReleaseClippingMask` checks `activeSelection.length === 1 && isClippingMaskGroup(activeSelection[0])`
+- [ ] `canReleaseCompoundPath` checks `activeSelection.length === 1 && isCompoundPath(activeSelection[0])`
+- [ ] MenuBar click-outside detection uses `mousedown` event on `document`, not `click`
+- [ ] Help > About FINNISH full toast text is `FINNISH v0.1.0 - AI-Powered Scientific Illustration Tool. Built with React, Fabric.js, and Zustand.`
+
+### Quick Export vs Export Dialog Toast Messages
+- [ ] MenuBar Quick Export SVG success toast reads `Exported as SVG`
+- [ ] MenuBar Quick Export PNG success toast reads `Exported as PNG`
+- [ ] MenuBar Quick Export PNG @2x success toast reads `Exported as PNG @2x`
+- [ ] MenuBar Quick Export PNG @2x download filename is `diagram@2x.png`
+- [ ] Export Dialog PNG export success toast reads `PNG exported successfully!`
+- [ ] Export Dialog SVG export success toast reads `SVG exported successfully!`
+- [ ] Export Dialog PDF export success toast reads `PDF exported successfully!`
+- [ ] Export Dialog PPTX export success toast reads `PowerPoint exported successfully!`
+- [ ] Quick Export and Export Dialog produce different toast messages for the same format
+
+### Scientific Text Toolbar (`ScientificTextToolbar.tsx`)
+- [ ] Toolbar header title text is `Scientific Text`
+- [ ] Close button title attribute is `Close toolbar`
+- [ ] `activeTab` state is initialized to `'greek'` with no setter function exposed, so only Greek letters are ever displayed
+- [ ] Superscripts tab (16 symbols), Subscripts tab (15 symbols), and Math Symbols tab (21 symbols) exist in source code but are unreachable dead code
+- [ ] Quick-format buttons `x²` (superscript) and `x₂` (subscript) ARE rendered and functional
+- [ ] Lowercase Greek letters section title is `Greek Letters (Lowercase)` showing 23 letters (α through ω)
+- [ ] Uppercase Greek letters section title is `Greek Letters (Uppercase)` showing 8 letters (Γ, Δ, Θ, Λ, Σ, Φ, Ψ, Ω)
+- [ ] Symbol grid uses `gridTemplateColumns: 'repeat(8, 1fr)'` layout
+- [ ] Symbol buttons use `fontFamily: 'Times New Roman, serif'`
+- [ ] Symbol button hover: background changes to `var(--accent-primary)` with white text
+- [ ] Toolbar positioned absolutely with z-index `1000`, min-width `280px`, max-height `400px`, overflowY `auto`
+- [ ] `insertSymbol` for IText inserts at cursor position via `insertChars`; for Textbox it appends to text
+- [ ] `insertSymbol` fires `object:modified` event after insertion
+- [ ] `applySuperscript` calls `setSuperscript(0.6)` on the active text object
+- [ ] `applySubscript` calls `setSubscript(0.6)` on the active text object
+
+### Error Boundary Details (`ErrorBoundary.tsx`)
+- [ ] Default fallback title is `Something went wrong` (not scope-specific)
+- [ ] Scope-specific fallback title follows pattern `${scope} failed to load`
+- [ ] Default fallback description is `An unexpected error occurred. Try resetting this section or reload the page.`
+- [ ] Error message appended in parentheses after description when present: ` (${error.message})`
+- [ ] Fallback container has `role="alert"` and `aria-live="assertive"`
+- [ ] Primary action button text is `Try Again` (not "Reset" as documented in Section 21)
+- [ ] `Reload Page` button appears ONLY in `fullScreen` mode
+- [ ] Error details section visible ONLY when `process.env.NODE_ENV === 'development'`
+- [ ] Error details toggle button text: `Show Error Details` / `Hide Error Details`
+- [ ] Error details display: error name, message, stack trace, and component stack
+- [ ] ErrorBoundary supports `resetKeys` prop — auto-resets when any key value changes
+- [ ] Inline (non-fullScreen) error container has min-height `280px` with border-radius `12px`
+
+### Toolbar Accessibility and Structure (`Toolbar.tsx`)
+- [ ] Tool buttons are organized into 7 named groups with visual dividers between groups
+- [ ] Group aria-labels: `Selection`, `Shapes`, `Lines`, `Draw`, `Text`, `Utility`, `Scientific Shapes`
+- [ ] Each tool group uses `role="group"` with its respective aria-label
+- [ ] Tool buttons have `aria-pressed` attribute reflecting active state
+- [ ] Tool buttons have `data-tool-label` attribute set to the tool label
+- [ ] Toolbar width derives from CSS custom property `var(--toolbar-width, 48px)`
+- [ ] Shape config popups positioned at `position: 'absolute', left: '100%', top: '50%'` relative to their button
+- [ ] Polygon/star numeric input validated with `Number.isFinite(value)` before store update
+
+### Right Panel Tab Accessibility (`RightPanel.tsx`)
+- [ ] Tab buttons use `role="tab"` with `aria-selected` attribute
+- [ ] Tab button id follows pattern `tab-${tab.id}`
+- [ ] Tab button `aria-controls` follows pattern `panel-${tab.id}`
+- [ ] Tab content area uses `role="tabpanel"` with `aria-labelledby` matching the active tab id
+- [ ] Tab content area id follows pattern `panel-${activeTab}`
+- [ ] Right panel sidebar width derives from CSS custom property `var(--sidebar-width, 280px)`
+- [ ] Canvas dimensions default to 800×600 in icon insertion fallback when canvas size is unavailable
+
+### PointEditingOverlay Visuals and Interaction (`PointEditingOverlay.tsx`)
+- [ ] Anchor point visual: border `#0f172a`, background `#ffffff`, cursor `move`
+- [ ] Selected anchor: background `#1d4ed8`
+- [ ] Handle point visual: border `#0284c7`, background `#bae6fd`, borderRadius `50%`, cursor `crosshair`
+- [ ] Guide lines between anchor and handle: stroke color `#94a3b8`
+- [ ] Holding `Alt` key during handle drag toggles `mirrorOpposite` behavior for independent handle control
+- [ ] Click on path segment adds new anchor point when click is within `8px / zoom` threshold of nearest segment
+- [ ] Shift+click on anchor adds or removes it from multi-selection set
+- [ ] Double-click on anchor point toggles smooth/corner state via `toggleAnchorSmooth()`
+- [ ] Double-click on overlay background exits point editing mode via `onExit()` callback
+- [ ] Anchor and handle interactive divs have no `role` or `aria-label` attributes (accessibility gap)
+- [ ] Drag state tracks two types: `'anchor'` (translates points) and `'handle'` (moves bezier control)
+
+### Canvas Internals (`Canvas.tsx`)
+- [ ] Canvas elements have `data-testid="illustrator-canvas-stage"` on container and `data-testid="illustrator-canvas"` on canvas
+- [ ] `ConnectorManager` is initialized during canvas setup and disposed during cleanup via `connectorManagerRef`
+- [ ] Custom `_isDrawing` flag is set on canvas: `(canvas as DrawingFlagCanvas)._isDrawing = false`
+- [ ] Eraser, Scissors, and Measure tools are implemented as separate class instances (`EraserTool`, `ScissorsTool`, `MeasureTool`) stored in refs
+- [ ] Freehand drawing module is lazy-loaded via dynamic import with promise caching in `freehandModulePromiseRef`
+- [ ] Rough.js module is lazy-loaded via dynamic import with promise caching in `roughModulePromiseRef`
+- [ ] Measurement overlay renders when `activeTool === ToolType.MEASURE && measurementOverlay !== null`
+- [ ] Eyedropper preview overlay renders when `activeTool === ToolType.EYEDROPPER && eyedropperPreview.visible`
+- [ ] Eraser cursor overlay renders when `activeTool === ToolType.ERASER && eraserCursor.visible`
+- [ ] `mouse:dblclick` handler enters point editing mode for path objects and enters text editing for text objects
+- [ ] Connector color default is `#6366f1`
+
+### CanvasContext Operation Details (`CanvasContext.tsx`)
+- [ ] `ungroupSelected()` applies group transforms (angle, scaleX, scaleY adjustments) to each child item before removing the group and re-adding items individually
+- [ ] `makeClippingMask()`, `releaseClippingMask()`, `makeCompoundPath()`, and `releaseCompoundPath()` all fire `canvas.fire('object:modified', { target })` after completion
+- [ ] `subscribeToCanvasEvents()` provides a generic event subscription helper that returns an unsubscribe function for cleanup
+
+### EditorMode Lazy Loading and State (`EditorMode.tsx`)
+- [ ] EditorMode lazy-loads 7 components via `React.lazy()`: ExportDialog, BackgroundRemovalTool, AIGenerationTool, ShapeGeneratorPanel, FigurePanelGenerator, DocumentSettings, RightPanel
+- [ ] `figurePanelGeneratorOpen` state controls Figure Panel Generator dialog visibility
+- [ ] `isCanvasDragActive` state applies inline box-shadow `inset 0 0 0 2px var(--accent-primary)` to canvas area during drag
+- [ ] Welcome toast `Editor ready. Start creating!` appears ONLY when no `id` prop is passed (new documents), not when loading existing diagrams
+- [ ] Export handler creates a temporary SVG element with `position: 'absolute', left: '-9999px'` appended to `document.body`
+
+### Status Bar Display Details (`StatusBar.tsx`)
+- [ ] Selection count uses pluralization: `${selectionCount} object${selectionCount !== 1 ? 's' : ''}`
+- [ ] `toolDisplayNames` map includes entries for `Pencil`, `Bracket`, `Callout`, `Dimension`, `Connector`, and `Text on Path` (ToolType enum values that are not exposed as toolbar buttons)
+- [ ] Default tool display name when `activeTool` is not found in map: `'Select'`
+- [ ] Zoom percentage displayed as `Math.round(zoom * 100)` followed by `%`
+
+### Export Options Panel Details
+- [ ] PNG DPI descriptions: `Screen/Web` (72), `Standard` (150), `Print Quality` (300), `High Resolution` (600)
+- [ ] PNG quality slider has text hints: `Smaller file` (left) and `Better quality` (right)
+- [ ] PNG panel shows estimated output dimensions calculated as `(800 * dpi) / 72` and estimated file size in KB
+- [ ] SVG Optimize description: `Remove unnecessary elements and attributes`
+- [ ] SVG Minify description: `Remove whitespace for smaller file size`
+- [ ] SVG Embed Fonts description: `Convert text to paths for consistent display`
+- [ ] SVG panel renders feature tags: `Scalable`, `Editable`, `Optimized`, `Minified`; `Editable` tag is active only when `embedFonts` is false
+- [ ] PPTX slide layout dimensions: 16:9 (10″×5.625″), 16:10 (10″×6.25″), 4:3 (10″×7.5″)
+- [ ] PPTX resolution descriptions: `Standard` (1x), `High quality` (2x), `Ultra HD` (4x)
+- [ ] PPTX centering description: `Automatically center the illustration with padding`
+- [ ] PPTX title placeholder: `Cell Biology Diagrams`; author placeholder: `Dr. Jane Smith`
+- [ ] LaTeX Standalone description: `Generate complete compilable .tex file`
+- [ ] LaTeX Include Preamble description: `Add TikZ package imports and libraries`
+- [ ] LaTeX panel renders a `Download .tex` button that creates a Blob and downloads `diagram.tex` independently of the main Export button
+- [ ] LaTeX help text: `Compile with: pdflatex diagram.tex`
+- [ ] Export dialog filename label is `Filename` with placeholder `Enter filename`
+- [ ] Export dialog shows `Journal Preset` selector for png, svg, and pdf formats only
+- [ ] Default journal preset option text: `None (no journal preset)`
+- [ ] Export dialog renders both `Cancel` and `Export` / `Exporting...` buttons
+- [ ] Export dialog close button has `aria-label="Close dialog"`
+
+### Journal Figure Panel Details (`JournalFigurePanel.tsx`)
+- [ ] Figure label style options: `Fig. 1`, `Figure 1`, `(a)`, `A`
+- [ ] Scale bar unit options: `nm`, `μm`, `mm`, `cm`, `m`
+- [ ] Panel letter auto-increments to next letter after each insertion (e.g., A → B → C)
+- [ ] `ColorConventionManager` applies standardized color conventions to canvas objects via `handleApplyConventions`
+- [ ] Color blind simulation types: `Deuteranopia (green-blind)`, `Protanopia (red-blind)`, `Tritanopia (blue-blind)`
+- [ ] Accessibility check success text: `Colors appear sufficiently distinct...`
+- [ ] Accessibility check fallback text: `Consider using patterns or textures alongside colors...`
+
+### Icon Grid Virtualization (`IconGrid.tsx`)
+- [ ] Icon grid implements scroll-based virtualization with `visibleRange` state tracking start and end indexes
+- [ ] Row height calculated as `showNames ? iconSize + 32 : iconSize + 8`
+- [ ] Spacer elements above and below visible range maintain scroll position during virtualization
+- [ ] Truncation message: `Showing {N} of {total} icons. Scroll to load more.`
+- [ ] Icon card title format: `${icon.name} (${icon.library})`
+- [ ] Icon card `aria-label` format: `Icon: ${icon.name}`
+
+### Icon Preview Details (`IconPreview.tsx`)
+- [ ] 16 preset tint colors available in `commonColors` array
+- [ ] Icon tinting via `applyTint()` replaces `currentColor`, `fill`, and `stroke` attributes in SVG
+- [ ] SVG extraction from React component icons uses `50ms` setTimeout delay before DOM scraping
+- [ ] Library license information displayed per icon in preview details
+- [ ] Keywords display truncated to 8 with `+N more` indicator when more keywords exist
+
+### Effects Panel Ranges (`EffectsPanel.tsx`)
+- [ ] Shadow blur range: `0` to `50`
+- [ ] Shadow X and Y offset range: `-50` to `50`
+- [ ] Blur approximation range: `0` to `20`
+- [ ] Full blend mode list: `source-over`, `multiply`, `screen`, `overlay`, `darken`, `lighten`, `color-dodge`, `color-burn`, `hard-light`, `soft-light`, `difference`, `exclusion`
+
+### Gradient Editor Details (`GradientEditor.tsx`)
+- [ ] Linear gradient angle presets: 0°, 45°, 90°, 135°, 180°
+- [ ] Radial gradient center positioning via `cx` / `cy` percentage values
+
+### API Route: `/api/illustration/icons` (GET)
+- [ ] No authentication required on this endpoint
+- [ ] No rate limiting applied
+- [ ] Input validation: requires `.svg` extension, rejects names containing `..` or `/`
+- [ ] Error for missing name: `{ error: "Missing 'name' parameter" }` (400)
+- [ ] Error for unsafe name: `{ error: "Invalid icon name" }` (400)
+- [ ] Response `Content-Type: image/svg+xml` with `Cache-Control: public, max-age=31536000, immutable`
+- [ ] Production: serves from R2 bucket at path `icons/bioicons/{name}`
+- [ ] Development: serves from local `.data/icons/bioicons/{name}` directory
+- [ ] Dev 404 message: `Icon not found (run upload script first)`; production 404: `Icon not found`
+
+### API Route: `/api/illustration/icons/search` (GET)
+- [ ] No rate limiting applied (unlike other illustration API routes)
+- [ ] Query parameter `q` is optional; empty/missing returns empty results
+- [ ] `expand_synonyms` parameter: boolean, default `true`
+- [ ] `include_scores` parameter: boolean, default `false`
+- [ ] Scoring algorithm: `100` (exact name match), `50` (starts-with), `25` (contains), `20` (category match), `30`/`15`/`10` (keyword exact/starts/contains), `3` (synonym match)
+- [ ] Response includes `expanded_terms` array when `expand_synonyms` is true
+- [ ] Category `medical` maps to `health`/`bioicons`/`anatomy`/`equipment`/`diagnostics` libraries
+
+### API Route: `/api/illustration/icons/generate` (POST)
+- [ ] Schema: `name` (1–100 chars), `style` (`flat`/`outline`/`filled`/`minimal`), `category` (`scientific`/`medical`/`ui`/`arrows`/`shapes`)
+- [ ] `color` is optional, `size` range 16–512 (default 64), `useGemini` boolean (default false)
+- [ ] Rate limited with `RATE_LIMITS.ai`
+- [ ] Response includes `metadata.pathCount` and `metadata.palette`
+- [ ] `extractSVG()` strips markdown code block wrappers before returning SVG
+- [ ] `cleanSVG()` adds `xmlns` and `viewBox` attributes to malformed SVGs
+- [ ] Gemini generation failure falls back to LLM-based SVG generation
+
+### API Route: `/api/illustration/save` (POST) — Full Schema
+- [ ] Schema includes optional fields: `description`, `svgContent`, `canvasJson` (any), `mermaidSyntax`, `domain`, `sourceBackend`, `sourcePrompt`, `width` (number), `height` (number)
+- [ ] Mock success response includes `userId` field alongside echoed illustration data
+
+### API Route: `/api/illustration/generate` (POST) — Additional Details
+- [ ] `traceGeneration()` called for observability tracing with `tier`, `modelId`, `feature`, `userId`
+- [ ] Gemini vectorization `colorCount`: `16` for flat/schematic styles, `32` for detailed/photorealistic styles
+
+### Editor Store Details (`editorStore.ts`)
+- [ ] Editor store uses `subscribeWithSelector` middleware
+- [ ] Editor store devtools name is `finnish-editor-store`
+- [ ] `selectObjects(objectIds)` action replaces entire selection array
+- [ ] `addToSelection(objectId)` action appends to selection array
+- [ ] `removeFromSelection(objectId)` action filters from selection array
+
+### Behavior Corrections (Pass 3)
+1. **PDF page sizes**: The original doc (Section 14, line 631) lists "A4, Letter, A3, Custom" but `PDFOptions.tsx` provides only A4, Letter, and Custom — there is no A3 option.
+2. **PNG quality minimum**: The original doc (Section 14, line 618) says quality "0–100" but `PNGOptions.tsx` uses range `1–100` (minimum 1, not 0).
+3. **Error boundary button text**: Section 21 (line 860) says fallback UI includes a "Reset" button, but `ErrorBoundary.tsx` renders `Try Again` as the primary button text. A separate `Reload Page` button appears only in fullScreen mode.
+4. **Error boundary description**: The default description is generic: `An unexpected error occurred. Try resetting this section or reload the page.` — not illustration-specific as implied by line 1154.
+5. **Scientific text toolbar tabs**: The toolbar declares three tabs (`greek`, `scripts`, `math`) but `activeTab` is `useState('greek')` with no setter exposed. Only Greek letters and the x²/x₂ format buttons are visible; Superscripts (16), Subscripts (15), and Math Symbols (21) tabs are unreachable dead code.
+6. **LaTeX download capability**: Line 1370 states "Editor-mode LaTeX export does not generate or download a .tex file" — this is true for the main Export button flow, but `LaTeXOptions.tsx` renders its own `Download .tex` button that independently creates a Blob and downloads `diagram.tex`. Both paths coexist in the UI.
+7. **Quick Export vs Export Dialog divergence**: Quick Export and Export Dialog produce different toast messages for the same format (e.g., Quick Export PNG shows `Exported as PNG` while Export Dialog shows `PNG exported successfully!`). The doc does not distinguish between these two export paths.
+
+### Components Referenced But Not Rendered (Additions)
+- `ChartTool` exists in `src/components/illustration/tools/ChartTool.tsx` but is not imported by any rendered illustrate page.
+- `PlotlyChartPanel` exists in `src/components/illustration/tools/PlotlyChartPanel.tsx` but is not imported by any rendered illustrate page.
+- `conversationStore` exists in `src/stores/illustration/conversationStore.ts` (persistence key `finnish-conversation`) but is not imported by any rendered illustrate component.
+- `exportStore` exists in `src/stores/illustration/exportStore.ts` but is not imported by any rendered illustrate component.
+- `useLayerSync` hook exists in `src/hooks/illustration/useLayerSync.ts` but is not imported by any rendered illustrate component.
+- `useDiagramGenerator` hook exists in `src/hooks/illustration/useDiagramGenerator.ts` but is not imported by any rendered illustrate component.
+- `useToolSwitching` hook exists in `src/hooks/illustration/useToolSwitching.ts` but is not imported by any rendered illustrate component.
+- `/api/illustration/agent/chat` route exists in `src/app/api/illustration/agent/chat/route.ts` but is not called by any rendered illustrate component (AgentMode calls `/api/illustration/generate` instead).

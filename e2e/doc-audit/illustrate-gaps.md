@@ -1,11 +1,13 @@
 # Illustrate — Feature Doc Gaps
 
-**Original doc:** `ILLUSTRATE_FEATURES_TESTING.md`  
-**Original checkbox count:** 428  
-**Features found in UI:** 561  
-**Features found in source code:** 920  
-**Missing from doc:** 492  
-**Completeness of original doc:** 46.5%
+**Original doc:** `ILLUSTRATE_FEATURES_TESTING.md`
+**Original checkbox count:** 428
+**Features found in UI (Codex pass 1):** 561
+**Features found in source code (Codex pass 2):** 920
+**Features found in source code (Claude Code pass 3):** 1099
+**Pass 3 new discoveries:** 179
+**Missing from original doc:** 671
+**Completeness of original doc:** 38.9%
 
 ## Missing Features
 
@@ -73,3 +75,38 @@
 - Save/Save As do not update `finnish-recent-diagrams` or `finnish-diagram-*` localStorage entries in the current editor route.
 - `POST /api/illustration/save` is still a placeholder mock endpoint rather than a completed persistence feature.
 - Help > Keyboard Shortcuts does not open the richer modal component described by the original doc.
+
+## Pass 3 Discoveries Summary
+
+### New checks added: 179
+- MenuBar operation toast messages (offset path, clipping mask, compound path, flip): 18
+- Quick Export vs Export Dialog toast divergence: 9
+- Scientific Text Toolbar internal details (dead tabs, symbol counts, insertion behavior): 15
+- Error Boundary specifics (button text, ARIA, dev-only details, resetKeys): 12
+- Toolbar accessibility (group roles, aria-pressed, data attributes): 8
+- Right Panel tab accessibility (role=tab, aria-selected, aria-controls): 7
+- PointEditingOverlay visuals and interaction (colors, Alt drag, threshold, multi-select): 11
+- Canvas internals (data-testid, ConnectorManager, tool classes, lazy modules): 11
+- CanvasContext operation details: 3
+- EditorMode lazy loading and state details: 5
+- Status bar display details: 4
+- Export options panel descriptions and details: 20
+- Journal Figure Panel details (labels, scale bar, color conventions): 7
+- Icon grid virtualization: 6
+- Icon preview details (tinting, licenses, keywords): 5
+- Effects panel ranges (shadow, blur, blend modes): 4
+- Gradient editor details: 2
+- API route internals (icons GET, search, generate, save schema, generate tracing): 22
+- Editor store details: 5
+
+### Behavior corrections: 7
+1. PDF page sizes: No A3 option (only A4, Letter, Custom)
+2. PNG quality minimum: 1 not 0
+3. Error boundary button: "Try Again" not "Reset"
+4. Error boundary description is generic, not illustration-specific
+5. Scientific text toolbar tabs (scripts, math) are unreachable dead code
+6. LaTeX Download .tex button exists independently of main Export button
+7. Quick Export and Export Dialog have different toast messages
+
+### Additional unreferenced components/stores/hooks/routes: 8
+- ChartTool, PlotlyChartPanel, conversationStore, exportStore, useLayerSync, useDiagramGenerator, useToolSwitching, /api/illustration/agent/chat route
