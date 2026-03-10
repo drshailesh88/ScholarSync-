@@ -575,18 +575,18 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 559 | LaTeX | Inline AI Bar — Replace button — replaces selected text with AI suggestion in editor | /latex/[projectId] | ✅ PASS | Accepting the inline suggestion replaced `clearer academic wording` with `more precise scholarly phrasing` in the editor. | `c42b127` |
 | 560 | LaTeX | Inline AI Bar — Dismiss button — closes the bar without changes | /latex/[projectId] | ✅ PASS | The inline secondary action now dismisses the bar cleanly without mutating the editor content. | `c42b127` |
 | 561 | LaTeX | Inline AI Bar — Escape key — dismisses the bar | /latex/[projectId] | ✅ PASS | `Escape` now closes the inline AI surface instead of leaving it open in a reset state. | `c42b127` |
-| 562 | LaTeX | Slash Command Menu — Cite | /latex/[projectId] | ⬜ |  |  |
-| 563 | LaTeX | Slash Command Menu — Fix | /latex/[projectId] | ⬜ |  |  |
-| 564 | LaTeX | Slash Command Menu — Bibliography | /latex/[projectId] | ⬜ |  |  |
-| 565 | LaTeX | Slash Command Menu — Table | /latex/[projectId] | ⬜ |  |  |
-| 566 | LaTeX | Slash Command Menu — Figure | /latex/[projectId] | ⬜ |  |  |
-| 567 | LaTeX | Slash Command Menu — Equation | /latex/[projectId] | ⬜ |  |  |
-| 568 | LaTeX | Slash Command Menu — TikZ | /latex/[projectId] | ⬜ |  |  |
-| 569 | LaTeX | Slash Command Menu / Slash Menu UX — Appears when / typed at line start | /latex/[projectId] | ⬜ |  |  |
-| 570 | LaTeX | Slash Command Menu / Slash Menu UX — Dynamic filtering — updates as user types after / | /latex/[projectId] | ⬜ |  |  |
-| 571 | LaTeX | Slash Command Menu / Slash Menu UX — Positioned near cursor using screen coordinates | /latex/[projectId] | ⬜ |  |  |
-| 572 | LaTeX | Slash Command Menu / Slash Menu UX — Escape dismisses the menu | /latex/[projectId] | ⬜ |  |  |
-| 573 | LaTeX | Slash Command Menu / Slash Menu UX — After selecting command, the / text is removed from editor | /latex/[projectId] | ⬜ |  |  |
+| 562 | LaTeX | Slash Command Menu — Cite | /latex/[projectId] | ✅ PASS | Typing `/` at line start and selecting `/cite` switched the right rail to the Cite tab. |  |
+| 563 | LaTeX | Slash Command Menu — Fix | /latex/[projectId] | ✅ PASS | Selecting `/fix` issued the LaTeX compile request in the focused slash-menu probe. |  |
+| 564 | LaTeX | Slash Command Menu — Bibliography | /latex/[projectId] | ✅ PASS | Selecting `/bib` inserted both `\bibliography{references}` and `\bibliographystyle{plain}` into the source. |  |
+| 565 | LaTeX | Slash Command Menu — Table | /latex/[projectId] | ✅ PASS | Selecting `/table` opened the Draft tab for AI generation. |  |
+| 566 | LaTeX | Slash Command Menu — Figure | /latex/[projectId] | ✅ PASS | Selecting `/figure` opened the Draft tab for AI generation. |  |
+| 567 | LaTeX | Slash Command Menu — Equation | /latex/[projectId] | ✅ PASS | Selecting `/equation` opened the Draft tab for AI generation. |  |
+| 568 | LaTeX | Slash Command Menu — TikZ | /latex/[projectId] | ✅ PASS | Selecting `/tikz` opened the Draft tab for AI generation. |  |
+| 569 | LaTeX | Slash Command Menu / Slash Menu UX — Appears when / typed at line start | /latex/[projectId] | ✅ PASS | The command palette appeared immediately after `/` was typed on a fresh line. |  |
+| 570 | LaTeX | Slash Command Menu / Slash Menu UX — Dynamic filtering — updates as user types after / | /latex/[projectId] | ✅ PASS | Typing `cit` after `/` narrowed the menu down to the Cite command. |  |
+| 571 | LaTeX | Slash Command Menu / Slash Menu UX — Positioned near cursor using screen coordinates | /latex/[projectId] | ✅ PASS | The slash palette rendered just below the typed slash rather than at a fixed viewport position. |  |
+| 572 | LaTeX | Slash Command Menu / Slash Menu UX — Escape dismisses the menu | /latex/[projectId] | ✅ PASS | Pressing `Escape` closed the slash palette cleanly. |  |
+| 573 | LaTeX | Slash Command Menu / Slash Menu UX — After selecting command, the / text is removed from editor | /latex/[projectId] | ✅ PASS | After selecting commands like `/cite` and `/fix`, the literal slash command text was removed from the source. |  |
 | 574 | LaTeX | LaTeX Autocompletion — 100+ LaTeX commands — \section, \begin, \usepackage, etc. | /latex/[projectId] | ⬜ |  |  |
 | 575 | LaTeX | LaTeX Autocompletion — Environment completions — \begin{...}\end{...} pairs | /latex/[projectId] | ⬜ |  |  |
 | 576 | LaTeX | LaTeX Autocompletion — Citation key completions — reads from .bib file content | /latex/[projectId] | ⬜ |  |  |
