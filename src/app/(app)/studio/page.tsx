@@ -1232,6 +1232,7 @@ function StudioContent() {
         open={citationDialogOpen}
         onClose={closeCitationDialog}
         onInsert={handleInsertCitation}
+        documentId={studioDoc?.id ? String(studioDoc.id) : "default"}
       />
       <KeyboardShortcutsDialog
         isOpen={showKeyboardShortcuts}
