@@ -190,7 +190,11 @@ $(cat "$NEXT_SPEC")
   ) &
   HEARTBEAT_PID=$!
 
-  echo "$FULL_PROMPT" | CLAUDECODE= claude --dangerously-skip-permissions -p - > "$LOG_FILE" 2>&1 || true
+  echo "$FULL_PROMPT" | CLAUDECODE= claude \
+    --dangerously-skip-permissions \
+    --disallowed-tools "mcp__task-master-ai__expand_task,mcp__task-master-ai__get_task,mcp__task-master-ai__get_tasks,mcp__task-master-ai__next_task,mcp__task-master-ai__parse_prd,mcp__task-master-ai__set_task_status,mcp__task-master-ai__update_subtask,TaskCreate,TaskGet,TaskList,TaskUpdate,TaskStop" \
+    --disable-slash-commands \
+    -p - > "$LOG_FILE" 2>&1 || true
 
   # Stop heartbeat
   kill "$HEARTBEAT_PID" 2>/dev/null || true
