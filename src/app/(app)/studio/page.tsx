@@ -292,6 +292,7 @@ function StudioContent() {
   const [showExport, setShowExport] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
+  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
   const conversationIdRef = useRef<number | null>(null);
   const editorRef = useRef<Editor | null>(null);
   const citationSelectionRef = useRef<{ from: number; to: number } | null>(null);
@@ -379,6 +380,23 @@ function StudioContent() {
     getUserUsageStats().then((stats) => {
       if (stats) setUsageStats({ tokens_used: stats.tokens_used ?? 0, tokens_limit: stats.tokens_limit ?? 50000 });
     }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const pending = sessionStorage.getItem("scholarsync_pending_citation");
+    if (!pending) return;
+    sessionStorage.removeItem("scholarsync_pending_citation");
+    try {
+      const parsed = JSON.parse(pending) as { title?: string };
+      const title = parsed.title?.trim();
+      setPendingCitationNotice(
+        title
+          ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
+          : "Paper saved to your library. Open Citation Dialog to cite it."
+      );
+    } catch {
+      setPendingCitationNotice("Paper saved to your library. Open Citation Dialog to cite it.");
+    }
   }, []);
 
   useEffect(() => {
@@ -914,6 +932,13 @@ function StudioContent() {
 
       {/* Center Editor */}
       <main className="flex-1 flex flex-col overflow-hidden">
+        {pendingCitationNotice && (
+          <div className="px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 shrink-0">
+            <span className="text-sm text-blue-700 dark:text-blue-300">
+              {pendingCitationNotice}
+            </span>
+          </div>
+        )}
         {!isLearnMode && (
           <div className="px-4 py-2 bg-brand/5 border-b border-brand/10">
             <div className="flex items-center justify-between">

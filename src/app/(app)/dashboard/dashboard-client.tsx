@@ -263,7 +263,7 @@ export default function DashboardClient({
               return (
                 <div
                   key={project.id}
-                  onClick={() => router.push(`/studio/${project.id}`)}
+                  onClick={() => router.push(`/studio?projectId=${project.id}`)}
                   className={cn(
                     "group flex items-center justify-between p-5 hover:bg-surface-raised/50 transition-colors cursor-pointer",
                     idx < recentProjects.length - 1 &&

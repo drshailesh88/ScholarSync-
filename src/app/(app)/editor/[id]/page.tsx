@@ -80,25 +80,7 @@ export default function EditorPage() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
   const [contentKey, setContentKey] = useState(0);
-  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(
-    () => {
-      if (typeof window === "undefined") return null;
-
-      const pending = sessionStorage.getItem("scholarsync_pending_citation");
-      if (!pending) return null;
-
-      sessionStorage.removeItem("scholarsync_pending_citation");
-      try {
-        const parsed = JSON.parse(pending) as { title?: string };
-        const title = parsed.title?.trim();
-        return title
-          ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
-          : "Paper saved to your library. Open Citation Dialog to cite it.";
-      } catch {
-        return "Paper saved to your library. Open Citation Dialog to cite it.";
-      }
-    }
-  );
+  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
 
   const handleInsertCitation = useCallback((referenceIds: string[]) => {
     const editor = editorRef.current;
@@ -157,6 +139,24 @@ export default function EditorPage() {
     handleSetReferenceSidebarOpen,
     referenceSidebarOpen,
   ]);
+
+  useEffect(() => {
+    const pending = sessionStorage.getItem("scholarsync_pending_citation");
+    if (!pending) return;
+    sessionStorage.removeItem("scholarsync_pending_citation");
+    let notice: string;
+    try {
+      const parsed = JSON.parse(pending) as { title?: string };
+      const title = parsed.title?.trim();
+      notice = title
+        ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
+        : "Paper saved to your library. Open Citation Dialog to cite it.";
+    } catch {
+      notice = "Paper saved to your library. Open Citation Dialog to cite it.";
+    }
+    const timer = setTimeout(() => setPendingCitationNotice(notice), 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!pendingCitationNotice) return;
