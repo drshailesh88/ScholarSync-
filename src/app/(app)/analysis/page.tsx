@@ -186,9 +186,11 @@ export default function AnalysisPage() {
           flags: p.flags ?? [],
           suggestion: p.suggestion,
         })),
-        plagiarismIndicators: (data.plagiarism?.matches ?? []).map((m: { excerpt?: string; concern?: string; severity?: string }) => ({
+        plagiarismIndicators: (data.plagiarism?.matches ?? []).map((m: { excerpt?: string; source?: { title?: string; authors?: string[]; doi?: string; year?: number }; severity?: string }) => ({
           excerpt: m.excerpt ?? "",
-          concern: m.concern ?? "",
+          concern: m.source
+            ? `${m.source.title ?? "Unknown source"}${m.source.authors?.length ? " — " + m.source.authors.join(", ") : ""}${m.source.year ? " (" + m.source.year + ")" : ""}`
+            : "",
           severity: (m.severity as "low" | "medium" | "high") ?? "low",
         })),
         writingQuality: {
@@ -600,6 +602,9 @@ export default function AnalysisPage() {
                               </span>
                             </div>
                             <p className="text-xs text-ink-muted">{issue.reason}</p>
+                            {issue.suggestion && (
+                              <p className="text-xs text-ink-muted/70 mt-1 italic">{issue.suggestion}</p>
+                            )}
                           </div>
                         );
                       })}
