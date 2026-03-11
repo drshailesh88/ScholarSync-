@@ -10,7 +10,7 @@ Page: http://localhost:3001/analysis
 |------|-------|--------|------|------|---------|
 | spec-001.md | 35 | COMPLETE | 33 | 0 | 2 |
 | spec-002.md | 35 | COMPLETE | 33 | 0 | 2 |
-| spec-003.md | 35 | PENDING | 0 | 0 | 0 |
+| spec-003.md | 35 | COMPLETE | 35 | 0 | 0 |
 | spec-004.md | 35 | PENDING | 0 | 0 | 0 |
 | spec-005.md | 35 | PENDING | 0 | 0 | 0 |
 | spec-006.md | 35 | PENDING | 0 | 0 | 0 |
