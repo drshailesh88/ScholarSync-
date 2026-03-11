@@ -634,18 +634,18 @@ Out of scope for this run: `RESEARCH_FEATURES_TESTING.md` was read during setup 
 | 618 | LaTeX | Citation System / Citation Insertion Flow — Inserts \cite{authorYear} at cursor in editor | /latex/[projectId] | ✅ PASS | The cite workflow inserted `\\cite{...}` into `main.tex` at the current cursor position in the source editor. |  |
 | 619 | LaTeX | Citation System / Citation Insertion Flow — File tree updates to show new/updated .bib file | /latex/[projectId] | ✅ PASS | The file tree refreshed immediately to show the recreated `references.bib` file after citation insertion. |  |
 | 620 | LaTeX | Citation System / Fallback — If .bib file creation fails, BibTeX is copied to clipboard | /latex/[projectId] | ⚠️ PARTIAL | Normal bibliography creation succeeded; I did not force the server-action create failure path needed to prove the clipboard fallback branch live. |  |
-| 621 | LaTeX | Export / Download PDF — Downloads the compiled PDF blob | /latex/[projectId] | ⬜ |  |  |
-| 622 | LaTeX | Export / Download PDF — Filename: {projectTitle}.pdf (sanitized) | /latex/[projectId] | ⬜ |  |  |
-| 623 | LaTeX | Export / Download PDF — Requires successful compilation first | /latex/[projectId] | ⬜ |  |  |
-| 624 | LaTeX | Export / Download PDF — Button disabled if no compiled PDF available | /latex/[projectId] | ⬜ |  |  |
-| 625 | LaTeX | Export / Download .tex — Downloads the current editor content as .tex file | /latex/[projectId] | ⬜ |  |  |
-| 626 | LaTeX | Export / Download .tex — Filename: main.tex | /latex/[projectId] | ⬜ |  |  |
-| 627 | LaTeX | Export / Download .tex — MIME type: text/x-tex | /latex/[projectId] | ⬜ |  |  |
-| 628 | LaTeX | Export / Download .tex — Always available (doesn't require compilation) | /latex/[projectId] | ⬜ |  |  |
-| 629 | LaTeX | Export / Download as .zip — Bundles all project files (.tex, .bib, images, etc.) into a ZIP | /latex/[projectId] | ⬜ |  |  |
-| 630 | LaTeX | Export / Download as .zip — Uses JSZip library (dynamically imported) | /latex/[projectId] | ⬜ |  |  |
-| 631 | LaTeX | Export / Download as .zip — Filename: {projectTitle}.zip (sanitized) | /latex/[projectId] | ⬜ |  |  |
-| 632 | LaTeX | Export / Download as .zip — Preserves file paths from project structure | /latex/[projectId] | ⬜ |  |  |
+| 621 | LaTeX | Export / Download PDF — Downloads the compiled PDF blob | /latex/[projectId] | ⚠️ PARTIAL | The live compile attempt returned the built-in `LaTeX compiler service is currently unavailable` message, so no compiled PDF blob was available to download on this server. |  |
+| 622 | LaTeX | Export / Download PDF — Filename: {projectTitle}.pdf (sanitized) | /latex/[projectId] | ⚠️ PARTIAL | PDF filename verification is blocked behind the same unavailable compile service, so no successful PDF download occurred in this environment. |  |
+| 623 | LaTeX | Export / Download PDF — Requires successful compilation first | /latex/[projectId] | ⚠️ PARTIAL | The export flow correctly remained blocked until compilation succeeds, but the current compile service outage prevented a green end-to-end PDF export. |  |
+| 624 | LaTeX | Export / Download PDF — Button disabled if no compiled PDF available | /latex/[projectId] | ✅ PASS | The PDF menu item is now disabled before compilation, matching the no-op export guard. | `55cde41` |
+| 625 | LaTeX | Export / Download .tex — Downloads the current editor content as .tex file | /latex/[projectId] | ✅ PASS | Exporting `.tex` produced a real browser download from the current source document content. |  |
+| 626 | LaTeX | Export / Download .tex — Filename: main.tex | /latex/[projectId] | ✅ PASS | The `.tex` export download used the expected filename `main.tex`. |  |
+| 627 | LaTeX | Export / Download .tex — MIME type: text/x-tex | /latex/[projectId] | ✅ PASS | The export flow created the `.tex` blob with MIME type `text/x-tex` before download. |  |
+| 628 | LaTeX | Export / Download .tex — Always available (doesn't require compilation) | /latex/[projectId] | ✅ PASS | `.tex` export worked before any compilation step, confirming it remains available independently of PDF compile status. |  |
+| 629 | LaTeX | Export / Download as .zip — Bundles all project files (.tex, .bib, images, etc.) into a ZIP | /latex/[projectId] | ✅ PASS | The ZIP export downloaded a full project archive containing the LaTeX project files. |  |
+| 630 | LaTeX | Export / Download as .zip — Uses JSZip library (dynamically imported) | /latex/[projectId] | ✅ PASS | The ZIP export path executed successfully through the JSZip-backed client bundling flow. |  |
+| 631 | LaTeX | Export / Download as .zip — Filename: {projectTitle}.zip (sanitized) | /latex/[projectId] | ✅ PASS | The downloaded archive used the sanitized project-title filename format. |  |
+| 632 | LaTeX | Export / Download as .zip — Preserves file paths from project structure | /latex/[projectId] | ✅ PASS | Inspecting the downloaded ZIP confirmed it preserved project file paths such as `main.tex` and `references.bib`. |  |
 | 633 | LaTeX | Save System / Auto-save — Debounced — saves 1500ms after last keystroke | /latex/[projectId] | ⬜ |  |  |
 | 634 | LaTeX | Save System / Auto-save — Per-file tracking — saves the currently active file | /latex/[projectId] | ⬜ |  |  |
 | 635 | LaTeX | Save System / Auto-save — File tree stays in sync with editor content | /latex/[projectId] | ⬜ |  |  |
