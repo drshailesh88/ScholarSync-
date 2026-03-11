@@ -18,6 +18,7 @@ import { SlashCommandMenu, type SlashCommand } from "./slash-command-menu";
 import { YjsCollaborationProvider } from "./collaboration-provider";
 import { CommentPanel } from "./comment-panel";
 import { TrackChangesPanel } from "./track-changes-panel";
+import { VersionHistoryPanel } from "./version-history-panel";
 import { acceptTrackChange, computeDiff, rejectTrackChange } from "./track-changes-extension";
 import {
   SidebarSimple,
@@ -83,6 +84,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
 
   // Mobile preview toggle (show preview or editor)
   const [mobileShowPreview, setMobileShowPreview] = useState(false);
+  const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
 
   // Ref to the CodeMirror editor (exposed via forwardRef)
   const editorRef = useRef<SourceEditorHandle>(null);
@@ -560,6 +562,24 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
     URL.revokeObjectURL(url);
   }, [project.title, files]);
 
+  const flushActiveFile = useCallback(async () => {
+    const fileId = useLatexEditorStore.getState().activeFileId;
+    const content = useLatexEditorStore.getState().documentContent;
+    if (!fileId) return;
+    setSaveState("saving");
+    try {
+      await updateLatexFile(fileId, { content });
+      setSaveState("saved");
+      setLastSavedAt(new Date());
+      setFiles((prev) =>
+        prev.map((file) => (file.id === fileId ? { ...file, content } : file))
+      );
+    } catch {
+      setSaveState("error");
+      throw new Error("Failed to save current file");
+    }
+  }, [setLastSavedAt, setSaveState]);
+
   // Handle inline AI apply — replace the selected text in the editor
   const handleInlineAiApply = useCallback((newText: string) => {
     const view = editorRef.current?.getView();
@@ -729,6 +749,13 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         onExportPdf={handleExportPdf}
         onExportTex={handleExportTex}
         onExportZip={handleExportZip}
+        onToggleVersionHistory={() => {
+          setVersionHistoryOpen((open) => !open);
+          if (agentPanelOpen) {
+            useLatexEditorStore.getState().setAgentPanelOpen(false);
+          }
+        }}
+        versionHistoryOpen={versionHistoryOpen}
       />
 
       {/* Mobile toggle bar - show editor/preview switcher */}
@@ -1012,7 +1039,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
         </div>
 
         {/* Agent Panel Toggle Tab (right edge) - hidden on mobile/tablet */}
-        {!isMobile && !isTablet && (
+        {!isMobile && !isTablet && !versionHistoryOpen && (
           <button
             onClick={toggleAgentPanel}
             className={cn(
@@ -1026,6 +1053,35 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
           >
             <ChatCircle size={14} />
           </button>
+        )}
+
+        {/* Version History Panel */}
+        {versionHistoryOpen && (
+          <aside
+            className={cn(
+              "shrink-0 border-l border-border-subtle bg-surface/50 overflow-hidden flex flex-col",
+              isMobile ? "fixed inset-0 z-50 w-full h-full" : "w-80"
+            )}
+          >
+            <VersionHistoryPanel
+              fileId={activeFileId ?? mainFile?.id ?? ""}
+              onBeforeSave={flushActiveFile}
+              onRestore={(content) => {
+                const fileId = useLatexEditorStore.getState().activeFileId;
+                setDocumentContent(content);
+                setShadowDocument(content);
+                setLastSavedAt(new Date());
+                setSaveState("saved");
+                if (fileId) {
+                  setFiles((prev) =>
+                    prev.map((file) => (file.id === fileId ? { ...file, content } : file))
+                  );
+                }
+                editorRef.current?.setContent(content);
+              }}
+              onClose={() => setVersionHistoryOpen(false)}
+            />
+          </aside>
         )}
 
         {/* Agent Panel - Mobile Overlay / Desktop Sidebar */}
