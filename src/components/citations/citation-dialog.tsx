@@ -409,7 +409,6 @@ export function CitationDialog({
     };
 
     addReference(ref);
-    setSelectedIds((prev) => [...prev, ref.id]);
     setManualForm({
       type: "article",
       title: "",
@@ -423,7 +422,8 @@ export function CitationDialog({
       pmid: "",
       url: "",
     });
-    setActiveTab("search");
+    onInsert([ref.id]);
+    onClose();
   };
 
   // Insert selected citations
