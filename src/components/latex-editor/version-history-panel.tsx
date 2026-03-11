@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   ClockCounterClockwise,
   Trash,
@@ -16,17 +17,20 @@ interface Version {
 
 interface VersionHistoryPanelProps {
   fileId: string;
+  onBeforeSave?: () => Promise<void> | void;
   onRestore: (content: string) => void;
   onClose?: () => void;
 }
 
 export function VersionHistoryPanel({
   fileId,
+  onBeforeSave,
   onRestore,
   onClose,
 }: VersionHistoryPanelProps) {
   const [versions, setVersions] = useState<Version[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [restoring, setRestoring] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -112,6 +116,25 @@ export function VersionHistoryPanel({
     });
   }
 
+  async function handleSaveVersion() {
+    setSaving(true);
+    setError(null);
+    try {
+      await onBeforeSave?.();
+      const res = await fetch("/api/latex/versions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileId }),
+      });
+      if (!res.ok) throw new Error("Failed to save version");
+      await loadVersions();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to save version");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -142,6 +165,23 @@ export function VersionHistoryPanel({
           {error}
         </div>
       )}
+
+      <div className="border-b border-gray-200 dark:border-gray-700 p-4">
+        <Button
+          onClick={() => void handleSaveVersion()}
+          disabled={saving || restoring !== null || deleting !== null}
+          className="w-full"
+        >
+          {saving ? (
+            <>
+              <Spinner className="mr-2 h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            "Save Current Version"
+          )}
+        </Button>
+      </div>
 
       <div className="flex-1 overflow-y-auto">
         {versions.length === 0 ? (
