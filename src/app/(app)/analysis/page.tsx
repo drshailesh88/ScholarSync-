@@ -89,7 +89,11 @@ export default function AnalysisPage() {
           setSelectedProjectId(p[0].id);
         }
       })
-      .catch(() => {});
+      .catch(() => {
+        setError("Could not load projects. Switching to paste mode.");
+        setSourceMode("paste");
+        setDocLoading(false);
+      });
   }, [selectedProjectId]);
 
   // Load active document when project changes
