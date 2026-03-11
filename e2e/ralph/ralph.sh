@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ── Ralph Loop — Test & Fix Runner ──────────────────────────────
+# ── Ralph Loop — Test & Fix Runner (v2: per-module branches) ────
 #
 # Usage:
-#   ./e2e/ralph/ralph.sh                    # Run all modules
+#   ./e2e/ralph/ralph.sh                    # Run all Claude-owned modules
 #   MODULE=dashboard ./e2e/ralph/ralph.sh   # Run specific module
 #   MAX_ITER=100 ./e2e/ralph/ralph.sh       # Custom iteration limit
 #
-# The loop runs Claude Code with RALPH_PROMPT.md, one spec per iteration.
-# Progress is tracked in spec files and git commits.
+# Branch model:
+#   test/queue-v2            → specs and manifests (no app code)
+#   test/claude-{module}-v2  → test results + code fixes per module
+#   test/integration-v2      → human-reviewed merges only
 # ─────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -23,13 +25,36 @@ MAX_ITER="${MAX_ITER:-200}"
 MODULE="${MODULE:-}"
 TEST_PORT="${TEST_PORT:-3001}"
 COOLDOWN="${COOLDOWN:-5}"
+QUEUE_BRANCH="test/queue-v2"
 
-# Modules owned by Codex — Ralph skips these to avoid conflicts
-CODEX_MODULES="editor latex notebook slides slides-ai"
+# Claude-owned modules (from OWNERSHIP.md)
+CLAUDE_MODULES="analysis compliance dashboard deep-research feeds illustrate library onboarding poster presentation projects research settings studio systematic-review"
 
 # State
 ITERATION=0
 START_TIME=$(date +%s)
+CURRENT_MODULE=""
+
+# ── Helper: switch to module branch ──────────────────────────────
+
+switch_to_module_branch() {
+  local mod="$1"
+  local branch="test/claude-${mod}-v2"
+
+  if ! git rev-parse --verify "$branch" >/dev/null 2>&1; then
+    echo "  │ Creating branch: $branch"
+    git checkout -b "$branch" "$QUEUE_BRANCH" --quiet
+  else
+    git checkout "$branch" --quiet
+  fi
+  CURRENT_MODULE="$mod"
+}
+
+# ── Helper: extract module name from spec path ───────────────────
+
+module_from_spec() {
+  echo "$1" | sed 's|.*/e2e/specs/\([^/]*\)/.*|\1|'
+}
 
 # ── Setup ───────────────────────────────────────────────────────
 
@@ -37,12 +62,12 @@ mkdir -p "$LOG_DIR"
 
 echo ""
 echo "  ╔══════════════════════════════════════════════════╗"
-echo "  ║           RALPH LOOP — Test & Fix                ║"
+echo "  ║       RALPH LOOP v2 — Per-Module Branches        ║"
 echo "  ╠══════════════════════════════════════════════════╣"
 echo "  ║  Max iterations: $(printf '%-28s' "$MAX_ITER")║"
-echo "  ║  Module filter:  $(printf '%-28s' "${MODULE:-all}")║"
+echo "  ║  Module filter:  $(printf '%-28s' "${MODULE:-all claude}")║"
 echo "  ║  Test port:      $(printf '%-28s' "$TEST_PORT")║"
-echo "  ║  Prompt:         $(printf '%-28s' "RALPH_PROMPT.md")║"
+echo "  ║  Queue branch:   $(printf '%-28s' "$QUEUE_BRANCH")║"
 echo "  ╚══════════════════════════════════════════════════╝"
 echo ""
 
@@ -53,11 +78,26 @@ if [ ! -f "$PROMPT_FILE" ]; then
   exit 1
 fi
 
-# Check if any PENDING specs exist
-PENDING_COUNT=$(grep -rl "STATUS: PENDING" "$PROJECT_DIR/e2e/specs/"/*/spec-*.md 2>/dev/null | wc -l | tr -d ' ')
+# Ensure we're on the queue branch to start
+git checkout "$QUEUE_BRANCH" --quiet 2>/dev/null || {
+  echo "ERROR: Queue branch $QUEUE_BRANCH does not exist."
+  echo "Create it first with the queue infrastructure."
+  exit 1
+}
+
+# Count pending specs (Claude-owned only)
+if [ -n "$MODULE" ]; then
+  PENDING_COUNT=$(grep -rl "STATUS: PENDING" "$PROJECT_DIR/e2e/specs/$MODULE"/spec-*.md 2>/dev/null | wc -l | tr -d ' ')
+else
+  PENDING_COUNT=0
+  for cm in $CLAUDE_MODULES; do
+    cnt=$(grep -rl "STATUS: PENDING" "$PROJECT_DIR/e2e/specs/$cm"/spec-*.md 2>/dev/null | wc -l | tr -d ' ')
+    PENDING_COUNT=$((PENDING_COUNT + cnt))
+  done
+fi
+
 if [ "$PENDING_COUNT" -eq 0 ]; then
-  echo "  No PENDING specs found. Run build-specs-from-docs.cjs first."
-  echo "  Or all specs are already complete!"
+  echo "  No PENDING specs found for Claude-owned modules."
   exit 0
 fi
 echo "  PENDING specs: $PENDING_COUNT"
@@ -67,8 +107,7 @@ echo ""
 
 if ! curl -s -o /dev/null -w "%{http_code}" "http://localhost:$TEST_PORT" | grep -q "200\|302\|301"; then
   echo "  WARNING: Dev server on port $TEST_PORT not responding."
-  echo "  Start it with: TEST_PORT=$TEST_PORT npm run dev -- -p $TEST_PORT"
-  echo "  Continuing anyway (server may start later)..."
+  echo "  Continuing anyway..."
   echo ""
 fi
 
@@ -84,42 +123,40 @@ while [ "$ITERATION" -lt "$MAX_ITER" ]; do
   echo "  │ $(date '+%Y-%m-%d %H:%M:%S')"
   echo "  │"
 
-  # Find next spec to test (skip Codex-owned modules unless MODULE is set)
-  SKIP_FILTER="grep -v"
-  if [ -n "$MODULE" ]; then
-    SKIP_FILTER="cat"  # no filtering when module is explicit
-  else
-    # Build filter to exclude Codex modules
-    for cm in $CODEX_MODULES; do
-      SKIP_FILTER="$SKIP_FILTER -e /specs/$cm/"
-    done
-  fi
+  # Find next pending spec across Claude-owned modules
+  NEXT_SPEC=""
+  NEXT_MODULE=""
 
   if [ -n "$MODULE" ]; then
     NEXT_SPEC=$(grep -rl "STATUS: PENDING" "$PROJECT_DIR/e2e/specs/$MODULE"/spec-*.md 2>/dev/null | sort | head -1 || true)
+    NEXT_MODULE="$MODULE"
   else
-    NEXT_SPEC=$(grep -rl "STATUS: PENDING" "$PROJECT_DIR/e2e/specs/"/*/spec-*.md 2>/dev/null | eval "$SKIP_FILTER" | sort | head -1 || true)
+    for cm in $CLAUDE_MODULES; do
+      NEXT_SPEC=$(grep -rl "STATUS: PENDING" "$PROJECT_DIR/e2e/specs/$cm"/spec-*.md 2>/dev/null | sort | head -1 || true)
+      if [ -n "$NEXT_SPEC" ]; then
+        NEXT_MODULE="$cm"
+        break
+      fi
+    done
   fi
 
   if [ -z "$NEXT_SPEC" ]; then
-    echo "  │ No more PENDING specs. Checking for failures..."
-    if [ -n "$MODULE" ]; then
-      NEXT_SPEC=$(grep -rl "FAIL:" "$PROJECT_DIR/e2e/specs/$MODULE"/spec-*.md 2>/dev/null | sort | head -1 || true)
-    else
-      NEXT_SPEC=$(grep -rl "FAIL:" "$PROJECT_DIR/e2e/specs/"/*/spec-*.md 2>/dev/null | eval "$SKIP_FILTER" | sort | head -1 || true)
-    fi
-
-    if [ -z "$NEXT_SPEC" ]; then
-      echo "  │ ALL SPECS COMPLETE (Ralph's modules)!"
-      echo "  └─────────────────────────────────────────────────"
-      break
-    fi
+    echo "  │ ALL CLAUDE SPECS COMPLETE!"
+    echo "  └─────────────────────────────────────────────────"
+    break
   fi
 
   SPEC_REL=$(echo "$NEXT_SPEC" | sed "s|$PROJECT_DIR/||")
-  echo "  │ Spec: $SPEC_REL"
+  echo "  │ Module: $NEXT_MODULE"
+  echo "  │ Spec:   $SPEC_REL"
 
-  # Build the full prompt with spec context
+  # Switch to the module's branch
+  if [ "$CURRENT_MODULE" != "$NEXT_MODULE" ]; then
+    echo "  │ Branch: test/claude-${NEXT_MODULE}-v2"
+    switch_to_module_branch "$NEXT_MODULE"
+  fi
+
+  # Build the full prompt with spec context and branch awareness
   FULL_PROMPT="$(cat "$PROMPT_FILE")
 
 ---
@@ -127,6 +164,12 @@ while [ "$ITERATION" -lt "$MAX_ITER" ]; do
 ## CURRENT SPEC FILE
 
 File: $SPEC_REL
+Module: $NEXT_MODULE
+Branch: test/claude-${NEXT_MODULE}-v2
+
+IMPORTANT: You are on branch test/claude-${NEXT_MODULE}-v2.
+Only modify files related to the ${NEXT_MODULE} module.
+Commit all changes to THIS branch.
 
 $(cat "$NEXT_SPEC")
 "
@@ -138,7 +181,6 @@ $(cat "$NEXT_SPEC")
   (
     while true; do
       sleep 30
-      # Count checked items in the spec file
       CHECKED=$(grep -c '^\- \[x\]\|^\- \[!\]\|^\- \[b\]\|^\- \[s\]' "$NEXT_SPEC" 2>/dev/null || echo 0)
       TOTAL_ITEMS=$(grep -c '^\- \[' "$NEXT_SPEC" 2>/dev/null || echo 0)
       LOG_SIZE=$(wc -c < "$LOG_FILE" 2>/dev/null | tr -d ' ')
@@ -157,7 +199,7 @@ $(cat "$NEXT_SPEC")
   ITER_END=$(date +%s)
   ITER_DURATION=$((ITER_END - ITER_START))
 
-  # Show results from the completed spec
+  # Show results
   PASS_COUNT=$(grep -c '^\- \[x\]' "$NEXT_SPEC" 2>/dev/null || echo 0)
   FAIL_COUNT=$(grep -c '^\- \[!\]' "$NEXT_SPEC" 2>/dev/null || echo 0)
   BLOCK_COUNT=$(grep -c '^\- \[b\]' "$NEXT_SPEC" 2>/dev/null || echo 0)
@@ -182,6 +224,9 @@ done
 
 # ── Final report ───────────────────────────────────────────────
 
+# Switch back to queue branch
+git checkout "$QUEUE_BRANCH" --quiet 2>/dev/null || true
+
 END_TIME=$(date +%s)
 TOTAL_DURATION=$((END_TIME - START_TIME))
 TOTAL_MINUTES=$((TOTAL_DURATION / 60))
@@ -195,7 +240,6 @@ echo "  ║  Total time:     $(printf '%-28s' "${TOTAL_MINUTES}m")║"
 echo "  ╚══════════════════════════════════════════════════╝"
 echo ""
 
-# Run final progress report
 if [ -f "$PROGRESS_SCRIPT" ]; then
   bash "$PROGRESS_SCRIPT"
 fi
