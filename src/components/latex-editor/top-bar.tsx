@@ -45,6 +45,7 @@ export function TopBar({
   const saveState = useLatexEditorStore((s) => s.saveState);
   const lastSavedAt = useLatexEditorStore((s) => s.lastSavedAt);
   const compileStatus = useLatexEditorStore((s) => s.compileStatus);
+  const compiledPdfUrl = useLatexEditorStore((s) => s.compiledPdfUrl);
   const viewMode = useLatexEditorStore((s) => s.viewMode);
   const setViewMode = useLatexEditorStore((s) => s.setViewMode);
   const previewMode = useLatexEditorStore((s) => s.previewMode);
@@ -282,7 +283,8 @@ export function TopBar({
             <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50 py-1">
               <button
                 onClick={() => { onExportPdf?.(); setShowExport(false); }}
-                className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                disabled={!compiledPdfUrl}
+                className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
               >
                 <FilePdf size={14} className="text-red-400" />
                 Download PDF
