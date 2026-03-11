@@ -175,7 +175,30 @@ export default function AnalysisPage() {
       }
 
       const data = await res.json();
-      setResult(data);
+      // Map API response shape to component's AnalysisResult shape
+      const mapped: AnalysisResult = {
+        humanScore: data.aiDetection?.humanScore ?? 0,
+        aiScore: data.aiDetection?.aiScore ?? 0,
+        overallRisk: data.aiDetection?.overallRisk ?? "low",
+        paragraphAnalysis: (data.aiDetection?.paragraphs ?? []).map((p: { paragraphIndex: number; humanProbability: number; flags: string[]; suggestion?: string }) => ({
+          paragraphIndex: p.paragraphIndex,
+          humanProbability: p.humanProbability,
+          flags: p.flags ?? [],
+          suggestion: p.suggestion,
+        })),
+        plagiarismIndicators: (data.plagiarism?.matches ?? []).map((m: { excerpt?: string; concern?: string; severity?: string }) => ({
+          excerpt: m.excerpt ?? "",
+          concern: m.concern ?? "",
+          severity: (m.severity as "low" | "medium" | "high") ?? "low",
+        })),
+        writingQuality: {
+          passiveVoiceCount: data.writingQuality?.passiveVoiceCount ?? 0,
+          averageSentenceLength: data.writingQuality?.averageSentenceLength ?? 0,
+          readabilityGrade: data.writingQuality?.readabilityGrade ?? 0,
+          suggestions: data.writingQuality?.suggestions ?? [],
+        },
+      };
+      setResult(mapped);
     } catch {
       setError("Failed to connect. Check your API key.");
     } finally {
