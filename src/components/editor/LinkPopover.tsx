@@ -17,6 +17,9 @@ interface LinkPopoverProps {
 export function LinkPopover({ editor }: LinkPopoverProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [url, setUrl] = useState("");
+  const [linkRange, setLinkRange] = useState<{ from: number; to: number } | null>(
+    null
+  );
   const [popoverPos, setPopoverPos] = useState<{
     x: number;
     y: number;
@@ -33,22 +36,26 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
         if (linkEl && editor.view.dom.contains(linkEl)) {
           e.preventDefault();
           const rect = linkEl.getBoundingClientRect();
+          const from = editor.view.posAtDOM(linkEl, 0);
+          const to = from + (linkEl.textContent?.length ?? 0);
           setPopoverPos({
             x: rect.left + rect.width / 2,
             y: rect.top - 8,
           });
           setUrl(linkEl.getAttribute("href") || "");
+          setLinkRange({ from, to });
           setIsEditing(false);
       } else if (
         popoverRef.current &&
         !popoverRef.current.contains(target)
       ) {
         setPopoverPos(null);
+        setLinkRange(null);
       }
     };
 
-    document.addEventListener("click", handleClick);
-    return () => document.removeEventListener("click", handleClick);
+    document.addEventListener("click", handleClick, true);
+    return () => document.removeEventListener("click", handleClick, true);
   }, [editor]);
 
   useEffect(() => {
@@ -60,20 +67,24 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
 
   const updateLink = useCallback(() => {
     if (url.trim()) {
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url.trim() })
-        .run();
+      let chain = editor.chain().focus();
+      if (linkRange) {
+        chain = chain.setTextSelection(linkRange);
+      }
+      chain.extendMarkRange("link").setLink({ href: url.trim() }).run();
     }
     setIsEditing(false);
-  }, [editor, url]);
+  }, [editor, linkRange, url]);
 
   const removeLink = useCallback(() => {
-    editor.chain().focus().extendMarkRange("link").unsetLink().run();
+    let chain = editor.chain().focus();
+    if (linkRange) {
+      chain = chain.setTextSelection(linkRange);
+    }
+    chain.extendMarkRange("link").unsetLink().run();
     setPopoverPos(null);
-  }, [editor]);
+    setLinkRange(null);
+  }, [editor, linkRange]);
 
   const openLink = useCallback(() => {
     if (url) {
@@ -107,12 +118,14 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
             className="px-2 py-1 text-xs bg-surface-raised border border-border rounded-md w-56 text-ink focus:outline-none focus:ring-1 focus:ring-brand"
           />
           <button
+            onMouseDown={(e) => e.preventDefault()}
             onClick={updateLink}
             className="p-1 rounded-md text-emerald-500 hover:bg-surface-raised transition-colors"
           >
             <Check size={14} />
           </button>
           <button
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => setIsEditing(false)}
             className="p-1 rounded-md text-ink-muted hover:bg-surface-raised transition-colors"
           >
@@ -125,6 +138,7 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
             {url}
           </span>
           <button
+            onMouseDown={(e) => e.preventDefault()}
             onClick={() => setIsEditing(true)}
             className="p-1.5 rounded-md text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
             title="Edit link"
@@ -132,6 +146,7 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
             <Pencil size={13} />
           </button>
           <button
+            onMouseDown={(e) => e.preventDefault()}
             onClick={openLink}
             className="p-1.5 rounded-md text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
             title="Open in new tab"
@@ -139,6 +154,7 @@ export function LinkPopover({ editor }: LinkPopoverProps) {
             <ArrowSquareOut size={13} />
           </button>
           <button
+            onMouseDown={(e) => e.preventDefault()}
             onClick={removeLink}
             className="p-1.5 rounded-md text-ink-muted hover:text-red-500 hover:bg-surface-raised transition-colors"
             title="Remove link"

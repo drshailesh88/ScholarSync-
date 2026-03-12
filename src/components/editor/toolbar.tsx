@@ -16,10 +16,6 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-interface ToolbarProps {
-  editor: Editor | null;
-}
-
 interface ToolbarButton {
   icon: typeof TextB;
   label: string;
@@ -78,7 +74,8 @@ const buttons: ToolbarButton[] = [
   },
 ];
 
-interface ToolbarExtendedProps extends ToolbarProps {
+interface ToolbarProps {
+  editor: Editor | null;
   onOpenCitationDialog?: () => void;
   onToggleReferenceSidebar?: () => void;
   referenceCount?: number;
@@ -89,7 +86,7 @@ export function Toolbar({
   onOpenCitationDialog,
   onToggleReferenceSidebar,
   referenceCount,
-}: ToolbarExtendedProps) {
+}: ToolbarProps) {
   if (!editor) return null;
 
   const preserveSelection = (event: MouseEvent<HTMLButtonElement>) => {

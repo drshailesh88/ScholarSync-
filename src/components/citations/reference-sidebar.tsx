@@ -26,6 +26,43 @@ interface ReferenceSidebarProps {
 
 type SortMode = "number" | "author" | "year" | "added";
 
+function sortReferences(
+  refs: Reference[],
+  sortMode: SortMode,
+  referenceNumberMap: Map<string, number>
+) {
+  const sorted = [...refs];
+
+  switch (sortMode) {
+    case "number":
+      sorted.sort(
+        (a, b) =>
+          (referenceNumberMap.get(a.id) || Number.MAX_SAFE_INTEGER) -
+          (referenceNumberMap.get(b.id) || Number.MAX_SAFE_INTEGER)
+      );
+      break;
+    case "author":
+      sorted.sort((a, b) => {
+        const aName = a.authors[0]?.family || "zzz";
+        const bName = b.authors[0]?.family || "zzz";
+        return aName.localeCompare(bName);
+      });
+      break;
+    case "year":
+      sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
+      break;
+    case "added":
+      sorted.sort(
+        (a, b) =>
+          new Date(b.dateAdded).getTime() -
+          new Date(a.dateAdded).getTime()
+      );
+      break;
+  }
+
+  return sorted;
+}
+
 export function ReferenceSidebar({
   open,
   onClose,
@@ -82,37 +119,12 @@ export function ReferenceSidebar({
 
   // Sort references
   const sortedCitedRefs = useMemo(() => {
-    const sorted = [...citedRefs];
-
-    switch (sortMode) {
-      case "number":
-        sorted.sort(
-          (a, b) =>
-            (referenceNumberMap.get(a.id) || 0) -
-            (referenceNumberMap.get(b.id) || 0)
-        );
-        break;
-      case "author":
-        sorted.sort((a, b) => {
-          const aName = a.authors[0]?.family || "zzz";
-          const bName = b.authors[0]?.family || "zzz";
-          return aName.localeCompare(bName);
-        });
-        break;
-      case "year":
-        sorted.sort((a, b) => (b.year || 0) - (a.year || 0));
-        break;
-      case "added":
-        sorted.sort(
-          (a, b) =>
-            new Date(b.dateAdded).getTime() -
-            new Date(a.dateAdded).getTime()
-        );
-        break;
-    }
-
-    return sorted;
+    return sortReferences(citedRefs, sortMode, referenceNumberMap);
   }, [citedRefs, sortMode, referenceNumberMap]);
+
+  const sortedUncitedRefs = useMemo(() => {
+    return sortReferences(uncitedRefs, sortMode, referenceNumberMap);
+  }, [uncitedRefs, sortMode, referenceNumberMap]);
 
   // Filter
   const filterFn = (ref: Reference): boolean => {
@@ -131,7 +143,7 @@ export function ReferenceSidebar({
   };
 
   const filteredCited = sortedCitedRefs.filter(filterFn);
-  const filteredUncited = uncitedRefs.filter(filterFn);
+  const filteredUncited = sortedUncitedRefs.filter(filterFn);
 
   const handleDelete = (refId: string) => {
     if (

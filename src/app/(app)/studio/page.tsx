@@ -10,20 +10,20 @@ import {
   PaperPlaneRight,
   GlobeHemisphereWest,
   Books,
-  MagnifyingGlass,
   Sparkle,
   DownloadSimple,
   FileDoc,
-  Check,
   CircleNotch,
-  CloudCheck,
   Warning,
-  CaretDown,
   Question,
+  CaretDown,
+  MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { ProjectSelector } from "@/components/studio/ProjectSelector";
+import { SaveIndicator } from "@/components/studio/SaveIndicator";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { CommentSidebar } from "@/components/editor/CommentSidebar";
@@ -36,7 +36,13 @@ import { ResearchSidebar } from "@/components/research/ResearchSidebar";
 import { useResearchStore } from "@/stores/research-store";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
-import { useStudioDocument, type SaveStatus } from "@/hooks/use-studio-document";
+import { getProjectPapersForCitation } from "@/lib/actions/papers";
+import { useStudioDocument } from "@/hooks/use-studio-document";
+import { paperToReference } from "@/lib/citations/paper-to-reference";
+import {
+  cloneReference,
+  extractReferencesFromContent,
+} from "@/lib/citations/document-reference-hydration";
 import { countSectionWords, getDocumentWordCount } from "@/lib/editor/word-counter";
 import type { Reference } from "@/types/citation";
 import {
@@ -146,133 +152,6 @@ export default function StudioPage() {
 }
 
 // ---------------------------------------------------------------------------
-// Save Status Indicator
-// ---------------------------------------------------------------------------
-function SaveIndicator({
-  status,
-  lastSavedAt,
-}: {
-  status: SaveStatus;
-  lastSavedAt: Date | null;
-}) {
-  switch (status) {
-    case "saving":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-ink-muted">
-          <CircleNotch size={12} className="text-brand animate-spin" />
-          Saving...
-        </span>
-      );
-    case "saved":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-ink-muted">
-          <CloudCheck size={12} className="text-emerald-500" />
-          Saved{" "}
-          {lastSavedAt
-            ? lastSavedAt.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : ""}
-        </span>
-      );
-    case "unsaved":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-amber-400">
-          <CircleNotch size={12} />
-          Unsaved changes
-        </span>
-      );
-    case "error":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-red-400">
-          <Warning size={12} />
-          Save failed
-        </span>
-      );
-    default:
-      // idle / first load -- show last saved if available, otherwise nothing
-      if (lastSavedAt) {
-        return (
-          <span className="flex items-center gap-1 text-[10px] text-ink-muted">
-            <Check size={12} className="text-emerald-500" />
-            Saved{" "}
-            {lastSavedAt.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
-        );
-      }
-      return <span />;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Project Selector Dropdown
-// ---------------------------------------------------------------------------
-function ProjectSelector({
-  projects,
-  selectedId,
-  onSelect,
-}: {
-  projects: { id: number; title: string }[];
-  selectedId: number | null;
-  onSelect: (id: number) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  // Close on outside click
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  const selected = projects.find((p) => p.id === selectedId);
-
-  if (projects.length <= 1) return null;
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-ink-muted hover:text-ink bg-surface-raised/50 hover:bg-surface-raised border border-border-subtle transition-colors max-w-[180px]"
-      >
-        <span className="truncate">{selected?.title ?? "Select project"}</span>
-        <CaretDown size={10} className="shrink-0" />
-      </button>
-      {open && (
-        <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
-          {projects.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => {
-                onSelect(p.id);
-                setOpen(false);
-              }}
-              className={cn(
-                "w-full text-left px-3 py-2 text-xs transition-colors",
-                p.id === selectedId
-                  ? "bg-brand/10 text-brand font-medium"
-                  : "text-ink hover:bg-surface-raised"
-              )}
-            >
-              {p.title}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // Main Studio Content
 // ---------------------------------------------------------------------------
 function StudioContent() {
@@ -309,6 +188,7 @@ function StudioContent() {
   const setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
   const addReferences = useReferenceStore((s) => s.addReferences);
+  const clearReferences = useReferenceStore((s) => s.clearReferences);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
   const commentSidebarOpen = useEditorStore((s) => s.commentSidebarOpen);
   const toggleCommentSidebar = useEditorStore((s) => s.toggleCommentSidebar);
@@ -358,6 +238,7 @@ function StudioContent() {
     initialContent,
     docTitle,
     setDocTitle,
+    markUnsaved,
     saveStatus,
     lastSavedAt,
     isLoading: docLoading,
@@ -398,6 +279,42 @@ function StudioContent() {
       setPendingCitationNotice("Paper saved to your library. Open Citation Dialog to cite it.");
     }
   }, []);
+
+  useEffect(() => {
+    clearReferences();
+
+    if (!studioDoc?.id) return;
+
+    const documentId = String(studioDoc.id);
+    const extractedReferences = extractReferencesFromContent(
+      initialContent,
+      documentId
+    );
+
+    if (extractedReferences.length > 0) {
+      addReferences(extractedReferences);
+    }
+
+    if (!studioDoc.project_id) return;
+
+    let canceled = false;
+
+    getProjectPapersForCitation(studioDoc.project_id)
+      .then((projectPapers) => {
+        if (canceled || projectPapers.length === 0) return;
+
+        addReferences(
+          projectPapers.map((paper) => paperToReference(paper, documentId))
+        );
+      })
+      .catch((err) => {
+        console.error("Failed to load studio references:", err);
+      });
+
+    return () => {
+      canceled = true;
+    };
+  }, [addReferences, clearReferences, initialContent, studioDoc]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -524,12 +441,22 @@ function StudioContent() {
 
       if (detail.action === "toggle-comment-sidebar") {
         toggleCommentSidebar();
+        return;
+      }
+
+      if (detail.action === "insert-citation") {
+        openCitationDialogWithSelection();
       }
     };
 
     window.addEventListener("scholarsync:editor-action", handler);
     return () => window.removeEventListener("scholarsync:editor-action", handler);
-  }, [commentSidebarOpen, showWordCountBreakdown, toggleCommentSidebar]);
+  }, [
+    commentSidebarOpen,
+    showWordCountBreakdown,
+    toggleCommentSidebar,
+    openCitationDialogWithSelection,
+  ]);
 
   // Handle citation insertion from the dialog.
   // Uses requestAnimationFrame to ensure the modal overlay is fully removed
@@ -540,6 +467,11 @@ function StudioContent() {
     if (!editor || editor.isDestroyed) return;
 
     const savedSelection = citationSelectionRef.current;
+    const referenceStore = useReferenceStore.getState();
+    const referenceSnapshots = referenceIds
+      .map((referenceId) => referenceStore.references.get(referenceId))
+      .filter((reference): reference is Reference => Boolean(reference))
+      .map((reference) => cloneReference(reference));
 
     requestAnimationFrame(() => {
       if (editor.isDestroyed) return;
@@ -552,7 +484,10 @@ function StudioContent() {
 
       const inserted = chain.insertContent({
           type: "citation",
-          attrs: { referenceIds },
+          attrs: {
+            referenceIds,
+            referenceSnapshots,
+          },
         })
         .run();
 
@@ -708,13 +643,9 @@ function StudioContent() {
 
   // Mark status as unsaved immediately on keystroke (before debounce fires)
   const handleDirty = useCallback(() => {
-    // The hook's handleEditorUpdate will transition to "saving" once the debounce fires.
-    // We want to show "unsaved" right away on keystroke.
-    // We achieve this through the hook -- but as a lightweight approach, we don't
-    // need extra state here: the hook already transitions idle -> saving -> saved.
-    // The onDirty callback gives us a chance to set unsaved if needed.
-    //
-    // Also save a localStorage draft as a fallback in case the DB save fails.
+    markUnsaved();
+
+    // Save a localStorage draft as a fallback in case the DB save fails.
     const editor = editorRef.current;
     if (editor && !editor.isDestroyed) {
       try {
@@ -732,7 +663,7 @@ function StudioContent() {
         // localStorage may be full or unavailable
       }
     }
-  }, [docTitle]);
+  }, [docTitle, markUnsaved]);
 
   const getEditorContent = (): string => {
     const el = document.querySelector(".ProseMirror");
@@ -753,12 +684,20 @@ function StudioContent() {
 
       if (!res.ok) return;
 
-      const html = await res.text();
       const newWindow = window.open("", "_blank");
-      if (newWindow) {
+      if (!newWindow) return;
+
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("text/html")) {
+        const html = await res.text();
         newWindow.document.write(html);
         newWindow.document.close();
+        return;
       }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      newWindow.location.href = url;
     } catch (err) {
       console.error("PDF export failed:", err);
     }
@@ -926,6 +865,9 @@ function StudioContent() {
             max={usageStats?.tokens_limit ?? 50000}
             label="AI Credits"
             color="var(--brand)"
+            formatText={({ value, max, isUnlimited }) =>
+              isUnlimited ? `${value} (Unlimited)` : `${value} / ${max}`
+            }
           />
         </div>
       </aside>

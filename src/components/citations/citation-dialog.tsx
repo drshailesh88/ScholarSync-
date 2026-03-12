@@ -824,6 +824,7 @@ export function CitationDialog({
                     <option value="conference">Conference</option>
                     <option value="thesis">Thesis</option>
                     <option value="preprint">Preprint</option>
+                    <option value="other">Other</option>
                   </select>
                 </div>
 

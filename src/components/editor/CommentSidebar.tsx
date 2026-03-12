@@ -19,9 +19,10 @@ import {
   resolveDocumentCommentLocal,
   unresolveDocumentCommentLocal,
   deleteDocumentCommentLocal,
+  getCommentCountLocal,
 } from "@/lib/editor/document-comments-local";
+import { useEditorStore } from "@/stores/editor-store";
 import type {
-  DocumentCommentThread,
   DocumentComment,
 } from "@/lib/actions/document-comments";
 
@@ -44,23 +45,29 @@ export function CommentSidebar({
   editor,
   onClose,
 }: CommentSidebarProps) {
-  const [threads, setThreads] = useState<DocumentCommentThread[]>([]);
+  const setCommentCount = useEditorStore((s) => s.setCommentCount);
+  const [threads, setThreads] = useState(() => getDocumentCommentsLocal(documentId));
   const [filter, setFilter] = useState<FilterMode>("all");
   const [newComment, setNewComment] = useState("");
   const [replyTo, setReplyTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
   const [pendingInlineComment, setPendingInlineComment] =
     useState<NewInlineCommentEvent | null>(null);
+  const [reloadToken, setReloadToken] = useState(0);
 
-  // Load comments on mount and when documentId changes
   useEffect(() => {
-    setThreads(getDocumentCommentsLocal(documentId));
-  }, [documentId]);
+    const timer = setTimeout(() => {
+      setThreads(getDocumentCommentsLocal(documentId));
+      setCommentCount(getCommentCountLocal(documentId).unresolved);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [documentId, reloadToken, setCommentCount]);
 
   // Reload comments helper (for use in event handlers)
   const reloadComments = useCallback(() => {
-    setThreads(getDocumentCommentsLocal(documentId));
-  }, [documentId]);
+    setReloadToken((current) => current + 1);
+  }, []);
 
   // Listen for new inline comment events from SelectionToolbar
   useEffect(() => {
@@ -380,7 +387,7 @@ export function CommentSidebar({
                 handleAddComment();
               }
             }}
-            placeholder="Add a comment..."
+            placeholder="Add a general comment about this document..."
             className="w-full px-3 py-2 text-xs rounded-lg bg-surface-raised border border-border text-ink placeholder:text-ink-muted/50 focus:outline-none focus:ring-1 focus:ring-brand/50"
           />
         </div>

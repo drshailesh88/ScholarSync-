@@ -40,6 +40,7 @@ import { DocumentOutline } from "./DocumentOutline";
 import { Extension } from "@tiptap/core";
 import { useEditorStore } from "@/stores/editor-store";
 import { getDocumentWordCount } from "@/lib/editor/word-counter";
+import { toSerializableJson } from "@/lib/editor/serializable-json";
 
 /**
  * Tiptap extension that wraps the citation numbering ProseMirror plugin.
@@ -113,7 +114,9 @@ export function TiptapEditor({
 
     if (timerRef.current) clearTimeout(timerRef.current);
 
-    const json = doc.toJSON() as Record<string, unknown>;
+    const json = toSerializableJson(
+      doc.toJSON() as Record<string, unknown>
+    );
     const text = doc.textBetween(0, doc.content.size, "\n");
     const wordCount = getDocumentWordCount(doc);
 
@@ -212,7 +215,9 @@ export function TiptapEditor({
 
       // Debounce the save
       timerRef.current = setTimeout(() => {
-        const json = ed.getJSON() as Record<string, unknown>;
+        const json = toSerializableJson(
+          ed.getJSON() as Record<string, unknown>
+        );
         const text = ed.getText();
         const wordCount = text
           .split(/\s+/)

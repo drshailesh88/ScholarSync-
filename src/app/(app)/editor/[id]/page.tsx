@@ -13,9 +13,14 @@ import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { useEditorStore } from "@/stores/editor-store";
 import { useReferenceStore } from "@/stores/reference-store";
 import { generateTemplateContent } from "@/lib/editor/section-templates";
+import { consumePendingCitationNotice } from "@/lib/editor/pending-citation-notice";
 import { useEditorDocument } from "@/hooks/use-editor-document";
 import { getProjectPapersForCitation } from "@/lib/actions/papers";
 import { paperToReference } from "@/lib/citations/paper-to-reference";
+import {
+  cloneReference,
+  extractReferencesFromContent,
+} from "@/lib/citations/document-reference-hydration";
 import {
   ArrowLeft,
   DownloadSimple,
@@ -81,17 +86,29 @@ export default function EditorPage() {
   const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
   const [contentKey, setContentKey] = useState(0);
   const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
+  const titleSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleInsertCitation = useCallback((referenceIds: string[]) => {
     const editor = editorRef.current;
     if (!editor || editor.isDestroyed) return;
+
+    const referenceStore = useReferenceStore.getState();
+    const referenceSnapshots = referenceIds
+      .map((referenceId) => referenceStore.references.get(referenceId))
+      .filter((reference): reference is NonNullable<typeof reference> =>
+        Boolean(reference)
+      )
+      .map((reference) => cloneReference(reference));
 
     editor
       .chain()
       .focus()
       .insertContent({
         type: "citation",
-        attrs: { referenceIds },
+        attrs: {
+          referenceIds,
+          referenceSnapshots,
+        },
       })
       .run();
 
@@ -124,6 +141,12 @@ export default function EditorPage() {
     handleSetReferenceSidebarOpen(!sidebarOpen);
   }, [handleSetReferenceSidebarOpen, sidebarOpen]);
 
+  const syncPendingCitationNotice = useCallback(() => {
+    const notice = consumePendingCitationNotice();
+    if (!notice) return;
+    setPendingCitationNotice(notice);
+  }, []);
+
   useEffect(() => {
     const handler = () => openCitationDialog();
     window.addEventListener("scholarsync:open-citation-dialog", handler);
@@ -141,22 +164,24 @@ export default function EditorPage() {
   ]);
 
   useEffect(() => {
-    const pending = sessionStorage.getItem("scholarsync_pending_citation");
-    if (!pending) return;
-    sessionStorage.removeItem("scholarsync_pending_citation");
-    let notice: string;
-    try {
-      const parsed = JSON.parse(pending) as { title?: string };
-      const title = parsed.title?.trim();
-      notice = title
-        ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
-        : "Paper saved to your library. Open Citation Dialog to cite it.";
-    } catch {
-      notice = "Paper saved to your library. Open Citation Dialog to cite it.";
-    }
-    const timer = setTimeout(() => setPendingCitationNotice(notice), 0);
-    return () => clearTimeout(timer);
-  }, []);
+    const initialSync = setTimeout(syncPendingCitationNotice, 0);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        syncPendingCitationNotice();
+      }
+    };
+
+    window.addEventListener("focus", syncPendingCitationNotice);
+    window.addEventListener("pageshow", syncPendingCitationNotice);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      clearTimeout(initialSync);
+      window.removeEventListener("focus", syncPendingCitationNotice);
+      window.removeEventListener("pageshow", syncPendingCitationNotice);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [syncPendingCitationNotice]);
 
   useEffect(() => {
     if (!pendingCitationNotice) return;
@@ -164,10 +189,26 @@ export default function EditorPage() {
     return () => clearTimeout(timer);
   }, [pendingCitationNotice]);
 
-  // Populate citation store with project papers when document changes.
+  // Reset reference state when switching documents or projects.
   useEffect(() => {
     clearReferences();
-    if (!dbDocumentId || !projectId) return;
+  }, [clearReferences, dbDocumentId, projectId]);
+
+  // Rehydrate references embedded in the current document content.
+  useEffect(() => {
+    if (!dbDocumentId) return;
+    const extractedReferences = extractReferencesFromContent(
+      dbContent,
+      String(dbDocumentId)
+    );
+    if (extractedReferences.length > 0) {
+      addReferences(extractedReferences);
+    }
+  }, [addReferences, dbContent, dbDocumentId]);
+
+  // Load project library references when the backing project changes.
+  useEffect(() => {
+    if (!projectId || !dbDocumentId) return;
 
     let canceled = false;
     getProjectPapersForCitation(projectId)
@@ -185,14 +226,17 @@ export default function EditorPage() {
     return () => {
       canceled = true;
     };
-  }, [dbDocumentId, projectId, addReferences, clearReferences]);
+  }, [addReferences, dbDocumentId, projectId]);
 
   // Add beforeunload protection to prevent data loss
   useEffect(() => {
+    if (saveStatus !== "unsaved" && saveStatus !== "saving") {
+      return;
+    }
+
     function handleBeforeUnload(e: BeforeUnloadEvent) {
-      if (saveStatus === "unsaved" || saveStatus === "saving") {
-        e.preventDefault();
-      }
+      e.preventDefault();
+      e.returnValue = "";
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -202,12 +246,23 @@ export default function EditorPage() {
   // Handle title changes with debounced save
   const handleTitleChange = (newTitle: string) => {
     setStoreTitle(newTitle);
-    // Debounced title save
-    const timeoutId = setTimeout(() => {
+    if (titleSaveTimeoutRef.current) {
+      clearTimeout(titleSaveTimeoutRef.current);
+    }
+
+    titleSaveTimeoutRef.current = setTimeout(() => {
       setTitle(newTitle);
+      titleSaveTimeoutRef.current = null;
     }, 1000);
-    return () => clearTimeout(timeoutId);
   };
+
+  useEffect(() => {
+    return () => {
+      if (titleSaveTimeoutRef.current) {
+        clearTimeout(titleSaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleDocumentTypeChange = (type: string) => {
     setDocumentType(type);
@@ -226,6 +281,11 @@ export default function EditorPage() {
     // If no content from DB, generate template
     return generateTemplateContent(documentType);
   }, [dbContent, documentType]);
+  const canOpenVersionHistory =
+    !isLoading &&
+    Boolean(editorContent) &&
+    dbDocumentId !== null &&
+    sectionId !== null;
 
   return (
     <EditorErrorBoundary documentId={urlDocumentId}>
@@ -314,12 +374,13 @@ export default function EditorPage() {
             {saveStatus === "unsaved" && (
               <>
                 <CloudArrowUp size={14} className="text-amber-500" />
-                <span className="text-xs text-ink-muted">Unsaved</span>
+                <span className="text-xs text-ink-muted">Unsaved changes</span>
               </>
             )}
             {saveStatus === "error" && (
               <>
                 <Warning size={14} className="text-red-500" />
+                <span className="text-xs text-ink-muted">Save failed</span>
                 <button
                   onClick={() => retrySave()}
                   className="text-xs text-red-500 hover:text-red-600 transition-colors"
@@ -345,7 +406,7 @@ export default function EditorPage() {
           <button
             onClick={() => setShowVersionHistory(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border rounded-lg transition-colors"
-            disabled={isLoading || !editorContent}
+            disabled={!canOpenVersionHistory}
           >
             <ClockCounterClockwise size={14} />
             Version History
