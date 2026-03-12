@@ -86,6 +86,10 @@ describe("POST /api/chat", () => {
     );
     expect(res.status).toBe(200);
     expect(mockStreamText).toHaveBeenCalledOnce();
+    expect(mockCheckRateLimit).toHaveBeenCalledWith("dev_user_001", "chat", {
+      limit: 60,
+      windowSeconds: 3600,
+    });
   });
 
   it("uses guide prompt in learn mode with context", async () => {
@@ -149,5 +153,82 @@ describe("POST /api/chat", () => {
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.error).toBeDefined();
+  });
+
+  it("returns the standard assistant prompt for unsupported mode values", async () => {
+    await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "Hello" }],
+        mode: "unknown-mode",
+      })
+    );
+
+    expect(mockStreamText).toHaveBeenCalledWith(
+      expect.objectContaining({
+        system:
+          "You are ScholarSync's AI research assistant for medical students. Help with academic writing, research questions, citations, and paper analysis. Be precise, cite sources when possible, maintain academic tone.",
+      })
+    );
+  });
+
+  it("returns 400 when more than 50 messages are supplied", async () => {
+    const res = await POST(
+      makeRequest({
+        messages: Array.from({ length: 51 }, (_, index) => ({
+          role: "user",
+          content: `Message ${index}`,
+        })),
+      })
+    );
+
+    expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toEqual({
+      error: "Invalid request. Please check your input and try again.",
+    });
+  });
+
+  it("returns 400 when a message exceeds 50,000 characters", async () => {
+    const res = await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "x".repeat(50001) }],
+      })
+    );
+
+    expect(res.status).toBe(400);
+    await expect(res.json()).resolves.toEqual({
+      error: "Invalid request. Please check your input and try again.",
+    });
+  });
+
+  it("returns 503 when AI is not configured", async () => {
+    mockIsAIConfigured.mockReturnValue(false);
+
+    const res = await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "Hello" }],
+      })
+    );
+
+    expect(res.status).toBe(503);
+    await expect(res.json()).resolves.toEqual({
+      error: "AI service is not configured. Please contact an administrator.",
+    });
+  });
+
+  it("returns 500 when streamText throws unexpectedly", async () => {
+    mockStreamText.mockImplementation(() => {
+      throw new Error("boom");
+    });
+
+    const res = await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "Hello" }],
+      })
+    );
+
+    expect(res.status).toBe(500);
+    await expect(res.json()).resolves.toEqual({
+      error: "An unexpected error occurred. Please try again.",
+    });
   });
 });

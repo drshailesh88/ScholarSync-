@@ -86,6 +86,7 @@ export function useStudioDocument(
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     initialProjectId ?? null
   );
+  const [isLocalFallback, setIsLocalFallback] = useState(false);
 
   // Refs for debounced title save
   const titleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -95,14 +96,36 @@ export function useStudioDocument(
   // Track whether this is the first load to avoid re-setting editor content
   const hasLoadedRef = useRef(false);
 
+  const initializeLocalFallback = useCallback(() => {
+    setIsLocalFallback(true);
+    setDocument({
+      id: 0,
+      project_id: 0,
+      title: "Untitled Document",
+      sections: [],
+    });
+    setActiveSectionId(null);
+    setInitialContent(null);
+    setDocTitleState("Untitled Document");
+    setSelectedProjectId(null);
+    setProjects([]);
+    setSaveStatus("idle");
+    setLastSavedAt(null);
+    setError(null);
+  }, []);
+
   // -----------------------------------------------------------------------
   // Load projects list
   // -----------------------------------------------------------------------
   useEffect(() => {
     listUserProjects()
       .then((p) => setProjects(p))
-      .catch(() => {});
-  }, []);
+      .catch((err) => {
+        if (err instanceof Error && err.message.includes("DATABASE_URL")) {
+          initializeLocalFallback();
+        }
+      });
+  }, [initializeLocalFallback]);
 
   // -----------------------------------------------------------------------
   // Load document from DB
@@ -155,11 +178,15 @@ export function useStudioDocument(
       setSaveStatus("idle");
     } catch (err) {
       console.error("Failed to load document:", err);
-      setError("Failed to load document. Please try again.");
+      if (err instanceof Error && err.message.includes("DATABASE_URL")) {
+        initializeLocalFallback();
+      } else {
+        setError("Failed to load document. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [initializeLocalFallback]);
 
   // Initial load
   useEffect(() => {
@@ -176,6 +203,15 @@ export function useStudioDocument(
       plain_text_content: string;
       word_count: number;
     }) => {
+      if (isLocalFallback) {
+        setSaveStatus("saving");
+        setTimeout(() => {
+          setSaveStatus("saved");
+          setLastSavedAt(new Date());
+        }, 0);
+        return;
+      }
+
       const doc = documentRef.current;
       if (!doc) return;
 
@@ -204,7 +240,7 @@ export function useStudioDocument(
     },
     // docTitle is intentionally read from the closure at call time
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [activeSectionId]
+    [activeSectionId, isLocalFallback]
   );
 
   // -----------------------------------------------------------------------
@@ -218,6 +254,12 @@ export function useStudioDocument(
       if (titleTimerRef.current) clearTimeout(titleTimerRef.current);
 
       titleTimerRef.current = setTimeout(() => {
+        if (isLocalFallback) {
+          setSaveStatus("saved");
+          setLastSavedAt(new Date());
+          return;
+        }
+
         const doc = documentRef.current;
         if (!doc) return;
         setSaveStatus("saving");
@@ -231,7 +273,7 @@ export function useStudioDocument(
           });
       }, 1000);
     },
-    []
+    [isLocalFallback]
   );
 
   // Cleanup title timer on unmount

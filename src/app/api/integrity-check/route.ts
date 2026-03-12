@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { runIntegrityCheck } from "@/lib/integrity";
 import type { IntegrityCheckInput } from "@/lib/integrity/types";
+import { buildLocalIntegrityCheckResult } from "@/lib/integrity/local-fallback";
 
 const requestSchema = z.object({
   text: z
@@ -33,6 +34,14 @@ const requestSchema = z.object({
   documentId: z.number().int().positive().optional(),
 });
 
+function hasDatabaseConnection(): boolean {
+  return Boolean(process.env.DATABASE_URL);
+}
+
+function shouldUseLocalFallback(): boolean {
+  return process.env.NODE_ENV === "development" && (!isAIConfigured() || !hasDatabaseConnection());
+}
+
 export async function POST(req: Request) {
   const log = logger.withRequestId();
 
@@ -45,21 +54,6 @@ export async function POST(req: Request) {
       return new Response(
         JSON.stringify({ error: "Not authenticated" }),
         { status: 401, headers: { "Content-Type": "application/json" } },
-      );
-    }
-
-    // Rate limiting
-    const rateLimitResponse = await checkRateLimit(
-      userId,
-      "integrity-check",
-      RATE_LIMITS.analysis,
-    );
-    if (rateLimitResponse) return rateLimitResponse;
-
-    if (!isAIConfigured()) {
-      return new Response(
-        JSON.stringify({ error: "AI service is not configured." }),
-        { status: 503, headers: { "Content-Type": "application/json" } },
       );
     }
 
@@ -77,13 +71,52 @@ export async function POST(req: Request) {
       );
     }
 
+    // Rate limiting
+    const rateLimitResponse = await checkRateLimit(
+      userId,
+      "integrity-check",
+      RATE_LIMITS.analysis,
+    );
+    if (rateLimitResponse) return rateLimitResponse;
+
+    const fallbackPlan: IntegrityCheckInput["plan"] = "basic";
+
+    if (shouldUseLocalFallback()) {
+      const result = buildLocalIntegrityCheckResult({
+        text: parsed.data.text,
+        plan: fallbackPlan,
+        mode: parsed.data.mode,
+        sources: parsed.data.sources,
+        userId,
+      });
+
+      log.info("Integrity check completed with local fallback", {
+        userId,
+        plan: fallbackPlan,
+        mode: parsed.data.mode,
+        tier: result.tier,
+        humanScore: result.aiDetection.humanScore,
+      });
+
+      return new Response(JSON.stringify(result), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    if (!isAIConfigured()) {
+      return new Response(
+        JSON.stringify({ error: "AI service is not configured." }),
+        { status: 503, headers: { "Content-Type": "application/json" } },
+      );
+    }
+
     // Get user plan for tier gating
     const [user] = await db
       .select({ plan: users.plan })
       .from(users)
       .where(eq(users.id, userId));
 
-    const plan = (user?.plan ?? "free") as IntegrityCheckInput["plan"];
+    const plan = (user?.plan ?? fallbackPlan) as IntegrityCheckInput["plan"];
 
     // Run the unified integrity check
     let result: Awaited<ReturnType<typeof runIntegrityCheck>>;

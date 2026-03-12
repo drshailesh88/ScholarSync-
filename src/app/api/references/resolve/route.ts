@@ -5,6 +5,11 @@ import {
   crossrefToReference,
 } from "@/lib/citations/reference-utils";
 import { parsePubMedXml } from "@/lib/citations/pubmed-parser";
+import { buildLocalResolvedReference } from "@/lib/citations/local-fallback";
+
+function shouldUseLocalFallback(): boolean {
+  return process.env.NODE_ENV === "development";
+}
 
 /**
  * POST /api/references/resolve
@@ -87,6 +92,14 @@ async function resolveDoi(doi: string, documentId: string) {
     });
 
     if (!res.ok) {
+      if (shouldUseLocalFallback()) {
+        return NextResponse.json({
+          success: true,
+          reference: buildLocalResolvedReference(doi, documentId),
+          source: "manual",
+          confidence: "medium",
+        });
+      }
       if (res.status === 404) {
         return NextResponse.json({
           success: false,
@@ -115,10 +128,26 @@ async function resolveDoi(doi: string, documentId: string) {
     });
   } catch (err: unknown) {
     if (err instanceof Error && err.name === "TimeoutError") {
+      if (shouldUseLocalFallback()) {
+        return NextResponse.json({
+          success: true,
+          reference: buildLocalResolvedReference(doi, documentId),
+          source: "manual",
+          confidence: "medium",
+        });
+      }
       return NextResponse.json(
         { success: false, error: "CrossRef request timed out. Try again." },
         { status: 504 }
       );
+    }
+    if (shouldUseLocalFallback()) {
+      return NextResponse.json({
+        success: true,
+        reference: buildLocalResolvedReference(doi, documentId),
+        source: "manual",
+        confidence: "medium",
+      });
     }
     throw err;
   }
@@ -136,6 +165,14 @@ async function resolvePmid(pmid: string, documentId: string) {
     });
 
     if (!res.ok) {
+      if (shouldUseLocalFallback()) {
+        return NextResponse.json({
+          success: true,
+          reference: buildLocalResolvedReference(pmid, documentId),
+          source: "manual",
+          confidence: "medium",
+        });
+      }
       return NextResponse.json({
         success: false,
         error: "No PubMed record found for this ID.",
@@ -145,6 +182,14 @@ async function resolvePmid(pmid: string, documentId: string) {
     const xml = await res.text();
 
     if (xml.includes("<ERROR>")) {
+      if (shouldUseLocalFallback()) {
+        return NextResponse.json({
+          success: true,
+          reference: buildLocalResolvedReference(pmid, documentId),
+          source: "manual",
+          confidence: "medium",
+        });
+      }
       return NextResponse.json({
         success: false,
         error: "No PubMed record found for this ID.",
@@ -153,6 +198,14 @@ async function resolvePmid(pmid: string, documentId: string) {
 
     const references = parsePubMedXml(xml, documentId);
     if (references.length === 0) {
+      if (shouldUseLocalFallback()) {
+        return NextResponse.json({
+          success: true,
+          reference: buildLocalResolvedReference(pmid, documentId),
+          source: "manual",
+          confidence: "medium",
+        });
+      }
       return NextResponse.json({
         success: false,
         error: "Could not parse PubMed record.",
@@ -167,6 +220,14 @@ async function resolvePmid(pmid: string, documentId: string) {
     });
   } catch (err: unknown) {
     if (err instanceof Error && err.name === "TimeoutError") {
+      if (shouldUseLocalFallback()) {
+        return NextResponse.json({
+          success: true,
+          reference: buildLocalResolvedReference(pmid, documentId),
+          source: "manual",
+          confidence: "medium",
+        });
+      }
       return NextResponse.json(
         {
           success: false,
@@ -174,6 +235,14 @@ async function resolvePmid(pmid: string, documentId: string) {
         },
         { status: 504 }
       );
+    }
+    if (shouldUseLocalFallback()) {
+      return NextResponse.json({
+        success: true,
+        reference: buildLocalResolvedReference(pmid, documentId),
+        source: "manual",
+        confidence: "medium",
+      });
     }
     throw err;
   }

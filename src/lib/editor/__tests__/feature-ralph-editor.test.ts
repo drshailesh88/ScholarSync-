@@ -706,11 +706,11 @@ describe("AcademicEditor Component Structure", () => {
   });
 
   it("should have correct heading levels configured", () => {
-    // StarterKit is configured with heading levels 1-4
-    const headingLevels = [1, 2, 3, 4];
-    expect(headingLevels).toHaveLength(4);
+    // StarterKit is configured with heading levels 1-6
+    const headingLevels = [1, 2, 3, 4, 5, 6];
+    expect(headingLevels).toHaveLength(6);
     expect(headingLevels[0]).toBe(1);
-    expect(headingLevels[3]).toBe(4);
+    expect(headingLevels[5]).toBe(6);
   });
 
   it("should have correct placeholder messages", () => {

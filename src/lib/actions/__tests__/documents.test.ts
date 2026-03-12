@@ -83,6 +83,7 @@ import {
 describe("documents actions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.DATABASE_URL = "postgresql://localhost/test";
   });
 
   // -------------------------------------------------------------------------

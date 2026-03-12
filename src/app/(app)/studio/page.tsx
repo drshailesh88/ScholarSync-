@@ -37,6 +37,7 @@ import { useResearchStore } from "@/stores/research-store";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
 import { useStudioDocument, type SaveStatus } from "@/hooks/use-studio-document";
+import { collectCitationReferenceMutations } from "@/lib/citations/remove-reference";
 import { countSectionWords, getDocumentWordCount } from "@/lib/editor/word-counter";
 import type { Reference } from "@/types/citation";
 import {
@@ -72,6 +73,8 @@ const aiPanelTabs = [
   { key: "research", label: "Research" },
   { key: "checks", label: "Checks" },
 ];
+
+const STUDIO_MODE_STORAGE_KEY = "scholarsync_studio_mode";
 
 function toCitationAuthors(authors?: string[]) {
   if (!authors?.length) return [];
@@ -278,9 +281,10 @@ function ProjectSelector({
 function StudioContent() {
   const searchParams = useSearchParams();
   const projectParam = searchParams.get("projectId");
+  const modeParam = searchParams.get("mode");
   const initialProjectId = projectParam ? Number(projectParam) : null;
 
-  const [isLearnMode, setIsLearnMode] = useState(searchParams.get("mode") === "learn");
+  const [isLearnMode, setIsLearnMode] = useState(() => modeParam === "learn");
   const [aiTab, setAiTab] = useState("chat");
   const [researchQuery, setResearchQuery] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -291,10 +295,10 @@ function StudioContent() {
   const [usageStats, setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
-  const [citationNotice, setCitationNotice] = useState<string | null>(null);
   const conversationIdRef = useRef<number | null>(null);
   const editorRef = useRef<Editor | null>(null);
   const citationSelectionRef = useRef<{ from: number; to: number } | null>(null);
+  const citationNoticeRunIdRef = useRef(0);
   const citationNoticeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
   );
@@ -308,10 +312,11 @@ function StudioContent() {
   const setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
   const addReferences = useReferenceStore((s) => s.addReferences);
+  const removeReference = useReferenceStore((s) => s.removeReference);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
   const commentSidebarOpen = useEditorStore((s) => s.commentSidebarOpen);
   const toggleCommentSidebar = useEditorStore((s) => s.toggleCommentSidebar);
-
+  
   const submitAiPrompt = useCallback((prompt: string) => {
     setInput(prompt);
     setAiTab("chat");
@@ -375,6 +380,17 @@ function StudioContent() {
   // Draft mode context
   const [draftIntensity, setDraftIntensity] = useState<DraftModeIntensity>("collaborate");
 
+  const updateMode = useCallback((nextIsLearnMode: boolean) => {
+    setIsLearnMode(nextIsLearnMode);
+
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(
+        STUDIO_MODE_STORAGE_KEY,
+        nextIsLearnMode ? "learn" : "write"
+      );
+    }
+  }, []);
+
   useEffect(() => {
     getUserUsageStats().then((stats) => {
       if (stats) setUsageStats({ tokens_used: stats.tokens_used ?? 0, tokens_limit: stats.tokens_limit ?? 50000 });
@@ -412,6 +428,63 @@ function StudioContent() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [toggleSidebar]);
+
+  useEffect(() => {
+    if (modeParam) return;
+    if (typeof window === "undefined") return;
+
+    const storedMode = window.sessionStorage.getItem(STUDIO_MODE_STORAGE_KEY);
+    if (storedMode === "learn") {
+      setIsLearnMode(true);
+      return;
+    }
+
+    if (storedMode === "write") {
+      setIsLearnMode(false);
+    }
+  }, [modeParam]);
+
+  useEffect(() => {
+    if (modeParam === "learn") {
+      updateMode(true);
+      return;
+    }
+
+    if (modeParam === "write") {
+      updateMode(false);
+    }
+  }, [modeParam, updateMode]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    window.sessionStorage.setItem(
+      STUDIO_MODE_STORAGE_KEY,
+      isLearnMode ? "learn" : "write"
+    );
+  }, [isLearnMode]);
+
+  const showCitationNotice = useCallback((message: string | null) => {
+    if (typeof document === "undefined") return;
+
+    let notice = document.getElementById("studio-citation-notice");
+    if (!notice) {
+      notice = document.createElement("div");
+      notice.id = "studio-citation-notice";
+      notice.className =
+        "fixed right-6 top-20 z-[120] rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 shadow-lg";
+      document.body.appendChild(notice);
+    }
+
+    if (!message) {
+      notice.textContent = "";
+      notice.setAttribute("hidden", "true");
+      return;
+    }
+
+    notice.textContent = message;
+    notice.removeAttribute("hidden");
+  }, []);
 
   // Handle slash command AI events from the editor
   useEffect(() => {
@@ -483,6 +556,16 @@ function StudioContent() {
         return;
       }
 
+      if (detail.action === "insert-citation") {
+        openCitationDialogWithSelection();
+        return;
+      }
+
+      if (detail.action === "toggle-reference-sidebar") {
+        toggleSidebar();
+        return;
+      }
+
       if (detail.action === "add-comment" && editorRef.current) {
         const editor = editorRef.current;
         const { from, to } = editor.state.selection;
@@ -511,7 +594,13 @@ function StudioContent() {
 
     window.addEventListener("scholarsync:editor-action", handler);
     return () => window.removeEventListener("scholarsync:editor-action", handler);
-  }, [commentSidebarOpen, showWordCountBreakdown, toggleCommentSidebar]);
+  }, [
+    commentSidebarOpen,
+    openCitationDialogWithSelection,
+    showWordCountBreakdown,
+    toggleCommentSidebar,
+    toggleSidebar,
+  ]);
 
   // Handle citation insertion from the dialog.
   // Uses requestAnimationFrame to ensure the modal overlay is fully removed
@@ -522,6 +611,14 @@ function StudioContent() {
     if (!editor || editor.isDestroyed) return;
 
     const savedSelection = citationSelectionRef.current;
+    const nextCitationNotice =
+      referenceIds.length === 1
+        ? "Citation inserted"
+        : `${referenceIds.length} citations inserted`;
+
+    if (citationNoticeTimerRef.current) {
+      clearTimeout(citationNoticeTimerRef.current);
+    }
 
     requestAnimationFrame(() => {
       if (editor.isDestroyed) return;
@@ -539,7 +636,9 @@ function StudioContent() {
         .run();
 
       citationSelectionRef.current = null;
-      if (!inserted) return;
+      if (!inserted) {
+        return;
+      }
 
       // Ensure bibliography exists at end of document
       let hasBibliography = false;
@@ -556,21 +655,46 @@ function StudioContent() {
         });
       }
 
-      if (citationNoticeTimerRef.current) {
-        clearTimeout(citationNoticeTimerRef.current);
-      }
-
-      setCitationNotice(
-        referenceIds.length === 1
-          ? "Citation inserted"
-          : `${referenceIds.length} citations inserted`
-      );
-
+      citationNoticeRunIdRef.current += 1;
+      const runId = citationNoticeRunIdRef.current;
+      showCitationNotice(nextCitationNotice);
       citationNoticeTimerRef.current = setTimeout(() => {
-        setCitationNotice(null);
+        if (citationNoticeRunIdRef.current === runId) {
+          showCitationNotice(null);
+        }
       }, 2500);
     });
-  }, []);
+  }, [showCitationNotice]);
+
+  const handleRemoveReference = useCallback((referenceId: string) => {
+    const editor = editorRef.current;
+
+    if (editor && !editor.isDestroyed) {
+      const mutations = collectCitationReferenceMutations(
+        editor.state.doc,
+        referenceId
+      );
+
+      if (mutations.length > 0) {
+        const tr = editor.state.tr;
+
+        for (const mutation of mutations) {
+          if (mutation.kind === "delete") {
+            tr.delete(mutation.pos, mutation.pos + mutation.nodeSize);
+            continue;
+          }
+
+          tr.setNodeMarkup(mutation.pos, undefined, mutation.attrs);
+        }
+
+        if (tr.docChanged) {
+          editor.view.dispatch(tr);
+        }
+      }
+    }
+
+    removeReference(referenceId);
+  }, [removeReference]);
 
   useEffect(() => {
     const handler = (event: Event) => {
@@ -586,9 +710,25 @@ function StudioContent() {
       handleInsertCitation([reference.id]);
     };
 
+    const browserWindow = window as typeof window & {
+      __studioInsertCitationHandler?: (event: Event) => void;
+    };
+
+    if (browserWindow.__studioInsertCitationHandler) {
+      window.removeEventListener(
+        "scholarsync:insert-citation",
+        browserWindow.__studioInsertCitationHandler
+      );
+    }
+
+    browserWindow.__studioInsertCitationHandler = handler;
     window.addEventListener("scholarsync:insert-citation", handler);
-    return () =>
+    return () => {
       window.removeEventListener("scholarsync:insert-citation", handler);
+      if (browserWindow.__studioInsertCitationHandler === handler) {
+        delete browserWindow.__studioInsertCitationHandler;
+      }
+    };
   }, [addReferences, handleInsertCitation, studioDoc?.id]);
 
   useEffect(() => {
@@ -716,9 +856,25 @@ function StudioContent() {
     }
   }, [docTitle]);
 
-  const getEditorContent = (): string => {
+  const getEditorContent = (): string | null => {
     const el = document.querySelector(".ProseMirror");
-    return el?.innerHTML ?? "";
+    if (!el) return null;
+
+    const html = el.innerHTML ?? "";
+    const text = el.textContent?.replace(/\u200B/g, "").trim() ?? "";
+    const hasCitation = !!el.querySelector("[data-citation], [data-type='citation']");
+    const hasBibliography = !!el.querySelector("[data-type='bibliography']");
+    const hasPlaceholderOnly =
+      !text &&
+      !hasCitation &&
+      !hasBibliography &&
+      !!el.querySelector(".is-editor-empty");
+
+    if (!html || hasPlaceholderOnly) {
+      return null;
+    }
+
+    return html;
   };
 
   const handleExportPDF = async () => {
@@ -735,12 +891,20 @@ function StudioContent() {
 
       if (!res.ok) return;
 
-      const html = await res.text();
-      const newWindow = window.open("", "_blank");
-      if (newWindow) {
-        newWindow.document.write(html);
-        newWindow.document.close();
-      }
+      const blob = await res.blob();
+      const contentDisposition = res.headers.get("Content-Disposition");
+      const filenameMatch = contentDisposition?.match(/filename="([^"]+)"/i);
+      const fallbackFilename = `${docTitle.replace(/[^a-zA-Z0-9]/g, "_") || "document"}.pdf`;
+      const filename = filenameMatch?.[1] || fallbackFilename;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.open(url, "_blank", "noopener,noreferrer");
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (err) {
       console.error("PDF export failed:", err);
     }
@@ -761,10 +925,14 @@ function StudioContent() {
       if (!res.ok) return;
 
       const blob = await res.blob();
+      const contentDisposition = res.headers.get("Content-Disposition");
+      const filenameMatch = contentDisposition?.match(/filename="([^"]+)"/i);
+      const fallbackFilename = `${docTitle.replace(/[^a-zA-Z0-9]/g, "_") || "document"}.docx`;
+      const filename = filenameMatch?.[1] || fallbackFilename;
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${docTitle.replace(/[^a-zA-Z0-9]/g, "_")}.doc`;
+      a.download = filename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -816,7 +984,7 @@ function StudioContent() {
           />
           <div className="flex mt-3 p-0.5 bg-surface-raised rounded-lg">
             <button
-              onClick={() => setIsLearnMode(false)}
+              onClick={() => updateMode(false)}
               className={cn(
                 "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
                 !isLearnMode ? "bg-brand text-white" : "text-ink-muted hover:text-ink"
@@ -825,7 +993,7 @@ function StudioContent() {
               Write
             </button>
             <button
-              onClick={() => setIsLearnMode(true)}
+              onClick={() => updateMode(true)}
               className={cn(
                 "flex-1 py-1.5 rounded-md text-xs font-medium transition-all",
                 isLearnMode ? "bg-emerald-500 text-white" : "text-ink-muted hover:text-ink"
@@ -868,7 +1036,10 @@ function StudioContent() {
             </span>
             <button
               onClick={openCitationDialogWithSelection}
-              className="text-brand hover:text-brand-hover"
+              type="button"
+              aria-label="Add citation"
+              title="Add citation"
+              className="p-1.5 -m-1.5 rounded-md text-brand hover:text-brand-hover hover:bg-surface-raised transition-colors"
             >
               <Plus size={14} />
             </button>
@@ -1009,11 +1180,6 @@ function StudioContent() {
         <div className="flex items-center justify-between px-4 py-2 border-b border-border-subtle bg-surface">
           <div className="flex items-center gap-3">
             <SaveIndicator status={saveStatus} lastSavedAt={lastSavedAt} />
-            {citationNotice && (
-              <span className="text-[10px] font-medium text-emerald-500">
-                {citationNotice}
-              </span>
-            )}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -1093,8 +1259,9 @@ function StudioContent() {
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onOpenCitationDialog={openCitationDialogWithSelection}
+          onRemoveReference={handleRemoveReference}
         />
-      ) : commentSidebarOpen && studioDoc?.id && editorRef.current ? (
+      ) : commentSidebarOpen && studioDoc && editorRef.current ? (
         <CommentSidebar
           documentId={String(studioDoc.id)}
           editor={editorRef.current}

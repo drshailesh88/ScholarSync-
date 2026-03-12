@@ -12,6 +12,11 @@ import { eq, and, desc, asc, isNull, ilike, or, sql, gte, lte, inArray } from "d
 import { getCurrentUserId } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { normalizeTitle } from "@/lib/search/dedup";
+import { buildLocalLibraryPapers } from "@/lib/citations/local-fallback";
+
+function hasDatabaseConnection(): boolean {
+  return Boolean(process.env.DATABASE_URL);
+}
 
 export async function getUserPapers(collection?: string) {
   const userId = await getCurrentUserId();
@@ -604,6 +609,10 @@ export async function removePaper(refId: number) {
 }
 
 export async function searchPapersInLibrary(query: string) {
+  if (!hasDatabaseConnection()) {
+    return buildLocalLibraryPapers(query);
+  }
+
   const userId = await getCurrentUserId();
   return db
     .select({

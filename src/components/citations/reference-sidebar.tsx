@@ -20,6 +20,7 @@ interface ReferenceSidebarProps {
   open: boolean;
   onClose: () => void;
   onOpenCitationDialog: () => void;
+  onRemoveReference?: (referenceId: string) => void;
   /** Map from referenceId to paragraph numbers where it's cited */
   citationLocations?: Map<string, number[]>;
 }
@@ -30,6 +31,7 @@ export function ReferenceSidebar({
   open,
   onClose,
   onOpenCitationDialog,
+  onRemoveReference,
   citationLocations,
 }: ReferenceSidebarProps) {
   const references = useReferenceStore((s) => s.references);
@@ -140,7 +142,11 @@ export function ReferenceSidebar({
     ) {
       return;
     }
-    removeReference(refId);
+    if (onRemoveReference) {
+      onRemoveReference(refId);
+    } else {
+      removeReference(refId);
+    }
     if (expandedId === refId) setExpandedId(null);
   };
 

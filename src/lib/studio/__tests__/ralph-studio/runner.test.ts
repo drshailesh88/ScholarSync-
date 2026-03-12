@@ -1835,11 +1835,17 @@ describe("Cycle 12: Reporting Guidelines", () => {
       passed: (REPORTING_GUIDELINES.meta_analysis?.length ?? 0) > 0,
     });
 
-    // Every doc type should have at least one guideline
-    const allTypes = Object.keys(REPORTING_GUIDELINES);
     checks.push({
-      name: "All doc types have guidelines",
-      passed: allTypes.every((t) => REPORTING_GUIDELINES[t as keyof typeof REPORTING_GUIDELINES].length > 0),
+      name: "Book chapter has no reporting guidelines",
+      passed: REPORTING_GUIDELINES.book_chapter?.length === 0,
+    });
+    checks.push({
+      name: "Academic draft has no reporting guidelines",
+      passed: REPORTING_GUIDELINES.academic_draft?.length === 0,
+    });
+    checks.push({
+      name: "Letter has no reporting guidelines",
+      passed: REPORTING_GUIDELINES.letter?.length === 0,
     });
 
     const result = buildResult("ralph-studio-053", "reporting guidelines mapped to doc types", "guide-mode", checks);

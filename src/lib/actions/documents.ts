@@ -10,6 +10,29 @@ import {
 import { eq, and, desc, isNull } from "drizzle-orm";
 import { getCurrentUserId } from "@/lib/auth";
 
+function hasDatabaseConnection(): boolean {
+  if (process.env.DATABASE_URL) return true;
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { env } = require("cloudflare:workers");
+    return Boolean(env?.HYPERDRIVE?.connectionString);
+  } catch {
+    return false;
+  }
+}
+
+function createLocalFallbackDocument(projectId?: number | null) {
+  return {
+    id: 0,
+    project_id: projectId ?? 0,
+    title: "Untitled Document",
+    document_type: "review_article",
+    overall_status: "drafting",
+    sections: [],
+  };
+}
+
 async function getNextVersionNumber(documentId: number): Promise<number> {
   const [latestVersion] = await db
     .select({ versionNumber: synthesisVersions.version_number })
@@ -56,6 +79,10 @@ export async function getDocument(id: number) {
 // If no document exists, one is created automatically.
 // ---------------------------------------------------------------------------
 export async function loadStudioDocument(projectId?: number | null) {
+  if (!hasDatabaseConnection()) {
+    return createLocalFallbackDocument(projectId);
+  }
+
   const userId = await getCurrentUserId();
 
   // If a project is specified, load the most recent document for that project
@@ -197,6 +224,14 @@ export async function saveDocumentContent(data: {
   word_count: number;
   sectionId?: number;
 }) {
+  if (!hasDatabaseConnection()) {
+    return {
+      documentId: data.documentId,
+      sectionId: data.sectionId ?? 0,
+      updatedAt: new Date(),
+    };
+  }
+
   // Update the document title + updated_at
   await db
     .update(synthesisDocuments)
@@ -280,6 +315,14 @@ export async function updateSection(
 // Update just the document title
 // ---------------------------------------------------------------------------
 export async function updateDocumentTitle(documentId: number, title: string) {
+  if (!hasDatabaseConnection()) {
+    return {
+      id: documentId,
+      title,
+      updated_at: new Date(),
+    };
+  }
+
   const [doc] = await db
     .update(synthesisDocuments)
     .set({ title, updated_at: new Date() })
@@ -312,6 +355,10 @@ export async function autoSaveVersion(
 // List all projects for the current user (for project selector)
 // ---------------------------------------------------------------------------
 export async function listUserProjects() {
+  if (!hasDatabaseConnection()) {
+    return [];
+  }
+
   const userId = await getCurrentUserId();
   return db
     .select({ id: projects.id, title: projects.title })

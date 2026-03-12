@@ -357,6 +357,8 @@ describe("searchPapersInLibrary", () => {
   });
 
   it("returns papers for empty query", async () => {
+    process.env.DATABASE_URL = "postgresql://localhost/test";
+
     const mockDb = {
       select: vi.fn(() => createQueryBuilder([{ id: 1, title: "Paper A" }])),
     };
@@ -374,6 +376,8 @@ describe("searchPapersInLibrary", () => {
   });
 
   it("returns empty array for no matches", async () => {
+    process.env.DATABASE_URL = "postgresql://localhost/test";
+
     const mockDb = {
       select: vi.fn(() => createQueryBuilder([])),
     };
@@ -387,5 +391,25 @@ describe("searchPapersInLibrary", () => {
     const { searchPapersInLibrary } = await import("@/lib/actions/papers");
     const results = await searchPapersInLibrary("nonexistent");
     expect(results).toEqual([]);
+  });
+
+  it("returns local fallback papers without touching the database when DATABASE_URL is missing", async () => {
+    delete process.env.DATABASE_URL;
+
+    const mockDb = {
+      select: vi.fn(),
+    };
+
+    vi.doMock("@/lib/db", () => ({ db: mockDb }));
+    vi.doMock("@/lib/auth", () => ({
+      getCurrentUserId: vi.fn(),
+    }));
+    vi.doMock("next/cache", () => ({ revalidatePath: vi.fn() }));
+
+    const { searchPapersInLibrary } = await import("@/lib/actions/papers");
+    const results = await searchPapersInLibrary("");
+
+    expect(results.length).toBeGreaterThan(0);
+    expect(mockDb.select).not.toHaveBeenCalled();
   });
 });

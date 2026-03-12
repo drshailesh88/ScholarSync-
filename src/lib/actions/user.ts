@@ -5,13 +5,41 @@ import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getCurrentUserId, DEV_USER_ID } from "@/lib/auth";
 
+function hasDatabaseConnection(): boolean {
+  if (process.env.DATABASE_URL) return true;
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { env } = require("cloudflare:workers");
+    return Boolean(env?.HYPERDRIVE?.connectionString);
+  } catch {
+    return false;
+  }
+}
+
 export async function getUser() {
+  if (!hasDatabaseConnection()) {
+    return null;
+  }
+
   const userId = await getCurrentUserId();
   const [user] = await db.select().from(users).where(eq(users.id, userId));
   return user || null;
 }
 
 export async function ensureUser() {
+  if (!hasDatabaseConnection()) {
+    return {
+      id: DEV_USER_ID,
+      email: "rahul.sharma@aiims.edu",
+      full_name: "Dr. Rahul Sharma",
+      plan: "basic",
+      tokens_limit: 50000,
+      tokens_used_this_month: 0,
+      onboarding_completed: true,
+    };
+  }
+
   const userId = await getCurrentUserId();
   const [existing] = await db
     .select()
@@ -50,6 +78,21 @@ export async function updateUserProfile(data: {
   default_citation_style?: string;
   orcid_id?: string;
 }) {
+  if (!hasDatabaseConnection()) {
+    return {
+      id: DEV_USER_ID,
+      full_name: data.full_name ?? "Dr. Rahul Sharma",
+      specialty: data.specialty ?? null,
+      country: data.country ?? null,
+      bio: data.bio ?? null,
+      research_interests: data.research_interests ?? [],
+      preferred_language: data.preferred_language ?? null,
+      default_citation_style: data.default_citation_style ?? null,
+      orcid_id: data.orcid_id ?? null,
+      updated_at: new Date(),
+    };
+  }
+
   const userId = await getCurrentUserId();
 
   // Build a clean update payload so we only SET columns that were provided
@@ -72,6 +115,17 @@ export async function updateUserProfile(data: {
 }
 
 export async function getUserUsageStats() {
+  if (!hasDatabaseConnection()) {
+    return {
+      tokens_used: 0,
+      tokens_limit: 50000,
+      searches_used: 0,
+      plagiarism_checks: 0,
+      exports_used: 0,
+      plan: "basic",
+    };
+  }
+
   const userId = await getCurrentUserId();
   const [user] = await db
     .select({

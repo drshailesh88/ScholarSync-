@@ -1,7 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { AcademicKeyboardShortcuts } from "@/components/editor/extensions/keyboard-shortcuts";
 import { Footnote } from "@/components/editor/extensions/footnote-node";
-import { structuralCommands } from "@/components/editor/extensions/slash-commands";
+import {
+  SlashCommandsExtension,
+  structuralCommands,
+} from "@/components/editor/extensions/slash-commands";
 import type { EditorMode } from "@/stores/editor-store";
 import { tiptapToDocx } from "@/components/export/tiptap-to-docx";
 import type { JSONContent } from "@tiptap/core";
@@ -295,6 +298,327 @@ describe("Studio Hardening Tests", () => {
       expect(lists.length).toBeGreaterThanOrEqual(2);
       expect(lists.some((l) => l.title === "Bullet List")).toBe(true);
       expect(lists.some((l) => l.title === "Numbered List")).toBe(true);
+    });
+
+    it("Abstract command inserts the structured abstract template", () => {
+      const insertContent = vi.fn().mockReturnThis();
+      const run = vi.fn();
+      const editor = {
+        chain: () => ({
+          focus: () => ({
+            insertContent,
+            run,
+          }),
+        }),
+      } as const;
+
+      structuralCommands.find((cmd) => cmd.title === "Abstract")?.command(
+        editor as never
+      );
+
+      expect(insertContent).toHaveBeenCalledWith({
+        type: "doc",
+        content: [
+          {
+            type: "heading",
+            attrs: { level: 2 },
+            content: [{ type: "text", text: "Abstract" }],
+          },
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                marks: [{ type: "bold" }],
+                text: "Background: ",
+              },
+            ],
+          },
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                marks: [{ type: "bold" }],
+                text: "Methods: ",
+              },
+            ],
+          },
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                marks: [{ type: "bold" }],
+                text: "Results: ",
+              },
+            ],
+          },
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                marks: [{ type: "bold" }],
+                text: "Conclusion: ",
+              },
+            ],
+          },
+        ],
+      });
+      expect(run).toHaveBeenCalledOnce();
+    });
+
+    it("Figure Caption command auto-numbers from existing figure captions", () => {
+      const insertContent = vi.fn().mockReturnThis();
+      const run = vi.fn();
+      const editor = {
+        state: {
+          doc: {
+            descendants: (callback: (node: { type: { name: string }; textContent: string }) => void) => {
+              callback({ type: { name: "paragraph" }, textContent: "Figure 1. Prior figure" });
+              callback({ type: { name: "paragraph" }, textContent: "Figure 2. Another figure" });
+            },
+          },
+        },
+        chain: () => ({
+          focus: () => ({
+            insertContent,
+            run,
+          }),
+        }),
+      } as const;
+
+      structuralCommands.find((cmd) => cmd.title === "Figure Caption")?.command(
+        editor as never
+      );
+
+      expect(insertContent).toHaveBeenCalledWith({
+        type: "paragraph",
+        content: [
+          {
+            type: "text",
+            marks: [{ type: "bold" }],
+            text: "Figure 3. ",
+          },
+          { type: "text", text: "Caption text here" },
+        ],
+      });
+      expect(run).toHaveBeenCalledOnce();
+    });
+
+    it("Table Caption command auto-numbers from existing table captions", () => {
+      const insertContent = vi.fn().mockReturnThis();
+      const run = vi.fn();
+      const editor = {
+        state: {
+          doc: {
+            descendants: (callback: (node: { type: { name: string }; textContent: string }) => void) => {
+              callback({ type: { name: "paragraph" }, textContent: "Table 1. Prior table" });
+            },
+          },
+        },
+        chain: () => ({
+          focus: () => ({
+            insertContent,
+            run,
+          }),
+        }),
+      } as const;
+
+      structuralCommands.find((cmd) => cmd.title === "Table Caption")?.command(
+        editor as never
+      );
+
+      expect(insertContent).toHaveBeenCalledWith({
+        type: "paragraph",
+        content: [
+          {
+            type: "text",
+            marks: [{ type: "bold" }],
+            text: "Table 2. ",
+          },
+          { type: "text", text: "Caption text here" },
+        ],
+      });
+      expect(run).toHaveBeenCalledOnce();
+    });
+
+    it("Footnote command prompts for text and inserts a footnote", () => {
+      const promptSpy = vi.fn().mockReturnValue("Footnote body");
+      const originalPrompt = globalThis.prompt;
+      globalThis.prompt = promptSpy;
+
+      const insertFootnote = vi.fn();
+      const editor = {
+        commands: {
+          insertFootnote,
+        },
+      } as const;
+
+      try {
+        structuralCommands.find((cmd) => cmd.title === "Footnote")?.command(
+          editor as never
+        );
+
+        expect(promptSpy).toHaveBeenCalledWith("Enter footnote text:");
+        expect(insertFootnote).toHaveBeenCalledWith("Footnote body");
+      } finally {
+        globalThis.prompt = originalPrompt;
+      }
+    });
+
+    it("event-dispatch commands emit the expected ScholarSync events", () => {
+      const originalDispatchEvent = window.dispatchEvent;
+      const dispatchEvent = vi.fn();
+      Object.assign(window, { dispatchEvent });
+
+      const editor = {
+        getText: () => "Current editor text",
+      } as const;
+
+      structuralCommands.find((cmd) => cmd.title === "Cite")?.command(
+        editor as never
+      );
+      structuralCommands.find((cmd) => cmd.title === "Continue Writing")?.command(
+        editor as never
+      );
+      structuralCommands.find((cmd) => cmd.title === "Outline Section")?.command(
+        editor as never
+      );
+      structuralCommands.find((cmd) => cmd.title === "Check Guidelines")?.command(
+        editor as never
+      );
+      structuralCommands.find((cmd) => cmd.title === "Ask AI")?.command(
+        editor as never
+      );
+      structuralCommands.find((cmd) => cmd.title === "Word Count")?.command(
+        editor as never
+      );
+
+      try {
+        expect(dispatchEvent).toHaveBeenCalledTimes(6);
+        expect(
+          dispatchEvent.mock.calls.map(
+            (args) => (args[0] as CustomEvent).type
+          )
+        ).toEqual([
+          "scholarsync:open-citation-dialog",
+          "scholarsync:ai-action",
+          "scholarsync:ai-action",
+          "scholarsync:ai-action",
+          "scholarsync:ai-action",
+          "scholarsync:editor-action",
+        ]);
+
+        expect(dispatchEvent.mock.calls[1][0].detail).toEqual({
+          action: "continue",
+          context: "Current editor text",
+        });
+        expect(dispatchEvent.mock.calls[2][0].detail).toEqual({
+          action: "outline-section",
+          context: "Current editor text",
+        });
+        expect(dispatchEvent.mock.calls[3][0].detail).toEqual({
+          action: "check-guidelines",
+          context: "Current editor text",
+        });
+        expect(dispatchEvent.mock.calls[4][0].detail).toEqual({
+          action: "ask",
+        });
+        expect(dispatchEvent.mock.calls[5][0].detail).toEqual({
+          action: "show-word-count",
+        });
+      } finally {
+        Object.assign(window, { dispatchEvent: originalDispatchEvent });
+      }
+    });
+
+    it("Image command creates a hidden image input and inserts a DataURL image", () => {
+      const setImage = vi.fn().mockReturnThis();
+      const run = vi.fn();
+      const editor = {
+        chain: () => ({
+          focus: () => ({
+            setImage,
+            run,
+          }),
+        }),
+      } as const;
+
+      const input = {
+        type: "",
+        accept: "",
+        style: { display: "" },
+        files: [{ name: "figure.png" }],
+        onchange: null as null | (() => void),
+        click() {
+          this.onchange?.();
+        },
+        remove: vi.fn(),
+      };
+
+      const originalDocument = globalThis.document;
+      const originalFileReader = globalThis.FileReader;
+
+      class MockFileReader {
+        onload: null | ((event: { target: { result: string } }) => void) = null;
+
+        readAsDataURL() {
+          this.onload?.({ target: { result: "data:image/png;base64,ZmFrZQ==" } });
+        }
+      }
+
+      Object.assign(globalThis, {
+        document: {
+          createElement: vi.fn().mockReturnValue(input),
+          body: {
+            appendChild: vi.fn(),
+          },
+        },
+        FileReader: MockFileReader,
+      });
+
+      try {
+        structuralCommands.find((cmd) => cmd.title === "Image")?.command(
+          editor as never
+        );
+
+        expect(input.type).toBe("file");
+        expect(input.accept).toBe("image/*");
+        expect(input.style.display).toBe("none");
+        expect(setImage).toHaveBeenCalledWith({
+          src: "data:image/png;base64,ZmFrZQ==",
+        });
+        expect(run).toHaveBeenCalledOnce();
+        expect(input.remove).toHaveBeenCalledOnce();
+      } finally {
+        Object.assign(globalThis, {
+          document: originalDocument,
+          FileReader: originalFileReader,
+        });
+      }
+    });
+
+    it("slash command filtering is case-insensitive and uses includes matching", () => {
+      const options = (
+        SlashCommandsExtension.config.addOptions as unknown as () => {
+          suggestion: {
+            items: (args: { query: string }) => typeof structuralCommands;
+          };
+        }
+      )();
+
+      expect(
+        options.suggestion.items({ query: "ABSTRACT" }).map((cmd) => cmd.title)
+      ).toContain("Abstract");
+      expect(
+        options.suggestion.items({ query: "guideline" }).map((cmd) => cmd.title)
+      ).toContain("Check Guidelines");
+      expect(
+        options.suggestion.items({ query: "TOOLS" }).map((cmd) => cmd.title)
+      ).toContain("Word Count");
+      expect(options.suggestion.items({ query: "zzz-no-match" })).toEqual([]);
     });
   });
 

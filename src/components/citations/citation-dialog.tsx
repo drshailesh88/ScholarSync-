@@ -461,6 +461,9 @@ export function CitationDialog({
           </div>
           <button
             onClick={onClose}
+            type="button"
+            aria-label="Close citation dialog"
+            title="Close citation dialog"
             className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <X size={16} />
@@ -551,7 +554,7 @@ export function CitationDialog({
                 <div className="px-4 py-8 text-center">
                   <p className="text-xs text-gray-400 dark:text-gray-500">
                     {searchQuery.trim() && !detectedIdentifier
-                      ? "No PubMed or reference matches found."
+                      ? "No matching references found."
                       : references.size === 0
                       ? "No references yet. Add one using DOI/PMID or manual entry."
                       : "No matching references found."}
