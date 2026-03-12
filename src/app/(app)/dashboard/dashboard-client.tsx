@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   GlobeHemisphereWest,
   PenNib,
@@ -18,6 +17,11 @@ import {
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { migrateLocalDocuments } from "@/lib/editor/migrate-local-documents";
+import {
+  collectLocalDocuments,
+  hasCompletedLocalDocumentMigration,
+  markLocalDocumentMigrationComplete,
+} from "./dashboard-client-helpers";
 import type {
   DashboardProject,
   DashboardStats,
@@ -147,10 +151,38 @@ export default function DashboardClient({
   recentSearches,
   recentActivity,
 }: DashboardClientProps) {
-  const router = useRouter();
-
   useEffect(() => {
-    migrateLocalDocuments().catch(console.error);
+    const storage = window.localStorage;
+    if (hasCompletedLocalDocumentMigration(storage)) {
+      return;
+    }
+
+    const localDocs = collectLocalDocuments(storage);
+    if (localDocs.length === 0) {
+      return;
+    }
+
+    const migratableDocs = localDocs.filter((doc) => doc.documentId !== "new");
+    let cancelled = false;
+
+    migrateLocalDocuments(localDocs)
+      .then((migratedCount) => {
+        if (cancelled) {
+          return;
+        }
+
+        if (
+          migratableDocs.length === 0 ||
+          migratedCount >= migratableDocs.length
+        ) {
+          markLocalDocumentMigrationComplete(storage);
+        }
+      })
+      .catch(console.error);
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -261,9 +293,9 @@ export default function DashboardClient({
               const status =
                 statusMap[(project.status as DbStatus) || "drafting"];
               return (
-                <div
+                <Link
                   key={project.id}
-                  onClick={() => router.push(`/studio?projectId=${project.id}`)}
+                  href={`/studio?projectId=${project.id}`}
                   className={cn(
                     "group flex items-center justify-between p-5 hover:bg-surface-raised/50 transition-colors cursor-pointer",
                     idx < recentProjects.length - 1 &&
@@ -290,7 +322,7 @@ export default function DashboardClient({
                       <ArrowRight size={14} />
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })
           )}
@@ -322,7 +354,7 @@ export default function DashboardClient({
                 <div
                   key={search.id}
                   className={cn(
-                    "flex items-center gap-3 p-4 hover:bg-surface-raised/50 transition-colors",
+                    "flex items-center gap-3 p-4",
                     idx < recentSearches.length - 1 &&
                       "border-b border-border-subtle"
                   )}
@@ -367,7 +399,7 @@ export default function DashboardClient({
                 <div
                   key={activity.id}
                   className={cn(
-                    "flex items-center gap-3 p-4 hover:bg-surface-raised/50 transition-colors",
+                    "flex items-center gap-3 p-4",
                     idx < recentActivity.length - 1 &&
                       "border-b border-border-subtle"
                   )}

@@ -52,6 +52,39 @@ interface QueueItem {
   blocked_reason: string | null;
 }
 
+export function selectRunnableQueueItems(
+  queue: QueueItem[],
+  {
+    moduleFilter,
+    specFilter,
+    agentName,
+  }: {
+    moduleFilter?: string;
+    specFilter?: string;
+    agentName: string;
+  }
+): QueueItem[] {
+  const isPass1Agent = agentName === "claude" || agentName === "codex-pass1";
+  const allowedStatuses = isPass1Agent
+    ? ["pending"]
+    : specFilter
+      ? ["pass1_done", "pass2_done", "blocked"]
+      : ["pass1_done"];
+
+  return queue.filter((item) => {
+    if (!allowedStatuses.includes(item.status)) {
+      return false;
+    }
+    if (moduleFilter && item.module !== moduleFilter) {
+      return false;
+    }
+    if (specFilter && item.id !== specFilter) {
+      return false;
+    }
+    return true;
+  });
+}
+
 // ── Queue I/O ──
 
 function readQueue(): QueueItem[] {
@@ -197,9 +230,11 @@ async function main() {
   const queue = readQueue();
 
   // Filter to relevant specs
-  let pending = queue.filter((q) => q.status === "pending");
-  if (moduleFilter) pending = pending.filter((q) => q.module === moduleFilter);
-  if (specFilter) pending = pending.filter((q) => q.id === specFilter);
+  const pending = selectRunnableQueueItems(queue, {
+    moduleFilter,
+    specFilter,
+    agentName,
+  });
 
   if (pending.length === 0) {
     console.log("\n  No pending specs to process.\n");
@@ -350,7 +385,9 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error("Controller error:", err);
-  process.exit(1);
-});
+if (process.argv[1] === __filename) {
+  main().catch((err) => {
+    console.error("Controller error:", err);
+    process.exit(1);
+  });
+}
