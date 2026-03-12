@@ -197,14 +197,14 @@ export default function DashboardClient({
             const colors = accentColors[card.accent];
             const Icon = card.icon;
             return (
-              <Link
-                key={card.title}
-                href={card.href}
-                className={cn(
-                  "group glass-panel rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1 border border-border",
-                  colors.glow
-                )}
-              >
+                <Link
+                  key={card.title}
+                  href={card.href}
+                  className={cn(
+                    "group flex h-full flex-col glass-panel rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1 border border-border",
+                    colors.glow
+                  )}
+                >
                 <div
                   className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",

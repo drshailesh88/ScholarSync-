@@ -70,6 +70,12 @@ function parseSpec(specPath: string): {
         .replace(/^(PASS|FAIL|BLOCKED|NOT_ON_PAGE):\s*/, "")
         .replace(/^\*\*(.+?)\*\*\s*[—–-]\s*/, "$1 — ");
 
+      // Recover original checkpoint text from older controller output that
+      // prefixed failures with "Error: ... — original description".
+      if (desc.startsWith("Error: ") && desc.includes(" — ")) {
+        desc = desc.split(" — ").slice(1).join(" — ").trim();
+      }
+
       // Determine current status from the line
       let status: Checkpoint["status"] = "untested";
       if (line.includes("PASS:") || (isChecked && line.includes("PASS"))) {
@@ -120,6 +126,7 @@ function generatePlaywrightTest(
 ): string {
   const pagePath = getPagePath(pageUrl, module);
   const artifactDir = `qa/artifacts/${module}/${specId}`;
+  const hasDashboardAssertions = module === "dashboard";
 
   const testCases = checkpoints.map((cp, i) => {
     const testName = sanitizeTestName(cp.description);
@@ -145,11 +152,25 @@ function generatePlaywrightTest(
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+${hasDashboardAssertions ? `    const handled = await assertDashboardCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, '${cpId}.png'),
       fullPage: false,
     });
+
+${hasDashboardAssertions ? `    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}
 
     // This test validates: ${cp.description.replace(/\*\//g, "* /")}
     // The controller will parse results from Playwright JSON output.
@@ -178,6 +199,7 @@ function generatePlaywrightTest(
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+${hasDashboardAssertions ? "import { assertDashboardCheckpoint } from '../../module-assertions/dashboard';" : ""}
 
 test.describe('${module} / ${specId}', () => {
   test.beforeEach(async ({ page }) => {

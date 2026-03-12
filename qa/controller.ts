@@ -175,6 +175,7 @@ function updateSpecMarkdown(
       /^- \[[ x]\]\s*(PASS|FAIL|BLOCKED|NOT_ON_PAGE):\s*/,
       "- [ ] "
     );
+    cleanLine = cleanLine.replace(/^-\s+\[\s*[x ]\s*\]\s*Error:.*?\s+—\s+/, "- [ ] ");
     // Also handle bold prefix
     cleanLine = cleanLine.replace(/^- \[[ x]\]\s*/, "- [ ] ");
 
@@ -182,10 +183,7 @@ function updateSpecMarkdown(
       case "PASS":
         return cleanLine.replace("- [ ]", "- [x] PASS:");
       case "FAIL":
-        return cleanLine.replace(
-          "- [ ]",
-          `- [ ] FAIL: ${v.proof.error_message?.slice(0, 100) ?? "assertion failed"} —`
-        );
+        return cleanLine.replace("- [ ]", "- [ ] FAIL:");
       case "BLOCKED":
         return cleanLine.replace("- [ ]", "- [ ] BLOCKED:");
       default:

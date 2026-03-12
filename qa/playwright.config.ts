@@ -26,9 +26,9 @@ export default defineConfig({
 
   use: {
     baseURL: process.env.BASE_URL ?? "http://127.0.0.1:3001",
-    trace: "on", // Always capture traces (proof)
+    trace: "retain-on-failure",
     screenshot: "on", // Always capture screenshots (proof)
-    video: "on-first-retry",
+    video: "off",
     actionTimeout: 10_000,
     navigationTimeout: 15_000,
   },
