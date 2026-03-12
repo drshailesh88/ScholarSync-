@@ -422,8 +422,8 @@ export function CitationDialog({
       pmid: "",
       url: "",
     });
-    onInsert([ref.id]);
-    onClose();
+    setSelectedIds((prev) => [...prev, ref.id]);
+    setActiveTab("search");
   };
 
   // Insert selected citations
