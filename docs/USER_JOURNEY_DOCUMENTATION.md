@@ -1,9 +1,10 @@
 # ScholarSync — Comprehensive User Journey Documentation
 
-> **Version:** 1.0
+> **Version:** 1.1
 > **Branch:** `claude/user-journey-documentation-xRBfo`
 > **Date:** 2026-03-13
 > **Scope:** All user-facing modules, flows, and interactions across the entire application.
+> **Tech Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, Zustand, TipTap, CodeMirror, Fabric.js, Liveblocks, Clerk, Drizzle ORM + PostgreSQL/pgvector, Cloudflare R2, Razorpay
 
 ---
 
@@ -31,6 +32,9 @@
 20. [Cross-Module Integration Flows](#20-cross-module-integration-flows)
 21. [Keyboard Shortcuts & Power-User Flows](#21-keyboard-shortcuts--power-user-flows)
 22. [Billing & Subscription Journey](#22-billing--subscription-journey)
+23. [Public Sharing & Live Presentation Journey](#23-public-sharing--live-presentation-journey)
+24. [Editor Module Journey](#24-editor-module-journey)
+25. [Slide Modes: Gamma & Agent](#25-slide-modes-gamma--agent)
 
 ---
 
@@ -53,12 +57,14 @@ The primary navigation is a persistent left sidebar (on the `(app)` layout) prov
 
 - Dashboard
 - The Studio (writing editor)
+- Editor (standalone document editor)
 - Literature Search
 - Notebook
 - Deep Research
 - Library
 - Slides
 - Presentation
+- Poster Creator
 - LaTeX Editor
 - Systematic Review
 - Illustrate
@@ -68,7 +74,16 @@ The primary navigation is a persistent left sidebar (on the `(app)` layout) prov
 - Projects
 - Settings
 
-All authenticated pages live under the `/app` route group. Authentication pages live under `/auth`. The marketing homepage is at `/`.
+**Route groups:**
+
+| Group | Path prefix | Purpose |
+|-------|-------------|---------|
+| Authenticated App | `/` (app group) | All user-facing features |
+| Authentication | `/sign-in`, `/sign-up` | Clerk auth pages |
+| Marketing | `/` | Landing page |
+| Public Sharing | `/share/[token]`, `/share/notebook/[token]` | Shared content viewers |
+| Live Sessions | `/live/[code]` | Live audience presentation mode |
+| Audience View | `/presentation/audience` | Audience-facing presentation view |
 
 ---
 
@@ -1827,6 +1842,12 @@ Write paper in /latex/[projectId]
 
 ## 21. Keyboard Shortcuts & Power-User Flows
 
+### Global Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Cmd+K` / `Ctrl+K` | Open Command Palette (quick navigation, search, actions) |
+
 ### Studio Shortcuts
 
 | Shortcut | Action |
@@ -1906,6 +1927,210 @@ Razorpay events → /api/billing/webhook
 
 ---
 
+## 23. Public Sharing & Live Presentation Journey
+
+### 23.1 Sharing a Notebook
+
+```
+/notebook → Share icon (top bar)
+  → NotebookShareDialog opens
+  → Generate shareable link
+  → Optional: set password protection
+  → Copy link
+  → Recipient visits /share/notebook/[token]
+      → Password prompt (if protected)
+      → Read-only notebook viewer with sources
+      → Sources listed, chat messages visible
+      → Cannot edit (view-only)
+```
+
+### 23.2 Sharing a Presentation
+
+```
+/presentation/[deckId] → "Share" button
+  → Generate public link: /share/[token]
+  → Optional: password protection
+  → Optional: time-limited link
+  → Viewer can see slide deck in read-only mode
+  → Can navigate slides, but cannot edit
+```
+
+### 23.3 Live Presentation Mode (Audience)
+
+```
+Presenter: /presentation/[deckId] → "Present Live" button
+  → Creates a live session code (e.g. ABC-123)
+  → /api/live-session is created
+  → Presenter controls: next slide, previous slide, pointer
+
+Audience: /live/[code]
+  → Enter session code
+  → OR follow shared link
+  → Slides sync in real-time with presenter's current slide
+  → /api/live-session/[sessionId]/stream (Server-Sent Events)
+  → Audience can see: current slide, slide number, progress
+  → Audience CANNOT control navigation
+
+Presenter: /presentation/audience
+  → View audience-facing display
+  → Laser pointer visible to all audience members
+  → Timer overlay
+  → Q&A mode: audience can submit questions
+```
+
+### 23.4 Presentation Recording
+
+```
+/presentation/[deckId] → "Record" button
+  → Recording modal opens
+  → Selects microphone + optional screen capture
+  → Presenter goes through slides while recording
+  → Recording uploaded: /api/recordings/upload
+  → Stored to Cloudflare R2
+  → Shareable recording link generated
+  → Playback with synchronized slide navigation
+```
+
+---
+
+## 24. Editor Module Journey
+
+**Route:** `/editor`, `/editor/[id]`
+
+The Editor is a standalone document editor (separate from the Studio). It provides the same TipTap-based rich text editing for specific use cases like "Cite in Editor" flow from the Library.
+
+### 24.1 Opening the Editor
+
+```
+/editor          → new blank document
+/editor/new      → new document (with optional pending citation from sessionStorage)
+/editor/[id]     → open specific document by ID
+```
+
+### 24.2 Pending Citation Flow
+
+```
+Library → "Cite in Editor" button on a paper
+  → sessionStorage.setItem("scholarsync_pending_citation", { paperId, title })
+  → Navigates to /editor/new
+  → Editor detects pending citation
+  → Automatically inserts the citation at cursor
+  → sessionStorage cleared
+```
+
+### 24.3 Editor Features
+
+The Editor shares the core TipTap editing capabilities with the Studio:
+
+```
+/editor/[id]
+  ├── Full rich-text formatting toolbar
+  ├── Slash commands (/cite, /continue, /summarize, etc.)
+  ├── Bibliography node (auto-appended when citing)
+  ├── Auto-save to database with debounce
+  ├── Version history
+  ├── Comments & annotations
+  ├── Export: PDF / DOCX
+  └── Back to Studio link
+```
+
+---
+
+## 25. Slide Modes: Gamma & Agent
+
+The Slides module supports three distinct editing interfaces, selectable within `/slides/[deckId]`.
+
+### 25.1 Slides Mode (Classic WYSIWYG)
+
+```
+/slides/[deckId] → "Slides" mode tab
+  → Traditional presentation editor
+  → Left: slide thumbnail filmstrip
+  → Center: 16:9 slide canvas (pixel-accurate)
+  → Right: Properties panel
+  → Click to select elements → resize/move/edit
+  → Element types: text, image, shape, chart, table, math, code
+  → Block types (30+ available):
+      Text, Bullets, Numbered List, Two-Column, Image, Video
+      Chart (Bar, Line, Pie, Scatter, Forest Plot)
+      Math (KaTeX), Code Block, Diagram (Mermaid), Citation
+      Table, Statistics Card, Infographic, Timeline, Quote
+      Callout, Divider, Shape, Icon
+  → Slide layout templates: Title, Content, Two-Column, Blank,
+      Image-Left, Image-Right, Full-Image, Section Header, etc.
+  → Master slides: global header/footer/branding
+  → Animation system:
+      → Per-element entrance animations
+      → Exit animations
+      → Emphasis effects
+      → Animation timeline panel
+  → Theme engine:
+      → 10+ preset themes
+      → Custom theme builder (colors, fonts, background)
+      → Real-time preview
+```
+
+### 25.2 Agent Mode (AI-Drafting Interface)
+
+```
+/slides/[deckId] → "Agent" mode tab
+  → AI-first slide creation
+  → Sub-modes:
+
+  Draft Mode:
+    → Chat interface with AI
+    → "Draft 10 slides about GLP-1 agonists in T2DM"
+    → AI generates slide outlines → reviewed → accepted
+    → Individual slides can be refined iteratively
+
+  Learn Mode:
+    → Socratic coaching for creating educational slides
+    → AI asks: "What is your target audience?"
+    → AI guides slide structure decisions
+
+  Visual Mode:
+    → AI suggests and generates visual elements
+    → "Add a diagram showing the mechanism of action"
+    → Image generation for backgrounds / visuals
+    → /api/slides/generate-image
+
+  Illustration Mode:
+    → Embedded illustration tool
+    → Create scientific figures inline
+    → Insert into current slide
+```
+
+### 25.3 Gamma Mode (Card-Based Interface)
+
+```
+/slides/[deckId] → "Gamma" mode tab
+  → Modern card-based UI (inspired by Gamma.app)
+  → Slides displayed as vertical scrolling cards
+  → Spotlight editing: click card → enters focused edit mode
+  → Drag to reorder cards
+  → "+" button between cards → insert new slide
+  → AI suggestions for each card:
+      → Rephrase content
+      → Add supporting statistics
+      → Suggest better layout
+  → Real-time collaboration cursors
+```
+
+### 25.4 Slide Collaboration Features
+
+```
+/slides/[deckId] with multiple users:
+  → Invite collaborators via email → role assignment
+  → Real-time presence: avatar stack in toolbar
+  → Live cursors: see where collaborators are editing
+  → Comment threads: attach comments to specific slides
+  → Version history: full diff between versions
+  → Conflict resolution: operational transforms
+  → "Go to collaborator" → jumps to their current slide
+```
+
+---
+
 ## Appendix: API Endpoint Summary by Module
 
 | Module | Key API Routes |
@@ -1916,6 +2141,7 @@ Razorpay events → /api/billing/webhook
 | Notebook | `/api/rag-chat`, `/api/extract-pdf-advanced`, `/api/research/pdf-chat`, `/api/research/synthesize`, `/api/audio-overview` |
 | Deep Research | `/api/deep-research/plan`, `/api/deep-research/execute`, `/api/deep-research/save`, `/api/deep-research/sessions/*` |
 | Library | `/api/papers/save`, `/api/papers/[id]/pdf`, `/api/citations/export` |
+| Editor | `/api/export/pdf`, `/api/export/docx` |
 | Slides | `/api/slides/*`, `/api/export/pptx` |
 | Presentation | `/api/presentations/generate`, `/api/presentations/edit-slide`, `/api/presentations/agent`, `/api/presentations/coach`, `/api/presentations/defense-prep` |
 | LaTeX | `/api/latex/*` (compile, complete, auto-fix, cite-search, versions, images, comments, synctex, draft-chat, inline-edit, spell-check, track-changes) |
@@ -1926,6 +2152,8 @@ Razorpay events → /api/billing/webhook
 | Compliance | `/api/integrity-check/*`, `/api/copyleaks`, `/api/live-session/*` |
 | Billing | `/api/billing/create-order`, `/api/billing/verify-payment`, `/api/billing/webhook`, `/api/billing/subscription` |
 | Posters | `/api/posters/generate` |
+| Sharing/Live | `/api/live-session/*`, `/api/recordings/upload` |
+| References | `/api/references/parse`, `/api/references/resolve`, `/api/references/search-pubmed`, `/api/references/zotero` |
 
 ---
 
