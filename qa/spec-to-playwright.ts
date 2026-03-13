@@ -127,6 +127,8 @@ function generatePlaywrightTest(
   const pagePath = getPagePath(pageUrl, module);
   const artifactDir = `qa/artifacts/${module}/${specId}`;
   const hasDashboardAssertions = module === "dashboard";
+  const hasOnboardingAssertions = module === "onboarding";
+  const hasProjectsAssertions = module === "projects";
 
   const testCases = checkpoints.map((cp, i) => {
     const testName = sanitizeTestName(cp.description);
@@ -159,6 +161,20 @@ ${hasDashboardAssertions ? `    const handled = await assertDashboardCheckpoint(
       subsection: ${JSON.stringify(cp.subsection)},
       rootDir: process.cwd(),
     });
+` : ""}${hasOnboardingAssertions ? `    const handled = await assertOnboardingCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasProjectsAssertions ? `    const handled = await assertProjectsCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
 ` : ""}
 
     // Screenshot as proof this test actually ran in a browser
@@ -169,6 +185,12 @@ ${hasDashboardAssertions ? `    const handled = await assertDashboardCheckpoint(
 
 ${hasDashboardAssertions ? `    if (!handled) {
       throw new Error('Unhandled dashboard checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasOnboardingAssertions ? `    if (!handled) {
+      throw new Error('Unhandled onboarding checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasProjectsAssertions ? `    if (!handled) {
+      throw new Error('Unhandled projects checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
     }
 ` : ""}
 
@@ -200,6 +222,8 @@ import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 ${hasDashboardAssertions ? "import { assertDashboardCheckpoint } from '../../module-assertions/dashboard';" : ""}
+${hasOnboardingAssertions ? "import { assertOnboardingCheckpoint } from '../../module-assertions/onboarding';" : ""}
+${hasProjectsAssertions ? "import { assertProjectsCheckpoint } from '../../module-assertions/projects';" : ""}
 
 test.describe('${module} / ${specId}', () => {
   test.beforeEach(async ({ page }) => {
