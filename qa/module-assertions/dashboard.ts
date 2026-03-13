@@ -123,6 +123,10 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "useEffect(() => {" },
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "migrateLocalDocuments(localDocs)" },
   ],
+  "Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`": [
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "const localDocs = collectLocalDocuments(storage);" },
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "migrateLocalDocuments(localDocs)" },
+  ],
   "Local document migration failures are sent to `console.error`": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: ".catch(console.error)" },
   ],
@@ -224,6 +228,9 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
   "Search metadata line omits the source suffix when `source` is null or `\"all\"`": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: 'search.source && search.source !== "all"' },
   ],
+  "Search rows have no hover background styling and no click navigation in the current implementation": [
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentSearches.map((search, idx) => (" },
+  ],
   "Search rows have hover background styling but no click navigation in the current implementation": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "hover:bg-surface-raised/50" },
   ],
@@ -239,6 +246,9 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
   ],
   "Activity metadata line omits the separator when `entity_type` is missing": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: '{activity.entity_type ? " · " : ""}' },
+  ],
+  "Activity rows have no hover background styling and no click navigation in the current implementation": [
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentActivity.map((activity, idx) => (" },
   ],
   "Activity rows have hover background styling but no click navigation in the current implementation": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "hover:bg-surface-raised/50" },
@@ -598,6 +608,12 @@ const sourceRegexChecks: Record<string, Array<{ file: string; pattern: RegExp }>
       pattern: /router\.push\(`\/studio\/\$\{project\.id\}`\)/,
     },
   ],
+  "Each project row is an accessible `Link` to `/studio?projectId=${project.id}`": [
+    {
+      file: "src/app/(app)/dashboard/dashboard-client.tsx",
+      pattern: /<Link[\s\S]*href=\{`\/studio\?projectId=\$\{project\.id\}`\}/,
+    },
+  ],
   "Recent Activity section header contains NO action link (unlike Recent Searches which has \"Search →\")": [
     {
       file: "src/app/(app)/dashboard/dashboard-client.tsx",
@@ -619,8 +635,16 @@ const sourceNotContainsChecks: Record<string, Array<{ file: string; needle: stri
   "Each action card is a `Link`, not a button with imperative routing": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "router.push(" },
   ],
+  "Search rows have no hover background styling and no click navigation in the current implementation": [
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentSearches.map((search, idx) => (\n                <div\n                  key={search.id}\n                  className={cn(\n                    \"flex items-center gap-3 p-4 hover:bg-surface-raised/50" },
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentSearches.map((search, idx) => (\n                <Link" },
+  ],
   "Search rows have hover background styling but no click navigation in the current implementation": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "href=\"/research\"" },
+  ],
+  "Activity rows have no hover background styling and no click navigation in the current implementation": [
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentActivity.map((activity, idx) => (\n                <div\n                  key={activity.id}\n                  className={cn(\n                    \"flex items-center gap-3 p-4 hover:bg-surface-raised/50" },
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentActivity.map((activity, idx) => (\n                <Link" },
   ],
   "Activity rows have hover background styling but no click navigation in the current implementation": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "href=\"/activity\"" },
@@ -1252,6 +1276,22 @@ export async function assertDashboardCheckpoint({
       "src/app/(app)/dashboard/dashboard-client.tsx",
       /recentActivity\.map\(\(activity, idx\) =>[\s\S]*className=\{cn\([\s\S]*hover:bg-surface-raised\/50/
     );
+    return true;
+  }
+
+  if (description === "Search rows have no hover background styling and no click navigation in the current implementation") {
+    const source = readFile(rootDir, "src/app/(app)/dashboard/dashboard-client.tsx");
+    expect(source).toMatch(/recentSearches\.map\(\(search, idx\) =>[\s\S]*className=\{cn\([\s\S]*"flex items-center gap-3 p-4"/);
+    expect(source).not.toMatch(/recentSearches\.map\(\(search, idx\) =>[\s\S]*hover:bg-surface-raised\/50/);
+    expect(source).not.toMatch(/recentSearches\.map\(\(search, idx\) =>[\s\S]*<Link/);
+    return true;
+  }
+
+  if (description === "Activity rows have no hover background styling and no click navigation in the current implementation") {
+    const source = readFile(rootDir, "src/app/(app)/dashboard/dashboard-client.tsx");
+    expect(source).toMatch(/recentActivity\.map\(\(activity, idx\) =>[\s\S]*className=\{cn\([\s\S]*"flex items-center gap-3 p-4"/);
+    expect(source).not.toMatch(/recentActivity\.map\(\(activity, idx\) =>[\s\S]*hover:bg-surface-raised\/50/);
+    expect(source).not.toMatch(/recentActivity\.map\(\(activity, idx\) =>[\s\S]*<Link/);
     return true;
   }
 

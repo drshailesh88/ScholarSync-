@@ -33,7 +33,7 @@ MODULE: dashboard
 - [x] PASS: `Searches` stat reads `stats.searchCount`
 - [x] PASS: `Conversations` stat reads `stats.conversationCount`
 - [x] PASS: `Active Manuscripts` rows are rendered directly from `recentProjects`
-- [x] PASS: Each project row uses `router.push(`/studio/${project.id}`)` on click
+- [x] PASS: Each project row is an accessible `Link` to `/studio?projectId=${project.id}`
 - [x] PASS: Project icon container uses `w-10 h-10 rounded-lg bg-surface-raised`
 - [x] PASS: Project title hover changes to `text-brand`
 - [x] PASS: Project subtitle format is `{relative time} · {formatted project type}`

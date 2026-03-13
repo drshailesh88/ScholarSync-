@@ -30,7 +30,7 @@ MODULE: dashboard
 
 ### Document Migration
 - [x] PASS: `migrateLocalDocuments()` called on dashboard mount via `useEffect`
-- [x] PASS: Dashboard mount currently calls `migrateLocalDocuments()` with zero arguments
+- [x] PASS: Dashboard mount collects local docs and calls `migrateLocalDocuments(localDocs)`
 - [x] PASS: Creates default "My Research" project if user has no projects
 - [x] PASS: Migrates each document to `synthesisDocuments` + `synthesisSections` tables
 - [x] PASS: Skips "new" template documents
