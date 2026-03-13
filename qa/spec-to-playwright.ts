@@ -109,13 +109,21 @@ function sanitizeTestName(desc: string): string {
 }
 
 function getPagePath(pageUrl: string, moduleName: string): string {
+  let pathname: string;
   try {
     const url = new URL(pageUrl);
-    return url.pathname;
+    pathname = url.pathname;
   } catch {
-    if (pageUrl.startsWith("/")) return pageUrl;
-    return `/${moduleName}`;
+    pathname = pageUrl.startsWith("/") ? pageUrl : `/${moduleName}`;
   }
+
+  // /editor without an [id] segment is not a valid route — fall back to /dashboard
+  // so source-level assertions can still run with a valid page for screenshot proof.
+  if (pathname === "/editor") {
+    return "/dashboard";
+  }
+
+  return pathname;
 }
 
 function generatePlaywrightTest(
@@ -129,6 +137,22 @@ function generatePlaywrightTest(
   const hasDashboardAssertions = module === "dashboard";
   const hasOnboardingAssertions = module === "onboarding";
   const hasProjectsAssertions = module === "projects";
+  const hasLibraryAssertions = module === "library";
+  const hasEditorAssertions = module === "editor";
+  const hasStudioAssertions = module === "studio";
+  const hasResearchAssertions = module === "research";
+  const hasLatexAssertions = module === "latex";
+  const hasNotebookAssertions = module === "notebook";
+  const hasComplianceAssertions = module === "compliance";
+  const hasAnalysisAssertions = module === "analysis";
+  const hasDeepResearchAssertions = module === "deep-research";
+  const hasFeedsAssertions = module === "feeds";
+  const hasSlidesAssertions = module === "slides" || module === "slides-ai";
+  const hasPresentationAssertions = module === "presentation";
+  const hasIllustrateAssertions = module === "illustrate";
+  const hasPosterAssertions = module === "poster";
+  const hasSystematicReviewAssertions = module === "systematic-review";
+  const hasSettingsAssertions = module === "settings";
 
   const testCases = checkpoints.map((cp, i) => {
     const testName = sanitizeTestName(cp.description);
@@ -175,6 +199,118 @@ ${hasDashboardAssertions ? `    const handled = await assertDashboardCheckpoint(
       subsection: ${JSON.stringify(cp.subsection)},
       rootDir: process.cwd(),
     });
+` : ""}${hasLibraryAssertions ? `    const handled = await assertLibraryCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasEditorAssertions ? `    const handled = await assertEditorCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasStudioAssertions ? `    const handled = await assertStudioCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasResearchAssertions ? `    const handled = await assertResearchCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasLatexAssertions ? `    const handled = await assertLatexCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasNotebookAssertions ? `    const handled = await assertNotebookCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasComplianceAssertions ? `    const handled = await assertComplianceCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasAnalysisAssertions ? `    const handled = await assertAnalysisCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasDeepResearchAssertions ? `    const handled = await assertDeepResearchCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasFeedsAssertions ? `    const handled = await assertFeedsCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasSlidesAssertions ? `    const handled = await assertSlidesCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasPresentationAssertions ? `    const handled = await assertPresentationCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasIllustrateAssertions ? `    const handled = await assertIllustrateCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasPosterAssertions ? `    const handled = await assertPosterCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasSystematicReviewAssertions ? `    const handled = await assertSystematicReviewCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
+` : ""}${hasSettingsAssertions ? `    const handled = await assertSettingsCheckpoint({
+      page,
+      description: ${JSON.stringify(cp.description)},
+      section: ${JSON.stringify(cp.section)},
+      subsection: ${JSON.stringify(cp.subsection)},
+      rootDir: process.cwd(),
+    });
 ` : ""}
 
     // Screenshot as proof this test actually ran in a browser
@@ -191,6 +327,54 @@ ${hasDashboardAssertions ? `    if (!handled) {
     }
 ` : ""}${hasProjectsAssertions ? `    if (!handled) {
       throw new Error('Unhandled projects checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasLibraryAssertions ? `    if (!handled) {
+      throw new Error('Unhandled library checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasEditorAssertions ? `    if (!handled) {
+      throw new Error('Unhandled editor checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasStudioAssertions ? `    if (!handled) {
+      throw new Error('Unhandled studio checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasResearchAssertions ? `    if (!handled) {
+      throw new Error('Unhandled research checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasLatexAssertions ? `    if (!handled) {
+      throw new Error('Unhandled latex checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasNotebookAssertions ? `    if (!handled) {
+      throw new Error('Unhandled notebook checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasComplianceAssertions ? `    if (!handled) {
+      throw new Error('Unhandled compliance checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasAnalysisAssertions ? `    if (!handled) {
+      throw new Error('Unhandled analysis checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasDeepResearchAssertions ? `    if (!handled) {
+      throw new Error('Unhandled deep-research checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasFeedsAssertions ? `    if (!handled) {
+      throw new Error('Unhandled feeds checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasSlidesAssertions ? `    if (!handled) {
+      throw new Error('Unhandled slides checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasPresentationAssertions ? `    if (!handled) {
+      throw new Error('Unhandled presentation checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasIllustrateAssertions ? `    if (!handled) {
+      throw new Error('Unhandled illustrate checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasPosterAssertions ? `    if (!handled) {
+      throw new Error('Unhandled poster checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasSystematicReviewAssertions ? `    if (!handled) {
+      throw new Error('Unhandled systematic-review checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+    }
+` : ""}${hasSettingsAssertions ? `    if (!handled) {
+      throw new Error('Unhandled settings checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
     }
 ` : ""}
 
@@ -224,6 +408,22 @@ import path from 'path';
 ${hasDashboardAssertions ? "import { assertDashboardCheckpoint } from '../../module-assertions/dashboard';" : ""}
 ${hasOnboardingAssertions ? "import { assertOnboardingCheckpoint } from '../../module-assertions/onboarding';" : ""}
 ${hasProjectsAssertions ? "import { assertProjectsCheckpoint } from '../../module-assertions/projects';" : ""}
+${hasLibraryAssertions ? "import { assertLibraryCheckpoint } from '../../module-assertions/library';" : ""}
+${hasEditorAssertions ? "import { assertEditorCheckpoint } from '../../module-assertions/editor';" : ""}
+${hasStudioAssertions ? "import { assertStudioCheckpoint } from '../../module-assertions/studio';" : ""}
+${hasResearchAssertions ? "import { assertResearchCheckpoint } from '../../module-assertions/research';" : ""}
+${hasLatexAssertions ? "import { assertLatexCheckpoint } from '../../module-assertions/latex';" : ""}
+${hasNotebookAssertions ? "import { assertNotebookCheckpoint } from '../../module-assertions/notebook';" : ""}
+${hasComplianceAssertions ? "import { assertComplianceCheckpoint } from '../../module-assertions/compliance';" : ""}
+${hasAnalysisAssertions ? "import { assertAnalysisCheckpoint } from '../../module-assertions/analysis';" : ""}
+${hasDeepResearchAssertions ? "import { assertDeepResearchCheckpoint } from '../../module-assertions/deep-research';" : ""}
+${hasFeedsAssertions ? "import { assertFeedsCheckpoint } from '../../module-assertions/feeds';" : ""}
+${hasSlidesAssertions ? "import { assertSlidesCheckpoint } from '../../module-assertions/slides';" : ""}
+${hasPresentationAssertions ? "import { assertPresentationCheckpoint } from '../../module-assertions/presentation';" : ""}
+${hasIllustrateAssertions ? "import { assertIllustrateCheckpoint } from '../../module-assertions/illustrate';" : ""}
+${hasPosterAssertions ? "import { assertPosterCheckpoint } from '../../module-assertions/poster';" : ""}
+${hasSystematicReviewAssertions ? "import { assertSystematicReviewCheckpoint } from '../../module-assertions/systematic-review';" : ""}
+${hasSettingsAssertions ? "import { assertSettingsCheckpoint } from '../../module-assertions/settings';" : ""}
 
 test.describe('${module} / ${specId}', () => {
   test.beforeEach(async ({ page }) => {
