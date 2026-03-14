@@ -1,0 +1,597 @@
+[
+  {
+    "checkpoint_id": "cp-000",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-000.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 5763
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-001",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-001.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1733
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-002",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-002.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1727
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-003",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": false,
+      "screenshot_path": "",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"integrity-check\"\u001b[39m\nReceived string:    \u001b[31m\"// Rate limiting utility\u001b[39m\n\u001b[31m// Uses in-memory sliding window when Upstash is not configured (dev),\u001b[39m\n\u001b[31m// or @upstash/ratelimit + @upstash/redis in production.·\u001b[39m\n\u001b[31mimport { NextResponse } from \\\"next/server\\\";·\u001b[39m\n\u001b[31minterface RateLimitConfig {\u001b[39m\n\u001b[31m  /** Max requests allowed in the window */\u001b[39m\n\u001b[31m  limit: number;\u001b[39m\n\u001b[31m  /** Window duration in seconds */\u001b[39m\n\u001b[31m  windowSeconds: number;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// In-memory rate limiter for dev / when Upstash is not configured\u001b[39m\n\u001b[31mconst windowMap = new Map<string, { count: number; resetAt: number }>();·\u001b[39m\n\u001b[31mfunction inMemoryCheck(\u001b[39m\n\u001b[31m  key: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): { success: boolean; remaining: number } {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  const entry = windowMap.get(key);·\u001b[39m\n\u001b[31m  if (!entry || now > entry.resetAt) {\u001b[39m\n\u001b[31m    windowMap.set(key, { count: 1, resetAt: now + config.windowSeconds * 1000 });\u001b[39m\n\u001b[31m    return { success: true, remaining: config.limit - 1 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  if (entry.count >= config.limit) {\u001b[39m\n\u001b[31m    return { success: false, remaining: 0 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  entry.count += 1;\u001b[39m\n\u001b[31m  return { success: true, remaining: config.limit - entry.count };\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Periodically clean up expired entries to prevent memory leaks\u001b[39m\n\u001b[31msetInterval(() => {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  for (const [key, entry] of windowMap) {\u001b[39m\n\u001b[31m    if (now > entry.resetAt) {\u001b[39m\n\u001b[31m      windowMap.delete(key);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }\u001b[39m\n\u001b[31m}, 60_000);·\u001b[39m\n\u001b[31m/**\u001b[39m\n\u001b[31m * Check rate limit for a given user/key.\u001b[39m\n\u001b[31m * Returns null if allowed, or a 429 Response if rate limited.\u001b[39m\n\u001b[31m */\u001b[39m\n\u001b[31mexport async function checkRateLimit(\u001b[39m\n\u001b[31m  userId: string,\u001b[39m\n\u001b[31m  endpoint: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): Promise<Response | null> {\u001b[39m\n\u001b[31m  const key = `${userId}:${endpoint}`;·\u001b[39m\n\u001b[31m  // Use Upstash if configured\u001b[39m\n\u001b[31m  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const { Ratelimit } = await import(\\\"@upstash/ratelimit\\\");\u001b[39m\n\u001b[31m      const { Redis } = await import(\\\"@upstash/redis\\\");·\u001b[39m\n\u001b[31m      const redis = new Redis({\u001b[39m\n\u001b[31m        url: process.env.UPSTASH_REDIS_REST_URL,\u001b[39m\n\u001b[31m        token: process.env.UPSTASH_REDIS_REST_TOKEN,\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const ratelimit = new Ratelimit({\u001b[39m\n\u001b[31m        redis,\u001b[39m\n\u001b[31m        limiter: Ratelimit.slidingWindow(config.limit, `${config.windowSeconds} s`),\u001b[39m\n\u001b[31m        prefix: \\\"scholarsync\\\",\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const { success, remaining } = await ratelimit.limit(key);\u001b[39m\n\u001b[31m      if (!success) {\u001b[39m\n\u001b[31m        return NextResponse.json(\u001b[39m\n\u001b[31m          { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m          {\u001b[39m\n\u001b[31m            status: 429,\u001b[39m\n\u001b[31m            headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m        );\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      return null;\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Fall through to in-memory if Upstash fails\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  // Fallback to in-memory rate limiting\u001b[39m\n\u001b[31m  const { success, remaining } = inMemoryCheck(key, config);\u001b[39m\n\u001b[31m  if (!success) {\u001b[39m\n\u001b[31m    return NextResponse.json(\u001b[39m\n\u001b[31m      { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m      {\u001b[39m\n\u001b[31m        status: 429,\u001b[39m\n\u001b[31m        headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    );\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return null;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Preset rate limit configs\u001b[39m\n\u001b[31mexport const RATE_LIMITS = {\u001b[39m\n\u001b[31m  /** AI chat/generation endpoints: 60 requests per hour */\u001b[39m\n\u001b[31m  ai: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Search endpoints: 120 requests per hour */\u001b[39m\n\u001b[31m  search: { limit: 120, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Export endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  export: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Audio overview generation: 10 requests per hour */\u001b[39m\n\u001b[31m  \\\"audio-overview\\\": { limit: 10, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Plagiarism/integrity check: 20 requests per hour */\u001b[39m\n\u001b[31m  analysis: { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Embedding: 60 requests per hour */\u001b[39m\n\u001b[31m  embed: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Write/save endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  write: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Feed operations: 60 requests per hour */\u001b[39m\n\u001b[31m  feeds: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Slide image generation: 20 requests per hour */\u001b[39m\n\u001b[31m  \\\"slide-images\\\": { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m} as const;\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/analysis.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/analysis.ts:26:43)\n    at assertAnalysisCheckpoint (/home/user/ScholarSync-/qa/module-assertions/analysis.ts:640:5)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:218:27",
+      "duration_ms": 1709
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-004",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-004.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1887
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-005",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-005.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1767
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-006",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-006.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1701
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-007",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-007.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1687
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-008",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-008.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1773
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-009",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-009.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1706
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-010",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-010.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1764
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-011",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-011.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1750
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-012",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-012.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1892
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-013",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-013.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1775
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-014",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-014.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1785
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-015",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-015.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1846
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-016",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-016.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1825
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-017",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-017.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1769
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-018",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-018.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1804
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-019",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-019.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1778
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-020",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-020.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1840
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-021",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-021.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1729
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-022",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-022.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1715
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-023",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-023.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1726
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-024",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-024.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1776
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-025",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-025.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1334:13",
+      "duration_ms": 1785
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-026",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-026.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)\n\n  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1384:13",
+      "duration_ms": 1839
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-027",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-027.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)\n\n  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1434:13",
+      "duration_ms": 1850
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-028",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-028.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1798
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-029",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-029.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1729
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-030",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-030.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)\n\n  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1584:13",
+      "duration_ms": 1862
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-031",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-031.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)\n\n  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1634:13",
+      "duration_ms": 1788
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-032",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-032.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1799
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-033",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-033.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)\n\n  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1734:13",
+      "duration_ms": 1850
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  },
+  {
+    "checkpoint_id": "cp-034",
+    "spec_id": "spec-008",
+    "module": "analysis",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/analysis/spec-008/cp-034.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)\n\n  1782 |\n  1783 |     if (!handled) {\n> 1784 |       throw new Error('Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)');\n       |             ^\n  1785 |     }\n  1786 |\n  1787 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1784:13",
+      "duration_ms": 1914
+    },
+    "timestamp": "2026-03-14T13:00:11.748Z"
+  }
+]

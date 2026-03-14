@@ -1,0 +1,1800 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.0",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "deep-research/spec-015.spec.ts",
+      "file": "deep-research/spec-015.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "deep-research / spec-015",
+          "file": "deep-research/spec-015.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Route appends References with a numbered citation list to the markdown before Ti",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6845,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-000 Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-000 Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:84:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 84
+                        },
+                        "snippet": "  82 |\n  83 |     if (!handled) {\n> 84 |       throw new Error('Unhandled deep-research checkpoint: cp-000 Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.');\n     |             ^\n  85 |     }\n  86 |\n  87 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 84
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-000 Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.\n\n  82 |\n  83 |     if (!handled) {\n> 84 |       throw new Error('Unhandled deep-research checkpoint: cp-000 Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.');\n     |             ^\n  85 |     }\n  86 |\n  87 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:84:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:23.600Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-db351-t-to-the-markdown-before-Ti-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-db351-t-to-the-markdown-before-Ti-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-db351-t-to-the-markdown-before-Ti-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 84
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-c5e3e702cc79ff8cef7e",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Route builds SourceReference with doi pmid title from sources and passes to mark",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1497,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:31.350Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-ddd1b--sources-and-passes-to-mark-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-e1394b92a34c44ca2239",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Route computes word_count from the plain text markdown and stores it on the sect",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1486,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-002 Route computes `word_count` from the plain text markdown and stores it on the section record.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-002 Route computes `word_count` from the plain text markdown and stores it on the section record.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:184:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 184
+                        },
+                        "snippet": "  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled deep-research checkpoint: cp-002 Route computes `word_count` from the plain text markdown and stores it on the section record.');\n      |             ^\n  185 |     }\n  186 |\n  187 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 184
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-002 Route computes `word_count` from the plain text markdown and stores it on the section record.\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled deep-research checkpoint: cp-002 Route computes `word_count` from the plain text markdown and stores it on the section record.');\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:184:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:32.927Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c47cf-n-and-stores-it-on-the-sect-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c47cf-n-and-stores-it-on-the-sect-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c47cf-n-and-stores-it-on-the-sect-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 184
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-a37b8df70770e3084764",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: If the authenticated user does not exist in the DB the route inserts a placehold",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1547,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-003 If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: \"{userId}@dev.local\"` and `full_name: \"Dev User\"`; the comment describes a dev-mode fallback, but the code is not environment-gated.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-003 If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: \"{userId}@dev.local\"` and `full_name: \"Dev User\"`; the comment describes a dev-mode fallback, but the code is not environment-gated.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:234:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 234
+                        },
+                        "snippet": "  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled deep-research checkpoint: cp-003 If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: \"{userId}@dev.local\"` and `full_name: \"Dev User\"`; the comment describes a dev-mode fallback, but the code is not environment-gated.');\n      |             ^\n  235 |     }\n  236 |\n  237 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 234
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-003 If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: \"{userId}@dev.local\"` and `full_name: \"Dev User\"`; the comment describes a dev-mode fallback, but the code is not environment-gated.\n\n  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled deep-research checkpoint: cp-003 If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: \"{userId}@dev.local\"` and `full_name: \"Dev User\"`; the comment describes a dev-mode fallback, but the code is not environment-gated.');\n      |             ^\n  235 |     }\n  236 |\n  237 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:234:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:35.231Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-a7c26-e-route-inserts-a-placehold-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-a7c26-e-route-inserts-a-placehold-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-a7c26-e-route-inserts-a-placehold-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 234
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-653e21178efcd1efa995",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Unexpected errors return 500 error Failed to create studio document",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1548,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-004 Unexpected errors return `500 { \"error\": \"Failed to create studio document\" }`.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-004 Unexpected errors return `500 { \"error\": \"Failed to create studio document\" }`.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:284:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 284
+                        },
+                        "snippet": "  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled deep-research checkpoint: cp-004 Unexpected errors return `500 { \"error\": \"Failed to create studio document\" }`.');\n      |             ^\n  285 |     }\n  286 |\n  287 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 284
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-004 Unexpected errors return `500 { \"error\": \"Failed to create studio document\" }`.\n\n  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled deep-research checkpoint: cp-004 Unexpected errors return `500 { \"error\": \"Failed to create studio document\" }`.');\n      |             ^\n  285 |     }\n  286 |\n  287 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:284:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:37.659Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-6ff66-d-to-create-studio-document-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-6ff66-d-to-create-studio-document-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-6ff66-d-to-create-studio-document-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 284
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-11cc908c5fb8952d1fc6",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Auth failure returns 401 error Not authenticated",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1534,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-005 Auth failure returns `401 { \"error\": \"Not authenticated\" }`.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-005 Auth failure returns `401 { \"error\": \"Not authenticated\" }`.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:334:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 334
+                        },
+                        "snippet": "  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled deep-research checkpoint: cp-005 Auth failure returns `401 { \"error\": \"Not authenticated\" }`.');\n      |             ^\n  335 |     }\n  336 |\n  337 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 334
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-005 Auth failure returns `401 { \"error\": \"Not authenticated\" }`.\n\n  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled deep-research checkpoint: cp-005 Auth failure returns `401 { \"error\": \"Not authenticated\" }`.');\n      |             ^\n  335 |     }\n  336 |\n  337 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:334:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:40.063Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-13881-401-error-Not-authenticated-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-13881-401-error-Not-authenticated-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-13881-401-error-Not-authenticated-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 334
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-b52b08624070b108d19b",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: EVIDENCE_BADGE_STYLES in CitationReferencetsx renders evidence labels as capital",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1558,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:42.469Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-0ed3a--evidence-labels-as-capital-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-28bab9c6e1ba3bbea02c",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: CitationsPaneltsx renders evidence labels via levelcharAt0toUpperCase levelslice",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1493,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:44.114Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-f7734-arAt0toUpperCase-levelslice-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-159064a3baeb3d7d43f4",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: EvidenceBadge tooltip text is Label evidence designLabel or Label evidence no de",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1585,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-008 EvidenceBadge tooltip text is `\"{Label} evidence — {designLabel}\"` or `\"{Label} evidence\"` (no design label).",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-008 EvidenceBadge tooltip text is `\"{Label} evidence — {designLabel}\"` or `\"{Label} evidence\"` (no design label).\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:484:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 484
+                        },
+                        "snippet": "  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled deep-research checkpoint: cp-008 EvidenceBadge tooltip text is `\"{Label} evidence — {designLabel}\"` or `\"{Label} evidence\"` (no design label).');\n      |             ^\n  485 |     }\n  486 |\n  487 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 484
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-008 EvidenceBadge tooltip text is `\"{Label} evidence — {designLabel}\"` or `\"{Label} evidence\"` (no design label).\n\n  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled deep-research checkpoint: cp-008 EvidenceBadge tooltip text is `\"{Label} evidence — {designLabel}\"` or `\"{Label} evidence\"` (no design label).');\n      |             ^\n  485 |     }\n  486 |\n  487 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:484:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:45.627Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c69f5-bel-or-Label-evidence-no-de-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c69f5-bel-or-Label-evidence-no-de-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c69f5-bel-or-Label-evidence-no-de-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 484
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-402327a4b28ae8c29b53",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: citationsPanelOpen is initialized to true the citations panel starts open by def",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1476,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:48.047Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-66e9c-ns-panel-starts-open-by-def-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-5f2f759ea15dc225955a",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Desktop TOC component TableOfContents returns null when itemslength 0 but the mo",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1428,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:49.611Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-ab403-en-itemslength-0-but-the-mo-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-6a88648b3174e2de1bad",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: The handle bar element div classNamew-10 h-1 bg-gray-300 is purely decorative th",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1549,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-011 The handle bar element (`<div className=\"w-10 h-1 bg-gray-300 ...\">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-011 The handle bar element (`<div className=\"w-10 h-1 bg-gray-300 ...\">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:634:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 634
+                        },
+                        "snippet": "  632 |\n  633 |     if (!handled) {\n> 634 |       throw new Error('Unhandled deep-research checkpoint: cp-011 The handle bar element (`<div className=\"w-10 h-1 bg-gray-300 ...\">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.');\n      |             ^\n  635 |     }\n  636 |\n  637 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 634
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-011 The handle bar element (`<div className=\"w-10 h-1 bg-gray-300 ...\">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.\n\n  632 |\n  633 |     if (!handled) {\n> 634 |       throw new Error('Unhandled deep-research checkpoint: cp-011 The handle bar element (`<div className=\"w-10 h-1 bg-gray-300 ...\">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.');\n      |             ^\n  635 |     }\n  636 |\n  637 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:634:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:51.057Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-a014f-300-is-purely-decorative-th-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-a014f-300-is-purely-decorative-th-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-a014f-300-is-purely-decorative-th-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 634
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-5d486d6a2ce5b8470476",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Export button text labels use hidden sminline on mobile below sm breakpoint only",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1528,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-012 Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-012 Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:684:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 684
+                        },
+                        "snippet": "  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled deep-research checkpoint: cp-012 Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.');\n      |             ^\n  685 |     }\n  686 |\n  687 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 684
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-012 Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.\n\n  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled deep-research checkpoint: cp-012 Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.');\n      |             ^\n  685 |     }\n  686 |\n  687 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:684:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:53.419Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c55ff-le-below-sm-breakpoint-only-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c55ff-le-below-sm-breakpoint-only-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c55ff-le-below-sm-breakpoint-only-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 684
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-a809e83c9f0756aa2a5b",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Buttons render in this order md PDF Copy vertical divider Open in Studio vertica",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1469,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:55.836Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-8ddb5-ider-Open-in-Studio-vertica-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-704671f1ac1b298e14eb",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Markdown button title attribute Download as Markdown",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1431,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:57.390Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-ed913-ribute-Download-as-Markdown-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-ef93ee01bfca3c9cdfc4",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Copy button title attribute Copies formatted text paste into Google Docs Word or",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1420,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:29:58.843Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-4be27-te-into-Google-Docs-Word-or-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-92d48c84443d70c9bd6a",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: BibTeX button title attribute Download references as BibTeX",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1393,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:00.276Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-633c3-wnload-references-as-BibTeX-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-46e4cc5ef370adfe52f1",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: RIS button title attribute Download references as RIS EndNoteMendeley",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1387,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:01.688Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c06e6-nces-as-RIS-EndNoteMendeley-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-7ba3f7ee34267bdd75b2",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: RIS export when pdfUrl is absent but doi is present uses UR - httpsdoiorgdoi as ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1409,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:03.085Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-1bad8-ses-UR---httpsdoiorgdoi-as--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-95ecf82c16534625d80e",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: BibTeX abstract field is truncated to 500 characters via sabstractslice0 500",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1423,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:04.503Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-7dac6-ers-via-sabstractslice0-500-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-aab0abaf919b8528f182",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: RIS AB field is truncated to 500 characters via sabstractslice0 500",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1391,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:05.936Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-cd329-ers-via-sabstractslice0-500-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-7d860a1baee95b5f6a72",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: markdownToRichHTML generates a clipboard References section from ALL sources no ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1393,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:07.336Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-3311c-ection-from-ALL-sources-no--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-fbf246e821a3d01c6751",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: markdownToRichHTML applies inline bold text strong italic text em and citation s",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1412,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:08.738Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-7aa62-alic-text-em-and-citation-s-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-58d20e6f19feca6e2be9",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: markdownToRichHTML renders horizontal rules as hr with inline styles while markd",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1472,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:10.160Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-7cb45-h-inline-styles-while-markd-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-5c0556925c9346e82330",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: h2 headings render with a bottom border border-b border-gray-200 darkborder-gray",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1416,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:11.644Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-45010-er-gray-200-darkborder-gray-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-ad75ce3af8d357fb8ea0",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: h4 headings render with italic class applied",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1403,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:13.074Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-ac879-r-with-italic-class-applied-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-9b4f0dbfcde0320e1195",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Heading ID generation lowercased strips a-z0-9s- replaces s with -",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1428,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:14.486Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-2f339--a-z0-9s--replaces-s-with---qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-408aca6f069a49993d82",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: IntersectionObserver for active heading tracking rootMargin -80px 0px -60 0px th",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1507,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:15.924Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-7bc83-Margin--80px-0px--60-0px-th-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-41ff2c157135b03f7e68",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: hr elements render with my-8 border-gray-200 darkborder-gray-70050",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1473,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:17.440Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-63b8a-y-200-darkborder-gray-70050-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-56deeb55cc69798af4ad",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Even table rows background f9fafb in print",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1453,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:18.923Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-0a34b--background-f9fafb-in-print-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-a93c367589a7777e41ab",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Blockquotes in print border 666 text 555 background transparent",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1439,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:20.387Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-82a51--555-background-transparent-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-bc22f1f43db6efa39dc5",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Code elements in print background f3f4f6 text 333",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1414,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:21.835Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-f9d96--background-f3f4f6-text-333-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-f6ef6dc6dc65f9765327",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Links in print color 1a56db",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1438,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:23.259Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-c209c-Links-in-print-color-1a56db-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-677fb3ba6ac9f7cf87a6",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Both routes return headers Content-Type textevent-stream Cache-Control no-cache ",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1484,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-033 Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-033 Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:1734:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                          "column": 13,
+                          "line": 1734
+                        },
+                        "snippet": "  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled deep-research checkpoint: cp-033 Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                            "column": 13,
+                            "line": 1734
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-033 Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.\n\n  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled deep-research checkpoint: cp-033 Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts:1734:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:24.706Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-98722-eam-Cache-Control-no-cache--qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-98722-eam-Cache-Control-no-cache--qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-98722-eam-Cache-Control-no-cache--qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-015.spec.ts",
+                        "column": 13,
+                        "line": 1734
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-be14602595be1798cf68",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Both routes export dynamic force-dynamic disables Nextjs static caching",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1493,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:30:27.013Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-015-dee-e6321-ables-Nextjs-static-caching-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "ce06e2d332d068c21119-ac4a394deb3e17677361",
+              "file": "deep-research/spec-015.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-14T14:29:21.597Z",
+    "duration": 67507.25,
+    "expected": 26,
+    "skipped": 0,
+    "unexpected": 9,
+    "flaky": 0
+  }
+}

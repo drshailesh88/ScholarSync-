@@ -1,0 +1,1732 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.0",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "feeds/spec-006.spec.ts",
+      "file": "feeds/spec-006.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "feeds / spec-006",
+          "file": "feeds/spec-006.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: File input accepts opml and xml files",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6446,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:21.558Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--21c98--accepts-opml-and-xml-files-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-e96870229cb5389e90d4",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: POST apifeedsopmlimport with XML content",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1651,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:28.079Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--7b07e-opmlimport-with-XML-content-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-ea79bc066ff1e80c7bac",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Response reports total feeds imported skipped failed",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1710,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-002 Response reports: total feeds, imported, skipped, failed",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-002 Response reports: total feeds, imported, skipped, failed\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:184:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 184
+                        },
+                        "snippet": "  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled feeds checkpoint: cp-002 Response reports: total feeds, imported, skipped, failed');\n      |             ^\n  185 |     }\n  186 |\n  187 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 184
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-002 Response reports: total feeds, imported, skipped, failed\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled feeds checkpoint: cp-002 Response reports: total feeds, imported, skipped, failed');\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:184:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:29.746Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--0b378-eds-imported-skipped-failed-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--0b378-eds-imported-skipped-failed-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--0b378-eds-imported-skipped-failed-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 184
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-4225eefdca20ad5d6aff",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Error details for failed imports",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1788,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-003 Error details for failed imports",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-003 Error details for failed imports\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:234:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 234
+                        },
+                        "snippet": "  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled feeds checkpoint: cp-003 Error details for failed imports');\n      |             ^\n  235 |     }\n  236 |\n  237 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 234
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-003 Error details for failed imports\n\n  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled feeds checkpoint: cp-003 Error details for failed imports');\n      |             ^\n  235 |     }\n  236 |\n  237 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:234:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:32.212Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--c2f96--details-for-failed-imports-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--c2f96--details-for-failed-imports-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--c2f96--details-for-failed-imports-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 234
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-2c47b8a0c94626a42518",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Subscriptions refresh after import",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1793,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-004 Subscriptions refresh after import",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-004 Subscriptions refresh after import\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:284:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 284
+                        },
+                        "snippet": "  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled feeds checkpoint: cp-004 Subscriptions refresh after import');\n      |             ^\n  285 |     }\n  286 |\n  287 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 284
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-004 Subscriptions refresh after import\n\n  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled feeds checkpoint: cp-004 Subscriptions refresh after import');\n      |             ^\n  285 |     }\n  286 |\n  287 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:284:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:34.853Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--960ed-ptions-refresh-after-import-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--960ed-ptions-refresh-after-import-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--960ed-ptions-refresh-after-import-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 284
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-a9f1019854a7db729af1",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: subscriptions array of users feed subscriptions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1705,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:37.505Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--b49a5-of-users-feed-subscriptions-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-6dcf3bf5592eafe679d7",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: articles loaded articles with readstarsave status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1634,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:39.295Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--00bd3-es-with-readstarsave-status-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-b0a9caf57c642c0bdcb7",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: selectedFeedId currently selected feed null all",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1630,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:40.940Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--aead1-ntly-selected-feed-null-all-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-5c3062b3a7ff200ba05b",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: selectedFolder currently selected folder",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1658,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:42.589Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--60768-r-currently-selected-folder-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-cf97479b54663d7026b2",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: viewFilter all unread starred default unread",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1629,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:44.257Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--9f212-read-starred-default-unread-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-9b5108651526b890564b",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: sortBy newest oldest relevance",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1686,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:45.894Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--70c95-tBy-newest-oldest-relevance-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-1ccd39d5f57c1f6a6032",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: layout list card magazine",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1652,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:47.590Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--c21df-1-layout-list-card-magazine-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-07eb00802efd32773bdb",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: selectedArticleId article in reading pane",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1623,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:49.253Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--2ecef-eId-article-in-reading-pane-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-bb62e0435c9dcf689218",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: copilotOpen AI panel visibility",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1640,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:50.889Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--8c9d6-lotOpen-AI-panel-visibility-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-2a30479e213949a05f08",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: copilotMessages chat history",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1646,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:52.538Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--47231-opilotMessages-chat-history-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-1f64a59ad4bc0e21799d",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: copilotSourceTier full_paper abstract_only title_only",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1640,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:54.194Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--4b932-er-abstract-only-title-only-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-8a52678e66a359578588",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: totalUnread aggregate unread count",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1671,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:55.843Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--20b2d-read-aggregate-unread-count-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-2edd03122e376abc1b53",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: hasMore pagination flag",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1630,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:57.523Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec-006-cp-017-hasMore-pagination-flag-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-668a4579c05c2a67232a",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: page current pagination page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1660,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:39:59.164Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--606a6-age-current-pagination-page-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-d7083bdbb070803c93ad",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: loadSubscriptions subscribe unsubscribe",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1645,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:00.837Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--9b420-tions-subscribe-unsubscribe-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-54264ce34a075f97c6dc",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: loadArticles loadMore",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1724,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:02.491Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec-006-cp-020-loadArticles-loadMore-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-7fdb88f3d859531fc7f7",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: markRead markAllRead toggleStar saveToLibrary",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1643,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:04.224Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--22384-ad-toggleStar-saveToLibrary-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-f5f334c8a58c2eb82901",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: setSelectedFeed setSelectedFolder setViewFilter",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1710,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-022 `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-022 `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1184:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1184
+                        },
+                        "snippet": "  1182 |\n  1183 |     if (!handled) {\n> 1184 |       throw new Error('Unhandled feeds checkpoint: cp-022 `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`');\n       |             ^\n  1185 |     }\n  1186 |\n  1187 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1184
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-022 `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`\n\n  1182 |\n  1183 |     if (!handled) {\n> 1184 |       throw new Error('Unhandled feeds checkpoint: cp-022 `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`');\n       |             ^\n  1185 |     }\n  1186 |\n  1187 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1184:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:05.882Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--09140-electedFolder-setViewFilter-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--09140-electedFolder-setViewFilter-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--09140-electedFolder-setViewFilter-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1184
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-45a7b2d1f4ec54e46fb7",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: openCopilot closeCopilot summarizeArticle sendCopilotMessage",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1670,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:08.354Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--f9bc6-eArticle-sendCopilotMessage-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-2e47aaf40175434fdd95",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: clearFilters clearSearch clearCopilot",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1619,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:10.107Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--012f1-rs-clearSearch-clearCopilot-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-a0c1afe14c45fd2302ae",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Feed store defaults to viewFilter unread sortBy newest sortDir desc and layout c",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1610,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:11.738Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--e3644-t-sortDir-desc-and-layout-c-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-94cc5d6c7923b51c7e4d",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Feed store does not use zustand persist middleware page state is refetched fresh",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1633,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:13.362Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--ccef3-ge-state-is-refetched-fresh-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-8f3c29cb0748e4c0023b",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Page mount triggers both loadSubscriptions and loadArticles in parallel",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1620,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:15.004Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--14cb2-nd-loadArticles-in-parallel-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-a704326c69c538e559f7",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Empty-state gate is subscriptionslength 0 isLoadingSubscriptions articles alone ",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1663,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-028 Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-028 Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1484:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1484
+                        },
+                        "snippet": "  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1484
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-028 Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen\n\n  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1484:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:16.636Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--20a73-bscriptions-articles-alone--qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--20a73-bscriptions-articles-alone--qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--20a73-bscriptions-articles-alone--qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1484
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-a9c62451b1300a2036b2",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Header unread helper text renders only when totalUnread 0",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1706,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:19.089Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--2e154-ers-only-when-totalUnread-0-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-50839fcda7f214b2f2b3",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Export button fetches apifeedsopmlexport and downloads scholarsync-feedsopml onl",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1646,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:20.882Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--fc688-s-scholarsync-feedsopml-onl-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-b912416528ddb8b8d797",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Export failures are silent in the current page UI",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1783,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-031 Export failures are silent in the current page UI",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-031 Export failures are silent in the current page UI\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1634:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1634
+                        },
+                        "snippet": "  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled feeds checkpoint: cp-031 Export failures are silent in the current page UI');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1634
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-031 Export failures are silent in the current page UI\n\n  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled feeds checkpoint: cp-031 Export failures are silent in the current page UI');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1634:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:22.541Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--ac7ba-lent-in-the-current-page-UI-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--ac7ba-lent-in-the-current-page-UI-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--ac7ba-lent-in-the-current-page-UI-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1634
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-3d0ad28bdee955887a9f",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Import control is a label wrapping a hidden file input with acceptopmlxml",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1813,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:25.184Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--d9794-le-input-with-acceptopmlxml-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-b0be751f9736923e704f",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Canceling the import file picker leaves the page unchanged",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1682,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-033 Canceling the import file picker leaves the page unchanged",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-033 Canceling the import file picker leaves the page unchanged\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1734:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1734
+                        },
+                        "snippet": "  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled feeds checkpoint: cp-033 Canceling the import file picker leaves the page unchanged');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1734
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-033 Canceling the import file picker leaves the page unchanged\n\n  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled feeds checkpoint: cp-033 Canceling the import file picker leaves the page unchanged');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts:1734:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:27.083Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--8ae79-r-leaves-the-page-unchanged-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--8ae79-r-leaves-the-page-unchanged-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--8ae79-r-leaves-the-page-unchanged-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1734
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-b3e37aa8eda5b6115af3",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Import reads the selected file as text and posts it to apifeedsopmlimport with C",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1720,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:40:29.581Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-006-feeds-spec--a1019-o-apifeedsopmlimport-with-C-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "d422f3db40642a4e4ac1-e74661d703a7712e5637",
+              "file": "feeds/spec-006.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-14T14:39:19.633Z",
+    "duration": 72390.45099999999,
+    "expected": 28,
+    "skipped": 0,
+    "unexpected": 7,
+    "flaky": 0
+  }
+}

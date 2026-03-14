@@ -1,0 +1,2616 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.0",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "deep-research/spec-006.spec.ts",
+      "file": "deep-research/spec-006.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "deep-research / spec-006",
+          "file": "deep-research/spec-006.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Backward references fetched via S2 API",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 7522,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-000 Backward references fetched via S2 API",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-000 Backward references fetched via S2 API\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:84:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 84
+                        },
+                        "snippet": "  82 |\n  83 |     if (!handled) {\n> 84 |       throw new Error('Unhandled deep-research checkpoint: cp-000 Backward references fetched via S2 API');\n     |             ^\n  85 |     }\n  86 |\n  87 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 84
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-000 Backward references fetched via S2 API\n\n  82 |\n  83 |     if (!handled) {\n> 84 |       throw new Error('Unhandled deep-research checkpoint: cp-000 Backward references fetched via S2 API');\n     |             ^\n  85 |     }\n  86 |\n  87 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:84:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:17.124Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-11d06-ferences-fetched-via-S2-API-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-11d06-ferences-fetched-via-S2-API-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-11d06-ferences-fetched-via-S2-API-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 84
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-375e3ecc3529bb536e2c",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Rate-limited with delays between requests",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1827,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-001 Rate-limited with delays between requests",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-001 Rate-limited with delays between requests\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:134:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 134
+                        },
+                        "snippet": "  132 |\n  133 |     if (!handled) {\n> 134 |       throw new Error('Unhandled deep-research checkpoint: cp-001 Rate-limited with delays between requests');\n      |             ^\n  135 |     }\n  136 |\n  137 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 134
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-001 Rate-limited with delays between requests\n\n  132 |\n  133 |     if (!handled) {\n> 134 |       throw new Error('Unhandled deep-research checkpoint: cp-001 Rate-limited with delays between requests');\n      |             ^\n  135 |     }\n  136 |\n  137 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:134:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:25.802Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-0b53e-ith-delays-between-requests-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-0b53e-ith-delays-between-requests-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-0b53e-ith-delays-between-requests-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 134
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-840cd7e8faa8068f8734",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Converts S2 format to unified result format",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1821,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-002 Converts S2 format to unified result format",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-002 Converts S2 format to unified result format\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:184:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 184
+                        },
+                        "snippet": "  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled deep-research checkpoint: cp-002 Converts S2 format to unified result format');\n      |             ^\n  185 |     }\n  186 |\n  187 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 184
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-002 Converts S2 format to unified result format\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled deep-research checkpoint: cp-002 Converts S2 format to unified result format');\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:184:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:28.568Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-07208-at-to-unified-result-format-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-07208-at-to-unified-result-format-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-07208-at-to-unified-result-format-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 184
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-1d606fbebe15a732ec2a",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Uses getSmallModel to extract structured data from abstracts",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1885,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-003 Uses `getSmallModel()` to extract structured data from abstracts:",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-003 Uses `getSmallModel()` to extract structured data from abstracts:\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:234:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 234
+                        },
+                        "snippet": "  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled deep-research checkpoint: cp-003 Uses `getSmallModel()` to extract structured data from abstracts:');\n      |             ^\n  235 |     }\n  236 |\n  237 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 234
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-003 Uses `getSmallModel()` to extract structured data from abstracts:\n\n  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled deep-research checkpoint: cp-003 Uses `getSmallModel()` to extract structured data from abstracts:');\n      |             ^\n  235 |     }\n  236 |\n  237 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:234:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:31.395Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-50e89-uctured-data-from-abstracts-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-50e89-uctured-data-from-abstracts-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-50e89-uctured-data-from-abstracts-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 234
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-7f8e159155213d832644",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Study design",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2031,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-004 Study design",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-004 Study design\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:284:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 284
+                        },
+                        "snippet": "  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled deep-research checkpoint: cp-004 Study design');\n      |             ^\n  285 |     }\n  286 |\n  287 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 284
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-004 Study design\n\n  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled deep-research checkpoint: cp-004 Study design');\n      |             ^\n  285 |     }\n  286 |\n  287 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:284:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:34.319Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-caa72-pec-006-cp-004-Study-design-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-caa72-pec-006-cp-004-Study-design-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-caa72-pec-006-cp-004-Study-design-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 284
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-f9aa41c344adcaf37415",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Sample size",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1968,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-005 Sample size",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-005 Sample size\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:334:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 334
+                        },
+                        "snippet": "  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled deep-research checkpoint: cp-005 Sample size');\n      |             ^\n  335 |     }\n  336 |\n  337 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 334
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-005 Sample size\n\n  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled deep-research checkpoint: cp-005 Sample size');\n      |             ^\n  335 |     }\n  336 |\n  337 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:334:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:37.266Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-b1ac0-spec-006-cp-005-Sample-size-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-b1ac0-spec-006-cp-005-Sample-size-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-b1ac0-spec-006-cp-005-Sample-size-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 334
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-6f7a29bba5351c40866e",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Effect sizes",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2112,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-006 Effect sizes",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-006 Effect sizes\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:384:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 384
+                        },
+                        "snippet": "  382 |\n  383 |     if (!handled) {\n> 384 |       throw new Error('Unhandled deep-research checkpoint: cp-006 Effect sizes');\n      |             ^\n  385 |     }\n  386 |\n  387 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 384
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-006 Effect sizes\n\n  382 |\n  383 |     if (!handled) {\n> 384 |       throw new Error('Unhandled deep-research checkpoint: cp-006 Effect sizes');\n      |             ^\n  385 |     }\n  386 |\n  387 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:384:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:40.187Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d578a-pec-006-cp-006-Effect-sizes-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d578a-pec-006-cp-006-Effect-sizes-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d578a-pec-006-cp-006-Effect-sizes-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 384
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-64caa88b2cedb50a7c21",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: P-values",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1710,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-007 P-values",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-007 P-values\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:434:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 434
+                        },
+                        "snippet": "  432 |\n  433 |     if (!handled) {\n> 434 |       throw new Error('Unhandled deep-research checkpoint: cp-007 P-values');\n      |             ^\n  435 |     }\n  436 |\n  437 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 434
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-007 P-values\n\n  432 |\n  433 |     if (!handled) {\n> 434 |       throw new Error('Unhandled deep-research checkpoint: cp-007 P-values');\n      |             ^\n  435 |     }\n  436 |\n  437 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:434:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:43.443Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-501b9-ch-spec-006-cp-007-P-values-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-501b9-ch-spec-006-cp-007-P-values-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-501b9-ch-spec-006-cp-007-P-values-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 434
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-1e929b64aee5466b96c7",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: Population characteristics",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2173,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-008 Population characteristics",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-008 Population characteristics\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:484:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 484
+                        },
+                        "snippet": "  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled deep-research checkpoint: cp-008 Population characteristics');\n      |             ^\n  485 |     }\n  486 |\n  487 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 484
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-008 Population characteristics\n\n  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled deep-research checkpoint: cp-008 Population characteristics');\n      |             ^\n  485 |     }\n  486 |\n  487 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:484:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:46.205Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-e57b9--Population-characteristics-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-e57b9--Population-characteristics-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-e57b9--Population-characteristics-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 484
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-30da10505cd0553fd21e",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: Follow-up duration",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1712,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-009 Follow-up duration",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-009 Follow-up duration\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:534:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 534
+                        },
+                        "snippet": "  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled deep-research checkpoint: cp-009 Follow-up duration');\n      |             ^\n  535 |     }\n  536 |\n  537 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 534
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-009 Follow-up duration\n\n  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled deep-research checkpoint: cp-009 Follow-up duration');\n      |             ^\n  535 |     }\n  536 |\n  537 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:534:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:49.394Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a844d-6-cp-009-Follow-up-duration-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a844d-6-cp-009-Follow-up-duration-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a844d-6-cp-009-Follow-up-duration-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 534
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-eb665432654ed4ac5bbb",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Key findings",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1752,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-010 Key findings",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-010 Key findings\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:584:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 584
+                        },
+                        "snippet": "  582 |\n  583 |     if (!handled) {\n> 584 |       throw new Error('Unhandled deep-research checkpoint: cp-010 Key findings');\n      |             ^\n  585 |     }\n  586 |\n  587 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 584
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-010 Key findings\n\n  582 |\n  583 |     if (!handled) {\n> 584 |       throw new Error('Unhandled deep-research checkpoint: cp-010 Key findings');\n      |             ^\n  585 |     }\n  586 |\n  587 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:584:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:51.981Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d9792-pec-006-cp-010-Key-findings-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d9792-pec-006-cp-010-Key-findings-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-d9792-pec-006-cp-010-Key-findings-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 584
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-cc784b7cfc133bc8b452",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Conservative extraction no speculation on missing data",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1833,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-011 Conservative extraction (no speculation on missing data)",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-011 Conservative extraction (no speculation on missing data)\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:634:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 634
+                        },
+                        "snippet": "  632 |\n  633 |     if (!handled) {\n> 634 |       throw new Error('Unhandled deep-research checkpoint: cp-011 Conservative extraction (no speculation on missing data)');\n      |             ^\n  635 |     }\n  636 |\n  637 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 634
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-011 Conservative extraction (no speculation on missing data)\n\n  632 |\n  633 |     if (!handled) {\n> 634 |       throw new Error('Unhandled deep-research checkpoint: cp-011 Conservative extraction (no speculation on missing data)');\n      |             ^\n  635 |     }\n  636 |\n  637 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:634:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:54.729Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ee732-speculation-on-missing-data-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ee732-speculation-on-missing-data-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ee732-speculation-on-missing-data-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 634
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-084c09b30f29ea4638d1",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Downloads open-access PDFs",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1747,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-012 Downloads open-access PDFs",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-012 Downloads open-access PDFs\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:684:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 684
+                        },
+                        "snippet": "  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled deep-research checkpoint: cp-012 Downloads open-access PDFs');\n      |             ^\n  685 |     }\n  686 |\n  687 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 684
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-012 Downloads open-access PDFs\n\n  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled deep-research checkpoint: cp-012 Downloads open-access PDFs');\n      |             ^\n  685 |     }\n  686 |\n  687 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:684:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:18:57.610Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5fba--Downloads-open-access-PDFs-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5fba--Downloads-open-access-PDFs-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5fba--Downloads-open-access-PDFs-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 684
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-26354c378ca9be5b76c1",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Extracts Results and Discussion sections",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1647,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-013 Extracts Results and Discussion sections",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-013 Extracts Results and Discussion sections\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:734:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 734
+                        },
+                        "snippet": "  732 |\n  733 |     if (!handled) {\n> 734 |       throw new Error('Unhandled deep-research checkpoint: cp-013 Extracts Results and Discussion sections');\n      |             ^\n  735 |     }\n  736 |\n  737 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 734
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-013 Extracts Results and Discussion sections\n\n  732 |\n  733 |     if (!handled) {\n> 734 |       throw new Error('Unhandled deep-research checkpoint: cp-013 Extracts Results and Discussion sections');\n      |             ^\n  735 |     }\n  736 |\n  737 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:734:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:00.430Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-9cdc2-lts-and-Discussion-sections-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-9cdc2-lts-and-Discussion-sections-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-9cdc2-lts-and-Discussion-sections-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 734
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-8d117f43a26c15278893",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Falls back to the pre-references full text when section headers are missing but ",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1742,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-014 Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-014 Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:784:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 784
+                        },
+                        "snippet": "  782 |\n  783 |     if (!handled) {\n> 784 |       throw new Error('Unhandled deep-research checkpoint: cp-014 Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails');\n      |             ^\n  785 |     }\n  786 |\n  787 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 784
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-014 Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails\n\n  782 |\n  783 |     if (!handled) {\n> 784 |       throw new Error('Unhandled deep-research checkpoint: cp-014 Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails');\n      |             ^\n  785 |     }\n  786 |\n  787 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:784:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:03.129Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-8f01f-on-headers-are-missing-but--qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-8f01f-on-headers-are-missing-but--qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-8f01f-on-headers-are-missing-but--qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 784
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-e23200f2bfcc3f000f42",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Max file size 20 MB",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1653,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-015 Max file size: 20 MB",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-015 Max file size: 20 MB\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:834:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 834
+                        },
+                        "snippet": "  832 |\n  833 |     if (!handled) {\n> 834 |       throw new Error('Unhandled deep-research checkpoint: cp-015 Max file size: 20 MB');\n      |             ^\n  835 |     }\n  836 |\n  837 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 834
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-015 Max file size: 20 MB\n\n  832 |\n  833 |     if (!handled) {\n> 834 |       throw new Error('Unhandled deep-research checkpoint: cp-015 Max file size: 20 MB');\n      |             ^\n  835 |     }\n  836 |\n  837 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:834:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:06.010Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5a73--cp-015-Max-file-size-20-MB-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5a73--cp-015-Max-file-size-20-MB-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c5a73--cp-015-Max-file-size-20-MB-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 834
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-25d971cb1d5b65fdaedb",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Timeout 15 seconds",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1783,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-016 Timeout: 15 seconds",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-016 Timeout: 15 seconds\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:884:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 884
+                        },
+                        "snippet": "  882 |\n  883 |     if (!handled) {\n> 884 |       throw new Error('Unhandled deep-research checkpoint: cp-016 Timeout: 15 seconds');\n      |             ^\n  885 |     }\n  886 |\n  887 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 884
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-016 Timeout: 15 seconds\n\n  882 |\n  883 |     if (!handled) {\n> 884 |       throw new Error('Unhandled deep-research checkpoint: cp-016 Timeout: 15 seconds');\n      |             ^\n  885 |     }\n  886 |\n  887 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:884:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:08.633Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-28233-6-cp-016-Timeout-15-seconds-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-28233-6-cp-016-Timeout-15-seconds-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-28233-6-cp-016-Timeout-15-seconds-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 884
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-41f4012adeae4b574d3f",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Pass 1 Per-perspective narrative sections parallel execution",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1841,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-017 Pass 1: Per-perspective narrative sections (parallel execution)",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-017 Pass 1: Per-perspective narrative sections (parallel execution)\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:934:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 934
+                        },
+                        "snippet": "  932 |\n  933 |     if (!handled) {\n> 934 |       throw new Error('Unhandled deep-research checkpoint: cp-017 Pass 1: Per-perspective narrative sections (parallel execution)');\n      |             ^\n  935 |     }\n  936 |\n  937 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 934
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-017 Pass 1: Per-perspective narrative sections (parallel execution)\n\n  932 |\n  933 |     if (!handled) {\n> 934 |       throw new Error('Unhandled deep-research checkpoint: cp-017 Pass 1: Per-perspective narrative sections (parallel execution)');\n      |             ^\n  935 |     }\n  936 |\n  937 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:934:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:11.498Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c2be9-sections-parallel-execution-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c2be9-sections-parallel-execution-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-c2be9-sections-parallel-execution-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 934
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-c4ae67e385d6ece509b2",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Pass 2 Executive summary and introduction",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2177,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-018 Pass 2: Executive summary and introduction",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-018 Pass 2: Executive summary and introduction\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:984:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 984
+                        },
+                        "snippet": "  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled deep-research checkpoint: cp-018 Pass 2: Executive summary and introduction');\n      |             ^\n  985 |     }\n  986 |\n  987 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 984
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-018 Pass 2: Executive summary and introduction\n\n  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled deep-research checkpoint: cp-018 Pass 2: Executive summary and introduction');\n      |             ^\n  985 |     }\n  986 |\n  987 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:984:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:14.324Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-56a3e-ve-summary-and-introduction-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-56a3e-ve-summary-and-introduction-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-56a3e-ve-summary-and-introduction-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 984
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-1776416a72616d5acb53",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Pass 3 Comparison tables gaps contradictions conclusions",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1883,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-019 Pass 3: Comparison tables, gaps, contradictions, conclusions",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-019 Pass 3: Comparison tables, gaps, contradictions, conclusions\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1034:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1034
+                        },
+                        "snippet": "  1032 |\n  1033 |     if (!handled) {\n> 1034 |       throw new Error('Unhandled deep-research checkpoint: cp-019 Pass 3: Comparison tables, gaps, contradictions, conclusions');\n       |             ^\n  1035 |     }\n  1036 |\n  1037 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1034
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-019 Pass 3: Comparison tables, gaps, contradictions, conclusions\n\n  1032 |\n  1033 |     if (!handled) {\n> 1034 |       throw new Error('Unhandled deep-research checkpoint: cp-019 Pass 3: Comparison tables, gaps, contradictions, conclusions');\n       |             ^\n  1035 |     }\n  1036 |\n  1037 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1034:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:17.455Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-4c6f2--contradictions-conclusions-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-4c6f2--contradictions-conclusions-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-4c6f2--contradictions-conclusions-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1034
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-ad769488ba432b45e992",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Pass 4 Self-critique and revision",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1877,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-020 Pass 4: Self-critique and revision",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-020 Pass 4: Self-critique and revision\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1084:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1084
+                        },
+                        "snippet": "  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled deep-research checkpoint: cp-020 Pass 4: Self-critique and revision');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1084
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-020 Pass 4: Self-critique and revision\n\n  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled deep-research checkpoint: cp-020 Pass 4: Self-critique and revision');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1084:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:20.385Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-1fa7a--Self-critique-and-revision-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-1fa7a--Self-critique-and-revision-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-1fa7a--Self-critique-and-revision-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1084
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-c1c36a50a4a04d4a6cd5",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Outputs markdown with interactive citation markers N",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 21,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1785,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:23.301Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-4b5ee-eractive-citation-markers-N-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-b69817b2a1aa2cbf85a1",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Topic 5 characters the plan route emits an SSE error and the page shows the erro",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 21,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1802,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-022 Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-022 Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1184:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1184
+                        },
+                        "snippet": "  1182 |\n  1183 |     if (!handled) {\n> 1184 |       throw new Error('Unhandled deep-research checkpoint: cp-022 Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message');\n       |             ^\n  1185 |     }\n  1186 |\n  1187 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1184
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-022 Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message\n\n  1182 |\n  1183 |     if (!handled) {\n> 1184 |       throw new Error('Unhandled deep-research checkpoint: cp-022 Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message');\n       |             ^\n  1185 |     }\n  1186 |\n  1187 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1184:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:25.185Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-f0c86-and-the-page-shows-the-erro-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-f0c86-and-the-page-shows-the-erro-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-f0c86-and-the-page-shows-the-erro-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1184
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-d89fe632ccd39ee76b49",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Topic 500 characters the plan route emits an SSE error and the page shows the er",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 22,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1701,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-023 Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-023 Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1234:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1234
+                        },
+                        "snippet": "  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled deep-research checkpoint: cp-023 Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message');\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1234
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-023 Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message\n\n  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled deep-research checkpoint: cp-023 Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message');\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1234:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:27.924Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ca3b0-r-and-the-page-shows-the-er-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ca3b0-r-and-the-page-shows-the-er-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ca3b0-r-and-the-page-shows-the-er-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1234
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-9275ae17068f94bc9483",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Empty topic Start button disabled",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2011,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-024 Empty topic: Start button disabled",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-024 Empty topic: Start button disabled\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1284:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1284
+                        },
+                        "snippet": "  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled deep-research checkpoint: cp-024 Empty topic: Start button disabled');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1284
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-024 Empty topic: Start button disabled\n\n  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled deep-research checkpoint: cp-024 Empty topic: Start button disabled');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1284:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:30.579Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a6686-topic-Start-button-disabled-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a6686-topic-Start-button-disabled-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a6686-topic-Start-button-disabled-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1284
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-3c65de2caad84382d242",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Fetch failures caught and displayed",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 24,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2021,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-025 Fetch failures caught and displayed",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-025 Fetch failures caught and displayed\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1334:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1334
+                        },
+                        "snippet": "  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled deep-research checkpoint: cp-025 Fetch failures caught and displayed');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1334
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-025 Fetch failures caught and displayed\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled deep-research checkpoint: cp-025 Fetch failures caught and displayed');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1334:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:33.660Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-5c650-ilures-caught-and-displayed-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-5c650-ilures-caught-and-displayed-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-5c650-ilures-caught-and-displayed-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1334
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-9fdbc8f92228b369f66d",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: AbortError handled silently expected from Stop button",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 25,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1658,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-026 AbortError handled silently (expected from Stop button)",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-026 AbortError handled silently (expected from Stop button)\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1384:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1384
+                        },
+                        "snippet": "  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled deep-research checkpoint: cp-026 AbortError handled silently (expected from Stop button)');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1384
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-026 AbortError handled silently (expected from Stop button)\n\n  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled deep-research checkpoint: cp-026 AbortError handled silently (expected from Stop button)');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1384:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:36.654Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-2ed71-y-expected-from-Stop-button-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-2ed71-y-expected-from-Stop-button-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-2ed71-y-expected-from-Stop-button-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1384
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-c0743f003f286cecd424",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Non-AbortError shows error state with message",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1738,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-027 Non-AbortError shows error state with message",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-027 Non-AbortError shows error state with message\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1434:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1434
+                        },
+                        "snippet": "  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled deep-research checkpoint: cp-027 Non-AbortError shows error state with message');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1434
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-027 Non-AbortError shows error state with message\n\n  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled deep-research checkpoint: cp-027 Non-AbortError shows error state with message');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1434:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:39.244Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc8bc-ws-error-state-with-message-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc8bc-ws-error-state-with-message-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc8bc-ws-error-state-with-message-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1434
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-39d236f72a9a482a309b",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Red AlertCircle icon",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2066,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-028 Red AlertCircle icon",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-028 Red AlertCircle icon\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1484:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1484
+                        },
+                        "snippet": "  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled deep-research checkpoint: cp-028 Red AlertCircle icon');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1484
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-028 Red AlertCircle icon\n\n  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled deep-research checkpoint: cp-028 Red AlertCircle icon');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1484:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:41.953Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a8ea9-cp-028-Red-AlertCircle-icon-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a8ea9-cp-028-Red-AlertCircle-icon-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-a8ea9-cp-028-Red-AlertCircle-icon-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1484
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-19ba08388bc050e54c5e",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Heading Research Failed",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 28,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1850,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-029 Heading: \"Research Failed\"",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-029 Heading: \"Research Failed\"\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1534:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1534
+                        },
+                        "snippet": "  1532 |\n  1533 |     if (!handled) {\n> 1534 |       throw new Error('Unhandled deep-research checkpoint: cp-029 Heading: \"Research Failed\"');\n       |             ^\n  1535 |     }\n  1536 |\n  1537 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1534
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-029 Heading: \"Research Failed\"\n\n  1532 |\n  1533 |     if (!handled) {\n> 1534 |       throw new Error('Unhandled deep-research checkpoint: cp-029 Heading: \"Research Failed\"');\n       |             ^\n  1535 |     }\n  1536 |\n  1537 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1534:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:45.035Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ea9dc-029-Heading-Research-Failed-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ea9dc-029-Heading-Research-Failed-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-ea9dc-029-Heading-Research-Failed-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1534
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-75124822a9d0d122a4af",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Error message text displayed",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 29,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1686,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-030 Error message text displayed",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-030 Error message text displayed\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1584:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1584
+                        },
+                        "snippet": "  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled deep-research checkpoint: cp-030 Error message text displayed');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1584
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-030 Error message text displayed\n\n  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled deep-research checkpoint: cp-030 Error message text displayed');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1584:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:47.854Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc35e-rror-message-text-displayed-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc35e-rror-message-text-displayed-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-dc35e-rror-message-text-displayed-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1584
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-17b1f9eb7b39ca5600a0",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Try Again button returns to idle state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 30,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1816,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:50.484Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-30d08-utton-returns-to-idle-state-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-092e15277b061b188b39",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Plan generation failure shows error and allows retry",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 30,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1694,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-032 Plan generation failure shows error and allows retry",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-032 Plan generation failure shows error and allows retry\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1684:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1684
+                        },
+                        "snippet": "  1682 |\n  1683 |     if (!handled) {\n> 1684 |       throw new Error('Unhandled deep-research checkpoint: cp-032 Plan generation failure shows error and allows retry');\n       |             ^\n  1685 |     }\n  1686 |\n  1687 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1684
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-032 Plan generation failure shows error and allows retry\n\n  1682 |\n  1683 |     if (!handled) {\n> 1684 |       throw new Error('Unhandled deep-research checkpoint: cp-032 Plan generation failure shows error and allows retry');\n       |             ^\n  1685 |     }\n  1686 |\n  1687 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1684:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:52.480Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-482c4-hows-error-and-allows-retry-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-482c4-hows-error-and-allows-retry-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-482c4-hows-error-and-allows-retry-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1684
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-8d8ad210c50b3ee43808",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Execute failure shows error with context",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 31,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1749,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-033 Execute failure shows error with context",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-033 Execute failure shows error with context\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1734:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1734
+                        },
+                        "snippet": "  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled deep-research checkpoint: cp-033 Execute failure shows error with context');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1734
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-033 Execute failure shows error with context\n\n  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled deep-research checkpoint: cp-033 Execute failure shows error with context');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1734:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:55.042Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-42761-re-shows-error-with-context-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-42761-re-shows-error-with-context-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-42761-re-shows-error-with-context-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1734
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-6a1c471862e39b04be1f",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Save failure shows error tooltip on button",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 32,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1823,
+                      "error": {
+                        "message": "Error: Unhandled deep-research checkpoint: cp-034 Save failure shows error tooltip on button",
+                        "stack": "Error: Unhandled deep-research checkpoint: cp-034 Save failure shows error tooltip on button\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1784:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                          "column": 13,
+                          "line": 1784
+                        },
+                        "snippet": "  1782 |\n  1783 |     if (!handled) {\n> 1784 |       throw new Error('Unhandled deep-research checkpoint: cp-034 Save failure shows error tooltip on button');\n       |             ^\n  1785 |     }\n  1786 |\n  1787 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                            "column": 13,
+                            "line": 1784
+                          },
+                          "message": "Error: Unhandled deep-research checkpoint: cp-034 Save failure shows error tooltip on button\n\n  1782 |\n  1783 |     if (!handled) {\n> 1784 |       throw new Error('Unhandled deep-research checkpoint: cp-034 Save failure shows error tooltip on button');\n       |             ^\n  1785 |     }\n  1786 |\n  1787 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts:1784:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:19:57.695Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-fdb88-ows-error-tooltip-on-button-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-fdb88-ows-error-tooltip-on-button-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-006-dee-fdb88-ows-error-tooltip-on-button-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-006.spec.ts",
+                        "column": 13,
+                        "line": 1784
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "c3e0a10d5fd15a2f7c50-71f85f59111d33428330",
+              "file": "deep-research/spec-006.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-14T14:18:15.023Z",
+    "duration": 105357.018,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 33,
+    "flaky": 0
+  }
+}

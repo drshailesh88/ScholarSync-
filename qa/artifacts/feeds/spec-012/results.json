@@ -1,0 +1,1698 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.0",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "feeds/spec-012.spec.ts",
+      "file": "feeds/spec-012.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "feeds / spec-012",
+          "file": "feeds/spec-012.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Selected feed item bg-surface-raised text-ink font-medium",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6909,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:40.673Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--06565-raised-text-ink-font-medium-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-54c9d6885885fa96ebf1",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Unselected feed item text-ink-muted hovertext-ink hoverbg-surface-raised50",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1685,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:47.678Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--3cb60-nk-hoverbg-surface-raised50-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-de0cff7c8accb6aa1044",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Skeleton condition isLoading articleslength 0 only on first-page load",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1638,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:49.376Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--7ad05-h-0-only-on-first-page-load-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-ec55b8c85746dc81e8a5",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Empty condition isLoading articleslength 0",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1681,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:51.025Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--00e96--isLoading-articleslength-0-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-3a1ad1a6a00e309e8832",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Card component dynamically selected layout list ArticleCardList magazine Article",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1669,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:52.726Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--382b9-leCardList-magazine-Article-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-4efc0a2d5f6d5d4e7266",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Article spacing magazine space-y-4 listcard space-y-1",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1656,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:54.405Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--f9631-pace-y-4-listcard-space-y-1-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-3df32814dbd37e8d5b0b",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Load more button w-full py-2 rounded-xl text-sm font-medium text-ink-muted hover",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1788,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:56.076Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--9468a-medium-text-ink-muted-hover-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-4794f3edad03b2ed77ef",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: Load more container pt-3 pb-1 shrink-0",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1740,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:57.876Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--490cb-ontainer-pt-3-pb-1-shrink-0-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-0fd092d335127afbd051",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: List view ArticleCardList does NOT accept onCiteonAI props no action buttons pos",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1701,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:46:59.627Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--95fa4-props-no-action-buttons-pos-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-f9a168093673ed15bffc",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: ArticleCard root element is a button not div",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1726,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:534:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                          "column": 13,
+                          "line": 534
+                        },
+                        "snippet": "  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)');\n      |             ^\n  535 |     }\n  536 |\n  537 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                            "column": 13,
+                            "line": 534
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)\n\n  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)');\n      |             ^\n  535 |     }\n  536 |\n  537 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:534:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:01.339Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d3a8c-element-is-a-button-not-div-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d3a8c-element-is-a-button-not-div-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d3a8c-element-is-a-button-not-div-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                        "column": 13,
+                        "line": 534
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3691359caebd930f4590-cb64283b0e8c389c1f46",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Unread dot color bg-brand design-system brand token not hard-coded blue",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1679,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:03.842Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--f8de3-d-token-not-hard-coded-blue-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-221708444a4b2bd93f4d",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Source title reads from articlefeedSourceTitle field",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1649,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:05.595Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--e33a1-rticlefeedSourceTitle-field-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-6111f016897af8b5ae5b",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Favicon fallback articlefeedSourceFaviconUrl getFaviconUrlarticlefeedSourceSiteU",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1700,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:684:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                          "column": 13,
+                          "line": 684
+                        },
+                        "snippet": "  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`');\n      |             ^\n  685 |     }\n  686 |\n  687 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                            "column": 13,
+                            "line": 684
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`\n\n  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`');\n      |             ^\n  685 |     }\n  686 |\n  687 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:684:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:07.257Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--969f5-onUrlarticlefeedSourceSiteU-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--969f5-onUrlarticlefeedSourceSiteU-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--969f5-onUrlarticlefeedSourceSiteU-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                        "column": 13,
+                        "line": 684
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3691359caebd930f4590-a29c857b1e4da9e28755",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: formatRelativeTime outputs just now 1 min nm ago nh ago nd ago or toLocaleDateSt",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1693,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:09.707Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--1af6e-go-nd-ago-or-toLocaleDateSt-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-8deb0139a9ac0b0925ea",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Abstract snippet truncated to first 120 characters in card view only magazine sh",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1586,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:11.480Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--f8a01--card-view-only-magazine-sh-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-7f5db450fd5852054553",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Snippet only rendered when articleabstractSnippet is truthy",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1682,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:13.080Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--955d0-leabstractSnippet-is-truthy-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-08d00ed4b512700e9098",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Snippet styling text-xs text-ink-muted70 line-clamp-2",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1626,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:14.772Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--4c600-xt-ink-muted70-line-clamp-2-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-fea9f379f2ccbd50a808",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Action row parent div has onClicke estopPropagation to prevent card selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1641,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:16.407Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--f2200-n-to-prevent-card-selection-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-b0fb398415ba17a6156c",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Star button title attribute Unstar when starred Star when not",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1685,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:984:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                          "column": 13,
+                          "line": 984
+                        },
+                        "snippet": "  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not');\n      |             ^\n  985 |     }\n  986 |\n  987 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                            "column": 13,
+                            "line": 984
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not\n\n  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not');\n      |             ^\n  985 |     }\n  986 |\n  987 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:984:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:18.057Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d139c--when-starred-Star-when-not-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d139c--when-starred-Star-when-not-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d139c--when-starred-Star-when-not-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                        "column": 13,
+                        "line": 984
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3691359caebd930f4590-51b01e9f7bebfa0535f2",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Star icon color when starred text-yellow-500 hovertext-yellow-400 text color onl",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1693,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:20.529Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--7ab96-t-yellow-400-text-color-onl-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-c9e1667f2b1450010d31",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Save button title attribute Saved when saved Save to Library when not",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1690,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1084:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                          "column": 13,
+                          "line": 1084
+                        },
+                        "snippet": "  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                            "column": 13,
+                            "line": 1084
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not\n\n  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1084:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:22.309Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--18c5d-ed-Save-to-Library-when-not-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--18c5d-ed-Save-to-Library-when-not-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--18c5d-ed-Save-to-Library-when-not-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                        "column": 13,
+                        "line": 1084
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3691359caebd930f4590-538446963806e0a69d71",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Save icon color when saved text-brand no background",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1681,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:24.764Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--0ce75-ed-text-brand-no-background-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-3375b9f4970f0893b898",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Cite button has its own inline estopPropagation in onClick",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1622,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:26.524Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--7c17d-estopPropagation-in-onClick-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-d9c1f279be1ab8bca557",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: AI button has its own inline estopPropagation in onClick",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1628,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:28.157Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--8cc85-estopPropagation-in-onClick-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-a2bed8a37bdcd514aa0d",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: DOI link is an a element not button opens httpsdoiorgarticledoi",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1636,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:29.805Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--fcd48-opens-httpsdoiorgarticledoi-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-53008e0872420aaf1a64",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: DOI link text DOI not the actual doi value",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1721,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1334:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                          "column": 13,
+                          "line": 1334
+                        },
+                        "snippet": "  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                            "column": 13,
+                            "line": 1334
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1334:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:31.453Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--cbbca-OI-not-the-actual-doi-value-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--cbbca-OI-not-the-actual-doi-value-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--cbbca-OI-not-the-actual-doi-value-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                        "column": 13,
+                        "line": 1334
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3691359caebd930f4590-c741b992c63ac1d104c9",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: DOI link has its own estopPropagation on click",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1697,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:34.001Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--dea49-n-estopPropagation-on-click-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-4f328a799bf8037bc70e",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: DOI link only shown when articledoi is truthy",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1611,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:35.785Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--fb3df-n-when-articledoi-is-truthy-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-9175d895b10aaa79fbfa",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: List view root element is a button",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1686,
+                      "error": {
+                        "message": "Error: Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`",
+                        "stack": "Error: Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1484:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                          "column": 13,
+                          "line": 1484
+                        },
+                        "snippet": "  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                            "column": 13,
+                            "line": 1484
+                          },
+                          "message": "Error: Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`\n\n  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1484:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:37.407Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c21c5-ew-root-element-is-a-button-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c21c5-ew-root-element-is-a-button-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c21c5-ew-root-element-is-a-button-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
+                        "column": 13,
+                        "line": 1484
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "3691359caebd930f4590-e8e72ad209276a5f479b",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: List view unread styling font-medium on the entire button row",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1657,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:39.903Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c2773-um-on-the-entire-button-row-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-19ad3a4a7ae5e5056a89",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: List view read styling text-ink-muted on the entire button row",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1659,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:41.649Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--6ff69-ed-on-the-entire-button-row-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-e7b8d66d4c1e40f0fc65",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Read article spacer empty span with w-2 h-2 shrink-0 aria-hiddentrue preserves a",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1647,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:43.320Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--f2a72-aria-hiddentrue-preserves-a-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-d491df0d96fad45596cf",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Title truncated via truncate single-line ellipsis not line-clamp",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1623,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:44.988Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--94508-ine-ellipsis-not-line-clamp-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-69b4c593943afdf2bafb",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Feed name visibility hidden mdinline hidden on small screens visible from md bre",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1657,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:46.623Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--f13d4-screens-visible-from-md-bre-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-6e5d21320c894b2ac0f6",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Reading time visibility hidden lginline hidden below lg breakpoint",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1640,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T14:47:48.290Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--ef632--hidden-below-lg-breakpoint-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "3691359caebd930f4590-5ac7a2e23cd2fcb89392",
+              "file": "feeds/spec-012.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-14T14:46:38.645Z",
+    "duration": 71955.626,
+    "expected": 29,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}
