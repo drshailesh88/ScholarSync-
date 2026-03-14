@@ -117,10 +117,11 @@ function getPagePath(pageUrl: string, moduleName: string): string {
     pathname = pageUrl.startsWith("/") ? pageUrl : `/${moduleName}`;
   }
 
-  // /editor without an [id] segment is not a valid route — fall back to /dashboard
-  // so source-level assertions can still run with a valid page for screenshot proof.
+  // /editor without an [id] segment is not a valid route.
+  // Fall back to /studio (the adjacent writing surface), not /dashboard,
+  // so editor/studio assertions execute against the closest functional UI.
   if (pathname === "/editor") {
-    return "/dashboard";
+    return "/studio";
   }
 
   return pathname;
