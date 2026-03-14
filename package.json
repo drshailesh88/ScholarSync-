@@ -20,7 +20,13 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "prepare": "husky"
+    "prepare": "husky",
+    "qa:compile": "npx tsx qa/compile-queue.ts",
+    "qa:run": "npx tsx qa/controller.ts",
+    "qa:run:module": "npx tsx qa/controller.ts --module",
+    "qa:run:spec": "npx tsx qa/controller.ts --spec",
+    "qa:report": "npx tsx qa/reporter.ts",
+    "qa:dry-run": "npx tsx qa/controller.ts --dry-run"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -163,8 +169,9 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@clerk/testing": "^2.0.4",
     "@opennextjs/cloudflare": "^1.17.1",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.19.33",

@@ -14,11 +14,12 @@ import {
   FilePdf,
   FileCode,
   FolderOpen,
+  ClockCounterClockwise,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useLatexEditorStore } from "@/stores/latex-editor-store";
 import { updateLatexProject } from "@/lib/actions/latex";
-import { CollaboratorAvatars } from "./collaboration-cursors";
+import { CollaboratorAvatars, CollaborationStatus, TypingIndicator } from "./collaboration-cursors";
 
 interface TopBarProps {
   projectId: string;
@@ -26,14 +27,25 @@ interface TopBarProps {
   onExportPdf?: () => void;
   onExportTex?: () => void;
   onExportZip?: () => void;
+  onToggleVersionHistory?: () => void;
+  versionHistoryOpen?: boolean;
 }
 
-export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExportZip }: TopBarProps) {
+export function TopBar({
+  projectId,
+  onCompile,
+  onExportPdf,
+  onExportTex,
+  onExportZip,
+  onToggleVersionHistory,
+  versionHistoryOpen = false,
+}: TopBarProps) {
   const projectTitle = useLatexEditorStore((s) => s.projectTitle);
   const setProjectTitle = useLatexEditorStore((s) => s.setProjectTitle);
   const saveState = useLatexEditorStore((s) => s.saveState);
   const lastSavedAt = useLatexEditorStore((s) => s.lastSavedAt);
   const compileStatus = useLatexEditorStore((s) => s.compileStatus);
+  const compiledPdfUrl = useLatexEditorStore((s) => s.compiledPdfUrl);
   const viewMode = useLatexEditorStore((s) => s.viewMode);
   const setViewMode = useLatexEditorStore((s) => s.setViewMode);
   const previewMode = useLatexEditorStore((s) => s.previewMode);
@@ -81,7 +93,7 @@ export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExpor
   }, [editingTitle]);
 
   return (
-    <div className="h-12 flex items-center justify-between px-4 border-b border-border-subtle bg-surface/80 backdrop-blur-sm shrink-0">
+    <div className="relative z-20 h-12 flex items-center justify-between px-4 border-b border-border-subtle bg-surface/80 backdrop-blur-sm shrink-0">
       {/* Left: Back + Title + Save Status */}
       <div className="flex items-center gap-3 min-w-0">
         <Link
@@ -210,8 +222,27 @@ export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExpor
 
       {/* Right: Collaborators + Compile + Export */}
       <div className="flex items-center gap-3">
+        {onToggleVersionHistory && (
+          <button
+            onClick={onToggleVersionHistory}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors",
+              versionHistoryOpen
+                ? "bg-brand/10 text-brand border-brand/30"
+                : "text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border-border-subtle"
+            )}
+            title="Version history"
+          >
+            <ClockCounterClockwise size={14} />
+            History
+          </button>
+        )}
+
+        <CollaborationStatus />
+
         {/* Collaborator avatars */}
         <CollaboratorAvatars />
+        <TypingIndicator />
 
         <button
           onClick={onCompile}
@@ -252,7 +283,8 @@ export function TopBar({ projectId, onCompile, onExportPdf, onExportTex, onExpor
             <div className="absolute right-0 top-full mt-1 w-48 rounded-lg glass-panel border border-border shadow-lg z-50 py-1">
               <button
                 onClick={() => { onExportPdf?.(); setShowExport(false); }}
-                className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors"
+                disabled={!compiledPdfUrl}
+                className="flex items-center gap-2 w-full px-3 py-2 text-xs text-ink hover:bg-surface-raised transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
               >
                 <FilePdf size={14} className="text-red-400" />
                 Download PDF

@@ -123,8 +123,8 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
     setResult(null);
     setInstruction("");
     setStreaming(false);
-    inputRef.current?.focus();
-  }, []);
+    onDismiss();
+  }, [onDismiss]);
 
   // Clamp position to viewport
   const clampedTop = Math.min(position.top, typeof window !== "undefined" ? window.innerHeight - 200 : position.top);
@@ -212,11 +212,11 @@ export function InlineAiBar({ selectedText, position, onApply, onDismiss }: Inli
                     className="flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
                   >
                     <ArrowCounterClockwise size={12} />
-                    Revert
+                    Dismiss
                   </button>
                 </div>
                 <span className="text-[9px] text-ink-muted">
-                  Enter accept · Esc revert
+                  Enter accept · Esc dismiss
                 </span>
               </div>
             )}

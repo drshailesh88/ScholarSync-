@@ -1,4 +1,4 @@
-import { EditorView, Decoration, ViewPlugin, WidgetType } from "@codemirror/view";
+import { EditorView, Decoration, ViewPlugin, WidgetType, type ViewUpdate } from "@codemirror/view";
 import { RangeSet } from "@codemirror/state";
 import { StateEffect, StateField } from "@codemirror/state";
 
@@ -95,43 +95,48 @@ async function fetchCompletion(context: string, currentLine: string): Promise<st
   }
 }
 
-// Track typing state
-let lastTypingTime = 0;
-let completionTimeout: ReturnType<typeof setTimeout> | null = null;
 const TYPING_TIMEOUT = 1500; // 1.5 seconds
 
 // Main extension
 export const aiCompletionExtension = ViewPlugin.fromClass(
   class {
+    private lastTypingTime = 0;
+    private completionTimeout: ReturnType<typeof setTimeout> | null = null;
+
     constructor(private view: EditorView) {}
 
-    update() {
+    update(update: ViewUpdate) {
+      if (!update.docChanged) return;
+
       // Update last typing time
-      lastTypingTime = Date.now();
+      this.lastTypingTime = Date.now();
 
       // Clear ghost text when user types
-      this.view.dispatch({ effects: setGhostText.of(null) });
+      const decorations = this.view.state.field(ghostTextField, false);
+      if (decorations && decorations !== Decoration.none) {
+        this.view.dispatch({ effects: setGhostText.of(null) });
+      }
 
       // Clear any pending completion
-      if (completionTimeout) {
-        clearTimeout(completionTimeout);
+      if (this.completionTimeout) {
+        clearTimeout(this.completionTimeout);
       }
 
       // Schedule completion fetch
-      completionTimeout = setTimeout(() => {
+      this.completionTimeout = setTimeout(() => {
         this.fetchCompletion(this.view);
       }, TYPING_TIMEOUT);
     }
 
     destroy() {
-      if (completionTimeout) {
-        clearTimeout(completionTimeout);
+      if (this.completionTimeout) {
+        clearTimeout(this.completionTimeout);
       }
     }
 
     private async fetchCompletion(view: EditorView) {
       // Check if user typed again
-      if (Date.now() - lastTypingTime < TYPING_TIMEOUT) {
+      if (Date.now() - this.lastTypingTime < TYPING_TIMEOUT) {
         return;
       }
 

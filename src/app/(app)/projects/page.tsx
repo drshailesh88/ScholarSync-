@@ -405,7 +405,7 @@ export default function ProjectsPage() {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              router.push(`/studio/${p.id}`);
+              router.push(`/studio?projectId=${p.id}`);
             }}
             title="Edit project"
             className="p-1.5 rounded-lg text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors"
@@ -555,7 +555,7 @@ export default function ProjectsPage() {
         <DataTable
           columns={columns}
           data={filtered}
-          onRowClick={(item) => router.push(`/studio/${item.id}`)}
+          onRowClick={(item) => router.push(`/studio?projectId=${item.id}`)}
         />
       )}
 
@@ -568,7 +568,7 @@ export default function ProjectsPage() {
             return (
               <div
                 key={p.id}
-                onClick={() => router.push(`/studio/${p.id}`)}
+                onClick={() => router.push(`/studio?projectId=${p.id}`)}
                 className="glass-panel rounded-2xl overflow-hidden cursor-pointer hover:bg-surface-raised/30 transition-all group"
               >
                 <div className="h-1.5 bg-brand" />
@@ -591,7 +591,7 @@ export default function ProjectsPage() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          router.push(`/studio/${p.id}`);
+                          router.push(`/studio?projectId=${p.id}`);
                         }}
                         className="p-1 rounded text-ink-muted hover:text-ink"
                       >

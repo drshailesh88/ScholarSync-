@@ -13,9 +13,14 @@ import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { useEditorStore } from "@/stores/editor-store";
 import { useReferenceStore } from "@/stores/reference-store";
 import { generateTemplateContent } from "@/lib/editor/section-templates";
+import { consumePendingCitationNotice } from "@/lib/editor/pending-citation-notice";
 import { useEditorDocument } from "@/hooks/use-editor-document";
 import { getProjectPapersForCitation } from "@/lib/actions/papers";
 import { paperToReference } from "@/lib/citations/paper-to-reference";
+import {
+  cloneReference,
+  extractReferencesFromContent,
+} from "@/lib/citations/document-reference-hydration";
 import {
   ArrowLeft,
   DownloadSimple,
@@ -26,6 +31,7 @@ import {
   Warning,
   WifiSlash,
   ClockCounterClockwise,
+  CloudArrowUp,
 } from "@phosphor-icons/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -47,6 +53,8 @@ export default function EditorPage() {
     setDocumentTitle: setStoreTitle,
     documentType,
     setDocumentType,
+    referenceSidebarOpen: editorReferenceSidebarOpen,
+    setReferenceSidebarOpen: setEditorReferenceSidebarOpen,
   } = useEditorStore();
 
   const {
@@ -66,8 +74,8 @@ export default function EditorPage() {
   const citationDialogOpen = useReferenceStore((s) => s.citationDialogOpen);
   const openCitationDialog = useReferenceStore((s) => s.openCitationDialog);
   const closeCitationDialog = useReferenceStore((s) => s.closeCitationDialog);
-  const sidebarOpen = useReferenceStore((s) => s.sidebarOpen);
-  const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
+  const referenceSidebarOpen = useReferenceStore((s) => s.sidebarOpen);
+  const setReferenceSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
   const addReferences = useReferenceStore((s) => s.addReferences);
   const clearReferences = useReferenceStore((s) => s.clearReferences);
@@ -77,36 +85,30 @@ export default function EditorPage() {
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [restoredContent, setRestoredContent] = useState<JSONContent | null>(null);
   const [contentKey, setContentKey] = useState(0);
-  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(
-    () => {
-      if (typeof window === "undefined") return null;
-
-      const pending = sessionStorage.getItem("scholarsync_pending_citation");
-      if (!pending) return null;
-
-      sessionStorage.removeItem("scholarsync_pending_citation");
-      try {
-        const parsed = JSON.parse(pending) as { title?: string };
-        const title = parsed.title?.trim();
-        return title
-          ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
-          : "Paper saved to your library. Open Citation Dialog to cite it.";
-      } catch {
-        return "Paper saved to your library. Open Citation Dialog to cite it.";
-      }
-    }
-  );
+  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
+  const titleSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleInsertCitation = useCallback((referenceIds: string[]) => {
     const editor = editorRef.current;
     if (!editor || editor.isDestroyed) return;
+
+    const referenceStore = useReferenceStore.getState();
+    const referenceSnapshots = referenceIds
+      .map((referenceId) => referenceStore.references.get(referenceId))
+      .filter((reference): reference is NonNullable<typeof reference> =>
+        Boolean(reference)
+      )
+      .map((reference) => cloneReference(reference));
 
     editor
       .chain()
       .focus()
       .insertContent({
         type: "citation",
-        attrs: { referenceIds },
+        attrs: {
+          referenceIds,
+          referenceSnapshots,
+        },
       })
       .run();
 
@@ -125,6 +127,26 @@ export default function EditorPage() {
     }
   }, []);
 
+  const sidebarOpen = editorReferenceSidebarOpen || referenceSidebarOpen;
+
+  const handleSetReferenceSidebarOpen = useCallback(
+    (open: boolean) => {
+      setEditorReferenceSidebarOpen(open);
+      setReferenceSidebarOpen(open);
+    },
+    [setEditorReferenceSidebarOpen, setReferenceSidebarOpen]
+  );
+
+  const handleToggleReferenceSidebar = useCallback(() => {
+    handleSetReferenceSidebarOpen(!sidebarOpen);
+  }, [handleSetReferenceSidebarOpen, sidebarOpen]);
+
+  const syncPendingCitationNotice = useCallback(() => {
+    const notice = consumePendingCitationNotice();
+    if (!notice) return;
+    setPendingCitationNotice(notice);
+  }, []);
+
   useEffect(() => {
     const handler = () => openCitationDialog();
     window.addEventListener("scholarsync:open-citation-dialog", handler);
@@ -133,15 +155,60 @@ export default function EditorPage() {
   }, [openCitationDialog]);
 
   useEffect(() => {
+    if (editorReferenceSidebarOpen === referenceSidebarOpen) return;
+    handleSetReferenceSidebarOpen(editorReferenceSidebarOpen || referenceSidebarOpen);
+  }, [
+    editorReferenceSidebarOpen,
+    handleSetReferenceSidebarOpen,
+    referenceSidebarOpen,
+  ]);
+
+  useEffect(() => {
+    const initialSync = setTimeout(syncPendingCitationNotice, 0);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        syncPendingCitationNotice();
+      }
+    };
+
+    window.addEventListener("focus", syncPendingCitationNotice);
+    window.addEventListener("pageshow", syncPendingCitationNotice);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      clearTimeout(initialSync);
+      window.removeEventListener("focus", syncPendingCitationNotice);
+      window.removeEventListener("pageshow", syncPendingCitationNotice);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [syncPendingCitationNotice]);
+
+  useEffect(() => {
     if (!pendingCitationNotice) return;
     const timer = setTimeout(() => setPendingCitationNotice(null), 5000);
     return () => clearTimeout(timer);
   }, [pendingCitationNotice]);
 
-  // Populate citation store with project papers when document changes.
+  // Reset reference state when switching documents or projects.
   useEffect(() => {
     clearReferences();
-    if (!dbDocumentId || !projectId) return;
+  }, [clearReferences, dbDocumentId, projectId]);
+
+  // Rehydrate references embedded in the current document content.
+  useEffect(() => {
+    if (!dbDocumentId) return;
+    const extractedReferences = extractReferencesFromContent(
+      dbContent,
+      String(dbDocumentId)
+    );
+    if (extractedReferences.length > 0) {
+      addReferences(extractedReferences);
+    }
+  }, [addReferences, dbContent, dbDocumentId]);
+
+  // Load project library references when the backing project changes.
+  useEffect(() => {
+    if (!projectId || !dbDocumentId) return;
 
     let canceled = false;
     getProjectPapersForCitation(projectId)
@@ -159,14 +226,17 @@ export default function EditorPage() {
     return () => {
       canceled = true;
     };
-  }, [dbDocumentId, projectId, addReferences, clearReferences]);
+  }, [addReferences, dbDocumentId, projectId]);
 
   // Add beforeunload protection to prevent data loss
   useEffect(() => {
+    if (saveStatus !== "unsaved" && saveStatus !== "saving") {
+      return;
+    }
+
     function handleBeforeUnload(e: BeforeUnloadEvent) {
-      if (saveStatus === "unsaved" || saveStatus === "saving") {
-        e.preventDefault();
-      }
+      e.preventDefault();
+      e.returnValue = "";
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -176,12 +246,23 @@ export default function EditorPage() {
   // Handle title changes with debounced save
   const handleTitleChange = (newTitle: string) => {
     setStoreTitle(newTitle);
-    // Debounced title save
-    const timeoutId = setTimeout(() => {
+    if (titleSaveTimeoutRef.current) {
+      clearTimeout(titleSaveTimeoutRef.current);
+    }
+
+    titleSaveTimeoutRef.current = setTimeout(() => {
       setTitle(newTitle);
+      titleSaveTimeoutRef.current = null;
     }, 1000);
-    return () => clearTimeout(timeoutId);
   };
+
+  useEffect(() => {
+    return () => {
+      if (titleSaveTimeoutRef.current) {
+        clearTimeout(titleSaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleDocumentTypeChange = (type: string) => {
     setDocumentType(type);
@@ -200,6 +281,11 @@ export default function EditorPage() {
     // If no content from DB, generate template
     return generateTemplateContent(documentType);
   }, [dbContent, documentType]);
+  const canOpenVersionHistory =
+    !isLoading &&
+    Boolean(editorContent) &&
+    dbDocumentId !== null &&
+    sectionId !== null;
 
   return (
     <EditorErrorBoundary documentId={urlDocumentId}>
@@ -269,7 +355,7 @@ export default function EditorPage() {
           <div className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-surface-raised border border-border">
             {saveStatus === "saving" && (
               <>
-                <Spinner size={14} className="animate-spin text-ink-muted" />
+                <CloudArrowUp size={14} className="animate-pulse text-ink-muted" />
                 <span className="text-xs text-ink-muted">Saving...</span>
               </>
             )}
@@ -277,19 +363,24 @@ export default function EditorPage() {
               <>
                 <CheckCircle size={14} className="text-emerald-500" />
                 <span className="text-xs text-ink-muted">
-                  Saved {formatRelativeTime(lastSavedAt)}
+                  Saved{" "}
+                  {lastSavedAt.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </span>
               </>
             )}
             {saveStatus === "unsaved" && (
               <>
-                <Warning size={14} className="text-amber-500" />
-                <span className="text-xs text-ink-muted">Unsaved changes...</span>
+                <CloudArrowUp size={14} className="text-amber-500" />
+                <span className="text-xs text-ink-muted">Unsaved changes</span>
               </>
             )}
             {saveStatus === "error" && (
               <>
                 <Warning size={14} className="text-red-500" />
+                <span className="text-xs text-ink-muted">Save failed</span>
                 <button
                   onClick={() => retrySave()}
                   className="text-xs text-red-500 hover:text-red-600 transition-colors"
@@ -300,7 +391,13 @@ export default function EditorPage() {
             )}
             {saveStatus === "offline" && (
               <>
-                <WifiSlash size={14} className="text-amber-500" />
+                <WifiSlash size={14} className="text-red-500" />
+                <span className="text-xs text-ink-muted">Offline</span>
+              </>
+            )}
+            {saveStatus === "local" && (
+              <>
+                <WifiSlash size={14} className="text-red-500" />
                 <span className="text-xs text-ink-muted">Saved locally</span>
               </>
             )}
@@ -309,7 +406,7 @@ export default function EditorPage() {
           <button
             onClick={() => setShowVersionHistory(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border rounded-lg transition-colors"
-            disabled={isLoading || !editorContent}
+            disabled={!canOpenVersionHistory}
           >
             <ClockCounterClockwise size={14} />
             Version History
@@ -378,7 +475,7 @@ export default function EditorPage() {
                 editorRef.current = editor;
               }}
               onOpenCitationDialog={openCitationDialog}
-              onToggleReferenceSidebar={toggleSidebar}
+              onToggleReferenceSidebar={handleToggleReferenceSidebar}
               referenceCount={references.size}
               debounceMs={2000}
             />
@@ -388,7 +485,7 @@ export default function EditorPage() {
             <div className="w-80 border-l border-border bg-surface shrink-0 overflow-hidden">
               <ReferenceSidebar
                 open={sidebarOpen}
-                onClose={toggleSidebar}
+                onClose={() => handleSetReferenceSidebarOpen(false)}
                 onOpenCitationDialog={openCitationDialog}
               />
             </div>
@@ -428,17 +525,4 @@ export default function EditorPage() {
       </div>
     </EditorErrorBoundary>
   );
-}
-
-// Helper function for relative time
-function formatRelativeTime(date: Date): string {
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }

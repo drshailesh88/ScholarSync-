@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { JSONContent } from "@tiptap/core";
 import {
   X,
@@ -35,8 +35,19 @@ export function ExportDialog({
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
   const bibliographyEntries = useReferenceStore((s) => s.bibliographyEntries);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    setFormat("docx");
+    setDoubleSpaced(true);
+    setIncludePageNumbers(true);
+    setIsExporting(false);
+  }, [isOpen]);
+
   const handleExport = useCallback(async () => {
     setIsExporting(true);
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 0);
+    });
 
     try {
       if (format === "docx") {

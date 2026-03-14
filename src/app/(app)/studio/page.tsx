@@ -10,29 +10,41 @@ import {
   PaperPlaneRight,
   GlobeHemisphereWest,
   Books,
-  MagnifyingGlass,
   Sparkle,
   DownloadSimple,
   FileDoc,
-  Check,
   CircleNotch,
-  CloudCheck,
   Warning,
+  Question,
   CaretDown,
+  MagnifyingGlass,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { ProjectSelector } from "@/components/studio/ProjectSelector";
+import { SaveIndicator } from "@/components/studio/SaveIndicator";
 import { IntegrityPanel } from "@/components/integrity/IntegrityPanel";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
+import { CommentSidebar } from "@/components/editor/CommentSidebar";
+import { KeyboardShortcutsDialog } from "@/components/editor/KeyboardShortcutsDialog";
 import { CitationDialog } from "@/components/citations/citation-dialog";
 import { ReferenceSidebar } from "@/components/citations/reference-sidebar";
 import { useReferenceStore } from "@/stores/reference-store";
+import { useEditorStore } from "@/stores/editor-store";
 import { ResearchSidebar } from "@/components/research/ResearchSidebar";
 import { useResearchStore } from "@/stores/research-store";
 import { getUserUsageStats } from "@/lib/actions/user";
 import { createConversation, addMessage } from "@/lib/actions/conversations";
-import { useStudioDocument, type SaveStatus } from "@/hooks/use-studio-document";
+import { getProjectPapersForCitation } from "@/lib/actions/papers";
+import { useStudioDocument } from "@/hooks/use-studio-document";
+import { paperToReference } from "@/lib/citations/paper-to-reference";
+import {
+  cloneReference,
+  extractReferencesFromContent,
+} from "@/lib/citations/document-reference-hydration";
+import { countSectionWords, getDocumentWordCount } from "@/lib/editor/word-counter";
+import type { Reference } from "@/types/citation";
 import {
   GUIDE_STAGES,
   GUIDE_STAGE_LABELS,
@@ -52,144 +64,90 @@ interface ChatMessage {
   content: string;
 }
 
+interface ResearchCitationDetail {
+  title: string;
+  authors?: string[];
+  year?: number | null;
+  journal?: string;
+  doi?: string;
+  pmid?: string;
+}
+
 const aiPanelTabs = [
   { key: "chat", label: "Chat & Learn" },
   { key: "research", label: "Research" },
   { key: "checks", label: "Checks" },
 ];
 
+function toCitationAuthors(authors?: string[]) {
+  if (!authors?.length) return [];
+
+  return authors.map((author) => {
+    const trimmed = author.trim();
+    if (!trimmed) {
+      return { family: "Unknown", given: "" };
+    }
+
+    if (trimmed.includes(",")) {
+      const [family, given = ""] = trimmed.split(",").map((part) => part.trim());
+      return { family: family || "Unknown", given };
+    }
+
+    const parts = trimmed.split(/\s+/);
+    if (parts.length === 1) {
+      return { family: parts[0], given: "" };
+    }
+
+    return {
+      family: parts[parts.length - 1] || "Unknown",
+      given: parts.slice(0, -1).join(" "),
+    };
+  });
+}
+
+function buildResearchReference(
+  detail: ResearchCitationDetail,
+  documentId: string
+): Reference {
+  const authors = toCitationAuthors(detail.authors);
+  const stableKey =
+    detail.doi?.trim() ||
+    detail.pmid?.trim() ||
+    detail.title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const id = `ref-research-${stableKey}`;
+
+  return {
+    id,
+    documentId,
+    type: "article",
+    title: detail.title,
+    authors,
+    year: detail.year || 0,
+    journal: detail.journal || undefined,
+    doi: detail.doi || undefined,
+    pmid: detail.pmid || undefined,
+    dateAdded: new Date().toISOString(),
+    cslData: {
+      id,
+      type: "article-journal",
+      title: detail.title,
+      author: authors.map((author) => ({
+        family: author.family,
+        given: author.given,
+      })),
+      issued: detail.year ? { "date-parts": [[detail.year]] } : undefined,
+      "container-title": detail.journal || undefined,
+      DOI: detail.doi || undefined,
+      PMID: detail.pmid || undefined,
+    },
+  };
+}
+
 export default function StudioPage() {
   return (
     <Suspense>
       <StudioContent />
     </Suspense>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Save Status Indicator
-// ---------------------------------------------------------------------------
-function SaveIndicator({
-  status,
-  lastSavedAt,
-}: {
-  status: SaveStatus;
-  lastSavedAt: Date | null;
-}) {
-  switch (status) {
-    case "saving":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-ink-muted">
-          <CircleNotch size={12} className="text-brand animate-spin" />
-          Saving...
-        </span>
-      );
-    case "saved":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-ink-muted">
-          <CloudCheck size={12} className="text-emerald-500" />
-          Saved{" "}
-          {lastSavedAt
-            ? lastSavedAt.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
-            : ""}
-        </span>
-      );
-    case "unsaved":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-amber-400">
-          <CircleNotch size={12} />
-          Unsaved changes
-        </span>
-      );
-    case "error":
-      return (
-        <span className="flex items-center gap-1 text-[10px] text-red-400">
-          <Warning size={12} />
-          Save failed
-        </span>
-      );
-    default:
-      // idle / first load -- show last saved if available, otherwise nothing
-      if (lastSavedAt) {
-        return (
-          <span className="flex items-center gap-1 text-[10px] text-ink-muted">
-            <Check size={12} className="text-emerald-500" />
-            Saved{" "}
-            {lastSavedAt.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </span>
-        );
-      }
-      return <span />;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Project Selector Dropdown
-// ---------------------------------------------------------------------------
-function ProjectSelector({
-  projects,
-  selectedId,
-  onSelect,
-}: {
-  projects: { id: number; title: string }[];
-  selectedId: number | null;
-  onSelect: (id: number) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  // Close on outside click
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  const selected = projects.find((p) => p.id === selectedId);
-
-  if (projects.length <= 1) return null;
-
-  return (
-    <div ref={ref} className="relative">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-ink-muted hover:text-ink bg-surface-raised/50 hover:bg-surface-raised border border-border-subtle transition-colors max-w-[180px]"
-      >
-        <span className="truncate">{selected?.title ?? "Select project"}</span>
-        <CaretDown size={10} className="shrink-0" />
-      </button>
-      {open && (
-        <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
-          {projects.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => {
-                onSelect(p.id);
-                setOpen(false);
-              }}
-              className={cn(
-                "w-full text-left px-3 py-2 text-xs transition-colors",
-                p.id === selectedId
-                  ? "bg-brand/10 text-brand font-medium"
-                  : "text-ink hover:bg-surface-raised"
-              )}
-            >
-              {p.title}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -211,7 +169,9 @@ function StudioContent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [usageStats, setUsageStats] = useState<{ tokens_used: number; tokens_limit: number } | null>(null);
   const [showExport, setShowExport] = useState(false);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
   const [citationNotice, setCitationNotice] = useState<string | null>(null);
+  const [pendingCitationNotice, setPendingCitationNotice] = useState<string | null>(null);
   const conversationIdRef = useRef<number | null>(null);
   const editorRef = useRef<Editor | null>(null);
   const citationSelectionRef = useRef<{ from: number; to: number } | null>(null);
@@ -227,7 +187,48 @@ function StudioContent() {
   const toggleSidebar = useReferenceStore((s) => s.toggleSidebar);
   const setSidebarOpen = useReferenceStore((s) => s.setSidebarOpen);
   const references = useReferenceStore((s) => s.references);
+  const addReferences = useReferenceStore((s) => s.addReferences);
+  const clearReferences = useReferenceStore((s) => s.clearReferences);
   const referenceNumberMap = useReferenceStore((s) => s.referenceNumberMap);
+  const commentSidebarOpen = useEditorStore((s) => s.commentSidebarOpen);
+  const toggleCommentSidebar = useEditorStore((s) => s.toggleCommentSidebar);
+
+  const submitAiPrompt = useCallback((prompt: string) => {
+    setInput(prompt);
+    setAiTab("chat");
+    setTimeout(() => {
+      setInput(prompt);
+      const form = document.querySelector<HTMLFormElement>("form");
+      form?.requestSubmit();
+    }, 100);
+  }, []);
+
+  const showWordCountBreakdown = useCallback(() => {
+    const editor = editorRef.current;
+    if (!editor || editor.isDestroyed) return;
+
+    const doc = editor.state.doc;
+    const totalWords = getDocumentWordCount(doc);
+    const sectionCounts = countSectionWords(doc);
+    const sectionLines = Object.entries(sectionCounts).map(([key, words]) => {
+      const heading = key.split("__")[0] || "Untitled Section";
+      return `${heading}: ${words} words`;
+    });
+
+    const content = sectionLines.length > 0
+      ? `Section word counts:\n${sectionLines.join("\n")}\n\nTotal: ${totalWords} words`
+      : `Document word count: ${totalWords} words`;
+
+    setAiTab("chat");
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `word-count-${Date.now()}`,
+        role: "assistant",
+        content,
+      },
+    ]);
+  }, []);
 
   // -----------------------------------------------------------------------
   // Real DB persistence via hook
@@ -237,6 +238,7 @@ function StudioContent() {
     initialContent,
     docTitle,
     setDocTitle,
+    markUnsaved,
     saveStatus,
     lastSavedAt,
     isLoading: docLoading,
@@ -260,6 +262,59 @@ function StudioContent() {
       if (stats) setUsageStats({ tokens_used: stats.tokens_used ?? 0, tokens_limit: stats.tokens_limit ?? 50000 });
     }).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    const pending = sessionStorage.getItem("scholarsync_pending_citation");
+    if (!pending) return;
+    sessionStorage.removeItem("scholarsync_pending_citation");
+    try {
+      const parsed = JSON.parse(pending) as { title?: string };
+      const title = parsed.title?.trim();
+      setPendingCitationNotice(
+        title
+          ? `Saved "${title}" to your library. Open Citation Dialog to cite it.`
+          : "Paper saved to your library. Open Citation Dialog to cite it."
+      );
+    } catch {
+      setPendingCitationNotice("Paper saved to your library. Open Citation Dialog to cite it.");
+    }
+  }, []);
+
+  useEffect(() => {
+    clearReferences();
+
+    if (!studioDoc?.id) return;
+
+    const documentId = String(studioDoc.id);
+    const extractedReferences = extractReferencesFromContent(
+      initialContent,
+      documentId
+    );
+
+    if (extractedReferences.length > 0) {
+      addReferences(extractedReferences);
+    }
+
+    if (!studioDoc.project_id) return;
+
+    let canceled = false;
+
+    getProjectPapersForCitation(studioDoc.project_id)
+      .then((projectPapers) => {
+        if (canceled || projectPapers.length === 0) return;
+
+        addReferences(
+          projectPapers.map((paper) => paperToReference(paper, documentId))
+        );
+      })
+      .catch((err) => {
+        console.error("Failed to load studio references:", err);
+      });
+
+    return () => {
+      canceled = true;
+    };
+  }, [addReferences, clearReferences, initialContent, studioDoc]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -304,6 +359,23 @@ function StudioContent() {
         case "continue":
           prompt = `Continue writing from where the user left off. Here is the current text:\n\n${detail.context || ""}`;
           break;
+        case "outline-section":
+          prompt = `Create a concise bullet outline for the current section based on this draft:\n\n${detail.context || ""}`;
+          break;
+        case "check-guidelines":
+          prompt = `Review this draft against the most relevant reporting guideline checklist and list missing or weak items:\n\n${detail.context || ""}`;
+          break;
+        case "precision-edit":
+          prompt = `Improve the clarity, precision, and academic tone of this selected text while preserving meaning:\n\n${detail.context || ""}`;
+          break;
+        case "ask":
+          setAiTab("chat");
+          setTimeout(() => {
+            document
+              .querySelector<HTMLInputElement>('input[placeholder*="AI research assistant"], input[placeholder*="challenge your thinking"]')
+              ?.focus();
+          }, 0);
+          return;
         case "summarize":
           prompt = `Summarize the following text concisely:\n\n${detail.context || ""}`;
           break;
@@ -329,18 +401,62 @@ function StudioContent() {
           return;
       }
 
-      setInput(prompt);
-      setAiTab("chat");
-      setTimeout(() => {
-        setInput(prompt);
-        const form = document.querySelector<HTMLFormElement>("form");
-        form?.requestSubmit();
-      }, 100);
+      submitAiPrompt(prompt);
     };
 
     window.addEventListener("scholarsync:ai-action", handler);
     return () => window.removeEventListener("scholarsync:ai-action", handler);
-  }, []);
+  }, [submitAiPrompt, toggleSidebar]);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail as { action?: string };
+      if (!detail?.action) return;
+
+      if (detail.action === "show-word-count") {
+        showWordCountBreakdown();
+        return;
+      }
+
+      if (detail.action === "add-comment" && editorRef.current) {
+        const editor = editorRef.current;
+        const { from, to } = editor.state.selection;
+        const selectedText = editor.state.doc.textBetween(from, to, " ");
+
+        if (!commentSidebarOpen) {
+          toggleCommentSidebar();
+        }
+
+        window.dispatchEvent(
+          new CustomEvent("scholarsync:new-inline-comment", {
+            detail: {
+              textRangeStart: from,
+              textRangeEnd: to,
+              quotedText: selectedText,
+            },
+          })
+        );
+        return;
+      }
+
+      if (detail.action === "toggle-comment-sidebar") {
+        toggleCommentSidebar();
+        return;
+      }
+
+      if (detail.action === "insert-citation") {
+        openCitationDialogWithSelection();
+      }
+    };
+
+    window.addEventListener("scholarsync:editor-action", handler);
+    return () => window.removeEventListener("scholarsync:editor-action", handler);
+  }, [
+    commentSidebarOpen,
+    showWordCountBreakdown,
+    toggleCommentSidebar,
+    openCitationDialogWithSelection,
+  ]);
 
   // Handle citation insertion from the dialog.
   // Uses requestAnimationFrame to ensure the modal overlay is fully removed
@@ -351,6 +467,11 @@ function StudioContent() {
     if (!editor || editor.isDestroyed) return;
 
     const savedSelection = citationSelectionRef.current;
+    const referenceStore = useReferenceStore.getState();
+    const referenceSnapshots = referenceIds
+      .map((referenceId) => referenceStore.references.get(referenceId))
+      .filter((reference): reference is Reference => Boolean(reference))
+      .map((reference) => cloneReference(reference));
 
     requestAnimationFrame(() => {
       if (editor.isDestroyed) return;
@@ -363,7 +484,10 @@ function StudioContent() {
 
       const inserted = chain.insertContent({
           type: "citation",
-          attrs: { referenceIds },
+          attrs: {
+            referenceIds,
+            referenceSnapshots,
+          },
         })
         .run();
 
@@ -400,6 +524,25 @@ function StudioContent() {
       }, 2500);
     });
   }, []);
+
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent<ResearchCitationDetail>).detail;
+      if (!detail?.title?.trim()) return;
+
+      const reference = buildResearchReference(
+        detail,
+        String(studioDoc?.id ?? "studio")
+      );
+
+      addReferences([reference]);
+      handleInsertCitation([reference.id]);
+    };
+
+    window.addEventListener("scholarsync:insert-citation", handler);
+    return () =>
+      window.removeEventListener("scholarsync:insert-citation", handler);
+  }, [addReferences, handleInsertCitation, studioDoc?.id]);
 
   useEffect(() => {
     return () => {
@@ -500,13 +643,9 @@ function StudioContent() {
 
   // Mark status as unsaved immediately on keystroke (before debounce fires)
   const handleDirty = useCallback(() => {
-    // The hook's handleEditorUpdate will transition to "saving" once the debounce fires.
-    // We want to show "unsaved" right away on keystroke.
-    // We achieve this through the hook -- but as a lightweight approach, we don't
-    // need extra state here: the hook already transitions idle -> saving -> saved.
-    // The onDirty callback gives us a chance to set unsaved if needed.
-    //
-    // Also save a localStorage draft as a fallback in case the DB save fails.
+    markUnsaved();
+
+    // Save a localStorage draft as a fallback in case the DB save fails.
     const editor = editorRef.current;
     if (editor && !editor.isDestroyed) {
       try {
@@ -524,7 +663,7 @@ function StudioContent() {
         // localStorage may be full or unavailable
       }
     }
-  }, [docTitle]);
+  }, [docTitle, markUnsaved]);
 
   const getEditorContent = (): string => {
     const el = document.querySelector(".ProseMirror");
@@ -545,12 +684,20 @@ function StudioContent() {
 
       if (!res.ok) return;
 
-      const html = await res.text();
       const newWindow = window.open("", "_blank");
-      if (newWindow) {
+      if (!newWindow) return;
+
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("text/html")) {
+        const html = await res.text();
         newWindow.document.write(html);
         newWindow.document.close();
+        return;
       }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      newWindow.location.href = url;
     } catch (err) {
       console.error("PDF export failed:", err);
     }
@@ -594,6 +741,23 @@ function StudioContent() {
         return ref ? { num, title: ref.title, author: ref.authors[0]?.family || "Unknown" } : null;
       })
       .filter(Boolean) as { num: number; title: string; author: string }[];
+  }, [referenceNumberMap, references]);
+
+  const integritySources = useMemo(() => {
+    return Array.from(referenceNumberMap.entries())
+      .sort(([, a], [, b]) => a - b)
+      .map(([refId]) => references.get(refId))
+      .filter((ref): ref is NonNullable<typeof ref> => Boolean(ref))
+      .map((ref) => ({
+        title: ref.title,
+        doi: ref.doi ?? undefined,
+        pmid: ref.pmid ?? undefined,
+        authors: ref.authors?.map((author) => {
+          if (typeof author === "string") return author;
+          return [author.given, author.family].filter(Boolean).join(" ").trim();
+        }),
+        year: ref.year ?? undefined,
+      }));
   }, [referenceNumberMap, references]);
 
   return (
@@ -701,12 +865,22 @@ function StudioContent() {
             max={usageStats?.tokens_limit ?? 50000}
             label="AI Credits"
             color="var(--brand)"
+            formatText={({ value, max, isUnlimited }) =>
+              isUnlimited ? `${value} (Unlimited)` : `${value} / ${max}`
+            }
           />
         </div>
       </aside>
 
       {/* Center Editor */}
       <main className="flex-1 flex flex-col overflow-hidden">
+        {pendingCitationNotice && (
+          <div className="px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 shrink-0">
+            <span className="text-sm text-blue-700 dark:text-blue-300">
+              {pendingCitationNotice}
+            </span>
+          </div>
+        )}
         {!isLearnMode && (
           <div className="px-4 py-2 bg-brand/5 border-b border-brand/10">
             <div className="flex items-center justify-between">
@@ -808,7 +982,15 @@ function StudioContent() {
               </span>
             )}
           </div>
-          <div className="relative">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowKeyboardShortcuts(true)}
+              title="Keyboard shortcuts"
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
+            >
+              <Question size={14} />
+            </button>
+            <div className="relative">
             <button
               onClick={() => setShowExport((v) => !v)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-ink-muted hover:text-ink bg-surface-raised hover:bg-surface-raised/80 border border-border transition-colors"
@@ -834,6 +1016,7 @@ function StudioContent() {
                 </button>
               </div>
             )}
+            </div>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto bg-surface">
@@ -853,7 +1036,7 @@ function StudioContent() {
             </div>
           ) : (
             <TiptapEditor
-              className="max-w-3xl mx-auto"
+              className="max-w-[720px] mx-auto"
               content={initialContent}
               contentKey={studioDoc?.id ?? null}
               onUpdate={handleEditorUpdate}
@@ -871,12 +1054,18 @@ function StudioContent() {
       {/* Research Sidebar */}
       <ResearchSidebar />
 
-      {/* Right: AI Panel or Reference Sidebar */}
+      {/* Right: Reference Sidebar, Comment Sidebar, or AI Panel */}
       {sidebarOpen ? (
         <ReferenceSidebar
           open={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           onOpenCitationDialog={openCitationDialogWithSelection}
+        />
+      ) : commentSidebarOpen && studioDoc?.id && editorRef.current ? (
+        <CommentSidebar
+          documentId={String(studioDoc.id)}
+          editor={editorRef.current}
+          onClose={toggleCommentSidebar}
         />
       ) : (
         <aside className="w-80 shrink-0 glass-panel border-l border-border flex flex-col">
@@ -994,7 +1183,12 @@ function StudioContent() {
 
           {aiTab === "checks" && (
             <IntegrityPanel
-              getEditorText={() => editorRef.current?.getText() ?? ""}
+              getEditorText={() =>
+                editorRef.current?.view.dom.innerText?.trim() ||
+                editorRef.current?.getText({ blockSeparator: "\n\n" }) ||
+                ""
+              }
+              sources={integritySources}
             />
           )}
         </aside>
@@ -1005,6 +1199,11 @@ function StudioContent() {
         open={citationDialogOpen}
         onClose={closeCitationDialog}
         onInsert={handleInsertCitation}
+        documentId={studioDoc?.id ? String(studioDoc.id) : "default"}
+      />
+      <KeyboardShortcutsDialog
+        isOpen={showKeyboardShortcuts}
+        onClose={() => setShowKeyboardShortcuts(false)}
       />
     </div>
   );

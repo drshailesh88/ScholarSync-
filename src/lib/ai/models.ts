@@ -157,7 +157,13 @@ export function getDeepResearchModel() {
 /** Claude Sonnet for LaTeX writing tasks — Draft mode, complex edits, TikZ.
  *  This is where users feel the quality difference vs Prism (GPT-5.2). */
 export function getLatexWriteModel() {
-  return getAnthropic()("claude-sonnet-4-20250514");
+  if (AI_PROVIDER === "anthropic") {
+    return getAnthropic()("claude-sonnet-4-20250514");
+  }
+  if (AI_PROVIDER === "openai") {
+    return getOpenAI()("gpt-4o");
+  }
+  return getZhipu()("glm-5");
 }
 
 /** GPT-5 Nano for mechanical LaTeX tasks — grammar fixes, equation gen, error fixes.
