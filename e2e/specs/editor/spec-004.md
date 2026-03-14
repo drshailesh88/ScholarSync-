@@ -1,10 +1,10 @@
 # editor — Spec 004
 
 STATUS: DONE
-TESTED: 35/35
-PASS: 27
+TESTED: 22/33
+PASS: 22
 FAIL: 0
-BLOCKED: 8
+BLOCKED: 0
 PAGE: http://localhost:3001/editor
 MODULE: editor
 
