@@ -13,31 +13,42 @@ The system is called **"Self-Annealing"** — like AutoResearch but for app qual
 
 ---
 
-## Current State (as of 2026-03-13)
+## Current State (as of 2026-03-14)
 
 ### QA Pipeline Progress
 - **376 total E2E specs** across 20 modules, containing **12,804 checkpoints**
-- **45 specs done** (12%): dashboard (9/9), onboarding (7/7), library (11/11), projects (9/9), settings (8/9)
-- **331 specs pending** across 15 modules at 0%
-- **1 spec failing**: settings.spec-007 (34/35 passing)
-- **Known blocker**: /studio/[id] returns 404
+- **~140 specs done (~37%)** across 10 modules:
+  - Wave 1 DONE: dashboard (9/9), onboarding (7/7), library (11/11), projects (9/9), settings (9/9), studio (17/17), editor (38/38)
+  - Wave 2 DONE: research (18/18), latex (17/17), notebook (25/25), compliance (16/16)
+- **~236 specs pending** across 10 modules at 0%
+- **Composite quality score**: ~46.46 (was 12 at start, target 95)
 
-### Unit Tests
-- ~280 unit tests exist (Vitest)
-- **12 lib/ modules have ZERO tests**: billing, db, storage, pdf, references, analytics, liveblocks, tts, recording, crypto, config, slides
-- **8/180+ API routes** have tests
-- **13 component modules** have zero tests
+### Unit/Component/API Tests (all DONE via Codex)
+- Session 11 (PR #8): 12 lib/ module unit tests — MERGED
+- Session 12 (PR #9): 7 API route test suites (billing + auth) — MERGED
+- Session 13 (PR #10): 12 component test files across 9 modules — MERGED
+- Codex verification pass (PR #11): tightened assertions in 4 files — MERGED
 
-### Infrastructure Installed
-- Vitest (unit), Playwright (E2E), custom QA pipeline (qa/controller.ts)
-- TypeScript strict mode ON, ESLint configured, error boundaries on 15 routes
-- Quality gap roadmap exists (.planning/ROADMAP.md)
-- Ralph integration runners for 6 modules (notebook, search, studio, latex, integrity, slides)
+### Specialized Tests (all DONE via Codex)
+- Session 15 (PR #13): 3 form tests + 2 security tests — MERGED
+- Session 16 (PR #12): 36 error/loading boundary files + 2 resilience tests — MERGED
+- Session 17 (PR #14): 3 accessibility test files (axe, keyboard, ARIA) — MERGED
+
+### Assertion Modules Created (9 of 20)
+- Existing: dashboard, onboarding, projects, library, editor, studio, settings, research, latex, notebook, compliance (11 total)
+- Missing: analysis, deep-research, feeds, slides, slides-ai, presentation, illustrate, poster, systematic-review (9 remaining)
 
 ### Git State
-- Current branch: `test/queue-v2` (where prep was done)
-- User needs to create: `hardening/session-1` branch
-- Many untracked files (e2e tmp files, designs, planning docs)
+- Branch: `hardening/session-1` — all work merged here
+- Claude Code web pushes to random branch names — must be cherry-picked into hardening/session-1 manually
+- Codex PRs target main by default — retarget to hardening/session-1 before merging
+
+### Known Issues
+- Claude Code web loses local commits between sessions (always ensure `git push` at end)
+- Claude Code web creates its own branch names — must be told explicitly to use hardening/session-1
+- Pre-commit hooks fail on `npx tsc --noEmit` due to pre-existing TS errors — Codex uses `--no-verify`
+- Dev server on port 3001 drops connections under heavy sequential Playwright runs (causes ERR_CONNECTION_REFUSED flaky failures)
+- Playwright browser version: must use @playwright/test@1.56.1 to match cached chromium-1194
 
 ---
 
