@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-013
  * Source: e2e/specs/deep-research/spec-013.md
- * Generated: 2026-03-14T10:16:18.734Z
+ * Generated: 2026-03-14T14:26:49.788Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "Execute-route `progress` SSE payloads contain `stage` and `message`, but no numeric `progress`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-000 Execute-route `progress` SSE payloads contain `stage` and `message`, but no numeric `progress`.');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "Execute-route `report` SSE payload nests the final report under `report` and includes `markdownReport`, `topic`, `mode`, `summary`, `keyFindings`, `gaps`, `contradictions`, `totalSources`, `searchRounds`, `citationTraversalPapers`, `extractedDataCount`, `durationMs`, `perspectives`, `perspectiveSections`, and `sources`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-001 Execute-route `report` SSE payload nests the final report under `report` and includes `markdownReport`, `topic`, `mode`, `summary`, `keyFindings`, `gaps`, `contradictions`, `totalSources`, `searchRounds`, `citationTraversalPapers`, `extractedDataCount`, `durationMs`, `perspectives`, `perspectiveSections`, and `sources`.');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "`GET /api/deep-research/sessions` reads from `deepResearchSessions`, orders by `completedAt DESC`, applies `.limit(20)`, and returns `{ sessions: [...] }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-002 `GET /api/deep-research/sessions` reads from `deepResearchSessions`, orders by `completedAt DESC`, applies `.limit(20)`, and returns `{ sessions: [...] }`.');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "`GET /api/deep-research/sessions/{id}` filters by both session ID and `userId`, returns `400 {\"error\":\"Invalid session ID\"}` for bad IDs, `404 {\"error\":\"Session not found\"}` for missing or unowned rows, and success payload `{ id, topic, mode, markdownReport, sources, keyFindings, gaps, papersFound, completedAt }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-003 `GET /api/deep-research/sessions/{id}` filters by both session ID and `userId`, returns `400 {"error":"Invalid session ID"}` for bad IDs, `404 {"error":"Session not found"}` for missing or unowned rows, and success payload `{ id, topic, mode, markdownReport, sources, keyFindings, gaps, papersFound, completedAt }`.');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "`POST /api/deep-research/save` inserts into `deepResearchSessions` with `userId`, `originalQuery`, `finalReport`, `keyFindings`, `gapsIdentified`, `researchPlan: { mode, sources }`, `status: \"completed\"`, `papersFound`, `papersRead`, and `completedAt`, then returns `{ id, success: true }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-004 `POST /api/deep-research/save` inserts into `deepResearchSessions` with `userId`, `originalQuery`, `finalReport`, `keyFindings`, `gapsIdentified`, `researchPlan: { mode, sources }`, `status: "completed"`, `papersFound`, `papersRead`, and `completedAt`, then returns `{ id, success: true }`.');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "`POST /api/deep-research/open-in-studio` requires both `topic` and `markdownReport`; otherwise it returns `400 {\"error\":\"Topic and markdownReport are required\"}`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-005 `POST /api/deep-research/open-in-studio` requires both `topic` and `markdownReport`; otherwise it returns `400 {"error":"Topic and markdownReport are required"}`.');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "`POST /api/deep-research/open-in-studio` best-effort inserts a matching `deepResearchSessions` row before creating Studio records; failures in that insert are logged and do not stop Studio creation.");
+      throw new Error('Unhandled deep-research checkpoint: cp-006 `POST /api/deep-research/open-in-studio` best-effort inserts a matching `deepResearchSessions` row before creating Studio records; failures in that insert are logged and do not stop Studio creation.');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "`POST /api/deep-research/open-in-studio` inserts a `projects` row with `project_type: \"literature_review\"` and `status: \"drafting\"`, inserts a `synthesisDocuments` row with `document_type: \"review_article\"`, inserts one `synthesisSections` row titled `Research Report`, and returns `{ projectId, documentId, redirectUrl }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-007 `POST /api/deep-research/open-in-studio` inserts a `projects` row with `project_type: "literature_review"` and `status: "drafting"`, inserts a `synthesisDocuments` row with `document_type: "review_article"`, inserts one `synthesisSections` row titled `Research Report`, and returns `{ projectId, documentId, redirectUrl }`.');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "`POST /api/export/pdf` is the only route in this flow that uses Zod and rate limiting.");
+      throw new Error('Unhandled deep-research checkpoint: cp-008 `POST /api/export/pdf` is the only route in this flow that uses Zod and rate limiting.');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "`POST /api/export/pdf` requires auth and returns `401 {\"error\":\"Authentication required\"}` when auth fails.");
+      throw new Error('Unhandled deep-research checkpoint: cp-009 `POST /api/export/pdf` requires auth and returns `401 {"error":"Authentication required"}` when auth fails.');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "`POST /api/export/pdf` rate-limits the caller with `checkRateLimit(userId, \"export\", RATE_LIMITS.export)`, where `RATE_LIMITS.export` is `30` requests per `3600` seconds.");
+      throw new Error('Unhandled deep-research checkpoint: cp-010 `POST /api/export/pdf` rate-limits the caller with `checkRateLimit(userId, "export", RATE_LIMITS.export)`, where `RATE_LIMITS.export` is `30` requests per `3600` seconds.');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "`POST /api/export/pdf` returns `429 {\"error\":\"Rate limit exceeded. Please try again later.\"}` with header `X-RateLimit-Remaining` when the rate limit is exceeded.");
+      throw new Error('Unhandled deep-research checkpoint: cp-011 `POST /api/export/pdf` returns `429 {"error":"Rate limit exceeded. Please try again later."}` with header `X-RateLimit-Remaining` when the rate limit is exceeded.');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "`POST /api/export/pdf` validates the request with `z.object({ title: z.string().max(500).optional(), content: z.string().max(500000), citations: z.array(z.string()).max(1000).optional() })`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-012 `POST /api/export/pdf` validates the request with `z.object({ title: z.string().max(500).optional(), content: z.string().max(500000), citations: z.array(z.string()).max(1000).optional() })`.');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "`POST /api/export/pdf` returns `400 {\"error\":\"Invalid request data\"}` on Zod validation failure, `400 {\"error\":\"Content is required\"}` when `content` is an empty string, a binary PDF on success, and `500 {\"error\":\"Export failed\"}` on unexpected failure.");
+      throw new Error('Unhandled deep-research checkpoint: cp-013 `POST /api/export/pdf` returns `400 {"error":"Invalid request data"}` on Zod validation failure, `400 {"error":"Content is required"}` when `content` is an empty string, a binary PDF on success, and `500 {"error":"Export failed"}` on unexpected failure.');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "`validateTopic()` returns `{ valid: false, error: \"Topic must be at least 5 characters long\" }` when `topic.trim().length < 5`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-014 `validateTopic()` returns `{ valid: false, error: "Topic must be at least 5 characters long" }` when `topic.trim().length < 5`.');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "`validateTopic()` returns `{ valid: false, error: \"Topic must be 500 characters or fewer\" }` when `topic.trim().length > 500`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-015 `validateTopic()` returns `{ valid: false, error: "Topic must be 500 characters or fewer" }` when `topic.trim().length > 500`.');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "Engine `buildConfig()` uses `quick = { depth: 1, breadth: 2, maxSources: 15, perSourceLimit: 10 }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-016 Engine `buildConfig()` uses `quick = { depth: 1, breadth: 2, maxSources: 15, perSourceLimit: 10 }`.');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "Engine `buildConfig()` uses `standard = { depth: 2, breadth: 3, maxSources: 30, perSourceLimit: 15 }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-017 Engine `buildConfig()` uses `standard = { depth: 2, breadth: 3, maxSources: 30, perSourceLimit: 15 }`.');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "Engine `buildConfig()` uses `deep = { depth: 3, breadth: 5, maxSources: 60, perSourceLimit: 20 }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-018 Engine `buildConfig()` uses `deep = { depth: 3, breadth: 5, maxSources: 60, perSourceLimit: 20 }`.');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "Engine `buildConfig()` uses `exhaustive = { depth: 4, breadth: 7, maxSources: 100, perSourceLimit: 25 }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-019 Engine `buildConfig()` uses `exhaustive = { depth: 4, breadth: 7, maxSources: 100, perSourceLimit: 25 }`.');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "Engine search always fans out across PubMed, Semantic Scholar, and OpenAlex in `searchAllSources()`; there is no user-selectable source filter in the route UI.");
+      throw new Error('Unhandled deep-research checkpoint: cp-020 Engine search always fans out across PubMed, Semantic Scholar, and OpenAlex in `searchAllSources()`; there is no user-selectable source filter in the route UI.');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "Round-1 search batches three queries at a time and sleeps for exactly 500 ms between batches.");
+      throw new Error('Unhandled deep-research checkpoint: cp-021 Round-1 search batches three queries at a time and sleeps for exactly 500 ms between batches.');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "Citation traversal batches three seed papers at a time, calls Semantic Scholar `citations` and `references` endpoints with a 15-second timeout each, and sleeps for exactly 500 ms between batches.");
+      throw new Error('Unhandled deep-research checkpoint: cp-022 Citation traversal batches three seed papers at a time, calls Semantic Scholar `citations` and `references` endpoints with a 15-second timeout each, and sleeps for exactly 500 ms between batches.');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "Citation traversal seeds the graph with the top 5 papers in quick mode and the top 10 papers in all other modes.");
+      throw new Error('Unhandled deep-research checkpoint: cp-023 Citation traversal seeds the graph with the top 5 papers in quick mode and the top 10 papers in all other modes.');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "Round-2 follow-up search only runs when `config.depth >= 2`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-024 Round-2 follow-up search only runs when `config.depth >= 2`.');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "Round-3 follow-up search only runs when `config.depth >= 3`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-025 Round-3 follow-up search only runs when `config.depth >= 3`.');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "Unpaywall lookup only checks the first 100 DOI-bearing papers.");
+      throw new Error('Unhandled deep-research checkpoint: cp-026 Unpaywall lookup only checks the first 100 DOI-bearing papers.');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "Full-text extraction only targets open-access papers with `fullTextUrl` and `isOpenAccess`, and it picks the top 5 papers in quick mode, 10 in standard mode, and 20 in deep or exhaustive mode.");
+      throw new Error('Unhandled deep-research checkpoint: cp-027 Full-text extraction only targets open-access papers with `fullTextUrl` and `isOpenAccess`, and it picks the top 5 papers in quick mode, 10 in standard mode, and 20 in deep or exhaustive mode.');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "Full-text extraction aborts each PDF fetch after exactly `15000` ms.");
+      throw new Error('Unhandled deep-research checkpoint: cp-028 Full-text extraction aborts each PDF fetch after exactly `15000` ms.');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "Full-text extraction rejects PDFs larger than 20 MB before or after download.");
+      throw new Error('Unhandled deep-research checkpoint: cp-029 Full-text extraction rejects PDFs larger than 20 MB before or after download.');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "Extracted full text is truncated to `15000` characters after section extraction.");
+      throw new Error('Unhandled deep-research checkpoint: cp-030 Extracted full text is truncated to `15000` characters after section extraction.');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "Full-text extraction failure returns `null` for that paper and increments the `failed` count; it does not fall back to the abstract.");
+      throw new Error('Unhandled deep-research checkpoint: cp-031 Full-text extraction failure returns `null` for that paper and increments the `failed` count; it does not fall back to the abstract.');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "Data extraction batches five papers at a time and sleeps for exactly 200 ms between batches.");
+      throw new Error('Unhandled deep-research checkpoint: cp-032 Data extraction batches five papers at a time and sleeps for exactly 200 ms between batches.');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "Data extraction limits papers to 10 in quick mode, 20 in standard mode, and 40 in deep or exhaustive mode.");
+      throw new Error('Unhandled deep-research checkpoint: cp-033 Data extraction limits papers to 10 in quick mode, 20 in standard mode, and 40 in deep or exhaustive mode.');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "Synthesis uses four passes: per-perspective sections, executive summary/introduction, tables and analysis, then critique-and-revision.");
+      throw new Error('Unhandled deep-research checkpoint: cp-034 Synthesis uses four passes: per-perspective sections, executive summary/introduction, tables and analysis, then critique-and-revision.');
     }
 
 

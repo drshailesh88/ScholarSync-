@@ -1,0 +1,1766 @@
+{
+  "config": {
+    "configFile": "/home/user/ScholarSync-/qa/playwright.config.ts",
+    "rootDir": "/home/user/ScholarSync-/qa/generated",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "./progress/results.json"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/user/ScholarSync-/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "qa-chromium",
+        "name": "qa-chromium",
+        "testDir": "/home/user/ScholarSync-/qa/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.56.0",
+    "workers": 1,
+    "webServer": {
+      "command": "PORT=3001 npm run dev",
+      "port": 3001,
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "stdout": "pipe",
+      "stderr": "pipe"
+    }
+  },
+  "suites": [
+    {
+      "title": "analysis/spec-007.spec.ts",
+      "file": "analysis/spec-007.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "analysis / spec-007",
+          "file": "analysis/spec-007.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Results write-good issue cards show uppercase type labels",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5792,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:41.003Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b43cd--show-uppercase-type-labels-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-d31084e95d51e31cdc7a",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Results write-good issue cards display the issue reason text only",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1833,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:46.870Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-69189--the-issue-reason-text-only-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-96142f895af3df091618",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: Plagiarism Indicators section renders only when resultplagiarismIndicatorslength",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1779,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:48.727Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d2e78-tplagiarismIndicatorslength-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-3ddac93a1331db37e7ab",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: High-severity plagiarism cards use red textbackground styling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1800,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:50.516Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-f7330--red-textbackground-styling-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-d405467e4cb3cbb4dfce",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Medium-severity plagiarism cards use yellow textbackground styling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1821,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:52.331Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-afa05-llow-textbackground-styling-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-1e7ce6552fc802d887f3",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: Low-severity plagiarism cards use muted text on bg-surface-raised",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1711,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:54.162Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6da2-d-text-on-bg-surface-raised-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-374c56e7513543b7ce0e",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Plagiarism cards display uppercase SEVERITY Risk labels an italic excerpt and a ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1741,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:55.882Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-8e9e6-ls-an-italic-excerpt-and-a--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-15d77c1fa226ce49e5c2",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: Detailed Metrics tab renders Readability Writing Quality and AI Detection sectio",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1725,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:57.631Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-11be0-ity-and-AI-Detection-sectio-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-293839cfca5a0c0ebe99",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: Readability section always shows Readability Grade",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1707,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:57:59.364Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-11c7b-ays-shows-Readability-Grade-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-926941599057a3c5e6a3",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: Results readability section adds Flesch-Kincaid Grade Gunning Fog Index and Fles",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1712,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:01.082Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-6c2e3--Gunning-Fog-Index-and-Fles-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-36b9a05979a79a9ad507",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: Results Avg Sentence Length row comes from resultwritingQualityaverageSentenceLe",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1720,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:02.803Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2fbfd-ingQualityaverageSentenceLe-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-ea36ec17b5f39e9455df",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Writing Quality Passive Voice falls back to resultwritingQualitypassiveVoiceCoun",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1757,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:04.532Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-376e4-tingQualitypassiveVoiceCoun-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-93463f3ce6f00b4fc3e4",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Writing Quality Weasel Words Adverbs and Complex Sentences rows render only when",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1842,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:06.297Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-074ec-ences-rows-render-only-when-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-47e4b6ef61976e2cc5be",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: AI Detection section renders Human Score AI Score and Overall Risk as ToneBadge ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1760,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:08.147Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-33a74--Overall-Risk-as-ToneBadge--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-ca1b14ab776170650d2c",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Human Score uses emerald for 70 yellow for 40-69 and red below 40",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1783,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:09.917Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d466f--for-40-69-and-red-below-40-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-a9113a49a66305468bd4",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: AI Score uses emerald for 30 yellow for 31-60 and red above 60",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1725,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:11.712Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0e283--for-31-60-and-red-above-60-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-c961e9c59b05e5c4e6e7",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Overall Risk uses low - emerald medium - yellow and high - red",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1713,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:13.444Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-64e72-ium---yellow-and-high---red-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-550a7fca1ff416876c8f",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Paragraph Breakdown section renders only when resultparagraphAnalysislength 0",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1674,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:15.165Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-538ff-ltparagraphAnalysislength-0-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-361b5d9225363d297e9b",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Paragraph Breakdown rows display Paragraph n on the left and humanProbability hu",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1741,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:16.848Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-1837f-eft-and-humanProbability-hu-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-c3c82ee50b582af0bcc2",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: MetricBar caps bar fill width at 100 with Mathminvalue max 100 100",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1866,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:18.598Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e352d-th-Mathminvalue-max-100-100-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-b853c6830e482396e57a",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: MetricBar appends suffix text such as words instances or sentences in the value ",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1717,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:20.478Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9a6d5--or-sentences-in-the-value--qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-c42cdf360bc44ad5e0f8",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: IssueBadge color map is yellow orange blue and red",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1724,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:22.206Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-55bf1--yellow-orange-blue-and-red-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-9955589dc657c88e0cd5",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: CircularGauge color thresholds are green 80 yellow 60 orange 40 and red below 40",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1772,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:23.950Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d433b--orange-40-and-red-below-40-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-46bc8c0324dfd8f7806a",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Results gauge readability label uses Excellent Good Needs Improvement and Poor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1740,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:25.731Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-75652--Needs-Improvement-and-Poor-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-323f47376abb3fdd2d75",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Instant gauge readability label uses the analyzeWriting labels not the results-g",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1759,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-024 Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-024 Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1284:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1284
+                        },
+                        "snippet": "  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled analysis checkpoint: cp-024 Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1284
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-024 Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels\n\n  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled analysis checkpoint: cp-024 Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1284:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:27.479Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2a1d9-ng-labels-not-the-results-g-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2a1d9-ng-labels-not-the-results-g-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-2a1d9-ng-labels-not-the-results-g-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1284
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-5d4db00b7bb5d1b04e24",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: When statsavgSentenceLength 28 the API returns the suggestion Your average sente",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1860,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-025 When `stats.avgSentenceLength > 28`, the API returns the suggestion: \"Your average sentence length is high. Consider breaking long sentences for readability.\" (~line 129)",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-025 When `stats.avgSentenceLength > 28`, the API returns the suggestion: \"Your average sentence length is high. Consider breaking long sentences for readability.\" (~line 129)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1334:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1334
+                        },
+                        "snippet": "  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled analysis checkpoint: cp-025 When `stats.avgSentenceLength > 28`, the API returns the suggestion: \"Your average sentence length is high. Consider breaking long sentences for readability.\" (~line 129)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1334
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-025 When `stats.avgSentenceLength > 28`, the API returns the suggestion: \"Your average sentence length is high. Consider breaking long sentences for readability.\" (~line 129)\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled analysis checkpoint: cp-025 When `stats.avgSentenceLength > 28`, the API returns the suggestion: \"Your average sentence length is high. Consider breaking long sentences for readability.\" (~line 129)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1334:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:30.035Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b9efd-ggestion-Your-average-sente-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b9efd-ggestion-Your-average-sente-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b9efd-ggestion-Your-average-sente-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1334
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-2ac3c0308d7a055d71c7",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: When statssentenceLengthStdDev 3 the API returns Your sentence lengths are very ",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1868,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-026 When `stats.sentenceLengthStdDev < 3`, the API returns: \"Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure.\" (~line 133)",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-026 When `stats.sentenceLengthStdDev < 3`, the API returns: \"Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure.\" (~line 133)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1384:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1384
+                        },
+                        "snippet": "  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled analysis checkpoint: cp-026 When `stats.sentenceLengthStdDev < 3`, the API returns: \"Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure.\" (~line 133)');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1384
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-026 When `stats.sentenceLengthStdDev < 3`, the API returns: \"Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure.\" (~line 133)\n\n  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled analysis checkpoint: cp-026 When `stats.sentenceLengthStdDev < 3`, the API returns: \"Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure.\" (~line 133)');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1384:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:32.730Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d02a4--sentence-lengths-are-very--qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d02a4--sentence-lengths-are-very--qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-d02a4--sentence-lengths-are-very--qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1384
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-722e82d9d0b3170e27d7",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: When statspassiveVoicePercent 30 the API returns N of sentences use passive voic",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1841,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-027 When `stats.passiveVoicePercent > 30`, the API returns: \"{N}% of sentences use passive voice. Consider using more active voice.\" where N is `Math.round(passiveVoicePercent)` (~line 139)",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-027 When `stats.passiveVoicePercent > 30`, the API returns: \"{N}% of sentences use passive voice. Consider using more active voice.\" where N is `Math.round(passiveVoicePercent)` (~line 139)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1434:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1434
+                        },
+                        "snippet": "  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled analysis checkpoint: cp-027 When `stats.passiveVoicePercent > 30`, the API returns: \"{N}% of sentences use passive voice. Consider using more active voice.\" where N is `Math.round(passiveVoicePercent)` (~line 139)');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1434
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-027 When `stats.passiveVoicePercent > 30`, the API returns: \"{N}% of sentences use passive voice. Consider using more active voice.\" where N is `Math.round(passiveVoicePercent)` (~line 139)\n\n  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled analysis checkpoint: cp-027 When `stats.passiveVoicePercent > 30`, the API returns: \"{N}% of sentences use passive voice. Consider using more active voice.\" where N is `Math.round(passiveVoicePercent)` (~line 139)');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1434:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:35.442Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0217d--sentences-use-passive-voic-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0217d--sentences-use-passive-voic-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-0217d--sentences-use-passive-voic-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1434
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-06ac14c0a61320aa904f",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: When statstypeTokenRatio 035 and 0 the API returns Vocabulary diversity is low U",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1757,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:38.167Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-b1c4c-cabulary-diversity-is-low-U-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-bbb8e2ddf4b21f8cedc7",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: When statshedgingPhraseCount 5 the API returns Found N hedging phrases eg It is ",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1785,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-029 When `stats.hedgingPhraseCount > 5`, the API returns: \"Found {N} hedging phrases (e.g. \"It is important to note\"). These are common in AI-generated text — consider being more direct.\" (~line 149)",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-029 When `stats.hedgingPhraseCount > 5`, the API returns: \"Found {N} hedging phrases (e.g. \"It is important to note\"). These are common in AI-generated text — consider being more direct.\" (~line 149)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1534:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1534
+                        },
+                        "snippet": "  1532 |\n  1533 |     if (!handled) {\n> 1534 |       throw new Error('Unhandled analysis checkpoint: cp-029 When `stats.hedgingPhraseCount > 5`, the API returns: \"Found {N} hedging phrases (e.g. \\\"It is important to note\\\"). These are common in AI-generated text — consider being more direct.\" (~line 149)');\n       |             ^\n  1535 |     }\n  1536 |\n  1537 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1534
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-029 When `stats.hedgingPhraseCount > 5`, the API returns: \"Found {N} hedging phrases (e.g. \"It is important to note\"). These are common in AI-generated text — consider being more direct.\" (~line 149)\n\n  1532 |\n  1533 |     if (!handled) {\n> 1534 |       throw new Error('Unhandled analysis checkpoint: cp-029 When `stats.hedgingPhraseCount > 5`, the API returns: \"Found {N} hedging phrases (e.g. \\\"It is important to note\\\"). These are common in AI-generated text — consider being more direct.\" (~line 149)');\n       |             ^\n  1535 |     }\n  1536 |\n  1537 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1534:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:40.016Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9059e-N-hedging-phrases-eg-It-is--qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9059e-N-hedging-phrases-eg-It-is--qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-9059e-N-hedging-phrases-eg-It-is--qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1534
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-951eba0431da1e7a7545",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: When statsreadabilityGrade 16 the API returns Readability grade is above 16 post",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1824,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-030 When `stats.readabilityGrade > 16`, the API returns: \"Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility.\" (~line 154)",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-030 When `stats.readabilityGrade > 16`, the API returns: \"Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility.\" (~line 154)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1584:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1584
+                        },
+                        "snippet": "  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled analysis checkpoint: cp-030 When `stats.readabilityGrade > 16`, the API returns: \"Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility.\" (~line 154)');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1584
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-030 When `stats.readabilityGrade > 16`, the API returns: \"Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility.\" (~line 154)\n\n  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled analysis checkpoint: cp-030 When `stats.readabilityGrade > 16`, the API returns: \"Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility.\" (~line 154)');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1584:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:42.547Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-07a14-lity-grade-is-above-16-post-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-07a14-lity-grade-is-above-16-post-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-07a14-lity-grade-is-above-16-post-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1584
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-388548aa11d85b18cb2f",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: When none of the above conditions fire the suggestions array is empty and the Is",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1856,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-031 When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the \"No issues detected\" message (~line 124-159)",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-031 When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the \"No issues detected\" message (~line 124-159)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1634:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1634
+                        },
+                        "snippet": "  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled analysis checkpoint: cp-031 When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the \"No issues detected\" message (~line 124-159)');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1634
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-031 When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the \"No issues detected\" message (~line 124-159)\n\n  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled analysis checkpoint: cp-031 When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the \"No issues detected\" message (~line 124-159)');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1634:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:45.195Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6846-s-array-is-empty-and-the-Is-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6846-s-array-is-empty-and-the-Is-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-e6846-s-array-is-empty-and-the-Is-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1634
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-4647df1074d660db408b",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: 401 response body is error Not authenticated line 47",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1860,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:47.899Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-93fdf-r-Not-authenticated-line-47-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-f48b6a6e96e9799e5422",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: 400 response body is error Invalid request details fieldErrors where details com",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1844,
+                      "error": {
+                        "message": "Error: Unhandled analysis checkpoint: cp-033 400 response body is `{ error: \"Invalid request\", details: <fieldErrors> }` where details come from Zod validation (~line 72)",
+                        "stack": "Error: Unhandled analysis checkpoint: cp-033 400 response body is `{ error: \"Invalid request\", details: <fieldErrors> }` where details come from Zod validation (~line 72)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1734:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 1734
+                        },
+                        "snippet": "  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled analysis checkpoint: cp-033 400 response body is `{ error: \"Invalid request\", details: <fieldErrors> }` where details come from Zod validation (~line 72)');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 1734
+                          },
+                          "message": "Error: Unhandled analysis checkpoint: cp-033 400 response body is `{ error: \"Invalid request\", details: <fieldErrors> }` where details come from Zod validation (~line 72)\n\n  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled analysis checkpoint: cp-033 400 response body is `{ error: \"Invalid request\", details: <fieldErrors> }` where details come from Zod validation (~line 72)');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts:1734:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:49.837Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-ed43b-eldErrors-where-details-com-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-ed43b-eldErrors-where-details-com-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-ed43b-eldErrors-where-details-com-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 1734
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-f3427c582cb6498ec84f",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: 503 when AI is not configured returns error AI service is not configured line 62",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1821,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T12:58:52.457Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-007-analysis-f3789-e-is-not-configured-line-62-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "30b3ed08af7f982ad1a1-0b5a445b13d3f040d69c",
+              "file": "analysis/spec-007.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-03-14T12:57:39.058Z",
+    "duration": 75820.573,
+    "expected": 27,
+    "skipped": 0,
+    "unexpected": 8,
+    "flaky": 0
+  }
+}

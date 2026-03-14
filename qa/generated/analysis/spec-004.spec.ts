@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-004
  * Source: e2e/specs/analysis/spec-004.md
- * Generated: 2026-03-14T10:15:19.450Z
+ * Generated: 2026-03-14T12:53:56.087Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "`getActiveDocumentForAnalysis(selectedProjectId)` runs after document mode initializes and again when the selected project changes");
+      throw new Error('Unhandled analysis checkpoint: cp-000 `getActiveDocumentForAnalysis(selectedProjectId)` runs after document mode initializes and again when the selected project changes');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "Document fetch failures clear `activeDoc` and reset `inputText` to an empty string");
+      throw new Error('Unhandled analysis checkpoint: cp-001 Document fetch failures clear `activeDoc` and reset `inputText` to an empty string');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "Empty `inputText` clears both `clientIssues` and `clientMetrics`");
+      throw new Error('Unhandled analysis checkpoint: cp-002 Empty `inputText` clears both `clientIssues` and `clientMetrics`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "Header back control is a `Link` to `/studio`, not a button with imperative navigation");
+      throw new Error('Unhandled analysis checkpoint: cp-003 Header back control is a `Link` to `/studio`, not a button with imperative navigation');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "Header title reads `Writing Analysis` while `result` is null");
+      throw new Error('Unhandled analysis checkpoint: cp-004 Header title reads `Writing Analysis` while `result` is null');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "Header title switches to `Draft Analysis` after a successful analysis response sets `result`");
+      throw new Error('Unhandled analysis checkpoint: cp-005 Header title switches to `Draft Analysis` after a successful analysis response sets `result`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Source-mode toggle group is visible only while `result` is null");
+      throw new Error('Unhandled analysis checkpoint: cp-006 Source-mode toggle group is visible only while `result` is null');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "Results-mode legend replaces the source toggle group after `result` is set");
+      throw new Error('Unhandled analysis checkpoint: cp-007 Results-mode legend replaces the source toggle group after `result` is set');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-008 ' + "Results legend contains exactly three items: `Low Human (<40%)`, `Mixed (40-70%)`, and `High Human (>70%)`");
+      throw new Error('Unhandled analysis checkpoint: cp-008 Results legend contains exactly three items: `Low Human (<40%)`, `Mixed (40-70%)`, and `High Human (>70%)`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-009 ' + "Each legend item includes a colored square swatch plus text label");
+      throw new Error('Unhandled analysis checkpoint: cp-009 Each legend item includes a colored square swatch plus text label');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-010 ' + "`From Document` button is the selected toggle on initial render");
+      throw new Error('Unhandled analysis checkpoint: cp-010 `From Document` button is the selected toggle on initial render');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-011 ' + "Selected toggle uses `bg-brand text-white`");
+      throw new Error('Unhandled analysis checkpoint: cp-011 Selected toggle uses `bg-brand text-white`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-012 ' + "Unselected toggle uses `text-ink-muted` and hover text-color changes");
+      throw new Error('Unhandled analysis checkpoint: cp-012 Unselected toggle uses `text-ink-muted` and hover text-color changes');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-013 ' + "`From Document` toggle includes a `FileText` icon before its label");
+      throw new Error('Unhandled analysis checkpoint: cp-013 `From Document` toggle includes a `FileText` icon before its label');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-014 ' + "`Paste Text` toggle has text only with no icon in the current implementation");
+      throw new Error('Unhandled analysis checkpoint: cp-014 `Paste Text` toggle has text only with no icon in the current implementation');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-015 ' + "Clicking `Paste Text` switches `sourceMode` to `paste`");
+      throw new Error('Unhandled analysis checkpoint: cp-015 Clicking `Paste Text` switches `sourceMode` to `paste`');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-016 ' + "Clicking `From Document` switches `sourceMode` back to `document`");
+      throw new Error('Unhandled analysis checkpoint: cp-016 Clicking `From Document` switches `sourceMode` back to `document`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-017 ' + "Switching from document mode to paste mode does not clear `inputText`; the current text carries over");
+      throw new Error('Unhandled analysis checkpoint: cp-017 Switching from document mode to paste mode does not clear `inputText`; the current text carries over');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-018 ' + "Switching back to document mode triggers a fresh document load that can overwrite pasted text");
+      throw new Error('Unhandled analysis checkpoint: cp-018 Switching back to document mode triggers a fresh document load that can overwrite pasted text');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-019 ' + "Project selector row is rendered only when `sourceMode === \"document\"` and `projects.length > 0`");
+      throw new Error('Unhandled analysis checkpoint: cp-019 Project selector row is rendered only when `sourceMode === "document"` and `projects.length > 0`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-020 ' + "Project selector row starts with the label `Project:`");
+      throw new Error('Unhandled analysis checkpoint: cp-020 Project selector row starts with the label `Project:`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-021 ' + "Project dropdown trigger shows the selected project title when `selectedProject` is found");
+      throw new Error('Unhandled analysis checkpoint: cp-021 Project dropdown trigger shows the selected project title when `selectedProject` is found');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-022 ' + "Project dropdown trigger falls back to `Select project` when no project is selected yet");
+      throw new Error('Unhandled analysis checkpoint: cp-022 Project dropdown trigger falls back to `Select project` when no project is selected yet');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-023 ' + "Project dropdown trigger includes a trailing `CaretDown` icon");
+      throw new Error('Unhandled analysis checkpoint: cp-023 Project dropdown trigger includes a trailing `CaretDown` icon');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-024 ' + "Clicking the project trigger toggles `projectDropdownOpen`");
+      throw new Error('Unhandled analysis checkpoint: cp-024 Clicking the project trigger toggles `projectDropdownOpen`');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-025 ' + "Open project menu renders as an absolutely positioned dropdown under the trigger");
+      throw new Error('Unhandled analysis checkpoint: cp-025 Open project menu renders as an absolutely positioned dropdown under the trigger');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-026 ' + "Project menu is capped with `max-h-60 overflow-y-auto`");
+      throw new Error('Unhandled analysis checkpoint: cp-026 Project menu is capped with `max-h-60 overflow-y-auto`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-027 ' + "Currently selected project row uses `bg-brand/10 text-brand font-medium`");
+      throw new Error('Unhandled analysis checkpoint: cp-027 Currently selected project row uses `bg-brand/10 text-brand font-medium`');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-028 ' + "Non-selected project rows use `text-ink` and gain a hover background");
+      throw new Error('Unhandled analysis checkpoint: cp-028 Non-selected project rows use `text-ink` and gain a hover background');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-029 ' + "Clicking a project option sets `selectedProjectId` and closes the dropdown");
+      throw new Error('Unhandled analysis checkpoint: cp-029 Clicking a project option sets `selectedProjectId` and closes the dropdown');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-030 ' + "Clicking outside the dropdown closes it through the `mousedown` document listener");
+      throw new Error('Unhandled analysis checkpoint: cp-030 Clicking outside the dropdown closes it through the `mousedown` document listener');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-031 ' + "When `activeDoc` exists, a `Document: {title}` text label is shown to the right of the project selector");
+      throw new Error('Unhandled analysis checkpoint: cp-031 When `activeDoc` exists, a `Document: {title}` text label is shown to the right of the project selector');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-032 ' + "While `docLoading` is true in document mode, the textarea is replaced by a centered loading state");
+      throw new Error('Unhandled analysis checkpoint: cp-032 While `docLoading` is true in document mode, the textarea is replaced by a centered loading state');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-033 ' + "Document loading state shows a `CircleNotch` icon with `animate-spin`");
+      throw new Error('Unhandled analysis checkpoint: cp-033 Document loading state shows a `CircleNotch` icon with `animate-spin`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('analysis / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-034 ' + "Document loading state shows the text `Loading document...`");
+      throw new Error('Unhandled analysis checkpoint: cp-034 Document loading state shows the text `Loading document...`');
     }
 
 

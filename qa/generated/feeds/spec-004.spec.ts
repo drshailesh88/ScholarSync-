@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-004
  * Source: e2e/specs/feeds/spec-004.md
- * Generated: 2026-03-14T10:16:37.515Z
+ * Generated: 2026-03-14T14:36:14.063Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "`GET /api/feeds/articles/{id}/related` (limit: 5)");
+      throw new Error('Unhandled feeds checkpoint: cp-000 `GET /api/feeds/articles/{id}/related` (limit: 5)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "`POST /api/papers/save` for saving related papers");
+      throw new Error('Unhandled feeds checkpoint: cp-001 `POST /api/papers/save` for saving related papers');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Sparkle icon in brand/20 background");
+      throw new Error('Unhandled feeds checkpoint: cp-002 Sparkle icon in brand/20 background');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Title: \"AI Copilot\"");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Title: "AI Copilot"');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Close button (X icon)");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Close button (X icon)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Article title (line-clamp-2)");
+      throw new Error('Unhandled feeds checkpoint: cp-005 Article title (line-clamp-2)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Authors, journal, year");
+      throw new Error('Unhandled feeds checkpoint: cp-006 Authors, journal, year');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "User messages: surface-raised background, right-aligned");
+      throw new Error('Unhandled feeds checkpoint: cp-007 User messages: surface-raised background, right-aligned');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Assistant messages: brand/5 background, left-aligned with Sparkle icon");
+      throw new Error('Unhandled feeds checkpoint: cp-008 Assistant messages: brand/5 background, left-aligned with Sparkle icon');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Loading indicator: 3 animated dots");
+      throw new Error('Unhandled feeds checkpoint: cp-009 Loading indicator: 3 animated dots');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "Streaming: text appears incrementally");
+      throw new Error('Unhandled feeds checkpoint: cp-010 Streaming: text appears incrementally');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Auto-scroll to latest message");
+      throw new Error('Unhandled feeds checkpoint: cp-011 Auto-scroll to latest message');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Clickable chips with follow-up question text");
+      throw new Error('Unhandled feeds checkpoint: cp-012 Clickable chips with follow-up question text');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "Clicking sends the suggestion as a message");
+      throw new Error('Unhandled feeds checkpoint: cp-013 Clicking sends the suggestion as a message');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "Placeholder: \"Ask about this paper...\"");
+      throw new Error('Unhandled feeds checkpoint: cp-014 Placeholder: "Ask about this paper..."');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "PaperPlaneRight send button (brand background)");
+      throw new Error('Unhandled feeds checkpoint: cp-015 PaperPlaneRight send button (brand background)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Disabled when loading or input empty");
+      throw new Error('Unhandled feeds checkpoint: cp-016 Disabled when loading or input empty');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Centered Sparkle icon (large, brand/10 bg)");
+      throw new Error('Unhandled feeds checkpoint: cp-017 Centered Sparkle icon (large, brand/10 bg)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "\"Ask me about this paper\"");
+      throw new Error('Unhandled feeds checkpoint: cp-018 "Ask me about this paper"');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "\"Click Summarize for a quick overview, or ask any question about the study.\"");
+      throw new Error('Unhandled feeds checkpoint: cp-019 "Click Summarize for a quick overview, or ask any question about the study."');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "`POST /api/feeds/copilot/summarize` — returns summary + suggestions + source tier");
+      throw new Error('Unhandled feeds checkpoint: cp-020 `POST /api/feeds/copilot/summarize` — returns summary + suggestions + source tier');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "`POST /api/feeds/copilot/chat` — SSE streaming chat response");
+      throw new Error('Unhandled feeds checkpoint: cp-021 `POST /api/feeds/copilot/chat` — SSE streaming chat response');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "\"Add URL\" tab");
+      throw new Error('Unhandled feeds checkpoint: cp-022 "Add URL" tab');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "\"Browse Journals\" tab");
+      throw new Error('Unhandled feeds checkpoint: cp-023 "Browse Journals" tab');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Label: \"RSS / Atom Feed URL\"");
+      throw new Error('Unhandled feeds checkpoint: cp-024 Label: "RSS / Atom Feed URL"');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Input placeholder: \"https://example.com/feed.xml\"");
+      throw new Error('Unhandled feeds checkpoint: cp-025 Input placeholder: "https://example.com/feed.xml"');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "\"Add\" button (loading: \"Adding...\")");
+      throw new Error('Unhandled feeds checkpoint: cp-026 "Add" button (loading: "Adding...")');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Enter key submits");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Enter key submits');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Validates URL and subscribes");
+      throw new Error('Unhandled feeds checkpoint: cp-028 Validates URL and subscribes');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Label: \"PubMed Search Query\"");
+      throw new Error('Unhandled feeds checkpoint: cp-029 Label: "PubMed Search Query"');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "Input placeholder: `e.g. \"machine learning\" AND radiology`");
+      throw new Error('Unhandled feeds checkpoint: cp-030 Input placeholder: `e.g. "machine learning" AND radiology`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "\"Create Feed\" button (loading: \"Creating...\")");
+      throw new Error('Unhandled feeds checkpoint: cp-031 "Create Feed" button (loading: "Creating...")');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Enter key submits");
+      throw new Error('Unhandled feeds checkpoint: cp-032 Enter key submits');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Creates live PubMed search feed");
+      throw new Error('Unhandled feeds checkpoint: cp-033 Creates live PubMed search feed');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Red background (red-500/10) with error text");
+      throw new Error('Unhandled feeds checkpoint: cp-034 Red background (red-500/10) with error text');
     }
 
 

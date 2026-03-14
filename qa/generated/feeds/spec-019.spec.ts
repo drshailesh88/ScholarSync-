@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-019
  * Source: e2e/specs/feeds/spec-019.md
- * Generated: 2026-03-14T10:17:24.976Z
+ * Generated: 2026-03-14T14:54:08.811Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "`loadJournals` failure is silent");
+      throw new Error('Unhandled feeds checkpoint: cp-000 `loadJournals` failure is silent');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "`setSelectedArticle` also loads article note via `loadArticleNote(articleId)`");
+      throw new Error('Unhandled feeds checkpoint: cp-001 `setSelectedArticle` also loads article note via `loadArticleNote(articleId)`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "`clearCopilot` sets `copilotOpen = false` — changing articles auto-closes copilot panel");
+      throw new Error('Unhandled feeds checkpoint: cp-002 `clearCopilot` sets `copilotOpen = false` — changing articles auto-closes copilot panel');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Chat history filters out `system` role messages before sending to API");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Chat history filters out `system` role messages before sending to API');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Chat sends prior messages minus the just-added user message: `history.slice(0, -1)`");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Chat sends prior messages minus the just-added user message: `history.slice(0, -1)`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "`sendCopilotMessage` clears `copilotSuggestions` to `[]` when user sends any message");
+      throw new Error('Unhandled feeds checkpoint: cp-005 `sendCopilotMessage` clears `copilotSuggestions` to `[]` when user sends any message');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires");
+      throw new Error('Unhandled feeds checkpoint: cp-006 Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "`RELATED_PAPERS_INTENT` regex: `/\\b(related papers|similar papers|similar articles|more like this|find related)\\b/i`");
+      throw new Error('Unhandled feeds checkpoint: cp-007 `RELATED_PAPERS_INTENT` regex: `/\b(related papers|similar papers|similar articles|more like this|find related)\b/i`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "`withRelatedSuggestion()` only appends \"Find related papers\" if no existing suggestion matches the intent regex");
+      throw new Error('Unhandled feeds checkpoint: cp-008 `withRelatedSuggestion()` only appends "Find related papers" if no existing suggestion matches the intent regex');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "`formatRelatedPapersSummary()` with papers: \"I found {n} related papers via {sourceLabel}.\"");
+      throw new Error('Unhandled feeds checkpoint: cp-009 `formatRelatedPapersSummary()` with papers: "I found {n} related papers via {sourceLabel}."');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "`formatRelatedPapersSummary()` without papers: \"I couldn't find related papers for this article. Try a broader topic search.\"");
+      throw new Error('Unhandled feeds checkpoint: cp-010 `formatRelatedPapersSummary()` without papers: "I couldn\'t find related papers for this article. Try a broader topic search."');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Source label map: `s2_recommendations` → \"Semantic Scholar recommendations\", `s2_search` → \"Semantic Scholar search\", else \"PubMed search\"");
+      throw new Error('Unhandled feeds checkpoint: cp-011 Source label map: `s2_recommendations` → "Semantic Scholar recommendations", `s2_search` → "Semantic Scholar search", else "PubMed search"');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "`summarizeArticle` sends full article metadata: title, authors, abstractSnippet, doi, pubmedId, journal, volume, issue, publishedAt (ISO), link");
+      throw new Error('Unhandled feeds checkpoint: cp-012 `summarizeArticle` sends full article metadata: title, authors, abstractSnippet, doi, pubmedId, journal, volume, issue, publishedAt (ISO), link');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "`summarizeArticle` error sets store `error` (global banner, not copilot-local)");
+      throw new Error('Unhandled feeds checkpoint: cp-013 `summarizeArticle` error sets store `error` (global banner, not copilot-local)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "Standard chat error sets store `error` (global banner, not copilot-local)");
+      throw new Error('Unhandled feeds checkpoint: cp-014 Standard chat error sets store `error` (global banner, not copilot-local)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "`findRelatedPapers` failure does NOT set store error (silent clear of loading state)");
+      throw new Error('Unhandled feeds checkpoint: cp-015 `findRelatedPapers` failure does NOT set store error (silent clear of loading state)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "`j` does nothing when at last article (`currentIndex >= articles.length - 1`)");
+      throw new Error('Unhandled feeds checkpoint: cp-016 `j` does nothing when at last article (`currentIndex >= articles.length - 1`)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "`k` does nothing when at first article (`currentIndex <= 0`)");
+      throw new Error('Unhandled feeds checkpoint: cp-017 `k` does nothing when at first article (`currentIndex <= 0`)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "`o` does nothing when `selectedArticleId` is falsy (no article selected)");
+      throw new Error('Unhandled feeds checkpoint: cp-018 `o` does nothing when `selectedArticleId` is falsy (no article selected)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "`s` accesses `toggleStar` via `useFeedStore.getState()` (not from destructured state)");
+      throw new Error('Unhandled feeds checkpoint: cp-019 `s` accesses `toggleStar` via `useFeedStore.getState()` (not from destructured state)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "`c` does nothing if article not found in `articles` array for `selectedArticleId`");
+      throw new Error('Unhandled feeds checkpoint: cp-020 `c` does nothing if article not found in `articles` array for `selectedArticleId`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "`a` reads live `copilotOpen` state via `useFeedStore.getState()` to toggle");
+      throw new Error('Unhandled feeds checkpoint: cp-021 `a` reads live `copilotOpen` state via `useFeedStore.getState()` to toggle');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Shared `EmptyState` wraps the icon in a `w-16 h-16 rounded-2xl bg-surface-raised` container and renders the icon at 32px");
+      throw new Error('Unhandled feeds checkpoint: cp-022 Shared `EmptyState` wraps the icon in a `w-16 h-16 rounded-2xl bg-surface-raised` container and renders the icon at 32px');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "Feed mute/unmute button starts hidden with `opacity-0` and only becomes visible on row hover via `group-hover:opacity-100`");
+      throw new Error('Unhandled feeds checkpoint: cp-023 Feed mute/unmute button starts hidden with `opacity-0` and only becomes visible on row hover via `group-hover:opacity-100`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Magazine-view favicons hide broken images with `onError={() => currentTarget.style.display = \"none\"}` just like sidebar and card-view favicons");
+      throw new Error('Unhandled feeds checkpoint: cp-024 Magazine-view favicons hide broken images with `onError={() => currentTarget.style.display = "none"}` just like sidebar and card-view favicons');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "`unsubscribe()` removes the subscription from local state only after the DELETE request succeeds; it is not optimistic");
+      throw new Error('Unhandled feeds checkpoint: cp-025 `unsubscribe()` removes the subscription from local state only after the DELETE request succeeds; it is not optimistic');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Closing Copilot through `closeCopilot()` only sets `copilotOpen = false` and preserves messages/source state for the same selected article");
+      throw new Error('Unhandled feeds checkpoint: cp-026 Closing Copilot through `closeCopilot()` only sets `copilotOpen = false` and preserves messages/source state for the same selected article');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Re-selecting the same article id does not clear Copilot state because `clearCopilot()` only runs when `articleId !== prev`");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Re-selecting the same article id does not clear Copilot state because `clearCopilot()` only runs when `articleId !== prev`');
     }
 
 

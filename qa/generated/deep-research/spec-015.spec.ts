@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-015
  * Source: e2e/specs/deep-research/spec-015.md
- * Generated: 2026-03-14T10:16:25.021Z
+ * Generated: 2026-03-14T14:29:20.558Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.");
+      throw new Error('Unhandled deep-research checkpoint: cp-000 Route appends `## References` with a numbered citation list to the markdown before Tiptap conversion.');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "Route builds `SourceReference[]` (with `doi`, `pmid`, `title`) from sources and passes to `markdownToTiptap()` for citation hyperlink mapping.");
+      throw new Error('Unhandled deep-research checkpoint: cp-001 Route builds `SourceReference[]` (with `doi`, `pmid`, `title`) from sources and passes to `markdownToTiptap()` for citation hyperlink mapping.');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "Route computes `word_count` from the plain text markdown and stores it on the section record.");
+      throw new Error('Unhandled deep-research checkpoint: cp-002 Route computes `word_count` from the plain text markdown and stores it on the section record.');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: \"{userId}@dev.local\"` and `full_name: \"Dev User\"`; the comment describes a dev-mode fallback, but the code is not environment-gated.");
+      throw new Error('Unhandled deep-research checkpoint: cp-003 If the authenticated user does not exist in the DB, the route inserts a placeholder user with `email: "{userId}@dev.local"` and `full_name: "Dev User"`; the comment describes a dev-mode fallback, but the code is not environment-gated.');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "Unexpected errors return `500 { \"error\": \"Failed to create studio document\" }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-004 Unexpected errors return `500 { "error": "Failed to create studio document" }`.');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "Auth failure returns `401 { \"error\": \"Not authenticated\" }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-005 Auth failure returns `401 { "error": "Not authenticated" }`.');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "`EVIDENCE_BADGE_STYLES` in CitationReference.tsx renders evidence labels as capitalized: `\"High\"`, `\"Moderate\"`, `\"Low\"`, `\"Unknown\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-006 `EVIDENCE_BADGE_STYLES` in CitationReference.tsx renders evidence labels as capitalized: `"High"`, `"Moderate"`, `"Low"`, `"Unknown"`.');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "CitationsPanel.tsx renders evidence labels via `level.charAt(0).toUpperCase() + level.slice(1)` — also capitalized.");
+      throw new Error('Unhandled deep-research checkpoint: cp-007 CitationsPanel.tsx renders evidence labels via `level.charAt(0).toUpperCase() + level.slice(1)` — also capitalized.');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "EvidenceBadge tooltip text is `\"{Label} evidence — {designLabel}\"` or `\"{Label} evidence\"` (no design label).");
+      throw new Error('Unhandled deep-research checkpoint: cp-008 EvidenceBadge tooltip text is `"{Label} evidence — {designLabel}"` or `"{Label} evidence"` (no design label).');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "`citationsPanelOpen` is initialized to `true` — the citations panel starts open by default.");
+      throw new Error('Unhandled deep-research checkpoint: cp-009 `citationsPanelOpen` is initialized to `true` — the citations panel starts open by default.');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "Desktop TOC component (`TableOfContents`) returns `null` when `items.length === 0`, but the mobile floating TOC button still renders.");
+      throw new Error('Unhandled deep-research checkpoint: cp-010 Desktop TOC component (`TableOfContents`) returns `null` when `items.length === 0`, but the mobile floating TOC button still renders.');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "The handle bar element (`<div className=\"w-10 h-1 bg-gray-300 ...\">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.");
+      throw new Error('Unhandled deep-research checkpoint: cp-011 The handle bar element (`<div className="w-10 h-1 bg-gray-300 ...">`) is purely decorative — there are no drag event handlers, touch listeners, or swipe-to-dismiss behavior attached to it.');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.");
+      throw new Error('Unhandled deep-research checkpoint: cp-012 Export button text labels use `.hidden sm:inline` — on mobile (below `sm` breakpoint) only icons are visible, no text.');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "Buttons render in this order: `.md` → `PDF` → `Copy` → vertical divider → `Open in Studio` → vertical divider → `.bib` → `.ris`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-013 Buttons render in this order: `.md` → `PDF` → `Copy` → vertical divider → `Open in Studio` → vertical divider → `.bib` → `.ris`.');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "Markdown button `title` attribute: `\"Download as Markdown\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-014 Markdown button `title` attribute: `"Download as Markdown"`.');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "Copy button `title` attribute: `\"Copies formatted text — paste into Google Docs, Word, or any editor with formatting preserved\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-015 Copy button `title` attribute: `"Copies formatted text — paste into Google Docs, Word, or any editor with formatting preserved"`.');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "BibTeX button `title` attribute: `\"Download references as BibTeX\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-016 BibTeX button `title` attribute: `"Download references as BibTeX"`.');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "RIS button `title` attribute: `\"Download references as RIS (EndNote/Mendeley)\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-017 RIS button `title` attribute: `"Download references as RIS (EndNote/Mendeley)"`.');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "RIS export: when `pdfUrl` is absent but `doi` is present, uses `UR  - https://doi.org/{doi}` as fallback URL.");
+      throw new Error('Unhandled deep-research checkpoint: cp-018 RIS export: when `pdfUrl` is absent but `doi` is present, uses `UR  - https://doi.org/{doi}` as fallback URL.');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "BibTeX `abstract` field is truncated to 500 characters via `s.abstract.slice(0, 500)`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-019 BibTeX `abstract` field is truncated to 500 characters via `s.abstract.slice(0, 500)`.');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "RIS `AB` field is truncated to 500 characters via `s.abstract.slice(0, 500)`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-020 RIS `AB` field is truncated to 500 characters via `s.abstract.slice(0, 500)`.');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "`markdownToRichHTML()` generates a clipboard References section from ALL sources — no 50-source cap, unlike the rendered references list and citations panel.");
+      throw new Error('Unhandled deep-research checkpoint: cp-021 `markdownToRichHTML()` generates a clipboard References section from ALL sources — no 50-source cap, unlike the rendered references list and citations panel.');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "`markdownToRichHTML()` applies inline bold (`**text**` → `<strong>`), italic (`*text*` → `<em>`), and citation superscript (`[N]` → styled `<sup>`) formatting via `applyInlineFormatting()`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-022 `markdownToRichHTML()` applies inline bold (`**text**` → `<strong>`), italic (`*text*` → `<em>`), and citation superscript (`[N]` → styled `<sup>`) formatting via `applyInlineFormatting()`.');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "`markdownToRichHTML()` renders horizontal rules as `<hr>` with inline styles, while `markdownToSimpleHTML()` skips them entirely.");
+      throw new Error('Unhandled deep-research checkpoint: cp-023 `markdownToRichHTML()` renders horizontal rules as `<hr>` with inline styles, while `markdownToSimpleHTML()` skips them entirely.');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "`h2` headings render with a bottom border: `border-b border-gray-200 dark:border-gray-700/50`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-024 `h2` headings render with a bottom border: `border-b border-gray-200 dark:border-gray-700/50`.');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "`h4` headings render with `italic` class applied.");
+      throw new Error('Unhandled deep-research checkpoint: cp-025 `h4` headings render with `italic` class applied.');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "Heading ID generation: lowercased, strips `[^a-z0-9\\s-]`, replaces `\\s+` with `-`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-026 Heading ID generation: lowercased, strips `[^a-z0-9\s-]`, replaces `\s+` with `-`.');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "`IntersectionObserver` for active heading tracking: `rootMargin: \"-80px 0px -60% 0px\"`, `threshold: 0.1`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-027 `IntersectionObserver` for active heading tracking: `rootMargin: "-80px 0px -60% 0px"`, `threshold: 0.1`.');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "`<hr>` elements render with `my-8 border-gray-200 dark:border-gray-700/50`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-028 `<hr>` elements render with `my-8 border-gray-200 dark:border-gray-700/50`.');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "Even table rows: `background: #f9fafb` in print.");
+      throw new Error('Unhandled deep-research checkpoint: cp-029 Even table rows: `background: #f9fafb` in print.');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "Blockquotes in print: border `#666`, text `#555`, background transparent.");
+      throw new Error('Unhandled deep-research checkpoint: cp-030 Blockquotes in print: border `#666`, text `#555`, background transparent.');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "Code elements in print: background `#f3f4f6`, text `#333`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-031 Code elements in print: background `#f3f4f6`, text `#333`.');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "Links in print: color `#1a56db`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-032 Links in print: color `#1a56db`.');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-033 Both routes return headers: `Content-Type: text/event-stream`, `Cache-Control: no-cache, no-transform`, `Connection: keep-alive`, `X-Accel-Buffering: no`.');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "Both routes export `dynamic = \"force-dynamic\"` (disables Next.js static caching).");
+      throw new Error('Unhandled deep-research checkpoint: cp-034 Both routes export `dynamic = "force-dynamic"` (disables Next.js static caching).');
     }
 
 

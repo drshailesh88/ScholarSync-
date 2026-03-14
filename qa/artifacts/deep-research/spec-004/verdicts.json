@@ -1,0 +1,597 @@
+[
+  {
+    "checkpoint_id": "cp-000",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-000.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1803
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-001",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-001.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-001 Click citation entry to navigate in report\n\n  132 |\n  133 |     if (!handled) {\n> 134 |       throw new Error('Unhandled deep-research checkpoint: cp-001 Click citation entry to navigate in report');\n      |             ^\n  135 |     }\n  136 |\n  137 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:134:13",
+      "duration_ms": 1983
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-002",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-002.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-002 Auto-scroll to highlighted citation\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled deep-research checkpoint: cp-002 Auto-scroll to highlighted citation');\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:184:13",
+      "duration_ms": 2059
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-003",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-003.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-003 Citation-panel rows do not render DOI, PubMed, PDF, or OA links inline\n\n  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled deep-research checkpoint: cp-003 Citation-panel rows do not render DOI, PubMed, PDF, or OA links inline');\n      |             ^\n  235 |     }\n  236 |\n  237 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:234:13",
+      "duration_ms": 1620
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-004",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-004.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1941
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-005",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-005.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/deep-research\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/deep-research\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  302 |\n  303 |     // Navigate to the page\n> 304 |     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });\n      |                ^\n  305 |     await page.waitForLoadState('networkidle').catch(() => {});\n  306 |\n  307 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:304:16",
+      "duration_ms": 175
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-006",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-006.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/deep-research\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/deep-research\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  352 |\n  353 |     // Navigate to the page\n> 354 |     await page.goto('/deep-research', { waitUntil: 'domcontentloaded' });\n      |                ^\n  355 |     await page.waitForLoadState('networkidle').catch(() => {});\n  356 |\n  357 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:354:16",
+      "duration_ms": 217
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-007",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-007.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 8199
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-008",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-008.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1658
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-009",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-009.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-009 Fixed position (z-50)\n\n  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled deep-research checkpoint: cp-009 Fixed position (z-50)');\n      |             ^\n  535 |     }\n  536 |\n  537 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:534:13",
+      "duration_ms": 1587
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-010",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-010.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-010 Shows:\n\n  582 |\n  583 |     if (!handled) {\n> 584 |       throw new Error('Unhandled deep-research checkpoint: cp-010 Shows:');\n      |             ^\n  585 |     }\n  586 |\n  587 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:584:13",
+      "duration_ms": 1644
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-011",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-011.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-011 Paper title\n\n  632 |\n  633 |     if (!handled) {\n> 634 |       throw new Error('Unhandled deep-research checkpoint: cp-011 Paper title');\n      |             ^\n  635 |     }\n  636 |\n  637 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:634:13",
+      "duration_ms": 1928
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-012",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-012.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-012 Authors (with \"et al.\" truncation)\n\n  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled deep-research checkpoint: cp-012 Authors (with \"et al.\" truncation)');\n      |             ^\n  685 |     }\n  686 |\n  687 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:684:13",
+      "duration_ms": 1999
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-013",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-013.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-013 Journal and year\n\n  732 |\n  733 |     if (!handled) {\n> 734 |       throw new Error('Unhandled deep-research checkpoint: cp-013 Journal and year');\n      |             ^\n  735 |     }\n  736 |\n  737 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:734:13",
+      "duration_ms": 1925
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-014",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-014.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-014 Citation count\n\n  782 |\n  783 |     if (!handled) {\n> 784 |       throw new Error('Unhandled deep-research checkpoint: cp-014 Citation count');\n      |             ^\n  785 |     }\n  786 |\n  787 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:784:13",
+      "duration_ms": 1676
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-015",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-015.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1721
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-016",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-016.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-016 Abstract (line-clamp-3)\n\n  882 |\n  883 |     if (!handled) {\n> 884 |       throw new Error('Unhandled deep-research checkpoint: cp-016 Abstract (line-clamp-3)');\n      |             ^\n  885 |     }\n  886 |\n  887 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:884:13",
+      "duration_ms": 1751
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-017",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-017.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-017 Links: DOI, PubMed, PDF\n\n  932 |\n  933 |     if (!handled) {\n> 934 |       throw new Error('Unhandled deep-research checkpoint: cp-017 Links: DOI, PubMed, PDF');\n      |             ^\n  935 |     }\n  936 |\n  937 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:934:13",
+      "duration_ms": 1674
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-018",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-018.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-018 Open-access `OA` label\n\n  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled deep-research checkpoint: cp-018 Open-access `OA` label');\n      |             ^\n  985 |     }\n  986 |\n  987 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:984:13",
+      "duration_ms": 2110
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-019",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-019.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-019 Tooltip positions correctly relative to marker\n\n  1032 |\n  1033 |     if (!handled) {\n> 1034 |       throw new Error('Unhandled deep-research checkpoint: cp-019 Tooltip positions correctly relative to marker');\n       |             ^\n  1035 |     }\n  1036 |\n  1037 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1034:13",
+      "duration_ms": 2002
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-020",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-020.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-020 Tooltip dismisses on mouse leave\n\n  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled deep-research checkpoint: cp-020 Tooltip dismisses on mouse leave');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1084:13",
+      "duration_ms": 1653
+    },
+    "timestamp": "2026-03-14T14:16:02.446Z"
+  },
+  {
+    "checkpoint_id": "cp-021",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-021.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-021 Evidence level auto-assigned based on study type keywords\n\n  1132 |\n  1133 |     if (!handled) {\n> 1134 |       throw new Error('Unhandled deep-research checkpoint: cp-021 Evidence level auto-assigned based on study type keywords');\n       |             ^\n  1135 |     }\n  1136 |\n  1137 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1134:13",
+      "duration_ms": 1644
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-022",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-022.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-022 Badge shows study design text (if available)\n\n  1182 |\n  1183 |     if (!handled) {\n> 1184 |       throw new Error('Unhandled deep-research checkpoint: cp-022 Badge shows study design text (if available)');\n       |             ^\n  1185 |     }\n  1186 |\n  1187 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1184:13",
+      "duration_ms": 1696
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-023",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-023.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1694
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-024",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-024.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-024 Download icon button\n\n  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled deep-research checkpoint: cp-024 Download icon button');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1284:13",
+      "duration_ms": 1541
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-025",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-025.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1621
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-026",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-026.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1657
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-027",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-027.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-027 Converts markdown to HTML\n\n  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled deep-research checkpoint: cp-027 Converts markdown to HTML');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1434:13",
+      "duration_ms": 1618
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-028",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-028.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1645
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-029",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-029.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-029 Downloads as `{topic}_report.pdf`\n\n  1532 |\n  1533 |     if (!handled) {\n> 1534 |       throw new Error('Unhandled deep-research checkpoint: cp-029 Downloads as `{topic}_report.pdf`');\n       |             ^\n  1535 |     }\n  1536 |\n  1537 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1534:13",
+      "duration_ms": 1643
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-030",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-030.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-030 Loading spinner during generation\n\n  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled deep-research checkpoint: cp-030 Loading spinner during generation');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1584:13",
+      "duration_ms": 1852
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-031",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-031.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-031 Error state shows red background on failure\n\n  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled deep-research checkpoint: cp-031 Error state shows red background on failure');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1634:13",
+      "duration_ms": 1796
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-032",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-032.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-032 Converts markdown to rich HTML with inline styles\n\n  1682 |\n  1683 |     if (!handled) {\n> 1684 |       throw new Error('Unhandled deep-research checkpoint: cp-032 Converts markdown to rich HTML with inline styles');\n       |             ^\n  1685 |     }\n  1686 |\n  1687 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1684:13",
+      "duration_ms": 1753
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-033",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-033.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-033 Formatting preserved for Google Docs / Word paste\n\n  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled deep-research checkpoint: cp-033 Formatting preserved for Google Docs / Word paste');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1734:13",
+      "duration_ms": 2104
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  },
+  {
+    "checkpoint_id": "cp-034",
+    "spec_id": "spec-004",
+    "module": "deep-research",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/deep-research/spec-004/cp-034.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled deep-research checkpoint: cp-034 Inline styles include:\n\n  1782 |\n  1783 |     if (!handled) {\n> 1784 |       throw new Error('Unhandled deep-research checkpoint: cp-034 Inline styles include:');\n       |             ^\n  1785 |     }\n  1786 |\n  1787 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-004.spec.ts:1784:13",
+      "duration_ms": 1703
+    },
+    "timestamp": "2026-03-14T14:16:02.447Z"
+  }
+]

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-008
  * Source: e2e/specs/feeds/spec-008.md
- * Generated: 2026-03-14T10:16:50.211Z
+ * Generated: 2026-03-14T14:41:47.564Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "`loadMore()` is a no-op when `hasMore` is false or `isLoadingArticles` is already true");
+      throw new Error('Unhandled feeds checkpoint: cp-000 `loadMore()` is a no-op when `hasMore` is false or `isLoadingArticles` is already true');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "`loadMore()` increments `page` before calling `loadArticles(false)`");
+      throw new Error('Unhandled feeds checkpoint: cp-001 `loadMore()` increments `page` before calling `loadArticles(false)`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Article API requests always send `perPage=30`");
+      throw new Error('Unhandled feeds checkpoint: cp-002 Article API requests always send `perPage=30`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Fresh article loads clear `articles`, reset `page` to `0`, and clear `selectedArticleId`");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Fresh article loads clear `articles`, reset `page` to `0`, and clear `selectedArticleId`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Append-mode article loads keep the current `selectedArticleId`");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Append-mode article loads keep the current `selectedArticleId`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Search input updates `searchQuery` and immediately triggers `loadArticles()`");
+      throw new Error('Unhandled feeds checkpoint: cp-005 Search input updates `searchQuery` and immediately triggers `loadArticles()`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Search clear button appears only when `searchQuery` is non-empty");
+      throw new Error('Unhandled feeds checkpoint: cp-006 Search clear button appears only when `searchQuery` is non-empty');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "Search clear button calls `setSearchQuery(\"\")`; it does not use the separate `clearSearch()` store action");
+      throw new Error('Unhandled feeds checkpoint: cp-007 Search clear button calls `setSearchQuery("")`; it does not use the separate `clearSearch()` store action');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Filters button blue-dot indicator appears only when a date or journal filter is active");
+      throw new Error('Unhandled feeds checkpoint: cp-008 Filters button blue-dot indicator appears only when a date or journal filter is active');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Advanced filters can be opened even when no filters are active");
+      throw new Error('Unhandled feeds checkpoint: cp-009 Advanced filters can be opened even when no filters are active');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "`Clear all filters` resets date-from, date-to, and journal only; it does not clear search text or collapse the filter panel");
+      throw new Error('Unhandled feeds checkpoint: cp-010 `Clear all filters` resets date-from, date-to, and journal only; it does not clear search text or collapse the filter panel');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Advanced sort buttons normalize `published` and `added` into feed-store sort modes rather than preserving a separate stored value");
+      throw new Error('Unhandled feeds checkpoint: cp-011 Advanced sort buttons normalize `published` and `added` into feed-store sort modes rather than preserving a separate stored value');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Selecting `Title` in advanced sort normalizes store `sortBy` to `relevance`");
+      throw new Error('Unhandled feeds checkpoint: cp-012 Selecting `Title` in advanced sort normalizes store `sortBy` to `relevance`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "Header sort segmented control and advanced sort buttons can represent different labels for the same underlying store state");
+      throw new Error('Unhandled feeds checkpoint: cp-013 Header sort segmented control and advanced sort buttons can represent different labels for the same underlying store state');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "Search-bar sort toggle flips only between `newest` and `oldest`; it never switches to or from `relevance`");
+      throw new Error('Unhandled feeds checkpoint: cp-014 Search-bar sort toggle flips only between `newest` and `oldest`; it never switches to or from `relevance`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "Selecting an article calls `setSelectedArticle(article.id)` and clears copilot state if the article changed");
+      throw new Error('Unhandled feeds checkpoint: cp-015 Selecting an article calls `setSelectedArticle(article.id)` and clears copilot state if the article changed');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Selecting a new unread article optimistically marks it read and decrements `totalUnread`");
+      throw new Error('Unhandled feeds checkpoint: cp-016 Selecting a new unread article optimistically marks it read and decrements `totalUnread`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "If the background `markRead` request fails, the article is reverted to unread and `totalUnread` increments back");
+      throw new Error('Unhandled feeds checkpoint: cp-017 If the background `markRead` request fails, the article is reverted to unread and `totalUnread` increments back');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "`j` keyboard shortcut selects the next article only when focus is not inside an input or textarea");
+      throw new Error('Unhandled feeds checkpoint: cp-018 `j` keyboard shortcut selects the next article only when focus is not inside an input or textarea');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "`k` keyboard shortcut selects the previous article only when focus is not inside an input or textarea");
+      throw new Error('Unhandled feeds checkpoint: cp-019 `k` keyboard shortcut selects the previous article only when focus is not inside an input or textarea');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "`/` keyboard shortcut focuses the first input whose placeholder contains `Search`");
+      throw new Error('Unhandled feeds checkpoint: cp-020 `/` keyboard shortcut focuses the first input whose placeholder contains `Search`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "`o` keyboard shortcut opens the selected article's `link` in a new tab only when that link exists");
+      throw new Error('Unhandled feeds checkpoint: cp-021 `o` keyboard shortcut opens the selected article\'s `link` in a new tab only when that link exists');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "`s` keyboard shortcut toggles star on the selected article through the store");
+      throw new Error('Unhandled feeds checkpoint: cp-022 `s` keyboard shortcut toggles star on the selected article through the store');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "`c` keyboard shortcut opens the citation modal for the selected article");
+      throw new Error('Unhandled feeds checkpoint: cp-023 `c` keyboard shortcut opens the citation modal for the selected article');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "`a` keyboard shortcut toggles the copilot panel only when an article is selected");
+      throw new Error('Unhandled feeds checkpoint: cp-024 `a` keyboard shortcut toggles the copilot panel only when an article is selected');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Article reader empty state text is exactly `Select an article to read`");
+      throw new Error('Unhandled feeds checkpoint: cp-025 Article reader empty state text is exactly `Select an article to read`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Reader journal-info row omits itself entirely when journal, volume, and issue are all absent");
+      throw new Error('Unhandled feeds checkpoint: cp-026 Reader journal-info row omits itself entirely when journal, volume, and issue are all absent');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Reader published-date row always includes reading-time text computed from `abstractSnippet`");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Reader published-date row always includes reading-time text computed from `abstractSnippet`');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Reader `Save` button does not disable while `saveToLibrary()` is in flight");
+      throw new Error('Unhandled feeds checkpoint: cp-028 Reader `Save` button does not disable while `saveToLibrary()` is in flight');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Successful `saveToLibrary()` marks `isSavedToLibrary = true` and stores `savedPaperId`");
+      throw new Error('Unhandled feeds checkpoint: cp-029 Successful `saveToLibrary()` marks `isSavedToLibrary = true` and stores `savedPaperId`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "Failed `saveToLibrary()` sets store `error` and returns `null`");
+      throw new Error('Unhandled feeds checkpoint: cp-030 Failed `saveToLibrary()` sets store `error` and returns `null`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "Reader `AI` button calls the passed `onOpenCopilot()` and does not itself select the article");
+      throw new Error('Unhandled feeds checkpoint: cp-031 Reader `AI` button calls the passed `onOpenCopilot()` and does not itself select the article');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Reader `Open Original` button is hidden when `article.link` is absent");
+      throw new Error('Unhandled feeds checkpoint: cp-032 Reader `Open Original` button is hidden when `article.link` is absent');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Reader `Abstract` section is hidden when `abstractSnippet` is empty");
+      throw new Error('Unhandled feeds checkpoint: cp-033 Reader `Abstract` section is hidden when `abstractSnippet` is empty');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Reader DOI section is hidden when `article.doi` is absent");
+      throw new Error('Unhandled feeds checkpoint: cp-034 Reader DOI section is hidden when `article.doi` is absent');
     }
 
 

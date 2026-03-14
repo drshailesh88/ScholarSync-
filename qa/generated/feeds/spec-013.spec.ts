@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-013
  * Source: e2e/specs/feeds/spec-013.md
- * Generated: 2026-03-14T10:17:05.963Z
+ * Generated: 2026-03-14T14:47:51.209Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "List view does NOT render a favicon image");
+      throw new Error('Unhandled feeds checkpoint: cp-000 List view does NOT render a favicon image');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "List view does NOT render authors");
+      throw new Error('Unhandled feeds checkpoint: cp-001 List view does NOT render authors');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "List view does NOT render abstract/snippet text");
+      throw new Error('Unhandled feeds checkpoint: cp-002 List view does NOT render abstract/snippet text');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Magazine card: `glass-panel rounded-2xl overflow-hidden`");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Magazine card: `glass-panel rounded-2xl overflow-hidden`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Magazine hover state (unselected): `hover:ring-1 hover:ring-border`");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Magazine hover state (unselected): `hover:ring-1 hover:ring-border`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Image container: `w-full h-48 bg-surface-raised overflow-hidden` (bg visible when image loading)");
+      throw new Error('Unhandled feeds checkpoint: cp-005 Image container: `w-full h-48 bg-surface-raised overflow-hidden` (bg visible when image loading)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Image uses `object-cover` fit");
+      throw new Error('Unhandled feeds checkpoint: cp-006 Image uses `object-cover` fit');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "Content area padding: `p-5`");
+      throw new Error('Unhandled feeds checkpoint: cp-007 Content area padding: `p-5`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Magazine title: `text-base` (larger than card view's `text-sm`)");
+      throw new Error('Unhandled feeds checkpoint: cp-008 Magazine title: `text-base` (larger than card view\'s `text-sm`)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Magazine read title: `font-medium text-ink-muted` (card view uses `font-normal`)");
+      throw new Error('Unhandled feeds checkpoint: cp-009 Magazine read title: `font-medium text-ink-muted` (card view uses `font-normal`)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "Magazine abstract shows full `article.abstractSnippet` (NOT truncated to 120 chars like card view)");
+      throw new Error('Unhandled feeds checkpoint: cp-010 Magazine abstract shows full `article.abstractSnippet` (NOT truncated to 120 chars like card view)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Magazine abstract styling: `text-sm text-ink-muted line-clamp-3 leading-relaxed`");
+      throw new Error('Unhandled feeds checkpoint: cp-011 Magazine abstract styling: `text-sm text-ink-muted line-clamp-3 leading-relaxed`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Magazine external link text: \"Open\" (NOT \"DOI\" like card view)");
+      throw new Error('Unhandled feeds checkpoint: cp-012 Magazine external link text: "Open" (NOT "DOI" like card view)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "Magazine external link uses `article.link` (NOT `https://doi.org/${article.doi}`)");
+      throw new Error('Unhandled feeds checkpoint: cp-013 Magazine external link uses `article.link` (NOT `https://doi.org/${article.doi}`)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "Magazine external link only shows when `article.link` is truthy (NOT `article.doi`)");
+      throw new Error('Unhandled feeds checkpoint: cp-014 Magazine external link only shows when `article.link` is truthy (NOT `article.doi`)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "Search input: `pl-9 pr-4 py-2 rounded-xl text-xs`");
+      throw new Error('Unhandled feeds checkpoint: cp-015 Search input: `pl-9 pr-4 py-2 rounded-xl text-xs`');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Search clear button position: `right-3 top-1/2 -translate-y-1/2`");
+      throw new Error('Unhandled feeds checkpoint: cp-016 Search clear button position: `right-3 top-1/2 -translate-y-1/2`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Filter toggle with active filters: `bg-brand/10 text-brand border-brand/20`");
+      throw new Error('Unhandled feeds checkpoint: cp-017 Filter toggle with active filters: `bg-brand/10 text-brand border-brand/20`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "Filter toggle without active filters: `bg-surface-raised text-ink-muted border-border hover:text-ink`");
+      throw new Error('Unhandled feeds checkpoint: cp-018 Filter toggle without active filters: `bg-surface-raised text-ink-muted border-border hover:text-ink`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "Blue dot indicator: `w-1.5 h-1.5 rounded-full bg-brand`");
+      throw new Error('Unhandled feeds checkpoint: cp-019 Blue dot indicator: `w-1.5 h-1.5 rounded-full bg-brand`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "Sort toggle icon: `SortAscending` when `sortBy === \"oldest\"`, `SortDescending` otherwise");
+      throw new Error('Unhandled feeds checkpoint: cp-020 Sort toggle icon: `SortAscending` when `sortBy === "oldest"`, `SortDescending` otherwise');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "Advanced filter panel: `glass-panel rounded-xl p-3 space-y-3` (only rendered when `showAdvancedFilters`)");
+      throw new Error('Unhandled feeds checkpoint: cp-021 Advanced filter panel: `glass-panel rounded-xl p-3 space-y-3` (only rendered when `showAdvancedFilters`)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Date filter \"From\" label: `text-[10px] text-ink-muted font-medium uppercase tracking-wide`");
+      throw new Error('Unhandled feeds checkpoint: cp-022 Date filter "From" label: `text-[10px] text-ink-muted font-medium uppercase tracking-wide`');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "Date filter \"To\" label: same styling as \"From\"");
+      throw new Error('Unhandled feeds checkpoint: cp-023 Date filter "To" label: same styling as "From"');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Date inputs are `type=\"date\"` (native HTML date picker)");
+      throw new Error('Unhandled feeds checkpoint: cp-024 Date inputs are `type="date"` (native HTML date picker)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Journal dropdown label: \"Journal\" (uppercase tracking-wide)");
+      throw new Error('Unhandled feeds checkpoint: cp-025 Journal dropdown label: "Journal" (uppercase tracking-wide)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Journal dropdown default option text: \"All journals\"");
+      throw new Error('Unhandled feeds checkpoint: cp-026 Journal dropdown default option text: "All journals"');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Advanced sort labels: \"Date\" (for published), \"Added\", \"Title\" (3 equal-width buttons)");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Advanced sort labels: "Date" (for published), "Added", "Title" (3 equal-width buttons)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Advanced sort active: `bg-brand/10 text-brand border border-brand/20`");
+      throw new Error('Unhandled feeds checkpoint: cp-028 Advanced sort active: `bg-brand/10 text-brand border border-brand/20`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Advanced sort inactive: `bg-surface-raised text-ink-muted border border-border hover:text-ink`");
+      throw new Error('Unhandled feeds checkpoint: cp-029 Advanced sort inactive: `bg-surface-raised text-ink-muted border border-border hover:text-ink`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "`currentLegacySort` derivation: `sortBy === \"relevance\" ? \"title\" : \"published\"` — maps store sort to advanced sort visual state");
+      throw new Error('Unhandled feeds checkpoint: cp-030 `currentLegacySort` derivation: `sortBy === "relevance" ? "title" : "published"` — maps store sort to advanced sort visual state');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "Setting sort \"added\" with `sortDir = \"asc\"` normalizes to store `sortBy = \"oldest\"`");
+      throw new Error('Unhandled feeds checkpoint: cp-031 Setting sort "added" with `sortDir = "asc"` normalizes to store `sortBy = "oldest"`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Setting sort \"published\" with `sortDir = \"desc\"` normalizes to store `sortBy = \"newest\"`");
+      throw new Error('Unhandled feeds checkpoint: cp-032 Setting sort "published" with `sortDir = "desc"` normalizes to store `sortBy = "newest"`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "`hasActiveFilters` does NOT include `searchQuery` — only checks `filterDateFrom || filterDateTo || filterJournal`");
+      throw new Error('Unhandled feeds checkpoint: cp-033 `hasActiveFilters` does NOT include `searchQuery` — only checks `filterDateFrom || filterDateTo || filterJournal`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Reader panel: `glass-panel rounded-2xl h-full overflow-y-auto p-5`");
+      throw new Error('Unhandled feeds checkpoint: cp-034 Reader panel: `glass-panel rounded-2xl h-full overflow-y-auto p-5`');
     }
 
 

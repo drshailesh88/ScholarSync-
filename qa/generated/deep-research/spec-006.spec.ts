@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-006
  * Source: e2e/specs/deep-research/spec-006.md
- * Generated: 2026-03-14T10:15:56.850Z
+ * Generated: 2026-03-14T14:18:13.938Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "Backward references fetched via S2 API");
+      throw new Error('Unhandled deep-research checkpoint: cp-000 Backward references fetched via S2 API');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "Rate-limited with delays between requests");
+      throw new Error('Unhandled deep-research checkpoint: cp-001 Rate-limited with delays between requests');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "Converts S2 format to unified result format");
+      throw new Error('Unhandled deep-research checkpoint: cp-002 Converts S2 format to unified result format');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "Uses `getSmallModel()` to extract structured data from abstracts:");
+      throw new Error('Unhandled deep-research checkpoint: cp-003 Uses `getSmallModel()` to extract structured data from abstracts:');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "Study design");
+      throw new Error('Unhandled deep-research checkpoint: cp-004 Study design');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "Sample size");
+      throw new Error('Unhandled deep-research checkpoint: cp-005 Sample size');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "Effect sizes");
+      throw new Error('Unhandled deep-research checkpoint: cp-006 Effect sizes');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "P-values");
+      throw new Error('Unhandled deep-research checkpoint: cp-007 P-values');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "Population characteristics");
+      throw new Error('Unhandled deep-research checkpoint: cp-008 Population characteristics');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "Follow-up duration");
+      throw new Error('Unhandled deep-research checkpoint: cp-009 Follow-up duration');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "Key findings");
+      throw new Error('Unhandled deep-research checkpoint: cp-010 Key findings');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "Conservative extraction (no speculation on missing data)");
+      throw new Error('Unhandled deep-research checkpoint: cp-011 Conservative extraction (no speculation on missing data)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "Downloads open-access PDFs");
+      throw new Error('Unhandled deep-research checkpoint: cp-012 Downloads open-access PDFs');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "Extracts Results and Discussion sections");
+      throw new Error('Unhandled deep-research checkpoint: cp-013 Extracts Results and Discussion sections');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails");
+      throw new Error('Unhandled deep-research checkpoint: cp-014 Falls back to the pre-references full text when section headers are missing, but does not fall back to the abstract if PDF extraction fails');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "Max file size: 20 MB");
+      throw new Error('Unhandled deep-research checkpoint: cp-015 Max file size: 20 MB');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "Timeout: 15 seconds");
+      throw new Error('Unhandled deep-research checkpoint: cp-016 Timeout: 15 seconds');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "Pass 1: Per-perspective narrative sections (parallel execution)");
+      throw new Error('Unhandled deep-research checkpoint: cp-017 Pass 1: Per-perspective narrative sections (parallel execution)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "Pass 2: Executive summary and introduction");
+      throw new Error('Unhandled deep-research checkpoint: cp-018 Pass 2: Executive summary and introduction');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "Pass 3: Comparison tables, gaps, contradictions, conclusions");
+      throw new Error('Unhandled deep-research checkpoint: cp-019 Pass 3: Comparison tables, gaps, contradictions, conclusions');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "Pass 4: Self-critique and revision");
+      throw new Error('Unhandled deep-research checkpoint: cp-020 Pass 4: Self-critique and revision');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "Outputs markdown with interactive citation markers `[N]`");
+      throw new Error('Unhandled deep-research checkpoint: cp-021 Outputs markdown with interactive citation markers `[N]`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message");
+      throw new Error('Unhandled deep-research checkpoint: cp-022 Topic < 5 characters: the plan route emits an SSE error and the page shows the error state with the validation message');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message");
+      throw new Error('Unhandled deep-research checkpoint: cp-023 Topic > 500 characters: the plan route emits an SSE error and the page shows the error state with the validation message');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "Empty topic: Start button disabled");
+      throw new Error('Unhandled deep-research checkpoint: cp-024 Empty topic: Start button disabled');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "Fetch failures caught and displayed");
+      throw new Error('Unhandled deep-research checkpoint: cp-025 Fetch failures caught and displayed');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "AbortError handled silently (expected from Stop button)");
+      throw new Error('Unhandled deep-research checkpoint: cp-026 AbortError handled silently (expected from Stop button)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "Non-AbortError shows error state with message");
+      throw new Error('Unhandled deep-research checkpoint: cp-027 Non-AbortError shows error state with message');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "Red AlertCircle icon");
+      throw new Error('Unhandled deep-research checkpoint: cp-028 Red AlertCircle icon');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "Heading: \"Research Failed\"");
+      throw new Error('Unhandled deep-research checkpoint: cp-029 Heading: "Research Failed"');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "Error message text displayed");
+      throw new Error('Unhandled deep-research checkpoint: cp-030 Error message text displayed');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "\"Try Again\" button returns to `idle` state");
+      throw new Error('Unhandled deep-research checkpoint: cp-031 "Try Again" button returns to `idle` state');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "Plan generation failure shows error and allows retry");
+      throw new Error('Unhandled deep-research checkpoint: cp-032 Plan generation failure shows error and allows retry');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "Execute failure shows error with context");
+      throw new Error('Unhandled deep-research checkpoint: cp-033 Execute failure shows error with context');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "Save failure shows error tooltip on button");
+      throw new Error('Unhandled deep-research checkpoint: cp-034 Save failure shows error tooltip on button');
     }
 
 

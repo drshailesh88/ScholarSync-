@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-018
  * Source: e2e/specs/feeds/spec-018.md
- * Generated: 2026-03-14T10:17:21.854Z
+ * Generated: 2026-03-14T13:54:54.911Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "Journal empty state: `rounded-xl border border-dashed border-border-subtle px-4 py-6 text-center`");
+      throw new Error('Unhandled feeds checkpoint: cp-000 Journal empty state: `rounded-xl border border-dashed border-border-subtle px-4 py-6 text-center`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "Subscribe checks both `journal.isSubscribed` property AND URL match against current subscriptions");
+      throw new Error('Unhandled feeds checkpoint: cp-001 Subscribe checks both `journal.isSubscribed` property AND URL match against current subscriptions');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "`subscribedUrls` computed via `useMemo` from subscriptions array");
+      throw new Error('Unhandled feeds checkpoint: cp-002 `subscribedUrls` computed via `useMemo` from subscriptions array');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Suggested feeds hidden when search is active: `hasSearch ? [] : data?.suggestedFeeds ?? []`");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Suggested feeds hidden when search is active: `hasSearch ? [] : data?.suggestedFeeds ?? []`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Browse feeds exclude suggested in browse mode: `feeds.filter((feed) => !feed.isSuggested)`");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Browse feeds exclude suggested in browse mode: `feeds.filter((feed) => !feed.isSuggested)`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "PubMed create feed uses `trimmedSearch` (not raw `search`) as query");
+      throw new Error('Unhandled feeds checkpoint: cp-005 PubMed create feed uses `trimmedSearch` (not raw `search`) as query');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "PubMed success message: green text `text-xs text-green-500`");
+      throw new Error('Unhandled feeds checkpoint: cp-006 PubMed success message: green text `text-xs text-green-500`');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "PubMed error message: red text `text-xs text-red-400`");
+      throw new Error('Unhandled feeds checkpoint: cp-007 PubMed error message: red text `text-xs text-red-400`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "`showAdvancedFilters` state: boolean, default `false`");
+      throw new Error('Unhandled feeds checkpoint: cp-008 `showAdvancedFilters` state: boolean, default `false`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "`loadSubscriptions` clears error at start: `{ isLoadingSubscriptions: true, error: null }`");
+      throw new Error('Unhandled feeds checkpoint: cp-009 `loadSubscriptions` clears error at start: `{ isLoadingSubscriptions: true, error: null }`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "`loadSubscriptions` fetches from `GET /api/feeds` endpoint");
+      throw new Error('Unhandled feeds checkpoint: cp-010 `loadSubscriptions` fetches from `GET /api/feeds` endpoint');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "`loadSubscriptions` error message from `Error` instance or fallback \"Failed to load subscriptions\"");
+      throw new Error('Unhandled feeds checkpoint: cp-011 `loadSubscriptions` error message from `Error` instance or fallback "Failed to load subscriptions"');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "`loadArticles` always sends `sortDir` parameter (even for default \"desc\")");
+      throw new Error('Unhandled feeds checkpoint: cp-012 `loadArticles` always sends `sortDir` parameter (even for default "desc")');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "`loadArticles` only sends `sortBy` when NOT \"newest\" (omits for default to reduce params)");
+      throw new Error('Unhandled feeds checkpoint: cp-013 `loadArticles` only sends `sortBy` when NOT "newest" (omits for default to reduce params)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "`loadArticles` sends `isRead=false` for unread filter, `isStarred=true` for starred filter");
+      throw new Error('Unhandled feeds checkpoint: cp-014 `loadArticles` sends `isRead=false` for unread filter, `isStarred=true` for starred filter');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "`subscribe` POSTs to `/api/feeds` with `{ feedUrl }` body");
+      throw new Error('Unhandled feeds checkpoint: cp-015 `subscribe` POSTs to `/api/feeds` with `{ feedUrl }` body');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "`subscribe` re-throws error after setting store error (enables caller catch)");
+      throw new Error('Unhandled feeds checkpoint: cp-016 `subscribe` re-throws error after setting store error (enables caller catch)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "`subscribePubMed` POSTs to `/api/feeds` with `{ pubmedQuery: query }` body");
+      throw new Error('Unhandled feeds checkpoint: cp-017 `subscribePubMed` POSTs to `/api/feeds` with `{ pubmedQuery: query }` body');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "`subscribePubMed` re-throws error after setting store error");
+      throw new Error('Unhandled feeds checkpoint: cp-018 `subscribePubMed` re-throws error after setting store error');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "`markRead` is fire-and-forget: synchronous optimistic update + `fetch().catch(revert)`");
+      throw new Error('Unhandled feeds checkpoint: cp-019 `markRead` is fire-and-forget: synchronous optimistic update + `fetch().catch(revert)`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "`markRead` skips if article already read (`if (!article || article.isRead) return`)");
+      throw new Error('Unhandled feeds checkpoint: cp-020 `markRead` skips if article already read (`if (!article || article.isRead) return`)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "`markRead` POSTs to `/api/feeds/articles/${articleId}/read`");
+      throw new Error('Unhandled feeds checkpoint: cp-021 `markRead` POSTs to `/api/feeds/articles/${articleId}/read`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "`toggleStar` POSTs to `/api/feeds/articles/${articleId}/star`");
+      throw new Error('Unhandled feeds checkpoint: cp-022 `toggleStar` POSTs to `/api/feeds/articles/${articleId}/star`');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "`saveToLibrary` POSTs to `/api/feeds/articles/${articleId}/save`");
+      throw new Error('Unhandled feeds checkpoint: cp-023 `saveToLibrary` POSTs to `/api/feeds/articles/${articleId}/save`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "`markAllRead` POSTs to `/api/feeds/articles/mark-all-read` with optional `{ feedSourceId }`");
+      throw new Error('Unhandled feeds checkpoint: cp-024 `markAllRead` POSTs to `/api/feeds/articles/mark-all-read` with optional `{ feedSourceId }`');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "`markAllRead` on success calls `loadSubscriptions()` to refresh unread counts");
+      throw new Error('Unhandled feeds checkpoint: cp-025 `markAllRead` on success calls `loadSubscriptions()` to refresh unread counts');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "`loadArticleNote` GETs `/api/feeds/articles/${articleId}/notes`");
+      throw new Error('Unhandled feeds checkpoint: cp-026 `loadArticleNote` GETs `/api/feeds/articles/${articleId}/notes`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "`loadArticleNote` silently returns on non-ok response (no error set)");
+      throw new Error('Unhandled feeds checkpoint: cp-027 `loadArticleNote` silently returns on non-ok response (no error set)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "`loadArticleNote` stores empty notes by deleting key from `articleNotes` map");
+      throw new Error('Unhandled feeds checkpoint: cp-028 `loadArticleNote` stores empty notes by deleting key from `articleNotes` map');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "`saveArticleNote` trims notes before storing/sending");
+      throw new Error('Unhandled feeds checkpoint: cp-029 `saveArticleNote` trims notes before storing/sending');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "`saveArticleNote` sends `null` to API for empty notes: `{ notes: trimmedNotes || null }`");
+      throw new Error('Unhandled feeds checkpoint: cp-030 `saveArticleNote` sends `null` to API for empty notes: `{ notes: trimmedNotes || null }`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "`saveArticleNote` failure is silent (catch block empty)");
+      throw new Error('Unhandled feeds checkpoint: cp-031 `saveArticleNote` failure is silent (catch block empty)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "`setLayout` does NOT trigger article reload (only updates layout state)");
+      throw new Error('Unhandled feeds checkpoint: cp-032 `setLayout` does NOT trigger article reload (only updates layout state)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "`clearFilters` does NOT reset `searchQuery` (only date and journal)");
+      throw new Error('Unhandled feeds checkpoint: cp-033 `clearFilters` does NOT reset `searchQuery` (only date and journal)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-018', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "`loadJournals` fetches from `GET /api/feeds/articles/journals`");
+      throw new Error('Unhandled feeds checkpoint: cp-034 `loadJournals` fetches from `GET /api/feeds/articles/journals`');
     }
 
 

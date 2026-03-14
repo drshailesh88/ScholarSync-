@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-008
  * Source: e2e/specs/analysis/spec-008.md
- * Generated: 2026-03-14T10:15:32.048Z
+ * Generated: 2026-03-14T12:58:55.428Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "503 when AI detection throws returns `{ error: \"AI detection service is unavailable. Please try again later.\" }` (~line 102)");
+      throw new Error('Unhandled analysis checkpoint: cp-000 503 when AI detection throws returns `{ error: "AI detection service is unavailable. Please try again later." }` (~line 102)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "500 catch-all returns `{ error: \"Failed to analyze text\" }` (~line 159)");
+      throw new Error('Unhandled analysis checkpoint: cp-001 500 catch-all returns `{ error: "Failed to analyze text" }` (~line 159)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "Rate limit exceeded returns status **429** (not 503) with `{ error: \"Rate limit exceeded. Please try again later.\" }` and `X-RateLimit-Remaining` header (`src/lib/rate-limit.ts` ~line 77)");
+      throw new Error('Unhandled analysis checkpoint: cp-002 Rate limit exceeded returns status **429** (not 503) with `{ error: "Rate limit exceeded. Please try again later." }` and `X-RateLimit-Remaining` header (`src/lib/rate-limit.ts` ~line 77)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "Rate limit key format is `{userId}:integrity-check` using `RATE_LIMITS.analysis` config (`src/lib/rate-limit.ts` ~line 56, route ~line 53)");
+      throw new Error('Unhandled analysis checkpoint: cp-003 Rate limit key format is `{userId}:integrity-check` using `RATE_LIMITS.analysis` config (`src/lib/rate-limit.ts` ~line 56, route ~line 53)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "API checks `isAIConfigured()` before processing and returns 503 if false (~line 59)");
+      throw new Error('Unhandled analysis checkpoint: cp-004 API checks `isAIConfigured()` before processing and returns 503 if false (~line 59)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "API persists results to `integrityChecks` database table after every successful check (~line 120)");
+      throw new Error('Unhandled analysis checkpoint: cp-005 API persists results to `integrityChecks` database table after every successful check (~line 120)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Database persistence failure is non-fatal — results are still returned to the client (~line 148-150)");
+      throw new Error('Unhandled analysis checkpoint: cp-006 Database persistence failure is non-fatal — results are still returned to the client (~line 148-150)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "`contentChecked` field in DB is truncated to first 5000 characters of submitted text (~line 125)");
+      throw new Error('Unhandled analysis checkpoint: cp-007 `contentChecked` field in DB is truncated to first 5000 characters of submitted text (~line 125)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-008 ' + "Zod `sources` schema validates an array of objects with optional fields: `title`, `doi`, `pmid`, `authors` (string array), `year` (number) (~line 23-31)");
+      throw new Error('Unhandled analysis checkpoint: cp-008 Zod `sources` schema validates an array of objects with optional fields: `title`, `doi`, `pmid`, `authors` (string array), `year` (number) (~line 23-31)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-009 ' + "Paid plans are `[\"basic\", \"pro\", \"institutional\"]` — the `PAID_PLANS` set at ~line 22");
+      throw new Error('Unhandled analysis checkpoint: cp-009 Paid plans are `["basic", "pro", "institutional"]` — the `PAID_PLANS` set at ~line 22');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-010 ' + "Free plan users get AI detection only; plagiarism, citation audit, and self-plagiarism engines are skipped (~lines 37-40)");
+      throw new Error('Unhandled analysis checkpoint: cp-010 Free plan users get AI detection only; plagiarism, citation audit, and self-plagiarism engines are skipped (~lines 37-40)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-011 ' + "Response includes `tier` field (\"free\" or \"paid\"), `checkedAt` ISO timestamp, and optional `selfPlagiarism` and `citationAudit` fields (~line 104-120)");
+      throw new Error('Unhandled analysis checkpoint: cp-011 Response includes `tier` field ("free" or "paid"), `checkedAt` ISO timestamp, and optional `selfPlagiarism` and `citationAudit` fields (~line 104-120)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-012 ' + "`writingQuality.passiveVoiceCount` in the API response is derived from `(passiveVoicePercent / 100) * sentenceCount`, not from write-good (~line 111-113)");
+      throw new Error('Unhandled analysis checkpoint: cp-012 `writingQuality.passiveVoiceCount` in the API response is derived from `(passiveVoicePercent / 100) * sentenceCount`, not from write-good (~line 111-113)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-013 ' + "`writingQuality.readabilityGrade` in the API response comes from the AI detection engine's Flesch-Kincaid grade, not from the client-side `fleschReadingEase` (~line 116)");
+      throw new Error('Unhandled analysis checkpoint: cp-013 `writingQuality.readabilityGrade` in the API response comes from the AI detection engine\'s Flesch-Kincaid grade, not from the client-side `fleschReadingEase` (~line 116)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-014 ' + "`fleschReadingEase` is clamped to 0-100 range and rounded to integer with `Math.round()` (~line 170-178)");
+      throw new Error('Unhandled analysis checkpoint: cp-014 `fleschReadingEase` is clamped to 0-100 range and rounded to integer with `Math.round()` (~line 170-178)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-015 ' + "`fleschKincaidGrade` is clamped to >= 0 and rounded to 1 decimal place: `Math.round(rawGrade * 10) / 10` (~line 183-186)");
+      throw new Error('Unhandled analysis checkpoint: cp-015 `fleschKincaidGrade` is clamped to >= 0 and rounded to 1 decimal place: `Math.round(rawGrade * 10) / 10` (~line 183-186)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-016 ' + "`gunningFogIndex` is clamped to >= 0 and rounded to 1 decimal place: `Math.round(... * 10) / 10` (~line 191-196)");
+      throw new Error('Unhandled analysis checkpoint: cp-016 `gunningFogIndex` is clamped to >= 0 and rounded to 1 decimal place: `Math.round(... * 10) / 10` (~line 191-196)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-017 ' + "`automatedReadabilityIndex` is clamped to >= 0 and rounded to 1 decimal: `Math.round(... * 10) / 10` (~line 259-262)");
+      throw new Error('Unhandled analysis checkpoint: cp-017 `automatedReadabilityIndex` is clamped to >= 0 and rounded to 1 decimal: `Math.round(... * 10) / 10` (~line 259-262)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-018 ' + "`colemanLiauIndex` is clamped to >= 0 and rounded to 1 decimal: `Math.round(... * 10) / 10` (~line 268-271)");
+      throw new Error('Unhandled analysis checkpoint: cp-018 `colemanLiauIndex` is clamped to >= 0 and rounded to 1 decimal: `Math.round(... * 10) / 10` (~line 268-271)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-019 ' + "`vocabularyDiversity` is a type-token ratio rounded to 2 decimal places: `Math.round(... * 100) / 100` (~line 275)");
+      throw new Error('Unhandled analysis checkpoint: cp-019 `vocabularyDiversity` is a type-token ratio rounded to 2 decimal places: `Math.round(... * 100) / 100` (~line 275)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-020 ' + "`avgSyllablesPerWord` is rounded to 2 decimal places: `Math.round(... * 100) / 100` (~line 292)");
+      throw new Error('Unhandled analysis checkpoint: cp-020 `avgSyllablesPerWord` is rounded to 2 decimal places: `Math.round(... * 100) / 100` (~line 292)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-021 ' + "`avgWordsPerSentence` and `avgSentenceLength` are identical values, both `Math.round(avgWordsPerSentence * 10) / 10` (~line 282-283)");
+      throw new Error('Unhandled analysis checkpoint: cp-021 `avgWordsPerSentence` and `avgSentenceLength` are identical values, both `Math.round(avgWordsPerSentence * 10) / 10` (~line 282-283)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-022 ' + "`complexWordPercentage` is rounded to 1 decimal: `Math.round(... * 1000) / 10` (~line 290)");
+      throw new Error('Unhandled analysis checkpoint: cp-022 `complexWordPercentage` is rounded to 1 decimal: `Math.round(... * 1000) / 10` (~line 290)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-023 ' + "`classifyReason()` maps write-good reasons: \"passive voice\" → type `passive` / severity `warning`; \"weasel\" → type `weasel` / severity `warning`; \"adverb\" → type `adverb` / severity `info`; all others → type `readability` / severity `info` (~line 94-112)");
+      throw new Error('Unhandled analysis checkpoint: cp-023 `classifyReason()` maps write-good reasons: "passive voice" → type `passive` / severity `warning`; "weasel" → type `weasel` / severity `warning`; "adverb" → type `adverb` / severity `info`; all others → type `readability` / severity `info` (~line 94-112)');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-024 ' + "Complex sentence issues have reason `\"This sentence has {N} words. Consider breaking it up for clarity.\"` and suggestion `\"Break this into shorter sentences for better readability.\"` (~line 241-248)");
+      throw new Error('Unhandled analysis checkpoint: cp-024 Complex sentence issues have reason `"This sentence has {N} words. Consider breaking it up for clarity."` and suggestion `"Break this into shorter sentences for better readability."` (~line 241-248)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-025 ' + "`isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)");
+      throw new Error('Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in "ed", "es", or "ing" (~line 118-127)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-026 ' + "`HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)");
+      throw new Error('Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-027 ' + "`PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)");
+      throw new Error('Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-028 ' + "`overallRisk` derivation: humanScore >= 70 → \"low\", >= 40 → \"medium\", < 40 → \"high\" (~line 1090-1097)");
+      throw new Error('Unhandled analysis checkpoint: cp-028 `overallRisk` derivation: humanScore >= 70 → "low", >= 40 → "medium", < 40 → "high" (~line 1090-1097)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-029 ' + "`aiScore` is computed as `100 - humanScore` after clamping (~line 1088)");
+      throw new Error('Unhandled analysis checkpoint: cp-029 `aiScore` is computed as `100 - humanScore` after clamping (~line 1088)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-030 ' + "Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)");
+      throw new Error('Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-031 ' + "Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)");
+      throw new Error('Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-032 ' + "`computeTextStatistics` rounds `avgSentenceLength` to 2 decimal places, `typeTokenRatio` to 3 decimal places, `formulaicTransitionDensity` to 3 decimal places (~line 421-431)");
+      throw new Error('Unhandled analysis checkpoint: cp-032 `computeTextStatistics` rounds `avgSentenceLength` to 2 decimal places, `typeTokenRatio` to 3 decimal places, `formulaicTransitionDensity` to 3 decimal places (~line 421-431)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-033 ' + "Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)");
+      throw new Error('Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → "high", >= 0.2 → "medium", < 0.2 → "low" (~line 500-504)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('analysis / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-034 ' + "Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)");
+      throw new Error('Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)');
     }
 
 

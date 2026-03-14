@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-007
  * Source: e2e/specs/feeds/spec-007.md
- * Generated: 2026-03-14T10:16:46.999Z
+ * Generated: 2026-03-14T14:40:32.606Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "Successful import uses `alert(...)` to show imported/skipped/failed counts");
+      throw new Error('Unhandled feeds checkpoint: cp-000 Successful import uses `alert(...)` to show imported/skipped/failed counts');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "Successful import refreshes subscriptions through `useFeedStore.getState().loadSubscriptions()`");
+      throw new Error('Unhandled feeds checkpoint: cp-001 Successful import refreshes subscriptions through `useFeedStore.getState().loadSubscriptions()`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Failed import uses `alert(data.error || \"Import failed\")`");
+      throw new Error('Unhandled feeds checkpoint: cp-002 Failed import uses `alert(data.error || "Import failed")`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Import handler clears the file input value after handling the selected file");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Import handler clears the file input value after handling the selected file');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "`Mark all read` in the header always calls `markAllRead()` for the current store state without requiring a confirmation dialog");
+      throw new Error('Unhandled feeds checkpoint: cp-004 `Mark all read` in the header always calls `markAllRead()` for the current store state without requiring a confirmation dialog');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Sort segmented control contains exactly `Newest`, `Oldest`, and `Relevance`");
+      throw new Error('Unhandled feeds checkpoint: cp-005 Sort segmented control contains exactly `Newest`, `Oldest`, and `Relevance`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Clicking `Newest` sets `sortBy = \"newest\"` and `sortDir = \"desc\"`");
+      throw new Error('Unhandled feeds checkpoint: cp-006 Clicking `Newest` sets `sortBy = "newest"` and `sortDir = "desc"`');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "Clicking `Oldest` sets `sortBy = \"oldest\"` and `sortDir = \"asc\"`");
+      throw new Error('Unhandled feeds checkpoint: cp-007 Clicking `Oldest` sets `sortBy = "oldest"` and `sortDir = "asc"`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Clicking `Relevance` sets `sortBy = \"relevance\"` while preserving the current `sortDir`");
+      throw new Error('Unhandled feeds checkpoint: cp-008 Clicking `Relevance` sets `sortBy = "relevance"` while preserving the current `sortDir`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Layout control buttons expose visible tooltips/titles `List`, `Card`, and `Magazine`");
+      throw new Error('Unhandled feeds checkpoint: cp-009 Layout control buttons expose visible tooltips/titles `List`, `Card`, and `Magazine`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "Layout control is icon-only; the labels are not rendered inline in the header");
+      throw new Error('Unhandled feeds checkpoint: cp-010 Layout control is icon-only; the labels are not rendered inline in the header');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Add Feed button sets `showAddModal = true`");
+      throw new Error('Unhandled feeds checkpoint: cp-011 Add Feed button sets `showAddModal = true`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Error banner shows the store error string and a `Dismiss` text button");
+      throw new Error('Unhandled feeds checkpoint: cp-012 Error banner shows the store error string and a `Dismiss` text button');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "Dismissing the error banner calls `clearError()` and removes the banner");
+      throw new Error('Unhandled feeds checkpoint: cp-013 Dismissing the error banner calls `clearError()` and removes the banner');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "Feed sidebar is hidden below the `lg` breakpoint");
+      throw new Error('Unhandled feeds checkpoint: cp-014 Feed sidebar is hidden below the `lg` breakpoint');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "Reading pane / copilot column is hidden below the `xl` breakpoint");
+      throw new Error('Unhandled feeds checkpoint: cp-015 Reading pane / copilot column is hidden below the `xl` breakpoint');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Reading pane / copilot column is not shown at all until an article is selected");
+      throw new Error('Unhandled feeds checkpoint: cp-016 Reading pane / copilot column is not shown at all until an article is selected');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Feed sidebar `All Articles`, `Unread`, and `Starred` buttons clear both `selectedFeedId` and `selectedFolder`");
+      throw new Error('Unhandled feeds checkpoint: cp-017 Feed sidebar `All Articles`, `Unread`, and `Starred` buttons clear both `selectedFeedId` and `selectedFolder`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "`All Articles` is treated as selected only when both `selectedFeedId` and `selectedFolder` are null");
+      throw new Error('Unhandled feeds checkpoint: cp-018 `All Articles` is treated as selected only when both `selectedFeedId` and `selectedFolder` are null');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "Folder buttons set `selectedFolder` and clear `selectedFeedId`");
+      throw new Error('Unhandled feeds checkpoint: cp-019 Folder buttons set `selectedFolder` and clear `selectedFeedId`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "Feed-item buttons set `selectedFeedId` and do not automatically change `viewFilter`");
+      throw new Error('Unhandled feeds checkpoint: cp-020 Feed-item buttons set `selectedFeedId` and do not automatically change `viewFilter`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "Sidebar groups subscriptions by exact `sub.folder` string; empty folder values fall into the ungrouped `FEEDS` section");
+      throw new Error('Unhandled feeds checkpoint: cp-021 Sidebar groups subscriptions by exact `sub.folder` string; empty folder values fall into the ungrouped `FEEDS` section');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Folder unread totals are recalculated by summing `sub.unreadCount` across that folder's feeds");
+      throw new Error('Unhandled feeds checkpoint: cp-022 Folder unread totals are recalculated by summing `sub.unreadCount` across that folder\'s feeds');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "Feed-item favicon falls back to `getFaviconUrl(siteUrl || feedUrl)` when no explicit `faviconUrl` is stored");
+      throw new Error('Unhandled feeds checkpoint: cp-023 Feed-item favicon falls back to `getFaviconUrl(siteUrl || feedUrl)` when no explicit `faviconUrl` is stored');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Broken favicon images are hidden by setting `display: none` on error");
+      throw new Error('Unhandled feeds checkpoint: cp-024 Broken favicon images are hidden by setting `display: none` on error');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Muted feeds render at reduced opacity via `opacity-50`");
+      throw new Error('Unhandled feeds checkpoint: cp-025 Muted feeds render at reduced opacity via `opacity-50`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Mute/unmute control is visually hidden until the row is hovered");
+      throw new Error('Unhandled feeds checkpoint: cp-026 Mute/unmute control is visually hidden until the row is hovered');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Mute/unmute clicks stop propagation and do not select the feed row");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Mute/unmute clicks stop propagation and do not select the feed row');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Mute/unmute flow is not optimistic in the store; it PATCHes `/api/feeds/{id}` then reloads subscriptions");
+      throw new Error('Unhandled feeds checkpoint: cp-028 Mute/unmute flow is not optimistic in the store; it PATCHes `/api/feeds/{id}` then reloads subscriptions');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Pending mute state disables only the currently mutating mute button");
+      throw new Error('Unhandled feeds checkpoint: cp-029 Pending mute state disables only the currently mutating mute button');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "Selecting a feed, folder, or view filter resets article pagination to page 0 and triggers a fresh article reload");
+      throw new Error('Unhandled feeds checkpoint: cp-030 Selecting a feed, folder, or view filter resets article pagination to page 0 and triggers a fresh article reload');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "`ArticleList` loads available journals once on mount through `loadJournals()`");
+      throw new Error('Unhandled feeds checkpoint: cp-031 `ArticleList` loads available journals once on mount through `loadJournals()`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Article skeleton state shows exactly 5 `SkeletonCard`s when the first page is loading");
+      throw new Error('Unhandled feeds checkpoint: cp-032 Article skeleton state shows exactly 5 `SkeletonCard`s when the first page is loading');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Empty article state renders `No articles` only when loading is false and the article list is empty");
+      throw new Error('Unhandled feeds checkpoint: cp-033 Empty article state renders `No articles` only when loading is false and the article list is empty');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "`Load more` button is shown only when `hasMore` is true");
+      throw new Error('Unhandled feeds checkpoint: cp-034 `Load more` button is shown only when `hasMore` is true');
     }
 
 

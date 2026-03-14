@@ -1,0 +1,597 @@
+[
+  {
+    "checkpoint_id": "cp-000",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-000.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 6819
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-001",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-001.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1726
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-002",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-002.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled feeds checkpoint: cp-002 The page-level header always marks all visible feeds read globally; there is no page-level picker for a specific-feed mark-all-read action.\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled feeds checkpoint: cp-002 The page-level header always marks all visible feeds read globally; there is no page-level picker for a specific-feed mark-all-read action.');\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-010.spec.ts:184:13",
+      "duration_ms": 1715
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-003",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-003.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1714
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-004",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-004.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1649
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-005",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-005.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1664
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-006",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-006.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled feeds checkpoint: cp-006 Import/export feedback uses `alert(...)` or silent failure, not toast notifications.\n\n  382 |\n  383 |     if (!handled) {\n> 384 |       throw new Error('Unhandled feeds checkpoint: cp-006 Import/export feedback uses `alert(...)` or silent failure, not toast notifications.');\n      |             ^\n  385 |     }\n  386 |\n  387 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-010.spec.ts:384:13",
+      "duration_ms": 1686
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-007",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": false,
+      "screenshot_path": "",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/mute/i\u001b[39m\nReceived string:  \u001b[31m\"/**\u001b[39m\n\u001b[31m * Zustand store for the Journal Feed reader.\u001b[39m\n\u001b[31m *\u001b[39m\n\u001b[31m * Manages subscriptions, articles, filters, and optimistic updates.\u001b[39m\n\u001b[31m * No persist middleware — feed data is always fetched fresh from the server.\u001b[39m\n\u001b[31m */·\u001b[39m\n\u001b[31mimport { create } from \\\"zustand\\\";\u001b[39m\n\u001b[31mimport type {\u001b[39m\n\u001b[31m  FeedSubscription,\u001b[39m\n\u001b[31m  FeedArticleWithStatus,\u001b[39m\n\u001b[31m} from \\\"@/types/feed\\\";\u001b[39m\n\u001b[31mimport type {\u001b[39m\n\u001b[31m  RelatedPaper,\u001b[39m\n\u001b[31m  RelatedPapersResult,\u001b[39m\n\u001b[31m} from \\\"@/lib/feeds/related-papers\\\";·\u001b[39m\n\u001b[31m// ── Types ───────────────────────────────────────────────────────────·\u001b[39m\n\u001b[31mexport type ViewFilter = \\\"all\\\" | \\\"unread\\\" | \\\"starred\\\";·\u001b[39m\n\u001b[31minterface CopilotMessage {\u001b[39m\n\u001b[31m  id: string;\u001b[39m\n\u001b[31m  role: \\\"user\\\" | \\\"assistant\\\" | \\\"system\\\";\u001b[39m\n\u001b[31m  content: string;\u001b[39m\n\u001b[31m  relatedPapers?: RelatedPaper[];\u001b[39m\n\u001b[31m  relatedPapersSource?: RelatedPapersResult[\\\"source\\\"];\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mconst RELATED_PAPERS_SUGGESTION = \\\"Find related papers\\\";\u001b[39m\n\u001b[31mconst RELATED_PAPERS_INTENT =\u001b[39m\n\u001b[31m  /\\\\b(related papers|similar papers|similar articles|more like this|find related)\\\\b/i;·\u001b[39m\n\u001b[31mfunction withRelatedSuggestion(suggestions: string[]): string[] {\u001b[39m\n\u001b[31m  if (\u001b[39m\n\u001b[31m    suggestions.some((suggestion) =>\u001b[39m\n\u001b[31m      RELATED_PAPERS_INTENT.test(suggestion)\u001b[39m\n\u001b[31m    )\u001b[39m\n\u001b[31m  ) {\u001b[39m\n\u001b[31m    return suggestions;\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return [...suggestions, RELATED_PAPERS_SUGGESTION];\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31mfunction formatRelatedPapersSummary(\u001b[39m\n\u001b[31m  result: RelatedPapersResult\u001b[39m\n\u001b[31m): CopilotMessage {\u001b[39m\n\u001b[31m  const sourceLabel =\u001b[39m\n\u001b[31m    result.source === \\\"s2_recommendations\\\"\u001b[39m\n\u001b[31m      ? \\\"Semantic Scholar recommendations\\\"\u001b[39m\n\u001b[31m      : result.source === \\\"s2_search\\\"\u001b[39m\n\u001b[31m        ? \\\"Semantic Scholar search\\\"\u001b[39m\n\u001b[31m        : \\\"PubMed search\\\";·\u001b[39m\n\u001b[31m  return {\u001b[39m\n\u001b[31m    id: `related-${Date.now()}`,\u001b[39m\n\u001b[31m    role: \\\"assistant\\\",\u001b[39m\n\u001b[31m    content:\u001b[39m\n\u001b[31m      result.papers.length > 0\u001b[39m\n\u001b[31m        ? `I found ${result.papers.length} related papers via ${sourceLabel}.`\u001b[39m\n\u001b[31m        : \\\"I couldn't find related papers for this article. Try a broader topic search.\\\",\u001b[39m\n\u001b[31m    relatedPapers: result.papers,\u001b[39m\n\u001b[31m    relatedPapersSource: result.source,\u001b[39m\n\u001b[31m  };\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31masync function fetchRelatedPapersForArticle(\u001b[39m\n\u001b[31m  articleId: number\u001b[39m\n\u001b[31m): Promise<RelatedPapersResult> {\u001b[39m\n\u001b[31m  const response = await fetch(`/api/feeds/articles/${articleId}/related`);\u001b[39m\n\u001b[31m  if (!response.ok) {\u001b[39m\n\u001b[31m    throw new Error(\\\"Failed to find related papers\\\");\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return response.json();\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31minterface FeedStore {\u001b[39m\n\u001b[31m  // ── State ──────────────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  /** List of user's feed subscriptions */\u001b[39m\n\u001b[31m  subscriptions: FeedSubscription[];·\u001b[39m\n\u001b[31m  /** Articles for the current view */\u001b[39m\n\u001b[31m  articles: FeedArticleWithStatus[];·\u001b[39m\n\u001b[31m  /** Currently selected feed source ID (null = all feeds) */\u001b[39m\n\u001b[31m  selectedFeedId: number | null;·\u001b[39m\n\u001b[31m  /** Currently selected folder filter (null = all folders) */\u001b[39m\n\u001b[31m  selectedFolder: string | null;·\u001b[39m\n\u001b[31m  /** Current view filter: all articles, unread only, or starred only */\u001b[39m\n\u001b[31m  viewFilter: ViewFilter;·\u001b[39m\n\u001b[31m  /** Whether subscriptions are loading */\u001b[39m\n\u001b[31m  isLoadingSubscriptions: boolean;·\u001b[39m\n\u001b[31m  /** Whether articles are loading */\u001b[39m\n\u001b[31m  isLoadingArticles: boolean;·\u001b[39m\n\u001b[31m  /** Total unread count across all feeds */\u001b[39m\n\u001b[31m  totalUnread: number;·\u001b[39m\n\u001b[31m  /** Whether more articles are available (pagination) */\u001b[39m\n\u001b[31m  hasMore: boolean;·\u001b[39m\n\u001b[31m  /** Current page (0-indexed) */\u001b[39m\n\u001b[31m  page: number;·\u001b[39m\n\u001b[31m  /** Currently selected article (for reading pane) */\u001b[39m\n\u001b[31m  selectedArticleId: number | null;·\u001b[39m\n\u001b[31m  /** Cached notes by article ID */\u001b[39m\n\u001b[31m  articleNotes: Record<number, string>;·\u001b[39m\n\u001b[31m  /** Current search query for articles */\u001b[39m\n\u001b[31m  searchQuery: string;·\u001b[39m\n\u001b[31m  /** Advanced filter: date from (ISO string) */\u001b[39m\n\u001b[31m  filterDateFrom: string | null;·\u001b[39m\n\u001b[31m  /** Advanced filter: date to (ISO string) */\u001b[39m\n\u001b[31m  filterDateTo: string | null;·\u001b[39m\n\u001b[31m  /** Advanced filter: specific journal */\u001b[39m\n\u001b[31m  filterJournal: string | null;·\u001b[39m\n\u001b[31m  /** Article sort order */\u001b[39m\n\u001b[31m  sortBy: \\\"newest\\\" | \\\"oldest\\\" | \\\"relevance\\\";·\u001b[39m\n\u001b[31m  /** Compatibility sort direction for advanced search controls */\u001b[39m\n\u001b[31m  sortDir: \\\"asc\\\" | \\\"desc\\\";·\u001b[39m\n\u001b[31m  /** Article list layout */\u001b[39m\n\u001b[31m  layout: \\\"list\\\" | \\\"card\\\" | \\\"magazine\\\";·\u001b[39m\n\u001b[31m  /** Whether the advanced filter panel is expanded */\u001b[39m\n\u001b[31m  showAdvancedFilters: boolean;·\u001b[39m\n\u001b[31m  /** Available journal names for the dropdown */\u001b[39m\n\u001b[31m  availableJournals: string[];·\u001b[39m\n\u001b[31m  /** Error message (null when no error) */\u001b[39m\n\u001b[31m  error: string | null;·\u001b[39m\n\u001b[31m  // ── Copilot state ────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  /** Whether the copilot panel is open */\u001b[39m\n\u001b[31m  copilotOpen: boolean;·\u001b[39m\n\u001b[31m  /** Source tier for the current article */\u001b[39m\n\u001b[31m  copilotSourceTier: \\\"full_paper\\\" | \\\"abstract_only\\\" | \\\"title_only\\\" | null;·\u001b[39m\n\u001b[31m  /** Source label (human-readable) */\u001b[39m\n\u001b[31m  copilotSourceLabel: string | null;·\u001b[39m\n\u001b[31m  /** Chat messages for the copilot */\u001b[39m\n\u001b[31m  copilotMessages: CopilotMessage[];·\u001b[39m\n\u001b[31m  /** Whether the copilot is generating a response */\u001b[39m\n\u001b[31m  copilotLoading: boolean;·\u001b[39m\n\u001b[31m  /** Suggested follow-up questions */\u001b[39m\n\u001b[31m  copilotSuggestions: string[];·\u001b[39m\n\u001b[31m  /** Summary cache: articleId → summary (avoids re-generating) */\u001b[39m\n\u001b[31m  copilotSummaryCache: Record<number, string>;·\u001b[39m\n\u001b[31m  /** Related papers for the current article */\u001b[39m\n\u001b[31m  relatedPapers: RelatedPaper[];·\u001b[39m\n\u001b[31m  /** Whether related papers are loading */\u001b[39m\n\u001b[31m  relatedPapersLoading: boolean;·\u001b[39m\n\u001b[31m  /** Source used to fetch related papers */\u001b[39m\n\u001b[31m  relatedPapersSource: RelatedPapersResult[\\\"source\\\"] | null;·\u001b[39m\n\u001b[31m  // ── Actions ────────────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  /** Fetch subscriptions from the server */\u001b[39m\n\u001b[31m  loadSubscriptions: () => Promise<void>;·\u001b[39m\n\u001b[31m  /** Fetch articles with current filters. reset=true clears existing articles. */\u001b[39m\n\u001b[31m  loadArticles: (reset?: boolean) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Load the next page of articles (append to existing) */\u001b[39m\n\u001b[31m  loadMore: () => Promise<void>;·\u001b[39m\n\u001b[31m  /** Subscribe to a feed by URL */\u001b[39m\n\u001b[31m  subscribe: (feedUrl: string) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Subscribe to a PubMed search query */\u001b[39m\n\u001b[31m  subscribePubMed: (query: string) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Unsubscribe from a feed */\u001b[39m\n\u001b[31m  unsubscribe: (subscriptionId: number) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Mark an article as read — optimistic update */\u001b[39m\n\u001b[31m  markRead: (articleId: number) => void;·\u001b[39m\n\u001b[31m  /** Toggle star on an article — optimistic update */\u001b[39m\n\u001b[31m  toggleStar: (articleId: number) => void;·\u001b[39m\n\u001b[31m  /** Save an article to the Library — returns paperId */\u001b[39m\n\u001b[31m  saveToLibrary: (articleId: number) => Promise<number | null>;·\u001b[39m\n\u001b[31m  /** Mark all articles as read (optionally for a specific feed) */\u001b[39m\n\u001b[31m  markAllRead: (feedSourceId?: number) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Load the current user's note for an article */\u001b[39m\n\u001b[31m  loadArticleNote: (articleId: number) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Save a note for an article */\u001b[39m\n\u001b[31m  saveArticleNote: (articleId: number, notes: string) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Set the selected feed (triggers article reload) */\u001b[39m\n\u001b[31m  setSelectedFeed: (feedId: number | null) => void;·\u001b[39m\n\u001b[31m  /** Set the selected folder (triggers article reload) */\u001b[39m\n\u001b[31m  setSelectedFolder: (folder: string | null) => void;·\u001b[39m\n\u001b[31m  /** Set the view filter (triggers article reload) */\u001b[39m\n\u001b[31m  setViewFilter: (filter: ViewFilter) => void;·\u001b[39m\n\u001b[31m  /** Set the selected article for the reading pane */\u001b[39m\n\u001b[31m  setSelectedArticle: (articleId: number | null) => void;·\u001b[39m\n\u001b[31m  /** Set search query and reload articles */\u001b[39m\n\u001b[31m  setSearchQuery: (query: string) => void;·\u001b[39m\n\u001b[31m  /** Clear search */\u001b[39m\n\u001b[31m  clearSearch: () => void;·\u001b[39m\n\u001b[31m  /** Set date range filter */\u001b[39m\n\u001b[31m  setDateRange: (from: string | null, to: string | null) => void;·\u001b[39m\n\u001b[31m  /** Set journal filter */\u001b[39m\n\u001b[31m  setFilterJournal: (journal: string | null) => void;·\u001b[39m\n\u001b[31m  /** Set article sort order */\u001b[39m\n\u001b[31m  setSortBy: (sortBy: \\\"newest\\\" | \\\"oldest\\\" | \\\"relevance\\\") => void;·\u001b[39m\n\u001b[31m  /** Set sort options */\u001b[39m\n\u001b[31m  setSort: (\u001b[39m\n\u001b[31m    sortBy: \\\"published\\\" | \\\"added\\\" | \\\"title\\\" | \\\"newest\\\" | \\\"oldest\\\" | \\\"relevance\\\",\u001b[39m\n\u001b[31m    sortDir: \\\"asc\\\" | \\\"desc\\\"\u001b[39m\n\u001b[31m  ) => void;·\u001b[39m\n\u001b[31m  /** Set article list layout */\u001b[39m\n\u001b[31m  setLayout: (layout: \\\"list\\\" | \\\"card\\\" | \\\"magazine\\\") => void;·\u001b[39m\n\u001b[31m  /** Toggle advanced filters panel visibility */\u001b[39m\n\u001b[31m  toggleAdvancedFilters: () => void;·\u001b[39m\n\u001b[31m  /** Clear all advanced filters */\u001b[39m\n\u001b[31m  clearFilters: () => void;·\u001b[39m\n\u001b[31m  /** Load available journal names for dropdown */\u001b[39m\n\u001b[31m  loadJournals: () => Promise<void>;·\u001b[39m\n\u001b[31m  /** Clear error */\u001b[39m\n\u001b[31m  clearError: () => void;·\u001b[39m\n\u001b[31m  // ── Copilot actions ──────────────────────────────────────────────·\u001b[39m\n\u001b[31m  /** Open the copilot panel for the selected article */\u001b[39m\n\u001b[31m  openCopilot: () => void;·\u001b[39m\n\u001b[31m  /** Close the copilot panel */\u001b[39m\n\u001b[31m  closeCopilot: () => void;·\u001b[39m\n\u001b[31m  /** Generate a summary for the selected article */\u001b[39m\n\u001b[31m  summarizeArticle: () => Promise<void>;·\u001b[39m\n\u001b[31m  /** Send a chat message to the copilot */\u001b[39m\n\u001b[31m  sendCopilotMessage: (question: string) => Promise<void>;·\u001b[39m\n\u001b[31m  /** Use a suggested question */\u001b[39m\n\u001b[31m  useSuggestion: (question: string) => void;·\u001b[39m\n\u001b[31m  /** Find related papers for the selected article */\u001b[39m\n\u001b[31m  findRelatedPapers: () => Promise<void>;·\u001b[39m\n\u001b[31m  /** Clear copilot state (when article changes) */\u001b[39m\n\u001b[31m  clearCopilot: () => void;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// ── Store ────────────────────────────────────────────────────────────·\u001b[39m\n\u001b[31mexport const useFeedStore = create<FeedStore>()((set, get) => ({\u001b[39m\n\u001b[31m  // ── Initial state ──────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  subscriptions: [],\u001b[39m\n\u001b[31m  articles: [],\u001b[39m\n\u001b[31m  selectedFeedId: null,\u001b[39m\n\u001b[31m  selectedFolder: null,\u001b[39m\n\u001b[31m  viewFilter: \\\"unread\\\",\u001b[39m\n\u001b[31m  isLoadingSubscriptions: false,\u001b[39m\n\u001b[31m  isLoadingArticles: false,\u001b[39m\n\u001b[31m  totalUnread: 0,\u001b[39m\n\u001b[31m  hasMore: false,\u001b[39m\n\u001b[31m  page: 0,\u001b[39m\n\u001b[31m  selectedArticleId: null,\u001b[39m\n\u001b[31m  articleNotes: {},\u001b[39m\n\u001b[31m  searchQuery: \\\"\\\",\u001b[39m\n\u001b[31m  filterDateFrom: null,\u001b[39m\n\u001b[31m  filterDateTo: null,\u001b[39m\n\u001b[31m  filterJournal: null,\u001b[39m\n\u001b[31m  sortBy: \\\"newest\\\",\u001b[39m\n\u001b[31m  sortDir: \\\"desc\\\",\u001b[39m\n\u001b[31m  layout: \\\"card\\\",\u001b[39m\n\u001b[31m  showAdvancedFilters: false,\u001b[39m\n\u001b[31m  availableJournals: [],\u001b[39m\n\u001b[31m  error: null,·\u001b[39m\n\u001b[31m  // ── Copilot initial state ──────────────────────────────────────────\u001b[39m\n\u001b[31m  copilotOpen: false,\u001b[39m\n\u001b[31m  copilotSourceTier: null,\u001b[39m\n\u001b[31m  copilotSourceLabel: null,\u001b[39m\n\u001b[31m  copilotMessages: [],\u001b[39m\n\u001b[31m  copilotLoading: false,\u001b[39m\n\u001b[31m  copilotSuggestions: [],\u001b[39m\n\u001b[31m  copilotSummaryCache: {},·\u001b[39m\n\u001b[31m  // ── Related papers initial state ──────────────────────────────────\u001b[39m\n\u001b[31m  relatedPapers: [],\u001b[39m\n\u001b[31m  relatedPapersLoading: false,\u001b[39m\n\u001b[31m  relatedPapersSource: null,·\u001b[39m\n\u001b[31m  // ── loadSubscriptions ──────────────────────────────────────────────·\u001b[39m\n\u001b[31m  loadSubscriptions: async () => {\u001b[39m\n\u001b[31m    set({ isLoadingSubscriptions: true, error: null });\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/feeds\\\");\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to load subscriptions\\\");\u001b[39m\n\u001b[31m      const data = await res.json();\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        subscriptions: data.subscriptions,\u001b[39m\n\u001b[31m        totalUnread: data.totalUnread,\u001b[39m\n\u001b[31m        isLoadingSubscriptions: false,\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        isLoadingSubscriptions: false,\u001b[39m\n\u001b[31m        error:\u001b[39m\n\u001b[31m          err instanceof Error ? err.message : \\\"Failed to load subscriptions\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── loadArticles ───────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  loadArticles: async (reset = true) => {\u001b[39m\n\u001b[31m    const {\u001b[39m\n\u001b[31m      selectedFeedId, selectedFolder, viewFilter, searchQuery,\u001b[39m\n\u001b[31m      filterDateFrom, filterDateTo, filterJournal, sortBy, sortDir,\u001b[39m\n\u001b[31m    } = get();\u001b[39m\n\u001b[31m    const page = reset ? 0 : get().page;·\u001b[39m\n\u001b[31m    set({\u001b[39m\n\u001b[31m      isLoadingArticles: true,\u001b[39m\n\u001b[31m      error: null,\u001b[39m\n\u001b[31m      ...(reset ? { articles: [], page: 0, selectedArticleId: null } : {}),\u001b[39m\n\u001b[31m    });·\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const params = new URLSearchParams();\u001b[39m\n\u001b[31m      if (selectedFeedId) params.set(\\\"feedSourceId\\\", String(selectedFeedId));\u001b[39m\n\u001b[31m      if (selectedFolder) params.set(\\\"folder\\\", selectedFolder);\u001b[39m\n\u001b[31m      if (viewFilter === \\\"unread\\\") params.set(\\\"isRead\\\", \\\"false\\\");\u001b[39m\n\u001b[31m      if (viewFilter === \\\"starred\\\") params.set(\\\"isStarred\\\", \\\"true\\\");\u001b[39m\n\u001b[31m      if (searchQuery) params.set(\\\"search\\\", searchQuery);\u001b[39m\n\u001b[31m      if (filterDateFrom) params.set(\\\"dateFrom\\\", filterDateFrom);\u001b[39m\n\u001b[31m      if (filterDateTo) params.set(\\\"dateTo\\\", filterDateTo);\u001b[39m\n\u001b[31m      if (filterJournal) params.set(\\\"journal\\\", filterJournal);\u001b[39m\n\u001b[31m      if (sortBy !== \\\"newest\\\") params.set(\\\"sortBy\\\", sortBy);\u001b[39m\n\u001b[31m      params.set(\\\"sortDir\\\", sortDir);\u001b[39m\n\u001b[31m      params.set(\\\"page\\\", String(page));\u001b[39m\n\u001b[31m      params.set(\\\"perPage\\\", \\\"30\\\");·\u001b[39m\n\u001b[31m      const res = await fetch(`/api/feeds/articles?${params}`);\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to load articles\\\");\u001b[39m\n\u001b[31m      const data = await res.json();·\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        articles: reset ? data.articles : [...s.articles, ...data.articles],\u001b[39m\n\u001b[31m        hasMore: data.hasMore,\u001b[39m\n\u001b[31m        page,\u001b[39m\n\u001b[31m        isLoadingArticles: false,\u001b[39m\n\u001b[31m      }));\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        isLoadingArticles: false,\u001b[39m\n\u001b[31m        error:\u001b[39m\n\u001b[31m          err instanceof Error ? err.message : \\\"Failed to load articles\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── loadMore ───────────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  loadMore: async () => {\u001b[39m\n\u001b[31m    const { hasMore, isLoadingArticles, page } = get();\u001b[39m\n\u001b[31m    if (!hasMore || isLoadingArticles) return;·\u001b[39m\n\u001b[31m    set({ page: page + 1 });\u001b[39m\n\u001b[31m    await get().loadArticles(false);\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── subscribe ──────────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  subscribe: async (feedUrl) => {\u001b[39m\n\u001b[31m    set({ error: null });\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/feeds\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({ feedUrl }),\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || \\\"Failed to subscribe\\\");\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      await get().loadSubscriptions();\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        error: err instanceof Error ? err.message : \\\"Failed to subscribe\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      throw err;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── subscribePubMed ────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  subscribePubMed: async (query) => {\u001b[39m\n\u001b[31m    set({ error: null });\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/feeds\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({ pubmedQuery: query }),\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      if (!res.ok) {\u001b[39m\n\u001b[31m        const data = await res.json().catch(() => ({}));\u001b[39m\n\u001b[31m        throw new Error(data.error || \\\"Failed to create PubMed feed\\\");\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      await get().loadSubscriptions();\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        error:\u001b[39m\n\u001b[31m          err instanceof Error\u001b[39m\n\u001b[31m            ? err.message\u001b[39m\n\u001b[31m            : \\\"Failed to create PubMed feed\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      throw err;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── unsubscribe ────────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  unsubscribe: async (subscriptionId) => {\u001b[39m\n\u001b[31m    set({ error: null });\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(`/api/feeds/${subscriptionId}`, {\u001b[39m\n\u001b[31m        method: \\\"DELETE\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to unsubscribe\\\");·\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        subscriptions: s.subscriptions.filter(\u001b[39m\n\u001b[31m          (sub) => sub.id !== subscriptionId\u001b[39m\n\u001b[31m        ),\u001b[39m\n\u001b[31m      }));\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        error:\u001b[39m\n\u001b[31m          err instanceof Error ? err.message : \\\"Failed to unsubscribe\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── markRead (OPTIMISTIC) ──────────────────────────────────────────·\u001b[39m\n\u001b[31m  markRead: (articleId) => {\u001b[39m\n\u001b[31m    const article = get().articles.find((a) => a.id === articleId);\u001b[39m\n\u001b[31m    if (!article || article.isRead) return;·\u001b[39m\n\u001b[31m    set((s) => ({\u001b[39m\n\u001b[31m      articles: s.articles.map((a) =>\u001b[39m\n\u001b[31m        a.id === articleId ? { ...a, isRead: true } : a\u001b[39m\n\u001b[31m      ),\u001b[39m\n\u001b[31m      totalUnread: Math.max(0, s.totalUnread - 1),\u001b[39m\n\u001b[31m    }));·\u001b[39m\n\u001b[31m    fetch(`/api/feeds/articles/${articleId}/read`, { method: \\\"POST\\\" }).catch(\u001b[39m\n\u001b[31m      () => {\u001b[39m\n\u001b[31m        set((s) => ({\u001b[39m\n\u001b[31m          articles: s.articles.map((a) =>\u001b[39m\n\u001b[31m            a.id === articleId ? { ...a, isRead: false } : a\u001b[39m\n\u001b[31m          ),\u001b[39m\n\u001b[31m          totalUnread: s.totalUnread + 1,\u001b[39m\n\u001b[31m        }));\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    );\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── toggleStar (OPTIMISTIC) ────────────────────────────────────────·\u001b[39m\n\u001b[31m  toggleStar: (articleId) => {\u001b[39m\n\u001b[31m    const article = get().articles.find((a) => a.id === articleId);\u001b[39m\n\u001b[31m    if (!article) return;·\u001b[39m\n\u001b[31m    const newStarred = !article.isStarred;·\u001b[39m\n\u001b[31m    set((s) => ({\u001b[39m\n\u001b[31m      articles: s.articles.map((a) =>\u001b[39m\n\u001b[31m        a.id === articleId ? { ...a, isStarred: newStarred } : a\u001b[39m\n\u001b[31m      ),\u001b[39m\n\u001b[31m    }));·\u001b[39m\n\u001b[31m    fetch(`/api/feeds/articles/${articleId}/star`, { method: \\\"POST\\\" }).catch(\u001b[39m\n\u001b[31m      () => {\u001b[39m\n\u001b[31m        set((s) => ({\u001b[39m\n\u001b[31m          articles: s.articles.map((a) =>\u001b[39m\n\u001b[31m            a.id === articleId ? { ...a, isStarred: !newStarred } : a\u001b[39m\n\u001b[31m          ),\u001b[39m\n\u001b[31m        }));\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    );\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── saveToLibrary ──────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  saveToLibrary: async (articleId) => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(`/api/feeds/articles/${articleId}/save`, {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to save to library\\\");\u001b[39m\n\u001b[31m      const data = await res.json();·\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        articles: s.articles.map((a) =>\u001b[39m\n\u001b[31m          a.id === articleId\u001b[39m\n\u001b[31m            ? { ...a, isSavedToLibrary: true, savedPaperId: data.paperId }\u001b[39m\n\u001b[31m            : a\u001b[39m\n\u001b[31m        ),\u001b[39m\n\u001b[31m      }));·\u001b[39m\n\u001b[31m      return data.paperId;\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        error: err instanceof Error ? err.message : \\\"Failed to save\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      return null;\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── markAllRead ────────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  markAllRead: async (feedSourceId) => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/feeds/articles/mark-all-read\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({ feedSourceId }),\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to mark all read\\\");·\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        articles: s.articles.map((a) =>\u001b[39m\n\u001b[31m          !feedSourceId || a.feedSourceId === feedSourceId\u001b[39m\n\u001b[31m            ? { ...a, isRead: true }\u001b[39m\n\u001b[31m            : a\u001b[39m\n\u001b[31m        ),\u001b[39m\n\u001b[31m        totalUnread: feedSourceId\u001b[39m\n\u001b[31m          ? Math.max(\u001b[39m\n\u001b[31m              0,\u001b[39m\n\u001b[31m              s.totalUnread -\u001b[39m\n\u001b[31m                s.articles.filter(\u001b[39m\n\u001b[31m                  (a) => a.feedSourceId === feedSourceId && !a.isRead\u001b[39m\n\u001b[31m                ).length\u001b[39m\n\u001b[31m            )\u001b[39m\n\u001b[31m          : 0,\u001b[39m\n\u001b[31m      }));·\u001b[39m\n\u001b[31m      await get().loadSubscriptions();\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        error:\u001b[39m\n\u001b[31m          err instanceof Error ? err.message : \\\"Failed to mark all read\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  loadArticleNote: async (articleId) => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(`/api/feeds/articles/${articleId}/notes`);\u001b[39m\n\u001b[31m      if (!res.ok) return;·\u001b[39m\n\u001b[31m      const data = await res.json();\u001b[39m\n\u001b[31m      set((s) => {\u001b[39m\n\u001b[31m        const articleNotes = { ...s.articleNotes };\u001b[39m\n\u001b[31m        const nextNotes = typeof data.notes === \\\"string\\\" ? data.notes : \\\"\\\";·\u001b[39m\n\u001b[31m        if (nextNotes) {\u001b[39m\n\u001b[31m          articleNotes[articleId] = nextNotes;\u001b[39m\n\u001b[31m        } else {\u001b[39m\n\u001b[31m          delete articleNotes[articleId];\u001b[39m\n\u001b[31m        }·\u001b[39m\n\u001b[31m        return { articleNotes };\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Silently fail — notes can be reloaded the next time the article opens\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  saveArticleNote: async (articleId, notes) => {\u001b[39m\n\u001b[31m    const trimmedNotes = notes.trim();·\u001b[39m\n\u001b[31m    set((s) => {\u001b[39m\n\u001b[31m      const articleNotes = { ...s.articleNotes };·\u001b[39m\n\u001b[31m      if (trimmedNotes) {\u001b[39m\n\u001b[31m        articleNotes[articleId] = trimmedNotes;\u001b[39m\n\u001b[31m      } else {\u001b[39m\n\u001b[31m        delete articleNotes[articleId];\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      return { articleNotes };\u001b[39m\n\u001b[31m    });·\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      await fetch(`/api/feeds/articles/${articleId}/notes`, {\u001b[39m\n\u001b[31m        method: \\\"PUT\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({ notes: trimmedNotes || null }),\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Silently fail — optimistic cache refreshes when the article is reopened\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  // ── Filter setters (trigger article reload) ────────────────────────·\u001b[39m\n\u001b[31m  setSelectedFeed: (feedId) => {\u001b[39m\n\u001b[31m    set({ selectedFeedId: feedId, selectedFolder: null, page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setSelectedFolder: (folder) => {\u001b[39m\n\u001b[31m    set({ selectedFolder: folder, selectedFeedId: null, page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setViewFilter: (filter) => {\u001b[39m\n\u001b[31m    set({ viewFilter: filter, page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setSearchQuery: (query) => {\u001b[39m\n\u001b[31m    set({ searchQuery: query, page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  clearSearch: () => {\u001b[39m\n\u001b[31m    set({ searchQuery: \\\"\\\", page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setDateRange: (from, to) => {\u001b[39m\n\u001b[31m    set({ filterDateFrom: from, filterDateTo: to, page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setFilterJournal: (journal) => {\u001b[39m\n\u001b[31m    set({ filterJournal: journal, page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setSortBy: (sortBy) => {\u001b[39m\n\u001b[31m    set({\u001b[39m\n\u001b[31m      sortBy,\u001b[39m\n\u001b[31m      sortDir: sortBy === \\\"oldest\\\" ? \\\"asc\\\" : \\\"desc\\\",\u001b[39m\n\u001b[31m      page: 0,\u001b[39m\n\u001b[31m    });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setSort: (sortBy, sortDir) => {\u001b[39m\n\u001b[31m    const normalizedSortBy =\u001b[39m\n\u001b[31m      sortBy === \\\"title\\\" || sortBy === \\\"relevance\\\"\u001b[39m\n\u001b[31m        ? \\\"relevance\\\"\u001b[39m\n\u001b[31m        : sortBy === \\\"oldest\\\" || sortDir === \\\"asc\\\"\u001b[39m\n\u001b[31m          ? \\\"oldest\\\"\u001b[39m\n\u001b[31m          : \\\"newest\\\";·\u001b[39m\n\u001b[31m    set({ sortBy: normalizedSortBy, sortDir, page: 0 });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setLayout: (layout) => {\u001b[39m\n\u001b[31m    set({ layout });\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  toggleAdvancedFilters: () => {\u001b[39m\n\u001b[31m    set((s) => ({ showAdvancedFilters: !s.showAdvancedFilters }));\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  clearFilters: () => {\u001b[39m\n\u001b[31m    set({\u001b[39m\n\u001b[31m      filterDateFrom: null,\u001b[39m\n\u001b[31m      filterDateTo: null,\u001b[39m\n\u001b[31m      filterJournal: null,\u001b[39m\n\u001b[31m      page: 0,\u001b[39m\n\u001b[31m    });\u001b[39m\n\u001b[31m    get().loadArticles();\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  loadJournals: async () => {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/feeds/articles/journals\\\");\u001b[39m\n\u001b[31m      if (!res.ok) return;\u001b[39m\n\u001b[31m      const data = await res.json();\u001b[39m\n\u001b[31m      set({ availableJournals: data.journals || [] });\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Silently fail — journal list is non-critical\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  setSelectedArticle: (articleId) => {\u001b[39m\n\u001b[31m    const prev = get().selectedArticleId;\u001b[39m\n\u001b[31m    set({ selectedArticleId: articleId });·\u001b[39m\n\u001b[31m    // Clear copilot when article changes\u001b[39m\n\u001b[31m    if (articleId !== prev) {\u001b[39m\n\u001b[31m      get().clearCopilot();\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    if (articleId) {\u001b[39m\n\u001b[31m      void get().loadArticleNote(articleId);·\u001b[39m\n\u001b[31m      const article = get().articles.find((a) => a.id === articleId);\u001b[39m\n\u001b[31m      if (article && !article.isRead) {\u001b[39m\n\u001b[31m        get().markRead(articleId);\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  clearError: () => set({ error: null }),·\u001b[39m\n\u001b[31m  // ── Copilot actions ────────────────────────────────────────────────·\u001b[39m\n\u001b[31m  openCopilot: () => {\u001b[39m\n\u001b[31m    set({ copilotOpen: true });\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  closeCopilot: () => {\u001b[39m\n\u001b[31m    set({ copilotOpen: false });\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  summarizeArticle: async () => {\u001b[39m\n\u001b[31m    const articleId = get().selectedArticleId;\u001b[39m\n\u001b[31m    if (!articleId) return;·\u001b[39m\n\u001b[31m    // Check cache first\u001b[39m\n\u001b[31m    const cached = get().copilotSummaryCache[articleId];\u001b[39m\n\u001b[31m    if (cached) {\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        copilotMessages: [\u001b[39m\n\u001b[31m          ...s.copilotMessages,\u001b[39m\n\u001b[31m          {\u001b[39m\n\u001b[31m            id: `summary-${Date.now()}`,\u001b[39m\n\u001b[31m            role: \\\"assistant\\\" as const,\u001b[39m\n\u001b[31m            content: cached,\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        ],\u001b[39m\n\u001b[31m      }));\u001b[39m\n\u001b[31m      return;\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    const article = get().articles.find((a) => a.id === articleId);\u001b[39m\n\u001b[31m    if (!article) return;·\u001b[39m\n\u001b[31m    const articleInput = {\u001b[39m\n\u001b[31m      title: article.title,\u001b[39m\n\u001b[31m      authors: article.authors,\u001b[39m\n\u001b[31m      abstractSnippet: article.abstractSnippet,\u001b[39m\n\u001b[31m      doi: article.doi,\u001b[39m\n\u001b[31m      pubmedId: article.pubmedId,\u001b[39m\n\u001b[31m      journal: article.journal,\u001b[39m\n\u001b[31m      volume: article.volume,\u001b[39m\n\u001b[31m      issue: article.issue,\u001b[39m\n\u001b[31m      publishedAt:\u001b[39m\n\u001b[31m        article.publishedAt instanceof Date\u001b[39m\n\u001b[31m          ? article.publishedAt.toISOString()\u001b[39m\n\u001b[31m          : article.publishedAt ?? null,\u001b[39m\n\u001b[31m      link: article.link,\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    set({ copilotLoading: true });·\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/feeds/copilot/summarize\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify(articleInput),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Failed to generate summary\\\");·\u001b[39m\n\u001b[31m      const data = await res.json();·\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        copilotLoading: false,\u001b[39m\n\u001b[31m        copilotSourceTier: data.sourceTier,\u001b[39m\n\u001b[31m        copilotSourceLabel: data.sourceLabel,\u001b[39m\n\u001b[31m        copilotSuggestions: withRelatedSuggestion(\u001b[39m\n\u001b[31m          data.suggestedQuestions || []\u001b[39m\n\u001b[31m        ),\u001b[39m\n\u001b[31m        copilotMessages: [\u001b[39m\n\u001b[31m          ...s.copilotMessages,\u001b[39m\n\u001b[31m          {\u001b[39m\n\u001b[31m            id: `summary-${Date.now()}`,\u001b[39m\n\u001b[31m            role: \\\"assistant\\\" as const,\u001b[39m\n\u001b[31m            content: data.summary,\u001b[39m\n\u001b[31m          },\u001b[39m\n\u001b[31m        ],\u001b[39m\n\u001b[31m        copilotSummaryCache: {\u001b[39m\n\u001b[31m          ...s.copilotSummaryCache,\u001b[39m\n\u001b[31m          [articleId]: data.summary,\u001b[39m\n\u001b[31m        },\u001b[39m\n\u001b[31m      }));\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        copilotLoading: false,\u001b[39m\n\u001b[31m        error:\u001b[39m\n\u001b[31m          err instanceof Error ? err.message : \\\"Failed to generate summary\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  sendCopilotMessage: async (question) => {\u001b[39m\n\u001b[31m    const articleId = get().selectedArticleId;\u001b[39m\n\u001b[31m    if (!articleId) return;·\u001b[39m\n\u001b[31m    const article = get().articles.find((a) => a.id === articleId);\u001b[39m\n\u001b[31m    if (!article) return;·\u001b[39m\n\u001b[31m    const articleInput = {\u001b[39m\n\u001b[31m      title: article.title,\u001b[39m\n\u001b[31m      authors: article.authors,\u001b[39m\n\u001b[31m      abstractSnippet: article.abstractSnippet,\u001b[39m\n\u001b[31m      doi: article.doi,\u001b[39m\n\u001b[31m      pubmedId: article.pubmedId,\u001b[39m\n\u001b[31m      journal: article.journal,\u001b[39m\n\u001b[31m      volume: article.volume,\u001b[39m\n\u001b[31m      issue: article.issue,\u001b[39m\n\u001b[31m      publishedAt:\u001b[39m\n\u001b[31m        article.publishedAt instanceof Date\u001b[39m\n\u001b[31m          ? article.publishedAt.toISOString()\u001b[39m\n\u001b[31m          : article.publishedAt ?? null,\u001b[39m\n\u001b[31m      link: article.link,\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    // Add user message\u001b[39m\n\u001b[31m    const userMsgId = `user-${Date.now()}`;\u001b[39m\n\u001b[31m    const assistantMsgId = `assistant-${Date.now()}`;·\u001b[39m\n\u001b[31m    set((s) => ({\u001b[39m\n\u001b[31m      copilotMessages: [\u001b[39m\n\u001b[31m        ...s.copilotMessages,\u001b[39m\n\u001b[31m        { id: userMsgId, role: \\\"user\\\" as const, content: question },\u001b[39m\n\u001b[31m      ],\u001b[39m\n\u001b[31m      copilotLoading: true,\u001b[39m\n\u001b[31m      relatedPapersLoading: RELATED_PAPERS_INTENT.test(question),\u001b[39m\n\u001b[31m      copilotSuggestions: [],\u001b[39m\n\u001b[31m    }));·\u001b[39m\n\u001b[31m    if (RELATED_PAPERS_INTENT.test(question)) {\u001b[39m\n\u001b[31m      try {\u001b[39m\n\u001b[31m        const result = await fetchRelatedPapersForArticle(articleId);·\u001b[39m\n\u001b[31m        set((s) => ({\u001b[39m\n\u001b[31m          copilotMessages: [\u001b[39m\n\u001b[31m            ...s.copilotMessages,\u001b[39m\n\u001b[31m            formatRelatedPapersSummary(result),\u001b[39m\n\u001b[31m          ],\u001b[39m\n\u001b[31m          relatedPapers: result.papers,\u001b[39m\n\u001b[31m          relatedPapersSource: result.source,\u001b[39m\n\u001b[31m          relatedPapersLoading: false,\u001b[39m\n\u001b[31m          copilotLoading: false,\u001b[39m\n\u001b[31m        }));\u001b[39m\n\u001b[31m        return;\u001b[39m\n\u001b[31m      } catch {\u001b[39m\n\u001b[31m        set({ relatedPapersLoading: false });\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    }·\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      // Build messages history (exclude system messages)\u001b[39m\n\u001b[31m      const history = get()\u001b[39m\n\u001b[31m        .copilotMessages.filter(\u001b[39m\n\u001b[31m          (m) => m.role === \\\"user\\\" || m.role === \\\"assistant\\\"\u001b[39m\n\u001b[31m        )\u001b[39m\n\u001b[31m        .map((m) => ({ role: m.role as \\\"user\\\" | \\\"assistant\\\", content: m.content }));·\u001b[39m\n\u001b[31m      // Remove the just-added user message from history (it goes as `question`)\u001b[39m\n\u001b[31m      const priorMessages = history.slice(0, -1);·\u001b[39m\n\u001b[31m      const res = await fetch(\\\"/api/feeds/copilot/chat\\\", {\u001b[39m\n\u001b[31m        method: \\\"POST\\\",\u001b[39m\n\u001b[31m        headers: { \\\"Content-Type\\\": \\\"application/json\\\" },\u001b[39m\n\u001b[31m        body: JSON.stringify({\u001b[39m\n\u001b[31m          article: articleInput,\u001b[39m\n\u001b[31m          messages: priorMessages,\u001b[39m\n\u001b[31m          question,\u001b[39m\n\u001b[31m        }),\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      if (!res.ok) throw new Error(\\\"Chat failed\\\");·\u001b[39m\n\u001b[31m      // Add empty assistant message to stream into\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        copilotMessages: [\u001b[39m\n\u001b[31m          ...s.copilotMessages,\u001b[39m\n\u001b[31m          { id: assistantMsgId, role: \\\"assistant\\\" as const, content: \\\"\\\" },\u001b[39m\n\u001b[31m        ],\u001b[39m\n\u001b[31m      }));·\u001b[39m\n\u001b[31m      const reader = res.body!.getReader();\u001b[39m\n\u001b[31m      const decoder = new TextDecoder();·\u001b[39m\n\u001b[31m      while (true) {\u001b[39m\n\u001b[31m        const { done, value } = await reader.read();\u001b[39m\n\u001b[31m        if (done) break;\u001b[39m\n\u001b[31m        const text = decoder.decode(value, { stream: true });·\u001b[39m\n\u001b[31m        set((s) => ({\u001b[39m\n\u001b[31m          copilotMessages: s.copilotMessages.map((m) =>\u001b[39m\n\u001b[31m            m.id === assistantMsgId\u001b[39m\n\u001b[31m              ? { ...m, content: m.content + text }\u001b[39m\n\u001b[31m              : m\u001b[39m\n\u001b[31m          ),\u001b[39m\n\u001b[31m        }));\u001b[39m\n\u001b[31m      }·\u001b[39m\n\u001b[31m      set({ copilotLoading: false });\u001b[39m\n\u001b[31m    } catch (err) {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        copilotLoading: false,\u001b[39m\n\u001b[31m        error: err instanceof Error ? err.message : \\\"Chat failed\\\",\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  useSuggestion: (question) => {\u001b[39m\n\u001b[31m    get().sendCopilotMessage(question);\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  findRelatedPapers: async () => {\u001b[39m\n\u001b[31m    const articleId = get().selectedArticleId;\u001b[39m\n\u001b[31m    if (!articleId) return;·\u001b[39m\n\u001b[31m    set({\u001b[39m\n\u001b[31m      copilotLoading: true,\u001b[39m\n\u001b[31m      relatedPapersLoading: true,\u001b[39m\n\u001b[31m      relatedPapers: [],\u001b[39m\n\u001b[31m      relatedPapersSource: null,\u001b[39m\n\u001b[31m    });·\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const result = await fetchRelatedPapersForArticle(articleId);·\u001b[39m\n\u001b[31m      set((s) => ({\u001b[39m\n\u001b[31m        relatedPapers: result.papers,\u001b[39m\n\u001b[31m        relatedPapersSource: result.source,\u001b[39m\n\u001b[31m        relatedPapersLoading: false,\u001b[39m\n\u001b[31m        copilotLoading: false,\u001b[39m\n\u001b[31m        copilotMessages: [\u001b[39m\n\u001b[31m          ...s.copilotMessages,\u001b[39m\n\u001b[31m          formatRelatedPapersSummary(result),\u001b[39m\n\u001b[31m        ],\u001b[39m\n\u001b[31m      }));\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      set({\u001b[39m\n\u001b[31m        copilotLoading: false,\u001b[39m\n\u001b[31m        relatedPapersLoading: false,\u001b[39m\n\u001b[31m        relatedPapersSource: null,\u001b[39m\n\u001b[31m      });\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  },·\u001b[39m\n\u001b[31m  clearCopilot: () => {\u001b[39m\n\u001b[31m    set({\u001b[39m\n\u001b[31m      copilotOpen: false,\u001b[39m\n\u001b[31m      copilotSourceTier: null,\u001b[39m\n\u001b[31m      copilotSourceLabel: null,\u001b[39m\n\u001b[31m      copilotMessages: [],\u001b[39m\n\u001b[31m      copilotLoading: false,\u001b[39m\n\u001b[31m      copilotSuggestions: [],\u001b[39m\n\u001b[31m      relatedPapers: [],\u001b[39m\n\u001b[31m      relatedPapersLoading: false,\u001b[39m\n\u001b[31m      relatedPapersSource: null,\u001b[39m\n\u001b[31m    });\u001b[39m\n\u001b[31m  },\u001b[39m\n\u001b[31m}));\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/feeds.ts:30\n\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n> 30 |   expect(readFile(rootDir, relativePath)).toMatch(pattern);\n     |                                           ^\n  31 | }\n  32 |\n  33 | function fileExists(rootDir: string, relativePath: string): boolean {\n    at expectSourceMatches (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:30:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:189:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-010.spec.ts:418:27",
+      "duration_ms": 1733
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-008",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-008.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1713
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-009",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-009.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1630
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-010",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-010.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1651
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-011",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-011.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1621
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-012",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-012.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1642
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-013",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-013.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1625
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-014",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-014.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1639
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-015",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-015.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1673
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-016",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-016.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1621
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-017",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-017.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1614
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-018",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-018.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1635
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-019",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-019.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled feeds checkpoint: cp-019 Unread text singular form: \"1 unread article\" (no trailing \"s\" when `totalUnread === 1`)\n\n  1032 |\n  1033 |     if (!handled) {\n> 1034 |       throw new Error('Unhandled feeds checkpoint: cp-019 Unread text singular form: \"1 unread article\" (no trailing \"s\" when `totalUnread === 1`)');\n       |             ^\n  1035 |     }\n  1036 |\n  1037 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-010.spec.ts:1034:13",
+      "duration_ms": 1669
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-020",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-020.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1658
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-021",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-021.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled feeds checkpoint: cp-021 Export button label text: \"Export\" (visible inline text, not tooltip-only)\n\n  1132 |\n  1133 |     if (!handled) {\n> 1134 |       throw new Error('Unhandled feeds checkpoint: cp-021 Export button label text: \"Export\" (visible inline text, not tooltip-only)');\n       |             ^\n  1135 |     }\n  1136 |\n  1137 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-010.spec.ts:1134:13",
+      "duration_ms": 1698
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-022",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-022.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1827
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-023",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-023.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled feeds checkpoint: cp-023 Import button label text: \"Import\" (visible inline text, not tooltip-only)\n\n  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled feeds checkpoint: cp-023 Import button label text: \"Import\" (visible inline text, not tooltip-only)');\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-010.spec.ts:1234:13",
+      "duration_ms": 1695
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-024",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-024.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1738
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-025",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "FAIL",
+    "proof": {
+      "playwright_status": "failed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-025.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": "Error: Unhandled feeds checkpoint: cp-025 Mark all read label text: \"Mark all read\" (visible inline)\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled feeds checkpoint: cp-025 Mark all read label text: \"Mark all read\" (visible inline)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-010.spec.ts:1334:13",
+      "duration_ms": 1662
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-026",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-026.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1680
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-027",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-027.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1649
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-028",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-028.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1666
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-029",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-029.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1666
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-030",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-030.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1636
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-031",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-031.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1627
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-032",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-032.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1656
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-033",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-033.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1592
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  },
+  {
+    "checkpoint_id": "cp-034",
+    "spec_id": "spec-010",
+    "module": "feeds",
+    "verdict": "PASS",
+    "proof": {
+      "playwright_status": "passed",
+      "playwright_exit_code": 1,
+      "screenshot_exists": true,
+      "screenshot_path": "qa/artifacts/feeds/spec-010/cp-034.png",
+      "trace_exists": false,
+      "trace_path": "",
+      "error_message": null,
+      "duration_ms": 1645
+    },
+    "timestamp": "2026-03-14T14:45:25.446Z"
+  }
+]

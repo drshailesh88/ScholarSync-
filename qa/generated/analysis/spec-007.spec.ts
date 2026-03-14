@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-007
  * Source: e2e/specs/analysis/spec-007.md
- * Generated: 2026-03-14T10:15:28.932Z
+ * Generated: 2026-03-14T12:57:38.017Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "Results write-good issue cards show uppercase type labels");
+      throw new Error('Unhandled analysis checkpoint: cp-000 Results write-good issue cards show uppercase type labels');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "Results write-good issue cards display the issue reason text only");
+      throw new Error('Unhandled analysis checkpoint: cp-001 Results write-good issue cards display the issue reason text only');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "Plagiarism Indicators section renders only when `result.plagiarismIndicators.length > 0`");
+      throw new Error('Unhandled analysis checkpoint: cp-002 Plagiarism Indicators section renders only when `result.plagiarismIndicators.length > 0`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "High-severity plagiarism cards use red text/background styling");
+      throw new Error('Unhandled analysis checkpoint: cp-003 High-severity plagiarism cards use red text/background styling');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "Medium-severity plagiarism cards use yellow text/background styling");
+      throw new Error('Unhandled analysis checkpoint: cp-004 Medium-severity plagiarism cards use yellow text/background styling');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "Low-severity plagiarism cards use muted text on `bg-surface-raised`");
+      throw new Error('Unhandled analysis checkpoint: cp-005 Low-severity plagiarism cards use muted text on `bg-surface-raised`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Plagiarism cards display uppercase `{SEVERITY} Risk` labels, an italic excerpt, and a concern line");
+      throw new Error('Unhandled analysis checkpoint: cp-006 Plagiarism cards display uppercase `{SEVERITY} Risk` labels, an italic excerpt, and a concern line');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "Detailed Metrics tab renders `Readability`, `Writing Quality`, and `AI Detection` sections every time metrics view is active");
+      throw new Error('Unhandled analysis checkpoint: cp-007 Detailed Metrics tab renders `Readability`, `Writing Quality`, and `AI Detection` sections every time metrics view is active');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-008 ' + "Readability section always shows `Readability Grade`");
+      throw new Error('Unhandled analysis checkpoint: cp-008 Readability section always shows `Readability Grade`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-009 ' + "Results readability section adds `Flesch-Kincaid Grade`, `Gunning Fog Index`, and `Flesch Reading Ease` only when `clientMetrics` exists");
+      throw new Error('Unhandled analysis checkpoint: cp-009 Results readability section adds `Flesch-Kincaid Grade`, `Gunning Fog Index`, and `Flesch Reading Ease` only when `clientMetrics` exists');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-010 ' + "Results `Avg Sentence Length` row comes from `result.writingQuality.averageSentenceLength`");
+      throw new Error('Unhandled analysis checkpoint: cp-010 Results `Avg Sentence Length` row comes from `result.writingQuality.averageSentenceLength`');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-011 ' + "Writing Quality `Passive Voice` falls back to `result.writingQuality.passiveVoiceCount` when `clientMetrics` is unavailable");
+      throw new Error('Unhandled analysis checkpoint: cp-011 Writing Quality `Passive Voice` falls back to `result.writingQuality.passiveVoiceCount` when `clientMetrics` is unavailable');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-012 ' + "Writing Quality `Weasel Words`, `Adverbs`, and `Complex Sentences` rows render only when `clientMetrics` exists");
+      throw new Error('Unhandled analysis checkpoint: cp-012 Writing Quality `Weasel Words`, `Adverbs`, and `Complex Sentences` rows render only when `clientMetrics` exists');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-013 ' + "AI Detection section renders `Human Score`, `AI Score`, and `Overall Risk` as `ToneBadge` rows");
+      throw new Error('Unhandled analysis checkpoint: cp-013 AI Detection section renders `Human Score`, `AI Score`, and `Overall Risk` as `ToneBadge` rows');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-014 ' + "Human Score uses emerald for >= 70, yellow for 40-69, and red below 40");
+      throw new Error('Unhandled analysis checkpoint: cp-014 Human Score uses emerald for >= 70, yellow for 40-69, and red below 40');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-015 ' + "AI Score uses emerald for <= 30, yellow for 31-60, and red above 60");
+      throw new Error('Unhandled analysis checkpoint: cp-015 AI Score uses emerald for <= 30, yellow for 31-60, and red above 60');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-016 ' + "Overall Risk uses `low -> emerald`, `medium -> yellow`, and `high -> red`");
+      throw new Error('Unhandled analysis checkpoint: cp-016 Overall Risk uses `low -> emerald`, `medium -> yellow`, and `high -> red`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-017 ' + "Paragraph Breakdown section renders only when `result.paragraphAnalysis.length > 0`");
+      throw new Error('Unhandled analysis checkpoint: cp-017 Paragraph Breakdown section renders only when `result.paragraphAnalysis.length > 0`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-018 ' + "Paragraph Breakdown rows display `Paragraph {n}` on the left and `{humanProbability}% human` on the right");
+      throw new Error('Unhandled analysis checkpoint: cp-018 Paragraph Breakdown rows display `Paragraph {n}` on the left and `{humanProbability}% human` on the right');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-019 ' + "`MetricBar` caps bar fill width at 100% with `Math.min((value / max) * 100, 100)`");
+      throw new Error('Unhandled analysis checkpoint: cp-019 `MetricBar` caps bar fill width at 100% with `Math.min((value / max) * 100, 100)`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-020 ' + "`MetricBar` appends suffix text such as ` words`, ` instances`, or ` sentences` in the value label when provided");
+      throw new Error('Unhandled analysis checkpoint: cp-020 `MetricBar` appends suffix text such as ` words`, ` instances`, or ` sentences` in the value label when provided');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-021 ' + "`IssueBadge` color map is `yellow`, `orange`, `blue`, and `red`");
+      throw new Error('Unhandled analysis checkpoint: cp-021 `IssueBadge` color map is `yellow`, `orange`, `blue`, and `red`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-022 ' + "`CircularGauge` color thresholds are green >= 80, yellow >= 60, orange >= 40, and red below 40");
+      throw new Error('Unhandled analysis checkpoint: cp-022 `CircularGauge` color thresholds are green >= 80, yellow >= 60, orange >= 40, and red below 40');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-023 ' + "Results gauge readability label uses `Excellent`, `Good`, `Needs Improvement`, and `Poor`");
+      throw new Error('Unhandled analysis checkpoint: cp-023 Results gauge readability label uses `Excellent`, `Good`, `Needs Improvement`, and `Poor`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-024 ' + "Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels");
+      throw new Error('Unhandled analysis checkpoint: cp-024 Instant gauge readability label uses the `analyzeWriting()` labels, not the results-gauge labels');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-025 ' + "When `stats.avgSentenceLength > 28`, the API returns the suggestion: \"Your average sentence length is high. Consider breaking long sentences for readability.\" (~line 129)");
+      throw new Error('Unhandled analysis checkpoint: cp-025 When `stats.avgSentenceLength > 28`, the API returns the suggestion: "Your average sentence length is high. Consider breaking long sentences for readability." (~line 129)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-026 ' + "When `stats.sentenceLengthStdDev < 3`, the API returns: \"Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure.\" (~line 133)");
+      throw new Error('Unhandled analysis checkpoint: cp-026 When `stats.sentenceLengthStdDev < 3`, the API returns: "Your sentence lengths are very uniform — this is a common AI writing pattern. Vary your sentence structure." (~line 133)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-027 ' + "When `stats.passiveVoicePercent > 30`, the API returns: \"{N}% of sentences use passive voice. Consider using more active voice.\" where N is `Math.round(passiveVoicePercent)` (~line 139)");
+      throw new Error('Unhandled analysis checkpoint: cp-027 When `stats.passiveVoicePercent > 30`, the API returns: "{N}% of sentences use passive voice. Consider using more active voice." where N is `Math.round(passiveVoicePercent)` (~line 139)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-028 ' + "When `stats.typeTokenRatio < 0.35` and `> 0`, the API returns: \"Vocabulary diversity is low. Use more varied word choices to strengthen your writing.\" (~line 144)");
+      throw new Error('Unhandled analysis checkpoint: cp-028 When `stats.typeTokenRatio < 0.35` and `> 0`, the API returns: "Vocabulary diversity is low. Use more varied word choices to strengthen your writing." (~line 144)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-029 ' + "When `stats.hedgingPhraseCount > 5`, the API returns: \"Found {N} hedging phrases (e.g. \\\"It is important to note\\\"). These are common in AI-generated text — consider being more direct.\" (~line 149)");
+      throw new Error('Unhandled analysis checkpoint: cp-029 When `stats.hedgingPhraseCount > 5`, the API returns: "Found {N} hedging phrases (e.g. \"It is important to note\"). These are common in AI-generated text — consider being more direct." (~line 149)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-030 ' + "When `stats.readabilityGrade > 16`, the API returns: \"Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility.\" (~line 154)");
+      throw new Error('Unhandled analysis checkpoint: cp-030 When `stats.readabilityGrade > 16`, the API returns: "Readability grade is above 16 (postgraduate level). Consider simplifying for broader accessibility." (~line 154)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-031 ' + "When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the \"No issues detected\" message (~line 124-159)");
+      throw new Error('Unhandled analysis checkpoint: cp-031 When none of the above conditions fire, the suggestions array is empty and the Issues tab shows the "No issues detected" message (~line 124-159)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-032 ' + "401 response body is `{ error: \"Not authenticated\" }` (~line 47)");
+      throw new Error('Unhandled analysis checkpoint: cp-032 401 response body is `{ error: "Not authenticated" }` (~line 47)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-033 ' + "400 response body is `{ error: \"Invalid request\", details: <fieldErrors> }` where details come from Zod validation (~line 72)");
+      throw new Error('Unhandled analysis checkpoint: cp-033 400 response body is `{ error: "Invalid request", details: <fieldErrors> }` where details come from Zod validation (~line 72)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('analysis / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-034 ' + "503 when AI is not configured returns `{ error: \"AI service is not configured.\" }` (~line 62)");
+      throw new Error('Unhandled analysis checkpoint: cp-034 503 when AI is not configured returns `{ error: "AI service is not configured." }` (~line 62)');
     }
 
 

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-011
  * Source: e2e/specs/deep-research/spec-011.md
- * Generated: 2026-03-14T10:16:12.431Z
+ * Generated: 2026-03-14T14:24:30.882Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "Open-access tooltip text is exactly `OA`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-000 Open-access tooltip text is exactly `OA`.');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "`CitationTooltip` installs a `mousedown` outside-click listener and removes it in cleanup.");
+      throw new Error('Unhandled deep-research checkpoint: cp-001 `CitationTooltip` installs a `mousedown` outside-click listener and removes it in cleanup.');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "`ParsedCitationText` maps citation numbers to `sources[part.num - 1]`, so out-of-range citation numbers still render markers but have no source-backed tooltip data.");
+      throw new Error('Unhandled deep-research checkpoint: cp-002 `ParsedCitationText` maps citation numbers to `sources[part.num - 1]`, so out-of-range citation numbers still render markers but have no source-backed tooltip data.');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "The citations-panel desktop header is exactly `Citations ({sources.length})`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-003 The citations-panel desktop header is exactly `Citations ({sources.length})`.');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "The citations-panel mobile header is exactly `Citations ({sources.length})`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-004 The citations-panel mobile header is exactly `Citations ({sources.length})`.');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "Citations-panel entries are buttons, not direct links.");
+      throw new Error('Unhandled deep-research checkpoint: cp-005 Citations-panel entries are buttons, not direct links.');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "Citations-panel entries show title, authors, journal/year, and an evidence label; they do not render DOI, PubMed, PDF, or OA links inline.");
+      throw new Error('Unhandled deep-research checkpoint: cp-006 Citations-panel entries show title, authors, journal/year, and an evidence label; they do not render DOI, PubMed, PDF, or OA links inline.');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "Citations-panel author text uses the first 2 authors plus `et al.` when there are more than 2 authors.");
+      throw new Error('Unhandled deep-research checkpoint: cp-007 Citations-panel author text uses the first 2 authors plus `et al.` when there are more than 2 authors.');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "Mobile citations use a bottom sheet and close after a citation is clicked because the mobile handler calls both `onClickCitation(num)` and `onClose()`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-008 Mobile citations use a bottom sheet and close after a citation is clicked because the mobile handler calls both `onClickCitation(num)` and `onClose()`.');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "`ExportButtons` initializes `copied = false`, `studioLoading = false`, `studioError = null`, `pdfLoading = false`, and `pdfError = null`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-009 `ExportButtons` initializes `copied = false`, `studioLoading = false`, `studioError = null`, `pdfLoading = false`, and `pdfError = null`.');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "Markdown export downloads `{topicSanitized}_report.md`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-010 Markdown export downloads `{topicSanitized}_report.md`.');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "Topic sanitization for all client-side downloads replaces non-alphanumeric characters with `_` and truncates the topic slug to 50 characters.");
+      throw new Error('Unhandled deep-research checkpoint: cp-011 Topic sanitization for all client-side downloads replaces non-alphanumeric characters with `_` and truncates the topic slug to 50 characters.');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "PDF export posts `POST /api/export/pdf` with `{ title: topic, content: markdownToSimpleHTML(markdownReport), citations }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-012 PDF export posts `POST /api/export/pdf` with `{ title: topic, content: markdownToSimpleHTML(markdownReport), citations }`.');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "The client only includes the `citations` field in the PDF request when `sources.length > 0`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-013 The client only includes the `citations` field in the PDF request when `sources.length > 0`.');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "`markdownToSimpleHTML()` preserves block structure only; it skips horizontal rules, turns blockquotes into plain paragraphs, and flattens tables to pipe-separated text lines.");
+      throw new Error('Unhandled deep-research checkpoint: cp-014 `markdownToSimpleHTML()` preserves block structure only; it skips horizontal rules, turns blockquotes into plain paragraphs, and flattens tables to pipe-separated text lines.');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "PDF export disables only the PDF button while `pdfLoading` is true.");
+      throw new Error('Unhandled deep-research checkpoint: cp-015 PDF export disables only the PDF button while `pdfLoading` is true.');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "PDF export success downloads `{topicSanitized}_report.pdf`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-016 PDF export success downloads `{topicSanitized}_report.pdf`.');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "PDF export failure sets `pdfError` and clears it after exactly 5000 ms.");
+      throw new Error('Unhandled deep-research checkpoint: cp-017 PDF export failure sets `pdfError` and clears it after exactly 5000 ms.');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "The PDF button title is either the current `pdfError` string or `Download as PDF`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-018 The PDF button title is either the current `pdfError` string or `Download as PDF`.');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "The PDF button label becomes `...` during loading and `Failed` during error state.");
+      throw new Error('Unhandled deep-research checkpoint: cp-019 The PDF button label becomes `...` during loading and `Failed` during error state.');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "Copy-to-clipboard prefers rich HTML plus plain text via `ClipboardItem` when available.");
+      throw new Error('Unhandled deep-research checkpoint: cp-020 Copy-to-clipboard prefers rich HTML plus plain text via `ClipboardItem` when available.');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "The first clipboard fallback is `navigator.clipboard.writeText(markdownReport)`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-021 The first clipboard fallback is `navigator.clipboard.writeText(markdownReport)`.');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "The last clipboard fallback creates a `<textarea>`, selects it, and calls `document.execCommand(\"copy\")`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-022 The last clipboard fallback creates a `<textarea>`, selects it, and calls `document.execCommand("copy")`.');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "Copy success sets `copied = true` and clears it after exactly 2000 ms.");
+      throw new Error('Unhandled deep-research checkpoint: cp-023 Copy success sets `copied = true` and clears it after exactly 2000 ms.');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "`markdownToRichHTML()` appends a generated `References` section from `sources`, even if the incoming markdown already contains one.");
+      throw new Error('Unhandled deep-research checkpoint: cp-024 `markdownToRichHTML()` appends a generated `References` section from `sources`, even if the incoming markdown already contains one.');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "`Open in Studio` posts `{ topic, mode, markdownReport, sources, keyFindings, gaps }` to `POST /api/deep-research/open-in-studio`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-025 `Open in Studio` posts `{ topic, mode, markdownReport, sources, keyFindings, gaps }` to `POST /api/deep-research/open-in-studio`.');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "There is no `sessionStorage` handoff key or client-side payload cache in the current `Open in Studio` flow.");
+      throw new Error('Unhandled deep-research checkpoint: cp-026 There is no `sessionStorage` handoff key or client-side payload cache in the current `Open in Studio` flow.');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "Successful `Open in Studio` expects `{ redirectUrl }` from the API and calls `router.push(redirectUrl)`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-027 Successful `Open in Studio` expects `{ redirectUrl }` from the API and calls `router.push(redirectUrl)`.');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "Successful `Open in Studio` does not reset `studioLoading` because navigation is expected to replace the page.");
+      throw new Error('Unhandled deep-research checkpoint: cp-028 Successful `Open in Studio` does not reset `studioLoading` because navigation is expected to replace the page.');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "Failed `Open in Studio` sets `studioError`, sets `studioLoading = false`, and clears `studioError` after exactly 5000 ms.");
+      throw new Error('Unhandled deep-research checkpoint: cp-029 Failed `Open in Studio` sets `studioError`, sets `studioLoading = false`, and clears `studioError` after exactly 5000 ms.');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "The Open in Studio button title is either the current `studioError` string or `Open in Studio editor`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-030 The Open in Studio button title is either the current `studioError` string or `Open in Studio editor`.');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "The Open in Studio button label becomes `Opening...` during loading and `Failed` during error state.");
+      throw new Error('Unhandled deep-research checkpoint: cp-031 The Open in Studio button label becomes `Opening...` during loading and `Failed` during error state.');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "BibTeX and RIS buttons are completely hidden when `sources.length === 0`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-032 BibTeX and RIS buttons are completely hidden when `sources.length === 0`.');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "BibTeX export downloads `{topicSanitized}_references.bib`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-033 BibTeX export downloads `{topicSanitized}_references.bib`.');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "RIS export downloads `{topicSanitized}_references.ris`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-034 RIS export downloads `{topicSanitized}_references.ris`.');
     }
 
 

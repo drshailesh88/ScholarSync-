@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-006
  * Source: e2e/specs/analysis/spec-006.md
- * Generated: 2026-03-14T10:15:25.724Z
+ * Generated: 2026-03-14T12:56:22.690Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "Instant gauge size is `110`");
+      throw new Error('Unhandled analysis checkpoint: cp-000 Instant gauge size is `110`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "Instant gauge center displays the numeric `fleschReadingEase` score");
+      throw new Error('Unhandled analysis checkpoint: cp-001 Instant gauge center displays the numeric `fleschReadingEase` score');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "Instant gauge label comes from `clientMetrics.readabilityLabel`");
+      throw new Error('Unhandled analysis checkpoint: cp-002 Instant gauge label comes from `clientMetrics.readabilityLabel`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "Instant readability labels in the current implementation are `Easy`, `Standard`, `Difficult`, and `Very Difficult`");
+      throw new Error('Unhandled analysis checkpoint: cp-003 Instant readability labels in the current implementation are `Easy`, `Standard`, `Difficult`, and `Very Difficult`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "Counts grid renders `Words`, `Sentences`, and `Paragraphs` summary cards");
+      throw new Error('Unhandled analysis checkpoint: cp-004 Counts grid renders `Words`, `Sentences`, and `Paragraphs` summary cards');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "Readability section renders four `MetricBar` rows");
+      throw new Error('Unhandled analysis checkpoint: cp-005 Readability section renders four `MetricBar` rows');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Writing Quality section renders four `IssueBadge` tiles");
+      throw new Error('Unhandled analysis checkpoint: cp-006 Writing Quality section renders four `IssueBadge` tiles');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "Instant issues section header shows `Issues ({clientIssues.length})`");
+      throw new Error('Unhandled analysis checkpoint: cp-007 Instant issues section header shows `Issues ({clientIssues.length})`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-008 ' + "Instant issues list renders at most 10 items before collapsing to a `+N more issues` footer");
+      throw new Error('Unhandled analysis checkpoint: cp-008 Instant issues list renders at most 10 items before collapsing to a `+N more issues` footer');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-009 ' + "Warning-severity instant issues use yellow styling");
+      throw new Error('Unhandled analysis checkpoint: cp-009 Warning-severity instant issues use yellow styling');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-010 ' + "Non-warning instant issues use blue styling");
+      throw new Error('Unhandled analysis checkpoint: cp-010 Non-warning instant issues use blue styling');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-011 ' + "Successful analysis hides the source toggle and displays the three-color legend");
+      throw new Error('Unhandled analysis checkpoint: cp-011 Successful analysis hides the source toggle and displays the three-color legend');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-012 ' + "Results left panel wraps the analyzed text in a `glass-panel rounded-2xl p-8` container");
+      throw new Error('Unhandled analysis checkpoint: cp-012 Results left panel wraps the analyzed text in a `glass-panel rounded-2xl p-8` container');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-013 ' + "Results left panel header contains the `Analyze New Text` reset button on the left");
+      throw new Error('Unhandled analysis checkpoint: cp-013 Results left panel header contains the `Analyze New Text` reset button on the left');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-014 ' + "Results left panel header shows `activeDoc.documentTitle` on the right when a document-backed analysis is open");
+      throw new Error('Unhandled analysis checkpoint: cp-014 Results left panel header shows `activeDoc.documentTitle` on the right when a document-backed analysis is open');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-015 ' + "Clicking `Analyze New Text` sets `result` back to `null`");
+      throw new Error('Unhandled analysis checkpoint: cp-015 Clicking `Analyze New Text` sets `result` back to `null`');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-016 ' + "Clicking `Analyze New Text` clears `paragraphs`");
+      throw new Error('Unhandled analysis checkpoint: cp-016 Clicking `Analyze New Text` clears `paragraphs`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-017 ' + "Clicking `Analyze New Text` resets `activeTab` back to `issues`");
+      throw new Error('Unhandled analysis checkpoint: cp-017 Clicking `Analyze New Text` resets `activeTab` back to `issues`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-018 ' + "Results right panel width is `w-96`");
+      throw new Error('Unhandled analysis checkpoint: cp-018 Results right panel width is `w-96`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-019 ' + "Results right panel gauge size is `120`");
+      throw new Error('Unhandled analysis checkpoint: cp-019 Results right panel gauge size is `120`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-020 ' + "Results right panel keeps the Words, Sentences, and Paragraphs summary cards above the tabs when `clientMetrics` exists");
+      throw new Error('Unhandled analysis checkpoint: cp-020 Results right panel keeps the Words, Sentences, and Paragraphs summary cards above the tabs when `clientMetrics` exists');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-021 ' + "Each paragraph is rendered from the precomputed `paragraphs` array, not by splitting the server response");
+      throw new Error('Unhandled analysis checkpoint: cp-021 Each paragraph is rendered from the precomputed `paragraphs` array, not by splitting the server response');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-022 ' + "Paragraphs with no matching `paragraphAnalysis` entry default to `100` human probability");
+      throw new Error('Unhandled analysis checkpoint: cp-022 Paragraphs with no matching `paragraphAnalysis` entry default to `100` human probability');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-023 ' + "Paragraphs under 40% human use red background and left border styling");
+      throw new Error('Unhandled analysis checkpoint: cp-023 Paragraphs under 40% human use red background and left border styling');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-024 ' + "Paragraphs between 40% and 70% human use yellow background and left border styling");
+      throw new Error('Unhandled analysis checkpoint: cp-024 Paragraphs between 40% and 70% human use yellow background and left border styling');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-025 ' + "Paragraphs above 70% human use emerald background and left border styling");
+      throw new Error('Unhandled analysis checkpoint: cp-025 Paragraphs above 70% human use emerald background and left border styling');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-026 ' + "Paragraph flags render as `Flags: {comma-separated flags}` below the paragraph when flags exist");
+      throw new Error('Unhandled analysis checkpoint: cp-026 Paragraph flags render as `Flags: {comma-separated flags}` below the paragraph when flags exist');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-027 ' + "Paragraph flag text is omitted entirely when no flags are present");
+      throw new Error('Unhandled analysis checkpoint: cp-027 Paragraph flag text is omitted entirely when no flags are present');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-028 ' + "Results tab list is driven by `analysisTabs`");
+      throw new Error('Unhandled analysis checkpoint: cp-028 Results tab list is driven by `analysisTabs`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-029 ' + "Issues-tab count badge uses `result.writingQuality.suggestions.length` once results exist");
+      throw new Error('Unhandled analysis checkpoint: cp-029 Issues-tab count badge uses `result.writingQuality.suggestions.length` once results exist');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-030 ' + "When `writingQuality.suggestions.length === 0`, the issues tab shows `No issues detected. Your writing looks great!`");
+      throw new Error('Unhandled analysis checkpoint: cp-030 When `writingQuality.suggestions.length === 0`, the issues tab shows `No issues detected. Your writing looks great!`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-031 ' + "AI suggestion cards use `bg-purple-500/10`");
+      throw new Error('Unhandled analysis checkpoint: cp-031 AI suggestion cards use `bg-purple-500/10`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-032 ' + "AI suggestion cards include a purple `Sparkle` icon and a `Suggestion {n}` label");
+      throw new Error('Unhandled analysis checkpoint: cp-032 AI suggestion cards include a purple `Sparkle` icon and a `Suggestion {n}` label');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-033 ' + "Local write-good issues render in a dedicated `Writing Issues (write-good)` section below AI suggestions");
+      throw new Error('Unhandled analysis checkpoint: cp-033 Local write-good issues render in a dedicated `Writing Issues (write-good)` section below AI suggestions');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('analysis / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-034 ' + "Results write-good issues render at most 15 cards before a `+N more issues` footer");
+      throw new Error('Unhandled analysis checkpoint: cp-034 Results write-good issues render at most 15 cards before a `+N more issues` footer');
     }
 
 

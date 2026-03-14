@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-006
  * Source: e2e/specs/feeds/spec-006.md
- * Generated: 2026-03-14T10:16:43.857Z
+ * Generated: 2026-03-14T14:39:18.650Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "File input accepts `.opml` and `.xml` files");
+      throw new Error('Unhandled feeds checkpoint: cp-000 File input accepts `.opml` and `.xml` files');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "`POST /api/feeds/opml/import` with XML content");
+      throw new Error('Unhandled feeds checkpoint: cp-001 `POST /api/feeds/opml/import` with XML content');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Response reports: total feeds, imported, skipped, failed");
+      throw new Error('Unhandled feeds checkpoint: cp-002 Response reports: total feeds, imported, skipped, failed');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Error details for failed imports");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Error details for failed imports');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Subscriptions refresh after import");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Subscriptions refresh after import');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "`subscriptions` — array of user's feed subscriptions");
+      throw new Error('Unhandled feeds checkpoint: cp-005 `subscriptions` — array of user\'s feed subscriptions');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "`articles` — loaded articles with read/star/save status");
+      throw new Error('Unhandled feeds checkpoint: cp-006 `articles` — loaded articles with read/star/save status');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "`selectedFeedId` — currently selected feed (null = all)");
+      throw new Error('Unhandled feeds checkpoint: cp-007 `selectedFeedId` — currently selected feed (null = all)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "`selectedFolder` — currently selected folder");
+      throw new Error('Unhandled feeds checkpoint: cp-008 `selectedFolder` — currently selected folder');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "`viewFilter` — \"all\" | \"unread\" | \"starred\" (default: \"unread\")");
+      throw new Error('Unhandled feeds checkpoint: cp-009 `viewFilter` — "all" | "unread" | "starred" (default: "unread")');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "`sortBy` — \"newest\" | \"oldest\" | \"relevance\"");
+      throw new Error('Unhandled feeds checkpoint: cp-010 `sortBy` — "newest" | "oldest" | "relevance"');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "`layout` — \"list\" | \"card\" | \"magazine\"");
+      throw new Error('Unhandled feeds checkpoint: cp-011 `layout` — "list" | "card" | "magazine"');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "`selectedArticleId` — article in reading pane");
+      throw new Error('Unhandled feeds checkpoint: cp-012 `selectedArticleId` — article in reading pane');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "`copilotOpen` — AI panel visibility");
+      throw new Error('Unhandled feeds checkpoint: cp-013 `copilotOpen` — AI panel visibility');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "`copilotMessages` — chat history");
+      throw new Error('Unhandled feeds checkpoint: cp-014 `copilotMessages` — chat history');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "`copilotSourceTier` — full_paper | abstract_only | title_only");
+      throw new Error('Unhandled feeds checkpoint: cp-015 `copilotSourceTier` — full_paper | abstract_only | title_only');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "`totalUnread` — aggregate unread count");
+      throw new Error('Unhandled feeds checkpoint: cp-016 `totalUnread` — aggregate unread count');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "`hasMore` — pagination flag");
+      throw new Error('Unhandled feeds checkpoint: cp-017 `hasMore` — pagination flag');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "`page` — current pagination page");
+      throw new Error('Unhandled feeds checkpoint: cp-018 `page` — current pagination page');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "`loadSubscriptions()` / `subscribe()` / `unsubscribe()`");
+      throw new Error('Unhandled feeds checkpoint: cp-019 `loadSubscriptions()` / `subscribe()` / `unsubscribe()`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "`loadArticles()` / `loadMore()`");
+      throw new Error('Unhandled feeds checkpoint: cp-020 `loadArticles()` / `loadMore()`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "`markRead()` / `markAllRead()` / `toggleStar()` / `saveToLibrary()`");
+      throw new Error('Unhandled feeds checkpoint: cp-021 `markRead()` / `markAllRead()` / `toggleStar()` / `saveToLibrary()`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "`setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`");
+      throw new Error('Unhandled feeds checkpoint: cp-022 `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "`openCopilot()` / `closeCopilot()` / `summarizeArticle()` / `sendCopilotMessage()`");
+      throw new Error('Unhandled feeds checkpoint: cp-023 `openCopilot()` / `closeCopilot()` / `summarizeArticle()` / `sendCopilotMessage()`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "`clearFilters()` / `clearSearch()` / `clearCopilot()`");
+      throw new Error('Unhandled feeds checkpoint: cp-024 `clearFilters()` / `clearSearch()` / `clearCopilot()`');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Feed store defaults to `viewFilter = \"unread\"`, `sortBy = \"newest\"`, `sortDir = \"desc\"`, and `layout = \"card\"`");
+      throw new Error('Unhandled feeds checkpoint: cp-025 Feed store defaults to `viewFilter = "unread"`, `sortBy = "newest"`, `sortDir = "desc"`, and `layout = "card"`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Feed store does not use zustand persist middleware; page state is refetched fresh after reload");
+      throw new Error('Unhandled feeds checkpoint: cp-026 Feed store does not use zustand persist middleware; page state is refetched fresh after reload');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Page mount triggers both `loadSubscriptions()` and `loadArticles()` in parallel");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Page mount triggers both `loadSubscriptions()` and `loadArticles()` in parallel');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen");
+      throw new Error('Unhandled feeds checkpoint: cp-028 Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Header unread helper text renders only when `totalUnread > 0`");
+      throw new Error('Unhandled feeds checkpoint: cp-029 Header unread helper text renders only when `totalUnread > 0`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "Export button fetches `/api/feeds/opml/export` and downloads `scholarsync-feeds.opml` only when the response is OK");
+      throw new Error('Unhandled feeds checkpoint: cp-030 Export button fetches `/api/feeds/opml/export` and downloads `scholarsync-feeds.opml` only when the response is OK');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "Export failures are silent in the current page UI");
+      throw new Error('Unhandled feeds checkpoint: cp-031 Export failures are silent in the current page UI');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Import control is a `<label>` wrapping a hidden file input with `accept=\".opml,.xml\"`");
+      throw new Error('Unhandled feeds checkpoint: cp-032 Import control is a `<label>` wrapping a hidden file input with `accept=".opml,.xml"`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Canceling the import file picker leaves the page unchanged");
+      throw new Error('Unhandled feeds checkpoint: cp-033 Canceling the import file picker leaves the page unchanged');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Import reads the selected file as text and posts it to `/api/feeds/opml/import` with `Content-Type: application/xml`");
+      throw new Error('Unhandled feeds checkpoint: cp-034 Import reads the selected file as text and posts it to `/api/feeds/opml/import` with `Content-Type: application/xml`');
     }
 
 

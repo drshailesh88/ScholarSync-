@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-009
  * Source: e2e/specs/feeds/spec-009.md
- * Generated: 2026-03-14T10:16:53.353Z
+ * Generated: 2026-03-14T14:42:58.947Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "Article Notes local textarea state resets when store notes for that article change");
+      throw new Error('Unhandled feeds checkpoint: cp-000 Article Notes local textarea state resets when store notes for that article change');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "Article Notes auto-save waits 1 second after the last keystroke before persisting");
+      throw new Error('Unhandled feeds checkpoint: cp-001 Article Notes auto-save waits 1 second after the last keystroke before persisting');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Blurring the notes field flushes any pending unsaved local changes immediately");
+      throw new Error('Unhandled feeds checkpoint: cp-002 Blurring the notes field flushes any pending unsaved local changes immediately');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Note saves optimistically update the store before the PUT request resolves");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Note saves optimistically update the store before the PUT request resolves');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Empty notes are stored as `null` to the API and removed from the local `articleNotes` map");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Empty notes are stored as `null` to the API and removed from the local `articleNotes` map');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Notes save failures are silent and rely on a future article reopen to refresh server state");
+      throw new Error('Unhandled feeds checkpoint: cp-005 Notes save failures are silent and rely on a future article reopen to refresh server state');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "`Saved` notes indicator is purely local UI state and appears for 2 seconds after each persist call");
+      throw new Error('Unhandled feeds checkpoint: cp-006 `Saved` notes indicator is purely local UI state and appears for 2 seconds after each persist call');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "Add Feed modal defaults to the `Add URL` tab each time the component mounts fresh");
+      throw new Error('Unhandled feeds checkpoint: cp-007 Add Feed modal defaults to the `Add URL` tab each time the component mounts fresh');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Add Feed modal `Add` button is disabled until `feedUrl.trim()` is non-empty");
+      throw new Error('Unhandled feeds checkpoint: cp-008 Add Feed modal `Add` button is disabled until `feedUrl.trim()` is non-empty');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Add Feed modal `Create Feed` button is disabled until `pubmedQuery.trim()` is non-empty");
+      throw new Error('Unhandled feeds checkpoint: cp-009 Add Feed modal `Create Feed` button is disabled until `pubmedQuery.trim()` is non-empty');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "Pressing Enter in the RSS URL input triggers `handleAddUrl()`");
+      throw new Error('Unhandled feeds checkpoint: cp-010 Pressing Enter in the RSS URL input triggers `handleAddUrl()`');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Pressing Enter in the PubMed query input triggers `handlePubMed()`");
+      throw new Error('Unhandled feeds checkpoint: cp-011 Pressing Enter in the PubMed query input triggers `handlePubMed()`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Successful Add URL and PubMed-subscription actions clear only the submitted field, then close the modal");
+      throw new Error('Unhandled feeds checkpoint: cp-012 Successful Add URL and PubMed-subscription actions clear only the submitted field, then close the modal');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "Add Feed modal error state is rendered as red helper text inside the modal, not a global banner");
+      throw new Error('Unhandled feeds checkpoint: cp-013 Add Feed modal error state is rendered as red helper text inside the modal, not a global banner');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "Copilot panel only renders when `copilotOpen` is true and a selected article still exists");
+      throw new Error('Unhandled feeds checkpoint: cp-014 Copilot panel only renders when `copilotOpen` is true and a selected article still exists');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "Copilot panel close button hides the panel but does not deselect the article");
+      throw new Error('Unhandled feeds checkpoint: cp-015 Copilot panel close button hides the panel but does not deselect the article');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Copilot empty state shows `Ask me about this paper` plus helper copy before any messages exist");
+      throw new Error('Unhandled feeds checkpoint: cp-016 Copilot empty state shows `Ask me about this paper` plus helper copy before any messages exist');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Copilot source badge appears only after summarize/chat populates `copilotSourceTier` and `copilotSourceLabel`");
+      throw new Error('Unhandled feeds checkpoint: cp-017 Copilot source badge appears only after summarize/chat populates `copilotSourceTier` and `copilotSourceLabel`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "`Summarize` checks `copilotSummaryCache` first and reuses cached summary text without hitting the API");
+      throw new Error('Unhandled feeds checkpoint: cp-018 `Summarize` checks `copilotSummaryCache` first and reuses cached summary text without hitting the API');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "Fresh summarize requests POST to `/api/feeds/copilot/summarize`");
+      throw new Error('Unhandled feeds checkpoint: cp-019 Fresh summarize requests POST to `/api/feeds/copilot/summarize`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "Successful summarize stores source tier, source label, suggestions, assistant summary message, and a per-article summary cache entry");
+      throw new Error('Unhandled feeds checkpoint: cp-020 Successful summarize stores source tier, source label, suggestions, assistant summary message, and a per-article summary cache entry');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "Suggested follow-up questions are automatically augmented to include `Find related papers` when no similar suggestion already exists");
+      throw new Error('Unhandled feeds checkpoint: cp-021 Suggested follow-up questions are automatically augmented to include `Find related papers` when no similar suggestion already exists');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Sending a question matching the related-papers intent triggers the related-papers endpoint before chat streaming");
+      throw new Error('Unhandled feeds checkpoint: cp-022 Sending a question matching the related-papers intent triggers the related-papers endpoint before chat streaming');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "Related-papers-intent matches set both `copilotLoading` and `relatedPapersLoading` true");
+      throw new Error('Unhandled feeds checkpoint: cp-023 Related-papers-intent matches set both `copilotLoading` and `relatedPapersLoading` true');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Successful related-paper intent handling appends an assistant summary message with embedded paper cards and skips the chat endpoint entirely");
+      throw new Error('Unhandled feeds checkpoint: cp-024 Successful related-paper intent handling appends an assistant summary message with embedded paper cards and skips the chat endpoint entirely');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Standard copilot chat posts to `/api/feeds/copilot/chat` with article metadata, prior user/assistant messages, and the new `question`");
+      throw new Error('Unhandled feeds checkpoint: cp-025 Standard copilot chat posts to `/api/feeds/copilot/chat` with article metadata, prior user/assistant messages, and the new `question`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Copilot chat appends an empty assistant message first and streams text chunks into it");
+      throw new Error('Unhandled feeds checkpoint: cp-026 Copilot chat appends an empty assistant message first and streams text chunks into it');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Copilot loading indicator uses the same three bouncing dots pattern as the main Studio chat");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Copilot loading indicator uses the same three bouncing dots pattern as the main Studio chat');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Copilot input placeholder reads `Ask about this paper...`");
+      throw new Error('Unhandled feeds checkpoint: cp-028 Copilot input placeholder reads `Ask about this paper...`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Copilot input and send button are disabled while `copilotLoading` is true");
+      throw new Error('Unhandled feeds checkpoint: cp-029 Copilot input and send button are disabled while `copilotLoading` is true');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "Changing the selected article clears copilot messages, suggestions, source badge, and related-paper state through `clearCopilot()`");
+      throw new Error('Unhandled feeds checkpoint: cp-030 Changing the selected article clears copilot messages, suggestions, source badge, and related-paper state through `clearCopilot()`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "`findRelatedPapers()` resets prior related papers before fetching a fresh related-paper result");
+      throw new Error('Unhandled feeds checkpoint: cp-031 `findRelatedPapers()` resets prior related papers before fetching a fresh related-paper result');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Failed related-paper lookups clear loading state but do not surface a user-facing error inside the copilot panel");
+      throw new Error('Unhandled feeds checkpoint: cp-032 Failed related-paper lookups clear loading state but do not surface a user-facing error inside the copilot panel');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Route-level `loading.tsx` renders header skeletons, a sidebar skeleton, and 6 article-card skeletons");
+      throw new Error('Unhandled feeds checkpoint: cp-033 Route-level `loading.tsx` renders header skeletons, a sidebar skeleton, and 6 article-card skeletons');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Route-level error boundary title reads `Journal Feed unavailable`");
+      throw new Error('Unhandled feeds checkpoint: cp-034 Route-level error boundary title reads `Journal Feed unavailable`');
     }
 
 

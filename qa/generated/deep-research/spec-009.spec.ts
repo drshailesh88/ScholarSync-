@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-009
  * Source: e2e/specs/deep-research/spec-009.md
- * Generated: 2026-03-14T10:16:06.231Z
+ * Generated: 2026-03-14T14:22:18.921Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "The shared SSE reader only processes lines that start with `data: `.");
+      throw new Error('Unhandled deep-research checkpoint: cp-000 The shared SSE reader only processes lines that start with `data: `.');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "The shared SSE reader ignores empty SSE payloads and the literal payload `[DONE]`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-001 The shared SSE reader ignores empty SSE payloads and the literal payload `[DONE]`.');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "The shared SSE reader recognizes `progress`, `perspectives`, `section`, `report`, and `error`; it has no `done` handler.");
+      throw new Error('Unhandled deep-research checkpoint: cp-002 The shared SSE reader recognizes `progress`, `perspectives`, `section`, `report`, and `error`; it has no `done` handler.');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "The shared SSE reader swallows JSON `SyntaxError`s and continues reading the stream.");
+      throw new Error('Unhandled deep-research checkpoint: cp-003 The shared SSE reader swallows JSON `SyntaxError`s and continues reading the stream.');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "The `handlers.onError` callback exists in the reader signature but is never invoked by the switch statement.");
+      throw new Error('Unhandled deep-research checkpoint: cp-004 The `handlers.onError` callback exists in the reader signature but is never invoked by the switch statement.');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "`executeResearch()` resets `error = null`, `report = null`, `streamingSections = []`, `seenStageIdsRef.current = []`, `currentStageIdRef.current = null`, `progressStages = buildStagesFromEvents([], null)`, `progressPercent = 0`, and `progressMessage = \"Starting research...\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-005 `executeResearch()` resets `error = null`, `report = null`, `streamingSections = []`, `seenStageIdsRef.current = []`, `currentStageIdRef.current = null`, `progressStages = buildStagesFromEvents([], null)`, `progressPercent = 0`, and `progressMessage = "Starting research..."`.');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "`executeResearch()` posts `POST /api/deep-research/execute` with JSON `{ topic: topic.trim(), mode, perspectives: confirmedPerspectives }`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-006 `executeResearch()` posts `POST /api/deep-research/execute` with JSON `{ topic: topic.trim(), mode, perspectives: confirmedPerspectives }`.');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "A non-OK execute response becomes `data.error` or `Research failed ({status})`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-007 A non-OK execute response becomes `data.error` or `Research failed ({status})`.');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "Execute-phase `onProgress` updates `progressMessage` on every server `progress` event.");
+      throw new Error('Unhandled deep-research checkpoint: cp-008 Execute-phase `onProgress` updates `progressMessage` on every server `progress` event.');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "Execute-phase `onProgress` updates `progressPercent` only when the incoming `progress` value is truthy, so `0` would never overwrite state.");
+      throw new Error('Unhandled deep-research checkpoint: cp-009 Execute-phase `onProgress` updates `progressPercent` only when the incoming `progress` value is truthy, so `0` would never overwrite state.');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "The current execute route never sends a numeric `progress` field, so `progressPercent` stays `0` through the running state and only jumps to `100` on the final `report` event.");
+      throw new Error('Unhandled deep-research checkpoint: cp-010 The current execute route never sends a numeric `progress` field, so `progressPercent` stays `0` through the running state and only jumps to `100` on the final `report` event.');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "Because the running-state progress bar only renders when `progress > 0`, the percentage bar never appears during actual execution.");
+      throw new Error('Unhandled deep-research checkpoint: cp-011 Because the running-state progress bar only renders when `progress > 0`, the percentage bar never appears during actual execution.');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "Stage completion is tracked by pushing the previously active stage into `seenStageIdsRef.current` when a new stage ID arrives.");
+      throw new Error('Unhandled deep-research checkpoint: cp-012 Stage completion is tracked by pushing the previously active stage into `seenStageIdsRef.current` when a new stage ID arrives.');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "The `report` SSE event sets `report`, sets `pageState = \"done\"`, sets `progressPercent = 100`, and marks the fixed nine stages completed.");
+      throw new Error('Unhandled deep-research checkpoint: cp-013 The `report` SSE event sets `report`, sets `pageState = "done"`, sets `progressPercent = 100`, and marks the fixed nine stages completed.');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "After the stream closes, the page still runs `setPageState(prev => prev === \"running\" ? \"done\" : prev)` as a fallback.");
+      throw new Error('Unhandled deep-research checkpoint: cp-014 After the stream closes, the page still runs `setPageState(prev => prev === "running" ? "done" : prev)` as a fallback.');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "The red header action during plan-preview and running is labeled exactly `Stop`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-015 The red header action during plan-preview and running is labeled exactly `Stop`.');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "`handleAbort()` aborts the current controller if present, clears `planPerspectives`, and sets `pageState = \"idle\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-016 `handleAbort()` aborts the current controller if present, clears `planPerspectives`, and sets `pageState = "idle"`.');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "`handleAbort()` does not clear `topic`, `mode`, `report`, `progressStages`, `progressPercent`, `progressMessage`, or `streamingSections`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-017 `handleAbort()` does not clear `topic`, `mode`, `report`, `progressStages`, `progressPercent`, `progressMessage`, or `streamingSections`.');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "An aborted plan or execute request returns the page to `idle` without entering the error view.");
+      throw new Error('Unhandled deep-research checkpoint: cp-018 An aborted plan or execute request returns the page to `idle` without entering the error view.');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "The running-state fallback line is exactly `Researching: {topic}`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-019 The running-state fallback line is exactly `Researching: {topic}`.');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "The running-state microscope icon uses `animate-pulse`, not a spinning rotation class.");
+      throw new Error('Unhandled deep-research checkpoint: cp-020 The running-state microscope icon uses `animate-pulse`, not a spinning rotation class.');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "`ProgressStepper` only renders the progress-bar block when `typeof progress === \"number\" && progress > 0`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-021 `ProgressStepper` only renders the progress-bar block when `typeof progress === "number" && progress > 0`.');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "The progress-bar label is exactly `Progress`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-022 The progress-bar label is exactly `Progress`.');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "The progress-bar percentage text is `Math.round(progress)%`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-023 The progress-bar percentage text is `Math.round(progress)%`.');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "The completed-stage icon is `CheckCircle2` with class `text-blue-400`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-024 The completed-stage icon is `CheckCircle2` with class `text-blue-400`.');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "The active-stage icon is `Loader2` with `animate-spin`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-025 The active-stage icon is `Loader2` with `animate-spin`.');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "The pending-stage icon is `Circle`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-026 The pending-stage icon is `Circle`.');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "`ProgressStage.status` includes an `error` variant, but `buildStagesFromEvents()` never returns `error`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-027 `ProgressStage.status` includes an `error` variant, but `buildStagesFromEvents()` never returns `error`.');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "`STAGE_LABELS` maps the visible labels exactly to `Searching papers...`, `Traversing citation graph...`, `Expanding search...`, `Reading full-text PDFs...`, `Extracting data from papers...`, `Analyzing perspectives...`, `Writing executive summary...`, `Generating tables...`, and `Self-critique and revision...`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-028 `STAGE_LABELS` maps the visible labels exactly to `Searching papers...`, `Traversing citation graph...`, `Expanding search...`, `Reading full-text PDFs...`, `Extracting data from papers...`, `Analyzing perspectives...`, `Writing executive summary...`, `Generating tables...`, and `Self-critique and revision...`.');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "The done-state metadata line renders `{report.mode} mode · {report.totalSources} sources analyzed`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-029 The done-state metadata line renders `{report.mode} mode · {report.totalSources} sources analyzed`.');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "The page chooses `ResearchDocument` only when `report` has a truthy `markdownReport`; otherwise it renders `LegacyReportView`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-030 The page chooses `ResearchDocument` only when `report` has a truthy `markdownReport`; otherwise it renders `LegacyReportView`.');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "The done-state reset button label is exactly `Start New Research`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-031 The done-state reset button label is exactly `Start New Research`.');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "`Start New Research` sets `pageState = \"idle\"`, `report = null`, `streamingSections = []`, `progressStages = []`, `seenStageIdsRef.current = []`, `currentStageIdRef.current = null`, and `topic = \"\"`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-032 `Start New Research` sets `pageState = "idle"`, `report = null`, `streamingSections = []`, `progressStages = []`, `seenStageIdsRef.current = []`, `currentStageIdRef.current = null`, and `topic = ""`.');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "`Start New Research` does not reset `mode`, `progressMessage`, `progressPercent`, or `error`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-033 `Start New Research` does not reset `mode`, `progressMessage`, `progressPercent`, or `error`.');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "The error-state title is exactly `Research Failed`.");
+      throw new Error('Unhandled deep-research checkpoint: cp-034 The error-state title is exactly `Research Failed`.');
     }
 
 

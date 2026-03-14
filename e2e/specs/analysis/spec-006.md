@@ -1,9 +1,9 @@
 # analysis — Spec 006
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
-FAIL: 0
+STATUS: PARTIAL
+TESTED: 35/35
+PASS: 29
+FAIL: 6
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -11,38 +11,38 @@ MODULE: analysis
 ---
 ### Quick Test Workflows
 #### Detailed QA Coverage
-- [ ] Instant gauge size is `110`
-- [ ] Instant gauge center displays the numeric `fleschReadingEase` score
-- [ ] Instant gauge label comes from `clientMetrics.readabilityLabel`
-- [ ] Instant readability labels in the current implementation are `Easy`, `Standard`, `Difficult`, and `Very Difficult`
-- [ ] Counts grid renders `Words`, `Sentences`, and `Paragraphs` summary cards
-- [ ] Readability section renders four `MetricBar` rows
-- [ ] Writing Quality section renders four `IssueBadge` tiles
-- [ ] Instant issues section header shows `Issues ({clientIssues.length})`
-- [ ] Instant issues list renders at most 10 items before collapsing to a `+N more issues` footer
-- [ ] Warning-severity instant issues use yellow styling
-- [ ] Non-warning instant issues use blue styling
-- [ ] Successful analysis hides the source toggle and displays the three-color legend
-- [ ] Results left panel wraps the analyzed text in a `glass-panel rounded-2xl p-8` container
-- [ ] Results left panel header contains the `Analyze New Text` reset button on the left
-- [ ] Results left panel header shows `activeDoc.documentTitle` on the right when a document-backed analysis is open
-- [ ] Clicking `Analyze New Text` sets `result` back to `null`
-- [ ] Clicking `Analyze New Text` clears `paragraphs`
-- [ ] Clicking `Analyze New Text` resets `activeTab` back to `issues`
-- [ ] Results right panel width is `w-96`
-- [ ] Results right panel gauge size is `120`
-- [ ] Results right panel keeps the Words, Sentences, and Paragraphs summary cards above the tabs when `clientMetrics` exists
-- [ ] Each paragraph is rendered from the precomputed `paragraphs` array, not by splitting the server response
-- [ ] Paragraphs with no matching `paragraphAnalysis` entry default to `100` human probability
-- [ ] Paragraphs under 40% human use red background and left border styling
-- [ ] Paragraphs between 40% and 70% human use yellow background and left border styling
-- [ ] Paragraphs above 70% human use emerald background and left border styling
-- [ ] Paragraph flags render as `Flags: {comma-separated flags}` below the paragraph when flags exist
-- [ ] Paragraph flag text is omitted entirely when no flags are present
-- [ ] Results tab list is driven by `analysisTabs`
-- [ ] Issues-tab count badge uses `result.writingQuality.suggestions.length` once results exist
-- [ ] When `writingQuality.suggestions.length === 0`, the issues tab shows `No issues detected. Your writing looks great!`
-- [ ] AI suggestion cards use `bg-purple-500/10`
-- [ ] AI suggestion cards include a purple `Sparkle` icon and a `Suggestion {n}` label
-- [ ] Local write-good issues render in a dedicated `Writing Issues (write-good)` section below AI suggestions
-- [ ] Results write-good issues render at most 15 cards before a `+N more issues` footer
+- [x] PASS: Instant gauge size is `110`
+- [x] PASS: Instant gauge center displays the numeric `fleschReadingEase` score
+- [x] PASS: Instant gauge label comes from `clientMetrics.readabilityLabel`
+- [x] PASS: Instant readability labels in the current implementation are `Easy`, `Standard`, `Difficult`, and `Very Difficult`
+- [x] PASS: Counts grid renders `Words`, `Sentences`, and `Paragraphs` summary cards
+- [x] PASS: Readability section renders four `MetricBar` rows
+- [x] PASS: Writing Quality section renders four `IssueBadge` tiles
+- [x] PASS: Instant issues section header shows `Issues ({clientIssues.length})`
+- [x] PASS: Instant issues list renders at most 10 items before collapsing to a `+N more issues` footer
+- [x] PASS: Warning-severity instant issues use yellow styling
+- [x] PASS: Non-warning instant issues use blue styling
+- [x] PASS: Successful analysis hides the source toggle and displays the three-color legend
+- [x] PASS: Results left panel wraps the analyzed text in a `glass-panel rounded-2xl p-8` container
+- [x] PASS: Results left panel header contains the `Analyze New Text` reset button on the left
+- [x] PASS: Results left panel header shows `activeDoc.documentTitle` on the right when a document-backed analysis is open
+- [x] PASS: Clicking `Analyze New Text` sets `result` back to `null`
+- [x] PASS: Clicking `Analyze New Text` clears `paragraphs`
+- [x] PASS: Clicking `Analyze New Text` resets `activeTab` back to `issues`
+- [x] PASS: Results right panel width is `w-96`
+- [x] PASS: Results right panel gauge size is `120`
+- [x] PASS: Results right panel keeps the Words, Sentences, and Paragraphs summary cards above the tabs when `clientMetrics` exists
+- [x] PASS: Each paragraph is rendered from the precomputed `paragraphs` array, not by splitting the server response
+- [x] PASS: Paragraphs with no matching `paragraphAnalysis` entry default to `100` human probability
+- [ ] FAIL: Paragraphs under 40% human use red background and left border styling
+- [ ] FAIL: Paragraphs between 40% and 70% human use yellow background and left border styling
+- [ ] FAIL: Paragraphs above 70% human use emerald background and left border styling
+- [ ] FAIL: Paragraph flags render as `Flags: {comma-separated flags}` below the paragraph when flags exist
+- [ ] FAIL: Paragraph flag text is omitted entirely when no flags are present
+- [x] PASS: Results tab list is driven by `analysisTabs`
+- [x] PASS: Issues-tab count badge uses `result.writingQuality.suggestions.length` once results exist
+- [x] PASS: When `writingQuality.suggestions.length === 0`, the issues tab shows `No issues detected. Your writing looks great!`
+- [x] PASS: AI suggestion cards use `bg-purple-500/10`
+- [x] PASS: AI suggestion cards include a purple `Sparkle` icon and a `Suggestion {n}` label
+- [x] PASS: Local write-good issues render in a dedicated `Writing Issues (write-good)` section below AI suggestions
+- [ ] FAIL: Results write-good issues render at most 15 cards before a `+N more issues` footer

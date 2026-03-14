@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-005
  * Source: e2e/specs/analysis/spec-005.md
- * Generated: 2026-03-14T10:15:22.562Z
+ * Generated: 2026-03-14T12:55:09.169Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "When document mode has no `activeDoc`, the textarea is replaced by the empty-document state");
+      throw new Error('Unhandled analysis checkpoint: cp-000 When document mode has no `activeDoc`, the textarea is replaced by the empty-document state');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "Empty-document state uses a `FileText` icon above the message");
+      throw new Error('Unhandled analysis checkpoint: cp-001 Empty-document state uses a `FileText` icon above the message');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "Empty-document state message reads `No document found. Write something in the Studio first, or switch to paste mode.`");
+      throw new Error('Unhandled analysis checkpoint: cp-002 Empty-document state message reads `No document found. Write something in the Studio first, or switch to paste mode.`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "Empty-document state hides the textarea and analyze button entirely");
+      throw new Error('Unhandled analysis checkpoint: cp-003 Empty-document state hides the textarea and analyze button entirely');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "Document-mode textarea placeholder is `Document content loaded from your project...`");
+      throw new Error('Unhandled analysis checkpoint: cp-004 Document-mode textarea placeholder is `Document content loaded from your project...`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "Paste-mode textarea placeholder is `Paste your text here to analyze writing quality, detect AI-generated content, and get improvement suggestions...`");
+      throw new Error('Unhandled analysis checkpoint: cp-005 Paste-mode textarea placeholder is `Paste your text here to analyze writing quality, detect AI-generated content, and get improvement suggestions...`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Document-mode textarea is `readOnly`");
+      throw new Error('Unhandled analysis checkpoint: cp-006 Document-mode textarea is `readOnly`');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "Paste-mode textarea is editable");
+      throw new Error('Unhandled analysis checkpoint: cp-007 Paste-mode textarea is editable');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-008 ' + "Textarea uses `font-serif`");
+      throw new Error('Unhandled analysis checkpoint: cp-008 Textarea uses `font-serif`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-009 ' + "Textarea uses `resize-none`");
+      throw new Error('Unhandled analysis checkpoint: cp-009 Textarea uses `resize-none`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-010 ' + "Textarea uses `focus:ring-2 focus:ring-brand/40` when focused");
+      throw new Error('Unhandled analysis checkpoint: cp-010 Textarea uses `focus:ring-2 focus:ring-brand/40` when focused');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-011 ' + "Word count text is always computed from `effectiveText.split(/\\s+/).filter(Boolean).length`");
+      throw new Error('Unhandled analysis checkpoint: cp-011 Word count text is always computed from `effectiveText.split(/\s+/).filter(Boolean).length`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-012 ' + "Word count reads `0 words` when the textarea is empty or whitespace-only");
+      throw new Error('Unhandled analysis checkpoint: cp-012 Word count reads `0 words` when the textarea is empty or whitespace-only');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-013 ' + "Paste-mode typing updates `inputText` on every `onChange`");
+      throw new Error('Unhandled analysis checkpoint: cp-013 Paste-mode typing updates `inputText` on every `onChange`');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-014 ' + "Inline error text is rendered directly under the textarea in red when `error` is non-null");
+      throw new Error('Unhandled analysis checkpoint: cp-014 Inline error text is rendered directly under the textarea in red when `error` is non-null');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-015 ' + "Forced submission with fewer than 50 characters sets `Please enter at least 50 characters of text to analyze.`");
+      throw new Error('Unhandled analysis checkpoint: cp-015 Forced submission with fewer than 50 characters sets `Please enter at least 50 characters of text to analyze.`');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-016 ' + "New document loads clear prior errors by setting `error` back to `null`");
+      throw new Error('Unhandled analysis checkpoint: cp-016 New document loads clear prior errors by setting `error` back to `null`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-017 ' + "Starting a new analysis clears prior errors before the fetch begins");
+      throw new Error('Unhandled analysis checkpoint: cp-017 Starting a new analysis clears prior errors before the fetch begins');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-018 ' + "Non-OK API responses use `data.error || \"Writing analysis failed\"` for the inline error");
+      throw new Error('Unhandled analysis checkpoint: cp-018 Non-OK API responses use `data.error || "Writing analysis failed"` for the inline error');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-019 ' + "Network exceptions set the inline error to `Failed to connect. Check your API key.`");
+      throw new Error('Unhandled analysis checkpoint: cp-019 Network exceptions set the inline error to `Failed to connect. Check your API key.`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-020 ' + "Error feedback is inline text only; there is no toast, alert banner, or modal");
+      throw new Error('Unhandled analysis checkpoint: cp-020 Error feedback is inline text only; there is no toast, alert banner, or modal');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-021 ' + "Analyze button label is `Analyze Writing` while idle");
+      throw new Error('Unhandled analysis checkpoint: cp-021 Analyze button label is `Analyze Writing` while idle');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-022 ' + "Analyze button includes a leading `Sparkle` icon while idle");
+      throw new Error('Unhandled analysis checkpoint: cp-022 Analyze button includes a leading `Sparkle` icon while idle');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-023 ' + "Analyze button is disabled when `effectiveText.trim().length < 50`");
+      throw new Error('Unhandled analysis checkpoint: cp-023 Analyze button is disabled when `effectiveText.trim().length < 50`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-024 ' + "Analyze button is disabled when `loading` is true");
+      throw new Error('Unhandled analysis checkpoint: cp-024 Analyze button is disabled when `loading` is true');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-025 ' + "Disabled button uses the `disabled:opacity-50` style");
+      throw new Error('Unhandled analysis checkpoint: cp-025 Disabled button uses the `disabled:opacity-50` style');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-026 ' + "Clicking Analyze serializes the request body as `{ text: inputText, mode: \"full\" }`");
+      throw new Error('Unhandled analysis checkpoint: cp-026 Clicking Analyze serializes the request body as `{ text: inputText, mode: "full" }`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-027 ' + "Clicking Analyze splits the current text into paragraphs using `/\\n\\n+/` before the network request");
+      throw new Error('Unhandled analysis checkpoint: cp-027 Clicking Analyze splits the current text into paragraphs using `/\n\n+/` before the network request');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-028 ' + "While loading, the button label changes to `Analyzing...`");
+      throw new Error('Unhandled analysis checkpoint: cp-028 While loading, the button label changes to `Analyzing...`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-029 ' + "While loading, the button still renders the `Sparkle` icon; it does not swap to a spinner in the current implementation");
+      throw new Error('Unhandled analysis checkpoint: cp-029 While loading, the button still renders the `Sparkle` icon; it does not swap to a spinner in the current implementation');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-030 ' + "Successful responses store the parsed JSON in `result`");
+      throw new Error('Unhandled analysis checkpoint: cp-030 Successful responses store the parsed JSON in `result`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-031 ' + "Successful responses keep the previously computed `clientMetrics` visible for the results summary cards");
+      throw new Error('Unhandled analysis checkpoint: cp-031 Successful responses keep the previously computed `clientMetrics` visible for the results summary cards');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-032 ' + "Instant metrics panel is hidden until `clientMetrics` exists and trimmed text length is greater than 0");
+      throw new Error('Unhandled analysis checkpoint: cp-032 Instant metrics panel is hidden until `clientMetrics` exists and trimmed text length is greater than 0');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-033 ' + "Instant metrics panel appears for loaded document text as well as pasted text");
+      throw new Error('Unhandled analysis checkpoint: cp-033 Instant metrics panel appears for loaded document text as well as pasted text');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('analysis / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-034 ' + "Instant metrics analysis is debounced by 500ms after the last text change");
+      throw new Error('Unhandled analysis checkpoint: cp-034 Instant metrics analysis is debounced by 500ms after the last text change');
     }
 
 

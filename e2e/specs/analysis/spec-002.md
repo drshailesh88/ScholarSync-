@@ -1,10 +1,10 @@
 # analysis — Spec 002
 
-STATUS: COMPLETE
-TESTED: 35/35
-PASS: 33
-FAIL: 0
-BLOCKED: 2
+STATUS: PARTIAL
+TESTED: 33/35
+PASS: 23
+FAIL: 10
+BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
 
@@ -33,27 +33,27 @@ MODULE: analysis
 #### Library Dependencies
 - [x] PASS: **write-good** — imported as `writeGood` from "write-good" on line 1, used for passive voice, weasel word, adverb detection via classifyReason(). Verified in src/lib/writing-analysis.ts:1,205-228
 - [x] PASS: **Complex sentence detection** — sentences with more than 35 words flagged: `if (sentenceWordCount > 35)` pushes a "complex" type issue. Verified in src/lib/writing-analysis.ts:237
-- [x] PASS: **Multiple readability formulas** — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts
+- [ ] FAIL: **Multiple readability formulas** — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts
 
 ### API — POST /api/integrity-check
 #### Rate Limiting
-- [x] PASS: **Limit** — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117
-- [x] PASS: **Exceeded** — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: "Rate limit exceeded..." }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97
+- [ ] FAIL: **Limit** — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117
+- [ ] FAIL: **Exceeded** — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: "Rate limit exceeded..." }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97
 
 ### AI Detection Engine
 #### Binoculars Model
-- [x] PASS: **Model** — `const BINOCULARS_MODEL = "drshailesh88/binoculars-ai-detection" as const;` Verified in src/lib/integrity/ai-detection.ts:26
-- [x] PASS: **Threshold** — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27
-- [x] PASS: **Weighting** — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076
+- [ ] FAIL: **Model** — `const BINOCULARS_MODEL = "drshailesh88/binoculars-ai-detection" as const;` Verified in src/lib/integrity/ai-detection.ts:26
+- [ ] FAIL: **Threshold** — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27
+- [ ] FAIL: **Weighting** — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076
 #### Hedging Phrases
-- [x] PASS: **Count** — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count
-- [x] PASS: **Detection** — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts
+- [ ] FAIL: **Count** — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count
+- [ ] FAIL: **Detection** — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts
 
 ### Plagiarism Engine
 - [x] PASS: **Paid feature only** — `const runPlagiarism = isPaid && (mode === "full" || mode === "plagiarism")` where `isPaid = PAID_PLANS.has(input.plan)` and PAID_PLANS = Set(["basic", "pro", "institutional"]). Verified in src/lib/integrity/index.ts:33,38
 - [x] PASS: **Similarity score** — `similarityScore` (0-100) computed via `computeOverallScore()` from paragraph-level Jaccard similarities. Verified in src/lib/integrity/plagiarism-engine.ts:630-633
-- [x] PASS: **Source matching** — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558
-- [x] PASS: **Severity levels** — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503
+- [ ] FAIL: **Source matching** — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558
+- [ ] FAIL: **Severity levels** — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503
 - [x] PASS: **Match excerpts** — each match includes `excerpt` (paragraph text truncated to 120 chars) and `source` object with title, authors, doi, url, year. Verified in src/lib/integrity/plagiarism-engine.ts:540-541,606-620
 
 ### Loading & Error States

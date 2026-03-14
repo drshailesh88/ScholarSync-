@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-005
  * Source: e2e/specs/feeds/spec-005.md
- * Generated: 2026-03-14T10:16:40.714Z
+ * Generated: 2026-03-14T14:37:47.829Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "Shows API error messages");
+      throw new Error('Unhandled feeds checkpoint: cp-000 Shows API error messages');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "Renders JournalBrowser component (see section 12)");
+      throw new Error('Unhandled feeds checkpoint: cp-001 Renders JournalBrowser component (see section 12)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Search input: \"Search by topic, journal, or publisher...\"");
+      throw new Error('Unhandled feeds checkpoint: cp-002 Search input: "Search by topic, journal, or publisher..."');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Category dropdown (populated from API)");
+      throw new Error('Unhandled feeds checkpoint: cp-003 Category dropdown (populated from API)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "Specialty dropdown (populated from API)");
+      throw new Error('Unhandled feeds checkpoint: cp-004 Specialty dropdown (populated from API)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "**Suggested for you** section (if available):");
+      throw new Error('Unhandled feeds checkpoint: cp-005 **Suggested for you** section (if available):');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "\"Personalized from the specialties you selected during onboarding.\"");
+      throw new Error('Unhandled feeds checkpoint: cp-006 "Personalized from the specialties you selected during onboarding."');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "Journal cards with \"Suggested for you\" badge");
+      throw new Error('Unhandled feeds checkpoint: cp-007 Journal cards with "Suggested for you" badge');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "**Browse Journals** section:");
+      throw new Error('Unhandled feeds checkpoint: cp-008 **Browse Journals** section:');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Grid of journal cards");
+      throw new Error('Unhandled feeds checkpoint: cp-009 Grid of journal cards');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "**Curated Journals** section:");
+      throw new Error('Unhandled feeds checkpoint: cp-010 **Curated Journals** section:');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "\"Matches from the ScholarSync journal directory for '{query}'.\"");
+      throw new Error('Unhandled feeds checkpoint: cp-011 "Matches from the ScholarSync journal directory for \'{query}\'."');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Empty: `No curated journals match \"{query}\".`");
+      throw new Error('Unhandled feeds checkpoint: cp-012 Empty: `No curated journals match "{query}".`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "**PubMed Search Feed** section (query ≥ 3 chars):");
+      throw new Error('Unhandled feeds checkpoint: cp-013 **PubMed Search Feed** section (query ≥ 3 chars):');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "\"Turn this topic into a live feed that updates as PubMed indexes new papers.\"");
+      throw new Error('Unhandled feeds checkpoint: cp-014 "Turn this topic into a live feed that updates as PubMed indexes new papers."');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "\"Create Feed\" button (loading: \"Creating...\")");
+      throw new Error('Unhandled feeds checkpoint: cp-015 "Create Feed" button (loading: "Creating...")');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Success: \"Live PubMed feed created for '{query}'.\"");
+      throw new Error('Unhandled feeds checkpoint: cp-016 Success: "Live PubMed feed created for \'{query}\'."');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Error: message in red");
+      throw new Error('Unhandled feeds checkpoint: cp-017 Error: message in red');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "Title: text-sm font-medium");
+      throw new Error('Unhandled feeds checkpoint: cp-018 Title: text-sm font-medium');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "Publisher: text-xs text-ink-muted");
+      throw new Error('Unhandled feeds checkpoint: cp-019 Publisher: text-xs text-ink-muted');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "Category/Specialty pill badges");
+      throw new Error('Unhandled feeds checkpoint: cp-020 Category/Specialty pill badges');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "Description: text-xs, line-clamp-2");
+      throw new Error('Unhandled feeds checkpoint: cp-021 Description: text-xs, line-clamp-2');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Subscribe button states:");
+      throw new Error('Unhandled feeds checkpoint: cp-022 Subscribe button states:');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "`GET /api/feeds/discover` — categories, specialties, feeds, suggestions");
+      throw new Error('Unhandled feeds checkpoint: cp-023 `GET /api/feeds/discover` — categories, specialties, feeds, suggestions');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Opens when \"Cite\" clicked on article card or reader");
+      throw new Error('Unhandled feeds checkpoint: cp-024 Opens when "Cite" clicked on article card or reader');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Loading: \"Formatting citations...\" (animate-pulse)");
+      throw new Error('Unhandled feeds checkpoint: cp-025 Loading: "Formatting citations..." (animate-pulse)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Error: \"Failed to load citation formats\"");
+      throw new Error('Unhandled feeds checkpoint: cp-026 Error: "Failed to load citation formats"');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Monospace citation text display (min-h-80px)");
+      throw new Error('Unhandled feeds checkpoint: cp-027 Monospace citation text display (min-h-80px)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Copy Citation** / **Copy BibTeX — copies full entry");
+      throw new Error('Unhandled feeds checkpoint: cp-028 Copy Citation** / **Copy BibTeX — copies full entry');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Copy In-Text — copies parenthetical (hidden for BibTeX)");
+      throw new Error('Unhandled feeds checkpoint: cp-029 Copy In-Text — copies parenthetical (hidden for BibTeX)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "Feedback: \"Copied!\" for 2 seconds");
+      throw new Error('Unhandled feeds checkpoint: cp-030 Feedback: "Copied!" for 2 seconds');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "\"DOI: {doi}\" with clickable link");
+      throw new Error('Unhandled feeds checkpoint: cp-031 "DOI: {doi}" with clickable link');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Triggered via Export button in header");
+      throw new Error('Unhandled feeds checkpoint: cp-032 Triggered via Export button in header');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Downloads `scholarsync-feeds.opml` (OPML 2.0 XML)");
+      throw new Error('Unhandled feeds checkpoint: cp-033 Downloads `scholarsync-feeds.opml` (OPML 2.0 XML)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "Contains all feed subscriptions with folders");
+      throw new Error('Unhandled feeds checkpoint: cp-034 Contains all feed subscriptions with folders');
     }
 
 

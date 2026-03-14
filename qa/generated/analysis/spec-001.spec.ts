@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-001
  * Source: e2e/specs/analysis/spec-001.md
- * Generated: 2026-03-14T10:15:10.088Z
+ * Generated: 2026-03-14T12:50:17.130Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "Back link — ArrowLeft icon link with href=\"/studio\" navigates to /studio when clicked");
+      throw new Error('Unhandled analysis checkpoint: cp-000 Back link — ArrowLeft icon link with href="/studio" navigates to /studio when clicked');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "Title (input mode) — h1 displays \"Writing Analysis\"");
+      throw new Error('Unhandled analysis checkpoint: cp-001 Title (input mode) — h1 displays "Writing Analysis"');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "Title (results mode) — h1 displays \"Draft Analysis\" after analysis completes");
+      throw new Error('Unhandled analysis checkpoint: cp-002 Title (results mode) — h1 displays "Draft Analysis" after analysis completes');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "Active button is visually highlighted — \"From Document\" has bg-brand class when active, \"Paste Text\" has bg-brand when active");
+      throw new Error('Unhandled analysis checkpoint: cp-003 Active button is visually highlighted — "From Document" has bg-brand class when active, "Paste Text" has bg-brand when active');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "Switching from document mode to paste mode preserves the current textarea content (document text persists)");
+      throw new Error('Unhandled analysis checkpoint: cp-004 Switching from document mode to paste mode preserves the current textarea content (document text persists)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "Switching back to document mode can overwrite the textarea with the selected document content (loads project doc)");
+      throw new Error('Unhandled analysis checkpoint: cp-005 Switching back to document mode can overwrite the textarea with the selected document content (loads project doc)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Document mode placeholder — textarea placeholder is \"Document content loaded from your project...\"");
+      throw new Error('Unhandled analysis checkpoint: cp-006 Document mode placeholder — textarea placeholder is "Document content loaded from your project..."');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "Paste mode placeholder — textarea placeholder is \"Paste your text here to analyze writing quality, detect AI-generated content, and get improvement suggestions...\"");
+      throw new Error('Unhandled analysis checkpoint: cp-007 Paste mode placeholder — textarea placeholder is "Paste your text here to analyze writing quality, detect AI-generated content, and get improvement suggestions..."');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-008 ' + "Word count display — shows \"0 words\" when empty, \"100 words\" with 100-word text");
+      throw new Error('Unhandled analysis checkpoint: cp-008 Word count display — shows "0 words" when empty, "100 words" with 100-word text');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-009 ' + "Word count updates in real time as text is typed or pasted — verified with fill, count updates after debounce");
+      throw new Error('Unhandled analysis checkpoint: cp-009 Word count updates in real time as text is typed or pasted — verified with fill, count updates after debounce');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-010 ' + "Label — \"Project:\" label visible next to dropdown");
+      throw new Error('Unhandled analysis checkpoint: cp-010 Label — "Project:" label visible next to dropdown');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-011 ' + "Dropdown trigger — shows selected project title \"My Research\"; shows \"Select project\" when none selected (confirmed from code)");
+      throw new Error('Unhandled analysis checkpoint: cp-011 Dropdown trigger — shows selected project title "My Research"; shows "Select project" when none selected (confirmed from code)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-012 ' + "CaretDown icon — visible on dropdown trigger button (caret-down chevron shown in screenshot)");
+      throw new Error('Unhandled analysis checkpoint: cp-012 CaretDown icon — visible on dropdown trigger button (caret-down chevron shown in screenshot)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-013 ' + "Dropdown list — shows all user projects by title when clicked (displayed \"My Research\" in list)");
+      throw new Error('Unhandled analysis checkpoint: cp-013 Dropdown list — shows all user projects by title when clicked (displayed "My Research" in list)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-014 ' + "Selection — clicking a project sets selectedProjectId and fetches the document (single project selected, document loaded)");
+      throw new Error('Unhandled analysis checkpoint: cp-014 Selection — clicking a project sets selectedProjectId and fetches the document (single project selected, document loaded)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-015 ' + "Document loaded — textarea populates with the document content from activeDoc (showed \"Flow Heading\", \"bullet item\", \"extrazq\")");
+      throw new Error('Unhandled analysis checkpoint: cp-015 Document loaded — textarea populates with the document content from activeDoc (showed "Flow Heading", "bullet item", "extrazq")');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-016 ' + "CircularGauge — 110px gauge displays fleschReadingEase value (showed 49 for document, 19 for pasted text)");
+      throw new Error('Unhandled analysis checkpoint: cp-016 CircularGauge — 110px gauge displays fleschReadingEase value (showed 49 for document, 19 for pasted text)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-017 ' + "Readability label — shows correct label: \"Standard\" for score 49, \"Very Difficult\" for score 19 (matches Easy/Standard/Difficult/Very Difficult scale)");
+      throw new Error('Unhandled analysis checkpoint: cp-017 Readability label — shows correct label: "Standard" for score 49, "Very Difficult" for score 19 (matches Easy/Standard/Difficult/Very Difficult scale)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-018 ' + "Max 10 issues — code renders `clientIssues.slice(0, 10)`, confirmed 10 issue divs rendered with test text");
+      throw new Error('Unhandled analysis checkpoint: cp-018 Max 10 issues — code renders `clientIssues.slice(0, 10)`, confirmed 10 issue divs rendered with test text');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-019 ' + "Scrollable — container has class `max-h-48 overflow-y-auto` for scrollable behavior");
+      throw new Error('Unhandled analysis checkpoint: cp-019 Scrollable — container has class `max-h-48 overflow-y-auto` for scrollable behavior');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-020 ' + "Warning issues — shown with yellow background (bg-yellow-500/10, 7 yellow elements found)");
+      throw new Error('Unhandled analysis checkpoint: cp-020 Warning issues — shown with yellow background (bg-yellow-500/10, 7 yellow elements found)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-021 ' + "Info issues — shown with blue background (bg-blue-500/10, 5 blue elements found)");
+      throw new Error('Unhandled analysis checkpoint: cp-021 Info issues — shown with blue background (bg-blue-500/10, 5 blue elements found)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-022 ' + "Button label — \"Analyze Writing\" with Sparkle icon visible");
+      throw new Error('Unhandled analysis checkpoint: cp-022 Button label — "Analyze Writing" with Sparkle icon visible');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-023 ' + "Loading label — \"Analyzing...\" shown during API call, Sparkle icon remains");
+      throw new Error('Unhandled analysis checkpoint: cp-023 Loading label — "Analyzing..." shown during API call, Sparkle icon remains');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-024 ' + "Disabled when — button disabled when textarea empty or < 50 chars; enabled with 100 words of text");
+      throw new Error('Unhandled analysis checkpoint: cp-024 Disabled when — button disabled when textarea empty or < 50 chars; enabled with 100 words of text');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-025 ' + "Submission — sends text to the `/api/integrity-check` endpoint (verified via curl and browser)");
+      throw new Error('Unhandled analysis checkpoint: cp-025 Submission — sends text to the `/api/integrity-check` endpoint (verified via curl and browser)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-026 ' + "Success — populates result, switches to results mode, parses paragraphs. Note: required fix — API returned nested shape (aiDetection.humanScore) but component expected flat shape. Fixed mapping in runAnalysis, re-tested successfully.");
+      throw new Error('Unhandled analysis checkpoint: cp-026 Success — populates result, switches to results mode, parses paragraphs. Note: required fix — API returned nested shape (aiDetection.humanScore) but component expected flat shape. Fixed mapping in runAnalysis, re-tested successfully.');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-027 ' + "Failure — error state displays with error message (error.tsx boundary catches unhandled errors; inline error text rendered for API errors)");
+      throw new Error('Unhandled analysis checkpoint: cp-027 Failure — error state displays with error message (error.tsx boundary catches unhandled errors; inline error text rendered for API errors)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-028 ' + "Glass panel — rounded-2xl glass-panel styling confirmed on results container");
+      throw new Error('Unhandled analysis checkpoint: cp-028 Glass panel — rounded-2xl glass-panel styling confirmed on results container');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-029 ' + "Flags — displayed below each paragraph in 10px text (verified: \"Flags: Zero specific data...\" shown)");
+      throw new Error('Unhandled analysis checkpoint: cp-029 Flags — displayed below each paragraph in 10px text (verified: "Flags: Zero specific data..." shown)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-030 ' + "Back link — \"← Analyze New Text\" button returns to input mode, title reverts to \"Writing Analysis\"");
+      throw new Error('Unhandled analysis checkpoint: cp-030 Back link — "← Analyze New Text" button returns to input mode, title reverts to "Writing Analysis"');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-031 ' + "Issues tab — label \"Issues\" with count badge (showed \"Issues\" + count \"1\" for suggestions)");
+      throw new Error('Unhandled analysis checkpoint: cp-031 Issues tab — label "Issues" with count badge (showed "Issues" + count "1" for suggestions)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('analysis / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-032 ' + "Detailed Metrics tab — label \"Detailed Metrics\" (confirmed in snapshot and screenshot)");
+      throw new Error('Unhandled analysis checkpoint: cp-032 Detailed Metrics tab — label "Detailed Metrics" (confirmed in snapshot and screenshot)');
     }
 
 

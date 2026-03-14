@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-010
  * Source: e2e/specs/analysis/spec-010.md
- * Generated: 2026-03-14T10:15:38.229Z
+ * Generated: 2026-03-14T13:01:27.199Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "`IssueBadge` helper renders count as `text-lg font-semibold` and label as `text-[10px]` with four color options: yellow → `text-yellow-600`, orange → `text-orange-600`, blue → `text-blue-600`, red → `text-red-600` (~lines 798-811)");
+      throw new Error('Unhandled analysis checkpoint: cp-000 `IssueBadge` helper renders count as `text-lg font-semibold` and label as `text-[10px]` with four color options: yellow → `text-yellow-600`, orange → `text-orange-600`, blue → `text-blue-600`, red → `text-red-600` (~lines 798-811)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "`MetricBar` bar track is `h-1.5 rounded-full bg-surface-raised`; fill bar is `h-full rounded-full bg-brand transition-all` (~lines 774-779)");
+      throw new Error('Unhandled analysis checkpoint: cp-001 `MetricBar` bar track is `h-1.5 rounded-full bg-surface-raised`; fill bar is `h-full rounded-full bg-brand transition-all` (~lines 774-779)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "`MetricBar` value label format is `{value}{suffix}` with no space before the suffix string (~line 772)");
+      throw new Error('Unhandled analysis checkpoint: cp-002 `MetricBar` value label format is `{value}{suffix}` with no space before the suffix string (~line 772)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "Hook cancels in-flight requests via `AbortController` before starting a new check (~line 35-37)");
+      throw new Error('Unhandled analysis checkpoint: cp-003 Hook cancels in-flight requests via `AbortController` before starting a new check (~line 35-37)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "Hook sends `mode: \"ai_detection\"` in the request body, not `\"full\"` (~line 49)");
+      throw new Error('Unhandled analysis checkpoint: cp-004 Hook sends `mode: "ai_detection"` in the request body, not `"full"` (~line 49)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "Hook extracts `result.aiDetection?.humanScore` from the API response (~line 59)");
+      throw new Error('Unhandled analysis checkpoint: cp-005 Hook extracts `result.aiDetection?.humanScore` from the API response (~line 59)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Hook ignores `AbortError` exceptions (cancelled requests are not treated as errors) (~line 62-65)");
+      throw new Error('Unhandled analysis checkpoint: cp-006 Hook ignores `AbortError` exceptions (cancelled requests are not treated as errors) (~line 62-65)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "Hook cleanup on unmount aborts any pending request and clears the debounce timer (~line 107-116)");
+      throw new Error('Unhandled analysis checkpoint: cp-007 Hook cleanup on unmount aborts any pending request and clears the debounce timer (~line 107-116)');
     }
 
 

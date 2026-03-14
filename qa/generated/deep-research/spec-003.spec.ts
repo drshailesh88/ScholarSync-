@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-003
  * Source: e2e/specs/deep-research/spec-003.md
- * Generated: 2026-03-14T10:15:47.461Z
+ * Generated: 2026-03-14T14:12:32.228Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "Unordered lists with custom bullet styling");
+      throw new Error('Unhandled deep-research checkpoint: cp-000 Unordered lists with custom bullet styling');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "Ordered lists with numbered items");
+      throw new Error('Unhandled deep-research checkpoint: cp-001 Ordered lists with numbered items');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "Tables with borders, header background, hover row states");
+      throw new Error('Unhandled deep-research checkpoint: cp-002 Tables with borders, header background, hover row states');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "Blockquotes with blue left border, italic, muted color");
+      throw new Error('Unhandled deep-research checkpoint: cp-003 Blockquotes with blue left border, italic, muted color');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "Inline code: gray background, emerald text, monospace");
+      throw new Error('Unhandled deep-research checkpoint: cp-004 Inline code: gray background, emerald text, monospace');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "Code blocks: monospace, scrollable, dark background");
+      throw new Error('Unhandled deep-research checkpoint: cp-005 Code blocks: monospace, scrollable, dark background');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "Links: blue, underlined, open in new tab (`target=\"_blank\"`)");
+      throw new Error('Unhandled deep-research checkpoint: cp-006 Links: blue, underlined, open in new tab (`target="_blank"`)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "Bold and italic formatting");
+      throw new Error('Unhandled deep-research checkpoint: cp-007 Bold and italic formatting');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "All markdown elements adapt to dark color scheme");
+      throw new Error('Unhandled deep-research checkpoint: cp-008 All markdown elements adapt to dark color scheme');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "Background transitions from white to gray-950");
+      throw new Error('Unhandled deep-research checkpoint: cp-009 Background transitions from white to gray-950');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "Text transitions from dark to light");
+      throw new Error('Unhandled deep-research checkpoint: cp-010 Text transitions from dark to light');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "Table borders update for dark theme");
+      throw new Error('Unhandled deep-research checkpoint: cp-011 Table borders update for dark theme');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "White background forced");
+      throw new Error('Unhandled deep-research checkpoint: cp-012 White background forced');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "Black text forced");
+      throw new Error('Unhandled deep-research checkpoint: cp-013 Black text forced');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "Simple table borders");
+      throw new Error('Unhandled deep-research checkpoint: cp-014 Simple table borders');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "All panels hidden during print");
+      throw new Error('Unhandled deep-research checkpoint: cp-015 All panels hidden during print');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "Fixed-width sidebar (w-56), sticky positioning");
+      throw new Error('Unhandled deep-research checkpoint: cp-016 Fixed-width sidebar (w-56), sticky positioning');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "Extracts h2 and h3 headings from report");
+      throw new Error('Unhandled deep-research checkpoint: cp-017 Extracts h2 and h3 headings from report');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "Click heading to smooth-scroll to section");
+      throw new Error('Unhandled deep-research checkpoint: cp-018 Click heading to smooth-scroll to section');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "Active heading highlighted as user scrolls");
+      throw new Error('Unhandled deep-research checkpoint: cp-019 Active heading highlighted as user scrolls');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "Indentation for h3 (nested under h2)");
+      throw new Error('Unhandled deep-research checkpoint: cp-020 Indentation for h3 (nested under h2)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "Left-side drawer overlay (`w-72`), not a full-screen handle-sheet UI");
+      throw new Error('Unhandled deep-research checkpoint: cp-021 Left-side drawer overlay (`w-72`), not a full-screen handle-sheet UI');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "Same heading list as desktop");
+      throw new Error('Unhandled deep-research checkpoint: cp-022 Same heading list as desktop');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "Click heading scrolls and closes overlay");
+      throw new Error('Unhandled deep-research checkpoint: cp-023 Click heading scrolls and closes overlay');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "Opens via the floating TOC button and closes on backdrop click or the `X` button");
+      throw new Error('Unhandled deep-research checkpoint: cp-024 Opens via the floating TOC button and closes on backdrop click or the `X` button');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "Right sidebar (w-72), sticky positioning");
+      throw new Error('Unhandled deep-research checkpoint: cp-025 Right sidebar (w-72), sticky positioning');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "Max-height with overflow scroll");
+      throw new Error('Unhandled deep-research checkpoint: cp-026 Max-height with overflow scroll');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "Shows up to 50 citations");
+      throw new Error('Unhandled deep-research checkpoint: cp-027 Shows up to 50 citations');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "Bottom sheet (max-h-[70vh])");
+      throw new Error('Unhandled deep-research checkpoint: cp-028 Bottom sheet (max-h-[70vh])');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "Decorative handle bar only (no drag or swipe behavior)");
+      throw new Error('Unhandled deep-research checkpoint: cp-029 Decorative handle bar only (no drag or swipe behavior)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "Scrollable content");
+      throw new Error('Unhandled deep-research checkpoint: cp-030 Scrollable content');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "`[N]` index number");
+      throw new Error('Unhandled deep-research checkpoint: cp-031 `[N]` index number');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "Title (line-clamp-2, truncated)");
+      throw new Error('Unhandled deep-research checkpoint: cp-032 Title (line-clamp-2, truncated)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "Authors: first 2 + \"et al.\" if more");
+      throw new Error('Unhandled deep-research checkpoint: cp-033 Authors: first 2 + "et al." if more');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-003', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "Journal name with year in parentheses");
+      throw new Error('Unhandled deep-research checkpoint: cp-034 Journal name with year in parentheses');
     }
 
 
