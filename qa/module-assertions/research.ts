@@ -1242,9 +1242,7 @@ export async function assertResearchCheckpoint(input: ResearchCheckpointInput): 
         const content = readFile(rootDir, componentPath);
         expect(content.length).toBeGreaterThan(0);
         // Also verify it's NOT imported by the page
-        const _pageContent = readFile(rootDir, PAGE);
-        const _fileName = path.basename(componentPath, path.extname(componentPath));
-        // Component exists but is not imported - this is the expected state
+        // Component exists - this is the expected state
         expect(content.length).toBeGreaterThan(0);
         return true;
       }

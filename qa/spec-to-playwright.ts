@@ -321,61 +321,61 @@ ${hasDashboardAssertions ? `    const handled = await assertDashboardCheckpoint(
     });
 
 ${hasDashboardAssertions ? `    if (!handled) {
-      throw new Error('Unhandled dashboard checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled dashboard checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasOnboardingAssertions ? `    if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled onboarding checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasProjectsAssertions ? `    if (!handled) {
-      throw new Error('Unhandled projects checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled projects checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasLibraryAssertions ? `    if (!handled) {
-      throw new Error('Unhandled library checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled library checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasEditorAssertions ? `    if (!handled) {
-      throw new Error('Unhandled editor checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled editor checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasStudioAssertions ? `    if (!handled) {
-      throw new Error('Unhandled studio checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled studio checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasResearchAssertions ? `    if (!handled) {
-      throw new Error('Unhandled research checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled research checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasLatexAssertions ? `    if (!handled) {
-      throw new Error('Unhandled latex checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled latex checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasNotebookAssertions ? `    if (!handled) {
-      throw new Error('Unhandled notebook checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled notebook checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasComplianceAssertions ? `    if (!handled) {
-      throw new Error('Unhandled compliance checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled compliance checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasAnalysisAssertions ? `    if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled analysis checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasDeepResearchAssertions ? `    if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled deep-research checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasFeedsAssertions ? `    if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled feeds checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasSlidesAssertions ? `    if (!handled) {
-      throw new Error('Unhandled slides checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled slides checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasPresentationAssertions ? `    if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled presentation checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasIllustrateAssertions ? `    if (!handled) {
-      throw new Error('Unhandled illustrate checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled illustrate checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasPosterAssertions ? `    if (!handled) {
-      throw new Error('Unhandled poster checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled poster checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasSystematicReviewAssertions ? `    if (!handled) {
-      throw new Error('Unhandled systematic-review checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled systematic-review checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}${hasSettingsAssertions ? `    if (!handled) {
-      throw new Error('Unhandled settings checkpoint: ${cpId} ${cp.description.replace(/'/g, "\\'")}');
+      throw new Error('Unhandled settings checkpoint: ${cpId} ' + ${JSON.stringify(cp.description)});
     }
 ` : ""}
 

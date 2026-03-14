@@ -1,8 +1,8 @@
 # latex — Spec 006
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: PASS
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/latex
@@ -11,58 +11,58 @@ MODULE: latex
 ---
 ### Agent Panel — AI Assistant
 #### Check Tab (Client-side, no AI)
-- [ ] **Package conflicts** — detects conflicts:
-- [ ] **Environment matching** — validates `\begin{}`/`\end{}` balance
+- [x] PASS: **Package conflicts** — detects conflicts:
+- [x] PASS: **Environment matching** — validates `\begin{}`/`\end{}` balance
 
 ### Inline AI Bar
-- [ ] **Trigger** — `Cmd+K` with text selected in the editor
-- [ ] **Positioning** — appears near the selection (8px below)
-- [ ] **Single AI suggestion** — sends selected text for AI rewrite
-- [ ] **Replace button** — replaces selected text with AI suggestion in editor
-- [ ] **Dismiss button** — closes the bar without changes
-- [ ] **Escape key** — dismisses the bar
+- [x] PASS: **Trigger** — `Cmd+K` with text selected in the editor
+- [x] PASS: **Positioning** — appears near the selection (8px below)
+- [x] PASS: **Single AI suggestion** — sends selected text for AI rewrite
+- [x] PASS: **Replace button** — replaces selected text with AI suggestion in editor
+- [x] PASS: **Dismiss button** — closes the bar without changes
+- [x] PASS: **Escape key** — dismisses the bar
 
 ### Slash Command Menu
 #### Slash Menu UX
-- [ ] Appears when `/` typed at line start
-- [ ] **Dynamic filtering** — updates as user types after `/`
-- [ ] **Positioned** near cursor using screen coordinates
-- [ ] **Escape** dismisses the menu
-- [ ] After selecting command, the `/` text is removed from editor
+- [x] PASS: Appears when `/` typed at line start
+- [x] PASS: **Dynamic filtering** — updates as user types after `/`
+- [x] PASS: **Positioned** near cursor using screen coordinates
+- [x] PASS: **Escape** dismisses the menu
+- [x] PASS: After selecting command, the `/` text is removed from editor
 
 ### Spell Check
-- [ ] **CodeMirror extension** — integrated spell checking
-- [ ] **Server-side** — uses `/api/latex/spell-check` endpoint
-- [ ] **LaTeX-aware** — ignores LaTeX commands, only checks natural text
-- [ ] **Dictionary integration** — standard dictionary support
+- [x] PASS: **CodeMirror extension** — integrated spell checking
+- [x] PASS: **Server-side** — uses `/api/latex/spell-check` endpoint
+- [x] PASS: **LaTeX-aware** — ignores LaTeX commands, only checks natural text
+- [x] PASS: **Dictionary integration** — standard dictionary support
 
 ### Collaboration (Real-time)
 #### YjsCollaborationProvider
-- [ ] **CRDT-based** — conflict-free concurrent editing
-- [ ] **WebSocket connection** — real-time sync
-- [ ] **Connection status tracking** — connected/disconnected states
+- [x] PASS: **CRDT-based** — conflict-free concurrent editing
+- [x] PASS: **WebSocket connection** — real-time sync
+- [x] PASS: **Connection status tracking** — connected/disconnected states
 #### Collaborator Awareness
-- [ ] **User presence** — see who is currently editing
-- [ ] **Avatars in top bar** — collaborator profile pictures/initials
+- [x] PASS: **User presence** — see who is currently editing
+- [x] PASS: **Avatars in top bar** — collaborator profile pictures/initials
 
 ### Citation System
 #### Citation Search (Cite Tab)
-- [ ] Search PubMed and Semantic Scholar databases
-- [ ] Results show author, title, year
-- [ ] Up to 10 results per search
+- [x] PASS: Search PubMed and Semantic Scholar databases
+- [x] PASS: Results show author, title, year
+- [x] PASS: Up to 10 results per search
 #### Fallback
-- [ ] If `.bib` file creation fails, BibTeX is copied to clipboard
+- [x] PASS: If `.bib` file creation fails, BibTeX is copied to clipboard
 
 ### Export
 #### Download PDF
-- [ ] Downloads the compiled PDF blob
-- [ ] Filename: `{projectTitle}.pdf` (sanitized)
-- [ ] Requires successful compilation first
-- [ ] Export handler no-ops if no compiled PDF URL is available yet
+- [x] PASS: Downloads the compiled PDF blob
+- [x] PASS: Filename: `{projectTitle}.pdf` (sanitized)
+- [x] PASS: Requires successful compilation first
+- [x] PASS: Export handler no-ops if no compiled PDF URL is available yet
 #### Download .tex
-- [ ] Downloads the current editor content as `.tex` file
-- [ ] Filename: `main.tex`
-- [ ] MIME type: `text/x-tex`
-- [ ] Always available (doesn't require compilation)
+- [x] PASS: Downloads the current editor content as `.tex` file
+- [x] PASS: Filename: `main.tex`
+- [x] PASS: MIME type: `text/x-tex`
+- [x] PASS: Always available (doesn't require compilation)
 #### Download as .zip
-- [ ] Bundles **all project files** (`.tex`, `.bib`, images, etc.) into a ZIP
+- [x] PASS: Bundles **all project files** (`.tex`, `.bib`, images, etc.) into a ZIP

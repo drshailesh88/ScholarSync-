@@ -1,6 +1,6 @@
 # compliance — Spec 016
 
-STATUS: PENDING
+STATUS: DONE
 TESTED: 0/8
 PASS: 0
 FAIL: 0

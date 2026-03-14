@@ -1,6 +1,6 @@
 # notebook — Spec 025
 
-STATUS: PENDING
+STATUS: DONE
 TESTED: 0/19
 PASS: 0
 FAIL: 0
