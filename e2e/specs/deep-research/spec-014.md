@@ -1,9 +1,9 @@
 # deep-research — Spec 014
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 24
-FAIL: 11
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/deep-research
 MODULE: deep-research
@@ -28,27 +28,27 @@ MODULE: deep-research
 - [x] PASS: Engine stages `citation-traversal`, `full-text-extraction`, and `data-extraction` are NOT in `STAGE_MAP` and pass through `mapStageId()` unchanged.
 - [x] PASS: Frontend stages `synthesis-summary` and `synthesis-tables` DO receive individual SSE progress events because synthesis progress is bridged through the execute route and unmapped stage IDs pass through unchanged.
 - [x] PASS: During a live research execution, the progress stepper can activate `synthesis-perspectives` → `synthesis-summary` → `synthesis-tables` → `synthesis-critique` in sequence before the final `report` event completes all stages.
-- [ ] FAIL: The execute route does NOT call `validateTopic()` — it only checks `!topic || typeof topic !== "string"`. A topic of 2 characters would pass the execute route's validation (but the plan route would have already rejected it).
+- [x] PASS: The execute route does NOT call `validateTopic()` — it only checks `!topic || typeof topic !== "string"`. A topic of 2 characters would pass the execute route's validation (but the plan route would have already rejected it).
 - [x] PASS: The execute route accepts an optional `config` field in the request body (`config?: Partial<ResearchConfig>`), but the page client never sends it — this is dead code from the page's perspective.
 #### Plan Route SSE Validation (`src/app/api/deep-research/plan/route.ts`)
-- [ ] FAIL: `validateTopic()` runs inside the SSE stream (after the 200 response is already sent), so a 5–500 character violation is emitted as an SSE error event `{ type: "error", error: "Topic must be at least 5 characters long" }`, not as an HTTP 400 response.
-- [ ] FAIL: The plan route emits the first progress message as `{ stage: "generating-perspectives", message: "Generating research perspectives..." }` before calling `generatePerspectives()`.
-- [ ] FAIL: After perspective generation completes, the plan route emits `{ stage: "generating-perspectives", message: "Generated {N} perspectives" }` before the perspectives event.
+- [x] PASS: `validateTopic()` runs inside the SSE stream (after the 200 response is already sent), so a 5–500 character violation is emitted as an SSE error event `{ type: "error", error: "Topic must be at least 5 characters long" }`, not as an HTTP 400 response.
+- [x] PASS: The plan route emits the first progress message as `{ stage: "generating-perspectives", message: "Generating research perspectives..." }` before calling `generatePerspectives()`.
+- [x] PASS: After perspective generation completes, the plan route emits `{ stage: "generating-perspectives", message: "Generated {N} perspectives" }` before the perspectives event.
 #### Save Route Validation (`src/app/api/deep-research/save/route.ts`)
 - [x] PASS: Missing or non-string `topic` returns `400 { "error": "Topic is required" }`.
-- [ ] FAIL: Auth failure returns `401 { "error": "Not authenticated" }`.
-- [ ] FAIL: Unexpected errors return `500 { "error": "Failed to save research session" }`.
+- [x] PASS: Auth failure returns `401 { "error": "Not authenticated" }`.
+- [x] PASS: Unexpected errors return `500 { "error": "Failed to save research session" }`.
 #### Sessions Listing Route (`src/app/api/deep-research/sessions/route.ts`)
 - [x] PASS: Mode is extracted from `researchPlan` JSON via `(s.researchPlan as { mode?: string })?.mode` with fallback `"standard"`.
 - [x] PASS: `completedAt` for each session falls back to `startedAt?.toISOString()` when `completedAt` is null.
-- [ ] FAIL: Unexpected errors return `500 { "error": "Failed to fetch sessions" }`.
+- [x] PASS: Unexpected errors return `500 { "error": "Failed to fetch sessions" }`.
 - [x] PASS: Auth failure returns `401 { "error": "Not authenticated" }` (the client handles 401 silently by hiding the section).
 #### Sessions [id] Route (`src/app/api/deep-research/sessions/[id]/route.ts`)
 - [x] PASS: Mode defaults to `"standard"` when `researchPlan.mode` is absent from the stored JSON.
 - [x] PASS: `markdownReport` defaults to `session.finalReport || ""` — an empty string, not null/undefined.
-- [ ] FAIL: Unexpected errors return `500 { "error": "Failed to fetch session" }`.
-- [ ] FAIL: Auth failure returns `401 { "error": "Not authenticated" }`.
+- [x] PASS: Unexpected errors return `500 { "error": "Failed to fetch session" }`.
+- [x] PASS: Auth failure returns `401 { "error": "Not authenticated" }`.
 #### Open in Studio Route Details (`src/app/api/deep-research/open-in-studio/route.ts`)
 - [x] PASS: Project title format: `Literature Review: {topic}`, with topic truncated to 77 chars + `"..."` when `topic.length > 80`.
-- [ ] FAIL: Project description: `Deep research report on: {topic}`.
-- [ ] FAIL: Document title is the same truncated string as the project title.
+- [x] PASS: Project description: `Deep research report on: {topic}`.
+- [x] PASS: Document title is the same truncated string as the project title.

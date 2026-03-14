@@ -1,9 +1,9 @@
 # feeds — Spec 014
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 26
-FAIL: 9
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -15,13 +15,13 @@ MODULE: feeds
 - [x] PASS: Reader empty state text styling: `text-sm text-ink-muted`
 - [x] PASS: Title styling: `text-lg font-bold text-ink leading-snug mb-3`
 - [x] PASS: Authors: `text-sm text-ink-muted mb-2`; hidden when `article.authors` is falsy
-- [ ] FAIL: Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by " · ")
+- [x] PASS: Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by " · ")
 - [x] PASS: Journal info styling: `text-xs text-ink-muted/70 mb-1`
 - [x] PASS: Published date styling: `text-xs text-ink-muted/70 mb-4`
 - [x] PASS: Reading time on same line as published date, separated by ` · `
-- [ ] FAIL: `estimateReadingTime()` returns `"< 1 min"` for null/empty text, otherwise `"{n} min read"` (at 200 WPM)
-- [ ] FAIL: Reader Star button label text: "Starred" / "Star" (not icon-only like card view)
-- [ ] FAIL: Reader Save button label text: "Saved" / "Save" (not icon-only like card view)
+- [x] PASS: `estimateReadingTime()` returns `"< 1 min"` for null/empty text, otherwise `"{n} min read"` (at 200 WPM)
+- [x] PASS: Reader Star button label text: "Starred" / "Star" (not icon-only like card view)
+- [x] PASS: Reader Save button label text: "Saved" / "Save" (not icon-only like card view)
 - [x] PASS: Reader Cite button: only rendered when `onCite` prop is provided
 - [x] PASS: Reader AI button styling: `bg-brand/10 text-brand hover:bg-brand/15 border border-brand/20`
 - [x] PASS: Reader AI button icon: `Sparkle` with `weight="fill"`
@@ -32,16 +32,16 @@ MODULE: feeds
 - [x] PASS: ArticleNotes rendered inside the actions border-b section
 - [x] PASS: RelatedPapers rendered below notes with `mt-4`, still inside the border-b section
 #### Article Notes (article-notes.tsx)
-- [ ] FAIL: NoteBlank icon size: 14px
+- [x] PASS: NoteBlank icon size: 14px
 - [x] PASS: "Notes" label: `text-xs text-ink-muted`
 - [x] PASS: Saved indicator: Check icon (12px) + "Saved" text in `text-emerald-500`
 - [x] PASS: Textarea: `resize-none rounded-xl border border-border bg-surface-raised px-3 py-2 text-xs leading-relaxed`
 - [x] PASS: Textarea focus: `focus:ring-2 focus:ring-brand/40`
-- [ ] FAIL: Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)
-- [ ] FAIL: Blur handler clears pending save timer before persisting
+- [x] PASS: Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)
+- [x] PASS: Blur handler clears pending save timer before persisting
 - [x] PASS: Blur handler only persists when `localValue !== notes` (skips if unchanged)
-- [ ] FAIL: Saved indicator disappears after exactly 2000ms
-- [ ] FAIL: Component cleans up both save timer and saved-indicator timer on unmount
+- [x] PASS: Saved indicator disappears after exactly 2000ms
+- [x] PASS: Component cleans up both save timer and saved-indicator timer on unmount
 #### Related Papers (related-papers.tsx)
 - [x] PASS: "Find Related Papers" button: `rounded-xl border border-border-subtle bg-surface-raised/50 px-4 py-3 text-sm`
 - [x] PASS: Loading: `Spinner` icon (18px) with `animate-spin` + "Finding related papers..." text

@@ -1,9 +1,9 @@
 # analysis — Spec 005
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 31
-FAIL: 4
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -28,10 +28,10 @@ MODULE: analysis
 - [x] PASS: Inline error text is rendered directly under the textarea in red when `error` is non-null
 - [x] PASS: Forced submission with fewer than 50 characters sets `Please enter at least 50 characters of text to analyze.`
 - [x] PASS: New document loads clear prior errors by setting `error` back to `null`
-- [ ] FAIL: Starting a new analysis clears prior errors before the fetch begins
+- [x] PASS: Starting a new analysis clears prior errors before the fetch begins
 - [x] PASS: Non-OK API responses use `data.error || "Writing analysis failed"` for the inline error
 - [x] PASS: Network exceptions set the inline error to `Failed to connect. Check your API key.`
-- [ ] FAIL: Error feedback is inline text only; there is no toast, alert banner, or modal
+- [x] PASS: Error feedback is inline text only; there is no toast, alert banner, or modal
 - [x] PASS: Analyze button label is `Analyze Writing` while idle
 - [x] PASS: Analyze button includes a leading `Sparkle` icon while idle
 - [x] PASS: Analyze button is disabled when `effectiveText.trim().length < 50`
@@ -44,5 +44,5 @@ MODULE: analysis
 - [x] PASS: Successful responses store the parsed JSON in `result`
 - [x] PASS: Successful responses keep the previously computed `clientMetrics` visible for the results summary cards
 - [x] PASS: Instant metrics panel is hidden until `clientMetrics` exists and trimmed text length is greater than 0
-- [ ] FAIL: Instant metrics panel appears for loaded document text as well as pasted text
-- [ ] FAIL: Instant metrics analysis is debounced by 500ms after the last text change
+- [x] PASS: Instant metrics panel appears for loaded document text as well as pasted text
+- [x] PASS: Instant metrics analysis is debounced by 500ms after the last text change

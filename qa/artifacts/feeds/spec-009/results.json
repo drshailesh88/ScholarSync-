@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6660,
+                      "duration": 10177,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:01.947Z",
+                      "startTime": "2026-03-14T18:57:50.347Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1644,
+                      "duration": 1783,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:08.690Z",
+                      "startTime": "2026-03-14T18:58:00.617Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -159,7 +159,7 @@
             },
             {
               "title": "cp-002: Blurring the notes field flushes any pending unsaved local changes immediately",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -172,58 +172,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1701,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-002 Blurring the notes field flushes any pending unsaved local changes immediately",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-002 Blurring the notes field flushes any pending unsaved local changes immediately\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:184:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                          "column": 13,
-                          "line": 184
-                        },
-                        "snippet": "  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled feeds checkpoint: cp-002 Blurring the notes field flushes any pending unsaved local changes immediately');\n      |             ^\n  185 |     }\n  186 |\n  187 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                            "column": 13,
-                            "line": 184
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-002 Blurring the notes field flushes any pending unsaved local changes immediately\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled feeds checkpoint: cp-002 Blurring the notes field flushes any pending unsaved local changes immediately');\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:184:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1815,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:10.349Z",
+                      "startTime": "2026-03-14T18:58:02.415Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a700e-d-local-changes-immediately-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a700e-d-local-changes-immediately-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a700e-d-local-changes-immediately-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a700e-d-local-changes-immediately-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                        "column": 13,
-                        "line": 184
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "18e855b476489eb0fea6-96302cab3acf77beaed3",
@@ -244,15 +210,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1701,
+                      "duration": 1762,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:12.813Z",
+                      "startTime": "2026-03-14T18:58:04.246Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -284,15 +250,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1650,
+                      "duration": 1752,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:14.605Z",
+                      "startTime": "2026-03-14T18:58:06.032Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -313,7 +279,7 @@
             },
             {
               "title": "cp-005: Notes save failures are silent and rely on a future article reopen to refresh se",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -324,60 +290,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1791,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-005 Notes save failures are silent and rely on a future article reopen to refresh server state",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-005 Notes save failures are silent and rely on a future article reopen to refresh server state\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:334:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                          "column": 13,
-                          "line": 334
-                        },
-                        "snippet": "  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled feeds checkpoint: cp-005 Notes save failures are silent and rely on a future article reopen to refresh server state');\n      |             ^\n  335 |     }\n  336 |\n  337 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                            "column": 13,
-                            "line": 334
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-005 Notes save failures are silent and rely on a future article reopen to refresh server state\n\n  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled feeds checkpoint: cp-005 Notes save failures are silent and rely on a future article reopen to refresh server state');\n      |             ^\n  335 |     }\n  336 |\n  337 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:334:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1846,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:16.268Z",
+                      "startTime": "2026-03-14T18:58:07.796Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--93e9a-rticle-reopen-to-refresh-se-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--93e9a-rticle-reopen-to-refresh-se-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--93e9a-rticle-reopen-to-refresh-se-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--93e9a-rticle-reopen-to-refresh-se-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                        "column": 13,
-                        "line": 334
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "18e855b476489eb0fea6-c09db3335bb0b97360d0",
@@ -398,15 +330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1685,
+                      "duration": 1747,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:18.830Z",
+                      "startTime": "2026-03-14T18:58:09.653Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -438,15 +370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1659,
+                      "duration": 1759,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:20.596Z",
+                      "startTime": "2026-03-14T18:58:11.411Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -478,15 +410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1647,
+                      "duration": 1755,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:22.266Z",
+                      "startTime": "2026-03-14T18:58:13.182Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -518,15 +450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1628,
+                      "duration": 1774,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:23.930Z",
+                      "startTime": "2026-03-14T18:58:14.947Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -558,15 +490,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1651,
+                      "duration": 1738,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:25.570Z",
+                      "startTime": "2026-03-14T18:58:16.731Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -598,15 +530,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1681,
+                      "duration": 1756,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:27.230Z",
+                      "startTime": "2026-03-14T18:58:18.480Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -627,7 +559,7 @@
             },
             {
               "title": "cp-012: Successful Add URL and PubMed-subscription actions clear only the submitted fiel",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -638,60 +570,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1774,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-012 Successful Add URL and PubMed-subscription actions clear only the submitted field, then close the modal",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-012 Successful Add URL and PubMed-subscription actions clear only the submitted field, then close the modal\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:684:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                          "column": 13,
-                          "line": 684
-                        },
-                        "snippet": "  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled feeds checkpoint: cp-012 Successful Add URL and PubMed-subscription actions clear only the submitted field, then close the modal');\n      |             ^\n  685 |     }\n  686 |\n  687 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                            "column": 13,
-                            "line": 684
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-012 Successful Add URL and PubMed-subscription actions clear only the submitted field, then close the modal\n\n  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled feeds checkpoint: cp-012 Successful Add URL and PubMed-subscription actions clear only the submitted field, then close the modal');\n      |             ^\n  685 |     }\n  686 |\n  687 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:684:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1907,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:28.920Z",
+                      "startTime": "2026-03-14T18:58:20.245Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--02901-ear-only-the-submitted-fiel-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--02901-ear-only-the-submitted-fiel-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--02901-ear-only-the-submitted-fiel-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--02901-ear-only-the-submitted-fiel-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                        "column": 13,
-                        "line": 684
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "18e855b476489eb0fea6-1a842b182c7472eac79c",
@@ -712,15 +610,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1711,
+                      "duration": 1781,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:31.516Z",
+                      "startTime": "2026-03-14T18:58:22.162Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -752,15 +650,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1656,
+                      "duration": 1740,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:33.319Z",
+                      "startTime": "2026-03-14T18:58:23.955Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -792,15 +690,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1643,
+                      "duration": 1788,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:34.993Z",
+                      "startTime": "2026-03-14T18:58:25.713Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -832,15 +730,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1675,
+                      "duration": 1802,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:36.646Z",
+                      "startTime": "2026-03-14T18:58:27.513Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -872,15 +770,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1671,
+                      "duration": 1775,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:38.330Z",
+                      "startTime": "2026-03-14T18:58:29.328Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -912,15 +810,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1756,
+                      "duration": 1759,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:40.013Z",
+                      "startTime": "2026-03-14T18:58:31.113Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -952,15 +850,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1657,
+                      "duration": 1853,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:41.778Z",
+                      "startTime": "2026-03-14T18:58:32.883Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -992,15 +890,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1674,
+                      "duration": 1808,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:43.447Z",
+                      "startTime": "2026-03-14T18:58:34.749Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1032,15 +930,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1673,
+                      "duration": 1786,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:45.129Z",
+                      "startTime": "2026-03-14T18:58:36.568Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1061,7 +959,7 @@
             },
             {
               "title": "cp-022: Sending a question matching the related-papers intent triggers the related-paper",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1072,60 +970,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1679,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-022 Sending a question matching the related-papers intent triggers the related-papers endpoint before chat streaming",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-022 Sending a question matching the related-papers intent triggers the related-papers endpoint before chat streaming\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:1184:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                          "column": 13,
-                          "line": 1184
-                        },
-                        "snippet": "  1182 |\n  1183 |     if (!handled) {\n> 1184 |       throw new Error('Unhandled feeds checkpoint: cp-022 Sending a question matching the related-papers intent triggers the related-papers endpoint before chat streaming');\n       |             ^\n  1185 |     }\n  1186 |\n  1187 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                            "column": 13,
-                            "line": 1184
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-022 Sending a question matching the related-papers intent triggers the related-papers endpoint before chat streaming\n\n  1182 |\n  1183 |     if (!handled) {\n> 1184 |       throw new Error('Unhandled feeds checkpoint: cp-022 Sending a question matching the related-papers intent triggers the related-papers endpoint before chat streaming');\n       |             ^\n  1185 |     }\n  1186 |\n  1187 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:1184:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1806,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:46.812Z",
+                      "startTime": "2026-03-14T18:58:38.365Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a8a55--triggers-the-related-paper-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a8a55--triggers-the-related-paper-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a8a55--triggers-the-related-paper-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--a8a55--triggers-the-related-paper-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                        "column": 13,
-                        "line": 1184
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "18e855b476489eb0fea6-5359e136858e4edce4c0",
@@ -1146,15 +1010,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1778,
+                      "duration": 1788,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:49.227Z",
+                      "startTime": "2026-03-14T18:58:40.182Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1175,7 +1039,7 @@
             },
             {
               "title": "cp-024: Successful related-paper intent handling appends an assistant summary message wi",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1186,60 +1050,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1674,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-024 Successful related-paper intent handling appends an assistant summary message with embedded paper cards and skips the chat endpoint entirely",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-024 Successful related-paper intent handling appends an assistant summary message with embedded paper cards and skips the chat endpoint entirely\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:1284:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                          "column": 13,
-                          "line": 1284
-                        },
-                        "snippet": "  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled feeds checkpoint: cp-024 Successful related-paper intent handling appends an assistant summary message with embedded paper cards and skips the chat endpoint entirely');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                            "column": 13,
-                            "line": 1284
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-024 Successful related-paper intent handling appends an assistant summary message with embedded paper cards and skips the chat endpoint entirely\n\n  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled feeds checkpoint: cp-024 Successful related-paper intent handling appends an assistant summary message with embedded paper cards and skips the chat endpoint entirely');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts:1284:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1825,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:51.084Z",
+                      "startTime": "2026-03-14T18:58:41.979Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--856f2-ssistant-summary-message-wi-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--856f2-ssistant-summary-message-wi-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--856f2-ssistant-summary-message-wi-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-009-feeds-spec--856f2-ssistant-summary-message-wi-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-009.spec.ts",
-                        "column": 13,
-                        "line": 1284
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "18e855b476489eb0fea6-9415d3ad2f585e83c37f",
@@ -1260,15 +1090,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1651,
+                      "duration": 1810,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:53.538Z",
+                      "startTime": "2026-03-14T18:58:43.814Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1300,15 +1130,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1734,
+                      "duration": 1835,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:55.271Z",
+                      "startTime": "2026-03-14T18:58:45.634Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1340,15 +1170,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1645,
+                      "duration": 1791,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:57.020Z",
+                      "startTime": "2026-03-14T18:58:47.482Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1380,15 +1210,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1641,
+                      "duration": 1783,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:43:58.680Z",
+                      "startTime": "2026-03-14T18:58:49.284Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1420,15 +1250,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1679,
+                      "duration": 1762,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:44:00.332Z",
+                      "startTime": "2026-03-14T18:58:51.077Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1460,15 +1290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1702,
+                      "duration": 1769,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:44:02.020Z",
+                      "startTime": "2026-03-14T18:58:52.849Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1500,15 +1330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1726,
+                      "duration": 1808,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:44:03.731Z",
+                      "startTime": "2026-03-14T18:58:54.628Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1540,15 +1370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1599,
+                      "duration": 1769,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:44:05.470Z",
+                      "startTime": "2026-03-14T18:58:56.447Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1580,15 +1410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1596,
+                      "duration": 1762,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:44:07.078Z",
+                      "startTime": "2026-03-14T18:58:58.226Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1620,15 +1450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1616,
+                      "duration": 1770,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:44:08.684Z",
+                      "startTime": "2026-03-14T18:58:59.998Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1654,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T14:43:00.003Z",
-    "duration": 71056.872,
-    "expected": 30,
+    "startTime": "2026-03-14T18:57:48.247Z",
+    "duration": 74324.91799999999,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 5,
+    "unexpected": 0,
     "flaky": 0
   }
 }

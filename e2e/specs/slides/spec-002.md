@@ -1,8 +1,8 @@
 # slides — Spec 002
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/slides
@@ -11,45 +11,45 @@ MODULE: slides
 ---
 ### Slide Filmstrip (Left Panel)
 #### Slide Thumbnails
-- [ ] All slides displayed as thumbnails with slide numbers
-- [ ] Active slide has a highlighted border
-- [ ] Clicking a thumbnail activates that slide
-- [ ] Shift+Click toggles multi-slide selection
-- [ ] Hidden slides appear at 50% opacity with an eye-slash icon
-- [ ] Regenerating slides show "Regenerating..." status label
-- [ ] Collaboration presence dots shown per slide
+- [x] PASS: All slides displayed as thumbnails with slide numbers
+- [x] PASS: Active slide has a highlighted border
+- [x] PASS: Clicking a thumbnail activates that slide
+- [x] PASS: Shift+Click toggles multi-slide selection
+- [x] PASS: Hidden slides appear at 50% opacity with an eye-slash icon
+- [x] PASS: Regenerating slides show "Regenerating..." status label
+- [x] PASS: Collaboration presence dots shown per slide
 #### Drag-to-Reorder
-- [ ] Drag handle appears on hover (6-dot icon)
-- [ ] Dragging a slide reorders it in the filmstrip
-- [ ] Drop target highlights correctly
-- [ ] Reorder persists after release
+- [x] PASS: Drag handle appears on hover (6-dot icon)
+- [x] PASS: Dragging a slide reorders it in the filmstrip
+- [x] PASS: Drop target highlights correctly
+- [x] PASS: Reorder persists after release
 #### Add Slide
-- [ ] "+ Add Slide" button at bottom of filmstrip
-- [ ] New slide inserted after active slide
+- [x] PASS: "+ Add Slide" button at bottom of filmstrip
+- [x] PASS: New slide inserted after active slide
 #### Filmstrip Context Menu (Right-Click)
-- [ ] **New Slide** — inserts after the right-clicked slide
-- [ ] **Duplicate Slide** — creates a copy
-- [ ] **Copy Slide** — copies to clipboard
-- [ ] **Cut Slide** — copies and removes (disabled if only 1 slide)
-- [ ] **Paste Slide** — pastes from clipboard (disabled if clipboard empty)
-- [ ] **Move to Beginning** — moves slide to position 1
-- [ ] **Move to End** — moves slide to last position
-- [ ] **Regenerate with AI...** — opens regenerate dialog
-- [ ] **Regenerate Selected Slides...** — batch regenerate (multi-select)
-- [ ] **Hide Slide** — toggles hidden flag
-- [ ] **Change Layout...** — submenu with all standard layouts
-- [ ] **Apply Master...** — submenu with "No Master" + all masters
-- [ ] **Export as PNG HD** — exports current slide as PNG (Shift+Click = 3x scale)
-- [ ] **Export as SVG** — exports current slide as SVG
-- [ ] **Delete Slide** — removes slide (disabled if only 1 slide, red/danger style)
+- [x] PASS: **New Slide** — inserts after the right-clicked slide
+- [x] PASS: **Duplicate Slide** — creates a copy
+- [x] PASS: **Copy Slide** — copies to clipboard
+- [x] PASS: **Cut Slide** — copies and removes (disabled if only 1 slide)
+- [x] PASS: **Paste Slide** — pastes from clipboard (disabled if clipboard empty)
+- [x] PASS: **Move to Beginning** — moves slide to position 1
+- [x] PASS: **Move to End** — moves slide to last position
+- [x] PASS: **Regenerate with AI...** — opens regenerate dialog
+- [x] PASS: **Regenerate Selected Slides...** — batch regenerate (multi-select)
+- [x] PASS: **Hide Slide** — toggles hidden flag
+- [x] PASS: **Change Layout...** — submenu with all standard layouts
+- [x] PASS: **Apply Master...** — submenu with "No Master" + all masters
+- [x] PASS: **Export as PNG HD** — exports current slide as PNG (Shift+Click = 3x scale)
+- [x] PASS: **Export as SVG** — exports current slide as SVG
+- [x] PASS: **Delete Slide** — removes slide (disabled if only 1 slide, red/danger style)
 
 ### WYSIWYG Canvas (Center Panel)
 #### Title & Subtitle Editing
-- [ ] Click on title text to enter inline edit mode
-- [ ] Click on subtitle text to enter inline edit mode
-- [ ] Changes save on blur / click away
-- [ ] Master slide placeholder prompts shown when empty
+- [x] PASS: Click on title text to enter inline edit mode
+- [x] PASS: Click on subtitle text to enter inline edit mode
+- [x] PASS: Changes save on blur / click away
+- [x] PASS: Master slide placeholder prompts shown when empty
 #### Block Selection
-- [ ] Click a block to select it (blue selection outline)
-- [ ] Shift+Click to add/remove from multi-selection
-- [ ] Click on canvas background deselects all blocks
+- [x] PASS: Click a block to select it (blue selection outline)
+- [x] PASS: Shift+Click to add/remove from multi-selection
+- [x] PASS: Click on canvas background deselects all blocks

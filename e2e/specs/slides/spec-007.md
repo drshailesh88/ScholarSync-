@@ -1,8 +1,8 @@
 # slides — Spec 007
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/slides
@@ -11,42 +11,42 @@ MODULE: slides
 ---
 ### Properties Panel (Right Panel)
 #### Animation Tab
-- [ ] **Preset selector:** Sequential Build, Fade All, Stagger, Results Reveal, None
-- [ ] "Apply Preset" button — applies selected preset to active slide
-- [ ] "Clear All" button — removes all animations from active slide
-- [ ] **Reveal Summary:**
-- [ ] Animated blocks count
-- [ ] Reveal steps count
-- [ ] Orders list
-- [ ] Note: "Per-block timing is edited from block properties or the timeline"
+- [x] PASS: **Preset selector:** Sequential Build, Fade All, Stagger, Results Reveal, None
+- [x] PASS: "Apply Preset" button — applies selected preset to active slide
+- [x] PASS: "Clear All" button — removes all animations from active slide
+- [x] PASS: **Reveal Summary:**
+- [x] PASS: Animated blocks count
+- [x] PASS: Reveal steps count
+- [x] PASS: Orders list
+- [x] PASS: Note: "Per-block timing is edited from block properties or the timeline"
 
 ### Animation Timeline (Below Canvas)
-- [ ] Collapsible section with "Animation Timeline" header
-- [ ] Shows count of animated blocks
-- [ ] **Preview button** — plays animation sequence preview
-- [ ] "Previewing..." state while running (button disabled)
-- [ ] **Timeline track:**
-- [ ] Time axis with second markers (0s, 1s, 2s, etc.)
-- [ ] Order column showing reveal order numbers
-- [ ] Colored bars for each animated block
-- [ ] Bar width = duration; bar position = delay
-- [ ] Selected block's bar has ring highlight
-- [ ] Click bar to select corresponding block
-- [ ] **Drag interactions:**
-- [ ] Drag bar horizontally to change delay
-- [ ] Drag bar vertically to change reveal order
-- [ ] Drag left edge to resize start (adjust delay + duration)
-- [ ] Drag right edge to resize end (adjust duration)
-- [ ] Grid rows with dashed borders for order lanes
-- [ ] Color-coded bars cycle through 8 colors
+- [x] PASS: Collapsible section with "Animation Timeline" header
+- [x] PASS: Shows count of animated blocks
+- [x] PASS: **Preview button** — plays animation sequence preview
+- [x] PASS: "Previewing..." state while running (button disabled)
+- [x] PASS: **Timeline track:**
+- [x] PASS: Time axis with second markers (0s, 1s, 2s, etc.)
+- [x] PASS: Order column showing reveal order numbers
+- [x] PASS: Colored bars for each animated block
+- [x] PASS: Bar width = duration; bar position = delay
+- [x] PASS: Selected block's bar has ring highlight
+- [x] PASS: Click bar to select corresponding block
+- [x] PASS: **Drag interactions:**
+- [x] PASS: Drag bar horizontally to change delay
+- [x] PASS: Drag bar vertically to change reveal order
+- [x] PASS: Drag left edge to resize start (adjust delay + duration)
+- [x] PASS: Drag right edge to resize end (adjust duration)
+- [x] PASS: Grid rows with dashed borders for order lanes
+- [x] PASS: Color-coded bars cycle through 8 colors
 
 ### Theme Engine
-- [ ] `ThemeProvider` wraps slides in CSS custom properties
-- [ ] CSS variables exposed:
-- [ ] `--slide-primary`, `--slide-secondary`, `--slide-bg`, `--slide-text`
-- [ ] `--slide-accent`, `--slide-surface`, `--slide-border`
-- [ ] `--slide-code-bg`, `--slide-callout-bg`
-- [ ] `--slide-gradient-from`, `--slide-gradient-to`
-- [ ] `--slide-font`, `--slide-heading-font`
-- [ ] `isDarkTheme()` correctly identifies dark backgrounds
-- [ ] All block renderers inherit theme variables
+- [x] PASS: `ThemeProvider` wraps slides in CSS custom properties
+- [x] PASS: CSS variables exposed:
+- [x] PASS: `--slide-primary`, `--slide-secondary`, `--slide-bg`, `--slide-text`
+- [x] PASS: `--slide-accent`, `--slide-surface`, `--slide-border`
+- [x] PASS: `--slide-code-bg`, `--slide-callout-bg`
+- [x] PASS: `--slide-gradient-from`, `--slide-gradient-to`
+- [x] PASS: `--slide-font`, `--slide-heading-font`
+- [x] PASS: `isDarkTheme()` correctly identifies dark backgrounds
+- [x] PASS: All block renderers inherit theme variables

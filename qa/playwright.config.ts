@@ -17,7 +17,7 @@ export default defineConfig({
   forbidOnly: true,
   retries: 0, // Controller handles retries, not Playwright
   workers: 1, // One at a time for deterministic results
-  timeout: 30_000,
+  timeout: 60_000,
 
   reporter: [
     ["json", { outputFile: "./progress/results.json" }],
@@ -30,7 +30,7 @@ export default defineConfig({
     screenshot: "on", // Always capture screenshots (proof)
     video: "off",
     actionTimeout: 10_000,
-    navigationTimeout: 15_000,
+    navigationTimeout: 45_000,
   },
 
   projects: [

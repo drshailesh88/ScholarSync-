@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6909,
+                      "duration": 22500,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:40.673Z",
+                      "startTime": "2026-03-14T17:59:03.204Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1685,
+                      "duration": 3338,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:47.678Z",
+                      "startTime": "2026-03-14T17:59:25.829Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -173,12 +173,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1638,
+                      "duration": 2603,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:49.376Z",
+                      "startTime": "2026-03-14T17:59:29.197Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -213,12 +213,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1681,
+                      "duration": 3101,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:51.025Z",
+                      "startTime": "2026-03-14T17:59:31.867Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -253,12 +253,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1669,
+                      "duration": 2459,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:52.726Z",
+                      "startTime": "2026-03-14T17:59:34.986Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -293,12 +293,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1656,
+                      "duration": 2917,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:54.405Z",
+                      "startTime": "2026-03-14T17:59:37.457Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -333,12 +333,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1788,
+                      "duration": 2690,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:56.076Z",
+                      "startTime": "2026-03-14T17:59:40.395Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -373,12 +373,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1740,
+                      "duration": 2891,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:57.876Z",
+                      "startTime": "2026-03-14T17:59:43.098Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -413,12 +413,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1701,
+                      "duration": 2900,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:46:59.627Z",
+                      "startTime": "2026-03-14T17:59:46.000Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -439,7 +439,7 @@
             },
             {
               "title": "cp-009: ArticleCard root element is a button not div",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -452,58 +452,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1726,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:534:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                          "column": 13,
-                          "line": 534
-                        },
-                        "snippet": "  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)');\n      |             ^\n  535 |     }\n  536 |\n  537 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                            "column": 13,
-                            "line": 534
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)\n\n  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled feeds checkpoint: cp-009 ArticleCard root element is a `<button>` (not div)');\n      |             ^\n  535 |     }\n  536 |\n  537 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:534:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3305,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:01.339Z",
+                      "startTime": "2026-03-14T17:59:48.935Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d3a8c-element-is-a-button-not-div-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d3a8c-element-is-a-button-not-div-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d3a8c-element-is-a-button-not-div-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d3a8c-element-is-a-button-not-div-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                        "column": 13,
-                        "line": 534
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "3691359caebd930f4590-cb64283b0e8c389c1f46",
@@ -524,15 +490,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1679,
+                      "duration": 2785,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:03.842Z",
+                      "startTime": "2026-03-14T17:59:52.268Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -564,15 +530,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1649,
+                      "duration": 2603,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:05.595Z",
+                      "startTime": "2026-03-14T17:59:55.070Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -593,7 +559,7 @@
             },
             {
               "title": "cp-012: Favicon fallback articlefeedSourceFaviconUrl getFaviconUrlarticlefeedSourceSiteU",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -604,60 +570,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1700,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:684:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                          "column": 13,
-                          "line": 684
-                        },
-                        "snippet": "  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`');\n      |             ^\n  685 |     }\n  686 |\n  687 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                            "column": 13,
-                            "line": 684
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`\n\n  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled feeds checkpoint: cp-012 Favicon fallback: `article.feedSourceFaviconUrl || getFaviconUrl(article.feedSourceSiteUrl ?? article.link ?? \"\")`');\n      |             ^\n  685 |     }\n  686 |\n  687 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:684:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2826,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:07.257Z",
+                      "startTime": "2026-03-14T17:59:57.686Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--969f5-onUrlarticlefeedSourceSiteU-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--969f5-onUrlarticlefeedSourceSiteU-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--969f5-onUrlarticlefeedSourceSiteU-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--969f5-onUrlarticlefeedSourceSiteU-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                        "column": 13,
-                        "line": 684
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "3691359caebd930f4590-a29c857b1e4da9e28755",
@@ -678,15 +610,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1693,
+                      "duration": 2911,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:09.707Z",
+                      "startTime": "2026-03-14T18:00:00.525Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -718,15 +650,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1586,
+                      "duration": 2928,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:11.480Z",
+                      "startTime": "2026-03-14T18:00:03.458Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -758,15 +690,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1682,
+                      "duration": 3442,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:13.080Z",
+                      "startTime": "2026-03-14T18:00:06.402Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -798,15 +730,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1626,
+                      "duration": 2349,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:14.772Z",
+                      "startTime": "2026-03-14T18:00:09.861Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -838,15 +770,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1641,
+                      "duration": 3213,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:16.407Z",
+                      "startTime": "2026-03-14T18:00:12.224Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -867,7 +799,7 @@
             },
             {
               "title": "cp-018: Star button title attribute Unstar when starred Star when not",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -878,60 +810,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1685,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:984:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                          "column": 13,
-                          "line": 984
-                        },
-                        "snippet": "  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not');\n      |             ^\n  985 |     }\n  986 |\n  987 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                            "column": 13,
-                            "line": 984
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not\n\n  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled feeds checkpoint: cp-018 Star button title attribute: \"Unstar\" when starred, \"Star\" when not');\n      |             ^\n  985 |     }\n  986 |\n  987 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:984:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3543,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:18.057Z",
+                      "startTime": "2026-03-14T18:00:15.454Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d139c--when-starred-Star-when-not-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d139c--when-starred-Star-when-not-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d139c--when-starred-Star-when-not-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--d139c--when-starred-Star-when-not-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                        "column": 13,
-                        "line": 984
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "3691359caebd930f4590-51b01e9f7bebfa0535f2",
@@ -952,15 +850,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1693,
+                      "duration": 2706,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:20.529Z",
+                      "startTime": "2026-03-14T18:00:19.027Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -981,7 +879,7 @@
             },
             {
               "title": "cp-020: Save button title attribute Saved when saved Save to Library when not",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -992,60 +890,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1690,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1084:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                          "column": 13,
-                          "line": 1084
-                        },
-                        "snippet": "  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                            "column": 13,
-                            "line": 1084
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not\n\n  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled feeds checkpoint: cp-020 Save button title attribute: \"Saved\" when saved, \"Save to Library\" when not');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1084:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2557,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:22.309Z",
+                      "startTime": "2026-03-14T18:00:21.768Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--18c5d-ed-Save-to-Library-when-not-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--18c5d-ed-Save-to-Library-when-not-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--18c5d-ed-Save-to-Library-when-not-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--18c5d-ed-Save-to-Library-when-not-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                        "column": 13,
-                        "line": 1084
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "3691359caebd930f4590-538446963806e0a69d71",
@@ -1066,15 +930,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1681,
+                      "duration": 2618,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:24.764Z",
+                      "startTime": "2026-03-14T18:00:24.345Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1106,15 +970,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1622,
+                      "duration": 2309,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:26.524Z",
+                      "startTime": "2026-03-14T18:00:26.981Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1146,15 +1010,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1628,
+                      "duration": 2862,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:28.157Z",
+                      "startTime": "2026-03-14T18:00:29.303Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1186,15 +1050,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1636,
+                      "duration": 2500,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:29.805Z",
+                      "startTime": "2026-03-14T18:00:32.176Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1215,7 +1079,7 @@
             },
             {
               "title": "cp-025: DOI link text DOI not the actual doi value",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1226,60 +1090,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1721,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1334:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                          "column": 13,
-                          "line": 1334
-                        },
-                        "snippet": "  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                            "column": 13,
-                            "line": 1334
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled feeds checkpoint: cp-025 DOI link text: \"DOI\" (not the actual doi value)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1334:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3174,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:31.453Z",
+                      "startTime": "2026-03-14T18:00:34.764Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--cbbca-OI-not-the-actual-doi-value-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--cbbca-OI-not-the-actual-doi-value-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--cbbca-OI-not-the-actual-doi-value-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--cbbca-OI-not-the-actual-doi-value-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                        "column": 13,
-                        "line": 1334
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "3691359caebd930f4590-c741b992c63ac1d104c9",
@@ -1300,15 +1130,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1697,
+                      "duration": 2747,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:34.001Z",
+                      "startTime": "2026-03-14T18:00:37.986Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1340,15 +1170,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1611,
+                      "duration": 3368,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:35.785Z",
+                      "startTime": "2026-03-14T18:00:40.750Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1369,7 +1199,7 @@
             },
             {
               "title": "cp-028: List view root element is a button",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1380,60 +1210,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1686,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1484:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                          "column": 13,
-                          "line": 1484
-                        },
-                        "snippet": "  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                            "column": 13,
-                            "line": 1484
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`\n\n  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 List view root element is a `<button>`');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts:1484:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 3499,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:37.407Z",
+                      "startTime": "2026-03-14T18:00:44.145Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c21c5-ew-root-element-is-a-button-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c21c5-ew-root-element-is-a-button-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c21c5-ew-root-element-is-a-button-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-012-feeds-spec--c21c5-ew-root-element-is-a-button-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-012.spec.ts",
-                        "column": 13,
-                        "line": 1484
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "3691359caebd930f4590-e8e72ad209276a5f479b",
@@ -1454,15 +1250,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1657,
+                      "duration": 2738,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:39.903Z",
+                      "startTime": "2026-03-14T18:00:47.683Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1494,15 +1290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1659,
+                      "duration": 3145,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:41.649Z",
+                      "startTime": "2026-03-14T18:00:50.436Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1534,15 +1330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1647,
+                      "duration": 3378,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:43.320Z",
+                      "startTime": "2026-03-14T18:00:53.596Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1574,15 +1370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1623,
+                      "duration": 2612,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:44.988Z",
+                      "startTime": "2026-03-14T18:00:57.006Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1614,15 +1410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1657,
+                      "duration": 2836,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:46.623Z",
+                      "startTime": "2026-03-14T18:00:59.633Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1654,15 +1450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1640,
+                      "duration": 3277,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:47:48.290Z",
+                      "startTime": "2026-03-14T18:01:02.484Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1688,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T14:46:38.645Z",
-    "duration": 71955.626,
-    "expected": 29,
+    "startTime": "2026-03-14T17:59:00.766Z",
+    "duration": 126090.91,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 6,
+    "unexpected": 0,
     "flaky": 0
   }
 }

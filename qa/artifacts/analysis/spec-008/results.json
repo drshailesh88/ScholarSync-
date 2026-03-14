@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5763,
+                      "duration": 7710,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:58:58.291Z",
+                      "startTime": "2026-03-14T20:46:18.427Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1733,
+                      "duration": 1964,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:04.135Z",
+                      "startTime": "2026-03-14T20:46:26.235Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -173,12 +173,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1727,
+                      "duration": 2028,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:05.882Z",
+                      "startTime": "2026-03-14T20:46:28.226Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -199,7 +199,7 @@
             },
             {
               "title": "cp-003: Rate limit key format is userIdintegrity-check using RATE_LIMITSanalysis config ",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -212,58 +212,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1709,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"integrity-check\"\u001b[39m\nReceived string:    \u001b[31m\"// Rate limiting utility\u001b[39m\n\u001b[31m// Uses in-memory sliding window when Upstash is not configured (dev),\u001b[39m\n\u001b[31m// or @upstash/ratelimit + @upstash/redis in production.·\u001b[39m\n\u001b[31mimport { NextResponse } from \\\"next/server\\\";·\u001b[39m\n\u001b[31minterface RateLimitConfig {\u001b[39m\n\u001b[31m  /** Max requests allowed in the window */\u001b[39m\n\u001b[31m  limit: number;\u001b[39m\n\u001b[31m  /** Window duration in seconds */\u001b[39m\n\u001b[31m  windowSeconds: number;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// In-memory rate limiter for dev / when Upstash is not configured\u001b[39m\n\u001b[31mconst windowMap = new Map<string, { count: number; resetAt: number }>();·\u001b[39m\n\u001b[31mfunction inMemoryCheck(\u001b[39m\n\u001b[31m  key: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): { success: boolean; remaining: number } {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  const entry = windowMap.get(key);·\u001b[39m\n\u001b[31m  if (!entry || now > entry.resetAt) {\u001b[39m\n\u001b[31m    windowMap.set(key, { count: 1, resetAt: now + config.windowSeconds * 1000 });\u001b[39m\n\u001b[31m    return { success: true, remaining: config.limit - 1 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  if (entry.count >= config.limit) {\u001b[39m\n\u001b[31m    return { success: false, remaining: 0 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  entry.count += 1;\u001b[39m\n\u001b[31m  return { success: true, remaining: config.limit - entry.count };\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Periodically clean up expired entries to prevent memory leaks\u001b[39m\n\u001b[31msetInterval(() => {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  for (const [key, entry] of windowMap) {\u001b[39m\n\u001b[31m    if (now > entry.resetAt) {\u001b[39m\n\u001b[31m      windowMap.delete(key);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }\u001b[39m\n\u001b[31m}, 60_000);·\u001b[39m\n\u001b[31m/**\u001b[39m\n\u001b[31m * Check rate limit for a given user/key.\u001b[39m\n\u001b[31m * Returns null if allowed, or a 429 Response if rate limited.\u001b[39m\n\u001b[31m */\u001b[39m\n\u001b[31mexport async function checkRateLimit(\u001b[39m\n\u001b[31m  userId: string,\u001b[39m\n\u001b[31m  endpoint: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): Promise<Response | null> {\u001b[39m\n\u001b[31m  const key = `${userId}:${endpoint}`;·\u001b[39m\n\u001b[31m  // Use Upstash if configured\u001b[39m\n\u001b[31m  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const { Ratelimit } = await import(\\\"@upstash/ratelimit\\\");\u001b[39m\n\u001b[31m      const { Redis } = await import(\\\"@upstash/redis\\\");·\u001b[39m\n\u001b[31m      const redis = new Redis({\u001b[39m\n\u001b[31m        url: process.env.UPSTASH_REDIS_REST_URL,\u001b[39m\n\u001b[31m        token: process.env.UPSTASH_REDIS_REST_TOKEN,\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const ratelimit = new Ratelimit({\u001b[39m\n\u001b[31m        redis,\u001b[39m\n\u001b[31m        limiter: Ratelimit.slidingWindow(config.limit, `${config.windowSeconds} s`),\u001b[39m\n\u001b[31m        prefix: \\\"scholarsync\\\",\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const { success, remaining } = await ratelimit.limit(key);\u001b[39m\n\u001b[31m      if (!success) {\u001b[39m\n\u001b[31m        return NextResponse.json(\u001b[39m\n\u001b[31m          { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m          {\u001b[39m\n\u001b[31m            status: 429,\u001b[39m\n\u001b[31m            headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m        );\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      return null;\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Fall through to in-memory if Upstash fails\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  // Fallback to in-memory rate limiting\u001b[39m\n\u001b[31m  const { success, remaining } = inMemoryCheck(key, config);\u001b[39m\n\u001b[31m  if (!success) {\u001b[39m\n\u001b[31m    return NextResponse.json(\u001b[39m\n\u001b[31m      { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m      {\u001b[39m\n\u001b[31m        status: 429,\u001b[39m\n\u001b[31m        headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    );\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return null;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Preset rate limit configs\u001b[39m\n\u001b[31mexport const RATE_LIMITS = {\u001b[39m\n\u001b[31m  /** AI chat/generation endpoints: 60 requests per hour */\u001b[39m\n\u001b[31m  ai: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Search endpoints: 120 requests per hour */\u001b[39m\n\u001b[31m  search: { limit: 120, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Export endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  export: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Audio overview generation: 10 requests per hour */\u001b[39m\n\u001b[31m  \\\"audio-overview\\\": { limit: 10, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Plagiarism/integrity check: 20 requests per hour */\u001b[39m\n\u001b[31m  analysis: { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Embedding: 60 requests per hour */\u001b[39m\n\u001b[31m  embed: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Write/save endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  write: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Feed operations: 60 requests per hour */\u001b[39m\n\u001b[31m  feeds: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Slide image generation: 20 requests per hour */\u001b[39m\n\u001b[31m  \\\"slide-images\\\": { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m} as const;\u001b[39m\n\u001b[31m\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"integrity-check\"\u001b[39m\nReceived string:    \u001b[31m\"// Rate limiting utility\u001b[39m\n\u001b[31m// Uses in-memory sliding window when Upstash is not configured (dev),\u001b[39m\n\u001b[31m// or @upstash/ratelimit + @upstash/redis in production.·\u001b[39m\n\u001b[31mimport { NextResponse } from \\\"next/server\\\";·\u001b[39m\n\u001b[31minterface RateLimitConfig {\u001b[39m\n\u001b[31m  /** Max requests allowed in the window */\u001b[39m\n\u001b[31m  limit: number;\u001b[39m\n\u001b[31m  /** Window duration in seconds */\u001b[39m\n\u001b[31m  windowSeconds: number;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// In-memory rate limiter for dev / when Upstash is not configured\u001b[39m\n\u001b[31mconst windowMap = new Map<string, { count: number; resetAt: number }>();·\u001b[39m\n\u001b[31mfunction inMemoryCheck(\u001b[39m\n\u001b[31m  key: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): { success: boolean; remaining: number } {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  const entry = windowMap.get(key);·\u001b[39m\n\u001b[31m  if (!entry || now > entry.resetAt) {\u001b[39m\n\u001b[31m    windowMap.set(key, { count: 1, resetAt: now + config.windowSeconds * 1000 });\u001b[39m\n\u001b[31m    return { success: true, remaining: config.limit - 1 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  if (entry.count >= config.limit) {\u001b[39m\n\u001b[31m    return { success: false, remaining: 0 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  entry.count += 1;\u001b[39m\n\u001b[31m  return { success: true, remaining: config.limit - entry.count };\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Periodically clean up expired entries to prevent memory leaks\u001b[39m\n\u001b[31msetInterval(() => {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  for (const [key, entry] of windowMap) {\u001b[39m\n\u001b[31m    if (now > entry.resetAt) {\u001b[39m\n\u001b[31m      windowMap.delete(key);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }\u001b[39m\n\u001b[31m}, 60_000);·\u001b[39m\n\u001b[31m/**\u001b[39m\n\u001b[31m * Check rate limit for a given user/key.\u001b[39m\n\u001b[31m * Returns null if allowed, or a 429 Response if rate limited.\u001b[39m\n\u001b[31m */\u001b[39m\n\u001b[31mexport async function checkRateLimit(\u001b[39m\n\u001b[31m  userId: string,\u001b[39m\n\u001b[31m  endpoint: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): Promise<Response | null> {\u001b[39m\n\u001b[31m  const key = `${userId}:${endpoint}`;·\u001b[39m\n\u001b[31m  // Use Upstash if configured\u001b[39m\n\u001b[31m  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const { Ratelimit } = await import(\\\"@upstash/ratelimit\\\");\u001b[39m\n\u001b[31m      const { Redis } = await import(\\\"@upstash/redis\\\");·\u001b[39m\n\u001b[31m      const redis = new Redis({\u001b[39m\n\u001b[31m        url: process.env.UPSTASH_REDIS_REST_URL,\u001b[39m\n\u001b[31m        token: process.env.UPSTASH_REDIS_REST_TOKEN,\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const ratelimit = new Ratelimit({\u001b[39m\n\u001b[31m        redis,\u001b[39m\n\u001b[31m        limiter: Ratelimit.slidingWindow(config.limit, `${config.windowSeconds} s`),\u001b[39m\n\u001b[31m        prefix: \\\"scholarsync\\\",\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const { success, remaining } = await ratelimit.limit(key);\u001b[39m\n\u001b[31m      if (!success) {\u001b[39m\n\u001b[31m        return NextResponse.json(\u001b[39m\n\u001b[31m          { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m          {\u001b[39m\n\u001b[31m            status: 429,\u001b[39m\n\u001b[31m            headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m        );\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      return null;\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Fall through to in-memory if Upstash fails\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  // Fallback to in-memory rate limiting\u001b[39m\n\u001b[31m  const { success, remaining } = inMemoryCheck(key, config);\u001b[39m\n\u001b[31m  if (!success) {\u001b[39m\n\u001b[31m    return NextResponse.json(\u001b[39m\n\u001b[31m      { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m      {\u001b[39m\n\u001b[31m        status: 429,\u001b[39m\n\u001b[31m        headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    );\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return null;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Preset rate limit configs\u001b[39m\n\u001b[31mexport const RATE_LIMITS = {\u001b[39m\n\u001b[31m  /** AI chat/generation endpoints: 60 requests per hour */\u001b[39m\n\u001b[31m  ai: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Search endpoints: 120 requests per hour */\u001b[39m\n\u001b[31m  search: { limit: 120, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Export endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  export: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Audio overview generation: 10 requests per hour */\u001b[39m\n\u001b[31m  \\\"audio-overview\\\": { limit: 10, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Plagiarism/integrity check: 20 requests per hour */\u001b[39m\n\u001b[31m  analysis: { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Embedding: 60 requests per hour */\u001b[39m\n\u001b[31m  embed: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Write/save endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  write: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Feed operations: 60 requests per hour */\u001b[39m\n\u001b[31m  feeds: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Slide image generation: 20 requests per hour */\u001b[39m\n\u001b[31m  \\\"slide-images\\\": { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m} as const;\u001b[39m\n\u001b[31m\"\u001b[39m\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/analysis.ts:26:43)\n    at assertAnalysisCheckpoint (/home/user/ScholarSync-/qa/module-assertions/analysis.ts:640:5)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:218:27",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/module-assertions/analysis.ts",
-                          "column": 43,
-                          "line": 26
-                        },
-                        "snippet": "   at ../module-assertions/analysis.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/module-assertions/analysis.ts",
-                            "column": 43,
-                            "line": 26
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"integrity-check\"\u001b[39m\nReceived string:    \u001b[31m\"// Rate limiting utility\u001b[39m\n\u001b[31m// Uses in-memory sliding window when Upstash is not configured (dev),\u001b[39m\n\u001b[31m// or @upstash/ratelimit + @upstash/redis in production.·\u001b[39m\n\u001b[31mimport { NextResponse } from \\\"next/server\\\";·\u001b[39m\n\u001b[31minterface RateLimitConfig {\u001b[39m\n\u001b[31m  /** Max requests allowed in the window */\u001b[39m\n\u001b[31m  limit: number;\u001b[39m\n\u001b[31m  /** Window duration in seconds */\u001b[39m\n\u001b[31m  windowSeconds: number;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// In-memory rate limiter for dev / when Upstash is not configured\u001b[39m\n\u001b[31mconst windowMap = new Map<string, { count: number; resetAt: number }>();·\u001b[39m\n\u001b[31mfunction inMemoryCheck(\u001b[39m\n\u001b[31m  key: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): { success: boolean; remaining: number } {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  const entry = windowMap.get(key);·\u001b[39m\n\u001b[31m  if (!entry || now > entry.resetAt) {\u001b[39m\n\u001b[31m    windowMap.set(key, { count: 1, resetAt: now + config.windowSeconds * 1000 });\u001b[39m\n\u001b[31m    return { success: true, remaining: config.limit - 1 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  if (entry.count >= config.limit) {\u001b[39m\n\u001b[31m    return { success: false, remaining: 0 };\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  entry.count += 1;\u001b[39m\n\u001b[31m  return { success: true, remaining: config.limit - entry.count };\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Periodically clean up expired entries to prevent memory leaks\u001b[39m\n\u001b[31msetInterval(() => {\u001b[39m\n\u001b[31m  const now = Date.now();\u001b[39m\n\u001b[31m  for (const [key, entry] of windowMap) {\u001b[39m\n\u001b[31m    if (now > entry.resetAt) {\u001b[39m\n\u001b[31m      windowMap.delete(key);\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }\u001b[39m\n\u001b[31m}, 60_000);·\u001b[39m\n\u001b[31m/**\u001b[39m\n\u001b[31m * Check rate limit for a given user/key.\u001b[39m\n\u001b[31m * Returns null if allowed, or a 429 Response if rate limited.\u001b[39m\n\u001b[31m */\u001b[39m\n\u001b[31mexport async function checkRateLimit(\u001b[39m\n\u001b[31m  userId: string,\u001b[39m\n\u001b[31m  endpoint: string,\u001b[39m\n\u001b[31m  config: RateLimitConfig\u001b[39m\n\u001b[31m): Promise<Response | null> {\u001b[39m\n\u001b[31m  const key = `${userId}:${endpoint}`;·\u001b[39m\n\u001b[31m  // Use Upstash if configured\u001b[39m\n\u001b[31m  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {\u001b[39m\n\u001b[31m    try {\u001b[39m\n\u001b[31m      const { Ratelimit } = await import(\\\"@upstash/ratelimit\\\");\u001b[39m\n\u001b[31m      const { Redis } = await import(\\\"@upstash/redis\\\");·\u001b[39m\n\u001b[31m      const redis = new Redis({\u001b[39m\n\u001b[31m        url: process.env.UPSTASH_REDIS_REST_URL,\u001b[39m\n\u001b[31m        token: process.env.UPSTASH_REDIS_REST_TOKEN,\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const ratelimit = new Ratelimit({\u001b[39m\n\u001b[31m        redis,\u001b[39m\n\u001b[31m        limiter: Ratelimit.slidingWindow(config.limit, `${config.windowSeconds} s`),\u001b[39m\n\u001b[31m        prefix: \\\"scholarsync\\\",\u001b[39m\n\u001b[31m      });·\u001b[39m\n\u001b[31m      const { success, remaining } = await ratelimit.limit(key);\u001b[39m\n\u001b[31m      if (!success) {\u001b[39m\n\u001b[31m        return NextResponse.json(\u001b[39m\n\u001b[31m          { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m          {\u001b[39m\n\u001b[31m            status: 429,\u001b[39m\n\u001b[31m            headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m        );\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m      return null;\u001b[39m\n\u001b[31m    } catch {\u001b[39m\n\u001b[31m      // Fall through to in-memory if Upstash fails\u001b[39m\n\u001b[31m    }\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  // Fallback to in-memory rate limiting\u001b[39m\n\u001b[31m  const { success, remaining } = inMemoryCheck(key, config);\u001b[39m\n\u001b[31m  if (!success) {\u001b[39m\n\u001b[31m    return NextResponse.json(\u001b[39m\n\u001b[31m      { error: \\\"Rate limit exceeded. Please try again later.\\\" },\u001b[39m\n\u001b[31m      {\u001b[39m\n\u001b[31m        status: 429,\u001b[39m\n\u001b[31m        headers: { \\\"X-RateLimit-Remaining\\\": String(remaining) },\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    );\u001b[39m\n\u001b[31m  }·\u001b[39m\n\u001b[31m  return null;\u001b[39m\n\u001b[31m}·\u001b[39m\n\u001b[31m// Preset rate limit configs\u001b[39m\n\u001b[31mexport const RATE_LIMITS = {\u001b[39m\n\u001b[31m  /** AI chat/generation endpoints: 60 requests per hour */\u001b[39m\n\u001b[31m  ai: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Search endpoints: 120 requests per hour */\u001b[39m\n\u001b[31m  search: { limit: 120, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Export endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  export: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Audio overview generation: 10 requests per hour */\u001b[39m\n\u001b[31m  \\\"audio-overview\\\": { limit: 10, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Plagiarism/integrity check: 20 requests per hour */\u001b[39m\n\u001b[31m  analysis: { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Embedding: 60 requests per hour */\u001b[39m\n\u001b[31m  embed: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Write/save endpoints: 30 requests per hour */\u001b[39m\n\u001b[31m  write: { limit: 30, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Feed operations: 60 requests per hour */\u001b[39m\n\u001b[31m  feeds: { limit: 60, windowSeconds: 3600 },\u001b[39m\n\u001b[31m  /** Slide image generation: 20 requests per hour */\u001b[39m\n\u001b[31m  \\\"slide-images\\\": { limit: 20, windowSeconds: 3600 },\u001b[39m\n\u001b[31m} as const;\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/analysis.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/analysis.ts:26:43)\n    at assertAnalysisCheckpoint (/home/user/ScholarSync-/qa/module-assertions/analysis.ts:640:5)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:218:27"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1876,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:07.625Z",
+                      "startTime": "2026-03-14T20:46:30.264Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-53b32-RATE-LIMITSanalysis-config--qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-53b32-RATE-LIMITSanalysis-config--qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-53b32-RATE-LIMITSanalysis-config--qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-53b32-RATE-LIMITSanalysis-config--qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/module-assertions/analysis.ts",
-                        "column": 43,
-                        "line": 26
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-aadee283dab9758e4b13",
@@ -284,15 +250,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1887,
+                      "duration": 2380,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:10.131Z",
+                      "startTime": "2026-03-14T20:46:32.153Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -324,15 +290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1767,
+                      "duration": 1979,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:12.099Z",
+                      "startTime": "2026-03-14T20:46:34.547Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -364,15 +330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1701,
+                      "duration": 1955,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:13.878Z",
+                      "startTime": "2026-03-14T20:46:36.539Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -404,15 +370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1687,
+                      "duration": 1969,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:15.595Z",
+                      "startTime": "2026-03-14T20:46:38.503Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -444,15 +410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1773,
+                      "duration": 2156,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:17.294Z",
+                      "startTime": "2026-03-14T20:46:40.483Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -484,15 +450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1706,
+                      "duration": 1969,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:19.076Z",
+                      "startTime": "2026-03-14T20:46:42.650Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -524,15 +490,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1764,
+                      "duration": 1921,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:20.792Z",
+                      "startTime": "2026-03-14T20:46:44.635Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -564,15 +530,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1750,
+                      "duration": 1972,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:22.567Z",
+                      "startTime": "2026-03-14T20:46:46.568Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -604,15 +570,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1892,
+                      "duration": 1942,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:24.326Z",
+                      "startTime": "2026-03-14T20:46:48.549Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -644,15 +610,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1775,
+                      "duration": 1941,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:26.229Z",
+                      "startTime": "2026-03-14T20:46:50.501Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -684,15 +650,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1785,
+                      "duration": 1936,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:28.014Z",
+                      "startTime": "2026-03-14T20:46:52.467Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -724,15 +690,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1846,
+                      "duration": 1977,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:29.815Z",
+                      "startTime": "2026-03-14T20:46:54.412Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -764,15 +730,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1825,
+                      "duration": 1921,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:31.674Z",
+                      "startTime": "2026-03-14T20:46:56.399Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -804,15 +770,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1769,
+                      "duration": 1910,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:33.519Z",
+                      "startTime": "2026-03-14T20:46:58.333Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -844,15 +810,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1804,
+                      "duration": 1887,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:35.298Z",
+                      "startTime": "2026-03-14T20:47:00.253Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -884,15 +850,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1778,
+                      "duration": 1925,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:37.113Z",
+                      "startTime": "2026-03-14T20:47:02.150Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -924,15 +890,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1840,
+                      "duration": 1921,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:38.899Z",
+                      "startTime": "2026-03-14T20:47:04.086Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -964,15 +930,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1729,
+                      "duration": 1875,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:40.748Z",
+                      "startTime": "2026-03-14T20:47:06.017Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1004,15 +970,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1715,
+                      "duration": 1950,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:42.486Z",
+                      "startTime": "2026-03-14T20:47:07.902Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1044,15 +1010,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1726,
+                      "duration": 1926,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:44.210Z",
+                      "startTime": "2026-03-14T20:47:09.860Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1084,15 +1050,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1776,
+                      "duration": 1910,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:45.946Z",
+                      "startTime": "2026-03-14T20:47:11.797Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1113,7 +1079,7 @@
             },
             {
               "title": "cp-025: isComplexWord requires 3 syllables AND excludes words ending in ed es or ing lin",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1124,60 +1090,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1785,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1334:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                          "column": 13,
-                          "line": 1334
-                        },
-                        "snippet": "  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                            "column": 13,
-                            "line": 1334
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled analysis checkpoint: cp-025 `isComplexWord()` requires 3+ syllables AND excludes words ending in \"ed\", \"es\", or \"ing\" (~line 118-127)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1334:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1872,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:47.732Z",
+                      "startTime": "2026-03-14T20:47:13.717Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-2d5c8--ending-in-ed-es-or-ing-lin-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-2d5c8--ending-in-ed-es-or-ing-lin-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-2d5c8--ending-in-ed-es-or-ing-lin-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-2d5c8--ending-in-ed-es-or-ing-lin-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                        "column": 13,
-                        "line": 1334
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-5e37189fa41dbd557955",
@@ -1187,7 +1119,7 @@
             },
             {
               "title": "cp-026: HEDGING_PHRASES array contains exactly 35 hedging phrases line 144-182",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1198,60 +1130,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1839,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1384:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                          "column": 13,
-                          "line": 1384
-                        },
-                        "snippet": "  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                            "column": 13,
-                            "line": 1384
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)\n\n  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled analysis checkpoint: cp-026 `HEDGING_PHRASES` array contains exactly 35 hedging phrases (~line 144-182)');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1384:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1904,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:50.322Z",
+                      "startTime": "2026-03-14T20:47:15.599Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-9c1bc-edging-phrases-line-144-182-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-9c1bc-edging-phrases-line-144-182-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-9c1bc-edging-phrases-line-144-182-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-9c1bc-edging-phrases-line-144-182-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                        "column": 13,
-                        "line": 1384
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-3ae6d6fdee522ad8b06e",
@@ -1261,7 +1159,7 @@
             },
             {
               "title": "cp-027: PARAGRAPH_BATCH_SIZE for LLM analysis is 4 paragraphs per batch line 185",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1272,60 +1170,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1850,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1434:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                          "column": 13,
-                          "line": 1434
-                        },
-                        "snippet": "  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                            "column": 13,
-                            "line": 1434
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)\n\n  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled analysis checkpoint: cp-027 `PARAGRAPH_BATCH_SIZE` for LLM analysis is 4 paragraphs per batch (~line 185)');\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1434:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1908,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:52.995Z",
+                      "startTime": "2026-03-14T20:47:17.513Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-fa4f1-ragraphs-per-batch-line-185-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-fa4f1-ragraphs-per-batch-line-185-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-fa4f1-ragraphs-per-batch-line-185-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-fa4f1-ragraphs-per-batch-line-185-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                        "column": 13,
-                        "line": 1434
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-bdffc3728af8b35104d1",
@@ -1346,15 +1210,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1798,
+                      "duration": 1890,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:55.692Z",
+                      "startTime": "2026-03-14T20:47:19.433Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1386,15 +1250,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1729,
+                      "duration": 1952,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:57.572Z",
+                      "startTime": "2026-03-14T20:47:21.335Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1415,7 +1279,7 @@
             },
             {
               "title": "cp-030: Binoculars score is mapped to human probability score threshold - 05 100 clamped",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1426,60 +1290,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1862,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1584:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                          "column": 13,
-                          "line": 1584
-                        },
-                        "snippet": "  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                            "column": 13,
-                            "line": 1584
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)\n\n  1582 |\n  1583 |     if (!handled) {\n> 1584 |       throw new Error('Unhandled analysis checkpoint: cp-030 Binoculars score is mapped to human probability: `(score / threshold - 0.5) * 100`, clamped to 0-100 (~line 64-69)');\n       |             ^\n  1585 |     }\n  1586 |\n  1587 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1584:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1993,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:59:59.312Z",
+                      "startTime": "2026-03-14T20:47:23.312Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-1d69a--threshold---05-100-clamped-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-1d69a--threshold---05-100-clamped-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-1d69a--threshold---05-100-clamped-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-1d69a--threshold---05-100-clamped-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                        "column": 13,
-                        "line": 1584
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-6341f7cccd7fb47a42a6",
@@ -1489,7 +1319,7 @@
             },
             {
               "title": "cp-031: Combined paid-tier score 60 Binoculars 40 LLM-heuristic rounded line 1075-1077",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1500,60 +1330,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1788,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1634:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                          "column": 13,
-                          "line": 1634
-                        },
-                        "snippet": "  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                            "column": 13,
-                            "line": 1634
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)\n\n  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled analysis checkpoint: cp-031 Combined paid-tier score: 60% Binoculars + 40% LLM-heuristic, rounded (~line 1075-1077)');\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1634:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1938,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T13:00:01.949Z",
+                      "startTime": "2026-03-14T20:47:25.316Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-38ad7-stic-rounded-line-1075-1077-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-38ad7-stic-rounded-line-1075-1077-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-38ad7-stic-rounded-line-1075-1077-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-38ad7-stic-rounded-line-1075-1077-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                        "column": 13,
-                        "line": 1634
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-696d74a55100cc639bc0",
@@ -1574,15 +1370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1799,
+                      "duration": 1948,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T13:00:04.559Z",
+                      "startTime": "2026-03-14T20:47:27.263Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1603,7 +1399,7 @@
             },
             {
               "title": "cp-033: Plagiarism severity Jaccard similarity 04 high 02 medium 02 low line 500-504",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1614,60 +1410,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1850,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1734:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                          "column": 13,
-                          "line": 1734
-                        },
-                        "snippet": "  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                            "column": 13,
-                            "line": 1734
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)\n\n  1732 |\n  1733 |     if (!handled) {\n> 1734 |       throw new Error('Unhandled analysis checkpoint: cp-033 Plagiarism severity: Jaccard similarity >= 0.4 → \"high\", >= 0.2 → \"medium\", < 0.2 → \"low\" (~line 500-504)');\n       |             ^\n  1735 |     }\n  1736 |\n  1737 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1734:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2016,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T13:00:06.439Z",
+                      "startTime": "2026-03-14T20:47:29.225Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-ce1b0--medium-02-low-line-500-504-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-ce1b0--medium-02-low-line-500-504-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-ce1b0--medium-02-low-line-500-504-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-ce1b0--medium-02-low-line-500-504-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                        "column": 13,
-                        "line": 1734
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-2f5bfd3806a0b7466239",
@@ -1677,7 +1439,7 @@
             },
             {
               "title": "cp-034: Plagiarism matches below 008 Jaccard similarity are not reported line 599",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1688,60 +1450,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1914,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1784:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                          "column": 13,
-                          "line": 1784
-                        },
-                        "snippet": "  1782 |\n  1783 |     if (!handled) {\n> 1784 |       throw new Error('Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)');\n       |             ^\n  1785 |     }\n  1786 |\n  1787 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                            "column": 13,
-                            "line": 1784
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)\n\n  1782 |\n  1783 |     if (!handled) {\n> 1784 |       throw new Error('Unhandled analysis checkpoint: cp-034 Plagiarism matches below 0.08 Jaccard similarity are not reported (~line 599)');\n       |             ^\n  1785 |     }\n  1786 |\n  1787 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts:1784:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1984,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T13:00:09.040Z",
+                      "startTime": "2026-03-14T20:47:31.254Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-b63a9-y-are-not-reported-line-599-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-b63a9-y-are-not-reported-line-599-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-b63a9-y-are-not-reported-line-599-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-008-analysis-b63a9-y-are-not-reported-line-599-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-008.spec.ts",
-                        "column": 13,
-                        "line": 1784
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ac521dacf4fd264a5ae1-f2038f1813ca8868707d",
@@ -1756,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T12:58:56.400Z",
-    "duration": 75287.421,
-    "expected": 27,
+    "startTime": "2026-03-14T20:46:16.422Z",
+    "duration": 77548.763,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 8,
+    "unexpected": 0,
     "flaky": 0
   }
 }

@@ -1,9 +1,9 @@
 # feeds — Spec 008
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 31
-FAIL: 4
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -13,14 +13,14 @@ MODULE: feeds
 #### Detailed QA Coverage
 - [x] PASS: `loadMore()` is a no-op when `hasMore` is false or `isLoadingArticles` is already true
 - [x] PASS: `loadMore()` increments `page` before calling `loadArticles(false)`
-- [ ] FAIL: Article API requests always send `perPage=30`
+- [x] PASS: Article API requests always send `perPage=30`
 - [x] PASS: Fresh article loads clear `articles`, reset `page` to `0`, and clear `selectedArticleId`
 - [x] PASS: Append-mode article loads keep the current `selectedArticleId`
 - [x] PASS: Search input updates `searchQuery` and immediately triggers `loadArticles()`
 - [x] PASS: Search clear button appears only when `searchQuery` is non-empty
 - [x] PASS: Search clear button calls `setSearchQuery("")`; it does not use the separate `clearSearch()` store action
-- [ ] FAIL: Filters button blue-dot indicator appears only when a date or journal filter is active
-- [ ] FAIL: Advanced filters can be opened even when no filters are active
+- [x] PASS: Filters button blue-dot indicator appears only when a date or journal filter is active
+- [x] PASS: Advanced filters can be opened even when no filters are active
 - [x] PASS: `Clear all filters` resets date-from, date-to, and journal only; it does not clear search text or collapse the filter panel
 - [x] PASS: Advanced sort buttons normalize `published` and `added` into feed-store sort modes rather than preserving a separate stored value
 - [x] PASS: Selecting `Title` in advanced sort normalizes store `sortBy` to `relevance`
@@ -37,7 +37,7 @@ MODULE: feeds
 - [x] PASS: `c` keyboard shortcut opens the citation modal for the selected article
 - [x] PASS: `a` keyboard shortcut toggles the copilot panel only when an article is selected
 - [x] PASS: Article reader empty state text is exactly `Select an article to read`
-- [ ] FAIL: Reader journal-info row omits itself entirely when journal, volume, and issue are all absent
+- [x] PASS: Reader journal-info row omits itself entirely when journal, volume, and issue are all absent
 - [x] PASS: Reader published-date row always includes reading-time text computed from `abstractSnippet`
 - [x] PASS: Reader `Save` button does not disable while `saveToLibrary()` is in flight
 - [x] PASS: Successful `saveToLibrary()` marks `isSavedToLibrary = true` and stores `savedPaperId`

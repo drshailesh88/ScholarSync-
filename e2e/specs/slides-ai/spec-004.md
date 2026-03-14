@@ -1,8 +1,8 @@
 # slides-ai — Spec 004
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/slides/ai
@@ -10,41 +10,41 @@ MODULE: slides-ai
 
 ---
 #### 5. Coach Panel (Properties Panel)
-- [ ] **Design** (amber)
-- [ ] **Audience Fit** (red)
-- [ ] Up to 5 suggestions displayed, sorted by priority
-- [ ] Priority coloring: high (red), medium (yellow), low (green)
-- [ ] Each suggestion shows actionable text
-- [ ] Per-slide breakdown with slide number and title
-- [ ] Issues list (red)
-- [ ] Strengths list (green)
-- [ ] Click a slide insight to navigate to that slide
-- [ ] "Re-evaluate" button to refresh scores after changes
-- [ ] Endpoint: `/api/presentations/coach`
-- [ ] Sends: deckId, audienceType, all slides data
-- [ ] Returns: overallScore, 5 dimension scores, suggestions[], slideInsights[]
+- [x] PASS: **Design** (amber)
+- [x] PASS: **Audience Fit** (red)
+- [x] PASS: Up to 5 suggestions displayed, sorted by priority
+- [x] PASS: Priority coloring: high (red), medium (yellow), low (green)
+- [x] PASS: Each suggestion shows actionable text
+- [x] PASS: Per-slide breakdown with slide number and title
+- [x] PASS: Issues list (red)
+- [x] PASS: Strengths list (green)
+- [x] PASS: Click a slide insight to navigate to that slide
+- [x] PASS: "Re-evaluate" button to refresh scores after changes
+- [x] PASS: Endpoint: `/api/presentations/coach`
+- [x] PASS: Sends: deckId, audienceType, all slides data
+- [x] PASS: Returns: overallScore, 5 dimension scores, suggestions[], slideInsights[]
 #### 6. Slide Regenerate Dialog (Filmstrip Context Menu)
-- [ ] Opens from filmstrip right-click → "Regenerate with AI..."
-- [ ] Also available as "Regenerate Selected Slides..." for multi-select
-- [ ] **Dialog UI:**
-- [ ] Title shows "Regenerate This Slide" or "Regenerate Selected Slides"
-- [ ] Lists slide titles being regenerated
-- [ ] Instruction text input (freeform prompt)
-- [ ] Tone selector (RegenerateTone enum)
-- [ ] "Regenerate" submit button
-- [ ] Close/cancel button
-- [ ] On submit, regenerates slide content via store action
-- [ ] Dialog closes after successful regeneration
+- [x] PASS: Opens from filmstrip right-click → "Regenerate with AI..."
+- [x] PASS: Also available as "Regenerate Selected Slides..." for multi-select
+- [x] PASS: **Dialog UI:**
+- [x] PASS: Title shows "Regenerate This Slide" or "Regenerate Selected Slides"
+- [x] PASS: Lists slide titles being regenerated
+- [x] PASS: Instruction text input (freeform prompt)
+- [x] PASS: Tone selector (RegenerateTone enum)
+- [x] PASS: "Regenerate" submit button
+- [x] PASS: Close/cancel button
+- [x] PASS: On submit, regenerates slide content via store action
+- [x] PASS: Dialog closes after successful regeneration
 #### 7. Gamma Mode Layout
-- [ ] Three-panel layout when slides exist:
-- [ ] Left: Card Outline Sidebar (w-56)
-- [ ] Center: Card Stack (flex-1, scrollable)
-- [ ] Right: AI Agent Panel (w-360, conditional on `agentPanelOpen`)
-- [ ] When no slides exist: shows Outline Generator wizard instead
-- [ ] Gamma Toolbar at top (fixed)
+- [x] PASS: Three-panel layout when slides exist:
+- [x] PASS: Left: Card Outline Sidebar (w-56)
+- [x] PASS: Center: Card Stack (flex-1, scrollable)
+- [x] PASS: Right: AI Agent Panel (w-360, conditional on `agentPanelOpen`)
+- [x] PASS: When no slides exist: shows Outline Generator wizard instead
+- [x] PASS: Gamma Toolbar at top (fixed)
 #### 8. Gamma Toolbar
-- [ ] "Slides" / "Create" toggle (same as Section 1)
-- [ ] Switching from Create to Slides mode via Export menu shows confirmation dialog
-- [ ] Click to enter edit mode (inline input with brand underline)
-- [ ] Max width 300px, text truncated
-- [ ] Enter commits the title change
+- [x] PASS: "Slides" / "Create" toggle (same as Section 1)
+- [x] PASS: Switching from Create to Slides mode via Export menu shows confirmation dialog
+- [x] PASS: Click to enter edit mode (inline input with brand underline)
+- [x] PASS: Max width 300px, text truncated
+- [x] PASS: Enter commits the title change

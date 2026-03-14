@@ -1,8 +1,8 @@
 # slides — Spec 006
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/slides
@@ -11,45 +11,45 @@ MODULE: slides
 ---
 ### Properties Panel (Right Panel)
 #### Background Section
-- [ ] Color stops editor
-- [ ] Uses theme colors as quick picks
-- [ ] **Image:**
-- [ ] URL input
-- [ ] Preview thumbnail
-- [ ] Image Position selector: Cover, Contain, Top, Center, Bottom
-- [ ] **Overlay** (shared across all types):
-- [ ] Overlay type: None, Frosted, Faded
-- [ ] Intensity slider (0–100%) when overlay active
-- [ ] Overlay color picker when overlay active
-- [ ] "Reset to Theme Default" button
+- [x] PASS: Color stops editor
+- [x] PASS: Uses theme colors as quick picks
+- [x] PASS: **Image:**
+- [x] PASS: URL input
+- [x] PASS: Preview thumbnail
+- [x] PASS: Image Position selector: Cover, Contain, Top, Center, Bottom
+- [x] PASS: **Overlay** (shared across all types):
+- [x] PASS: Overlay type: None, Frosted, Faded
+- [x] PASS: Intensity slider (0–100%) when overlay active
+- [x] PASS: Overlay color picker when overlay active
+- [x] PASS: "Reset to Theme Default" button
 #### Theme Section
-- [ ] Theme picker with preset themes
-- [ ] Clicking a theme applies it globally to the deck
-- [ ] Active theme is highlighted
+- [x] PASS: Theme picker with preset themes
+- [x] PASS: Clicking a theme applies it globally to the deck
+- [x] PASS: Active theme is highlighted
 #### Branding (Institution Kit)
-- [ ] Institution Name text input
-- [ ] Footer Text input
-- [ ] Logo URL input
-- [ ] Values persist across the deck
+- [x] PASS: Institution Name text input
+- [x] PASS: Footer Text input
+- [x] PASS: Logo URL input
+- [x] PASS: Values persist across the deck
 #### Layout Section
-- [ ] Layout picker with visual layout options
-- [ ] Changing layout updates the active slide immediately
-- [ ] Active layout is highlighted
+- [x] PASS: Layout picker with visual layout options
+- [x] PASS: Changing layout updates the active slide immediately
+- [x] PASS: Active layout is highlighted
 #### Slide Master Section
-- [ ] Dropdown to select a master (or "No Master")
-- [ ] Applying a master also sets the slide's layout
-- [ ] "Edit Masters" button opens the Master Editor modal
+- [x] PASS: Dropdown to select a master (or "No Master")
+- [x] PASS: Applying a master also sets the slide's layout
+- [x] PASS: "Edit Masters" button opens the Master Editor modal
 #### Transition Section
-- [ ] 5 transition options: None, Fade, Slide, Zoom, Morph
-- [ ] Morph tooltip: "Automatically animates matching elements between slides"
-- [ ] Active transition highlighted per slide
-- [ ] "Apply to All Slides" button
-- [ ] Note: "Slides without a transition use the global default"
+- [x] PASS: 5 transition options: None, Fade, Slide, Zoom, Morph
+- [x] PASS: Morph tooltip: "Automatically animates matching elements between slides"
+- [x] PASS: Active transition highlighted per slide
+- [x] PASS: "Apply to All Slides" button
+- [x] PASS: Note: "Slides without a transition use the global default"
 #### AI Tools Section
-- [ ] AI Tools dropdown for active slide
-- [ ] Operates on slide's title, subtitle, content blocks, speaker notes
-- [ ] "Apply" callback updates the slide
+- [x] PASS: AI Tools dropdown for active slide
+- [x] PASS: Operates on slide's title, subtitle, content blocks, speaker notes
+- [x] PASS: "Apply" callback updates the slide
 #### Coach Section
-- [ ] Coach panel with deck-wide analysis
-- [ ] Uses audience type for context
-- [ ] "Navigate to Slide" action from coach suggestions
+- [x] PASS: Coach panel with deck-wide analysis
+- [x] PASS: Uses audience type for context
+- [x] PASS: "Navigate to Slide" action from coach suggestions

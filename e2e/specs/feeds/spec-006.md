@@ -1,9 +1,9 @@
 # feeds — Spec 006
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 28
-FAIL: 7
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -13,9 +13,9 @@ MODULE: feeds
 #### Import
 - [x] PASS: File input accepts `.opml` and `.xml` files
 - [x] PASS: `POST /api/feeds/opml/import` with XML content
-- [ ] FAIL: Response reports: total feeds, imported, skipped, failed
-- [ ] FAIL: Error details for failed imports
-- [ ] FAIL: Subscriptions refresh after import
+- [x] PASS: Response reports: total feeds, imported, skipped, failed
+- [x] PASS: Error details for failed imports
+- [x] PASS: Subscriptions refresh after import
 
 ### Feed Store (Zustand)
 #### Key State
@@ -37,7 +37,7 @@ MODULE: feeds
 - [x] PASS: `loadSubscriptions()` / `subscribe()` / `unsubscribe()`
 - [x] PASS: `loadArticles()` / `loadMore()`
 - [x] PASS: `markRead()` / `markAllRead()` / `toggleStar()` / `saveToLibrary()`
-- [ ] FAIL: `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`
+- [x] PASS: `setSelectedFeed()` / `setSelectedFolder()` / `setViewFilter()`
 - [x] PASS: `openCopilot()` / `closeCopilot()` / `summarizeArticle()` / `sendCopilotMessage()`
 - [x] PASS: `clearFilters()` / `clearSearch()` / `clearCopilot()`
 
@@ -46,10 +46,10 @@ MODULE: feeds
 - [x] PASS: Feed store defaults to `viewFilter = "unread"`, `sortBy = "newest"`, `sortDir = "desc"`, and `layout = "card"`
 - [x] PASS: Feed store does not use zustand persist middleware; page state is refetched fresh after reload
 - [x] PASS: Page mount triggers both `loadSubscriptions()` and `loadArticles()` in parallel
-- [ ] FAIL: Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen
+- [x] PASS: Empty-state gate is `subscriptions.length === 0 && !isLoadingSubscriptions`; articles alone do not bypass the empty-state screen
 - [x] PASS: Header unread helper text renders only when `totalUnread > 0`
 - [x] PASS: Export button fetches `/api/feeds/opml/export` and downloads `scholarsync-feeds.opml` only when the response is OK
-- [ ] FAIL: Export failures are silent in the current page UI
+- [x] PASS: Export failures are silent in the current page UI
 - [x] PASS: Import control is a `<label>` wrapping a hidden file input with `accept=".opml,.xml"`
-- [ ] FAIL: Canceling the import file picker leaves the page unchanged
+- [x] PASS: Canceling the import file picker leaves the page unchanged
 - [x] PASS: Import reads the selected file as text and posts it to `/api/feeds/opml/import` with `Content-Type: application/xml`

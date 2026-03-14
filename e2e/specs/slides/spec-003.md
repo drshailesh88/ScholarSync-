@@ -1,8 +1,8 @@
 # slides — Spec 003
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/slides
@@ -11,46 +11,46 @@ MODULE: slides
 ---
 ### WYSIWYG Canvas (Center Panel)
 #### Block Selection
-- [ ] Marquee/rubber-band selection by dragging on empty canvas area
-- [ ] Tab cycles to next block; Shift+Tab cycles to previous
-- [ ] Cmd+A selects all blocks on the active slide
-- [ ] Escape deselects all (or exits editing mode first)
+- [x] PASS: Marquee/rubber-band selection by dragging on empty canvas area
+- [x] PASS: Tab cycles to next block; Shift+Tab cycles to previous
+- [x] PASS: Cmd+A selects all blocks on the active slide
+- [x] PASS: Escape deselects all (or exits editing mode first)
 #### Block Editing
-- [ ] Double-click a text/bullets/quote block to enter inline edit mode
-- [ ] Editing state tracked globally (for keyboard shortcuts awareness)
-- [ ] Click outside the editing block to exit edit mode
-- [ ] Escape exits edit mode
+- [x] PASS: Double-click a text/bullets/quote block to enter inline edit mode
+- [x] PASS: Editing state tracked globally (for keyboard shortcuts awareness)
+- [x] PASS: Click outside the editing block to exit edit mode
+- [x] PASS: Escape exits edit mode
 #### Block Positioning (Drag & Resize)
-- [ ] Drag blocks to reposition them on the canvas
-- [ ] Resize handles on selected blocks
-- [ ] Multi-block group move (drag one selected block, all move together)
-- [ ] Grid snap when `snapToGrid` is enabled
-- [ ] Position values in percentage-based coordinates (0–100)
+- [x] PASS: Drag blocks to reposition them on the canvas
+- [x] PASS: Resize handles on selected blocks
+- [x] PASS: Multi-block group move (drag one selected block, all move together)
+- [x] PASS: Grid snap when `snapToGrid` is enabled
+- [x] PASS: Position values in percentage-based coordinates (0–100)
 #### Block Z-Order
-- [ ] Cmd+] — Bring Forward
-- [ ] Cmd+Shift+] — Bring to Front
-- [ ] Cmd+[ — Send Backward
-- [ ] Cmd+Shift+[ — Send to Back
+- [x] PASS: Cmd+] — Bring Forward
+- [x] PASS: Cmd+Shift+] — Bring to Front
+- [x] PASS: Cmd+[ — Send Backward
+- [x] PASS: Cmd+Shift+[ — Send to Back
 #### Block Lock/Unlock
-- [ ] Cmd+L — Toggle lock on selected block
-- [ ] Locked blocks cannot be moved, resized, or deleted
-- [ ] Lock/unlock icons displayed on locked blocks
+- [x] PASS: Cmd+L — Toggle lock on selected block
+- [x] PASS: Locked blocks cannot be moved, resized, or deleted
+- [x] PASS: Lock/unlock icons displayed on locked blocks
 #### Block Clipboard
-- [ ] Cmd+C — Copy selected block(s)
-- [ ] Cmd+X — Cut selected block(s)
-- [ ] Cmd+V — Paste block(s) from clipboard
-- [ ] Delete/Backspace — Delete selected block(s) (respects lock)
+- [x] PASS: Cmd+C — Copy selected block(s)
+- [x] PASS: Cmd+X — Cut selected block(s)
+- [x] PASS: Cmd+V — Paste block(s) from clipboard
+- [x] PASS: Delete/Backspace — Delete selected block(s) (respects lock)
 #### Canvas Context Menu (Right-Click on block)
-- [ ] Context menu appears at cursor position
-- [ ] Contains block-specific actions (copy, cut, delete, z-order, lock)
-- [ ] Submenu support with hover-reveal
-- [ ] Escape or click outside closes the menu
-- [ ] Scroll closes the menu
+- [x] PASS: Context menu appears at cursor position
+- [x] PASS: Contains block-specific actions (copy, cut, delete, z-order, lock)
+- [x] PASS: Submenu support with hover-reveal
+- [x] PASS: Escape or click outside closes the menu
+- [x] PASS: Scroll closes the menu
 #### Slide Regenerate Dialog
-- [ ] Opened from context menu "Regenerate with AI..."
-- [ ] Instruction text input
-- [ ] Tone selector (RegenerateTone)
-- [ ] Submit regenerates the slide content
-- [ ] Dialog closes on cancel or after successful regeneration
+- [x] PASS: Opened from context menu "Regenerate with AI..."
+- [x] PASS: Instruction text input
+- [x] PASS: Tone selector (RegenerateTone)
+- [x] PASS: Submit regenerates the slide content
+- [x] PASS: Dialog closes on cancel or after successful regeneration
 #### Canvas Rulers
-- [ ] Toggle rulers on/off from canvas controls
+- [x] PASS: Toggle rulers on/off from canvas controls

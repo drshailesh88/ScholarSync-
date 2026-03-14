@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6721,
+                      "duration": 17038,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:10.744Z",
+                      "startTime": "2026-03-14T18:03:20.034Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1665,
+                      "duration": 2009,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:17.558Z",
+                      "startTime": "2026-03-14T18:03:37.201Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -173,12 +173,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1667,
+                      "duration": 1985,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:19.235Z",
+                      "startTime": "2026-03-14T18:03:39.253Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -213,12 +213,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1659,
+                      "duration": 1892,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:20.920Z",
+                      "startTime": "2026-03-14T18:03:41.263Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -239,7 +239,7 @@
             },
             {
               "title": "cp-004: Journal info format journal Vol volume Issue issue array filtered joined by",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -252,58 +252,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1754,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-004 Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by \" · \")",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-004 Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by \" · \")\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:284:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 284
-                        },
-                        "snippet": "  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled feeds checkpoint: cp-004 Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by \" · \")');\n      |             ^\n  285 |     }\n  286 |\n  287 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 284
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-004 Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by \" · \")\n\n  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled feeds checkpoint: cp-004 Journal info format: `[journal] · Vol. {volume} · Issue {issue}` (array filtered + joined by \" · \")');\n      |             ^\n  285 |     }\n  286 |\n  287 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:284:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1957,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:22.590Z",
+                      "startTime": "2026-03-14T18:03:43.170Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--e9a80-ue-array-filtered-joined-by-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--e9a80-ue-array-filtered-joined-by-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--e9a80-ue-array-filtered-joined-by-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--e9a80-ue-array-filtered-joined-by-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 284
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-a344396f0c89580363ff",
@@ -324,15 +290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1768,
+                      "duration": 2285,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:25.138Z",
+                      "startTime": "2026-03-14T18:03:45.142Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -364,15 +330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1769,
+                      "duration": 2129,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:26.992Z",
+                      "startTime": "2026-03-14T18:03:47.443Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -404,15 +370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1675,
+                      "duration": 2633,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:28.775Z",
+                      "startTime": "2026-03-14T18:03:49.590Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -433,7 +399,7 @@
             },
             {
               "title": "cp-008: estimateReadingTime returns 1 min for nullempty text otherwise n min read at 200",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -444,60 +410,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1743,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-008 `estimateReadingTime()` returns `\"< 1 min\"` for null/empty text, otherwise `\"{n} min read\"` (at 200 WPM)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-008 `estimateReadingTime()` returns `\"< 1 min\"` for null/empty text, otherwise `\"{n} min read\"` (at 200 WPM)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:484:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 484
-                        },
-                        "snippet": "  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled feeds checkpoint: cp-008 `estimateReadingTime()` returns `\"< 1 min\"` for null/empty text, otherwise `\"{n} min read\"` (at 200 WPM)');\n      |             ^\n  485 |     }\n  486 |\n  487 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 484
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-008 `estimateReadingTime()` returns `\"< 1 min\"` for null/empty text, otherwise `\"{n} min read\"` (at 200 WPM)\n\n  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled feeds checkpoint: cp-008 `estimateReadingTime()` returns `\"< 1 min\"` for null/empty text, otherwise `\"{n} min read\"` (at 200 WPM)');\n      |             ^\n  485 |     }\n  486 |\n  487 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:484:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2989,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:30.465Z",
+                      "startTime": "2026-03-14T18:03:52.236Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--92137-otherwise-n-min-read-at-200-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--92137-otherwise-n-min-read-at-200-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--92137-otherwise-n-min-read-at-200-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--92137-otherwise-n-min-read-at-200-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 484
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-9a13b137610fe6b84cb0",
@@ -507,7 +439,7 @@
             },
             {
               "title": "cp-009: Reader Star button label text Starred Star not icon-only like card view",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -518,60 +450,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1766,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-009 Reader Star button label text: \"Starred\" / \"Star\" (not icon-only like card view)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-009 Reader Star button label text: \"Starred\" / \"Star\" (not icon-only like card view)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:534:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 534
-                        },
-                        "snippet": "  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled feeds checkpoint: cp-009 Reader Star button label text: \"Starred\" / \"Star\" (not icon-only like card view)');\n      |             ^\n  535 |     }\n  536 |\n  537 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 534
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-009 Reader Star button label text: \"Starred\" / \"Star\" (not icon-only like card view)\n\n  532 |\n  533 |     if (!handled) {\n> 534 |       throw new Error('Unhandled feeds checkpoint: cp-009 Reader Star button label text: \"Starred\" / \"Star\" (not icon-only like card view)');\n      |             ^\n  535 |     }\n  536 |\n  537 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:534:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2751,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:32.975Z",
+                      "startTime": "2026-03-14T18:03:55.239Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--c6fd5-ot-icon-only-like-card-view-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--c6fd5-ot-icon-only-like-card-view-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--c6fd5-ot-icon-only-like-card-view-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--c6fd5-ot-icon-only-like-card-view-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 534
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-1da81048031f769f7ed3",
@@ -581,7 +479,7 @@
             },
             {
               "title": "cp-010: Reader Save button label text Saved Save not icon-only like card view",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -592,60 +490,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1749,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-010 Reader Save button label text: \"Saved\" / \"Save\" (not icon-only like card view)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-010 Reader Save button label text: \"Saved\" / \"Save\" (not icon-only like card view)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:584:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 584
-                        },
-                        "snippet": "  582 |\n  583 |     if (!handled) {\n> 584 |       throw new Error('Unhandled feeds checkpoint: cp-010 Reader Save button label text: \"Saved\" / \"Save\" (not icon-only like card view)');\n      |             ^\n  585 |     }\n  586 |\n  587 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 584
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-010 Reader Save button label text: \"Saved\" / \"Save\" (not icon-only like card view)\n\n  582 |\n  583 |     if (!handled) {\n> 584 |       throw new Error('Unhandled feeds checkpoint: cp-010 Reader Save button label text: \"Saved\" / \"Save\" (not icon-only like card view)');\n      |             ^\n  585 |     }\n  586 |\n  587 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:584:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2774,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:35.614Z",
+                      "startTime": "2026-03-14T18:03:58.015Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5f95e-ot-icon-only-like-card-view-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5f95e-ot-icon-only-like-card-view-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5f95e-ot-icon-only-like-card-view-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5f95e-ot-icon-only-like-card-view-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 584
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-e9280bef27cdeef0f3bb",
@@ -666,15 +530,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1700,
+                      "duration": 2975,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:38.216Z",
+                      "startTime": "2026-03-14T18:04:00.806Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -706,15 +570,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1684,
+                      "duration": 2708,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:40.005Z",
+                      "startTime": "2026-03-14T18:04:03.809Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -746,15 +610,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1661,
+                      "duration": 2778,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:41.701Z",
+                      "startTime": "2026-03-14T18:04:06.532Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -786,15 +650,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1707,
+                      "duration": 2541,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:43.384Z",
+                      "startTime": "2026-03-14T18:04:09.324Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -826,15 +690,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1686,
+                      "duration": 2543,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:45.101Z",
+                      "startTime": "2026-03-14T18:04:11.890Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -866,15 +730,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1686,
+                      "duration": 2661,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:46.801Z",
+                      "startTime": "2026-03-14T18:04:14.453Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -906,15 +770,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1644,
+                      "duration": 2682,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:48.502Z",
+                      "startTime": "2026-03-14T18:04:17.189Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -946,15 +810,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1672,
+                      "duration": 2636,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:50.155Z",
+                      "startTime": "2026-03-14T18:04:19.885Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -986,15 +850,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1706,
+                      "duration": 2709,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:51.835Z",
+                      "startTime": "2026-03-14T18:04:22.537Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1015,7 +879,7 @@
             },
             {
               "title": "cp-020: NoteBlank icon size 14px",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1026,60 +890,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1723,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-020 NoteBlank icon size: 14px",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-020 NoteBlank icon size: 14px\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1084:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 1084
-                        },
-                        "snippet": "  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled feeds checkpoint: cp-020 NoteBlank icon size: 14px');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 1084
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-020 NoteBlank icon size: 14px\n\n  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled feeds checkpoint: cp-020 NoteBlank icon size: 14px');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1084:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2931,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:53.550Z",
+                      "startTime": "2026-03-14T18:04:25.282Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--feeb6-20-NoteBlank-icon-size-14px-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--feeb6-20-NoteBlank-icon-size-14px-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--feeb6-20-NoteBlank-icon-size-14px-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--feeb6-20-NoteBlank-icon-size-14px-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 1084
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-aba181e571a6d7acfa21",
@@ -1100,15 +930,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1739,
+                      "duration": 1980,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:56.096Z",
+                      "startTime": "2026-03-14T18:04:28.238Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1140,15 +970,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1684,
+                      "duration": 1909,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:57.920Z",
+                      "startTime": "2026-03-14T18:04:30.230Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1180,15 +1010,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1653,
+                      "duration": 1923,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:49:59.617Z",
+                      "startTime": "2026-03-14T18:04:32.149Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1220,15 +1050,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1834,
+                      "duration": 1970,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:01.286Z",
+                      "startTime": "2026-03-14T18:04:34.087Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1249,7 +1079,7 @@
             },
             {
               "title": "cp-025: Auto-save debounce setTimeout persistvalue 1000 exactly 1000ms",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1260,60 +1090,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1725,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-025 Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-025 Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1334:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 1334
-                        },
-                        "snippet": "  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled feeds checkpoint: cp-025 Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 1334
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-025 Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)\n\n  1332 |\n  1333 |     if (!handled) {\n> 1334 |       throw new Error('Unhandled feeds checkpoint: cp-025 Auto-save debounce: `setTimeout(() => persist(value), 1000)` (exactly 1000ms)');\n       |             ^\n  1335 |     }\n  1336 |\n  1337 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1334:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1974,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:03.132Z",
+                      "startTime": "2026-03-14T18:04:36.072Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--b1e50-stvalue-1000-exactly-1000ms-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--b1e50-stvalue-1000-exactly-1000ms-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--b1e50-stvalue-1000-exactly-1000ms-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--b1e50-stvalue-1000-exactly-1000ms-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 1334
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-cae93e7062e2163ac8e5",
@@ -1323,7 +1119,7 @@
             },
             {
               "title": "cp-026: Blur handler clears pending save timer before persisting",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1334,60 +1130,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1800,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-026 Blur handler clears pending save timer before persisting",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-026 Blur handler clears pending save timer before persisting\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1384:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 1384
-                        },
-                        "snippet": "  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled feeds checkpoint: cp-026 Blur handler clears pending save timer before persisting');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 1384
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-026 Blur handler clears pending save timer before persisting\n\n  1382 |\n  1383 |     if (!handled) {\n> 1384 |       throw new Error('Unhandled feeds checkpoint: cp-026 Blur handler clears pending save timer before persisting');\n       |             ^\n  1385 |     }\n  1386 |\n  1387 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1384:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1945,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:05.639Z",
+                      "startTime": "2026-03-14T18:04:38.059Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--f87de-ave-timer-before-persisting-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--f87de-ave-timer-before-persisting-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--f87de-ave-timer-before-persisting-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--f87de-ave-timer-before-persisting-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 1384
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-15ac98e2761308d18c9f",
@@ -1408,15 +1170,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1719,
+                      "duration": 2043,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:08.298Z",
+                      "startTime": "2026-03-14T18:04:40.015Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1437,7 +1199,7 @@
             },
             {
               "title": "cp-028: Saved indicator disappears after exactly 2000ms",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1448,60 +1210,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1682,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-028 Saved indicator disappears after exactly 2000ms",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-028 Saved indicator disappears after exactly 2000ms\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1484:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 1484
-                        },
-                        "snippet": "  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 Saved indicator disappears after exactly 2000ms');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 1484
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-028 Saved indicator disappears after exactly 2000ms\n\n  1482 |\n  1483 |     if (!handled) {\n> 1484 |       throw new Error('Unhandled feeds checkpoint: cp-028 Saved indicator disappears after exactly 2000ms');\n       |             ^\n  1485 |     }\n  1486 |\n  1487 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1484:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1957,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:10.108Z",
+                      "startTime": "2026-03-14T18:04:42.071Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5697c-ppears-after-exactly-2000ms-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5697c-ppears-after-exactly-2000ms-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5697c-ppears-after-exactly-2000ms-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--5697c-ppears-after-exactly-2000ms-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 1484
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-b8b21cf812a42508c9e5",
@@ -1511,7 +1239,7 @@
             },
             {
               "title": "cp-029: Component cleans up both save timer and saved-indicator timer on unmount",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1522,60 +1250,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1783,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-029 Component cleans up both save timer and saved-indicator timer on unmount",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-029 Component cleans up both save timer and saved-indicator timer on unmount\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1534:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                          "column": 13,
-                          "line": 1534
-                        },
-                        "snippet": "  1532 |\n  1533 |     if (!handled) {\n> 1534 |       throw new Error('Unhandled feeds checkpoint: cp-029 Component cleans up both save timer and saved-indicator timer on unmount');\n       |             ^\n  1535 |     }\n  1536 |\n  1537 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                            "column": 13,
-                            "line": 1534
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-029 Component cleans up both save timer and saved-indicator timer on unmount\n\n  1532 |\n  1533 |     if (!handled) {\n> 1534 |       throw new Error('Unhandled feeds checkpoint: cp-029 Component cleans up both save timer and saved-indicator timer on unmount');\n       |             ^\n  1535 |     }\n  1536 |\n  1537 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts:1534:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2013,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:12.588Z",
+                      "startTime": "2026-03-14T18:04:44.044Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--83e74--indicator-timer-on-unmount-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--83e74--indicator-timer-on-unmount-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--83e74--indicator-timer-on-unmount-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-014-feeds-spec--83e74--indicator-timer-on-unmount-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-014.spec.ts",
-                        "column": 13,
-                        "line": 1534
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "e0fb1aab0dfcca15fb4a-1a6f32cfd128f12df2ab",
@@ -1596,15 +1290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1728,
+                      "duration": 2002,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:15.242Z",
+                      "startTime": "2026-03-14T18:04:46.075Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1636,15 +1330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1645,
+                      "duration": 1974,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:17.060Z",
+                      "startTime": "2026-03-14T18:04:48.088Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1676,15 +1370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1653,
+                      "duration": 1968,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:18.716Z",
+                      "startTime": "2026-03-14T18:04:50.076Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1716,15 +1410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1644,
+                      "duration": 1976,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:20.381Z",
+                      "startTime": "2026-03-14T18:04:52.060Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1756,15 +1450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1675,
+                      "duration": 2043,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:50:22.034Z",
+                      "startTime": "2026-03-14T18:04:54.049Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1790,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T14:49:08.767Z",
-    "duration": 75644.69,
-    "expected": 26,
+    "startTime": "2026-03-14T18:03:17.704Z",
+    "duration": 99344.09000000001,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 9,
+    "unexpected": 0,
     "flaky": 0
   }
 }

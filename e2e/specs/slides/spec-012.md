@@ -1,8 +1,8 @@
 # slides — Spec 012
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/slides
@@ -11,51 +11,51 @@ MODULE: slides
 ---
 ### Keyboard Shortcuts (Global)
 #### Z-Order
-- [ ] `Cmd+Shift+[` — Send to Back
+- [x] PASS: `Cmd+Shift+[` — Send to Back
 #### Block Operations
-- [ ] `Cmd+L` — Toggle Lock on selected block
-- [ ] `Cmd+G` — Group (TODO/placeholder)
-- [ ] `Cmd+Shift+G` — Ungroup (TODO/placeholder)
-- [ ] `Delete` / `Backspace` — Delete selected blocks (respects lock)
+- [x] PASS: `Cmd+L` — Toggle Lock on selected block
+- [x] PASS: `Cmd+G` — Group (TODO/placeholder)
+- [x] PASS: `Cmd+Shift+G` — Ungroup (TODO/placeholder)
+- [x] PASS: `Delete` / `Backspace` — Delete selected blocks (respects lock)
 #### Slide Operations
-- [ ] `Cmd+Shift+D` — Duplicate active slide
-- [ ] `Cmd+C` — Copy block (if block selected) or copy slide (if no block selected)
-- [ ] `Cmd+X` — Cut selected block(s)
-- [ ] `Cmd+V` — Paste block (if blocks in clipboard) or paste slide
+- [x] PASS: `Cmd+Shift+D` — Duplicate active slide
+- [x] PASS: `Cmd+C` — Copy block (if block selected) or copy slide (if no block selected)
+- [x] PASS: `Cmd+X` — Cut selected block(s)
+- [x] PASS: `Cmd+V` — Paste block (if blocks in clipboard) or paste slide
 #### Navigation
-- [ ] `Home` — Jump to first slide
-- [ ] `End` — Jump to last slide
-- [ ] `PageUp` — Previous slide
-- [ ] `PageDown` — Next slide
+- [x] PASS: `Home` — Jump to first slide
+- [x] PASS: `End` — Jump to last slide
+- [x] PASS: `PageUp` — Previous slide
+- [x] PASS: `PageDown` — Next slide
 #### Smart Target Detection
-- [ ] Shortcuts disabled when typing in INPUT, TEXTAREA, or contentEditable elements
-- [ ] Undo/Redo disabled when editing a block
-- [ ] Z-order shortcuts only work when block is selected (not "select all")
+- [x] PASS: Shortcuts disabled when typing in INPUT, TEXTAREA, or contentEditable elements
+- [x] PASS: Undo/Redo disabled when editing a block
+- [x] PASS: Z-order shortcuts only work when block is selected (not "select all")
 
 ### Slide Background System
 #### Background Types
-- [ ] **Solid Color** — Single color from ColorPicker
-- [ ] **Gradient** — Linear gradient with configurable angle and color stops
-- [ ] **Image** — Background image with URL
+- [x] PASS: **Solid Color** — Single color from ColorPicker
+- [x] PASS: **Gradient** — Linear gradient with configurable angle and color stops
+- [x] PASS: **Image** — Background image with URL
 #### Image Position Options
-- [ ] Cover
-- [ ] Contain
-- [ ] Top
-- [ ] Center
-- [ ] Bottom
+- [x] PASS: Cover
+- [x] PASS: Contain
+- [x] PASS: Top
+- [x] PASS: Center
+- [x] PASS: Bottom
 #### Overlay System
-- [ ] **None** — No overlay
-- [ ] **Frosted** — Frosted glass effect
-- [ ] **Faded** — Semi-transparent color overlay
-- [ ] Overlay Intensity slider (0–100%)
-- [ ] Overlay Color picker
-- [ ] Overlay style correctly renders in both editor and presenter
+- [x] PASS: **None** — No overlay
+- [x] PASS: **Frosted** — Frosted glass effect
+- [x] PASS: **Faded** — Semi-transparent color overlay
+- [x] PASS: Overlay Intensity slider (0–100%)
+- [x] PASS: Overlay Color picker
+- [x] PASS: Overlay style correctly renders in both editor and presenter
 #### Per-Slide Override
-- [ ] Each slide can override the theme background
-- [ ] "Reset to Theme Default" removes the override
-- [ ] Background changes reflect in filmstrip thumbnails
+- [x] PASS: Each slide can override the theme background
+- [x] PASS: "Reset to Theme Default" removes the override
+- [x] PASS: Background changes reflect in filmstrip thumbnails
 
 ### Alignment & Layout Engine
 #### Single Block → Canvas Alignment
-- [ ] Align Left (x = 0)
-- [ ] Align Center (x = 50 - width/2)
+- [x] PASS: Align Left (x = 0)
+- [x] PASS: Align Center (x = 50 - width/2)

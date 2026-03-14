@@ -79,7 +79,7 @@
           "specs": [
             {
               "title": "cp-000: Active tab Tabs component applies bg-surface-raised text-ink border border-borde",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -92,24 +92,53 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6212,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 24044,
+                      "error": {
+                        "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/analysis\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/analysis\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:54:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
+                          "column": 16,
+                          "line": 54
+                        },
+                        "snippet": "  52 |\n  53 |     // Navigate to the page\n> 54 |     await page.goto('/analysis', { waitUntil: 'domcontentloaded' });\n     |                ^\n  55 |     await page.waitForLoadState('networkidle').catch(() => {});\n  56 |\n  57 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
+                            "column": 16,
+                            "line": 54
+                          },
+                          "message": "TimeoutError: page.goto: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/analysis\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  52 |\n  53 |     // Navigate to the page\n> 54 |     await page.goto('/analysis', { waitUntil: 'domcontentloaded' });\n     |                ^\n  55 |     await page.waitForLoadState('networkidle').catch(() => {});\n  56 |\n  57 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:54:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:26.813Z",
+                      "startTime": "2026-03-14T20:37:59.281Z",
                       "annotations": [],
                       "attachments": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4de16-ext-ink-border-border-borde-qa-chromium/test-finished-1.png"
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4de16-ext-ink-border-border-borde-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4de16-ext-ink-border-border-borde-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
+                        "column": 16,
+                        "line": 54
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-32d75d074ea847d80c7e",
@@ -130,15 +159,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1768,
+                      "duration": 2730,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:33.103Z",
+                      "startTime": "2026-03-14T20:38:32.923Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -170,15 +199,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1733,
+                      "duration": 2257,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:34.882Z",
+                      "startTime": "2026-03-14T20:38:35.821Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -210,15 +239,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1658,
+                      "duration": 2303,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:36.628Z",
+                      "startTime": "2026-03-14T20:38:38.094Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -250,15 +279,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1725,
+                      "duration": 2336,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:38.295Z",
+                      "startTime": "2026-03-14T20:38:40.415Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -290,15 +319,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1712,
+                      "duration": 2227,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:40.029Z",
+                      "startTime": "2026-03-14T20:38:42.766Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -330,15 +359,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1754,
+                      "duration": 1972,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:41.750Z",
+                      "startTime": "2026-03-14T20:38:45.008Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -370,15 +399,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1819,
+                      "duration": 2079,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:43.513Z",
+                      "startTime": "2026-03-14T20:38:46.993Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -410,15 +439,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1876,
+                      "duration": 2047,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:45.344Z",
+                      "startTime": "2026-03-14T20:38:49.089Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -450,15 +479,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1780,
+                      "duration": 1953,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:47.233Z",
+                      "startTime": "2026-03-14T20:38:51.154Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -490,15 +519,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1738,
+                      "duration": 2066,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:49.034Z",
+                      "startTime": "2026-03-14T20:38:53.117Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -530,15 +559,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1762,
+                      "duration": 1935,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:50.781Z",
+                      "startTime": "2026-03-14T20:38:55.192Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -570,15 +599,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1748,
+                      "duration": 2056,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:52.554Z",
+                      "startTime": "2026-03-14T20:38:57.137Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -599,81 +628,7 @@
             },
             {
               "title": "cp-013: Multiple readability formulas all 5 implemented Flesch Reading Ease line 170 Fle",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "qa-chromium",
-                  "projectName": "qa-chromium",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1792,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-013 Multiple readability formulas — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-013 Multiple readability formulas — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:734:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 734
-                        },
-                        "snippet": "  732 |\n  733 |     if (!handled) {\n> 734 |       throw new Error('Unhandled analysis checkpoint: cp-013 Multiple readability formulas — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts');\n      |             ^\n  735 |     }\n  736 |\n  737 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 734
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-013 Multiple readability formulas — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts\n\n  732 |\n  733 |     if (!handled) {\n> 734 |       throw new Error('Unhandled analysis checkpoint: cp-013 Multiple readability formulas — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts');\n      |             ^\n  735 |     }\n  736 |\n  737 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:734:13"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-03-14T12:51:54.313Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-0b2ed-h-Reading-Ease-line-170-Fle-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-0b2ed-h-Reading-Ease-line-170-Fle-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-0b2ed-h-Reading-Ease-line-170-Fle-qa-chromium/trace.zip"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 734
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "0ad711391dd6d152a1fb-5f444549251abe63b5e2",
-              "file": "analysis/spec-002.spec.ts",
-              "line": 699,
-              "column": 3
-            },
-            {
-              "title": "cp-014: Limit 20 requests per hour per user RATE_LIMITSanalysis limit 20 windowSeconds 3",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -686,58 +641,64 @@
                     {
                       "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1812,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-014 Limit — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-014 Limit — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:784:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 784
-                        },
-                        "snippet": "  782 |\n  783 |     if (!handled) {\n> 784 |       throw new Error('Unhandled analysis checkpoint: cp-014 Limit — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117');\n      |             ^\n  785 |     }\n  786 |\n  787 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 784
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-014 Limit — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117\n\n  782 |\n  783 |     if (!handled) {\n> 784 |       throw new Error('Unhandled analysis checkpoint: cp-014 Limit — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117');\n      |             ^\n  785 |     }\n  786 |\n  787 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:784:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 2042,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:56.884Z",
+                      "startTime": "2026-03-14T20:38:59.203Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-59830-is-limit-20-windowSeconds-3-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-59830-is-limit-20-windowSeconds-3-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-59830-is-limit-20-windowSeconds-3-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-0b2ed-h-Reading-Ease-line-170-Fle-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 784
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
+                }
+              ],
+              "id": "0ad711391dd6d152a1fb-5f444549251abe63b5e2",
+              "file": "analysis/spec-002.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Limit 20 requests per hour per user RATE_LIMITSanalysis limit 20 windowSeconds 3",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2119,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-14T20:39:01.254Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-59830-is-limit-20-windowSeconds-3-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-33561dcddbe72d070e26",
@@ -747,7 +708,7 @@
             },
             {
               "title": "cp-015: Exceeded returns 429 status via checkRateLimit which returns NextResponsejson er",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -758,60 +719,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1855,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-015 Exceeded — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: \"Rate limit exceeded...\" }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-015 Exceeded — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: \"Rate limit exceeded...\" }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:834:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 834
-                        },
-                        "snippet": "  832 |\n  833 |     if (!handled) {\n> 834 |       throw new Error('Unhandled analysis checkpoint: cp-015 Exceeded — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: \"Rate limit exceeded...\" }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97');\n      |             ^\n  835 |     }\n  836 |\n  837 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 834
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-015 Exceeded — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: \"Rate limit exceeded...\" }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97\n\n  832 |\n  833 |     if (!handled) {\n> 834 |       throw new Error('Unhandled analysis checkpoint: cp-015 Exceeded — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: \"Rate limit exceeded...\" }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97');\n      |             ^\n  835 |     }\n  836 |\n  837 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:834:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1971,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:51:59.525Z",
+                      "startTime": "2026-03-14T20:39:03.383Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-29d63-returns-NextResponsejson-er-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-29d63-returns-NextResponsejson-er-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-29d63-returns-NextResponsejson-er-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-29d63-returns-NextResponsejson-er-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 834
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-4b968b7bda861e26dd04",
@@ -821,7 +748,7 @@
             },
             {
               "title": "cp-016: Model const BINOCULARS_MODEL drshailesh88binoculars-ai-detection as const Verifi",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -832,60 +759,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 2034,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-016 Model — `const BINOCULARS_MODEL = \"drshailesh88/binoculars-ai-detection\" as const;` Verified in src/lib/integrity/ai-detection.ts:26",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-016 Model — `const BINOCULARS_MODEL = \"drshailesh88/binoculars-ai-detection\" as const;` Verified in src/lib/integrity/ai-detection.ts:26\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:884:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 884
-                        },
-                        "snippet": "  882 |\n  883 |     if (!handled) {\n> 884 |       throw new Error('Unhandled analysis checkpoint: cp-016 Model — `const BINOCULARS_MODEL = \"drshailesh88/binoculars-ai-detection\" as const;` Verified in src/lib/integrity/ai-detection.ts:26');\n      |             ^\n  885 |     }\n  886 |\n  887 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 884
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-016 Model — `const BINOCULARS_MODEL = \"drshailesh88/binoculars-ai-detection\" as const;` Verified in src/lib/integrity/ai-detection.ts:26\n\n  882 |\n  883 |     if (!handled) {\n> 884 |       throw new Error('Unhandled analysis checkpoint: cp-016 Model — `const BINOCULARS_MODEL = \"drshailesh88/binoculars-ai-detection\" as const;` Verified in src/lib/integrity/ai-detection.ts:26');\n      |             ^\n  885 |     }\n  886 |\n  887 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:884:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1907,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:02.244Z",
+                      "startTime": "2026-03-14T20:39:05.364Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-35b3d-i-detection-as-const-Verifi-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-35b3d-i-detection-as-const-Verifi-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-35b3d-i-detection-as-const-Verifi-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-35b3d-i-detection-as-const-Verifi-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 884
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-0cfddf3f42ddd451c36f",
@@ -895,7 +788,7 @@
             },
             {
               "title": "cp-017: Threshold const BINOCULARS_FPR_THRESHOLD 08536432310785527 Verified in srclibint",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -906,60 +799,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1857,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-017 Threshold — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-017 Threshold — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:934:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 934
-                        },
-                        "snippet": "  932 |\n  933 |     if (!handled) {\n> 934 |       throw new Error('Unhandled analysis checkpoint: cp-017 Threshold — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27');\n      |             ^\n  935 |     }\n  936 |\n  937 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 934
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-017 Threshold — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27\n\n  932 |\n  933 |     if (!handled) {\n> 934 |       throw new Error('Unhandled analysis checkpoint: cp-017 Threshold — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27');\n      |             ^\n  935 |     }\n  936 |\n  937 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:934:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1958,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:05.093Z",
+                      "startTime": "2026-03-14T20:39:07.283Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-e705a-85527-Verified-in-srclibint-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-e705a-85527-Verified-in-srclibint-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-e705a-85527-Verified-in-srclibint-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-e705a-85527-Verified-in-srclibint-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 934
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-2372339e7c79dcf4b4ed",
@@ -969,7 +828,7 @@
             },
             {
               "title": "cp-018: Weighting binocularsResulthumanScore 06 llmResulthumanScore 04 60 Binoculars 40 ",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -980,60 +839,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1804,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-018 Weighting — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-018 Weighting — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:984:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 984
-                        },
-                        "snippet": "  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled analysis checkpoint: cp-018 Weighting — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076');\n      |             ^\n  985 |     }\n  986 |\n  987 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 984
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-018 Weighting — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076\n\n  982 |\n  983 |     if (!handled) {\n> 984 |       throw new Error('Unhandled analysis checkpoint: cp-018 Weighting — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076');\n      |             ^\n  985 |     }\n  986 |\n  987 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:984:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1943,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:07.807Z",
+                      "startTime": "2026-03-14T20:39:09.251Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-79313-nScore-04-60-Binoculars-40--qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-79313-nScore-04-60-Binoculars-40--qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-79313-nScore-04-60-Binoculars-40--qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-79313-nScore-04-60-Binoculars-40--qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 984
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-028c34ad814c70817ed5",
@@ -1043,7 +868,7 @@
             },
             {
               "title": "cp-019: Count exactly 35 hedging phrases in the HEDGING_PHRASES array lines 144-182 veri",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1054,60 +879,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1837,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-019 Count — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-019 Count — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1034:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 1034
-                        },
-                        "snippet": "  1032 |\n  1033 |     if (!handled) {\n> 1034 |       throw new Error('Unhandled analysis checkpoint: cp-019 Count — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count');\n       |             ^\n  1035 |     }\n  1036 |\n  1037 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 1034
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-019 Count — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count\n\n  1032 |\n  1033 |     if (!handled) {\n> 1034 |       throw new Error('Unhandled analysis checkpoint: cp-019 Count — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count');\n       |             ^\n  1035 |     }\n  1036 |\n  1037 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1034:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1946,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:10.432Z",
+                      "startTime": "2026-03-14T20:39:11.203Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4ff68-ES-array-lines-144-182-veri-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4ff68-ES-array-lines-144-182-veri-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4ff68-ES-array-lines-144-182-veri-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4ff68-ES-array-lines-144-182-veri-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 1034
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-43ea9c6358bde0d964ff",
@@ -1117,7 +908,7 @@
             },
             {
               "title": "cp-020: Detection computeTextStatistics counts hedging phrases and reports in statshedgi",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1128,60 +919,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1854,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-020 Detection — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-020 Detection — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1084:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 1084
-                        },
-                        "snippet": "  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled analysis checkpoint: cp-020 Detection — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 1084
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-020 Detection — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts\n\n  1082 |\n  1083 |     if (!handled) {\n> 1084 |       throw new Error('Unhandled analysis checkpoint: cp-020 Detection — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts');\n       |             ^\n  1085 |     }\n  1086 |\n  1087 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1084:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1913,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:13.149Z",
+                      "startTime": "2026-03-14T20:39:13.158Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-5b068-s-and-reports-in-statshedgi-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-5b068-s-and-reports-in-statshedgi-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-5b068-s-and-reports-in-statshedgi-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-5b068-s-and-reports-in-statshedgi-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 1084
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-5606eefbae0ebbc76a50",
@@ -1202,15 +959,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1801,
+                      "duration": 2075,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:15.851Z",
+                      "startTime": "2026-03-14T20:39:15.080Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1242,15 +999,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1770,
+                      "duration": 1958,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:17.738Z",
+                      "startTime": "2026-03-14T20:39:17.167Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1271,7 +1028,7 @@
             },
             {
               "title": "cp-023: Source matching queries Crossref API and Semantic Scholar API in parallel to ide",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1282,60 +1039,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1773,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-023 Source matching — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-023 Source matching — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1234:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 1234
-                        },
-                        "snippet": "  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled analysis checkpoint: cp-023 Source matching — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558');\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 1234
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-023 Source matching — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558\n\n  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled analysis checkpoint: cp-023 Source matching — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558');\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1234:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1913,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:19.519Z",
+                      "startTime": "2026-03-14T20:39:19.134Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4425a-olar-API-in-parallel-to-ide-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4425a-olar-API-in-parallel-to-ide-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4425a-olar-API-in-parallel-to-ide-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-4425a-olar-API-in-parallel-to-ide-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 1234
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-90fe754043710cda656f",
@@ -1345,7 +1068,7 @@
             },
             {
               "title": "cp-024: Severity levels high 04 medium 02 low 02 via classifySeverity Verified in srclib",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1356,60 +1079,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 9,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1980,
-                      "error": {
-                        "message": "Error: Unhandled analysis checkpoint: cp-024 Severity levels — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503",
-                        "stack": "Error: Unhandled analysis checkpoint: cp-024 Severity levels — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1284:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                          "column": 13,
-                          "line": 1284
-                        },
-                        "snippet": "  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled analysis checkpoint: cp-024 Severity levels — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                            "column": 13,
-                            "line": 1284
-                          },
-                          "message": "Error: Unhandled analysis checkpoint: cp-024 Severity levels — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503\n\n  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled analysis checkpoint: cp-024 Severity levels — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503');\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |\n    at /home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts:1284:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1938,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:22.049Z",
+                      "startTime": "2026-03-14T20:39:21.059Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-2fbe3-Severity-Verified-in-srclib-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-2fbe3-Severity-Verified-in-srclib-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-2fbe3-Severity-Verified-in-srclib-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/analysis-spec-002-analysis-2fbe3-Severity-Verified-in-srclib-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/analysis/spec-002.spec.ts",
-                        "column": 13,
-                        "line": 1284
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "0ad711391dd6d152a1fb-f6b8a195d84f1605204d",
@@ -1430,15 +1119,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2043,
+                      "duration": 1909,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:24.883Z",
+                      "startTime": "2026-03-14T20:39:23.017Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1470,15 +1159,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1774,
+                      "duration": 1904,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:27.012Z",
+                      "startTime": "2026-03-14T20:39:24.935Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1510,15 +1199,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1743,
+                      "duration": 1909,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:28.796Z",
+                      "startTime": "2026-03-14T20:39:26.849Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1550,15 +1239,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1698,
+                      "duration": 1936,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:30.553Z",
+                      "startTime": "2026-03-14T20:39:28.767Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1590,15 +1279,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1737,
+                      "duration": 2190,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:32.261Z",
+                      "startTime": "2026-03-14T20:39:30.716Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1630,15 +1319,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1753,
+                      "duration": 1942,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:34.011Z",
+                      "startTime": "2026-03-14T20:39:32.915Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1670,15 +1359,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1776,
+                      "duration": 1938,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:35.776Z",
+                      "startTime": "2026-03-14T20:39:34.868Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1710,15 +1399,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 10,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1837,
+                      "duration": 1907,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T12:52:37.562Z",
+                      "startTime": "2026-03-14T20:39:36.815Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1744,11 +1433,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T12:51:24.836Z",
-    "duration": 75107.641,
-    "expected": 23,
+    "startTime": "2026-03-14T20:37:56.470Z",
+    "duration": 102956.979,
+    "expected": 32,
     "skipped": 0,
-    "unexpected": 10,
+    "unexpected": 1,
     "flaky": 0
   }
 }
