@@ -1,8 +1,8 @@
 # studio — Spec 003
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/studio
@@ -11,48 +11,48 @@ MODULE: studio
 ---
 ### Slash Commands
 #### Academic Content Commands
-- [ ] Image opens a file picker and inserts an uploaded image
-- [ ] Abstract inserts the structured `Background / Methods / Results / Conclusion` template
-- [ ] Figure Caption inserts the next auto-numbered figure label
-- [ ] Table Caption inserts the next auto-numbered table label
-- [ ] Footnote prompts for text and inserts a footnote
-- [ ] Word Count posts section counts into the chat panel
-- [ ] Menu navigable with Arrow Up/Down
-- [ ] Enter selects highlighted command
-- [ ] Escape closes menu
-- [ ] Menu positions correctly relative to cursor
+- [x] PASS: Image opens a file picker and inserts an uploaded image
+- [x] PASS: Abstract inserts the structured `Background / Methods / Results / Conclusion` template
+- [x] PASS: Figure Caption inserts the next auto-numbered figure label
+- [x] PASS: Table Caption inserts the next auto-numbered table label
+- [x] PASS: Footnote prompts for text and inserts a footnote
+- [x] PASS: Word Count posts section counts into the chat panel
+- [x] PASS: Menu navigable with Arrow Up/Down
+- [x] PASS: Enter selects highlighted command
+- [x] PASS: Escape closes menu
+- [x] PASS: Menu positions correctly relative to cursor
 
 ### AI Chat Panel (Chat & Learn Tab)
 #### Chat Messages
-- [ ] User messages appear on one side
-- [ ] Assistant messages appear on opposite side
-- [ ] Messages render plain text content
-- [ ] Streaming responses update incrementally
-- [ ] Loading spinner shows during response generation
+- [x] PASS: User messages appear on one side
+- [x] PASS: Assistant messages appear on opposite side
+- [x] PASS: Messages render plain text content
+- [x] PASS: Streaming responses update incrementally
+- [x] PASS: Loading spinner shows during response generation
 #### Chat Input
-- [ ] Input field with contextual placeholder:
-- [ ] Submit via Enter key
-- [ ] Submit via Send button
-- [ ] Empty input cannot be submitted
-- [ ] Input clears after submission
+- [x] PASS: Input field with contextual placeholder:
+- [x] PASS: Submit via Enter key
+- [x] PASS: Submit via Send button
+- [x] PASS: Empty input cannot be submitted
+- [x] PASS: Input clears after submission
 #### Chat Errors
-- [ ] Error displays in amber warning box
-- [ ] Error text from `chatError` state
-- [ ] Error clears on next successful message
+- [x] PASS: Error displays in amber warning box
+- [x] PASS: Error text from `chatError` state
+- [x] PASS: Error clears on next successful message
 #### AI Behavior by Mode
-- [ ] Write mode: AI acts as research assistant
-- [ ] Learn mode: AI uses Socratic method, refuses to write content directly
-- [ ] AI behavior adapts to selected guide stage in Learn mode
-- [ ] AI behavior adapts to draft intensity in Write mode
+- [x] PASS: Write mode: AI acts as research assistant
+- [x] PASS: Learn mode: AI uses Socratic method, refuses to write content directly
+- [x] PASS: AI behavior adapts to selected guide stage in Learn mode
+- [x] PASS: AI behavior adapts to draft intensity in Write mode
 
 ### Research Tab
-- [ ] Tab labeled "Research" in right panel
-- [ ] "Open Literature Research Panel" button opens `ResearchSidebar`
-- [ ] Instruction text: "Or press Cmd+Shift+L to toggle"
+- [x] PASS: Tab labeled "Research" in right panel
+- [x] PASS: "Open Literature Research Panel" button opens `ResearchSidebar`
+- [x] PASS: Instruction text: "Or press Cmd+Shift+L to toggle"
 #### Quick PubMed Search
-- [ ] Search input with placeholder: "Quick search PubMed..."
-- [ ] "Search" button submits query
-- [ ] Search opens the external `ResearchSidebar`; the right-panel launcher does not render inline results
+- [x] PASS: Search input with placeholder: "Quick search PubMed..."
+- [x] PASS: "Search" button submits query
+- [x] PASS: Search opens the external `ResearchSidebar`; the right-panel launcher does not render inline results
 #### Research Sidebar
-- [ ] Full panel with literature discovery
-- [ ] 3 sub-tabs for different search/browse modes
+- [x] PASS: Full panel with literature discovery
+- [x] PASS: 3 sub-tabs for different search/browse modes

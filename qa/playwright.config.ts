@@ -42,8 +42,8 @@ export default defineConfig({
 
   // Dev server — reuse if already running
   webServer: {
-    command: "npm run dev",
-    port: Number(process.env.PORT ?? 3001),
+    command: "PORT=3001 npm run dev",
+    port: 3001,
     reuseExistingServer: true,
     timeout: 120_000,
     stdout: "pipe",
