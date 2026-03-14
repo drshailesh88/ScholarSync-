@@ -37,7 +37,7 @@ describe("pdf module helpers", () => {
   it("creates and formats source quotes", async () => {
     const { createSourceQuote, addUsageToQuote, formatSourceQuoteForDisplay } = await import("../source-quotes");
     const q = createSourceQuote("p1", 2, "quoted", 1, 4, "Results");
-    const updated = addUsageToQuote(q, "chat", "c1");
+    const updated = addUsageToQuote(q, "ai_chat", "c1");
     expect(updated.usedIn).toHaveLength(1);
     expect(formatSourceQuoteForDisplay(updated)).toContain("Results");
   });

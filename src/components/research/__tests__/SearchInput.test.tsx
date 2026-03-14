@@ -21,9 +21,9 @@ describe("SearchInput", () => {
   const baseProps = {
     query: "gene therapy",
     onQueryChange,
-    filters: {},
+    filters: { dateFrom: 2016, dateTo: 2026, studyTypes: [], fullTextOnly: false, sources: ["pubmed" as const], language: "english" as const },
     onFiltersChange,
-    parsedChips: [{ label: "year:2020+" }],
+    parsedChips: [{ label: "year:2020+", type: "dateRange" as const, value: "2020+" }],
     onRemoveChip,
     onSearch,
     isSearching: false,
