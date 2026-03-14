@@ -1,6 +1,6 @@
 # compliance — Spec 009
 
-STATUS: PENDING
+STATUS: DONE
 TESTED: 0/35
 PASS: 0
 FAIL: 0
