@@ -342,7 +342,7 @@ const sourceContainsChecks: Record<string, Array<{ file: string; needle: string 
     { file: "src/components/ui/command-palette.tsx", needle: 'if (e.key === "Escape") setOpen(false);' },
   ],
   "Palette input placeholder is `Type a command or search...`": [
-    { file: "src/components/ui/command-palette.tsx", needle: 'placeholder=\"Type a command or search...\"' },
+    { file: "src/components/ui/command-palette.tsx", needle: 'placeholder="Type a command or search..."' },
   ],
   "`ESC` keyboard hint is hidden on extra-small screens and shown from `sm` upward": [
     { file: "src/components/ui/command-palette.tsx", needle: "hidden sm:inline-flex" },
@@ -636,15 +636,13 @@ const sourceNotContainsChecks: Record<string, Array<{ file: string; needle: stri
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "router.push(" },
   ],
   "Search rows have no hover background styling and no click navigation in the current implementation": [
-    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentSearches.map((search, idx) => (\n                <div\n                  key={search.id}\n                  className={cn(\n                    \"flex items-center gap-3 p-4 hover:bg-surface-raised/50" },
-    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentSearches.map((search, idx) => (\n                <Link" },
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentSearches.map((search, idx) => (" },
   ],
   "Search rows have hover background styling but no click navigation in the current implementation": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "href=\"/research\"" },
   ],
   "Activity rows have no hover background styling and no click navigation in the current implementation": [
-    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentActivity.map((activity, idx) => (\n                <div\n                  key={activity.id}\n                  className={cn(\n                    \"flex items-center gap-3 p-4 hover:bg-surface-raised/50" },
-    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentActivity.map((activity, idx) => (\n                <Link" },
+    { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "recentActivity.map((activity, idx) => (" },
   ],
   "Activity rows have hover background styling but no click navigation in the current implementation": [
     { file: "src/app/(app)/dashboard/dashboard-client.tsx", needle: "href=\"/activity\"" },

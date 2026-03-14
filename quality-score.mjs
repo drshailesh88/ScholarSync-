@@ -204,17 +204,21 @@ function scoreAssertionModuleCoverage() {
     allModules.add(entry.module);
   }
 
+  const expectedAssertionFiles = new Set([...allModules].map((module) => `${module}.ts`));
   let assertionFiles = 0;
+  let coveredAssertionFiles = 0;
   if (existsSync(MODULE_ASSERTIONS_DIR)) {
     try {
-      assertionFiles = readdirSync(MODULE_ASSERTIONS_DIR).filter(f => f.endsWith('.ts') || f.endsWith('.js')).length;
+      const files = readdirSync(MODULE_ASSERTIONS_DIR).filter(f => f.endsWith('.ts') || f.endsWith('.js'));
+      assertionFiles = files.length;
+      coveredAssertionFiles = files.filter((f) => expectedAssertionFiles.has(f)).length;
     } catch {}
   }
 
-  const d = { totalModules: allModules.size, assertionFiles };
+  const d = { totalModules: allModules.size, assertionFiles, coveredAssertionFiles };
 
   if (allModules.size === 0) return { score: 0, details: { ...d, note: 'No modules in queue' } };
-  return { score: clamp((assertionFiles / allModules.size) * 100), details: d };
+  return { score: clamp((coveredAssertionFiles / allModules.size) * 100), details: d };
 }
 
 function scoreUnitPassRate() {

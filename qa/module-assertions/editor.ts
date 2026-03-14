@@ -256,11 +256,26 @@ function assertGenericSourceCheckpoint(
     }
   }
 
-  // No specific terms extracted — verify the primary source file exists and is non-empty
-  // This is the minimum meaningful assertion: the implementation file exists
-  const primaryFile = existingFiles[0];
-  const content = readFile(rootDir, primaryFile);
-  expect(content.length).toBeGreaterThan(0);
+  // No explicit quoted/backticked terms: fall back to semantic keyword matching.
+  // This is stricter than a pure file-exists check and prevents false positives.
+  const semanticTerms = `${section} ${subsection} ${description}`
+    .split(/[^a-zA-Z0-9]+/)
+    .map((t) => t.trim())
+    .filter((t) => t.length >= 5)
+    .filter((t) => !["which", "their", "there", "these", "using", "should", "current", "verified"].includes(t.toLowerCase()));
+
+  const matchedSemanticTerm = semanticTerms.find((term) =>
+    existingFiles.some((file) => readFile(rootDir, file).toLowerCase().includes(term.toLowerCase()))
+  );
+
+  if (!matchedSemanticTerm) {
+    return false;
+  }
+
+  const matchedFile = existingFiles.find((file) =>
+    readFile(rootDir, file).toLowerCase().includes(matchedSemanticTerm.toLowerCase())
+  )!;
+  expectSourceMatches(rootDir, matchedFile, new RegExp(escapeRegex(matchedSemanticTerm), "i"));
   return true;
 }
 
