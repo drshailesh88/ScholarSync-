@@ -1,9 +1,9 @@
 # deep-research — Spec 005
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
-FAIL: 0
+STATUS: PARTIAL
+TESTED: 35/35
+PASS: 6
+FAIL: 29
 BLOCKED: 0
 PAGE: http://localhost:3001/deep-research
 MODULE: deep-research
@@ -11,50 +11,50 @@ MODULE: deep-research
 ---
 ### Export System
 #### Copy to Clipboard
-- [ ] Headings: font-size (24–14px), font-weight, margins
-- [ ] Paragraphs: line-height 1.6, color #333
-- [ ] Tables: border-collapse, cell padding, borders (#ccc)
-- [ ] Blockquotes: 3px left border (#ccc), italic
-- [ ] Superscript citations: 10px, color #2563eb
-- [ ] Shows "Copied" confirmation for 2 seconds
-- [ ] Fallback to plain text on older browsers
+- [ ] FAIL: Headings: font-size (24–14px), font-weight, margins
+- [ ] FAIL: Paragraphs: line-height 1.6, color #333
+- [x] PASS: Tables: border-collapse, cell padding, borders (#ccc)
+- [ ] FAIL: Blockquotes: 3px left border (#ccc), italic
+- [ ] FAIL: Superscript citations: 10px, color #2563eb
+- [ ] FAIL: Shows "Copied" confirmation for 2 seconds
+- [ ] FAIL: Fallback to plain text on older browsers
 #### BibTeX Export (.bib)
-- [ ] Downloads as `{topic}_references.bib`
-- [ ] Citation key format: `{firstAuthorFirstSegment}{year}{firstTitleWord}` (lowercase), with fallback `ref{n}`
-- [ ] Fields: author, title, journal, year, doi, pmid, abstract
-- [ ] All sources included
+- [ ] FAIL: Downloads as `{topic}_references.bib`
+- [ ] FAIL: Citation key format: `{firstAuthorFirstSegment}{year}{firstTitleWord}` (lowercase), with fallback `ref{n}`
+- [ ] FAIL: Fields: author, title, journal, year, doi, pmid, abstract
+- [ ] FAIL: All sources included
 #### RIS Export (.ris)
-- [ ] Downloads as `{topic}_references.ris`
-- [ ] Fields: TY, TI, AU (per author), JO, PY, DO, AN, AB, UR, ER
-- [ ] Compatible with Mendeley / EndNote
-- [ ] All sources included
+- [x] PASS: Downloads as `{topic}_references.ris`
+- [ ] FAIL: Fields: TY, TI, AU (per author), JO, PY, DO, AN, AB, UR, ER
+- [ ] FAIL: Compatible with Mendeley / EndNote
+- [ ] FAIL: All sources included
 
 ### Save to Library
-- [ ] Button visible in `done` state header
-- [ ] States:
-- [ ] Calls `POST /api/deep-research/save`
-- [ ] Disabled if not logged in or research incomplete
-- [ ] Error tooltip appears on failure
-- [ ] Auto-disables after successful save
-- [ ] Saved session appears in Past Research on next visit
+- [x] PASS: Button visible in `done` state header
+- [ ] FAIL: States:
+- [x] PASS: Calls `POST /api/deep-research/save`
+- [x] PASS: Disabled if not logged in or research incomplete
+- [ ] FAIL: Error tooltip appears on failure
+- [ ] FAIL: Auto-disables after successful save
+- [ ] FAIL: Saved session appears in Past Research on next visit
 
 ### Open in Studio
-- [ ] Export option: "Open in Studio"
-- [ ] Calls `POST /api/deep-research/open-in-studio`
-- [ ] Process:
-- [ ] Redirects to `/studio?projectId={projectId}`
-- [ ] Loading spinner during creation
-- [ ] Error state with retry capability
+- [x] PASS: Export option: "Open in Studio"
+- [ ] FAIL: Calls `POST /api/deep-research/open-in-studio`
+- [ ] FAIL: Process:
+- [ ] FAIL: Redirects to `/studio?projectId={projectId}`
+- [ ] FAIL: Loading spinner during creation
+- [ ] FAIL: Error state with retry capability
 
 ### Legacy Report View
-- [ ] Fallback for reports without markdown format
-- [ ] Renders card-based display with sections:
+- [ ] FAIL: Fallback for reports without markdown format
+- [ ] FAIL: Renders card-based display with sections:
 
 ### Research Engine & Backends
 #### Multi-Source Search
-- [ ] PubMed search returns results
-- [ ] Semantic Scholar search returns results
-- [ ] OpenAlex search returns results
-- [ ] Results deduplicated across sources
+- [ ] FAIL: PubMed search returns results
+- [ ] FAIL: Semantic Scholar search returns results
+- [ ] FAIL: OpenAlex search returns results
+- [ ] FAIL: Results deduplicated across sources
 #### Citation Graph Traversal
-- [ ] Forward citations fetched via Semantic Scholar API
+- [ ] FAIL: Forward citations fetched via Semantic Scholar API

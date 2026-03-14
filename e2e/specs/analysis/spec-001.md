@@ -1,10 +1,10 @@
 # analysis — Spec 001
 
-STATUS: COMPLETE
-TESTED: 35/35
+STATUS: DONE
+TESTED: 33/35
 PASS: 33
 FAIL: 0
-BLOCKED: 2
+BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
 

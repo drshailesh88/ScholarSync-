@@ -1,9 +1,9 @@
 # feeds — Spec 003
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
-FAIL: 0
+STATUS: PARTIAL
+TESTED: 35/35
+PASS: 7
+FAIL: 28
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -11,54 +11,54 @@ MODULE: feeds
 ---
 ### Article Search & Filters
 #### Sort Toggle
-- [ ] Toggles between newest/oldest sort direction
+- [x] PASS: Toggles between newest/oldest sort direction
 #### Advanced Filter Panel (Collapsible)
-- [ ] **Date range**: FROM and TO date input fields
-- [ ] **Journal dropdown**: "All journals" default, populated from available journals
-- [ ] **Sort by buttons** (3-column): Date (published) | Added | Title
-- [ ] **Clear all filters** button (visible only when filters active)
+- [ ] FAIL: **Date range**: FROM and TO date input fields
+- [ ] FAIL: **Journal dropdown**: "All journals" default, populated from available journals
+- [ ] FAIL: **Sort by buttons** (3-column): Date (published) | Added | Title
+- [x] PASS: **Clear all filters** button (visible only when filters active)
 #### Filter Indicators
-- [ ] Active filters show blue highlight: `bg-brand/10 text-brand border-brand/20`
+- [x] PASS: Active filters show blue highlight: `bg-brand/10 text-brand border-brand/20`
 
 ### Article Reader (Reading Pane)
 #### Empty State
-- [ ] Glass panel with centered text: "Select an article to read"
+- [ ] FAIL: Glass panel with centered text: "Select an article to read"
 #### Article Content
-- [ ] **Title**: text-lg font-bold
-- [ ] **Authors**: text-sm text-ink-muted
-- [ ] **Journal info**: "Journal · Vol. X · Issue Y" (text-xs)
-- [ ] **Publication date**: "Published {date}" or "Publication date unavailable"
-- [ ] **Reading time estimate**
+- [ ] FAIL: **Title**: text-lg font-bold
+- [ ] FAIL: **Authors**: text-sm text-ink-muted
+- [ ] FAIL: **Journal info**: "Journal · Vol. X · Issue Y" (text-xs)
+- [ ] FAIL: **Publication date**: "Published {date}" or "Publication date unavailable"
+- [ ] FAIL: **Reading time estimate**
 #### Abstract Section
-- [ ] Header: "Abstract"
-- [ ] Content: text-sm text-ink-muted, leading-relaxed
-- [ ] Hidden if no abstract available
+- [ ] FAIL: Header: "Abstract"
+- [ ] FAIL: Content: text-sm text-ink-muted, leading-relaxed
+- [ ] FAIL: Hidden if no abstract available
 #### DOI Section
-- [ ] Format: "DOI: {doi}" with clickable link to `https://doi.org/{doi}`
-- [ ] Hidden if no DOI
+- [ ] FAIL: Format: "DOI: {doi}" with clickable link to `https://doi.org/{doi}`
+- [ ] FAIL: Hidden if no DOI
 
 ### Article Notes
-- [ ] NoteBlank icon + "Notes" header
-- [ ] Textarea with 3 rows
-- [ ] Placeholder: "Add your notes about this article..."
-- [ ] Auto-save after 1 second of inactivity
-- [ ] Saves on blur if changes pending
-- [ ] "Saved" indicator (Check icon) appears for 2 seconds after save
-- [ ] Loads existing notes via `GET /api/feeds/articles/{id}/notes`
-- [ ] Saves via `PUT /api/feeds/articles/{id}/notes`
+- [ ] FAIL: NoteBlank icon + "Notes" header
+- [ ] FAIL: Textarea with 3 rows
+- [ ] FAIL: Placeholder: "Add your notes about this article..."
+- [ ] FAIL: Auto-save after 1 second of inactivity
+- [ ] FAIL: Saves on blur if changes pending
+- [ ] FAIL: "Saved" indicator (Check icon) appears for 2 seconds after save
+- [x] PASS: Loads existing notes via `GET /api/feeds/articles/{id}/notes`
+- [ ] FAIL: Saves via `PUT /api/feeds/articles/{id}/notes`
 
 ### Related Papers
 #### Initial State
-- [ ] "Find Related Papers" button displayed
+- [x] PASS: "Find Related Papers" button displayed
 #### Loading State
-- [ ] Spinner + "Finding related papers..."
+- [x] PASS: Spinner + "Finding related papers..."
 #### Error State
-- [ ] "Could not find related papers" message
+- [x] PASS: "Could not find related papers" message
 #### Results
-- [ ] List of related paper cards:
-- [ ] Title: text-sm font-medium
-- [ ] Authors: "Author1, Author2 et al. · Journal · Year"
-- [ ] DOI link: `https://doi.org/{doi}`
-- [ ] PubMed link: `https://pubmed.ncbi.nlm.nih.gov/{pmid}`
-- [ ] Citation count: "{count} citations"
-- [ ] "Save to Library" button per paper:
+- [ ] FAIL: List of related paper cards:
+- [ ] FAIL: Title: text-sm font-medium
+- [ ] FAIL: Authors: "Author1, Author2 et al. · Journal · Year"
+- [ ] FAIL: DOI link: `https://doi.org/{doi}`
+- [ ] FAIL: PubMed link: `https://pubmed.ncbi.nlm.nih.gov/{pmid}`
+- [ ] FAIL: Citation count: "{count} citations"
+- [ ] FAIL: "Save to Library" button per paper:

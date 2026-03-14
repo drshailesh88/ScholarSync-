@@ -1,0 +1,233 @@
+{
+  "timestamp": "2026-03-14T14:59:30.897Z",
+  "composite": 49.63,
+  "temperature": "WARM",
+  "currentPhase": 1,
+  "phaseAverages": {
+    "1": 68,
+    "2": 34,
+    "3": 60,
+    "4": 80,
+    "5": 0
+  },
+  "weakest": {
+    "dimension": "typescriptStrict",
+    "label": "TypeScript Strict",
+    "score": 0
+  },
+  "dimensions": {
+    "typescriptStrict": {
+      "score": 0,
+      "details": {
+        "errors": 7,
+        "anyCount": 279,
+        "strictEnabled": true
+      },
+      "weight": 0.08,
+      "phase": 1,
+      "label": "TypeScript Strict"
+    },
+    "lintClean": {
+      "score": 100,
+      "details": {
+        "errors": 0,
+        "warnings": 0
+      },
+      "weight": 0.05,
+      "phase": 1,
+      "label": "Lint Cleanliness"
+    },
+    "errorBoundaries": {
+      "score": 81.28,
+      "details": {
+        "pageCount": 39,
+        "errorCount": 32,
+        "loadingCount": 31
+      },
+      "weight": 0.05,
+      "phase": 1,
+      "label": "Error Boundaries"
+    },
+    "apiHardening": {
+      "score": 92.14,
+      "details": {
+        "total": 168,
+        "withTryCatch": 165,
+        "withValidation": 141,
+        "withAuth": 154,
+        "withProperStatus": 161
+      },
+      "weight": 0.07,
+      "phase": 1,
+      "label": "API Route Hardening"
+    },
+    "specPassRate": {
+      "score": 26.6,
+      "details": {
+        "totalSpecs": 376,
+        "passingSpecs": 100
+      },
+      "weight": 0.12,
+      "phase": 2,
+      "label": "Spec Pass Rate"
+    },
+    "checkpointPassRate": {
+      "score": 32.86,
+      "details": {
+        "totalCheckpoints": 12804,
+        "passingCheckpoints": 4207
+      },
+      "weight": 0.1,
+      "phase": 2,
+      "label": "Checkpoint Pass Rate"
+    },
+    "moduleCoverage": {
+      "score": 40,
+      "details": {
+        "totalModules": 20,
+        "coveredModules": 8,
+        "modules": [
+          "dashboard",
+          "onboarding",
+          "settings",
+          "projects",
+          "library",
+          "studio",
+          "editor",
+          "research",
+          "latex",
+          "notebook",
+          "compliance",
+          "analysis",
+          "deep-research",
+          "feeds",
+          "slides",
+          "slides-ai",
+          "poster",
+          "presentation",
+          "illustrate",
+          "systematic-review"
+        ]
+      },
+      "weight": 0.08,
+      "phase": 2,
+      "label": "Module Coverage"
+    },
+    "assertionModuleCoverage": {
+      "score": 70,
+      "details": {
+        "totalModules": 20,
+        "assertionFiles": 14,
+        "coveredAssertionFiles": 14
+      },
+      "weight": 0.05,
+      "phase": 2,
+      "label": "Assertion Module Coverage"
+    },
+    "unitPassRate": {
+      "score": 0,
+      "details": {
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "note": "No tests"
+      },
+      "weight": 0.05,
+      "phase": 2,
+      "label": "Unit Pass Rate"
+    },
+    "networkResilience": {
+      "score": 80,
+      "details": {
+        "retryLogic": 76,
+        "timeoutHandling": 520,
+        "offlineHandling": 4,
+        "errorStates": 90,
+        "resilienceTests": 0
+      },
+      "weight": 0.05,
+      "phase": 3,
+      "label": "Network Resilience"
+    },
+    "emptyStates": {
+      "score": 13.15,
+      "details": {
+        "emptyStateComponents": 112,
+        "dataDisplayComponents": 2555
+      },
+      "weight": 0.03,
+      "phase": 3,
+      "label": "Empty/Boundary States"
+    },
+    "errorMessages": {
+      "score": 65.71,
+      "details": {
+        "genericErrors": 12,
+        "specificErrors": 9,
+        "recoverableErrors": 135
+      },
+      "weight": 0.03,
+      "phase": 3,
+      "label": "Error Message Quality"
+    },
+    "stateConsistency": {
+      "score": 80,
+      "details": {
+        "urlState": 50,
+        "loadingStates": 524,
+        "optimisticUpdates": 0
+      },
+      "weight": 0.04,
+      "phase": 3,
+      "label": "State Consistency"
+    },
+    "authSecurity": {
+      "score": 40,
+      "details": {
+        "protectedRoutes": 14,
+        "withMiddleware": false,
+        "withCsrf": false,
+        "properCookies": false
+      },
+      "weight": 0.06,
+      "phase": 4,
+      "label": "Auth Security"
+    },
+    "inputValidation": {
+      "score": 99.53,
+      "details": {
+        "zodUsage": 1637,
+        "manualValidation": 259,
+        "rawBodyUsage": 9
+      },
+      "weight": 0.05,
+      "phase": 4,
+      "label": "Input Validation"
+    },
+    "depSecurity": {
+      "score": 100,
+      "details": {
+        "critical": 0,
+        "high": 0,
+        "moderate": 0,
+        "low": 0
+      },
+      "weight": 0.04,
+      "phase": 4,
+      "label": "Dependency Security"
+    },
+    "accessibility": {
+      "score": 0,
+      "details": {
+        "missingAlt": 59,
+        "missingLabels": 551,
+        "ariaUsage": 310,
+        "jsxA11yPlugin": false,
+        "axeTests": 0
+      },
+      "weight": 0.05,
+      "phase": 5,
+      "label": "Accessibility"
+    }
+  }
+}
