@@ -65,21 +65,21 @@
   },
   "suites": [
     {
-      "title": "illustrate/spec-037.spec.ts",
-      "file": "illustrate/spec-037.spec.ts",
+      "title": "systematic-review/spec-007.spec.ts",
+      "file": "systematic-review/spec-007.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "illustrate / spec-037",
-          "file": "illustrate/spec-037.spec.ts",
+          "title": "systematic-review / spec-007",
+          "file": "systematic-review/spec-007.spec.ts",
           "line": 36,
           "column": 6,
           "specs": [
             {
-              "title": "cp-000: getShortcutDisplayString detects Mac via navigatorplatformtoUpperCaseindexOfMAC ",
-              "ok": true,
+              "title": "cp-000: CSV format rows papers columns extraction fields",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -92,33 +92,67 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 12914,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 1717,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-000 CSV format — rows = papers, columns = extraction fields",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-000 CSV format — rows = papers, columns = extraction fields\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:84:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 84
+                        },
+                        "snippet": "  82 |\n  83 |     if (!handled) {\n> 84 |       throw new Error('Unhandled systematic-review checkpoint: cp-000 ' + \"CSV format — rows = papers, columns = extraction fields\");\n     |             ^\n  85 |     }\n  86 |\n  87 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 84
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-000 CSV format — rows = papers, columns = extraction fields\n\n  82 |\n  83 |     if (!handled) {\n> 84 |       throw new Error('Unhandled systematic-review checkpoint: cp-000 ' + \"CSV format — rows = papers, columns = extraction fields\");\n     |             ^\n  85 |     }\n  86 |\n  87 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:84:13"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:38:49.401Z",
+                      "startTime": "2026-03-15T05:39:11.236Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-ba9bb-tformtoUpperCaseindexOfMAC--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-2e441-s-columns-extraction-fields-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-2e441-s-columns-extraction-fields-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-2e441-s-columns-extraction-fields-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 84
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-095c48960f035397c801",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-f0a27385fb4f37e2ef6a",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 49,
               "column": 3
             },
             {
-              "title": "cp-001: getShortcutDisplayString formats special keys SpaceSpace DeleteDel BackspaceDele",
+              "title": "cp-001: Complete data all extracted values included in export",
               "ok": true,
               "tags": [],
               "tests": [
@@ -130,21 +164,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1427,
+                      "duration": 1656,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:02.481Z",
+                      "startTime": "2026-03-15T05:39:14.155Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-b8d8f-ace-DeleteDel-BackspaceDele-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-4dde1-d-values-included-in-export-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -152,14 +186,14 @@
                   "status": "expected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-7b0594c563907bc10590",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-473baaed5465218c5860",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 99,
               "column": 3
             },
             {
-              "title": "cp-002: Paste offsets pasted objects by 20px left and 20px top from original position",
-              "ok": true,
+              "title": "cp-002: Effect type selector dropdown or radio to choose effect measure",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -170,36 +204,70 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 1,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1234,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 1851,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-002 Effect type selector — dropdown or radio to choose effect measure",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-002 Effect type selector — dropdown or radio to choose effect measure\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:184:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 184
+                        },
+                        "snippet": "  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled systematic-review checkpoint: cp-002 ' + \"Effect type selector — dropdown or radio to choose effect measure\");\n      |             ^\n  185 |     }\n  186 |\n  187 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 184
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-002 Effect type selector — dropdown or radio to choose effect measure\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled systematic-review checkpoint: cp-002 ' + \"Effect type selector — dropdown or radio to choose effect measure\");\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:184:13"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:03.928Z",
+                      "startTime": "2026-03-15T05:39:15.898Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-d6f7f--top-from-original-position-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-15ee0-io-to-choose-effect-measure-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-15ee0-io-to-choose-effect-measure-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-15ee0-io-to-choose-effect-measure-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 184
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-2081070604f6add033c7",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-cca44ee3a6340192e44a",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 149,
               "column": 3
             },
             {
-              "title": "cp-003: Copy serializes objects via objtoObject into window__finnishClipboard array",
-              "ok": true,
+              "title": "cp-003: Model toggle switch between fixed and random effects",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -210,36 +278,70 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 2,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1270,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 1675,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-003 Model toggle — switch between fixed and random effects",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-003 Model toggle — switch between fixed and random effects\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:234:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 234
+                        },
+                        "snippet": "  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled systematic-review checkpoint: cp-003 ' + \"Model toggle — switch between fixed and random effects\");\n      |             ^\n  235 |     }\n  236 |\n  237 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 234
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-003 Model toggle — switch between fixed and random effects\n\n  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled systematic-review checkpoint: cp-003 ' + \"Model toggle — switch between fixed and random effects\");\n      |             ^\n  235 |     }\n  236 |\n  237 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:234:13"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:05.174Z",
+                      "startTime": "2026-03-15T05:39:18.750Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-57d97-ndow-finnishClipboard-array-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-4d5f4-en-fixed-and-random-effects-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-4d5f4-en-fixed-and-random-effects-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-4d5f4-en-fixed-and-random-effects-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 234
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-414304d7464ac3535929",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-2c1394783c51c57bd55c",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 199,
               "column": 3
             },
             {
-              "title": "cp-004: Paste uses fabricutilenlivenObjects to deserialize clipboard data",
-              "ok": true,
+              "title": "cp-004: Trim-and-fill option to apply trim-and-fill adjustment for publication bias",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -250,35 +352,69 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 3,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1303,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 1652,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-004 Trim-and-fill — option to apply trim-and-fill adjustment for publication bias",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-004 Trim-and-fill — option to apply trim-and-fill adjustment for publication bias\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:284:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 284
+                        },
+                        "snippet": "  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled systematic-review checkpoint: cp-004 ' + \"Trim-and-fill — option to apply trim-and-fill adjustment for publication bias\");\n      |             ^\n  285 |     }\n  286 |\n  287 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 284
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-004 Trim-and-fill — option to apply trim-and-fill adjustment for publication bias\n\n  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled systematic-review checkpoint: cp-004 ' + \"Trim-and-fill — option to apply trim-and-fill adjustment for publication bias\");\n      |             ^\n  285 |     }\n  286 |\n  287 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:284:13"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:06.454Z",
+                      "startTime": "2026-03-15T05:39:21.520Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-5b6ba--deserialize-clipboard-data-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-625d7-stment-for-publication-bias-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-625d7-stment-for-publication-bias-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-625d7-stment-for-publication-bias-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 284
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-9531639800662aadeca5",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-423db740fef6a24c7d96",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 249,
               "column": 3
             },
             {
-              "title": "cp-005: groupSelected creates group with name Group",
+              "title": "cp-005: Forest plot rendered standard meta-analysis forest plot",
               "ok": true,
               "tags": [],
               "tests": [
@@ -290,21 +426,21 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1732,
+                      "duration": 1735,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:07.767Z",
+                      "startTime": "2026-03-15T05:39:24.213Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-00387-eates-group-with-name-Group-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-75b37-d-meta-analysis-forest-plot-qa-chromium/test-finished-1.png"
                         }
                       ]
                     }
@@ -312,14 +448,14 @@
                   "status": "expected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-68752fa6445acb17e7f5",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-fb24bd559dc005287053",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 299,
               "column": 3
             },
             {
-              "title": "cp-006: ungroupSelected calls _restoreObjectsState before re-adding individual items",
-              "ok": true,
+              "title": "cp-006: Study labels each study labeled on left",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -330,36 +466,70 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 4,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1211,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 1923,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-006 Study labels — each study labeled on left",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-006 Study labels — each study labeled on left\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:384:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 384
+                        },
+                        "snippet": "  382 |\n  383 |     if (!handled) {\n> 384 |       throw new Error('Unhandled systematic-review checkpoint: cp-006 ' + \"Study labels — each study labeled on left\");\n      |             ^\n  385 |     }\n  386 |\n  387 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 384
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-006 Study labels — each study labeled on left\n\n  382 |\n  383 |     if (!handled) {\n> 384 |       throw new Error('Unhandled systematic-review checkpoint: cp-006 ' + \"Study labels — each study labeled on left\");\n      |             ^\n  385 |     }\n  386 |\n  387 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:384:13"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:09.512Z",
+                      "startTime": "2026-03-15T05:39:26.040Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-22868--re-adding-individual-items-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-5678d--each-study-labeled-on-left-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-5678d--each-study-labeled-on-left-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-5678d--each-study-labeled-on-left-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 384
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-566b6a7197a8af9ffb6f",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-466b86dceb8b82ef4b29",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 349,
               "column": 3
             },
             {
-              "title": "cp-007: Hook returns shortcuts enabled isSpacePressed for external consumers",
-              "ok": true,
+              "title": "cp-007: Effect estimates point estimates with confidence intervals",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -370,36 +540,70 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 5,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1278,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 1901,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-007 Effect estimates — point estimates with confidence intervals",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-007 Effect estimates — point estimates with confidence intervals\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:434:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 434
+                        },
+                        "snippet": "  432 |\n  433 |     if (!handled) {\n> 434 |       throw new Error('Unhandled systematic-review checkpoint: cp-007 ' + \"Effect estimates — point estimates with confidence intervals\");\n      |             ^\n  435 |     }\n  436 |\n  437 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 434
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-007 Effect estimates — point estimates with confidence intervals\n\n  432 |\n  433 |     if (!handled) {\n> 434 |       throw new Error('Unhandled systematic-review checkpoint: cp-007 ' + \"Effect estimates — point estimates with confidence intervals\");\n      |             ^\n  435 |     }\n  436 |\n  437 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:434:13"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:10.741Z",
+                      "startTime": "2026-03-15T05:39:28.891Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-8150c-ssed-for-external-consumers-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-c0d1a-s-with-confidence-intervals-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-c0d1a-s-with-confidence-intervals-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-c0d1a-s-with-confidence-intervals-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 434
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-7efa9e6b06af8946aa8d",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-733073f41c38924f63d7",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 399,
               "column": 3
             },
             {
-              "title": "cp-008: ToolType enum has 23 values SELECT DIRECT_SELECT PEN PENCIL BRUSH LINE RECTANGLE",
-              "ok": true,
+              "title": "cp-008: Diamond summary pooled effect shown as diamond",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -410,36 +614,70 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 6,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1249,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 2022,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-008 Diamond summary — pooled effect shown as diamond",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-008 Diamond summary — pooled effect shown as diamond\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:484:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 13,
+                          "line": 484
+                        },
+                        "snippet": "  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled systematic-review checkpoint: cp-008 ' + \"Diamond summary — pooled effect shown as diamond\");\n      |             ^\n  485 |     }\n  486 |\n  487 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 13,
+                            "line": 484
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-008 Diamond summary — pooled effect shown as diamond\n\n  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled systematic-review checkpoint: cp-008 ' + \"Diamond summary — pooled effect shown as diamond\");\n      |             ^\n  485 |     }\n  486 |\n  487 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:484:13"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:12.031Z",
+                      "startTime": "2026-03-15T05:39:31.991Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-c71d1-PENCIL-BRUSH-LINE-RECTANGLE-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-bb2b6-led-effect-shown-as-diamond-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-bb2b6-led-effect-shown-as-diamond-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-bb2b6-led-effect-shown-as-diamond-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 13,
+                        "line": 484
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-404398d0c7a5c33cd396",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-49f850d85e3351e38bcd",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 449,
               "column": 3
             },
             {
-              "title": "cp-009: BRACKET CALLOUT DIMENSION CONNECTOR PENCIL and TEXT_ON_PATH are defined in enum ",
-              "ok": true,
+              "title": "cp-009: Heterogeneity stats I-squared tau-squared Q-test displayed",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -450,36 +688,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 7,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1336,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 258,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:504:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 504
+                        },
+                        "snippet": "  502 |\n  503 |     // Navigate to the page\n> 504 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  505 |     await page.waitForLoadState('networkidle').catch(() => {});\n  506 |\n  507 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 504
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  502 |\n  503 |     // Navigate to the page\n> 504 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  505 |     await page.waitForLoadState('networkidle').catch(() => {});\n  506 |\n  507 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:504:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:13.294Z",
+                      "startTime": "2026-03-15T05:39:35.173Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-d70cb-N-PATH-are-defined-in-enum--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-554d5-au-squared-Q-test-displayed-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-554d5-au-squared-Q-test-displayed-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 504
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-b23d0db72db3b142db78",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-14048609498237dc5ffd",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 499,
               "column": 3
             },
             {
-              "title": "cp-010: DiagramType union has 11 values flowchart sequence class entity-relationship sta",
-              "ok": true,
+              "title": "cp-010: Weights study weights shown",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -490,36 +757,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 8,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1240,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 250,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:554:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 554
+                        },
+                        "snippet": "  552 |\n  553 |     // Navigate to the page\n> 554 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  555 |     await page.waitForLoadState('networkidle').catch(() => {});\n  556 |\n  557 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 554
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  552 |\n  553 |     // Navigate to the page\n> 554 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  555 |     await page.waitForLoadState('networkidle').catch(() => {});\n  556 |\n  557 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:554:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:14.654Z",
+                      "startTime": "2026-03-15T05:39:36.392Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-9af6a-ass-entity-relationship-sta-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-13e29-Weights-study-weights-shown-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-13e29-Weights-study-weights-shown-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 554
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-5b4a80099dc8a7c590c9",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-ef1b73ae6f6199e335f0",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 549,
               "column": 3
             },
             {
-              "title": "cp-011: ExportDPI type allows exactly 4 values 72 150 300 600",
-              "ok": true,
+              "title": "cp-011: Funnel plot rendered standard funnel plot for publication bias",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -530,36 +826,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 9,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1361,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 235,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:604:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 604
+                        },
+                        "snippet": "  602 |\n  603 |     // Navigate to the page\n> 604 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  605 |     await page.waitForLoadState('networkidle').catch(() => {});\n  606 |\n  607 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 604
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  602 |\n  603 |     // Navigate to the page\n> 604 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  605 |     await page.waitForLoadState('networkidle').catch(() => {});\n  606 |\n  607 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:604:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:15.912Z",
+                      "startTime": "2026-03-15T05:39:37.621Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-c072f-tly-4-values-72-150-300-600-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-37f6b-l-plot-for-publication-bias-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-37f6b-l-plot-for-publication-bias-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 604
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-a820f6815a2b7944591d",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-1c3ee6367137f912fc06",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 599,
               "column": 3
             },
             {
-              "title": "cp-012: BlendMode type lists 12 modes normal multiply screen overlay darken lighten colo",
-              "ok": true,
+              "title": "cp-012: Symmetry assessment visual inspection of asymmetry",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -570,36 +895,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 10,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1248,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 264,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:654:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 654
+                        },
+                        "snippet": "  652 |\n  653 |     // Navigate to the page\n> 654 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  655 |     await page.waitForLoadState('networkidle').catch(() => {});\n  656 |\n  657 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 654
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  652 |\n  653 |     // Navigate to the page\n> 654 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  655 |     await page.waitForLoadState('networkidle').catch(() => {});\n  656 |\n  657 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:654:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:17.285Z",
+                      "startTime": "2026-03-15T05:39:38.883Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-73d6f-overlay-darken-lighten-colo-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-c9d8f-ual-inspection-of-asymmetry-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-c9d8f-ual-inspection-of-asymmetry-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 654
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-6a1dcc0da74943549eae",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-393bb113ecdbaacff8c5",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 649,
               "column": 3
             },
             {
-              "title": "cp-013: ExportStage type has 6 stages preparing rendering optimizing encoding complete e",
-              "ok": true,
+              "title": "cp-013: Trim-and-fill imputed studies shown if trim-and-fill enabled",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -610,36 +964,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 11,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1219,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 244,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:704:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 704
+                        },
+                        "snippet": "  702 |\n  703 |     // Navigate to the page\n> 704 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  705 |     await page.waitForLoadState('networkidle').catch(() => {});\n  706 |\n  707 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 704
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  702 |\n  703 |     // Navigate to the page\n> 704 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  705 |     await page.waitForLoadState('networkidle').catch(() => {});\n  706 |\n  707 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:704:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:18.543Z",
+                      "startTime": "2026-03-15T05:39:40.156Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-0cbed-imizing-encoding-complete-e-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-a8da7-wn-if-trim-and-fill-enabled-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-a8da7-wn-if-trim-and-fill-enabled-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 704
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-1236507869d2ab26fc35",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-51d5d21e9d44b07c228c",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 699,
               "column": 3
             },
             {
-              "title": "cp-014: AIGenerationTool stores imageSize and model in component state but handleGenerat",
-              "ok": true,
+              "title": "cp-014: Subgroup definition UI to define subgroups",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -650,36 +1033,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 12,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1150,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 237,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:754:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 754
+                        },
+                        "snippet": "  752 |\n  753 |     // Navigate to the page\n> 754 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  755 |     await page.waitForLoadState('networkidle').catch(() => {});\n  756 |\n  757 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 754
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  752 |\n  753 |     // Navigate to the page\n> 754 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  755 |     await page.waitForLoadState('networkidle').catch(() => {});\n  756 |\n  757 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:754:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:19.778Z",
+                      "startTime": "2026-03-15T05:39:41.457Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-2a40f-ent-state-but-handleGenerat-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-959e3-tion-UI-to-define-subgroups-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-959e3-tion-UI-to-define-subgroups-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 754
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-996f5b14584582a1a16e",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-7df7be4ea9d3905c33e7",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 749,
               "column": 3
             },
             {
-              "title": "cp-015: BackgroundRemovalTool gives the drop zone rolebutton and tabIndex0 but it does n",
-              "ok": true,
+              "title": "cp-015: Subgroup forest plots separate analyses per subgroup",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -690,36 +1102,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 13,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1201,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 214,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:804:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 804
+                        },
+                        "snippet": "  802 |\n  803 |     // Navigate to the page\n> 804 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  805 |     await page.waitForLoadState('networkidle').catch(() => {});\n  806 |\n  807 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 804
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  802 |\n  803 |     // Navigate to the page\n> 804 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  805 |     await page.waitForLoadState('networkidle').catch(() => {});\n  806 |\n  807 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:804:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:20.940Z",
+                      "startTime": "2026-03-15T05:39:42.655Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-05ab0-and-tabIndex0-but-it-does-n-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-0891d-arate-analyses-per-subgroup-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-0891d-arate-analyses-per-subgroup-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 804
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-7845f3acfa0d37b8b3e2",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-c876f89ab5a835248070",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 799,
               "column": 3
             },
             {
-              "title": "cp-016: ExportDialog registers its Escape handler on document and pressing Escape while ",
-              "ok": true,
+              "title": "cp-016: Between-group comparison test for subgroup differences",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -730,36 +1171,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 14,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1273,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 198,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:854:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 854
+                        },
+                        "snippet": "  852 |\n  853 |     // Navigate to the page\n> 854 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  855 |     await page.waitForLoadState('networkidle').catch(() => {});\n  856 |\n  857 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 854
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  852 |\n  853 |     // Navigate to the page\n> 854 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  855 |     await page.waitForLoadState('networkidle').catch(() => {});\n  856 |\n  857 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:854:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:22.153Z",
+                      "startTime": "2026-03-15T05:39:43.789Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-da5c5--and-pressing-Escape-while--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-7e1b5-st-for-subgroup-differences-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-7e1b5-st-for-subgroup-differences-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 854
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-efb13224f2ef0dc55d94",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-5a039188a8f584472b9f",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 849,
               "column": 3
             },
             {
-              "title": "cp-017: ExportDialog blocks backdrop clicks while isExporting but the Escape-key path do",
-              "ok": true,
+              "title": "cp-017: Leave-one-out iteratively removes each study",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -770,36 +1240,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 15,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1247,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 216,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:904:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 904
+                        },
+                        "snippet": "  902 |\n  903 |     // Navigate to the page\n> 904 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  905 |     await page.waitForLoadState('networkidle').catch(() => {});\n  906 |\n  907 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 904
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  902 |\n  903 |     // Navigate to the page\n> 904 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  905 |     await page.waitForLoadState('networkidle').catch(() => {});\n  906 |\n  907 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:904:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:23.435Z",
+                      "startTime": "2026-03-15T05:39:44.919Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-704dd--but-the-Escape-key-path-do-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-cbd1d-ratively-removes-each-study-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-cbd1d-ratively-removes-each-study-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 904
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-b941f01a90ab5b1c6cdc",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-0678b84d32c5e3aca9b6",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 899,
               "column": 3
             },
             {
-              "title": "cp-018: FigurePanelGenerator closes on backdrop click via onClickonClose but it has no E",
-              "ok": true,
+              "title": "cp-018: Results table shows effect with each study removed",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -810,36 +1309,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 16,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1417,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 212,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:954:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 954
+                        },
+                        "snippet": "  952 |\n  953 |     // Navigate to the page\n> 954 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  955 |     await page.waitForLoadState('networkidle').catch(() => {});\n  956 |\n  957 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 954
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  952 |\n  953 |     // Navigate to the page\n> 954 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n      |                ^\n  955 |     await page.waitForLoadState('networkidle').catch(() => {});\n  956 |\n  957 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:954:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:24.697Z",
+                      "startTime": "2026-03-15T05:39:46.080Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-b7eb9-lickonClose-but-it-has-no-E-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-57bb1-ect-with-each-study-removed-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-57bb1-ect-with-each-study-removed-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 954
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-c99f18457b09ca11d7fa",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-225fb151ed7cb0c384d8",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 949,
               "column": 3
             },
             {
-              "title": "cp-019: IconSearch debounces onSearch by 200 ms by default clears the query on Escape wh",
-              "ok": true,
+              "title": "cp-019: Influence detection highlights studies that strongly influence results",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -850,36 +1378,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 17,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1419,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 205,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1004:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1004
+                        },
+                        "snippet": "  1002 |\n  1003 |     // Navigate to the page\n> 1004 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1005 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1006 |\n  1007 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1004
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1002 |\n  1003 |     // Navigate to the page\n> 1004 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1005 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1006 |\n  1007 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1004:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:26.126Z",
+                      "startTime": "2026-03-15T05:39:47.221Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-b3536-ears-the-query-on-Escape-wh-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-1f970--strongly-influence-results-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-1f970--strongly-influence-results-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1004
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-d7c3cf8da1ca4c1e3689",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-16c089461f4a7854ba72",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 999,
               "column": 3
             },
             {
-              "title": "cp-020: PropertiesPanel empty state text is exactly Select an object to edit its propert",
-              "ok": true,
+              "title": "cp-020: POST apisystematic-reviewmeta-analysis runs meta-analysis",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -890,36 +1447,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 18,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1275,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 234,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1054:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1054
+                        },
+                        "snippet": "  1052 |\n  1053 |     // Navigate to the page\n> 1054 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1055 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1056 |\n  1057 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1054
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1052 |\n  1053 |     // Navigate to the page\n> 1054 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1055 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1056 |\n  1057 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1054:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:27.556Z",
+                      "startTime": "2026-03-15T05:39:48.405Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-d85fb--object-to-edit-its-propert-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-b8dab-analysis-runs-meta-analysis-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-b8dab-analysis-runs-meta-analysis-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1054
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-675f40503d2c7ae76f75",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-06536213a3b383bfc0c2",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 1049,
               "column": 3
             },
             {
-              "title": "cp-021: PropertiesPanel debounces transform-panel resync by 40 ms with windowsetTimeout ",
-              "ok": true,
+              "title": "cp-021: GET apisystematic-reviewmeta-analysis retrieves saved results",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -930,36 +1516,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 19,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1257,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 221,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1104:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1104
+                        },
+                        "snippet": "  1102 |\n  1103 |     // Navigate to the page\n> 1104 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1105 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1106 |\n  1107 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1104
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1102 |\n  1103 |     // Navigate to the page\n> 1104 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1105 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1106 |\n  1107 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1104:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:28.842Z",
+                      "startTime": "2026-03-15T05:39:49.626Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-992fa-0-ms-with-windowsetTimeout--qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-2faaa-sis-retrieves-saved-results-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-2faaa-sis-retrieves-saved-results-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1104
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-bd9654fcf094d8c7e2b6",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-444cadf8579d96f327c4",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 1099,
               "column": 3
             },
             {
-              "title": "cp-022: LayersPanel refuses to delete the last remaining layer by returning early in the",
-              "ok": true,
+              "title": "cp-022: Treatment pair input define comparisons between treatments",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -970,36 +1585,65 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 20,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1205,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 207,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1154:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1154
+                        },
+                        "snippet": "  1152 |\n  1153 |     // Navigate to the page\n> 1154 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1155 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1156 |\n  1157 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1154
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1152 |\n  1153 |     // Navigate to the page\n> 1154 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1155 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1156 |\n  1157 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1154:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:30.114Z",
+                      "startTime": "2026-03-15T05:39:50.808Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-50685-r-by-returning-early-in-the-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-2178e-parisons-between-treatments-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-2178e-parisons-between-treatments-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1154
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-3f1d1e890ebc59407210",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-70166142ac85e5697c51",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 1149,
               "column": 3
             },
             {
-              "title": "cp-023: LayersPanel renaming autofocuses and selects the layer-name input on entry commi",
-              "ok": true,
+              "title": "cp-023: Treatment A input field for first treatment",
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1010,31 +1654,819 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
+                      "workerIndex": 21,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1445,
-                      "errors": [],
+                      "status": "failed",
+                      "duration": 204,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1204:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1204
+                        },
+                        "snippet": "  1202 |\n  1203 |     // Navigate to the page\n> 1204 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1205 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1206 |\n  1207 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1204
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1202 |\n  1203 |     // Navigate to the page\n> 1204 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1205 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1206 |\n  1207 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1204:16"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-15T05:39:31.329Z",
+                      "startTime": "2026-03-15T05:39:51.989Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/illustrate-spec-037-illust-da8ea-r-name-input-on-entry-commi-qa-chromium/test-finished-1.png"
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-81972-t-field-for-first-treatment-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-81972-t-field-for-first-treatment-qa-chromium/trace.zip"
                         }
-                      ]
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1204
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
-              "id": "fbbf91d1dd9409af67ff-9b757d29b9a57b4675a5",
-              "file": "illustrate/spec-037.spec.ts",
+              "id": "1bed7ea83e200d0c7e1b-552bd1a50587c397be9d",
+              "file": "systematic-review/spec-007.spec.ts",
               "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Treatment B input field for second treatment",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 22,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 226,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1254:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1254
+                        },
+                        "snippet": "  1252 |\n  1253 |     // Navigate to the page\n> 1254 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1255 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1256 |\n  1257 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1254
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1252 |\n  1253 |     // Navigate to the page\n> 1254 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1255 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1256 |\n  1257 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1254:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:39:53.124Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-1dd9a--field-for-second-treatment-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-1dd9a--field-for-second-treatment-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1254
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-9a2b270215514d69c884",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Effect data input fields for effect size and variance",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 225,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1304:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1304
+                        },
+                        "snippet": "  1302 |\n  1303 |     // Navigate to the page\n> 1304 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1305 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1306 |\n  1307 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1304
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1302 |\n  1303 |     // Navigate to the page\n> 1304 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1305 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1306 |\n  1307 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1304:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:39:54.306Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-c80a7-or-effect-size-and-variance-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-c80a7-or-effect-size-and-variance-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1304
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-6f51ff78d00f2ce1a567",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Add comparison button to add new study comparison",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 24,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 259,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1354:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1354
+                        },
+                        "snippet": "  1352 |\n  1353 |     // Navigate to the page\n> 1354 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1355 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1356 |\n  1357 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1354
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1352 |\n  1353 |     // Navigate to the page\n> 1354 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1355 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1356 |\n  1357 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1354:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:39:55.561Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-efdfe-to-add-new-study-comparison-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-efdfe-to-add-new-study-comparison-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1354
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-e4e1ab682df0dc4327c9",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Remove comparison button to remove a comparison",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 25,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 286,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1404:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1404
+                        },
+                        "snippet": "  1402 |\n  1403 |     // Navigate to the page\n> 1404 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1405 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1406 |\n  1407 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1404
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1402 |\n  1403 |     // Navigate to the page\n> 1404 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1405 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1406 |\n  1407 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1404:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:39:56.807Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-29533-tton-to-remove-a-comparison-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-29533-tton-to-remove-a-comparison-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1404
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-4246bd612355e7d38e48",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Matrix format treatments on rows and columns",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 236,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1454:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1454
+                        },
+                        "snippet": "  1452 |\n  1453 |     // Navigate to the page\n> 1454 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1455 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1456 |\n  1457 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1454
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1452 |\n  1453 |     // Navigate to the page\n> 1454 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1455 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1456 |\n  1457 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1454:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:39:58.112Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-ff04c-atments-on-rows-and-columns-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-ff04c-atments-on-rows-and-columns-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1454
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-325c098c41eca526e995",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Pairwise comparisons effect estimates in cells",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 247,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1504:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1504
+                        },
+                        "snippet": "  1502 |\n  1503 |     // Navigate to the page\n> 1504 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1505 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1506 |\n  1507 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1504
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1502 |\n  1503 |     // Navigate to the page\n> 1504 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1505 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1506 |\n  1507 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1504:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:39:59.325Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-3d288-s-effect-estimates-in-cells-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-3d288-s-effect-estimates-in-cells-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1504
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-0bff2270f23110748ee4",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Confidence intervals shown for each comparison",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 28,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 254,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1554:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1554
+                        },
+                        "snippet": "  1552 |\n  1553 |     // Navigate to the page\n> 1554 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1555 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1556 |\n  1557 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1554
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1552 |\n  1553 |     // Navigate to the page\n> 1554 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1555 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1556 |\n  1557 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1554:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:40:00.613Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-26f12-s-shown-for-each-comparison-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-26f12-s-shown-for-each-comparison-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1554
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-ab565dc4ebb30c5b943a",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Color coding significant effects highlighted",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 29,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 221,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1604:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1604
+                        },
+                        "snippet": "  1602 |\n  1603 |     // Navigate to the page\n> 1604 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1605 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1606 |\n  1607 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1604
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1602 |\n  1603 |     // Navigate to the page\n> 1604 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1605 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1606 |\n  1607 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1604:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:40:01.879Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-b88d4-ificant-effects-highlighted-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-b88d4-ificant-effects-highlighted-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1604
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-fb578c00a646df796cea",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Node rendering each treatment as a node",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 30,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 233,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1654:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1654
+                        },
+                        "snippet": "  1652 |\n  1653 |     // Navigate to the page\n> 1654 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1655 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1656 |\n  1657 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1654
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1652 |\n  1653 |     // Navigate to the page\n> 1654 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1655 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1656 |\n  1657 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1654:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:40:03.094Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-f917c-ng-each-treatment-as-a-node-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-f917c-ng-each-treatment-as-a-node-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1654
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-f385d96f98e073c98e05",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Edge rendering direct comparisons as edges",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 31,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 241,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1704:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1704
+                        },
+                        "snippet": "  1702 |\n  1703 |     // Navigate to the page\n> 1704 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1705 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1706 |\n  1707 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1704
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1702 |\n  1703 |     // Navigate to the page\n> 1704 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1705 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1706 |\n  1707 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1704:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:40:04.274Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-1313a-direct-comparisons-as-edges-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-1313a-direct-comparisons-as-edges-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1704
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-f62ef624573a121c5761",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Node size proportional to sample size",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 32,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 248,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1754:16",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                          "column": 16,
+                          "line": 1754
+                        },
+                        "snippet": "  1752 |\n  1753 |     // Navigate to the page\n> 1754 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1755 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1756 |\n  1757 |     // Take a screenshot as proof of page load"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                            "column": 16,
+                            "line": 1754
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:3001/systematic-review\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:3001/systematic-review\", waiting until \"domcontentloaded\"\u001b[22m\n\n\n  1752 |\n  1753 |     // Navigate to the page\n> 1754 |     await page.goto('/systematic-review', { waitUntil: 'domcontentloaded' });\n       |                ^\n  1755 |     await page.waitForLoadState('networkidle').catch(() => {});\n  1756 |\n  1757 |     // Take a screenshot as proof of page load\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts:1754:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T05:40:05.487Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-79f78-proportional-to-sample-size-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-007-79f78-proportional-to-sample-size-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-007.spec.ts",
+                        "column": 16,
+                        "line": 1754
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "1bed7ea83e200d0c7e1b-f30fa8178c90ec334844",
+              "file": "systematic-review/spec-007.spec.ts",
+              "line": 1749,
               "column": 3
             }
           ]
@@ -1044,11 +2476,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-15T05:38:46.979Z",
-    "duration": 46406.745,
-    "expected": 24,
+    "startTime": "2026-03-15T05:39:09.934Z",
+    "duration": 56070.488000000005,
+    "expected": 2,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 33,
     "flaky": 0
   }
 }
