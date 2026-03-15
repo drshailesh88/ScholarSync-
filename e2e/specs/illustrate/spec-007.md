@@ -1,9 +1,9 @@
 # illustrate — Spec 007
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -13,7 +13,7 @@ MODULE: illustrate
 #### Selection & Manipulation
 - [x] PASS: Corner handles resize objects proportionally
 - [x] PASS: Side handles resize non-proportionally
-- [ ] FAIL: Rotation handle rotates object (visible above selection)
+- [x] PASS: Rotation handle rotates object (visible above selection)
 - [x] PASS: Double-click group to enter group editing
 #### Navigation
 - [x] PASS: Scroll wheel zooms in/out

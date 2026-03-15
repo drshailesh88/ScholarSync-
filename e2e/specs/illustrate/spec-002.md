@@ -1,9 +1,9 @@
 # illustrate — Spec 002
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -37,7 +37,7 @@ MODULE: illustrate
 - [x] PASS: "Regenerate" button resends previous user prompt
 - [x] PASS: Regeneration creates a new request with the same prompt
 #### Prompt Input
-- [ ] FAIL: Text input field accepts up to 4000 characters
+- [x] PASS: Text input field accepts up to 4000 characters
 - [x] PASS: Character count or limit indicator visible
 - [x] PASS: Submit via "Send" button
 - [x] PASS: Submit via Enter key

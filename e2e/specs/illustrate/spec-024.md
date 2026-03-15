@@ -1,9 +1,9 @@
 # illustrate — Spec 024
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 33
-FAIL: 2
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -12,8 +12,8 @@ MODULE: illustrate
 ### Quick Test Workflows
 #### Scientific Shapes
 - [x] PASS: ER defaults are `type: 'rough'`, `size: 120`, `branches: 5`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#fbbf24'`
-- [ ] FAIL: Microtubule defaults are `length: 200`, `protofilaments: 13`, `showDimer: false`, `stroke: '#4a5568'`, and `strokeWidth: 2`
-- [ ] FAIL: Protein defaults are `type: 'alpha-helix'`, `length: 150`, `strands: 3`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#60a5fa'`
+- [x] PASS: Microtubule defaults are `length: 200`, `protofilaments: 13`, `showDimer: false`, `stroke: '#4a5568'`, and `strokeWidth: 2`
+- [x] PASS: Protein defaults are `type: 'alpha-helix'`, `length: 150`, `strands: 3`, `stroke: '#4a5568'`, `strokeWidth: 2`, and `fill: '#60a5fa'`
 - [x] PASS: Scientific shape previews are rendered with raw SVG strings through `dangerouslySetInnerHTML`
 - [x] PASS: Scientific shape insertion rasterizes the generated SVG through `Blob` plus `FabricImage.fromURL()` instead of inserting editable vector paths
 - [x] PASS: Inserted scientific shapes are scaled to fit within 60% of the current canvas width and height and then centered

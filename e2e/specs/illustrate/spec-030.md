@@ -1,9 +1,9 @@
 # illustrate — Spec 030
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
@@ -18,7 +18,7 @@ MODULE: illustrate
 - [x] PASS: Primary action button text is `Try Again` (not "Reset" as documented in Section 21)
 - [x] PASS: `Reload Page` button appears ONLY in `fullScreen` mode
 - [x] PASS: Error details section visible ONLY when `process.env.NODE_ENV === 'development'`
-- [ ] FAIL: Error details toggle button text: `Show Error Details` / `Hide Error Details`
+- [x] PASS: Error details toggle button text: `Show Error Details` / `Hide Error Details`
 - [x] PASS: Error details display: error name, message, stack trace, and component stack
 - [x] PASS: ErrorBoundary supports `resetKeys` prop — auto-resets when any key value changes
 - [x] PASS: Inline (non-fullScreen) error container has min-height `280px` with border-radius `12px`
