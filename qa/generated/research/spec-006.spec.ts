@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-006
  * Source: e2e/specs/research/spec-006.md
- * Generated: 2026-03-14T08:45:46.331Z
+ * Generated: 2026-03-15T17:20:57.535Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 `Save & Cite` routes to `/editor/new` after `handleSave(...)` resolves');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "`Save & Cite` routes to `/editor/new` after `handleSave(...)` resolves");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 Because `handleSave(...)` swallows save errors, `Save & Cite` still redirects even if the save operation failed');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "Because `handleSave(...)` swallows save errors, `Save & Cite` still redirects even if the save operation failed");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 `Similar` button is rendered only for results with an `s2Id`');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "`Similar` button is rendered only for results with an `s2Id`");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 `Similar` button switches to `Finding...` with a spinning `CircleNotch` icon while recommendations load');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "`Similar` button switches to `Finding...` with a spinning `CircleNotch` icon while recommendations load");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 Similar-paper requests call `/api/search/s2-recommendations?paperId={s2Id}&limit=5&paperTitle={encodedTitle}`');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "Similar-paper requests call `/api/search/s2-recommendations?paperId={s2Id}&limit=5&paperTitle={encodedTitle}`");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Retrying Similar clears prior error and empty markers for that paper before the next request');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Retrying Similar clears prior error and empty markers for that paper before the next request");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Once a similar-results list is loaded for a paper, clicking `Similar` again does not refetch because cached results short-circuit the handler');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Once a similar-results list is loaded for a paper, clicking `Similar` again does not refetch because cached results short-circuit the handler");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Similar-paper error state reads `Couldn\'t load similar papers.` and shows a `Retry` action');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Similar-paper error state reads `Couldn't load similar papers.` and shows a `Retry` action");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Similar-paper empty state reads `No similar papers found for this article.`');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Similar-paper empty state reads `No similar papers found for this article.`");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Similar-paper result cards render title, `journal · year`, optional citation count, and a `Save` button only');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Similar-paper result cards render title, `journal · year`, optional citation count, and a `Save` button only");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 Evidence-level badge is rendered only when `r.evidenceLevel` exists');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "Evidence-level badge is rendered only when `r.evidenceLevel` exists");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 Evidence-level fallback styling defaults to Level V colors for unrecognized values');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "Evidence-level fallback styling defaults to Level V colors for unrecognized values");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 Open-access badge text reads `Open Access`');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "Open-access badge text reads `Open Access`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 High-relevance helper text renders on the far right only when `rrfScore >= 1.0`');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "High-relevance helper text renders on the far right only when `rrfScore >= 1.0`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 `rrfScore >= 1.5` shows `High relevance`; `rrfScore` between `1.0` and `1.49` shows `Relevant`');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "`rrfScore >= 1.5` shows `High relevance`; `rrfScore` between `1.0` and `1.49` shows `Relevant`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Pagination uses `Previous` and `Next` buttons, not an infinite scroll or load-more control');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Pagination uses `Previous` and `Next` buttons, not an infinite scroll or load-more control");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Previous button is disabled on page 0');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Previous button is disabled on page 0");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Next button is disabled when `hasMore` is false');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Next button is disabled when `hasMore` is false");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Pagination status text reads `Page {current} of {total}`');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Pagination status text reads `Page {current} of {total}`");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Clicking Previous or Next reruns `handleSearch(...)` with the adjacent page number');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Clicking Previous or Next reruns `handleSearch(...)` with the adjacent page number");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Floating research-copilot toggle button is fixed at the bottom-right corner of the viewport');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Floating research-copilot toggle button is fixed at the bottom-right corner of the viewport");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Floating copilot button is visible even before any search has run');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Floating copilot button is visible even before any search has run");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Floating copilot button changes from glass styling to solid brand styling when the sidebar is open');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Floating copilot button changes from glass styling to solid brand styling when the sidebar is open");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Copilot sidebar renders only while `showCopilot` is true');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Copilot sidebar renders only while `showCopilot` is true");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Copilot sidebar header reads `Research Copilot`');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Copilot sidebar header reads `Research Copilot`");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Copilot sidebar header includes a pulsing `AI` status indicator');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Copilot sidebar header includes a pulsing `AI` status indicator");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Copilot welcome card is shown only when there are no chat messages yet');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Copilot welcome card is shown only when there are no chat messages yet");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Copilot welcome card copy promises search across PubMed, Semantic Scholar, and OpenAlex');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Copilot welcome card copy promises search across PubMed, Semantic Scholar, and OpenAlex");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Chat request transport uses `/api/research-agent`');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Chat request transport uses `/api/research-agent`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 Copilot input placeholder reads `Ask about papers, topics, methods...`');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "Copilot input placeholder reads `Ask about papers, topics, methods...`");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 Copilot send button is disabled when the input is blank or while a response is streaming/submitted');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "Copilot send button is disabled when the input is blank or while a response is streaming/submitted");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 Successful copilot submit clears the input field immediately after `sendMessage(...)`');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "Successful copilot submit clears the input field immediately after `sendMessage(...)`");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 Copilot message rendering concatenates only `text` parts and ignores non-text message parts');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "Copilot message rendering concatenates only `text` parts and ignores non-text message parts");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Copilot loading helper reads `Searching...`');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Copilot loading helper reads `Searching...`");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-006', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 Closing the copilot sidebar hides it without clearing the existing in-memory chat messages for that render cycle');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "Closing the copilot sidebar hides it without clearing the existing in-memory chat messages for that render cycle");
     }
 
 
