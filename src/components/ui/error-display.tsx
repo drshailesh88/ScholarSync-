@@ -37,6 +37,12 @@ export function ErrorDisplay({
       </div>
       <h3 className="text-lg font-semibold text-ink mb-2">{title}</h3>
       <p className="text-sm text-ink-muted max-w-sm mb-6">{message}</p>
+      {error && process.env.NODE_ENV === "development" && (
+        <details className="text-xs text-ink-muted max-w-sm mb-4">
+          <summary className="cursor-pointer">Error details</summary>
+          <pre className="mt-1 whitespace-pre-wrap break-all">{error.message}</pre>
+        </details>
+      )}
       {onRetry && (
         <button
           onClick={onRetry}
