@@ -89,7 +89,7 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
                   <span className="text-red-500">*</span>
                 )}
               </label>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={pico[key]}
                 onChange={(e) =>

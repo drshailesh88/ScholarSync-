@@ -360,7 +360,7 @@ export function ExportDialog({
           <div style={styles.filenameSection}>
             <label style={styles.label}>Filename</label>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={exportFilename}
                 onChange={(e) => setExportFilename(e.target.value)}
@@ -406,7 +406,7 @@ export function ExportDialog({
           {(selectedFormat === 'svg' || selectedFormat === 'pdf' || selectedFormat === 'png') && (
             <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid var(--border-color, #333)' }}>
               <label style={styles.label}>Journal Preset</label>
-              <select
+              <select aria-label="Select option"
                 value={selectedPreset}
                 onChange={(e) => {
                   setSelectedPreset(e.target.value);

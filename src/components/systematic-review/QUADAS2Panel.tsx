@@ -335,7 +335,7 @@ export function QUADAS2Panel({ projectId }: QUADAS2PanelProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-3 flex-wrap">
-          <select
+          <select aria-label="Select option"
             value={selectedPaperId ?? ""}
             onChange={(e) =>
               setSelectedPaperId(e.target.value ? Number(e.target.value) : null)

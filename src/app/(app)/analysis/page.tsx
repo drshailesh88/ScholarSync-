@@ -334,6 +334,10 @@ export default function AnalysisPage() {
                   </button>
                   {projectDropdownOpen && (
                     <div className="absolute left-0 top-full mt-1 w-56 rounded-lg glass-panel border border-border shadow-lg z-50 py-1 max-h-60 overflow-y-auto">
+                      {/* empty state: no data, nothing here */}
+                      {projects.length === 0 && (
+                        <p className="text-xs text-ink-muted text-center py-2">no results yet. Create a project to get started.</p>
+                      )}
                       {projects.map((p) => (
                         <button
                           key={p.id}
@@ -378,7 +382,7 @@ export default function AnalysisPage() {
               </div>
             ) : (
               <>
-                <textarea
+                <textarea aria-label="Text area"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder={sourceMode === "document"

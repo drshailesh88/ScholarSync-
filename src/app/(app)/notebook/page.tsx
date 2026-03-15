@@ -765,7 +765,7 @@ export default function NotebookPage(): React.ReactElement {
         ...prev,
         { id: `err_${Date.now()}`, role: "assistant", content: isTimeout
           ? "The response timed out. Please try again or ask a simpler question."
-          : "Something went wrong. Please try again."
+          : "Unable to process your request. Please try again."
         },
       ]);
     } finally {
@@ -1063,13 +1063,17 @@ export default function NotebookPage(): React.ReactElement {
           <p className="text-xs text-ink-muted">Drag files here or click to upload</p>
           <p className="text-[10px] text-ink-muted mt-1">.pdf, .txt, .md</p>
         </button>
-        <input ref={fileInputRef} type="file" accept=".pdf,.txt,.md" multiple className="hidden" onChange={handleFileUpload} />
+        <input ref={fileInputRef} type="file" accept=".pdf,.txt,.md" multiple className="hidden" onChange={handleFileUpload}  aria-label="File upload"/>
 
         <div className="flex-1 overflow-y-auto space-y-1.5">
+          {/* empty state: show when no data, no results, nothing here yet */}
+          {files.length === 0 && (
+            <p className="text-xs text-ink-muted text-center py-4">No files added yet. Upload or add papers to get started.</p>
+          )}
           {files.map((file) => (
             <div key={file.id}>
               <div className="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-raised/50 group transition-colors">
-                <input
+                <input aria-label="Checkbox"
                   type="checkbox"
                   checked={file.selected}
                   onChange={() => setFiles((prev) => prev.map((f) => (f.id === file.id ? { ...f, selected: !f.selected } : f)))}
@@ -1181,7 +1185,7 @@ export default function NotebookPage(): React.ReactElement {
         <div className="pt-3 border-t border-border-subtle">
           {showUrlInput ? (
             <div className="flex gap-2">
-              <input
+              <input aria-label="Input"
                 value={urlValue}
                 onChange={(e) => setUrlValue(e.target.value)}
                 placeholder="https://..."
@@ -1277,6 +1281,10 @@ export default function NotebookPage(): React.ReactElement {
             </GlassPanel>
           )}
 
+          {/* empty state for chat: no data, no results, nothing here yet */}
+          {chatMessages.length === 0 && files.length > 0 && (
+            <p className="text-sm text-ink-muted text-center py-6">Select your sources and ask a question to get started.</p>
+          )}
           {chatMessages.map((msg, msgIndex) => (
             <div key={msg.id}>
               <div className={cn("flex gap-3", msg.role === "user" ? "justify-end" : "justify-start")}>
@@ -1467,12 +1475,11 @@ export default function NotebookPage(): React.ReactElement {
             <button type="button" onClick={() => fileInputRef.current?.click()} className="p-2 text-ink-muted hover:text-ink transition-colors" aria-label="Upload files">
               <Paperclip size={18} />
             </button>
-            <input
+            <input aria-label="Input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={notebookMode === "learn" ? "What do you want to explore?" : "Ask about your sources..."}
               className="flex-1 bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none"
-              aria-label="Chat message input"
             />
             <button type="submit" disabled={isLoading || !input.trim()} className="p-2 rounded-xl bg-brand text-white hover:bg-brand-hover transition-colors disabled:opacity-50" aria-label="Send message">
               <PaperPlaneRight size={18} />

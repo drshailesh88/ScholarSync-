@@ -213,7 +213,7 @@ export function PrismaInputForm({
             </p>
             {data.fullTextExclusionReasons.map((r, i) => (
               <div key={i} className="flex items-center gap-1.5">
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={r.reason}
                   onChange={(e) =>
@@ -222,7 +222,7 @@ export function PrismaInputForm({
                   placeholder="Reason"
                   className="flex-1 text-xs px-2 py-1 rounded border border-border bg-transparent text-ink focus:outline-none focus:ring-1 focus:ring-brand/30"
                 />
-                <input
+                <input aria-label="Number input"
                   type="number"
                   value={r.count || ""}
                   onChange={(e) =>
@@ -356,7 +356,7 @@ function NumberField({
   return (
     <div className="flex items-center justify-between gap-2">
       <label className="text-xs text-ink-muted">{label}</label>
-      <input
+      <input aria-label="Number input"
         type="number"
         min={0}
         value={value || ""}

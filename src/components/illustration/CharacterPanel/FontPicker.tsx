@@ -52,12 +52,11 @@ export function FontPicker({ value, onChange, disabled = false }: FontPickerProp
     : [{ value, label: value }, ...fontOptions];
 
   return (
-    <select
+    <select aria-label="Select option"
       value={value}
       disabled={disabled}
       onChange={(event) => onChange(event.target.value)}
       style={styles.select}
-      aria-label="Font family"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>

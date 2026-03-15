@@ -237,7 +237,7 @@ export function DocumentSettings({
         <div style={styles.body}>
           <div style={styles.field}>
             <label style={styles.label} htmlFor="canvas-preset-select">Preset</label>
-            <select
+            <select aria-label="Preset"
               id="canvas-preset-select"
               style={styles.select}
               value={presetId}
@@ -280,7 +280,7 @@ export function DocumentSettings({
           <div style={styles.row}>
             <div style={styles.field}>
               <label style={styles.label} htmlFor="canvas-width-input">Width (px)</label>
-              <input
+              <input aria-label="Width"
                 id="canvas-width-input"
                 type="number"
                 min={1}
@@ -295,7 +295,7 @@ export function DocumentSettings({
 
             <div style={styles.field}>
               <label style={styles.label} htmlFor="canvas-height-input">Height (px)</label>
-              <input
+              <input aria-label="Height"
                 id="canvas-height-input"
                 type="number"
                 min={1}
@@ -311,7 +311,7 @@ export function DocumentSettings({
 
           <div style={styles.field}>
             <label style={styles.label} htmlFor="canvas-background-input">Background Color</label>
-            <input
+            <input aria-label="Background color"
               id="canvas-background-input"
               type="color"
               value={backgroundColor}

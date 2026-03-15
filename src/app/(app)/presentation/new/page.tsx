@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { Suspense, useState } from "react";
@@ -85,7 +86,7 @@ function NewPresentationContent() {
         <div className="space-y-6">
           <div>
             <label className="text-sm font-medium text-ink block mb-2">Title</label>
-            <input
+            <input aria-label="Input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., CRISPR Gene Therapy in Sickle Cell Disease"
@@ -98,7 +99,7 @@ function NewPresentationContent() {
             <label className="text-sm font-medium text-ink block mb-2">
               Description <span className="text-ink-muted font-normal">(optional)</span>
             </label>
-            <textarea
+            <textarea aria-label="Text area"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of your presentation"

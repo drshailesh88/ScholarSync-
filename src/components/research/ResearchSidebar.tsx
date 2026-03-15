@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { X, Books, MagnifyingGlass, ChatCircleDots } from "@phosphor-icons/react";

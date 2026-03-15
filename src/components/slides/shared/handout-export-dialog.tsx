@@ -186,7 +186,7 @@ export function HandoutExportDialog({
           <div className="text-xs font-medium text-ink-muted mb-1">Options</div>
 
           <label className="flex items-center gap-2 text-xs text-ink cursor-pointer">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={includeSlideNumbers}
               onChange={() => setIncludeSlideNumbers(!includeSlideNumbers)}
@@ -196,7 +196,7 @@ export function HandoutExportDialog({
           </label>
 
           <label className="flex items-center gap-2 text-xs text-ink cursor-pointer">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={includeHeader}
               onChange={() => setIncludeHeader(!includeHeader)}
@@ -211,7 +211,7 @@ export function HandoutExportDialog({
               layout === "three_up_notes" ? "text-ink" : "text-ink-muted/60 cursor-not-allowed",
             )}
           >
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={includeSpeakerNotes}
               disabled={layout !== "three_up_notes"}

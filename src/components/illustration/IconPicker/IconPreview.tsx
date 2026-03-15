@@ -306,7 +306,7 @@ export const IconPreview: React.FC<IconPreviewProps> = ({
             title={color}
           />
         ))}
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={iconColor}
           onChange={(e) => handleColorChange(e.target.value)}

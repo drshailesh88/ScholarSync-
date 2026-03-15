@@ -78,9 +78,8 @@ export function CollaboratorPresence() {
               title="You"
             >
               {self.presence.avatar ? (
-                <Image
+                <Image alt={self.presence.name}
                   src={self.presence.avatar}
-                  alt={self.presence.name}
                   width={28}
                   height={28}
                   className="w-full h-full rounded-full object-cover"
@@ -113,9 +112,8 @@ export function CollaboratorPresence() {
               }}
             >
               {collab.presence.avatar || collab.info?.avatar ? (
-                <Image
+                <Image alt={collab.presence.name || collab.info?.name || "User"}
                   src={collab.presence.avatar || collab.info?.avatar || ""}
-                  alt={collab.presence.name || collab.info?.name || "User"}
                   width={28}
                   height={28}
                   className="w-full h-full rounded-full object-cover"

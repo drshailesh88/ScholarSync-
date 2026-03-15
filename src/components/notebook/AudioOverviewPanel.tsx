@@ -327,7 +327,7 @@ export function AudioOverviewPanel({
                 <span className="text-[10px] text-ink-muted tabular-nums w-8 text-right">
                   {formatTime(currentTime)}
                 </span>
-                <input
+                <input aria-label="Range slider"
                   type="range"
                   min={0}
                   max={Math.max(durationSeconds, 0)}
@@ -335,7 +335,7 @@ export function AudioOverviewPanel({
                   value={Math.min(currentTime, durationSeconds)}
                   onChange={handleSeek}
                   className="flex-1 h-1 accent-brand cursor-pointer"
-                />
+/>
                 <span className="text-[10px] text-ink-muted tabular-nums w-8">
                   {formatTime(durationSeconds)}
                 </span>
@@ -403,7 +403,7 @@ export function AudioOverviewPanel({
               <label className="text-[10px] font-medium text-ink-muted block mb-1">
                 Focus on (optional)
               </label>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={customPrompt}
                 onChange={(e) => setCustomPrompt(e.target.value)}

@@ -156,7 +156,7 @@ export function VisualMode() {
           }}
           className="flex gap-2"
         >
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="e.g., CRISPR gene editing pipeline..."

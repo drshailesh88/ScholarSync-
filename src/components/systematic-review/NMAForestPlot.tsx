@@ -150,7 +150,7 @@ export function NMAForestPlot({
         <label className="text-[11px] text-ink/60 font-medium">
           Reference treatment:
         </label>
-        <select
+        <select aria-label="Select option"
           value={selectedRef}
           onChange={(e) => setSelectedRef(e.target.value)}
           className="text-[11px] bg-surface-2 border border-ink/10 rounded px-2 py-1 text-ink"

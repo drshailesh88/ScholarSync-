@@ -242,7 +242,7 @@ export function ReferenceSidebar({
             size={12}
             className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400"
           />
-          <input
+          <input aria-label="Text input"
             type="text"
             value={filterQuery}
             onChange={(e) => setFilterQuery(e.target.value)}

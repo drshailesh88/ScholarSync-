@@ -64,7 +64,7 @@ export function ResultsTable({
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-border-subtle bg-surface-raised/30">
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={allSelected}
             onChange={() => (allSelected ? onClearSelection() : onSelectAll())}

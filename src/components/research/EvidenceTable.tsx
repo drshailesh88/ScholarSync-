@@ -38,7 +38,7 @@ function EvidenceCellComponent({
   return (
     <div className="group relative">
       {isEditing ? (
-        <input
+        <input aria-label="Input"
           value={editValue}
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={() => {

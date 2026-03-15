@@ -602,7 +602,7 @@ export function AIGenerationTool({
             <KeyIcon /> fal.ai API Key
           </label>
           <div style={styles.apiKeyInput}>
-            <input
+            <input aria-label="Enter your fal.ai API key"
               type="password"
               style={{ ...styles.input, flex: 1 }}
               placeholder="Enter your fal.ai API key"
@@ -627,7 +627,7 @@ export function AIGenerationTool({
       {/* Prompt Input */}
       <div style={styles.section}>
         <label style={styles.label}>Describe your illustration</label>
-        <textarea
+        <textarea aria-label="e.g., Human heart anatomy with labeled chambers and valves, detailed cross-section view"
           style={styles.textarea}
           placeholder="e.g., Human heart anatomy with labeled chambers and valves, detailed cross-section view"
           value={prompt}
@@ -660,7 +660,7 @@ export function AIGenerationTool({
       <div style={styles.row}>
         <div style={{ ...styles.inputGroup, ...styles.column }}>
           <label style={styles.label}>Size</label>
-          <select
+          <select aria-label="Select option"
             style={styles.select}
             value={imageSize}
             onChange={(e) => setImageSize(e.target.value as ImageSize)}
@@ -675,7 +675,7 @@ export function AIGenerationTool({
         </div>
         <div style={{ ...styles.inputGroup, ...styles.column }}>
           <label style={styles.label}>Model</label>
-          <select
+          <select aria-label="Select option"
             style={styles.select}
             value={model}
             onChange={(e) => setModel(e.target.value as FluxModel)}
@@ -729,9 +729,8 @@ export function AIGenerationTool({
         <div style={styles.previewContainer}>
           {result.images.length === 1 ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <img alt="Generated illustration"
               src={result.images[0].url}
-              alt="Generated illustration"
               style={styles.singlePreview}
             />
           ) : (
@@ -739,9 +738,9 @@ export function AIGenerationTool({
               {result.images.map((image, index) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
+                  alt={`Generated illustration ${index + 1}`}
                   key={index}
                   src={image.url}
-                  alt={`Generated illustration ${index + 1}`}
                   style={{
                     ...styles.previewImage,
                     ...(selectedImageIndex === index ? styles.previewImageSelected : {}),

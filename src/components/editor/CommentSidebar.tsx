@@ -260,7 +260,7 @@ export function CommentSidebar({
                 &ldquo;{pendingInlineComment.quotedText}&rdquo;
               </blockquote>
             )}
-            <input
+            <input aria-label="Text input"
               type="text"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
@@ -347,7 +347,7 @@ export function CommentSidebar({
             {/* Reply input */}
             {replyTo === thread.comment.id && (
               <div className="ml-4 flex gap-2">
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
@@ -377,7 +377,7 @@ export function CommentSidebar({
       {/* New comment input (at bottom) */}
       {replyTo !== "new-inline" && (
         <div className="p-3 border-t border-border">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}

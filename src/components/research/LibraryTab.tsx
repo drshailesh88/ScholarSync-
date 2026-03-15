@@ -63,7 +63,7 @@ export function LibraryTab({
             size={12}
             className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted"
           />
-          <input
+          <input aria-label="Text input"
             type="text"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}

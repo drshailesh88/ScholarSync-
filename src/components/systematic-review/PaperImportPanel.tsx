@@ -189,7 +189,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
                 {generatedStrategy.estimatedResults?.toLocaleString() ?? "?"}{" "}
                 estimated results)
               </div>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={customSearch}
                 onChange={(e) => setCustomSearch(e.target.value)}
@@ -198,7 +198,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
               />
             </div>
           ) : (
-            <input
+            <input aria-label="Text input"
               type="text"
               value={customSearch}
               onChange={(e) => setCustomSearch(e.target.value)}
@@ -242,7 +242,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
           <label className="block text-sm font-medium text-ink mb-1">
             Max Results Per Source
           </label>
-          <select
+          <select aria-label="Select option"
             value={maxResults}
             onChange={(e) => setMaxResults(parseInt(e.target.value, 10))}
             className="px-3 py-2 bg-surface-raised border border-border rounded text-sm text-ink"
@@ -331,7 +331,7 @@ export function PaperImportPanel({ projectId }: PaperImportPanelProps) {
                 Drag & drop PDF files here, or{" "}
                 <label className="text-brand cursor-pointer hover:underline">
                   browse
-                  <input
+                  <input aria-label="File upload"
                     type="file"
                     accept=".pdf"
                     multiple

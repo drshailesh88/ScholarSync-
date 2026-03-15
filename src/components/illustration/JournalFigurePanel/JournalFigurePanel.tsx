@@ -268,7 +268,7 @@ export function JournalFigurePanel({
         <div style={styles.sectionTitle}>Figure Labels</div>
         <div style={styles.row}>
           <span style={styles.label}>Style</span>
-          <select
+          <select aria-label="Select option"
             style={styles.select}
             value={labelStyle}
             onChange={(e) => setLabelStyle(e.target.value as FigureLabelStyle)}
@@ -281,7 +281,7 @@ export function JournalFigurePanel({
         </div>
         <div style={styles.row}>
           <span style={styles.label}>Number</span>
-          <input
+          <input aria-label="Number input"
             type="number"
             style={styles.input}
             value={labelNumber}
@@ -291,7 +291,7 @@ export function JournalFigurePanel({
         </div>
         <div style={styles.row}>
           <span style={styles.label}>Panel</span>
-          <input
+          <input aria-label="A, B, C..."
             type="text"
             style={styles.input}
             value={labelPanel}
@@ -314,7 +314,7 @@ export function JournalFigurePanel({
         <div style={styles.sectionTitle}>Scale Bar</div>
         <div style={styles.row}>
           <span style={styles.label}>Value</span>
-          <input
+          <input aria-label="Number input"
             type="number"
             style={styles.input}
             value={scaleValue}
@@ -324,7 +324,7 @@ export function JournalFigurePanel({
         </div>
         <div style={styles.row}>
           <span style={styles.label}>Unit</span>
-          <select
+          <select aria-label="Select option"
             style={styles.select}
             value={scaleUnit}
             onChange={(e) => setScaleUnit(e.target.value)}
@@ -338,7 +338,7 @@ export function JournalFigurePanel({
         </div>
         <div style={styles.row}>
           <span style={styles.label}>Width (px)</span>
-          <input
+          <input aria-label="Number input"
             type="number"
             style={styles.input}
             value={scaleBarWidth}
@@ -362,7 +362,7 @@ export function JournalFigurePanel({
         </div>
         <div style={styles.row}>
           <span style={styles.label}>Next</span>
-          <input
+          <input aria-label="Text input"
             type="text"
             style={styles.input}
             value={nextPanelLetter}
@@ -381,7 +381,7 @@ export function JournalFigurePanel({
       {/* Copyright / Attribution */}
       <div style={styles.section}>
         <div style={styles.sectionTitle}>Copyright / Attribution</div>
-        <input
+        <input aria-label="e.g., Created with ScholarSync"
           type="text"
           style={styles.input}
           value={copyrightText}
@@ -437,7 +437,7 @@ export function JournalFigurePanel({
         </div>
         <div style={styles.row}>
           <span style={styles.label}>Type</span>
-          <select
+          <select aria-label="Select option"
             style={styles.select}
             value={colorBlindType}
             onChange={(e) => setColorBlindType(e.target.value as ColorBlindType)}

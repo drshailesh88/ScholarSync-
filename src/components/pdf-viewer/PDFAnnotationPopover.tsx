@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useState } from "react";
@@ -99,7 +100,7 @@ export function PDFAnnotationPopover({
           <label className="text-xs text-ink-muted block mb-1">
             Section target
           </label>
-          <select
+          <select aria-label="Select option"
             value={highlight.targetSection || "general"}
             onChange={(e) =>
               onUpdateSection(highlight.id, e.target.value as TargetSection)
@@ -117,7 +118,7 @@ export function PDFAnnotationPopover({
         {/* Note */}
         <div className="px-3 py-2 border-b border-border">
           <label className="text-xs text-ink-muted block mb-1">Note</label>
-          <textarea
+          <textarea aria-label="Text area"
             value={note}
             onChange={(e) => setNote(e.target.value)}
             onBlur={handleNoteBlur}

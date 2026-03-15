@@ -162,7 +162,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
       <div>
         <SectionLabel>Opacity</SectionLabel>
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Range slider"
             type="range"
             min={0}
             max={100}
@@ -171,7 +171,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
             onChange={(e) => updateOpacity(Number(e.target.value))}
             className="w-full"
           />
-          <input
+          <input aria-label="Number input"
             type="number"
             min={0}
             max={100}
@@ -188,7 +188,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
         <div className="flex items-center justify-between mb-1">
           <SectionLabel>Shadow</SectionLabel>
           <label className="flex items-center gap-1.5 text-xs">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={shadowEnabled}
               onChange={(e) => {
@@ -206,7 +206,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
         {shadowEnabled && (
           <div className="space-y-2 pl-1">
             <div>
-              <select
+              <select aria-label="Select option"
                 value=""
                 onChange={(e) => {
                   const preset = SHADOW_PRESETS.find((p) => p.label === e.target.value);
@@ -227,28 +227,28 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
 
             <div className="flex items-center gap-2">
               <span className="w-8 text-[10px] text-ink-muted">X</span>
-              <input type="range" min={-20} max={20} value={localShadow.offsetX}
+              <input aria-label="Range slider" type="range" min={-20} max={20} value={localShadow.offsetX}
                 onChange={(e) => updateShadowField("offsetX", Number(e.target.value))}
                 className="w-full" />
               <span className="w-8 text-right text-[10px] text-ink-muted">{localShadow.offsetX}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-8 text-[10px] text-ink-muted">Y</span>
-              <input type="range" min={-20} max={20} value={localShadow.offsetY}
+              <input aria-label="Range slider" type="range" min={-20} max={20} value={localShadow.offsetY}
                 onChange={(e) => updateShadowField("offsetY", Number(e.target.value))}
                 className="w-full" />
               <span className="w-8 text-right text-[10px] text-ink-muted">{localShadow.offsetY}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-8 text-[10px] text-ink-muted">Blur</span>
-              <input type="range" min={0} max={40} value={localShadow.blur}
+              <input aria-label="Range slider" type="range" min={0} max={40} value={localShadow.blur}
                 onChange={(e) => updateShadowField("blur", Number(e.target.value))}
                 className="w-full" />
               <span className="w-8 text-right text-[10px] text-ink-muted">{localShadow.blur}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-8 text-[10px] text-ink-muted">Sprd</span>
-              <input type="range" min={0} max={20} value={localShadow.spread ?? 0}
+              <input aria-label="Range slider" type="range" min={0} max={20} value={localShadow.spread ?? 0}
                 onChange={(e) => updateShadowField("spread", Number(e.target.value))}
                 className="w-full" />
               <span className="w-8 text-right text-[10px] text-ink-muted">{localShadow.spread ?? 0}</span>
@@ -277,7 +277,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
         <div className="flex items-center justify-between mb-1">
           <SectionLabel>Border</SectionLabel>
           <label className="flex items-center gap-1.5 text-xs">
-            <input
+            <input aria-label="Checkbox"
               type="checkbox"
               checked={borderEnabled}
               onChange={(e) => {
@@ -296,7 +296,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
           <div className="space-y-2 pl-1">
             <div className="flex items-center gap-2">
               <span className="w-10 text-[10px] text-ink-muted">Width</span>
-              <input type="range" min={1} max={8} value={localBorder.width}
+              <input aria-label="Range slider" type="range" min={1} max={8} value={localBorder.width}
                 onChange={(e) => updateBorderField("width", Number(e.target.value))}
                 className="w-full" />
               <span className="w-8 text-right text-[10px] text-ink-muted">{localBorder.width}px</span>
@@ -314,7 +314,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
             </div>
             <div className="flex items-center gap-2">
               <span className="w-10 text-[10px] text-ink-muted">Style</span>
-              <select
+              <select aria-label="Select option"
                 value={localBorder.style}
                 onChange={(e) => updateBorderField("style", e.target.value)}
                 className="w-full rounded border border-border bg-surface px-2 py-1 text-xs"
@@ -326,7 +326,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
             </div>
             <div className="flex items-center gap-2">
               <span className="w-10 text-[10px] text-ink-muted">Radius</span>
-              <input type="range" min={0} max={24} value={localBorder.radius}
+              <input aria-label="Range slider" type="range" min={0} max={24} value={localBorder.radius}
                 onChange={(e) => updateBorderField("radius", Number(e.target.value))}
                 className="w-full" />
               <span className="w-8 text-right text-[10px] text-ink-muted">{localBorder.radius}px</span>

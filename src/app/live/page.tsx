@@ -40,7 +40,7 @@ export default function LiveJoinPage() {
 
         {/* Join form */}
         <form onSubmit={handleJoin} className="space-y-4">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={code}
             onChange={(e) => {

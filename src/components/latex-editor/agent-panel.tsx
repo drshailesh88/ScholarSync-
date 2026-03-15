@@ -286,7 +286,7 @@ function DraftTab() {
           ))}
         </div>
         <div className="flex gap-1.5">
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Help me strengthen my methods section..."
@@ -381,7 +381,7 @@ function LearnTab() {
       {/* Search */}
       <div className="relative mb-3">
         <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
-        <input
+        <input aria-label="Text input"
           type="text"
           value={searchQuery}
           onChange={(e) => {
@@ -535,7 +535,7 @@ function CiteTab() {
         >
           <div className="relative flex-1">
             <MagnifyingGlass size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-muted" />
-            <input
+            <input aria-label="Text input"
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}

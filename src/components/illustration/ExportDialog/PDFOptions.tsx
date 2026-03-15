@@ -288,7 +288,7 @@ export function PDFOptions({ settings, onChange }: PDFOptionsProps): JSX.Element
         <div style={styles.section}>
           <label style={styles.label}>Custom Dimensions (mm)</label>
           <div style={styles.customDimensionsRow}>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.customWidth || 210}
               onChange={(e) => handleCustomDimensionChange('customWidth', e.target.value)}
@@ -298,7 +298,7 @@ export function PDFOptions({ settings, onChange }: PDFOptionsProps): JSX.Element
               max="1000"
             />
             <span style={styles.dimensionSeparator}>x</span>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.customHeight || 297}
               onChange={(e) => handleCustomDimensionChange('customHeight', e.target.value)}
@@ -358,7 +358,7 @@ export function PDFOptions({ settings, onChange }: PDFOptionsProps): JSX.Element
         <div style={styles.marginsGrid}>
           <div style={styles.marginInput}>
             <span style={styles.marginLabel}>Top</span>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.margins.top}
               onChange={(e) => handleMarginChange('top', e.target.value)}
@@ -369,7 +369,7 @@ export function PDFOptions({ settings, onChange }: PDFOptionsProps): JSX.Element
           </div>
           <div style={styles.marginInput}>
             <span style={styles.marginLabel}>Right</span>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.margins.right}
               onChange={(e) => handleMarginChange('right', e.target.value)}
@@ -380,7 +380,7 @@ export function PDFOptions({ settings, onChange }: PDFOptionsProps): JSX.Element
           </div>
           <div style={styles.marginInput}>
             <span style={styles.marginLabel}>Bottom</span>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.margins.bottom}
               onChange={(e) => handleMarginChange('bottom', e.target.value)}
@@ -391,7 +391,7 @@ export function PDFOptions({ settings, onChange }: PDFOptionsProps): JSX.Element
           </div>
           <div style={styles.marginInput}>
             <span style={styles.marginLabel}>Left</span>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={settings.margins.left}
               onChange={(e) => handleMarginChange('left', e.target.value)}

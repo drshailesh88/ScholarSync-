@@ -280,7 +280,7 @@ export function PRISMAChecklistPanel({ projectId }: PRISMAChecklistPanelProps) {
 
       {/* Manuscript input */}
       <div className="space-y-3">
-        <textarea
+        <textarea aria-label="Text area"
           value={manuscriptText}
           onChange={(e) => setManuscriptText(e.target.value)}
           placeholder="Paste your manuscript text here (minimum 100 characters)..."

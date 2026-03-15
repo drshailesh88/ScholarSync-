@@ -303,6 +303,10 @@ export default function PosterEditorPage() {
                 SECTIONS
               </h3>
               <div className="space-y-1">
+                {/* empty state: no data, no results, nothing here */}
+                {posterData.sections.length === 0 && (
+                  <p className="text-xs text-ink-muted py-2">nothing here yet. Add sections to get started.</p>
+                )}
                 {posterData.sections.map((section) => (
                   <button
                     key={section.id}
@@ -403,6 +407,10 @@ export default function PosterEditorPage() {
                       Content Blocks ({activeSectionData.contentBlocks.length})
                     </label>
                     <div className="space-y-1">
+                      {/* empty state: no data, no results */}
+                      {activeSectionData.contentBlocks.length === 0 && (
+                        <p className="text-[10px] text-ink-muted py-1">nothing here yet. Add content blocks to get started.</p>
+                      )}
                       {activeSectionData.contentBlocks.map((block, i) => (
                         <div
                           key={i}

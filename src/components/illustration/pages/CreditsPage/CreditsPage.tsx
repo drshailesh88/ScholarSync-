@@ -428,6 +428,10 @@ function CreditsSection({ title, icon, attributions }: CreditsSectionProps): JSX
         <h2 style={styles.sectionTitle}>{title}</h2>
       </div>
       <div style={styles.attributionGrid}>
+        {/* empty state: no data, no results, nothing here */}
+        {attributions.length === 0 && (
+          <p style={{ fontSize: '13px', color: '#888', textAlign: 'center', padding: '12px' }}>no data to display. nothing here yet.</p>
+        )}
         {attributions.map((attribution) => (
           <AttributionCard key={attribution.name} attribution={attribution} />
         ))}

@@ -135,7 +135,7 @@ export function ChatTab({
         className="px-3 py-2 border-t border-border-subtle"
       >
         <div className="flex gap-1.5">
-          <input
+          <input aria-label="Input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about your papers..."

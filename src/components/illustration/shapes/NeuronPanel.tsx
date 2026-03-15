@@ -385,7 +385,7 @@ export function NeuronPanel({
       <div style={styles.section}>
         <label style={styles.label}>Dendrite Count</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="2"
             max="10"
@@ -403,7 +403,7 @@ export function NeuronPanel({
       <div style={styles.section}>
         <label style={styles.label}>Axon Length (px)</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="50"
             max="300"
@@ -463,7 +463,7 @@ export function NeuronPanel({
         <label style={styles.label}>Colors</label>
         <div style={styles.colorPickers}>
           <div style={styles.colorPickerWrapper}>
-            <input
+            <input aria-label="Color picker"
               type="color"
               value={fillColor}
               onChange={(e) => setFillColor(e.target.value)}
@@ -473,7 +473,7 @@ export function NeuronPanel({
             <span style={styles.colorLabel}>Cell Body</span>
           </div>
           <div style={styles.colorPickerWrapper}>
-            <input
+            <input aria-label="Color picker"
               type="color"
               value={strokeColor}
               onChange={(e) => setStrokeColor(e.target.value)}

@@ -239,7 +239,7 @@ export function PDFChatPanel({
           </div>
         )}
         <div className="flex items-end gap-2">
-          <textarea
+          <textarea aria-label="Text area"
             ref={inputRef}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}

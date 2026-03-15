@@ -290,7 +290,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                   <div className="space-y-2">
                     <div>
                       <label className="mb-1 block text-[10px] text-ink-muted">Name</label>
-                      <input
+                      <input aria-label="Text input"
                         type="text"
                         value={activeMaster.name}
                         onChange={(event) =>
@@ -301,7 +301,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                     </div>
                     <div>
                       <label className="mb-1 block text-[10px] text-ink-muted">Layout</label>
-                      <select
+                      <select aria-label="Select option"
                         value={activeMaster.layout}
                         onChange={(event) =>
                           applyMasterUpdate({ layout: event.target.value as SlideLayout })
@@ -335,7 +335,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                     {activeMaster.placeholders.map((placeholder) => (
                       <div key={placeholder.id} className="rounded border border-border p-2">
                         <div className="mb-2 flex items-center justify-between gap-2">
-                          <input
+                          <input aria-label="Text input"
                             type="text"
                             value={placeholder.label}
                             onChange={(event) =>
@@ -353,7 +353,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                         </div>
                         <div className="mb-2">
                           <label className="mb-1 block text-[10px] text-ink-muted">Type</label>
-                          <select
+                          <select aria-label="Select option"
                             value={placeholder.defaultType}
                             onChange={(event) =>
                               updatePlaceholder(placeholder.id, {
@@ -370,7 +370,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                         </div>
                         <div className="grid grid-cols-4 gap-1">
                           {(["x", "y", "width", "height"] as const).map((field) => (
-                            <input
+                            <input aria-label="Number input"
                               key={field}
                               type="number"
                               value={placeholder.position[field]}
@@ -386,7 +386,6 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                                 })
                               }
                               className="rounded border border-border bg-surface px-1 py-1 text-[11px] text-ink"
-                              aria-label={`${placeholder.label} ${field}`}
                             />
                           ))}
                         </div>
@@ -406,7 +405,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                   </h3>
                   <div className="space-y-2">
                     <label className="flex items-center gap-2 text-xs text-ink">
-                      <input
+                      <input aria-label="Checkbox"
                         type="checkbox"
                         checked={Boolean(logoBlock)}
                         onChange={(event) => toggleLogo(event.target.checked)}
@@ -414,7 +413,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                       Logo
                     </label>
                     <label className="flex items-center gap-2 text-xs text-ink">
-                      <input
+                      <input aria-label="Checkbox"
                         type="checkbox"
                         checked={Boolean(footerBlock)}
                         onChange={(event) => toggleFooter(event.target.checked)}
@@ -422,7 +421,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                       Footer
                     </label>
                     <label className="flex items-center gap-2 text-xs text-ink">
-                      <input
+                      <input aria-label="Checkbox"
                         type="checkbox"
                         checked={Boolean(slideNumberBlock)}
                         onChange={(event) => toggleSlideNumber(event.target.checked)}
@@ -439,7 +438,7 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                         </p>
                         <div className="grid grid-cols-4 gap-1">
                           {(["x", "y", "width", "height"] as const).map((field) => (
-                            <input
+                            <input aria-label="Number input"
                               key={`${block.masterFixedKey}-${field}`}
                               type="number"
                               value={block.position?.[field] ?? 0}
@@ -452,7 +451,6 @@ export function MasterEditor({ isOpen, onClose }: MasterEditorProps) {
                                 })
                               }
                               className="rounded border border-border bg-surface px-1 py-1 text-[11px] text-ink"
-                              aria-label={`${block.masterFixedKey} ${field}`}
                             />
                           ))}
                         </div>

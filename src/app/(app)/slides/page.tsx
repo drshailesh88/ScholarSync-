@@ -149,7 +149,7 @@ export default function SlidesListPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10">
-      <input
+      <input aria-label="File upload"
         ref={fileInputRef}
         type="file"
         accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation"

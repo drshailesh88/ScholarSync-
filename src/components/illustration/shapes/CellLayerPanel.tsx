@@ -293,7 +293,7 @@ export function CellLayerPanel({
         <div style={styles.column}>
           <label style={styles.label}>Rows</label>
           <div style={styles.sliderContainer}>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min="1"
               max="6"
@@ -309,7 +309,7 @@ export function CellLayerPanel({
         <div style={styles.column}>
           <label style={styles.label}>Columns</label>
           <div style={styles.sliderContainer}>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min="1"
               max="10"
@@ -329,7 +329,7 @@ export function CellLayerPanel({
         <div style={styles.column}>
           <label style={styles.label}>Cell Width (px)</label>
           <div style={styles.sliderContainer}>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min="20"
               max="80"
@@ -345,7 +345,7 @@ export function CellLayerPanel({
         <div style={styles.column}>
           <label style={styles.label}>Cell Height (px)</label>
           <div style={styles.sliderContainer}>
-            <input
+            <input aria-label="Range slider"
               type="range"
               min="20"
               max="100"
@@ -363,7 +363,7 @@ export function CellLayerPanel({
       {/* Cell Type */}
       <div style={styles.section}>
         <label style={styles.label}>Cell Type</label>
-        <select
+        <select aria-label="Select option"
           value={cellType}
           onChange={(e) => setCellType(e.target.value as CellType)}
           style={styles.select}
@@ -423,7 +423,7 @@ export function CellLayerPanel({
         <label style={styles.label}>Colors</label>
         <div style={styles.colorPickers}>
           <div style={styles.colorPickerWrapper}>
-            <input
+            <input aria-label="Color picker"
               type="color"
               value={fillColor}
               onChange={(e) => setFillColor(e.target.value)}
@@ -433,7 +433,7 @@ export function CellLayerPanel({
             <span style={styles.colorLabel}>Cell Fill</span>
           </div>
           <div style={styles.colorPickerWrapper}>
-            <input
+            <input aria-label="Color picker"
               type="color"
               value={strokeColor}
               onChange={(e) => setStrokeColor(e.target.value)}

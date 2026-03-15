@@ -570,7 +570,7 @@ export default function ResearchPage() {
                 size={20}
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted"
               />
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -618,7 +618,7 @@ export default function ResearchPage() {
 
             {/* Year Range */}
             <div className="flex items-center gap-1.5">
-              <input
+              <input aria-label="From"
                 type="number"
                 placeholder="From"
                 value={filters.yearStart}
@@ -632,7 +632,7 @@ export default function ResearchPage() {
                 className="w-[70px] px-2 py-1.5 rounded-lg text-xs bg-surface-raised text-ink border border-border placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand/40"
               />
               <span className="text-[10px] text-ink-muted">-</span>
-              <input
+              <input aria-label="To"
                 type="number"
                 placeholder="To"
                 value={filters.yearEnd}
@@ -1196,7 +1196,7 @@ export default function ResearchPage() {
 
           {/* Chat Input */}
           <form onSubmit={handleChatSubmit} className="relative">
-            <input
+            <input aria-label="Text input"
               type="text"
               value={chatInput}
               onChange={(e) => setChatInput(e.target.value)}

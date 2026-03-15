@@ -356,7 +356,7 @@ export function AgentPanel({
       {/* Input */}
       <form onSubmit={handleSubmit} className="px-3 py-2 border-t border-border">
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}

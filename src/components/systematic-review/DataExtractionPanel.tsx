@@ -832,21 +832,21 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
 
             {schema.map((field, i) => (
               <div key={i} className="grid grid-cols-12 gap-2">
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={field.field}
                   onChange={(e) => updateField(i, "field", e.target.value)}
                   placeholder="field_name"
                   className="col-span-3 px-2 py-1.5 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
                 />
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={field.description}
                   onChange={(e) => updateField(i, "description", e.target.value)}
                   placeholder="What the AI should look for"
                   className="col-span-5 px-2 py-1.5 bg-surface-raised border border-border rounded text-sm text-ink placeholder:text-ink-muted focus:ring-2 focus:ring-brand/40 outline-none"
                 />
-                <select
+                <select aria-label="Select option"
                   value={field.type}
                   onChange={(e) =>
                     updateField(
@@ -886,7 +886,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
 
             {/* Full-text toggle */}
             <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer select-none">
-              <input
+              <input aria-label="Checkbox"
                 type="checkbox"
                 checked={useFullText}
                 onChange={(e) => setUseFullText(e.target.checked)}
@@ -1098,7 +1098,7 @@ export function DataExtractionPanel({ projectId }: DataExtractionPanelProps) {
                               {cell?.value != null ? (
                                 isEditing ? (
                                   <div className="flex items-center gap-1">
-                                    <input
+                                    <input aria-label="Text input"
                                       type="text"
                                       value={editValue}
                                       onChange={(e) =>

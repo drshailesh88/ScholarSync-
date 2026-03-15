@@ -705,9 +705,8 @@ export function PlotlyChartPanel({
         <div style={styles.chartPreview}>
           {capturedImage ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <img alt="Chart preview"
               src={capturedImage}
-              alt="Chart preview"
               style={{ maxWidth: '100%', maxHeight: '300px', border: '1px solid var(--border-primary)', borderRadius: '8px' }}
             />
           ) : (
@@ -724,7 +723,7 @@ export function PlotlyChartPanel({
           {/* Layout Options */}
           <div style={styles.dataInputRow}>
             <label style={styles.dataLabel}>Title</label>
-            <input
+            <input aria-label="Text input"
               type="text"
               style={styles.dataInput}
               value={chartLayout.title || ''}
@@ -735,7 +734,7 @@ export function PlotlyChartPanel({
 
           <div style={styles.dataInputRow}>
             <label style={styles.dataLabel}>Width</label>
-            <input
+            <input aria-label="Number input"
               type="number"
               style={{ ...styles.dataInput, maxWidth: '100px' }}
               value={chartLayout.width || 600}
@@ -744,7 +743,7 @@ export function PlotlyChartPanel({
               max="2000"
             />
             <label style={styles.dataLabel}>Height</label>
-            <input
+            <input aria-label="Number input"
               type="number"
               style={{ ...styles.dataInput, maxWidth: '100px' }}
               value={chartLayout.height || 400}
@@ -793,7 +792,7 @@ export function PlotlyChartPanel({
             <summary style={{ cursor: 'pointer', fontSize: '12px', color: 'var(--text-secondary)' }}>
               Edit Raw Data (JSON)
             </summary>
-            <textarea
+            <textarea aria-label="Text area"
               style={styles.textArea}
               value={JSON.stringify(chartData, null, 2)}
               onChange={e => {

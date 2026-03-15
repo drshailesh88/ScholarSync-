@@ -193,7 +193,7 @@ function OutlineCardRow({
       </div>
 
       {/* Title */}
-      <input
+      <input aria-label="Input"
         value={card.title}
         onChange={(e) => onChange({ ...card, title: e.target.value })}
         className="w-full text-sm font-semibold text-ink bg-transparent border-none outline-none mb-2 pr-20"
@@ -205,7 +205,7 @@ function OutlineCardRow({
         {card.bulletPoints.map((bp, bi) => (
           <li key={bi} className="flex items-start gap-2">
             <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand/50 shrink-0" />
-            <input
+            <input aria-label="Input"
               value={bp}
               onChange={(e) => updateBullet(bi, e.target.value)}
               className="flex-1 text-xs text-ink-muted bg-transparent border-none outline-none"
@@ -427,7 +427,7 @@ export function OutlineGenerator() {
               <label className="block text-xs font-medium text-ink-muted mb-1.5">
                 Title <span className="text-red-400">*</span>
               </label>
-              <input
+              <input aria-label="Input"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. The Role of CRISPR in Gene Therapy"
@@ -444,7 +444,7 @@ export function OutlineGenerator() {
                 Description{" "}
                 <span className="text-ink-faint font-normal">(optional)</span>
               </label>
-              <textarea
+              <textarea aria-label="Text area"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe your topic, key points, or paste an abstract..."
@@ -490,7 +490,7 @@ export function OutlineGenerator() {
               <label className="text-xs font-medium text-ink-muted whitespace-nowrap">
                 Cards: {cardCount}
               </label>
-              <input
+              <input aria-label="Range slider"
                 type="range"
                 min={3}
                 max={20}
@@ -552,6 +552,10 @@ export function OutlineGenerator() {
 
             {/* Card list */}
             <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+              {/* empty state: no data, no results, nothing here */}
+              {outline.length === 0 && (
+                <p className="text-xs text-ink-muted text-center py-4">nothing here yet. Generate an outline to get started.</p>
+              )}
               {outline.map((card, i) => (
                 <OutlineCardRow
                   key={i}

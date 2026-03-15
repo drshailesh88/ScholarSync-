@@ -194,13 +194,13 @@ export function ImageBrowser({ projectId, onInsertImage }: ImageBrowserProps) {
         >
           {isUploading ? <Spinner size={14} className="animate-spin" /> : <Upload size={14} />}
         </button>
-        <input
+        <input aria-label="File upload"
           ref={fileInputRef}
           type="file"
           accept=".png,.jpg,.jpeg,.pdf"
           onChange={handleFileSelect}
           className="hidden"
-        />
+/>
       </div>
 
       {/* Error message */}
@@ -250,9 +250,8 @@ export function ImageBrowser({ projectId, onInsertImage }: ImageBrowserProps) {
                 >
                   <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border border-border-subtle bg-surface-raised">
                     {isPreviewableImage(image.contentType) ? (
-                      <Image
+                      <Image alt={image.filename}
                         src={image.url}
-                        alt={image.filename}
                         className="object-cover"
                         loading="lazy"
                         fill

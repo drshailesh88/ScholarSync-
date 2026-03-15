@@ -356,7 +356,7 @@ export default function LiveSessionPage() {
               >
                 {/* Submit question form */}
                 <form onSubmit={handleSubmitQuestion} className="space-y-2">
-                  <textarea
+                  <textarea aria-label="Text area"
                     value={questionText}
                     onChange={(e) => setQuestionText(e.target.value)}
                     placeholder="Type your question..."
@@ -365,7 +365,7 @@ export default function LiveSessionPage() {
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/30 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                   />
                   <div className="flex items-center gap-2">
-                    <input
+                    <input aria-label="Text input"
                       type="text"
                       value={authorName}
                       onChange={(e) => setAuthorName(e.target.value)}

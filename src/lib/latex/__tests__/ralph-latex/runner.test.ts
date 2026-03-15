@@ -39,22 +39,22 @@ import { LATEX_TEMPLATES, getTemplate } from "@/data/latex-templates";
 describe("latexToHtml", () => {
   it("converts sections to headings", () => {
     const html = latexToHtml("\\section{Introduction}\n\nText here.");
-    expect(html).toContain('<h2 class="latex-section">Introduction</h2>');
+    expect(html).toContain('<h2 class="latex-section" data-line="1">Introduction</h2>');
   });
 
   it("converts subsections", () => {
     const html = latexToHtml("\\subsection{Methods}");
-    expect(html).toContain('<h3 class="latex-subsection">Methods</h3>');
+    expect(html).toContain('<h3 class="latex-subsection" data-line="1">Methods</h3>');
   });
 
   it("converts subsubsections", () => {
     const html = latexToHtml("\\subsubsection{Details}");
-    expect(html).toContain('<h4 class="latex-subsubsection">Details</h4>');
+    expect(html).toContain('<h4 class="latex-subsubsection" data-line="1">Details</h4>');
   });
 
   it("handles starred sections", () => {
     const html = latexToHtml("\\section*{Acknowledgements}");
-    expect(html).toContain('<h2 class="latex-section">Acknowledgements</h2>');
+    expect(html).toContain('<h2 class="latex-section" data-line="1">Acknowledgements</h2>');
   });
 
   it("converts bold text", () => {
@@ -882,12 +882,12 @@ describe("Cycle 4: Math mode preservation", () => {
 describe("Cycle 4: Chapter, part, paragraph headings", () => {
   it("converts chapter to h1", () => {
     const html = latexToHtml("\\chapter{Introduction}");
-    expect(html).toContain('<h1 class="latex-chapter">Introduction</h1>');
+    expect(html).toContain('<h1 class="latex-chapter" data-line="1">Introduction</h1>');
   });
 
   it("converts chapter* (starred)", () => {
     const html = latexToHtml("\\chapter*{Preface}");
-    expect(html).toContain('<h1 class="latex-chapter">Preface</h1>');
+    expect(html).toContain('<h1 class="latex-chapter" data-line="1">Preface</h1>');
   });
 
   it("converts part to large heading", () => {

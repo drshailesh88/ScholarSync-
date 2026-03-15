@@ -143,7 +143,7 @@ export function GammaToolbar() {
       {/* 2. Editable title + save dot */}
       <div className="flex items-center gap-2 min-w-0 flex-1">
         {isEditingTitle ? (
-          <input
+          <input aria-label="Input"
             ref={titleInputRef}
             value={titleDraft}
             onChange={(e) => setTitleDraft(e.target.value)}

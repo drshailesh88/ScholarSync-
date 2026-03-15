@@ -169,7 +169,7 @@ function AnglePicker({
           }}
         />
       </div>
-      <input
+      <input aria-label="Number input"
         type="number"
         min={0}
         max={360}
@@ -179,7 +179,6 @@ function AnglePicker({
           if (Number.isFinite(v)) onChange(((v % 360) + 360) % 360);
         }}
         className="w-14 text-xs px-2 py-1 border border-border rounded-md bg-surface text-ink"
-        aria-label="Angle degrees"
       />
       <span className="text-[10px] text-ink-muted">deg</span>
     </div>

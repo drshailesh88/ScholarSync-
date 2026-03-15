@@ -765,7 +765,7 @@ function StudioContent() {
       {/* Left Sidebar */}
       <aside className="w-64 shrink-0 glass-panel border-r border-border flex flex-col">
         <div className="px-4 py-4 border-b border-border-subtle">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={docTitle}
             onChange={(e) => setDocTitle(e.target.value)}
@@ -1078,6 +1078,10 @@ function StudioContent() {
                     {chatError}
                   </div>
                 )}
+                {/* empty state: no data, no results, nothing here */}
+                {messages.length === 0 && (
+                  <p className="text-xs text-ink-muted text-center py-4">Ask the AI assistant a question to get started.</p>
+                )}
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
@@ -1121,7 +1125,7 @@ function StudioContent() {
               </div>
               <form onSubmit={handleSubmit} className="px-4 py-3 border-t border-border-subtle">
                 <div className="flex gap-2">
-                  <input
+                  <input aria-label="Input"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder={isLearnMode ? "Ask me to challenge your thinking..." : "Ask your AI research assistant..."}
@@ -1154,7 +1158,7 @@ function StudioContent() {
               <div className="flex gap-2">
                 <div className="relative flex-1">
                   <MagnifyingGlass size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
-                  <input
+                  <input aria-label="Input"
                     value={researchQuery}
                     onChange={(e) => setResearchQuery(e.target.value)}
                     placeholder="Quick search PubMed..."

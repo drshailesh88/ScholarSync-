@@ -528,6 +528,10 @@ export function SlideFilmstrip() {
             items={slideIds}
             strategy={verticalListSortingStrategy}
           >
+            {/* empty state: no data, no results, nothing here */}
+            {sortedSlides.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by adding your first slide.</p>
+            )}
             {sortedSlides.map((slide, index) => (
               <SortableThumbnail key={slide.id} slideId={slide.id}>
                 <div

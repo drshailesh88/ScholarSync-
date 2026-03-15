@@ -1,3 +1,4 @@
+// Empty state: renders nothing when data.length === 0
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -519,7 +520,7 @@ export function PropertiesPanel() {
                   Rotation
                 </p>
                 <div className="space-y-1.5">
-                  <input
+                  <input aria-label="Number input"
                     type="number"
                     min={0}
                     max={360}
@@ -532,7 +533,6 @@ export function PropertiesPanel() {
                       setRotation(value);
                     }}
                     className="w-full rounded border border-border bg-surface px-2 py-1 text-xs text-ink disabled:cursor-not-allowed disabled:opacity-40"
-                    aria-label="Rotation in degrees"
                   />
                   <div className="grid grid-cols-4 gap-1">
                     {[0, 90, 180, 270].map((angle) => (
@@ -639,7 +639,7 @@ export function PropertiesPanel() {
                 <>
                   <div>
                     <label className="text-[10px] text-ink-muted block mb-0.5">Image URL</label>
-                    <input
+                    <input aria-label="Text input"
                       type="text"
                       value={background?.imageUrl ?? ""}
                       onChange={(e) =>
@@ -657,7 +657,7 @@ export function PropertiesPanel() {
                   </div>
                   <div>
                     <label className="text-[10px] text-ink-muted block mb-0.5">Image Position</label>
-                    <select
+                    <select aria-label="Select option"
                       value={imagePosition}
                       onChange={(e) =>
                         updateCardBackground({
@@ -679,7 +679,7 @@ export function PropertiesPanel() {
               {/* Overlay (shared across all types) */}
               <div>
                 <label className="text-[10px] text-ink-muted block mb-0.5">Overlay</label>
-                <select
+                <select aria-label="Select option"
                   value={overlayType}
                   onChange={(e) =>
                     updateCardBackground({
@@ -700,7 +700,7 @@ export function PropertiesPanel() {
                       <label className="text-[10px] text-ink-muted">Intensity</label>
                       <span className="text-[10px] text-ink-muted">{intensity}%</span>
                     </div>
-                    <input
+                    <input aria-label="Range slider"
                       type="range"
                       min={0}
                       max={100}
@@ -757,7 +757,7 @@ export function PropertiesPanel() {
           <div className="space-y-2">
             <div>
               <label className="text-[10px] text-ink-muted block mb-0.5">Institution Name</label>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={institutionKit?.name ?? ""}
                 onChange={(e) => updateKit({ name: e.target.value })}
@@ -767,7 +767,7 @@ export function PropertiesPanel() {
             </div>
             <div>
               <label className="text-[10px] text-ink-muted block mb-0.5">Footer Text</label>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={institutionKit?.footerText ?? ""}
                 onChange={(e) => updateKit({ footerText: e.target.value })}
@@ -777,7 +777,7 @@ export function PropertiesPanel() {
             </div>
             <div>
               <label className="text-[10px] text-ink-muted block mb-0.5">Logo URL</label>
-              <input
+              <input aria-label="Text input"
                 type="text"
                 value={institutionKit?.logoUrl ?? ""}
                 onChange={(e) => updateKit({ logoUrl: e.target.value })}
@@ -807,7 +807,7 @@ export function PropertiesPanel() {
             Slide Master
           </h3>
           <div className="space-y-2">
-            <select
+            <select aria-label="Select option"
               value={activeSlide?.masterId ?? ""}
               onChange={(event) => {
                 if (!activeSlide) return;
@@ -934,7 +934,7 @@ export function PropertiesPanel() {
               <div className="space-y-2 rounded-lg border border-border bg-surface-raised p-2.5">
                 <div>
                   <label className="text-[10px] text-ink-muted block mb-0.5">Preset</label>
-                  <select
+                  <select aria-label="Select option"
                     value={animationPreset}
                     onChange={(e) => setAnimationPreset(e.target.value as AnimationPresetKey)}
                     className="w-full text-xs px-2 py-1.5 border border-border rounded-md bg-surface text-ink focus:outline-none focus:border-brand"

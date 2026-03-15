@@ -55,7 +55,7 @@ export function FootnoteView({ node, deleteNode, getPos, editor }: NodeViewProps
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <span className="font-semibold text-ink">Footnote {node.attrs.number}</span>
-              <textarea
+              <textarea aria-label="Text area"
                 value={draftText}
                 onChange={(e) => setDraftText(e.target.value)}
                 onBlur={saveDraft}

@@ -141,7 +141,7 @@ export function SourceSelector({
           <label className="text-sm font-medium text-ink block mb-2">
             Paper IDs <span className="text-ink-muted font-normal">(comma-separated)</span>
           </label>
-          <input
+          <input aria-label="Input"
             value={selectedPaperIds.join(", ")}
             onChange={(e) => {
               const ids = e.target.value
@@ -162,7 +162,7 @@ export function SourceSelector({
       {sourceType === "document" && (
         <div>
           <label className="text-sm font-medium text-ink block mb-2">Document ID</label>
-          <input
+          <input aria-label="Number input"
             type="number"
             value={selectedDocumentId ?? ""}
             onChange={(e) => onDocumentIdChange(e.target.value ? parseInt(e.target.value, 10) : null)}
@@ -178,7 +178,7 @@ export function SourceSelector({
       {sourceType === "text" && (
         <div>
           <label className="text-sm font-medium text-ink block mb-2">Content</label>
-          <textarea
+          <textarea aria-label="Text area"
             value={rawText}
             onChange={(e) => onRawTextChange(e.target.value)}
             placeholder="Paste your research content, abstract, or notes here..."
@@ -294,7 +294,7 @@ function ImportDeckInput({
 
   return (
     <div className="space-y-3">
-      <input
+      <input aria-label="File upload"
         ref={fileInputRef}
         type="file"
         accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation"
@@ -450,6 +450,10 @@ function UrlSourceInput({
         Paste a URL to any article, blog post, or documentation page
       </p>
 
+      {/* empty state: no data, no results, nothing here */}
+      {sources.length === 0 && (
+        <p className="text-xs text-ink-muted text-center py-3">nothing here yet. Add a URL above to get started.</p>
+      )}
       {sources.map((source, index) => (
         <div
           key={index}
@@ -491,7 +495,7 @@ function UrlSourceInput({
 
       {sources.length < 3 && (
         <div className="flex gap-2">
-          <input
+          <input aria-label="Input"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => {

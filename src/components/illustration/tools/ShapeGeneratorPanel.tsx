@@ -953,7 +953,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Length</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="100"
           max="400"
@@ -961,7 +961,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setDnaOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={dnaOptions.length}
           onChange={(e) => setDnaOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
@@ -971,7 +971,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Base Pairs</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="3"
           max="20"
@@ -979,7 +979,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setDnaOptions((prev) => ({ ...prev, basePairs: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={dnaOptions.basePairs}
           onChange={(e) => setDnaOptions((prev) => ({ ...prev, basePairs: Number(e.target.value) }))}
@@ -989,7 +989,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Width</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="20"
           max="80"
@@ -997,7 +997,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setDnaOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={dnaOptions.width}
           onChange={(e) => setDnaOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
@@ -1008,7 +1008,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Show Base Pairs</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={dnaOptions.showBasePairs}
             onChange={(e) => setDnaOptions((prev) => ({ ...prev, showBasePairs: e.target.checked }))}
@@ -1019,7 +1019,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Stroke Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={dnaOptions.stroke}
           onChange={(e) => setDnaOptions((prev) => ({ ...prev, stroke: e.target.value }))}
@@ -1068,7 +1068,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Length</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="150"
           max="500"
@@ -1076,7 +1076,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setMembraneOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={membraneOptions.length}
           onChange={(e) => setMembraneOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
@@ -1086,7 +1086,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Phospholipids</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="5"
           max="30"
@@ -1094,7 +1094,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setMembraneOptions((prev) => ({ ...prev, phospholipidCount: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={membraneOptions.phospholipidCount}
           onChange={(e) => setMembraneOptions((prev) => ({ ...prev, phospholipidCount: Number(e.target.value) }))}
@@ -1105,7 +1105,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Bilayer</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={membraneOptions.bilayer}
             onChange={(e) => setMembraneOptions((prev) => ({ ...prev, bilayer: e.target.checked }))}
@@ -1116,7 +1116,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Head Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={membraneOptions.fill}
           onChange={(e) => setMembraneOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1131,7 +1131,7 @@ export function ShapeGeneratorPanel({
     <>
       <div style={styles.sectionTitle}>Cell Type</div>
       <div style={styles.optionRow}>
-        <select
+        <select aria-label="Select option"
           value={cellLayerOptions.cellType}
           onChange={(e) =>
             setCellLayerOptions((prev) => ({
@@ -1150,7 +1150,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Rows</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="1"
           max="5"
@@ -1158,7 +1158,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setCellLayerOptions((prev) => ({ ...prev, rows: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={cellLayerOptions.rows}
           onChange={(e) => setCellLayerOptions((prev) => ({ ...prev, rows: Number(e.target.value) }))}
@@ -1168,7 +1168,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Columns</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="2"
           max="10"
@@ -1176,7 +1176,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setCellLayerOptions((prev) => ({ ...prev, columns: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={cellLayerOptions.columns}
           onChange={(e) => setCellLayerOptions((prev) => ({ ...prev, columns: Number(e.target.value) }))}
@@ -1187,7 +1187,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Show Nuclei</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={cellLayerOptions.showNuclei}
             onChange={(e) => setCellLayerOptions((prev) => ({ ...prev, showNuclei: e.target.checked }))}
@@ -1199,7 +1199,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Tight Junctions</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={cellLayerOptions.junctions}
             onChange={(e) => setCellLayerOptions((prev) => ({ ...prev, junctions: e.target.checked }))}
@@ -1210,7 +1210,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Cell Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={cellLayerOptions.fill}
           onChange={(e) => setCellLayerOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1245,7 +1245,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Curved</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={arrowOptions.curved}
             onChange={(e) => setArrowOptions((prev) => ({ ...prev, curved: e.target.checked }))}
@@ -1256,7 +1256,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Label</label>
-        <input
+        <input aria-label="Text input"
           type="text"
           value={arrowOptions.label || ''}
           onChange={(e) => setArrowOptions((prev) => ({ ...prev, label: e.target.value || undefined }))}
@@ -1267,7 +1267,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Stroke Width</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="1"
           max="5"
@@ -1275,7 +1275,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setArrowOptions((prev) => ({ ...prev, strokeWidth: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={arrowOptions.strokeWidth}
           onChange={(e) => setArrowOptions((prev) => ({ ...prev, strokeWidth: Number(e.target.value) }))}
@@ -1309,7 +1309,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Dendrites</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="2"
           max="8"
@@ -1317,7 +1317,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setNeuronOptions((prev) => ({ ...prev, dendrites: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={neuronOptions.dendrites}
           onChange={(e) => setNeuronOptions((prev) => ({ ...prev, dendrites: Number(e.target.value) }))}
@@ -1327,7 +1327,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Axon Length</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="80"
           max="250"
@@ -1335,7 +1335,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setNeuronOptions((prev) => ({ ...prev, axonLength: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={neuronOptions.axonLength}
           onChange={(e) => setNeuronOptions((prev) => ({ ...prev, axonLength: Number(e.target.value) }))}
@@ -1346,7 +1346,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Show Myelin</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={neuronOptions.showMyelin}
             onChange={(e) => setNeuronOptions((prev) => ({ ...prev, showMyelin: e.target.checked }))}
@@ -1357,7 +1357,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Soma Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={neuronOptions.fill}
           onChange={(e) => setNeuronOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1373,7 +1373,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Width</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="80"
           max="200"
@@ -1381,7 +1381,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setMitoOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={mitoOptions.width}
           onChange={(e) => setMitoOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
@@ -1391,7 +1391,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Height</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="40"
           max="100"
@@ -1399,7 +1399,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setMitoOptions((prev) => ({ ...prev, height: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={mitoOptions.height}
           onChange={(e) => setMitoOptions((prev) => ({ ...prev, height: Number(e.target.value) }))}
@@ -1409,7 +1409,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Cristae</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="2"
           max="10"
@@ -1417,7 +1417,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setMitoOptions((prev) => ({ ...prev, cristaCount: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={mitoOptions.cristaCount}
           onChange={(e) => setMitoOptions((prev) => ({ ...prev, cristaCount: Number(e.target.value) }))}
@@ -1428,7 +1428,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Show Matrix</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={mitoOptions.showMatrix}
             onChange={(e) => setMitoOptions((prev) => ({ ...prev, showMatrix: e.target.checked }))}
@@ -1439,7 +1439,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={mitoOptions.fill}
           onChange={(e) => setMitoOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1455,7 +1455,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Diameter</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="50"
           max="200"
@@ -1463,7 +1463,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setNucleusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={nucleusOptions.diameter}
           onChange={(e) => setNucleusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
@@ -1473,7 +1473,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Pores</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="0"
           max="20"
@@ -1481,7 +1481,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setNucleusOptions((prev) => ({ ...prev, pores: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={nucleusOptions.pores}
           onChange={(e) => setNucleusOptions((prev) => ({ ...prev, pores: Number(e.target.value) }))}
@@ -1491,7 +1491,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Envelope</label>
-        <select
+        <select aria-label="Select option"
           value={nucleusOptions.envelopeStyle}
           onChange={(e) =>
             setNucleusOptions((prev) => ({
@@ -1509,7 +1509,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={nucleusOptions.fill}
           onChange={(e) => setNucleusOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1525,7 +1525,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Size</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="30"
           max="100"
@@ -1533,7 +1533,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={ribosomeOptions.size}
           onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
@@ -1543,7 +1543,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Subunits</label>
-        <select
+        <select aria-label="Select option"
           value={ribosomeOptions.subunits}
           onChange={(e) =>
             setRibosomeOptions((prev) => ({
@@ -1562,7 +1562,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Show mRNA</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={ribosomeOptions.showRna}
             onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, showRna: e.target.checked }))}
@@ -1573,7 +1573,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={ribosomeOptions.fill}
           onChange={(e) => setRibosomeOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1589,7 +1589,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Diameter</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="30"
           max="150"
@@ -1597,7 +1597,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setVesicleOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={vesicleOptions.diameter}
           onChange={(e) => setVesicleOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
@@ -1607,7 +1607,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Cargo</label>
-        <select
+        <select aria-label="Select option"
           value={vesicleOptions.cargo}
           onChange={(e) =>
             setVesicleOptions((prev) => ({
@@ -1625,7 +1625,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Membrane</label>
-        <select
+        <select aria-label="Select option"
           value={vesicleOptions.membraneStyle}
           onChange={(e) =>
             setVesicleOptions((prev) => ({
@@ -1643,7 +1643,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={vesicleOptions.fill}
           onChange={(e) => setVesicleOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1677,7 +1677,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Diameter</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="50"
           max="200"
@@ -1685,7 +1685,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setVirusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={virusOptions.diameter}
           onChange={(e) => setVirusOptions((prev) => ({ ...prev, diameter: Number(e.target.value) }))}
@@ -1695,7 +1695,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Spike Length</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="5"
           max="30"
@@ -1703,7 +1703,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setVirusOptions((prev) => ({ ...prev, spikeLength: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={virusOptions.spikeLength}
           onChange={(e) => setVirusOptions((prev) => ({ ...prev, spikeLength: Number(e.target.value) }))}
@@ -1713,7 +1713,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={virusOptions.fill}
           onChange={(e) => setVirusOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1747,7 +1747,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Length</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="50"
           max="200"
@@ -1755,7 +1755,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={bacteriaOptions.length}
           onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
@@ -1765,7 +1765,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Width</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="20"
           max="80"
@@ -1773,7 +1773,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={bacteriaOptions.width}
           onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, width: Number(e.target.value) }))}
@@ -1783,7 +1783,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Flagella</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="0"
           max="6"
@@ -1791,7 +1791,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, flagella: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={bacteriaOptions.flagella}
           onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, flagella: Number(e.target.value) }))}
@@ -1801,7 +1801,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={bacteriaOptions.fill}
           onChange={(e) => setBacteriaOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1817,7 +1817,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Size</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="80"
           max="200"
@@ -1825,7 +1825,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setGolgiOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={golgiOptions.size}
           onChange={(e) => setGolgiOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
@@ -1835,7 +1835,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Cisternae</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="3"
           max="8"
@@ -1843,7 +1843,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setGolgiOptions((prev) => ({ ...prev, cisternae: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={golgiOptions.cisternae}
           onChange={(e) => setGolgiOptions((prev) => ({ ...prev, cisternae: Number(e.target.value) }))}
@@ -1853,7 +1853,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={golgiOptions.fill}
           onChange={(e) => setGolgiOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1887,7 +1887,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Size</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="80"
           max="200"
@@ -1895,7 +1895,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setErOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={erOptions.size}
           onChange={(e) => setErOptions((prev) => ({ ...prev, size: Number(e.target.value) }))}
@@ -1905,7 +1905,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Branches</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="3"
           max="10"
@@ -1913,7 +1913,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setErOptions((prev) => ({ ...prev, branches: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={erOptions.branches}
           onChange={(e) => setErOptions((prev) => ({ ...prev, branches: Number(e.target.value) }))}
@@ -1923,7 +1923,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={erOptions.fill}
           onChange={(e) => setErOptions((prev) => ({ ...prev, fill: e.target.value }))}
@@ -1939,7 +1939,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Length</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="100"
           max="400"
@@ -1947,7 +1947,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={microtubuleOptions.length}
           onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
@@ -1957,7 +1957,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Protofilaments</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="5"
           max="20"
@@ -1965,7 +1965,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, protofilaments: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={microtubuleOptions.protofilaments}
           onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, protofilaments: Number(e.target.value) }))}
@@ -1976,7 +1976,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Show Dimers</label>
         <label style={styles.optionCheckbox}>
-          <input
+          <input aria-label="Checkbox"
             type="checkbox"
             checked={microtubuleOptions.showDimer}
             onChange={(e) => setMicrotubuleOptions((prev) => ({ ...prev, showDimer: e.target.checked }))}
@@ -2011,7 +2011,7 @@ export function ShapeGeneratorPanel({
       <div style={styles.sectionTitle}>Parameters</div>
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Length</label>
-        <input
+        <input aria-label="Range slider"
           type="range"
           min="50"
           max="300"
@@ -2019,7 +2019,7 @@ export function ShapeGeneratorPanel({
           onChange={(e) => setProteinOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
           style={styles.optionSlider}
         />
-        <input
+        <input aria-label="Number input"
           type="number"
           value={proteinOptions.length}
           onChange={(e) => setProteinOptions((prev) => ({ ...prev, length: Number(e.target.value) }))}
@@ -2030,7 +2030,7 @@ export function ShapeGeneratorPanel({
       {proteinOptions.type === 'beta-sheet' && (
         <div style={styles.optionRow}>
           <label style={styles.optionLabel}>Strands</label>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="2"
             max="6"
@@ -2038,7 +2038,7 @@ export function ShapeGeneratorPanel({
             onChange={(e) => setProteinOptions((prev) => ({ ...prev, strands: Number(e.target.value) }))}
             style={styles.optionSlider}
           />
-          <input
+          <input aria-label="Number input"
             type="number"
             value={proteinOptions.strands}
             onChange={(e) => setProteinOptions((prev) => ({ ...prev, strands: Number(e.target.value) }))}
@@ -2049,7 +2049,7 @@ export function ShapeGeneratorPanel({
 
       <div style={styles.optionRow}>
         <label style={styles.optionLabel}>Fill Color</label>
-        <input
+        <input aria-label="Color picker"
           type="color"
           value={proteinOptions.fill}
           onChange={(e) => setProteinOptions((prev) => ({ ...prev, fill: e.target.value }))}

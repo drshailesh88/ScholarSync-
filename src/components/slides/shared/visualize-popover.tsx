@@ -222,7 +222,7 @@ export function VisualizePopover({
           }}
           className="flex gap-2"
         >
-          <input
+          <input aria-label="Describe what you want to visualize"
             ref={inputRef}
             data-testid="visualize-input"
             value={input}

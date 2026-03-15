@@ -360,7 +360,7 @@ export function CellMembranePanel({
       <div style={styles.section}>
         <label style={styles.label}>Length (px)</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="100"
             max="600"
@@ -378,7 +378,7 @@ export function CellMembranePanel({
       <div style={styles.section}>
         <label style={styles.label}>Phospholipid Count</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="5"
             max="40"
@@ -417,7 +417,7 @@ export function CellMembranePanel({
       <div style={styles.section}>
         <label style={styles.label}>Curvature</label>
         <div style={styles.sliderContainer}>
-          <input
+          <input aria-label="Range slider"
             type="range"
             min="-1"
             max="1"
@@ -436,7 +436,7 @@ export function CellMembranePanel({
         <label style={styles.label}>Colors</label>
         <div style={{ display: 'flex', gap: '16px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <input
+            <input aria-label="Color picker"
               type="color"
               value={fillColor}
               onChange={(e) => setFillColor(e.target.value)}
@@ -446,7 +446,7 @@ export function CellMembranePanel({
             <span style={{ fontSize: '11px', color: 'var(--text-muted, #666)' }}>Head</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-            <input
+            <input aria-label="Color picker"
               type="color"
               value={strokeColor}
               onChange={(e) => setStrokeColor(e.target.value)}
@@ -475,7 +475,7 @@ export function CellMembranePanel({
           <div style={styles.proteinList}>
             {proteins.map((protein) => (
               <div key={protein.id} style={styles.proteinItem}>
-                <select
+                <select aria-label="Select option"
                   value={protein.type}
                   onChange={(e) => handleUpdateProtein(protein.id, { type: e.target.value as ProteinType })}
                   style={styles.proteinSelect}
@@ -485,7 +485,7 @@ export function CellMembranePanel({
                     <option key={pt.value} value={pt.value}>{pt.label}</option>
                   ))}
                 </select>
-                <input
+                <input aria-label="Number input"
                   type="number"
                   min="0"
                   max="1"
@@ -496,7 +496,7 @@ export function CellMembranePanel({
                   placeholder="Pos"
                   disabled={disabled}
                 />
-                <input
+                <input aria-label="Text input"
                   type="text"
                   value={protein.label}
                   onChange={(e) => handleUpdateProtein(protein.id, { label: e.target.value })}

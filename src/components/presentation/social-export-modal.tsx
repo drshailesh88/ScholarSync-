@@ -252,7 +252,7 @@ export function SocialExportModal({
                         {tweet.length}/280
                       </span>
                     </div>
-                    <textarea
+                    <textarea aria-label="Text area"
                       value={tweet}
                       onChange={(e) => {
                         const updated = [...editedThread];
@@ -272,7 +272,7 @@ export function SocialExportModal({
               {/* Options */}
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2 text-sm text-ink-muted cursor-pointer">
-                  <input
+                  <input aria-label="Checkbox"
                     type="checkbox"
                     checked={showBranding}
                     onChange={(e) => setShowBranding(e.target.checked)}

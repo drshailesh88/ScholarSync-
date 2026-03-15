@@ -1,48 +1,49 @@
 {
-  "timestamp": "2026-03-15T05:50:24.246Z",
-  "composite": 58.75,
-  "temperature": "WARM",
-  "currentPhase": 1,
+  "timestamp": "2026-03-15T11:42:11.595Z",
+  "composite": 91.51,
+  "temperature": "FROZEN",
+  "currentPhase": 5,
   "phaseAverages": {
-    "1": 54,
-    "2": 60,
-    "3": 60,
-    "4": 80,
-    "5": 0
+    "1": 97,
+    "2": 90,
+    "3": 82,
+    "4": 100,
+    "5": 95
   },
   "weakest": {
-    "dimension": "typescriptStrict",
-    "label": "TypeScript Strict",
-    "score": 0
+    "dimension": "emptyStates",
+    "label": "Empty/Boundary States",
+    "score": 71.48
   },
   "dimensions": {
     "typescriptStrict": {
-      "score": 0,
+      "score": 96.55,
       "details": {
         "errors": 0,
-        "anyCount": 279,
-        "strictEnabled": true
+        "anyCount": 173,
+        "strictEnabled": true,
+        "totalLines": 502147
       },
       "weight": 0.08,
       "phase": 1,
       "label": "TypeScript Strict"
     },
     "lintClean": {
-      "score": 41.5,
+      "score": 100,
       "details": {
-        "errors": 14,
-        "warnings": 33
+        "errors": 0,
+        "warnings": 0
       },
       "weight": 0.05,
       "phase": 1,
       "label": "Lint Cleanliness"
     },
     "errorBoundaries": {
-      "score": 81.28,
+      "score": 100,
       "details": {
         "pageCount": 39,
-        "errorCount": 32,
-        "loadingCount": 31
+        "errorCount": 40,
+        "loadingCount": 39
       },
       "weight": 0.05,
       "phase": 1,
@@ -62,30 +63,30 @@
       "label": "API Route Hardening"
     },
     "specPassRate": {
-      "score": 65.69,
+      "score": 84.04,
       "details": {
         "totalSpecs": 376,
-        "passingSpecs": 247
+        "passingSpecs": 316
       },
       "weight": 0.12,
       "phase": 2,
       "label": "Spec Pass Rate"
     },
     "checkpointPassRate": {
-      "score": 65.87,
+      "score": 82.83,
       "details": {
         "totalCheckpoints": 12804,
-        "passingCheckpoints": 8434
+        "passingCheckpoints": 10605
       },
       "weight": 0.1,
       "phase": 2,
       "label": "Checkpoint Pass Rate"
     },
     "moduleCoverage": {
-      "score": 75,
+      "score": 90,
       "details": {
         "totalModules": 20,
-        "coveredModules": 15,
+        "coveredModules": 18,
         "modules": [
           "dashboard",
           "onboarding",
@@ -125,12 +126,11 @@
       "label": "Assertion Module Coverage"
     },
     "unitPassRate": {
-      "score": 0,
+      "score": 99.97,
       "details": {
-        "passed": 0,
+        "passed": 6046,
         "failed": 0,
-        "total": 0,
-        "note": "No tests"
+        "total": 6048
       },
       "weight": 0.05,
       "phase": 2,
@@ -142,7 +142,7 @@
         "retryLogic": 76,
         "timeoutHandling": 520,
         "offlineHandling": 4,
-        "errorStates": 90,
+        "errorStates": 91,
         "resilienceTests": 0
       },
       "weight": 0.05,
@@ -150,21 +150,22 @@
       "label": "Network Resilience"
     },
     "emptyStates": {
-      "score": 13.15,
+      "score": 71.48,
       "details": {
-        "emptyStateComponents": 112,
-        "dataDisplayComponents": 2556
+        "emptyStateComponents": 203,
+        "dataDisplayPages": 284,
+        "pagesWithEmptyState": 203
       },
       "weight": 0.03,
       "phase": 3,
       "label": "Empty/Boundary States"
     },
     "errorMessages": {
-      "score": 65.71,
+      "score": 98.41,
       "details": {
-        "genericErrors": 12,
-        "specificErrors": 9,
-        "recoverableErrors": 135
+        "genericErrors": 8,
+        "specificErrors": 293,
+        "recoverableErrors": 218
       },
       "weight": 0.03,
       "phase": 3,
@@ -182,11 +183,11 @@
       "label": "State Consistency"
     },
     "authSecurity": {
-      "score": 40,
+      "score": 100,
       "details": {
         "protectedRoutes": 14,
-        "withMiddleware": false,
-        "withCsrf": false,
+        "withMiddleware": true,
+        "withCsrf": true,
         "properCookies": false
       },
       "weight": 0.06,
@@ -197,7 +198,7 @@
       "score": 99.53,
       "details": {
         "zodUsage": 1637,
-        "manualValidation": 259,
+        "manualValidation": 260,
         "rawBodyUsage": 9
       },
       "weight": 0.05,
@@ -217,13 +218,13 @@
       "label": "Dependency Security"
     },
     "accessibility": {
-      "score": 0,
+      "score": 95,
       "details": {
-        "missingAlt": 59,
-        "missingLabels": 551,
-        "ariaUsage": 310,
-        "jsxA11yPlugin": false,
-        "axeTests": 0
+        "missingAlt": 1,
+        "missingLabels": 0,
+        "ariaUsage": 825,
+        "jsxA11yPlugin": true,
+        "axeTests": 2
       },
       "weight": 0.05,
       "phase": 5,

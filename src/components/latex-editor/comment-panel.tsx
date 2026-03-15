@@ -197,7 +197,7 @@ function CommentThread({
       {/* Reply input */}
       {showReplyInput && (
         <div className="mt-2 flex gap-2">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
@@ -469,7 +469,7 @@ export function CommentPanel({
         <div className="p-3 border-b border-ink/10 bg-primary/5">
           <div className="flex items-center gap-2 mb-2">
             <label className="text-xs text-ink-muted">Line:</label>
-            <input
+            <input aria-label="Number input"
               type="number"
               value={newCommentLine}
               onChange={(e) => setNewCommentLine(parseInt(e.target.value) || 1)}
@@ -477,7 +477,7 @@ export function CommentPanel({
               className="w-16 px-2 py-0.5 text-sm border border-ink/20 rounded"
             />
           </div>
-          <textarea
+          <textarea aria-label="Text area"
             value={newCommentText}
             onChange={(e) => setNewCommentText(e.target.value)}
             placeholder="Write a comment..."

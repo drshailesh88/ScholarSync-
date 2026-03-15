@@ -46,6 +46,10 @@ export function BibliographyView(_props: NodeViewProps) {
             References
           </h2>
           <ol className="space-y-2 list-none pl-0">
+            {/* empty state: no data, no results, nothing here */}
+            {bibliographyEntries.length === 0 && (
+              <li className="text-sm text-gray-400 italic">no results yet. Add citations to get started.</li>
+            )}
             {bibliographyEntries.map((entry, _idx) => (
               <li
                 key={entry.id}

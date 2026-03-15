@@ -382,6 +382,10 @@ export function DefensePrepPanel({
               </h4>
             </div>
             <div className="space-y-1">
+              {/* empty state: no data, nothing here */}
+              {summary.strengths.length === 0 && (
+                <p className="text-[10px] text-ink-muted">no results yet. nothing here to display.</p>
+              )}
               {summary.strengths.map((s, i) => (
                 <div
                   key={i}
@@ -402,6 +406,10 @@ export function DefensePrepPanel({
               </h4>
             </div>
             <div className="space-y-1">
+              {/* empty state: no data, nothing here */}
+              {summary.improvements.length === 0 && (
+                <p className="text-[10px] text-ink-muted">no results yet. nothing here to display.</p>
+              )}
               {summary.improvements.map((s, i) => (
                 <div
                   key={i}
@@ -473,6 +481,10 @@ export function DefensePrepPanel({
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3">
+        {/* empty state: no data, no results, nothing here – get started */}
+        {messages.length === 0 && (
+          <p className="text-xs text-ink-muted text-center py-4">nothing here yet. Start a practice session to get started.</p>
+        )}
         {messages.map((msg, i) => (
           <div key={i}>
             <div
@@ -575,7 +587,7 @@ export function DefensePrepPanel({
       {/* Answer Input */}
       <form onSubmit={handleSubmitAnswer} className="px-3 py-2 border-t border-border">
         <div className="flex items-center gap-2">
-          <input
+          <input aria-label="Text input"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}

@@ -278,7 +278,7 @@ export function GammaAgentPanel() {
       {/* Input area */}
       <div className="shrink-0 border-t border-border px-3 py-3">
         <div className="flex items-end gap-2">
-          <textarea
+          <textarea aria-label="Text area"
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}

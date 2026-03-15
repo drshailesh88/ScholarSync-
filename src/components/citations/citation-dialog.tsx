@@ -504,7 +504,7 @@ export function CitationDialog({
                     size={14}
                     className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                   />
-                  <input
+                  <input aria-label="Text input"
                     ref={searchInputRef}
                     type="text"
                     value={searchQuery}
@@ -642,7 +642,7 @@ export function CitationDialog({
                   size={14}
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
                 />
-                <input
+                <input aria-label="Text input"
                   ref={librarySearchInputRef}
                   type="text"
                   value={libraryQuery}
@@ -724,7 +724,7 @@ export function CitationDialog({
                   Paste DOI or PMID
                 </label>
                 <div className="flex gap-2">
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={doiInput}
                     onChange={(e) => {
@@ -806,7 +806,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Type
                   </label>
-                  <select
+                  <select aria-label="Select option"
                     value={manualForm.type}
                     onChange={(e) =>
                       setManualForm({
@@ -832,7 +832,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Title *
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.title}
                     onChange={(e) =>
@@ -850,7 +850,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Authors (comma separated)
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.authorInput}
                     onChange={(e) =>
@@ -868,7 +868,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Journal
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.journal}
                     onChange={(e) =>
@@ -886,7 +886,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Year
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.year}
                     onChange={(e) =>
@@ -904,7 +904,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Volume
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.volume}
                     onChange={(e) =>
@@ -922,7 +922,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Issue
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.issue}
                     onChange={(e) =>
@@ -940,7 +940,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     Pages
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.pages}
                     onChange={(e) =>
@@ -958,7 +958,7 @@ export function CitationDialog({
                   <label className="block text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
                     DOI
                   </label>
-                  <input
+                  <input aria-label="Text input"
                     type="text"
                     value={manualForm.doi}
                     onChange={(e) =>

@@ -592,7 +592,7 @@ export function SlidesAgentPanel() {
       {/* Input area */}
       <div className="shrink-0 border-t border-border px-3 py-3">
         <div className="flex items-end gap-2">
-          <textarea
+          <textarea aria-label="Text area"
             ref={inputRef}
             value={input}
             onChange={handleInputChange}
@@ -605,7 +605,7 @@ export function SlidesAgentPanel() {
             rows={1}
             className="flex-1 resize-none rounded-lg border border-border bg-surface-raised px-3 py-2 text-xs text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-brand max-h-[120px]"
             disabled={isLoading}
-          />
+/>
           <button
             onClick={() => sendMessage(input)}
             disabled={isLoading || !input.trim()}
