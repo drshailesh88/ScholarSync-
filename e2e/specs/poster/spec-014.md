@@ -1,9 +1,9 @@
 # poster — Spec 014
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -36,10 +36,10 @@ MODULE: poster
 - [x] PASS: A second identical vertical divider separates panel toggle buttons from the Export PDF button
 #### Editor Layout Structure
 - [x] PASS: Editor page root uses `h-[calc(100vh-5rem)]` with `-m-6` for full-height layout
-- [ ] FAIL: Canvas area has `p-8` padding around the scaled poster
+- [x] PASS: Canvas area has `p-8` padding around the scaled poster
 #### Fallback Reconstruction Specifics
-- [ ] FAIL: Fallback reconstruction gives the first content section (sortOrder=1) `colSpan: 3` in addition to the title bar
-- [ ] FAIL: Fallback reconstruction section IDs use format `section_${slide.id}`
+- [x] PASS: Fallback reconstruction gives the first content section (sortOrder=1) `colSpan: 3` in addition to the title bar
+- [x] PASS: Fallback reconstruction section IDs use format `section_${slide.id}`
 - [x] PASS: Fallback reconstruction section titles fall back to `Section ${i + 1}` when slide title is null
 - [x] PASS: Fallback reconstruction calculates position as `column: i % 3`, `row: Math.floor(i / 3) + 1`
 #### API Route Implementation Details

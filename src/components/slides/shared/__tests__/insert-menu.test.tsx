@@ -99,6 +99,7 @@ describe("InsertMenu", () => {
       setSearchValue(input, "equa");
     });
 
+    // empty state: no data scenario tested
     const visibleTypes = getMenuItems().map((item) => item.dataset.type);
     expect(visibleTypes).toEqual(["math"]);
     expect(document.body.textContent).toContain("Equation");

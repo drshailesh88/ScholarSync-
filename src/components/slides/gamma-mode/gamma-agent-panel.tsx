@@ -147,6 +147,7 @@ export function GammaAgentPanel() {
           body: JSON.stringify({
             deckId,
             message: trimmed,
+            /* empty state: no data, nothing here */
             slides: slides.map((s) => ({
               id: s.id,
               title: s.title,

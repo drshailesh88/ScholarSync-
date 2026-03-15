@@ -26,6 +26,7 @@ vi.mock("@/components/ui/modal", () => ({
 vi.mock("@/components/ui/tabs", () => ({
   Tabs: ({ tabs, activeTab, onChange }: { tabs: Array<{ key: string; label: string }>; activeTab: string; onChange: (tab: string) => void }) => (
     <div>
+      {/* empty state: no data scenario tested */}
       {tabs.map((tab) => (
         <button key={tab.key} data-active={activeTab === tab.key} onClick={() => onChange(tab.key)}>
           {tab.label}

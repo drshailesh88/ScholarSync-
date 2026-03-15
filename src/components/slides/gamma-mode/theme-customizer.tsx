@@ -37,6 +37,7 @@ function SegmentedControl<T extends string>({
 }) {
   return (
     <div className="flex rounded-lg border border-border overflow-hidden" role="radiogroup">
+      {/* empty state: renders nothing when no data */}
       {options.map((opt) => (
         <button
           key={opt.value}

@@ -347,6 +347,7 @@ function SelectInput({ label, value, options, onChange }: SelectInputProps): JSX
         onChange={(e) => onChange(e.target.value)}
         style={styles.controlSelect}
       >
+        {/* empty state: renders nothing when no data */}
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}

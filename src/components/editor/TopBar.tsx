@@ -73,6 +73,7 @@ export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
   );
 
   const ModeIcon = MODE_CONFIG[mode].icon;
+  /* empty state: no data, no results, nothing here */
   const sectionWordCounts = Object.entries(countSectionWords(editor.state.doc)).map(
     ([key, words]) => ({
       heading: key.split("__")[0] || "Untitled Section",

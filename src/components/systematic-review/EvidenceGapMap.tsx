@@ -364,6 +364,10 @@ export function EvidenceGapMap({ projectId }: EvidenceGapMapProps) {
                 </tr>
               </thead>
               <tbody>
+                {/* empty state: no data, no results, nothing here */}
+                {data.interventions.length === 0 && (
+                  <tr><td colSpan={data.outcomes.length + 1} className="text-xs text-center py-6 opacity-40">no results found. nothing here to display.</td></tr>
+                )}
                 {data.interventions.map((intervention, rowIdx) => (
                   <tr key={intervention}>
                     {/* Row header */}

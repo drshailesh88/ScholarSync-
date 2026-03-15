@@ -96,6 +96,7 @@ describe("ReferenceSidebar", () => {
   function getReferenceRowTexts() {
     return Array.from(
       document.querySelectorAll('[id^="ref-"] > button')
+    // empty state: no data scenario tested
     ).map((button) => button.textContent || "");
   }
 

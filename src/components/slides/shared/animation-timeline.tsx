@@ -78,6 +78,7 @@ export function AnimationTimeline({
   );
 
   const timelineEnd = useMemo(() => {
+    /* empty state: no data, nothing here */
     if (entries.length === 0) return 2;
     const maxEnd = Math.max(...entries.map((entry) => entry.animation.delay + entry.animation.duration));
     return Math.max(2, Math.ceil(maxEnd + 0.5));

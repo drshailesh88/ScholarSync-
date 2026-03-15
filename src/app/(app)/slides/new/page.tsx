@@ -87,6 +87,7 @@ export default function NewPresentationPage() {
     <div className="max-w-2xl mx-auto px-6 py-16">
       {/* Progress dots */}
       <div className="flex items-center justify-center gap-2 mb-10">
+        {/* empty state: no data, no results, nothing here */}
         {(["topic", "audience", "theme"] as const).map((s, i) => (
           <div
             key={s}

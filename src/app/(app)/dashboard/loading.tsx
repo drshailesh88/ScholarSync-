@@ -6,6 +6,7 @@ export default function DashboardLoading() {
       <section className="mb-12">
         <Skeleton className="h-4 w-48 mb-6" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* empty state: renders nothing when no data */}
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="glass-panel rounded-2xl p-6 border border-border">
               <Skeleton className="h-12 w-12 rounded-xl mb-4" />

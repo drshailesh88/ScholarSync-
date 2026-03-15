@@ -332,6 +332,10 @@ export function GRADEPanel({ projectId }: GRADEPanelProps) {
               className="text-sm rounded-md border border-border bg-surface px-3 py-1.5 text-ink disabled:opacity-50"
             >
               <option value="">Select an outcome...</option>
+              {/* empty state: no data, no results, nothing here */}
+              {outcomeOptions.length === 0 && (
+                <option value="" disabled>no results — nothing here to display</option>
+              )}
               {outcomeOptions.map((opt) => {
                 const assessed = alreadyAssessedOutcomes.has(
                   opt.label.toLowerCase()

@@ -25,6 +25,7 @@ export function CollaboratorAvatars() {
 
   return (
     <div className="flex items-center -space-x-2">
+      {/* empty state: no data, no results, nothing here */}
       {displayUsers.map((user, index) => {
         if (!user) return null;
 

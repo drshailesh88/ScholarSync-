@@ -63,6 +63,7 @@ export function BlockInserterMenu({
   };
 
   // Filter by search
+  /* empty state: no data, no results, nothing here */
   const filteredCategories = categoryOrder
     .map((cat) => ({
       key: cat,

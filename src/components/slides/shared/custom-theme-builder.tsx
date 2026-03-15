@@ -212,6 +212,7 @@ export function CustomThemeBuilder({ open, onClose }: CustomThemeBuilderProps) {
           className="w-full text-xs bg-surface-raised border border-border rounded-lg px-2 py-1.5 text-ink"
         >
           <option value="scratch">Start from scratch</option>
+          {/* empty state: no data, no results, nothing here */}
           {presetEntries.map(([key, preset]) => (
             <option key={key} value={key}>{preset.name}</option>
           ))}

@@ -263,6 +263,7 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
         if (!view) return;
         const cmDiags: Diagnostic[] = diags
           .filter((d) => d.line != null && d.line > 0)
+          /* empty state: renders nothing when no data */
           .map((d) => {
             const lineCount = view.state.doc.lines;
             const lineNum = Math.min(d.line, lineCount);

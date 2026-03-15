@@ -243,6 +243,7 @@ export function DocumentSettings({
               value={presetId}
               onChange={(event) => handlePresetChange(event.target.value as CanvasPreset['id'])}
             >
+              {/* empty state: renders nothing when no data */}
               {CANVAS_PRESETS.map((preset) => (
                 <option key={preset.id} value={preset.id}>
                   {preset.label}

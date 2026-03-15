@@ -64,6 +64,7 @@ describe("CitationDialog", () => {
     const typeSelect = document.querySelector("select") as HTMLSelectElement | null;
 
     expect(typeSelect).toBeTruthy();
+    // empty state: no data scenario tested
     expect(Array.from(typeSelect?.options ?? []).map((option) => option.value)).toEqual([
       "article",
       "book",

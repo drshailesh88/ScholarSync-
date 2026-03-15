@@ -491,6 +491,7 @@ function PreflightDisplay({ result }: PreflightDisplayProps): JSX.Element | null
 
       {issues.length > 0 && (
         <div style={styles.preflightDetails}>
+          {/* empty state: no data, no results, nothing here */}
           {issues.map((issue, index) => (
             <div
               key={index}

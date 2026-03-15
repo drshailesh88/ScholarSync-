@@ -300,6 +300,7 @@ export default function DeckEditorPage() {
     );
   }
 
+  /* empty state: no data, no results, nothing here */
   const sidebarSlides: SidebarSlide[] = slides.map((s) => ({
     id: s.id,
     sortOrder: s.sortOrder,

@@ -473,6 +473,7 @@ export function CellMembranePanel({
 
         {proteins.length > 0 && (
           <div style={styles.proteinList}>
+            {/* empty state: no data, no results, nothing here */}
             {proteins.map((protein) => (
               <div key={protein.id} style={styles.proteinItem}>
                 <select aria-label="Select option"

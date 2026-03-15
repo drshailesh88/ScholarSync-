@@ -351,6 +351,10 @@ export default function SlidesListPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* empty state: no data, no results, nothing here */}
+          {decks.length === 0 && (
+            <p className="col-span-full text-sm text-ink-muted text-center py-8">nothing here yet. get started by creating a new deck.</p>
+          )}
           {decks.map((deck) => (
             <Link
               key={deck.id}

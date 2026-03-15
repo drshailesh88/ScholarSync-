@@ -1,6 +1,6 @@
 # poster — Spec 015
 
-STATUS: DONE
+STATUS: PASS
 TESTED: 19/19
 PASS: 19
 FAIL: 0

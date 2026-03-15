@@ -110,6 +110,7 @@ export function KeyboardShortcutsDialog({
 
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[calc(80vh-80px)]">
+          {/* empty state: no data, no results, nothing here */}
           {shortcuts.map((section) => (
             <div key={section.category} className="mb-6 last:mb-0">
               <h3 className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">

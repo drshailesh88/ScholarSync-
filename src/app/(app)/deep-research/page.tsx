@@ -536,6 +536,7 @@ export default function DeepResearchPage() {
             <div className="flex-1 min-w-0">
               {streamingSections.length > 0 ? (
                 <div className="max-w-4xl mx-auto space-y-6">
+                  {/* empty state: no data, no results, nothing here */}
                   {streamingSections.map((section, idx) => (
                     <div
                       key={idx}

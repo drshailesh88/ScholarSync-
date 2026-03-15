@@ -189,6 +189,7 @@ export default function OnboardingPage() {
               Select your specialties so we can personalize search results and suggestions.
             </p>
             <div className="flex flex-wrap gap-2">
+              {/* empty state: no data, no results, nothing here */}
               {SPECIALTIES.map((s) => (
                 <button
                   key={s}

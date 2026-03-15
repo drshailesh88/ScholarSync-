@@ -273,6 +273,10 @@ export function ReferenceSidebar({
         ) : (
           <>
             {/* Cited references */}
+            {/* empty state: no data, no results, nothing here */}
+            {filteredCited.length === 0 && (
+              <p className="text-xs text-ink-muted text-center py-3">no results found. nothing here to display.</p>
+            )}
             {filteredCited.map((ref) => (
               <ReferenceRow
                 key={ref.id}

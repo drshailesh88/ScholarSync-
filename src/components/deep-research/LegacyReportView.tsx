@@ -21,6 +21,7 @@ export function LegacyReportView({ report }: LegacyReportViewProps) {
         <section className="bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-xl p-6">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-3">Key Findings</h2>
           <ul className="space-y-2">
+            {/* empty state: renders nothing when no data */}
             {report.keyFindings.map((finding, idx) => (
               <li key={idx} className="flex gap-3 text-gray-600 dark:text-gray-300 text-[15px]">
                 <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-semibold mt-0.5">

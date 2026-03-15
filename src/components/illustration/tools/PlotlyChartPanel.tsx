@@ -493,6 +493,7 @@ function PlotlyChart({ data, layout, width, height, onRenderComplete }: PlotlyCh
 
         if (chartRef.current && plotlyInstance) {
           const figure = {
+            /* empty state: renders nothing when no data */
             data: data.map(d => ({
               ...d,
               // Ensure type is correctly mapped

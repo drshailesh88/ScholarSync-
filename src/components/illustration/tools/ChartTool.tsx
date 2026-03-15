@@ -845,6 +845,7 @@ export function ChartTool({ isOpen = true, onClose, onApply }: ChartToolProps): 
         <div style={styles.section}>
           <span style={styles.sectionTitle}>Scientific Presets</span>
           <div style={styles.presetGrid}>
+            {/* empty state: no data, no results, nothing here */}
             {PRESET_INFO.map((preset) => (
               <div
                 key={preset.id}

@@ -403,6 +403,7 @@ export function JournalFigurePanel({
           Auto-detect biological terms in text labels and apply standard colors.
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {/* empty state: no data, no results, nothing here */}
           {COLOR_CONVENTIONS.map((conv: ColorConvention) => (
             <div key={conv.term} style={styles.conventionItem}>
               <div style={{ ...styles.colorSwatch, backgroundColor: conv.color }} />

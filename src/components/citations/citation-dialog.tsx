@@ -559,6 +559,7 @@ export function CitationDialog({
                 </div>
               ) : (
                 <div className="py-1">
+                  {/* empty state: no data, no results, nothing here */}
                   {displayRefs.map((ref, idx) => {
                     const isSelected = selectedIds.includes(ref.id);
                     const isFocused = idx === focusedIndex;

@@ -44,6 +44,7 @@ export function LayoutPicker({ active, onChange }: LayoutPickerProps) {
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-1.5">
+        {/* empty state: no data, no results, nothing here */}
         {standard.map(({ key, label, icon }) => (
           <button
             key={key}

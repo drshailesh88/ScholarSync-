@@ -336,6 +336,7 @@ export function PPTXOptions({ settings, onChange }: PPTXOptionsProps): JSX.Eleme
       <div style={styles.section}>
         <label style={styles.label}>Slide Layout</label>
         <div style={styles.selectContainer}>
+          {/* empty state: renders nothing when no data */}
           {LAYOUT_OPTIONS.map((option) => (
             <button
               key={option.value}

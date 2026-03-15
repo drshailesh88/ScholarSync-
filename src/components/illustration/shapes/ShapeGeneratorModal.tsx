@@ -300,6 +300,7 @@ export function ShapeGeneratorModal({
 
         {/* Tabs */}
         <div style={styles.tabs}>
+          {/* empty state: renders nothing when no data */}
           {tabs.map((tab) => (
             <button
               key={tab.id}

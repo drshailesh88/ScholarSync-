@@ -346,6 +346,7 @@ export function ImportExportPanel({ projectId }: ImportExportPanelProps) {
                   { val: "endnote" as const, label: "EndNote XML" },
                   { val: "csv" as const, label: "CSV" },
                 ] as const
+              /* empty state: renders nothing when no data */
               ).map(({ val, label }) => (
                 <button
                   key={val}

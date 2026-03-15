@@ -76,6 +76,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
           ...styles.text,
           ...(message.isError ? styles.errorText : {})
         }}>
+          {/* empty state: no data, no results, nothing here */}
           {message.content.split('\n').map((line, i) => (
             <React.Fragment key={i}>
               {line}

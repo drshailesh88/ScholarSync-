@@ -692,6 +692,10 @@ function ChartEditor({ block, onUpdate }: { block: ChartBlock; onUpdate: (b: Con
       </EditorSection>
 
       <EditorSection title="Datasets">
+        {/* empty state: no data, no results, nothing here */}
+        {data.datasets.length === 0 && (
+          <p className="text-xs text-ink-muted py-2">nothing here yet. get started by adding a dataset.</p>
+        )}
         {data.datasets.map((ds, i) => (
           <div key={i} className="p-2 rounded-md border border-border bg-surface-raised/50 space-y-1.5">
             <div className="flex items-center gap-2">
@@ -1652,6 +1656,10 @@ function TimelineEditor({ block, onUpdate }: { block: TimelineBlock; onUpdate: (
   return (
     <div className="space-y-3">
       <EditorSection title="Timeline">
+        {/* empty state: no data, no results, nothing here */}
+        {data.entries.length === 0 && (
+          <p className="text-xs text-ink-muted py-2">nothing here yet. get started by adding timeline entries.</p>
+        )}
         {data.entries.map((entry, i) => (
           <div key={i} className="p-2 rounded-md border border-border bg-surface-raised/50 space-y-1.5">
             <div className="flex items-center gap-1">

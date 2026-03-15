@@ -40,6 +40,7 @@ export function CollaboratorPresence() {
   const status = useSRStatus();
 
   const isConnected = status === "connected";
+  /* empty state: no data, no results, nothing here */
   const collaborators = others.map((other) => ({
     connectionId: other.connectionId,
     presence: other.presence,

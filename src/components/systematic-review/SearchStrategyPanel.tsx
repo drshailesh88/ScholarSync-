@@ -81,6 +81,7 @@ export function SearchStrategyPanel({ projectId }: SearchStrategyPanelProps) {
               ["comparison", "Comparison", "e.g., Sulfonylurea monotherapy"],
               ["outcome", "Outcome", "e.g., HbA1c reduction at 12 months"],
             ] as const
+          /* empty state: renders nothing when no data */
           ).map(([key, label, placeholder]) => (
             <div key={key}>
               <label className="block text-sm font-medium text-ink mb-1">

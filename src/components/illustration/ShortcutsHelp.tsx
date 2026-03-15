@@ -500,6 +500,7 @@ export const ShortcutsHelp: React.FC<ShortcutsHelpProps> = ({
         {/* Content */}
         <div style={styles.content}>
           {hasResults ? (
+            /* empty state: no data, no results, nothing here */
             CATEGORY_ORDER.map((category) => {
               const categoryShortcuts = groupedShortcuts[category];
               if (categoryShortcuts.length === 0) return null;

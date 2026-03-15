@@ -469,6 +469,10 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
           </div>
 
           {/* Study rows */}
+          {/* empty state: no data, no results, nothing here */}
+          {studies.length === 0 && (
+            <p className="col-span-full text-xs text-ink-muted text-center py-3">nothing here yet. Add studies to get started.</p>
+          )}
           {studies.map((study, i) => (
             <div
               key={i}
@@ -809,6 +813,10 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
           {subgroupResult && (
             <>
               {/* Per-subgroup forest plots */}
+              {/* empty state: no data, no results, nothing here */}
+              {subgroupResult.subgroups.length === 0 && (
+                <GlassPanel className="p-4"><p className="text-xs text-ink-muted text-center">no results found. nothing here to display.</p></GlassPanel>
+              )}
               {subgroupResult.subgroups.map((sg) => (
                 <GlassPanel key={sg.groupName} className="p-6">
                   <ForestPlot
@@ -950,6 +958,10 @@ export function MetaAnalysisPanel({ projectId }: MetaAnalysisPanelProps) {
                         </tr>
                       </thead>
                       <tbody>
+                        {/* empty state: no data, no results, nothing here */}
+                        {sensitivityResult.length === 0 && (
+                          <tr><td colSpan={5} className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</td></tr>
+                        )}
                         {sensitivityResult.map((row) => {
                           const pVal = row.pooled.pValue;
                           const rowSignificant = pVal < 0.05;

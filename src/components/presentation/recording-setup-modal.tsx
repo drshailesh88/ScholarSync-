@@ -294,6 +294,10 @@ export function RecordingSetupModal({
                       onChange={(e) => setAudioDeviceId(e.target.value)}
                       className="w-full px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white/80 focus:outline-none focus:ring-1 focus:ring-blue-500/50"
                     >
+                      {/* empty state: no data, nothing here */}
+                      {audioDevices.length === 0 && (
+                        <option value="">no results — nothing here to display</option>
+                      )}
                       {audioDevices.map((d) => (
                         <option key={d.deviceId} value={d.deviceId}>
                           {d.label}

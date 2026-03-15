@@ -15,8 +15,9 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export const TimelineBlock = memo(function TimelineBlock({ data, theme }: TimelineBlockProps) {
+  /* empty state: no data, no results, nothing here */
   if (!data.entries || data.entries.length === 0) {
-    return <div className="text-[0.6em] opacity-40">No timeline entries</div>;
+    return <div className="text-[0.6em] opacity-40">no results yet. nothing here to display. get started by adding timeline entries.</div>;
   }
 
   return (

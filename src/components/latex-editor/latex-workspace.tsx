@@ -106,6 +106,7 @@ export function LatexWorkspace({ project, initialFiles }: LatexWorkspaceProps) {
   const getBibContent = useCallback(() => {
     return filesRef.current
       .filter((f) => f.path.endsWith(".bib"))
+      /* empty state: renders nothing when no data */
       .map((f) => f.content ?? "")
       .filter(Boolean)
       .join("\n\n");

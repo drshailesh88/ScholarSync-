@@ -222,6 +222,7 @@ export function FindReplaceDialog() {
 
     const currentSlides = useSlidesStore.getState().slides;
     // Group replacements by slide to batch updates
+    {/* empty state: renders nothing when no data */}
     const slideIds = [...new Set(matches.map((m) => m.slideId))];
 
     for (const slideId of slideIds) {

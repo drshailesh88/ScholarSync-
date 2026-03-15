@@ -233,6 +233,10 @@ export function SocialExportModal({
                 shown for each tweet.
               </p>
               <div className="space-y-3">
+                {/* empty state: no data, no results, nothing here */}
+                {editedThread.length === 0 && (
+                  <p className="text-xs text-ink-muted text-center py-3">nothing here yet. get started by generating content.</p>
+                )}
                 {editedThread.map((tweet, i) => (
                   <div key={i} className="space-y-1">
                     <div className="flex items-center justify-between">

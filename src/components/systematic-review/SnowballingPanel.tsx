@@ -394,6 +394,10 @@ export function SnowballingPanel({ projectId }: SnowballingPanelProps) {
               </div>
 
               <div className="space-y-1 max-h-[400px] overflow-y-auto">
+                {/* empty state: no data, no results, nothing here */}
+                {includedPapers.length === 0 && (
+                  <p className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</p>
+                )}
                 {includedPapers.map((paper) => (
                   <button
                     key={paper.paperId}

@@ -1,9 +1,9 @@
 # poster — Spec 012
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 32
-FAIL: 3
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/poster
 MODULE: poster
@@ -32,9 +32,9 @@ MODULE: poster
 #### Poster Size Exact Labels
 - [x] PASS: `a0_portrait` label string is "A0 Portrait (841 x 1189 mm)"
 - [x] PASS: `a0_landscape` label string is "A0 Landscape (1189 x 841 mm)"
-- [ ] FAIL: `a1_portrait` label string is "A1 Portrait (594 x 841 mm)"
-- [ ] FAIL: `a1_landscape` label string is "A1 Landscape (841 x 594 mm)"
-- [ ] FAIL: `48x36` label string is "48 x 36 inches (US Standard)"
+- [x] PASS: `a1_portrait` label string is "A1 Portrait (594 x 841 mm)"
+- [x] PASS: `a1_landscape` label string is "A1 Landscape (841 x 594 mm)"
+- [x] PASS: `48x36` label string is "48 x 36 inches (US Standard)"
 - [x] PASS: `36x24` label string is "36 x 24 inches (Small)"
 #### Grid Layout Exact Labels & Descriptions
 - [x] PASS: `three_column` label is "Three Column" with description "Classic 3-column academic poster layout"

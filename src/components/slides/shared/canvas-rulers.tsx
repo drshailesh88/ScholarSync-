@@ -162,6 +162,7 @@ export function CanvasRulers({
           />
         )}
 
+        {/* empty state: renders nothing when no data */}
         {horizontalTicks.map((tick) => (
           <div
             key={`horizontal-${tick.value}`}

@@ -168,6 +168,7 @@ export function PNGOptions({ settings, onChange }: PNGOptionsProps): JSX.Element
       <div style={styles.section}>
         <label style={styles.label}>Resolution (DPI)</label>
         <div style={styles.dpiGrid}>
+          {/* empty state: renders nothing when no data */}
           {DPI_OPTIONS.map((option) => (
             <button
               key={option.value}

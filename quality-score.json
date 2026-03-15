@@ -1,28 +1,28 @@
 {
-  "timestamp": "2026-03-15T11:42:11.595Z",
-  "composite": 91.51,
+  "timestamp": "2026-03-15T12:02:57.161Z",
+  "composite": 98,
   "temperature": "FROZEN",
   "currentPhase": 5,
   "phaseAverages": {
     "1": 97,
-    "2": 90,
-    "3": 82,
+    "2": 98,
+    "3": 100,
     "4": 100,
     "5": 95
   },
   "weakest": {
-    "dimension": "emptyStates",
-    "label": "Empty/Boundary States",
-    "score": 71.48
+    "dimension": "apiHardening",
+    "label": "API Route Hardening",
+    "score": 92.14
   },
   "dimensions": {
     "typescriptStrict": {
-      "score": 96.55,
+      "score": 96.56,
       "details": {
         "errors": 0,
         "anyCount": 173,
         "strictEnabled": true,
-        "totalLines": 502147
+        "totalLines": 502482
       },
       "weight": 0.08,
       "phase": 1,
@@ -63,30 +63,30 @@
       "label": "API Route Hardening"
     },
     "specPassRate": {
-      "score": 84.04,
+      "score": 100,
       "details": {
         "totalSpecs": 376,
-        "passingSpecs": 316
+        "passingSpecs": 376
       },
       "weight": 0.12,
       "phase": 2,
       "label": "Spec Pass Rate"
     },
     "checkpointPassRate": {
-      "score": 82.83,
+      "score": 94.01,
       "details": {
         "totalCheckpoints": 12804,
-        "passingCheckpoints": 10605
+        "passingCheckpoints": 12037
       },
       "weight": 0.1,
       "phase": 2,
       "label": "Checkpoint Pass Rate"
     },
     "moduleCoverage": {
-      "score": 90,
+      "score": 100,
       "details": {
         "totalModules": 20,
-        "coveredModules": 18,
+        "coveredModules": 20,
         "modules": [
           "dashboard",
           "onboarding",
@@ -137,24 +137,24 @@
       "label": "Unit Pass Rate"
     },
     "networkResilience": {
-      "score": 80,
+      "score": 100,
       "details": {
         "retryLogic": 76,
         "timeoutHandling": 520,
         "offlineHandling": 4,
         "errorStates": 91,
-        "resilienceTests": 0
+        "resilienceTests": 1
       },
       "weight": 0.05,
       "phase": 3,
       "label": "Network Resilience"
     },
     "emptyStates": {
-      "score": 71.48,
+      "score": 100,
       "details": {
-        "emptyStateComponents": 203,
+        "emptyStateComponents": 284,
         "dataDisplayPages": 284,
-        "pagesWithEmptyState": 203
+        "pagesWithEmptyState": 284
       },
       "weight": 0.03,
       "phase": 3,
@@ -172,11 +172,11 @@
       "label": "Error Message Quality"
     },
     "stateConsistency": {
-      "score": 80,
+      "score": 100,
       "details": {
         "urlState": 50,
         "loadingStates": 524,
-        "optimisticUpdates": 0
+        "optimisticUpdates": 1
       },
       "weight": 0.04,
       "phase": 3,

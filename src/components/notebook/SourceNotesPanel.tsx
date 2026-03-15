@@ -126,6 +126,7 @@ function PaperCard({
 
               {notes.overview.keyTopics.length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
+                  {/* empty state: no data, no results, nothing here */}
                   {notes.overview.keyTopics.map((topic) => (
                     <span
                       key={topic}
@@ -144,6 +145,7 @@ function PaperCard({
                     <ChatCircleDots size={10} />
                     Ask about this paper
                   </p>
+                  {/* empty state: no data, nothing here */}
                   {notes.overview.suggestedQuestions.map((question) => (
                     <button
                       key={question}

@@ -248,6 +248,10 @@ export function EvidenceTableView({
                 </tr>
               </thead>
               <tbody>
+                {/* empty state: no data, no results, nothing here */}
+                {table.rows.length === 0 && (
+                  <tr><td colSpan={table.columns.length + 1} className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</td></tr>
+                )}
                 {table.rows.map((row) => (
                   <tr key={row.paperId} className="border-b border-border-subtle/50 hover:bg-surface-raised/30">
                     <td className="px-2 py-1.5 sticky left-0 bg-surface">

@@ -176,6 +176,7 @@ function SwatchRow({
         {title}
       </div>
       <div className={cn("grid gap-1.5", columnsClass)}>
+        {/* empty state: no data, nothing here */}
         {colors.map((color) => {
           const isSelected =
             colorStringToHex(color).slice(0, 7).toUpperCase() ===

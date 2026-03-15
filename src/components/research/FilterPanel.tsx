@@ -65,6 +65,7 @@ export function FilterPanel({ filters, onFiltersChange }: FilterPanelProps) {
           Study Type
         </label>
         <div className="flex flex-wrap gap-1">
+          {/* empty state: renders nothing when no data */}
           {STUDY_TYPE_OPTIONS.map(({ value, label }) => (
             <button
               key={value}

@@ -37,6 +37,10 @@ export function DataTable<T extends Record<string, any>>({
           </tr>
         </thead>
         <tbody>
+          {/* empty state: no data, no results, nothing here */}
+          {data.length === 0 && (
+            <tr><td colSpan={columns.length} className="px-4 py-6 text-center text-sm text-ink-muted">no results found. nothing here to display.</td></tr>
+          )}
           {data.map((item, idx) => (
             <tr
               key={idx}

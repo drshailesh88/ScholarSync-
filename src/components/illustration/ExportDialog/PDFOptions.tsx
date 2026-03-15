@@ -267,6 +267,7 @@ export function PDFOptions({ settings, onChange }: PDFOptionsProps): JSX.Element
       <div style={styles.section}>
         <label style={styles.label}>Page Size</label>
         <div style={styles.selectContainer}>
+          {/* empty state: renders nothing when no data */}
           {PAGE_SIZE_OPTIONS.map((option) => (
             <button
               key={option.value}

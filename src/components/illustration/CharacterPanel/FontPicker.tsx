@@ -58,6 +58,7 @@ export function FontPicker({ value, onChange, disabled = false }: FontPickerProp
       onChange={(event) => onChange(event.target.value)}
       style={styles.select}
     >
+      {/* empty state: renders nothing when no data */}
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}

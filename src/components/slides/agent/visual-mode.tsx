@@ -185,6 +185,7 @@ export function VisualMode() {
               "Key findings overview with stats",
               "Study design hierarchy",
               "Data analysis cycle",
+            /* empty state: no data, nothing here */
             ].map((p) => (
               <button
                 key={p}

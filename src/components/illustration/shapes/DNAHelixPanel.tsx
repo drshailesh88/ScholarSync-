@@ -344,6 +344,7 @@ export function DNAHelixPanel({
       <div style={styles.section}>
         <label style={styles.label}>Style</label>
         <div style={styles.styleGrid}>
+          {/* empty state: renders nothing when no data */}
           {styleOptions.map((option) => (
             <button
               key={option.value}

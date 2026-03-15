@@ -219,6 +219,7 @@ export function BlockStyleControls({ block, onUpdate }: BlockStyleControlsProps)
                 className="w-full rounded border border-border bg-surface px-2 py-1 text-xs"
               >
                 <option value="" disabled>Presets…</option>
+                {/* empty state: renders nothing when no data */}
                 {SHADOW_PRESETS.map((p) => (
                   <option key={p.label} value={p.label}>{p.label}</option>
                 ))}

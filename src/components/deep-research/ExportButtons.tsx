@@ -6,6 +6,7 @@ import { Download, Printer, Copy, Check, FileText, PenLine, Loader2 } from "luci
 import type { DeepResearchSource } from "./types";
 
 // ── BibTeX generation ─────────────────────────────────────────────
+/* empty state: no data, no results, nothing here */
 function generateBibTeX(sources: DeepResearchSource[]): string {
   return sources
     .map((s, idx) => {

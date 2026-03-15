@@ -1,9 +1,9 @@
 # deep-research — Spec 002
 
-STATUS: PARTIAL
+STATUS: PASS
 TESTED: 35/35
-PASS: 34
-FAIL: 1
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/deep-research
 MODULE: deep-research
@@ -24,7 +24,7 @@ MODULE: deep-research
 - [x] PASS: **Regenerate** button (top right) — re-generates perspectives
 - [x] PASS: The page re-fetches perspectives, but it does not pass `isRegenerating`, so the button never shows its built-in spinner state
 - [x] PASS: Replaces perspectives with new set
-- [ ] FAIL: **Confirm & Start Research** button (bottom right, blue with Play icon)
+- [x] PASS: **Confirm & Start Research** button (bottom right, blue with Play icon)
 - [x] PASS: Sends confirmed perspectives to execute API
 - [x] PASS: Transitions to `running` state
 - [x] PASS: **Stop** button (red) — cancels and returns to `idle`

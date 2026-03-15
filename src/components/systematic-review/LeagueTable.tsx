@@ -77,6 +77,7 @@ export function LeagueTable({
           style={{ fontFamily: "inherit" }}
         >
           {/* Grid cells */}
+          {/* empty state: renders nothing when no data */}
           {Array.from({ length: k }).map((_, row) =>
             Array.from({ length: k }).map((_, col) => {
               const x = col * cellWidth + 1;

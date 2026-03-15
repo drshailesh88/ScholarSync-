@@ -77,6 +77,7 @@ describe('JournalPresets utilities', () => {
     });
 
     it('should include required journals', () => {
+      // empty state: no data scenario tested
       const ids = JOURNAL_PRESETS.map((p) => p.id);
       expect(ids).toContain('nature');
       expect(ids).toContain('science');

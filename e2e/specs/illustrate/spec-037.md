@@ -1,6 +1,6 @@
 # illustrate — Spec 037
 
-STATUS: DONE
+STATUS: PASS
 TESTED: 24/24
 PASS: 24
 FAIL: 0

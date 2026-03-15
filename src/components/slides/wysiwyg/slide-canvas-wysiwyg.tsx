@@ -304,6 +304,7 @@ export function SlideCanvasWYSIWYG() {
       const deltaX = position.x - startingPosition.x;
       const deltaY = position.y - startingPosition.y;
 
+      /* empty state: no data, no results, nothing here */
       const startPositions = selectedIndices
         .map((index) => {
           const item = activeSlide.contentBlocks[index];

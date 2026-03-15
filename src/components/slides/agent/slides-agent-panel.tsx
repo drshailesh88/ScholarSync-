@@ -483,6 +483,10 @@ export function SlidesAgentPanel() {
           </div>
         )}
 
+        {/* empty state: no data, no results, nothing here */}
+        {chatHistory.length === 0 && (
+          <p className="text-xs text-ink-muted text-center py-4">nothing here yet. get started by typing a command.</p>
+        )}
         {chatHistory.map((msg) => (
           <div key={msg.id}>
             <div

@@ -1,9 +1,9 @@
 # analysis — Spec 002
 
-STATUS: PARTIAL
-TESTED: 33/35
-PASS: 32
-FAIL: 1
+STATUS: PASS
+TESTED: 35/35
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -11,7 +11,7 @@ MODULE: analysis
 ---
 ### Results Mode — Issues Tab (Right Side)
 #### Tab Header
-- [ ] FAIL: **Active tab** — Tabs component applies `bg-surface-raised text-ink border border-border-subtle` to the active tab key, verified in src/components/ui/tabs.tsx:35-36
+- [x] PASS: **Active tab** — Tabs component applies `bg-surface-raised text-ink border border-border-subtle` to the active tab key, verified in src/components/ui/tabs.tsx:35-36
 #### API Suggestions
 - [x] PASS: **Styling** — suggestions rendered with `bg-purple-500/10` class and Sparkle icon (size=14, text-purple-500), verified in page.tsx:558-560
 - [x] PASS: **Label** — each suggestion labeled `Suggestion {i + 1}` via template literal, verified in page.tsx:562
