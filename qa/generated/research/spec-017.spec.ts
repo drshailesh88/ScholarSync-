@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-017
  * Source: e2e/specs/research/spec-017.md
- * Generated: 2026-03-14T08:12:01.169Z
+ * Generated: 2026-03-15T17:36:06.056Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Inactive filter chip styling: `bg-surface-raised text-ink-muted border-border hover:text-ink`');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Inactive filter chip styling: `bg-surface-raised text-ink-muted border-border hover:text-ink`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 Sort dropdown overlay uses `z-20` z-index');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "Sort dropdown overlay uses `z-20` z-index");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Copilot floating toggle button uses `z-40` z-index');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Copilot floating toggle button uses `z-40` z-index");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 Pagination total-pages display clamps the rendered denominator with `Math.max(totalPages, 1)` whenever the pagination block is visible');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "Pagination total-pages display clamps the rendered denominator with `Math.max(totalPages, 1)` whenever the pagination block is visible");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 Sort dropdown menu has `min-w-[140px]` minimum width');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "Sort dropdown menu has `min-w-[140px]` minimum width");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Search input has no `aria-label` or accessible name attribute');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Search input has no `aria-label` or accessible name attribute");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Filter chip buttons have no `aria-pressed` attribute to indicate toggle state to assistive technology');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Filter chip buttons have no `aria-pressed` attribute to indicate toggle state to assistive technology");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Sort dropdown trigger has no `aria-expanded` or `aria-haspopup` attribute');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Sort dropdown trigger has no `aria-expanded` or `aria-haspopup` attribute");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Sort dropdown menu has no `role="listbox"` or `role="menu"` attribute');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Sort dropdown menu has no `role=\"listbox\"` or `role=\"menu\"` attribute");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Sort dropdown items have no `role="option"` or `role="menuitem"` attributes');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Sort dropdown items have no `role=\"option\"` or `role=\"menuitem\"` attributes");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 Copilot close button has no `aria-label` attribute');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "Copilot close button has no `aria-label` attribute");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 Copilot chat input has no `aria-label` attribute');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "Copilot chat input has no `aria-label` attribute");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 Copilot send button has no `aria-label` attribute');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "Copilot send button has no `aria-label` attribute");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 No `aria-live` region exists for search result count updates or loading/error state transitions');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "No `aria-live` region exists for search result count updates or loading/error state transitions");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Pagination Previous/Next buttons have no `aria-label` attributes (e.g., "Go to previous page")');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Pagination Previous/Next buttons have no `aria-label` attributes (e.g., \"Go to previous page\")");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Evidence level badges have no `title` or `aria-label` explaining the evidence level meaning');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Evidence level badges have no `title` or `aria-label` explaining the evidence level meaning");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Route-level `loading.tsx` renders `ResearchLoading` — one `Skeleton` title bar (`h-8 w-48`), one `Skeleton` search bar (`h-12 w-full rounded-xl`), and exactly 3 `SkeletonCard` placeholders');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Route-level `loading.tsx` renders `ResearchLoading` — one `Skeleton` title bar (`h-8 w-48`), one `Skeleton` search bar (`h-12 w-full rounded-xl`), and exactly 3 `SkeletonCard` placeholders");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Route-level `error.tsx` renders `ErrorDisplay` component with `onRetry={reset}` prop, providing a retry button');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Route-level `error.tsx` renders `ErrorDisplay` component with `onRetry={reset}` prop, providing a retry button");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Section 21 line 397 claims "Scroll position — restored from `searchScrollPosition`" — **WRONG**. No scroll position state or restoration logic exists in page.tsx. The `searchScrollPosition` identifier does not appear anywhere in the research page; it exists only in the unused `research-store.ts` and `ResultsTable.tsx` which are not imported by this page.');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Section 21 line 397 claims \"Scroll position — restored from `searchScrollPosition`\" — **WRONG**. No scroll position state or restoration logic exists in page.tsx. The `searchScrollPosition` identifier does not appear anywhere in the research page; it exists only in the unused `research-store.ts` and `ResultsTable.tsx` which are not imported by this page.");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Section 2 lines 71-73 claim "Parsed filter chips — appear below input when natural language filters detected" with sub-items for X buttons and chip types — **WRONG**. No NLP-parsed filter chips exist in the current implementation. Only 6 static toggle chips (Last 5 Years, PDF Available, High Impact, RCTs Only, Reviews, Meta-Analyses) are rendered.');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Section 2 lines 71-73 claim \"Parsed filter chips — appear below input when natural language filters detected\" with sub-items for X buttons and chip types — **WRONG**. No NLP-parsed filter chips exist in the current implementation. Only 6 static toggle chips (Last 5 Years, PDF Available, High Impact, RCTs Only, Reviews, Meta-Analyses) are rendered.");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Section 5 line 135 claims "Skeleton loader — 5 placeholder cards during search" — **WRONG**. The in-page loading state renders exactly 4 skeleton cards (`Array.from({ length: 4 })`). The route-level `loading.tsx` renders 3 `SkeletonCard`s — neither uses 5.');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Section 5 line 135 claims \"Skeleton loader — 5 placeholder cards during search\" — **WRONG**. The in-page loading state renders exactly 4 skeleton cards (`Array.from({ length: 4 })`). The route-level `loading.tsx` renders 3 `SkeletonCard`s — neither uses 5.");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Section 7 line 165 claims authors are truncated with "et al." if >5 — **WRONG**. Result card authors use `r.authors.slice(0, 3)` and show " et al." when `r.authors.length > 3` (threshold is 3, not 5).');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Section 7 line 165 claims authors are truncated with \"et al.\" if >5 — **WRONG**. Result card authors use `r.authors.slice(0, 3)` and show \" et al.\" when `r.authors.length > 3` (threshold is 3, not 5).");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Section 7 line 169 claims a "Study type badge" is rendered on each result card — **WRONG**. No study type badge is rendered by the current page. The `studyType` field exists on results but is not displayed.');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Section 7 line 169 claims a \"Study type badge\" is rendered on each result card — **WRONG**. No study type badge is rendered by the current page. The `studyType` field exists on results but is not displayed.");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Section 7 line 171 claims a "Source badge" (`pubmed`, `semantic_scholar`, or `both`) is rendered — **WRONG**. No source badge is rendered by the current page.');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Section 7 line 171 claims a \"Source badge\" (`pubmed`, `semantic_scholar`, or `both`) is rendered — **WRONG**. No source badge is rendered by the current page.");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Section 7 line 173 claims a "PMID badge" is rendered — **WRONG**. PMID is not displayed anywhere on result cards. It is used internally for title link construction and save payload only.');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Section 7 line 173 claims a \"PMID badge\" is rendered — **WRONG**. PMID is not displayed anywhere on result cards. It is used internally for title link construction and save payload only.");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Section 7 line 174 claims a "DOI badge" is rendered — **WRONG**. DOI is rendered as a text link ("DOI") in the metadata row, not as a badge component.');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Section 7 line 174 claims a \"DOI badge\" is rendered — **WRONG**. DOI is rendered as a text link (\"DOI\") in the metadata row, not as a badge component.");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Section 17 line 345 claims "Temperature — 0.3 for consistent output" for synthesis generation — **MISLEADING**. Plan mode uses temperature 0.3, but the primary streaming synthesis (generate mode) uses temperature 0.4 (correctly documented at lines 788-789 from Pass 2).');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Section 17 line 345 claims \"Temperature — 0.3 for consistent output\" for synthesis generation — **MISLEADING**. Plan mode uses temperature 0.3, but the primary streaming synthesis (generate mode) uses temperature 0.4 (correctly documented at lines 788-789 from Pass 2).");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Section 20 (Verification System) claims "Per-paper verification — calls `/api/research/verify`" — **WRONG for this page**. The `/research` page never calls `/api/research/verify`. The verification endpoint and VerificationBadge exist in the codebase but are not imported or invoked by `page.tsx`.');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Section 20 (Verification System) claims \"Per-paper verification — calls `/api/research/verify`\" — **WRONG for this page**. The `/research` page never calls `/api/research/verify`. The verification endpoint and VerificationBadge exist in the codebase but are not imported or invoked by `page.tsx`.");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 `ResearchPage` never aborts `abortRef.current` on component unmount, so an in-flight `/api/search/unified` request can continue after navigation away from `/research`');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "`ResearchPage` never aborts `abortRef.current` on component unmount, so an in-flight `/api/search/unified` request can continue after navigation away from `/research`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 `handleSearch(...)` has no stale-request guard beyond `AbortController`, so an older aborted search can still enter `catch` / `finally` and overwrite `error` or `loading` state for a newer search');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "`handleSearch(...)` has no stale-request guard beyond `AbortController`, so an older aborted search can still enter `catch` / `finally` and overwrite `error` or `loading` state for a newer search");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 Failed searches do not clear the prior `results` array, so an error banner can render above stale results from the previous successful search');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "Failed searches do not clear the prior `results` array, so an error banner can render above stale results from the previous successful search");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 `handleSearch(...)` sets `hasSearched` to `true` before the fetch resolves, so a failed first search skips the rich pre-search empty state on the next render');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "`handleSearch(...)` sets `hasSearched` to `true` before the fetch resolves, so a failed first search skips the rich pre-search empty state on the next render");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 Main search button remains enabled for whitespace-only input; the no-op happens inside `handleSearch()` because it returns early on `!query.trim()`');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "Main search button remains enabled for whitespace-only input; the no-op happens inside `handleSearch()` because it returns early on `!query.trim()`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Similar-paper cards use unstable React keys (`key={simIdx}`) instead of a paper identity field');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Similar-paper cards use unstable React keys (`key={simIdx}`) instead of a paper identity field");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 `handleFindSimilar(...)` does not use an `AbortController` or timeout, so similar-paper fetches cannot be cancelled when the user retries or leaves the page');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "`handleFindSimilar(...)` does not use an `AbortController` or timeout, so similar-paper fetches cannot be cancelled when the user retries or leaves the page");
     }
 
 
