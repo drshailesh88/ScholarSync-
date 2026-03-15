@@ -1,17 +1,17 @@
 # ScholarSync QA Progress
 
-Updated: 2026-03-15T16:23:27.796Z
+Updated: 2026-03-15T17:14:05.953Z
 
 ## Overall
 
-`[█████░░░░░░░░░░░░░░░░░░░░░░░░░] 15.7%`
+`[████████░░░░░░░░░░░░░░░░░░░░░░] 25.5%`
 
 | Metric | Count |
 |--------|-------|
 | Total specs | 376 |
 | Total checkpoints | 12804 |
-| Pending | 317 |
-| Pass 1 done | 59 |
+| Pending | 280 |
+| Pass 1 done | 96 |
 | Pass 2 done | 0 |
 | Blocked | 0 |
 
@@ -25,7 +25,7 @@ Updated: 2026-03-15T16:23:27.796Z
 | projects | 9 | 9 | 0 | 0 | 305 | 305/0/0 |
 | library | 11 | 10 | 1 | 0 | 380 | 378/2/0 |
 | studio | 17 | 17 | 0 | 0 | 564 | 564/0/0 |
-| editor | 38 | 0 | 38 | 0 | 1303 | 0/0/0 |
+| editor | 38 | 37 | 1 | 0 | 1303 | 1264/3/0 |
 | research | 18 | 0 | 18 | 0 | 598 | 0/0/0 |
 | latex | 17 | 0 | 17 | 0 | 571 | 0/0/0 |
 | notebook | 25 | 0 | 25 | 0 | 859 | 0/0/0 |
