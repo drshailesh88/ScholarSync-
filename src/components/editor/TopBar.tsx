@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { Editor } from "@tiptap/react";
 import {
   ArrowUUpLeft,
@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useEditorStore, type EditorMode } from "@/stores/editor-store";
 import { KeyboardShortcutsDialog } from "./KeyboardShortcutsDialog";
+import { countSectionWords } from "@/lib/editor/word-counter";
 
 interface TopBarProps {
   editor: Editor;
@@ -55,6 +56,7 @@ export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
   const [showModeDropdown, setShowModeDropdown] = useState(false);
   const [showWordCountDetail, setShowWordCountDetail] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const wordCountRef = useRef<HTMLDivElement | null>(null);
 
   const handleModeChange = useCallback(
     (newMode: EditorMode) => {
@@ -70,6 +72,26 @@ export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
   );
 
   const ModeIcon = MODE_CONFIG[mode].icon;
+  const sectionWordCounts = Object.entries(countSectionWords(editor.state.doc)).map(
+    ([key, words]) => ({
+      heading: key.split("__")[0] || "Untitled Section",
+      words,
+    })
+  );
+
+  useEffect(() => {
+    if (!showWordCountDetail) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (wordCountRef.current?.contains(event.target as Node)) {
+        return;
+      }
+      setShowWordCountDetail(false);
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, [showWordCountDetail]);
 
   return (
     <>
@@ -159,13 +181,48 @@ export function TopBar({ editor, onToggleReferenceSidebar }: TopBarProps) {
         <div className="w-px h-4 bg-border" />
 
         {/* Word count */}
-        <button
-          onClick={() => setShowWordCountDetail(!showWordCountDetail)}
-          className="text-ink-muted hover:text-ink transition-colors"
-          title="Click for section breakdown"
-        >
-          {wordCount.toLocaleString()} words
-        </button>
+        <div ref={wordCountRef} className="relative">
+          <button
+            onClick={() => setShowWordCountDetail((open) => !open)}
+            className="text-ink-muted hover:text-ink transition-colors"
+            title="Click for section breakdown"
+          >
+            {wordCount.toLocaleString()} words
+          </button>
+          {showWordCountDetail && (
+            <div className="absolute top-full left-1/2 z-50 mt-2 w-64 -translate-x-1/2 rounded-lg border border-border bg-surface p-3 shadow-xl">
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-muted">
+                  Section Breakdown
+                </p>
+                <span className="text-xs font-medium text-ink">
+                  {wordCount.toLocaleString()} words
+                </span>
+              </div>
+              <div className="space-y-1.5">
+                {sectionWordCounts.length > 0 ? (
+                  sectionWordCounts.map((section) => (
+                    <div
+                      key={`${section.heading}-${section.words}`}
+                      className="flex items-center justify-between gap-3 rounded-md bg-surface-raised px-2 py-1.5"
+                    >
+                      <span className="truncate text-xs text-ink">
+                        {section.heading}
+                      </span>
+                      <span className="shrink-0 text-[11px] text-ink-muted">
+                        {section.words.toLocaleString()} words
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="rounded-md bg-surface-raised px-2 py-2 text-xs text-ink-muted">
+                    No section headings yet.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Divider */}
         <div className="w-px h-4 bg-border" />

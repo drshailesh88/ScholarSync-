@@ -107,3 +107,20 @@ export function TypingIndicator() {
     </div>
   );
 }
+
+export function CollaborationStatus() {
+  const { isConnected } = useCollaboration();
+
+  return (
+    <div
+      className="hidden sm:flex items-center gap-1.5 text-[11px] text-ink-muted"
+      title={isConnected ? "Collaboration connected" : "Collaboration disconnected"}
+    >
+      <span
+        className="h-2 w-2 rounded-full"
+        style={{ backgroundColor: isConnected ? "#10b981" : "#94a3b8" }}
+      />
+      {isConnected ? "Connected" : "Offline"}
+    </div>
+  );
+}

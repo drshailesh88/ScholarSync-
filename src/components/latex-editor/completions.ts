@@ -261,11 +261,16 @@ export function latexEnvironmentCompletion(context: CompletionContext): Completi
  */
 export function parseBibKeys(bibContent: string): { key: string; title: string; author: string; year: string }[] {
   const entries: { key: string; title: string; author: string; year: string }[] = [];
-  const entryRegex = /@\w+\{([^,]+),([\s\S]*?)(?=\n@|\n*$)/g;
-  let m;
-  while ((m = entryRegex.exec(bibContent)) !== null) {
-    const key = m[1].trim();
-    const body = m[2];
+  const headerRegex = /@\w+\s*\{([^,]+),/g;
+  const headers = [...bibContent.matchAll(headerRegex)];
+
+  for (let index = 0; index < headers.length; index += 1) {
+    const headerMatch = headers[index];
+    const start = headerMatch.index;
+    if (start == null) continue;
+    const end = headers[index + 1]?.index ?? bibContent.length;
+    const key = headerMatch[1].trim();
+    const body = bibContent.slice(start + headerMatch[0].length, end);
     const title = body.match(/title\s*=\s*[{"]([^}"]+)[}"]/i)?.[1] ?? "";
     const author = body.match(/author\s*=\s*[{"]([^}"]+)[}"]/i)?.[1] ?? "";
     const year = body.match(/year\s*=\s*[{"]?(\d{4})[}"]?/i)?.[1] ?? "";

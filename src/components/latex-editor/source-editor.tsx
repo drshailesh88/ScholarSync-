@@ -4,12 +4,22 @@ import { useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from 
 import { EditorView, keymap, lineNumbers, highlightActiveLine, drawSelection, rectangularSelection, highlightActiveLineGutter } from "@codemirror/view";
 import { EditorState, Compartment } from "@codemirror/state";
 import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
-import { syntaxHighlighting, indentOnInput, foldGutter, foldKeymap, defaultHighlightStyle, HighlightStyle } from "@codemirror/language";
-import { closeBracketsKeymap } from "@codemirror/autocomplete";
+import { syntaxHighlighting, indentOnInput, foldGutter, foldKeymap, defaultHighlightStyle, HighlightStyle, bracketMatching } from "@codemirror/language";
+import { autocompletion, closeBracketsKeymap, completionKeymap, startCompletion } from "@codemirror/autocomplete";
 import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 import { lintKeymap, lintGutter, setDiagnostics, type Diagnostic } from "@codemirror/lint";
 import { latex } from "codemirror-lang-latex";
 import { tags } from "@lezer/highlight";
+import { createSpellCheckLinter } from "./spell-check-extension";
+import {
+  createCitationCompletion,
+  createRefCompletion,
+  latexCommandCompletion,
+  latexEnvironmentCompletion,
+} from "./completions";
+import { aiCompletions } from "./ai-completion-extension";
+import { trackChanges, trackChangesCompartment, syncTrackChanges } from "./track-changes-extension";
+import type { TrackChange } from "@/types/track-changes";
 
 // Custom LaTeX-friendly highlight style
 const latexHighlightStyle = HighlightStyle.define([
@@ -124,6 +134,11 @@ const lightTheme = EditorView.theme({
 
 const themeCompartment = new Compartment();
 const highlightCompartment = new Compartment();
+const defaultTrackChangesAuthor: TrackChange["author"] = {
+  id: "local",
+  name: "You",
+  color: "#f59e0b",
+};
 
 /** Handle exposed by SourceEditor via forwardRef */
 export interface SourceEditorHandle {
@@ -157,10 +172,26 @@ interface SourceEditorProps {
   onSlashDismiss?: () => void;
   /** Called with the top visible line number when the editor scrolls */
   onScrollLine?: (line: number) => void;
+  trackChangesEnabled?: boolean;
+  trackChangesFileId?: string;
+  trackChangesAuthor?: TrackChange["author"];
+  pendingTrackChanges?: TrackChange[];
 }
 
 export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
-  function SourceEditor({ initialContent, onChange, className, getBibContent, onSlashTrigger, onSlashDismiss, onScrollLine }, ref) {
+  function SourceEditor({
+    initialContent,
+    onChange,
+    className,
+    getBibContent,
+    onSlashTrigger,
+    onSlashDismiss,
+    onScrollLine,
+    trackChangesEnabled = false,
+    trackChangesFileId = "",
+    trackChangesAuthor = defaultTrackChangesAuthor,
+    pendingTrackChanges = [],
+  }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
     const onChangeRef = useRef(onChange);
@@ -312,6 +343,13 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
               onSlashDismissRef.current?.();
             }
           }
+
+          if (
+            /\\cite[tp]?\{[^}\s]*$/.test(lineTextBeforeCursor) ||
+            /\\(?:eq|page|auto|c)?ref\{[^}\s]*$/.test(lineTextBeforeCursor)
+          ) {
+            startCompletion(update.view);
+          }
         }
       });
 
@@ -337,9 +375,34 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
 
           // Lint gutter (error/warning markers in the gutter)
           lintGutter(),
+          createSpellCheckLinter(),
 
           // LaTeX language support (includes autocompletion, bracket matching, close brackets)
-          latex(),
+          latex({ enableAutocomplete: false }),
+          bracketMatching(),
+          autocompletion({
+            override: [
+              latexCommandCompletion,
+              latexEnvironmentCompletion,
+              createCitationCompletion(() => getBibContentRef.current?.() ?? ""),
+              createRefCompletion(() => viewRef.current?.state.doc.toString() ?? ""),
+            ],
+          }),
+          ...aiCompletions,
+          trackChangesCompartment.of(
+            trackChanges({
+              enabled: trackChangesEnabled,
+              fileId: trackChangesFileId,
+              author: trackChangesAuthor,
+            })
+          ),
+
+          // Native browser spellcheck support for the editable surface
+          EditorView.contentAttributes.of({
+            spellcheck: "true",
+            autocorrect: "on",
+            autocapitalize: "off",
+          }),
 
           // Theme
           themeCompartment.of(lightTheme),
@@ -353,6 +416,7 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
             ...defaultKeymap,
             ...historyKeymap,
             ...closeBracketsKeymap,
+            ...completionKeymap,
             ...searchKeymap,
             ...foldKeymap,
             ...lintKeymap,
@@ -408,6 +472,27 @@ export const SourceEditor = forwardRef<SourceEditorHandle, SourceEditorProps>(
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+      const view = viewRef.current;
+      if (!view) return;
+
+      view.dispatch({
+        effects: trackChangesCompartment.reconfigure(
+          trackChanges({
+            enabled: trackChangesEnabled,
+            fileId: trackChangesFileId,
+            author: trackChangesAuthor,
+          })
+        ),
+      });
+    }, [trackChangesAuthor, trackChangesEnabled, trackChangesFileId]);
+
+    useEffect(() => {
+      const view = viewRef.current;
+      if (!view) return;
+      syncTrackChanges(view, pendingTrackChanges, view.state.doc.toString());
+    }, [pendingTrackChanges]);
 
     return (
       <div

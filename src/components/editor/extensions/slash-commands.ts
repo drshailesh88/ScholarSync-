@@ -12,6 +12,13 @@ export interface SlashCommandItem {
   command: (editor: Editor) => void;
 }
 
+const CATEGORY_SEARCH_TEXT: Record<SlashCommandItem["category"], string> = {
+  basic: "basic blocks",
+  academic: "academic",
+  ai: "ai tools",
+  tools: "document tools",
+};
+
 const structuralCommands: SlashCommandItem[] = [
   // Basic blocks
   {
@@ -28,7 +35,7 @@ const structuralCommands: SlashCommandItem[] = [
     description: "Manuscript title",
     icon: "h1",
     category: "basic",
-    shortcut: "Cmd+Opt+1",
+    shortcut: "Cmd+Shift+1",
     command: (editor) => {
       editor.chain().focus().setHeading({ level: 1 }).run();
     },
@@ -38,7 +45,7 @@ const structuralCommands: SlashCommandItem[] = [
     description: "IMRAD sections",
     icon: "h2",
     category: "basic",
-    shortcut: "Cmd+Opt+2",
+    shortcut: "Cmd+Shift+2",
     command: (editor) => {
       editor.chain().focus().setHeading({ level: 2 }).run();
     },
@@ -48,7 +55,7 @@ const structuralCommands: SlashCommandItem[] = [
     description: "Subsections",
     icon: "h3",
     category: "basic",
-    shortcut: "Cmd+Opt+3",
+    shortcut: "Cmd+Shift+3",
     command: (editor) => {
       editor.chain().focus().setHeading({ level: 3 }).run();
     },
@@ -58,7 +65,7 @@ const structuralCommands: SlashCommandItem[] = [
     description: "Sub-subsections",
     icon: "h4",
     category: "basic",
-    shortcut: "Cmd+Opt+4",
+    shortcut: "Cmd+Shift+4",
     command: (editor) => {
       editor.chain().focus().setHeading({ level: 4 }).run();
     },
@@ -98,6 +105,7 @@ const structuralCommands: SlashCommandItem[] = [
     description: "Quote text",
     icon: "quote",
     category: "basic",
+    shortcut: "Cmd+Shift+B",
     command: (editor) => {
       editor.chain().focus().toggleBlockquote().run();
     },
@@ -107,6 +115,7 @@ const structuralCommands: SlashCommandItem[] = [
     description: "Horizontal rule",
     icon: "divider",
     category: "basic",
+    shortcut: "Cmd+Shift+Enter",
     command: (editor) => {
       editor.chain().focus().setHorizontalRule().run();
     },
@@ -116,6 +125,7 @@ const structuralCommands: SlashCommandItem[] = [
     description: "For statistical code",
     icon: "code",
     category: "basic",
+    shortcut: "Cmd+Opt+C",
     command: (editor) => {
       editor.chain().focus().toggleCodeBlock().run();
     },
@@ -133,6 +143,16 @@ const structuralCommands: SlashCommandItem[] = [
         .focus()
         .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
         .run();
+
+      // The resizable table node view does not preserve HTMLAttributes on insert,
+      // so apply the styling hook directly to the rendered table element.
+      requestAnimationFrame(() => {
+        const tables = editor.view.dom.querySelectorAll(".tableWrapper table");
+        const table = tables[tables.length - 1];
+        if (table) {
+          table.classList.add("academic-table");
+        }
+      });
     },
   },
   {
@@ -145,6 +165,8 @@ const structuralCommands: SlashCommandItem[] = [
       const input = document.createElement("input");
       input.type = "file";
       input.accept = "image/*";
+      input.style.display = "none";
+      document.body.appendChild(input);
       input.onchange = () => {
         const file = input.files?.[0];
         if (file) {
@@ -152,8 +174,11 @@ const structuralCommands: SlashCommandItem[] = [
           reader.onload = (e) => {
             const src = e.target?.result as string;
             editor.chain().focus().setImage({ src }).run();
+            input.remove();
           };
           reader.readAsDataURL(file);
+        } else {
+          input.remove();
         }
       };
       input.click();
@@ -241,6 +266,20 @@ const structuralCommands: SlashCommandItem[] = [
       }
     },
   },
+  {
+    title: "Cite",
+    description: "Insert a citation from your library",
+    icon: "academic",
+    category: "academic",
+    shortcut: "Cmd+Shift+C",
+    command: () => {
+      window.dispatchEvent(
+        new CustomEvent("scholarsync:editor-action", {
+          detail: { action: "insert-citation" },
+        })
+      );
+    },
+  },
 
   // AI Actions (integration points — dispatch events, don't implement)
   {
@@ -320,10 +359,14 @@ function filterCommands(query: string): SlashCommandItem[] {
 
   const lower = query.toLowerCase();
   return structuralCommands.filter(
-    (cmd) =>
-      cmd.title.toLowerCase().includes(lower) ||
-      cmd.description.toLowerCase().includes(lower) ||
-      cmd.category.toLowerCase().includes(lower)
+    (cmd) => {
+      const categoryText = CATEGORY_SEARCH_TEXT[cmd.category] ?? cmd.category;
+      return (
+        cmd.title.toLowerCase().includes(lower) ||
+        cmd.description.toLowerCase().includes(lower) ||
+        categoryText.toLowerCase().includes(lower)
+      );
+    }
   );
 }
 
@@ -377,4 +420,4 @@ export const SlashCommandsExtension = Extension.create<SlashCommandsOptions>({
   },
 });
 
-export { structuralCommands };
+export { structuralCommands, filterCommands };

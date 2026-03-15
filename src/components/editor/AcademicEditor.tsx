@@ -42,6 +42,7 @@ import { FootnoteSection } from "./FootnoteSection";
 import { useEditorStore } from "@/stores/editor-store";
 import { getDocumentWordCount } from "@/lib/editor/word-counter";
 import { getCommentCountLocal } from "@/lib/editor/document-comments-local";
+import { toSerializableJson } from "@/lib/editor/serializable-json";
 
 const CitationNumbering = Extension.create({
   name: "citationNumbering",
@@ -211,11 +212,12 @@ export function AcademicEditor({
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
         const json = ed.getJSON();
+        const serializableJson = toSerializableJson(json);
         const text = ed.getText();
         const wordCount = getDocumentWordCount(ed.state.doc);
 
         onUpdateRef.current?.({
-          editor_content: json,
+          editor_content: serializableJson,
           plain_text_content: text,
           word_count: wordCount,
         });
@@ -248,7 +250,7 @@ export function AcademicEditor({
     if (!editor) return;
     if (timerRef.current) clearTimeout(timerRef.current);
 
-    const json = editor.getJSON();
+    const json = toSerializableJson(editor.getJSON());
     const text = editor.getText();
     const wc = getDocumentWordCount(editor.state.doc);
 
@@ -280,7 +282,7 @@ export function AcademicEditor({
     if (editor && content && !editor.isDestroyed) {
       const currentText = editor.getText();
       if (!currentText.trim()) {
-        editor.commands.setContent(content);
+        editor.commands.setContent(content, { emitUpdate: false });
         // Initial word count and outline
         const wc = getDocumentWordCount(editor.state.doc);
         setWordCount(wc);
@@ -307,6 +309,8 @@ export function AcademicEditor({
         });
         if (items.length >= 2) {
           setOutline(items);
+        } else {
+          setOutline([]);
         }
       }, 300);
       return () => clearTimeout(timer);

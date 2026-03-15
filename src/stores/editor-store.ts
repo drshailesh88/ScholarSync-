@@ -50,6 +50,7 @@ interface EditorState {
   referenceSidebarOpen: boolean;
   commentSidebarOpen: boolean;
   toggleReferenceSidebar: () => void;
+  setReferenceSidebarOpen: (open: boolean) => void;
   toggleCommentSidebar: () => void;
 
   // Document metadata
@@ -96,6 +97,8 @@ export const useEditorStore = create<EditorState>((set) => ({
   commentSidebarOpen: false,
   toggleReferenceSidebar: () =>
     set((s) => ({ referenceSidebarOpen: !s.referenceSidebarOpen })),
+  setReferenceSidebarOpen: (referenceSidebarOpen) =>
+    set({ referenceSidebarOpen }),
   toggleCommentSidebar: () =>
     set((s) => ({ commentSidebarOpen: !s.commentSidebarOpen })),
 

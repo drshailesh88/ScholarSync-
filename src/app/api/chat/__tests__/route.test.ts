@@ -8,6 +8,7 @@ const mockCheckRateLimit = vi.hoisted(() => vi.fn());
 const mockStreamText = vi.hoisted(() => vi.fn());
 const mockIsAIConfigured = vi.hoisted(() => vi.fn());
 const mockGetModel = vi.hoisted(() => vi.fn());
+const mockToTextStreamResponse = vi.hoisted(() => vi.fn());
 
 vi.mock("@/lib/auth", () => ({
   getCurrentUserId: mockGetCurrentUserId,
@@ -57,6 +58,14 @@ vi.mock("@/lib/ai/prompts/draft", () => ({
 }));
 
 import { POST } from "../route";
+import {
+  getDefaultDraftPrompt,
+  getDraftSystemPrompt,
+} from "@/lib/ai/prompts/draft";
+import {
+  getDefaultGuidePrompt,
+  getGuideSystemPrompt,
+} from "@/lib/ai/prompts/guide";
 
 function makeRequest(body: unknown): Request {
   return new Request("http://localhost/api/chat", {
@@ -74,7 +83,9 @@ describe("POST /api/chat", () => {
     mockIsAIConfigured.mockReturnValue(true);
     mockGetModel.mockReturnValue("mock-model");
     mockStreamText.mockReturnValue({
-      toTextStreamResponse: vi.fn().mockReturnValue(new Response("stream")),
+      toTextStreamResponse: mockToTextStreamResponse.mockReturnValue(
+        new Response("stream")
+      ),
     });
   });
 
@@ -86,6 +97,7 @@ describe("POST /api/chat", () => {
     );
     expect(res.status).toBe(200);
     expect(mockStreamText).toHaveBeenCalledOnce();
+    expect(mockToTextStreamResponse).toHaveBeenCalledOnce();
   });
 
   it("uses guide prompt in learn mode with context", async () => {
@@ -111,6 +123,37 @@ describe("POST /api/chat", () => {
     );
     expect(mockStreamText).toHaveBeenCalledWith(
       expect.objectContaining({ system: "draft-system-prompt" })
+    );
+  });
+
+  it("falls back to the default draft prompt when draft intensity is missing", async () => {
+    await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "Draft text" }],
+        mode: "draft",
+      })
+    );
+
+    expect(getDraftSystemPrompt).not.toHaveBeenCalled();
+    expect(getDefaultDraftPrompt).toHaveBeenCalledOnce();
+    expect(mockStreamText).toHaveBeenCalledWith(
+      expect.objectContaining({ system: "default-draft-prompt" })
+    );
+  });
+
+  it("falls back to the default guide prompt when learn mode context is incomplete", async () => {
+    await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "Teach me" }],
+        mode: "learn",
+        guideContext: { documentType: "review_article" },
+      })
+    );
+
+    expect(getGuideSystemPrompt).not.toHaveBeenCalled();
+    expect(getDefaultGuidePrompt).toHaveBeenCalledOnce();
+    expect(mockStreamText).toHaveBeenCalledWith(
+      expect.objectContaining({ system: "default-guide-prompt" })
     );
   });
 
@@ -149,5 +192,53 @@ describe("POST /api/chat", () => {
     expect(res.status).toBe(400);
     const body = await res.json();
     expect(body.error).toBeDefined();
+  });
+
+  it("returns 400 when more than 50 chat messages are submitted", async () => {
+    const res = await POST(
+      makeRequest({
+        messages: Array.from({ length: 51 }, () => ({
+          role: "user",
+          content: "Hello",
+        })),
+      })
+    );
+
+    expect(res.status).toBe(400);
+    expect(mockStreamText).not.toHaveBeenCalled();
+  });
+
+  it("returns 503 when the AI service is not configured", async () => {
+    mockIsAIConfigured.mockReturnValue(false);
+
+    const res = await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "Hello" }],
+      })
+    );
+
+    expect(res.status).toBe(503);
+    const body = await res.json();
+    expect(body.error).toBe(
+      "AI service is not configured. Please contact an administrator."
+    );
+  });
+
+  it("returns 500 for uncaught server errors", async () => {
+    mockStreamText.mockImplementation(() => {
+      throw new Error("boom");
+    });
+
+    const res = await POST(
+      makeRequest({
+        messages: [{ role: "user", content: "Hello" }],
+      })
+    );
+
+    expect(res.status).toBe(500);
+    const body = await res.json();
+    expect(body.error).toBe(
+      "An unexpected error occurred. Please try again."
+    );
   });
 });

@@ -43,6 +43,27 @@ interface FileTreeProps {
   onDraftSection?: (sectionTitle: string) => void;
 }
 
+type NewFileType = "tex" | "bib" | "sty" | "cls";
+
+const NEW_FILE_TYPES: Array<{ value: NewFileType; label: string }> = [
+  { value: "tex", label: ".tex" },
+  { value: "bib", label: ".bib" },
+  { value: "sty", label: ".sty" },
+  { value: "cls", label: ".cls" },
+];
+
+function normalizeNewFilePath(input: string, fileType: NewFileType) {
+  const trimmed = input.trim();
+  if (!trimmed) return "";
+
+  const fileName = trimmed.split("/").pop() ?? trimmed;
+  if (fileName.includes(".")) {
+    return trimmed;
+  }
+
+  return `${trimmed}.${fileType}`;
+}
+
 function getFileIcon(path: string) {
   if (path.endsWith(".tex")) return FileText;
   if (path.endsWith(".bib")) return FileCode;
@@ -102,6 +123,7 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
 
   const [showNewFile, setShowNewFile] = useState(false);
   const [newFileName, setNewFileName] = useState("");
+  const [newFileType, setNewFileType] = useState<NewFileType>("tex");
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
@@ -126,7 +148,13 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
 
   // Close context menu on outside click
   useEffect(() => {
-    const handler = () => setContextMenuId(null);
+    const handler = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("[data-file-context-menu]")) {
+        return;
+      }
+      setContextMenuId(null);
+    };
     document.addEventListener("click", handler);
     return () => document.removeEventListener("click", handler);
   }, []);
@@ -138,7 +166,7 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
   }, [setActiveFileId, setDocumentContent, onFileSelect]);
 
   const handleCreateFile = useCallback(async () => {
-    const name = newFileName.trim();
+    const name = normalizeNewFilePath(newFileName, newFileType);
     if (!name) return;
 
     const newFile = await createLatexFile({
@@ -151,8 +179,9 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
     onFilesChange([...files, newFile as FileItem]);
     setShowNewFile(false);
     setNewFileName("");
+    setNewFileType("tex");
     handleSelectFile(newFile as FileItem);
-  }, [newFileName, projectId, files, onFilesChange, handleSelectFile]);
+  }, [newFileName, newFileType, projectId, files, onFilesChange, handleSelectFile]);
 
   const handleRename = useCallback(async (file: FileItem) => {
     const newPath = renameValue.trim();
@@ -169,6 +198,7 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
 
   const handleDelete = useCallback(async (file: FileItem) => {
     if (file.isMain) return; // Can't delete main file
+    if (!window.confirm(`Delete ${file.path}?`)) return;
 
     await deleteLatexFile(file.id);
     const updated = files.filter((f) => f.id !== file.id);
@@ -217,8 +247,7 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
             />
           </div>
         ) : (
-          <button
-            onClick={() => handleSelectFile(file)}
+          <div
             className={cn(
               "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-[11px] transition-colors",
               file.id === activeFileId
@@ -226,8 +255,13 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
                 : "text-ink-muted hover:text-ink hover:bg-surface-raised"
             )}
           >
-            <Icon size={14} className={cn(color, "shrink-0")} />
-            <span className="truncate">{fileName}</span>
+            <button
+              onClick={() => handleSelectFile(file)}
+              className="flex min-w-0 flex-1 items-center gap-2 text-left"
+            >
+              <Icon size={14} className={cn(color, "shrink-0")} />
+              <span className="truncate">{fileName}</span>
+            </button>
             {file.isMain && (
               <span className="ml-auto text-[8px] font-medium px-1 py-0.5 rounded bg-brand/10 text-brand shrink-0">
                 main
@@ -241,17 +275,18 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
                   e.stopPropagation();
                   setContextMenuId(contextMenuId === file.id ? null : file.id);
                 }}
+                data-file-context-menu="true"
                 className="ml-auto p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-surface-raised/80 transition-opacity shrink-0"
               >
                 <DotsThree size={12} />
               </button>
             )}
-          </button>
+          </div>
         )}
 
         {/* Context menu dropdown */}
         {contextMenuId === file.id && (
-          <div className="absolute right-2 top-full z-20 w-32 rounded-lg glass-panel border border-border shadow-lg py-1">
+          <div data-file-context-menu="true" className="absolute right-2 top-full z-20 w-32 rounded-lg glass-panel border border-border shadow-lg py-1">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -301,19 +336,40 @@ export function FileTree({ projectId, files, onFilesChange, onJumpToLine, onFile
       <div className="flex-1 overflow-y-auto px-2 py-1.5 space-y-0.5">
         {/* New file input */}
         {showNewFile && (
-          <div className="px-1 py-1">
+          <div className="px-1 py-1 flex items-center gap-1.5">
+            <select
+              aria-label="New file type"
+              value={newFileType}
+              onChange={(e) => setNewFileType(e.target.value as NewFileType)}
+              className="w-20 px-1.5 py-1 rounded text-[11px] bg-surface-raised border border-brand text-ink focus:outline-none"
+            >
+              {NEW_FILE_TYPES.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             <input
               ref={newFileInputRef}
               type="text"
               value={newFileName}
               onChange={(e) => setNewFileName(e.target.value)}
-              onBlur={() => { if (!newFileName.trim()) setShowNewFile(false); }}
+              onBlur={() => {
+                if (!newFileName.trim()) {
+                  setShowNewFile(false);
+                  setNewFileType("tex");
+                }
+              }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleCreateFile();
-                if (e.key === "Escape") { setShowNewFile(false); setNewFileName(""); }
+                if (e.key === "Escape") {
+                  setShowNewFile(false);
+                  setNewFileName("");
+                  setNewFileType("tex");
+                }
               }}
-              placeholder="filename.tex"
-              className="w-full px-2 py-1 rounded text-[11px] bg-surface-raised border border-brand text-ink placeholder:text-ink-muted focus:outline-none"
+              placeholder="filename or folder/name"
+              className="flex-1 px-2 py-1 rounded text-[11px] bg-surface-raised border border-brand text-ink placeholder:text-ink-muted focus:outline-none"
             />
           </div>
         )}

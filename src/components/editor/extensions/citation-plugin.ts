@@ -20,6 +20,58 @@ export function createCitationPlugin() {
   return new Plugin({
     key: citationPluginKey,
 
+    appendTransaction(_transactions, _oldState, newState) {
+      const tr = newState.tr;
+      let changed = false;
+      const citationsToDelete: Array<{ from: number; to: number }> = [];
+
+      newState.doc.descendants((node, pos) => {
+        if (node.type.name !== "citation") return;
+
+        const rawReferenceIds = Array.isArray(node.attrs.referenceIds)
+          ? (node.attrs.referenceIds as unknown[])
+          : [];
+        const referenceIds = rawReferenceIds.filter(
+          (referenceId): referenceId is string =>
+            typeof referenceId === "string" && referenceId.trim().length > 0
+        );
+
+        if (referenceIds.length === 0) {
+          citationsToDelete.push({ from: pos, to: pos + node.nodeSize });
+          return;
+        }
+
+        const rawSnapshots = Array.isArray(node.attrs.referenceSnapshots)
+          ? (node.attrs.referenceSnapshots as Array<{ id?: unknown }>)
+          : [];
+        const referenceSnapshots = rawSnapshots.filter(
+          (snapshot) =>
+            typeof snapshot?.id === "string" &&
+            referenceIds.includes(snapshot.id)
+        );
+
+        if (
+          referenceIds.length !== rawReferenceIds.length ||
+          referenceSnapshots.length !== rawSnapshots.length
+        ) {
+          tr.setNodeMarkup(pos, undefined, {
+            ...node.attrs,
+            referenceIds,
+            referenceSnapshots,
+          });
+          changed = true;
+        }
+      });
+
+      for (let i = citationsToDelete.length - 1; i >= 0; i--) {
+        const citation = citationsToDelete[i];
+        tr.delete(citation.from, citation.to);
+        changed = true;
+      }
+
+      return changed ? tr : null;
+    },
+
     view() {
       return {
         update(view) {

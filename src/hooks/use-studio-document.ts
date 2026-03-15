@@ -28,6 +28,7 @@ interface StudioDocument {
   id: number;
   project_id: number;
   title: string;
+  updated_at?: Date | string | null;
   sections: SectionData[];
 }
 
@@ -41,6 +42,8 @@ interface UseStudioDocumentReturn {
   /** Document title (local state, synced to DB on save) */
   docTitle: string;
   setDocTitle: (title: string) => void;
+  /** Mark the current draft as dirty before the debounced save fires */
+  markUnsaved: () => void;
   /** Current save status for the indicator */
   saveStatus: SaveStatus;
   /** Timestamp of last successful save */
@@ -90,6 +93,7 @@ export function useStudioDocument(
   // Refs for debounced title save
   const titleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const documentRef = useRef<StudioDocument | null>(null);
+  const changeVersionRef = useRef(0);
   documentRef.current = document;
 
   // Track whether this is the first load to avoid re-setting editor content
@@ -122,12 +126,14 @@ export function useStudioDocument(
         id: doc.id,
         project_id: doc.project_id,
         title: doc.title,
+        updated_at: doc.updated_at,
         sections: doc.sections,
       };
 
       setDocument(studioDoc);
       setDocTitleState(doc.title);
       setSelectedProjectId(doc.project_id);
+      setLastSavedAt(doc.updated_at ? new Date(doc.updated_at) : null);
 
       // Determine initial content from the first section with editor_content,
       // or fall back to the first section
@@ -152,6 +158,7 @@ export function useStudioDocument(
           .catch(() => {});
       }
 
+      changeVersionRef.current = 0;
       setSaveStatus("idle");
     } catch (err) {
       console.error("Failed to load document:", err);
@@ -178,6 +185,10 @@ export function useStudioDocument(
     }) => {
       const doc = documentRef.current;
       if (!doc) return;
+      const versionToSave =
+        changeVersionRef.current > 0
+          ? changeVersionRef.current
+          : ++changeVersionRef.current;
 
       setSaveStatus("saving");
 
@@ -190,6 +201,11 @@ export function useStudioDocument(
         sectionId: activeSectionId ?? undefined,
       })
         .then((result) => {
+          if (changeVersionRef.current !== versionToSave) {
+            setSaveStatus("unsaved");
+            return;
+          }
+
           setSaveStatus("saved");
           setLastSavedAt(result.updatedAt);
           // Update activeSectionId if it was auto-determined
@@ -199,6 +215,10 @@ export function useStudioDocument(
         })
         .catch((err) => {
           console.error("Auto-save failed:", err);
+          if (changeVersionRef.current !== versionToSave) {
+            setSaveStatus("unsaved");
+            return;
+          }
           setSaveStatus("error");
         });
     },
@@ -213,6 +233,7 @@ export function useStudioDocument(
   const setDocTitle = useCallback(
     (title: string) => {
       setDocTitleState(title);
+      const versionToSave = ++changeVersionRef.current;
       setSaveStatus("unsaved");
 
       if (titleTimerRef.current) clearTimeout(titleTimerRef.current);
@@ -223,16 +244,29 @@ export function useStudioDocument(
         setSaveStatus("saving");
         updateDocumentTitle(doc.id, title)
           .then(() => {
+            if (changeVersionRef.current !== versionToSave) {
+              setSaveStatus("unsaved");
+              return;
+            }
             setSaveStatus("saved");
             setLastSavedAt(new Date());
           })
           .catch(() => {
+            if (changeVersionRef.current !== versionToSave) {
+              setSaveStatus("unsaved");
+              return;
+            }
             setSaveStatus("error");
           });
       }, 1000);
     },
     []
   );
+
+  const markUnsaved = useCallback(() => {
+    changeVersionRef.current += 1;
+    setSaveStatus("unsaved");
+  }, []);
 
   // Cleanup title timer on unmount
   useEffect(() => {
@@ -250,6 +284,7 @@ export function useStudioDocument(
       setSelectedProjectId(projectId);
       setInitialContent(null);
       setDocument(null);
+      setActiveSectionId(null);
       setSaveStatus("idle");
       loadDocument(projectId);
     },
@@ -262,6 +297,7 @@ export function useStudioDocument(
     initialContent,
     docTitle,
     setDocTitle,
+    markUnsaved,
     saveStatus,
     lastSavedAt,
     isLoading,

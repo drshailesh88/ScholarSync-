@@ -40,17 +40,11 @@ export function convertInline(latex: string): string {
   return html;
 }
 
-/**
- * Get the line number for a given position in the source text.
- */
-function _getLineNumber(text: string, position: number): number {
+function getLineNumber(text: string, position: number): number {
   return text.substring(0, position).split("\n").length;
 }
 
 export function latexToHtml(tex: string): string {
-  // Store line number mappings for scroll sync
-  const _lineMappings: { element: string; line: number }[] = [];
-
   let html = tex;
 
   // Remove preamble (everything before \begin{document})
@@ -96,11 +90,31 @@ export function latexToHtml(tex: string): string {
   );
 
   // Sectioning (full LaTeX hierarchy)
-  html = html.replace(/\\part\*?\{([^}]*)\}/g, '<h1 class="latex-part" style="text-align:center;font-size:1.8em">$1</h1>');
-  html = html.replace(/\\chapter\*?\{([^}]*)\}/g, '<h1 class="latex-chapter">$1</h1>');
-  html = html.replace(/\\section\*?\{([^}]*)\}/g, '<h2 class="latex-section">$1</h2>');
-  html = html.replace(/\\subsection\*?\{([^}]*)\}/g, '<h3 class="latex-subsection">$1</h3>');
-  html = html.replace(/\\subsubsection\*?\{([^}]*)\}/g, '<h4 class="latex-subsubsection">$1</h4>');
+  html = html.replace(
+    /\\part\*?\{([^}]*)\}/g,
+    (_match, title: string, offset: number, source: string) =>
+      `<h1 class="latex-part" data-line="${getLineNumber(source, offset)}" style="text-align:center;font-size:1.8em">${title}</h1>`
+  );
+  html = html.replace(
+    /\\chapter\*?\{([^}]*)\}/g,
+    (_match, title: string, offset: number, source: string) =>
+      `<h1 class="latex-chapter" data-line="${getLineNumber(source, offset)}">${title}</h1>`
+  );
+  html = html.replace(
+    /\\section\*?\{([^}]*)\}/g,
+    (_match, title: string, offset: number, source: string) =>
+      `<h2 class="latex-section" data-line="${getLineNumber(source, offset)}">${title}</h2>`
+  );
+  html = html.replace(
+    /\\subsection\*?\{([^}]*)\}/g,
+    (_match, title: string, offset: number, source: string) =>
+      `<h3 class="latex-subsection" data-line="${getLineNumber(source, offset)}">${title}</h3>`
+  );
+  html = html.replace(
+    /\\subsubsection\*?\{([^}]*)\}/g,
+    (_match, title: string, offset: number, source: string) =>
+      `<h4 class="latex-subsubsection" data-line="${getLineNumber(source, offset)}">${title}</h4>`
+  );
   html = html.replace(/\\paragraph\*?\{([^}]*)\}/g, '<strong class="latex-paragraph">$1</strong> ');
   html = html.replace(/\\subparagraph\*?\{([^}]*)\}/g, '<strong class="latex-subparagraph">$1</strong> ');
 

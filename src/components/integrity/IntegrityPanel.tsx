@@ -61,6 +61,7 @@ export function IntegrityPanel({ getEditorText, sources }: IntegrityPanelProps) 
     const text = getEditorText();
     if (!text || text.trim().length < 50) {
       setError("Document must have at least 50 characters to check.");
+      setStatus("error");
       return;
     }
 

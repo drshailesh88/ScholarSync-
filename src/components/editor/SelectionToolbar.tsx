@@ -220,24 +220,28 @@ export function SelectionToolbar({ editor }: SelectionToolbarProps) {
           icon={TextB}
           label="Bold"
           active={editor.isActive("bold")}
+          activateOnMouseDown
           onClick={() => editor.chain().focus().toggleBold().run()}
         />
         <ToolbarButton
           icon={TextItalic}
           label="Italic"
           active={editor.isActive("italic")}
+          activateOnMouseDown
           onClick={() => editor.chain().focus().toggleItalic().run()}
         />
         <ToolbarButton
           icon={TextUnderline}
           label="Underline"
           active={editor.isActive("underline")}
+          activateOnMouseDown
           onClick={() => editor.chain().focus().toggleUnderline().run()}
         />
         <ToolbarButton
           icon={TextStrikethrough}
           label="Strikethrough"
           active={editor.isActive("strike")}
+          activateOnMouseDown
           onClick={() => editor.chain().focus().toggleStrike().run()}
         />
 
@@ -254,6 +258,7 @@ export function SelectionToolbar({ editor }: SelectionToolbarProps) {
           icon={Code}
           label="Inline Code"
           active={editor.isActive("code")}
+          activateOnMouseDown
           onClick={() => editor.chain().focus().toggleCode().run()}
         />
 
@@ -318,6 +323,7 @@ function ToolbarButton({
   active,
   onClick,
   onContextMenu,
+  activateOnMouseDown,
   className,
 }: {
   icon: typeof TextB;
@@ -325,13 +331,23 @@ function ToolbarButton({
   active?: boolean;
   onClick: () => void;
   onContextMenu?: (e: React.MouseEvent) => void;
+  activateOnMouseDown?: boolean;
   className?: string;
 }) {
   return (
     <button
       title={label}
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={onClick}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        if (activateOnMouseDown) {
+          onClick();
+        }
+      }}
+      onClick={() => {
+        if (!activateOnMouseDown) {
+          onClick();
+        }
+      }}
       onContextMenu={onContextMenu}
       className={cn(
         "p-1.5 rounded-md transition-colors",
