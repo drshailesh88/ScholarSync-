@@ -1,55 +1,55 @@
 # illustrate — Spec 001
 
 STATUS: PARTIAL
-TESTED: 27/35
-PASS: 0
-FAIL: 0
-BLOCKED: 27
+TESTED: 35/35
+PASS: 34
+FAIL: 1
+BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
 
 ---
 ### Welcome Page (`/illustrate`)
 #### Hero Section
-- [ ] Gradient title "Scientific Illustration Made Simple" renders correctly
-- [ ] Tagline text displays below the title
+- [x] PASS: Gradient title "Scientific Illustration Made Simple" renders correctly
+- [x] PASS: Tagline text displays below the title
 #### Action Cards
-- [ ] "Create with AI" card visible with correct icon
-- [ ] Clicking "Create with AI" navigates to `/illustrate/agent`
-- [ ] "Open Editor" card visible with correct icon
-- [ ] Clicking "Open Editor" navigates to `/illustrate/editor`
-- [ ] Hover state shows elevation and accent border
-- [ ] Keyboard activation with Enter/Space on focused card
+- [x] PASS: "Create with AI" card visible with correct icon
+- [x] PASS: Clicking "Create with AI" navigates to `/illustrate/agent`
+- [x] PASS: "Open Editor" card visible with correct icon
+- [x] PASS: Clicking "Open Editor" navigates to `/illustrate/editor`
+- [x] PASS: Hover state shows elevation and accent border
+- [x] PASS: Keyboard activation with Enter/Space on focused card
 #### Recent Diagrams
-- [ ] Section displays up to 6 recent diagrams from `localStorage['finnish-recent-diagrams']`
-- [ ] Each card shows thumbnail (or placeholder if none)
-- [ ] Each card shows diagram name
-- [ ] Relative date displays correctly: "Today", "Yesterday", "N days ago"
-- [ ] Clicking a card navigates to `/illustrate/editor/{diagramId}`
-- [ ] Keyboard accessible (Tab + Enter)
-- [ ] Empty state shown when no recent diagrams exist
-- [ ] Section hidden or shows message when localStorage is empty
+- [x] PASS: Section displays up to 6 recent diagrams from `localStorage['finnish-recent-diagrams']`
+- [x] PASS: Each card shows thumbnail (or placeholder if none)
+- [x] PASS: Each card shows diagram name
+- [x] PASS: Relative date displays correctly: "Today", "Yesterday", "N days ago"
+- [x] PASS: Clicking a card navigates to `/illustrate/editor/{diagramId}`
+- [x] PASS: Keyboard accessible (Tab + Enter)
+- [x] PASS: Empty state shown when no recent diagrams exist
+- [x] PASS: Section hidden or shows message when localStorage is empty
 #### Quick Templates
-- [ ] 4 template cards displayed: Flowchart, Sequence, Scientific, Annotation
-- [ ] Each card shows category icon and label
-- [ ] Clicking a template navigates to `/illustrate/agent?template={templateId}`
-- [ ] Hover state shows visual feedback
-- [ ] Grid layout responsive at different viewport widths
+- [x] PASS: 4 template cards displayed: Flowchart, Sequence, Scientific, Annotation
+- [x] PASS: Each card shows category icon and label
+- [x] PASS: Clicking a template navigates to `/illustrate/agent?template={templateId}`
+- [x] PASS: Hover state shows visual feedback
+- [x] PASS: Grid layout responsive at different viewport widths
 #### Accessibility
-- [ ] All interactive elements have ARIA labels
-- [ ] Tab navigation reaches every card and link
-- [ ] Focus indicator visible on all interactive elements
-- [ ] Role attributes set on action cards
+- [x] PASS: All interactive elements have ARIA labels
+- [x] PASS: Tab navigation reaches every card and link
+- [x] PASS: Focus indicator visible on all interactive elements
+- [x] PASS: Role attributes set on action cards
 
 ### Agent Mode — AI Diagram Generation (`/illustrate/agent`)
 #### Template Gallery (Left Sidebar)
-- [ ] Sidebar renders with template categories
-- [ ] Sidebar can be collapsed/expanded via toggle button
-- [ ] **Medicine** category shows 3 templates:
-- [ ] CONSORT — Clinical trial flow diagrams
-- [ ] PRISMA — Systematic review flows
-- [ ] Forest Plot — Meta-analysis visualization
-- [ ] **Biology** category shows 3 templates:
-- [ ] Pathway — Biological signaling cascades
-- [ ] Cell Diagram — Cellular structure
-- [ ] Phylogenetic Tree — Evolutionary relationships
+- [x] PASS: Sidebar renders with template categories
+- [ ] FAIL: Sidebar can be collapsed/expanded via toggle button
+- [x] PASS: **Medicine** category shows 3 templates:
+- [x] PASS: CONSORT — Clinical trial flow diagrams
+- [x] PASS: PRISMA — Systematic review flows
+- [x] PASS: Forest Plot — Meta-analysis visualization
+- [x] PASS: **Biology** category shows 3 templates:
+- [x] PASS: Pathway — Biological signaling cascades
+- [x] PASS: Cell Diagram — Cellular structure
+- [x] PASS: Phylogenetic Tree — Evolutionary relationships

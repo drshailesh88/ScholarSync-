@@ -184,7 +184,6 @@ describe("ProgressBar", () => {
           value={0}
           max={50000}
           label="AI Credits"
-          formatText={({ value, max }) => `${value} / ${max}`}
         />
       );
     });

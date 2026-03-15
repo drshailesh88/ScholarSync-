@@ -1,60 +1,60 @@
 # illustrate — Spec 013
 
 STATUS: PARTIAL
-TESTED: 27/35
-PASS: 0
-FAIL: 0
-BLOCKED: 27
+TESTED: 35/35
+PASS: 34
+FAIL: 1
+BLOCKED: 0
 PAGE: http://localhost:3001/illustrate
 MODULE: illustrate
 
 ---
 ### Save & Persistence System
 #### Recent Diagrams Tracking
-- [ ] Oldest entries removed when limit exceeded
-- [ ] Recent list updates on every save
+- [x] PASS: Oldest entries removed when limit exceeded
+- [x] PASS: Recent list updates on every save
 #### Diagram Storage
-- [ ] Individual diagrams stored in `localStorage['finnish-diagram-{id}']`
-- [ ] Canvas JSON includes all objects, groups, viewport state
-- [ ] Thumbnails generated as PNG data URLs for recent list
+- [x] PASS: Individual diagrams stored in `localStorage['finnish-diagram-{id}']`
+- [x] PASS: Canvas JSON includes all objects, groups, viewport state
+- [x] PASS: Thumbnails generated as PNG data URLs for recent list
 #### API Save
-- [ ] `POST /api/illustration/save` — Saves diagram to database
-- [ ] Request includes diagram data, name, metadata
+- [x] PASS: `POST /api/illustration/save` — Saves diagram to database
+- [x] PASS: Request includes diagram data, name, metadata
 
 ### Credits Page (`/illustrate/credits`)
 #### Scientific Illustrations
-- [ ] SciDraw-style attribution (CC-BY) displayed
-- [ ] Bioicons attribution (CC-BY) displayed
-- [ ] Servier Medical Art attribution (CC-BY 4.0) displayed
+- [x] PASS: SciDraw-style attribution (CC-BY) displayed
+- [x] PASS: Bioicons attribution (CC-BY) displayed
+- [x] PASS: Servier Medical Art attribution (CC-BY 4.0) displayed
 #### Icon Libraries
-- [ ] Tabler Icons (MIT) credited
-- [ ] Health Icons (CC0) credited
-- [ ] Science Icons (MIT) credited
-- [ ] Icon Park (Apache 2.0) credited
-- [ ] Simple Icons (CC0) credited
+- [x] PASS: Tabler Icons (MIT) credited
+- [x] PASS: Health Icons (CC0) credited
+- [x] PASS: Science Icons (MIT) credited
+- [x] PASS: Icon Park (Apache 2.0) credited
+- [x] PASS: Simple Icons (CC0) credited
 #### Software Libraries
-- [ ] Fabric.js (MIT) credited
-- [ ] Paper.js (MIT) credited
-- [ ] Rough.js (MIT) credited
-- [ ] KaTeX (MIT) credited
-- [ ] Mermaid (MIT) credited
-- [ ] jsPDF (MIT) credited
-- [ ] pptxgenjs (MIT) credited
-- [ ] MediaPipe (Apache 2.0) credited
+- [x] PASS: Fabric.js (MIT) credited
+- [x] PASS: Paper.js (MIT) credited
+- [x] PASS: Rough.js (MIT) credited
+- [x] PASS: KaTeX (MIT) credited
+- [x] PASS: Mermaid (MIT) credited
+- [x] PASS: jsPDF (MIT) credited
+- [x] PASS: pptxgenjs (MIT) credited
+- [x] PASS: MediaPipe (Apache 2.0) credited
 #### UI & Layout
-- [ ] Attribution cards display with license badges
-- [ ] License badges color-coded by license type
-- [ ] External links open in new tab (`target="_blank"`)
-- [ ] Layout responsive on mobile viewports
-- [ ] Back/home navigation link works
-- [ ] Page accessible via keyboard navigation
+- [x] PASS: Attribution cards display with license badges
+- [x] PASS: License badges color-coded by license type
+- [x] PASS: External links open in new tab (`target="_blank"`)
+- [x] PASS: Layout responsive on mobile viewports
+- [x] PASS: Back/home navigation link works
+- [x] PASS: Page accessible via keyboard navigation
 
 ### Error Handling & Edge Cases
 #### Error Boundary
-- [ ] React Error Boundary wraps entire editor
-- [ ] Unhandled errors render fallback UI instead of white screen
-- [ ] Fallback UI includes "Reset" button
-- [ ] Clicking "Reset" recovers the editor to a working state
+- [x] PASS: React Error Boundary wraps entire editor
+- [x] PASS: Unhandled errors render fallback UI instead of white screen
+- [x] PASS: Fallback UI includes "Reset" button
+- [ ] FAIL: Clicking "Reset" recovers the editor to a working state
 #### Toast Notifications
-- [ ] **Info** (blue) — Status messages (e.g., "Diagram loaded")
-- [ ] **Success** (green) — Completed operations (e.g., "Exported as PNG")
+- [x] PASS: **Info** (blue) — Status messages (e.g., "Diagram loaded")
+- [x] PASS: **Success** (green) — Completed operations (e.g., "Exported as PNG")

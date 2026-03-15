@@ -865,9 +865,6 @@ function StudioContent() {
             max={usageStats?.tokens_limit ?? 50000}
             label="AI Credits"
             color="var(--brand)"
-            formatText={({ value, max, isUnlimited }) =>
-              isUnlimited ? `${value} (Unlimited)` : `${value} / ${max}`
-            }
           />
         </div>
       </aside>
