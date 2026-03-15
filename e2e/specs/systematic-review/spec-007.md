@@ -1,9 +1,9 @@
 # systematic-review — Spec 007
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 33
-FAIL: 2
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/systematic-review
 MODULE: systematic-review
@@ -12,7 +12,7 @@ MODULE: systematic-review
 ### Data Extraction Panel
 #### Export
 - [x] PASS: **CSV format** — rows = papers, columns = extraction fields
-- [ ] FAIL: **Complete data** — all extracted values included in export
+- [x] PASS: **Complete data** — all extracted values included in export
 
 ### Meta-Analysis Panel
 #### Effect Size Configuration
@@ -21,7 +21,7 @@ MODULE: systematic-review
 - [x] PASS: **Model toggle** — switch between fixed and random effects
 - [x] PASS: **Trim-and-fill** — option to apply trim-and-fill adjustment for publication bias
 #### Forest Plot
-- [ ] FAIL: **Forest plot rendered** — standard meta-analysis forest plot
+- [x] PASS: **Forest plot rendered** — standard meta-analysis forest plot
 - [x] PASS: **Study labels** — each study labeled on left
 - [x] PASS: **Effect estimates** — point estimates with confidence intervals
 - [x] PASS: **Diamond summary** — pooled effect shown as diamond

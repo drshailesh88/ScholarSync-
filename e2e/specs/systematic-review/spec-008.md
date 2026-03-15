@@ -1,9 +1,9 @@
 # systematic-review — Spec 008
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 27
-FAIL: 8
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/systematic-review
 MODULE: systematic-review
@@ -23,7 +23,7 @@ MODULE: systematic-review
 #### Export
 - [x] PASS: **CSV export** — league table and rankings downloadable as CSV
 #### API
-- [ ] FAIL: `POST /api/systematic-review/nma` — runs network meta-analysis
+- [x] PASS: `POST /api/systematic-review/nma` — runs network meta-analysis
 
 ### GRADE Panel
 #### Domain Ratings
@@ -38,8 +38,8 @@ MODULE: systematic-review
 - [x] PASS: **CSV export** — GRADE evidence table downloadable as CSV
 - [x] PASS: **Complete data** — includes all domains, ratings, justifications, and overall certainty
 #### API
-- [ ] FAIL: `POST /api/systematic-review/grade` — submits GRADE assessment
-- [ ] FAIL: `GET /api/systematic-review/grade` — retrieves GRADE results + CSV export
+- [x] PASS: `POST /api/systematic-review/grade` — submits GRADE assessment
+- [x] PASS: `GET /api/systematic-review/grade` — retrieves GRADE results + CSV export
 
 ### Manuscript Panel
 #### Section Generation
@@ -47,7 +47,7 @@ MODULE: systematic-review
 - [x] PASS: **Individual generation** — each section can be generated independently
 - [x] PASS: **"Generate All" button** — generates all 5 sections in sequence
 - [x] PASS: **Custom instructions** — text input for additional instructions per section
-- [ ] FAIL: **AI-generated content** — sections generated based on review data
+- [x] PASS: **AI-generated content** — sections generated based on review data
 #### Section Editing
 - [x] PASS: **Editable text** — generated sections can be manually edited
 - [x] PASS: **Rich text** — sections support formatting (headings, lists, etc.)
@@ -55,13 +55,13 @@ MODULE: systematic-review
 #### Export
 - [x] PASS: **Copy to clipboard** — individual sections copiable
 - [x] PASS: **Download DOCX** — complete manuscript downloadable as Word document
-- [ ] FAIL: **Formatting preserved** — headings, references, and structure maintained in export
+- [x] PASS: **Formatting preserved** — headings, references, and structure maintained in export
 #### API
-- [ ] FAIL: `POST /api/systematic-review/manuscript` — generates manuscript section(s)
-- [ ] FAIL: `GET /api/systematic-review/manuscript` — retrieves saved manuscript content
+- [x] PASS: `POST /api/systematic-review/manuscript` — generates manuscript section(s)
+- [x] PASS: `GET /api/systematic-review/manuscript` — retrieves saved manuscript content
 
 ### Snowballing Panel
 #### Configuration
-- [ ] FAIL: **Direction selector** — choose snowballing direction:
+- [x] PASS: **Direction selector** — choose snowballing direction:
 - [x] PASS: **Depth setting** — configurable depth (1 or 2 levels)
 - [x] PASS: **Depth 1** — direct citations only

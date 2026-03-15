@@ -1,9 +1,9 @@
 # systematic-review — Spec 006
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 25
-FAIL: 10
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/systematic-review
 MODULE: systematic-review
@@ -17,11 +17,11 @@ MODULE: systematic-review
 - [x] PASS: **Batch progress** — shows progress during batch operation
 - [x] PASS: **Per-paper results** — each paper gets individual assessment
 #### API Routes
-- [ ] FAIL: `POST /api/systematic-review/rob2` — submits RoB 2 assessment
-- [ ] FAIL: `GET /api/systematic-review/rob2` — retrieves RoB 2 results
-- [ ] FAIL: `POST /api/systematic-review/robins-i` — submits ROBINS-I assessment
-- [ ] FAIL: `GET /api/systematic-review/robins-i` — retrieves ROBINS-I results
-- [ ] FAIL: `POST /api/systematic-review/quadas2` — submits QUADAS-2 assessment
+- [x] PASS: `POST /api/systematic-review/rob2` — submits RoB 2 assessment
+- [x] PASS: `GET /api/systematic-review/rob2` — retrieves RoB 2 results
+- [x] PASS: `POST /api/systematic-review/robins-i` — submits ROBINS-I assessment
+- [x] PASS: `GET /api/systematic-review/robins-i` — retrieves ROBINS-I results
+- [x] PASS: `POST /api/systematic-review/quadas2` — submits QUADAS-2 assessment
 - [x] PASS: `GET /api/systematic-review/quadas2` — retrieves QUADAS-2 results
 
 ### Data Extraction Panel
@@ -34,20 +34,20 @@ MODULE: systematic-review
 - [x] PASS: **Remove field** — existing fields can be deleted
 - [x] PASS: **Reorder fields** — fields can be reordered (if supported)
 #### AI Extraction
-- [ ] FAIL: **"Run Extraction" button** — Lightning icon, triggers AI data extraction
-- [ ] FAIL: **API call** — `POST /api/systematic-review/extract` (single/batch/fulltext modes)
+- [x] PASS: **"Run Extraction" button** — Lightning icon, triggers AI data extraction
+- [x] PASS: **API call** — `POST /api/systematic-review/extract` (single/batch/fulltext modes)
 - [x] PASS: **Single mode** — extracts from one paper at a time
 - [x] PASS: **Batch mode** — extracts from multiple papers
 - [x] PASS: **Fulltext mode** — uses full-text PDF content for extraction
 - [x] PASS: **Confidence badges** — each extracted value shows confidence score
 - [x] PASS: **Confidence color coding** — high/medium/low confidence visually differentiated
 #### Source Linking
-- [ ] FAIL: **Page number references** — extracted data linked to source page numbers
+- [x] PASS: **Page number references** — extracted data linked to source page numbers
 - [x] PASS: **Source linking** — click to jump to relevant passage in paper
 - [x] PASS: **Provenance tracking** — each extracted value traces back to source text
 #### Manual Editing
 - [x] PASS: **Editable cells** — extracted values can be manually edited
-- [ ] FAIL: **Override AI values** — manual edits override AI-extracted data
+- [x] PASS: **Override AI values** — manual edits override AI-extracted data
 - [x] PASS: **Save edits** — changes persisted
 #### Matrix Table View
 - [x] PASS: **Table layout** — papers as rows, extraction fields as columns
@@ -55,4 +55,4 @@ MODULE: systematic-review
 - [x] PASS: **Sortable** — columns sortable (if supported)
 - [x] PASS: **All papers visible** — every included paper has a row
 #### Export
-- [ ] FAIL: **"Download CSV" button** — exports extraction data as CSV
+- [x] PASS: **"Download CSV" button** — exports extraction data as CSV

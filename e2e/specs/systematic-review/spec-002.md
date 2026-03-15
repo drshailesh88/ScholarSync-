@@ -1,9 +1,9 @@
 # systematic-review — Spec 002
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 29
-FAIL: 6
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/systematic-review
 MODULE: systematic-review
@@ -11,16 +11,16 @@ MODULE: systematic-review
 ---
 ### Workflow Page — Layout & Navigation
 #### Wrapper
-- [ ] FAIL: **Project ID** — extracted from URL params and used to fetch/hydrate state
+- [x] PASS: **Project ID** — extracted from URL params and used to fetch/hydrate state
 #### Navigation
 - [x] PASS: **Back link** — "All Reviews" text link navigates back to `/systematic-review`
 - [x] PASS: **Back link position** — top-left of page
-- [ ] FAIL: **Browser back** — back navigation returns to hub page
+- [x] PASS: **Browser back** — back navigation returns to hub page
 
 ### Workflow Page — Collaborator Presence
 #### Online Indicators
 - [x] PASS: **CollaboratorPresence component** — renders in workflow page header
-- [ ] FAIL: **Avatar display** — shows online collaborator avatars
+- [x] PASS: **Avatar display** — shows online collaborator avatars
 - [x] PASS: **Tooltips** — hover shows collaborator name, current tab, and current paper
 - [x] PASS: **WiFi status indicator** — shows connection status icon
 - [x] PASS: **Real-time updates** — avatars appear/disappear as collaborators join/leave
@@ -39,8 +39,8 @@ MODULE: systematic-review
 - [x] PASS: **Active stage** — visually highlighted (filled/colored)
 - [x] PASS: **Completed stages** — show completion indicator
 - [x] PASS: **Future stages** — shown as inactive/dimmed
-- [ ] FAIL: **Connectors** — lines or arrows between steps
-- [ ] FAIL: **Stage updates** — stepper reflects `reviewStage` from store
+- [x] PASS: **Connectors** — lines or arrows between steps
+- [x] PASS: **Stage updates** — stepper reflects `reviewStage` from store
 
 ### Workflow Page — Tab System (15 Tabs)
 #### Tab Bar
@@ -61,5 +61,5 @@ MODULE: systematic-review
 - [x] PASS: **All fields editable** — free-text input for each PICO element
 #### Generate Search Strategy
 - [x] PASS: **"Generate Search Strategy" button** — triggers strategy generation
-- [ ] FAIL: **API call** — `POST /api/systematic-review/search-strategy` with PICO data
+- [x] PASS: **API call** — `POST /api/systematic-review/search-strategy` with PICO data
 - [x] PASS: **Loading state** — button shows spinner during generation
