@@ -260,6 +260,9 @@ interface FeedStore {
   /** Load available journal names for dropdown */
   loadJournals: () => Promise<void>;
 
+  /** Mute or unmute a subscription */
+  muteSubscription: (subscriptionId: number, mute: boolean) => Promise<void>;
+
   /** Clear error */
   clearError: () => void;
 
@@ -748,6 +751,23 @@ export const useFeedStore = create<FeedStore>()((set, get) => ({
       if (article && !article.isRead) {
         get().markRead(articleId);
       }
+    }
+  },
+
+  muteSubscription: async (subscriptionId, mute) => {
+    set({ error: null });
+    try {
+      const res = await fetch(`/api/feeds/${subscriptionId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isMuted: mute }),
+      });
+      if (!res.ok) throw new Error("Failed to update mute status");
+      await get().loadSubscriptions();
+    } catch (err) {
+      set({
+        error: err instanceof Error ? err.message : "Failed to update mute status",
+      });
     }
   },
 
