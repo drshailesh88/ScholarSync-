@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-03-14T09:03:35.887Z",
-  "composite": 46.46,
+  "timestamp": "2026-03-15T01:52:24.456Z",
+  "composite": 58.36,
   "temperature": "WARM",
   "currentPhase": 1,
   "phaseAverages": {
     "1": 68,
-    "2": 24,
+    "2": 52,
     "3": 60,
     "4": 80,
     "5": 0
@@ -19,7 +19,7 @@
     "typescriptStrict": {
       "score": 0,
       "details": {
-        "errors": 7,
+        "errors": 8172,
         "anyCount": 279,
         "strictEnabled": true
       },
@@ -62,30 +62,30 @@
       "label": "API Route Hardening"
     },
     "specPassRate": {
-      "score": 25.8,
+      "score": 56.91,
       "details": {
         "totalSpecs": 376,
-        "passingSpecs": 97
+        "passingSpecs": 214
       },
       "weight": 0.12,
       "phase": 2,
       "label": "Spec Pass Rate"
     },
     "checkpointPassRate": {
-      "score": 25.12,
+      "score": 58.71,
       "details": {
         "totalCheckpoints": 12804,
-        "passingCheckpoints": 3217
+        "passingCheckpoints": 7517
       },
       "weight": 0.1,
       "phase": 2,
       "label": "Checkpoint Pass Rate"
     },
     "moduleCoverage": {
-      "score": 30,
+      "score": 65,
       "details": {
         "totalModules": 20,
-        "coveredModules": 6,
+        "coveredModules": 13,
         "modules": [
           "dashboard",
           "onboarding",
@@ -114,11 +114,11 @@
       "label": "Module Coverage"
     },
     "assertionModuleCoverage": {
-      "score": 40,
+      "score": 80,
       "details": {
         "totalModules": 20,
-        "assertionFiles": 8,
-        "coveredAssertionFiles": 8
+        "assertionFiles": 16,
+        "coveredAssertionFiles": 16
       },
       "weight": 0.05,
       "phase": 2,
