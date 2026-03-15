@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for analysis/spec-002
  * Source: e2e/specs/analysis/spec-002.md
- * Generated: 2026-03-14T20:37:54.917Z
+ * Generated: 2026-03-15T12:53:26.036Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-000 Active tab — Tabs component applies `bg-surface-raised text-ink border border-border-subtle` to the active tab key, verified in src/components/ui/tabs.tsx:35-36');
+      throw new Error('Unhandled analysis checkpoint: cp-000 ' + "Active tab — Tabs component applies `bg-surface-raised text-ink border border-border-subtle` to the active tab key, verified in src/components/ui/tabs.tsx:35-36");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-001 Styling — suggestions rendered with `bg-purple-500/10` class and Sparkle icon (size=14, text-purple-500), verified in page.tsx:558-560');
+      throw new Error('Unhandled analysis checkpoint: cp-001 ' + "Styling — suggestions rendered with `bg-purple-500/10` class and Sparkle icon (size=14, text-purple-500), verified in page.tsx:558-560");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-002 Label — each suggestion labeled `Suggestion {i + 1}` via template literal, verified in page.tsx:562');
+      throw new Error('Unhandled analysis checkpoint: cp-002 ' + "Label — each suggestion labeled `Suggestion {i + 1}` via template literal, verified in page.tsx:562");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-003 Content — displays AI-generated improvement suggestions from `result.writingQuality.suggestions` array, verified in page.tsx:565');
+      throw new Error('Unhandled analysis checkpoint: cp-003 ' + "Content — displays AI-generated improvement suggestions from `result.writingQuality.suggestions` array, verified in page.tsx:565");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-004 Max 15 issues — `clientIssues.slice(0, 15)` limits display to 15, with "+N more issues" overflow text, verified in page.tsx:578,606-609');
+      throw new Error('Unhandled analysis checkpoint: cp-004 ' + "Max 15 issues — `clientIssues.slice(0, 15)` limits display to 15, with \"+N more issues\" overflow text, verified in page.tsx:578,606-609");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-005 Color coding by type — passive=yellow-500/10, weasel=orange-500/10, complex=red-500/10, adverb/readability=blue-500/10, verified in page.tsx:579-586');
+      throw new Error('Unhandled analysis checkpoint: cp-005 ' + "Color coding by type — passive=yellow-500/10, weasel=orange-500/10, complex=red-500/10, adverb/readability=blue-500/10, verified in page.tsx:579-586");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-006 Issue details — shows reason and suggestion (if available). Fixed: added conditional suggestion rendering below reason text. Verified in page.tsx:602-605');
+      throw new Error('Unhandled analysis checkpoint: cp-006 ' + "Issue details — shows reason and suggestion (if available). Fixed: added conditional suggestion rendering below reason text. Verified in page.tsx:602-605");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-007 Severity badges — displays `{severity.toUpperCase()} Risk` for each match (e.g. "HIGH Risk"), with color-coded backgrounds. Verified in page.tsx:643');
+      throw new Error('Unhandled analysis checkpoint: cp-007 ' + "Severity badges — displays `{severity.toUpperCase()} Risk` for each match (e.g. \"HIGH Risk\"), with color-coded backgrounds. Verified in page.tsx:643");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-008 Match details — shows excerpt in italics with quotes and source information (title, authors, year). Fixed: mapped PlagiarismMatch.source fields into concern string. Verified in page.tsx:646-649');
+      throw new Error('Unhandled analysis checkpoint: cp-008 ' + "Match details — shows excerpt in italics with quotes and source information (title, authors, year). Fixed: mapped PlagiarismMatch.source fields into concern string. Verified in page.tsx:646-649");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-009 Per-paragraph scores — renders each paragraph with `{p.humanProbability}% human` badge via paragraphAnalysis array, verified in page.tsx:758-776');
+      throw new Error('Unhandled analysis checkpoint: cp-009 ' + "Per-paragraph scores — renders each paragraph with `{p.humanProbability}% human` badge via paragraphAnalysis array, verified in page.tsx:758-776");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-010 Color-coded — uses same thresholds: <40% = red-500/10, 40-70% = yellow-500/10, >70% = emerald-500/10, matching left panel\'s getParagraphBg(), verified in page.tsx:765-770');
+      throw new Error('Unhandled analysis checkpoint: cp-010 ' + "Color-coded — uses same thresholds: <40% = red-500/10, 40-70% = yellow-500/10, >70% = emerald-500/10, matching left panel's getParagraphBg(), verified in page.tsx:765-770");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-011 write-good — imported as `writeGood` from "write-good" on line 1, used for passive voice, weasel word, adverb detection via classifyReason(). Verified in src/lib/writing-analysis.ts:1,205-228');
+      throw new Error('Unhandled analysis checkpoint: cp-011 ' + "write-good — imported as `writeGood` from \"write-good\" on line 1, used for passive voice, weasel word, adverb detection via classifyReason(). Verified in src/lib/writing-analysis.ts:1,205-228");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-012 Complex sentence detection — sentences with more than 35 words flagged: `if (sentenceWordCount > 35)` pushes a "complex" type issue. Verified in src/lib/writing-analysis.ts:237');
+      throw new Error('Unhandled analysis checkpoint: cp-012 ' + "Complex sentence detection — sentences with more than 35 words flagged: `if (sentenceWordCount > 35)` pushes a \"complex\" type issue. Verified in src/lib/writing-analysis.ts:237");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-013 Multiple readability formulas — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts');
+      throw new Error('Unhandled analysis checkpoint: cp-013 ' + "Multiple readability formulas — all 5 implemented: Flesch Reading Ease (line 170), Flesch-Kincaid Grade (line 182), Gunning Fog Index (line 191), Automated Readability Index (line 259), Coleman-Liau Index (line 268). Verified in src/lib/writing-analysis.ts");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-014 Limit — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117');
+      throw new Error('Unhandled analysis checkpoint: cp-014 ' + "Limit — 20 requests per hour per user: `RATE_LIMITS.analysis = { limit: 20, windowSeconds: 3600 }`. Verified in src/lib/rate-limit.ts:117");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-015 Exceeded — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: "Rate limit exceeded..." }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97');
+      throw new Error('Unhandled analysis checkpoint: cp-015 ' + "Exceeded — returns 429 status via `checkRateLimit()` which returns `NextResponse.json({ error: \"Rate limit exceeded...\" }, { status: 429 })`. Verified in src/lib/rate-limit.ts:80,97");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-016 Model — `const BINOCULARS_MODEL = "drshailesh88/binoculars-ai-detection" as const;` Verified in src/lib/integrity/ai-detection.ts:26');
+      throw new Error('Unhandled analysis checkpoint: cp-016 ' + "Model — `const BINOCULARS_MODEL = \"drshailesh88/binoculars-ai-detection\" as const;` Verified in src/lib/integrity/ai-detection.ts:26");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-017 Threshold — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27');
+      throw new Error('Unhandled analysis checkpoint: cp-017 ' + "Threshold — `const BINOCULARS_FPR_THRESHOLD = 0.8536432310785527;` Verified in src/lib/integrity/ai-detection.ts:27");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-018 Weighting — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076');
+      throw new Error('Unhandled analysis checkpoint: cp-018 ' + "Weighting — `binocularsResult.humanScore * 0.6 + llmResult.humanScore * 0.4` = 60% Binoculars, 40% LLM. Verified in src/lib/integrity/ai-detection.ts:1076");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-019 Count — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count');
+      throw new Error('Unhandled analysis checkpoint: cp-019 ' + "Count — exactly 35 hedging phrases in the HEDGING_PHRASES array (lines 144-182), verified by programmatic count");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-020 Detection — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts');
+      throw new Error('Unhandled analysis checkpoint: cp-020 ' + "Detection — `computeTextStatistics()` counts hedging phrases and reports in `stats.hedgingPhraseCount`, used in AI detection prompt and writing suggestions. Verified in src/lib/integrity/ai-detection.ts");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-021 Paid feature only — `const runPlagiarism = isPaid && (mode === "full" || mode === "plagiarism")` where `isPaid = PAID_PLANS.has(input.plan)` and PAID_PLANS = Set(["basic", "pro", "institutional"]). Verified in src/lib/integrity/index.ts:33,38');
+      throw new Error('Unhandled analysis checkpoint: cp-021 ' + "Paid feature only — `const runPlagiarism = isPaid && (mode === \"full\" || mode === \"plagiarism\")` where `isPaid = PAID_PLANS.has(input.plan)` and PAID_PLANS = Set([\"basic\", \"pro\", \"institutional\"]). Verified in src/lib/integrity/index.ts:33,38");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-022 Similarity score — `similarityScore` (0-100) computed via `computeOverallScore()` from paragraph-level Jaccard similarities. Verified in src/lib/integrity/plagiarism-engine.ts:630-633');
+      throw new Error('Unhandled analysis checkpoint: cp-022 ' + "Similarity score — `similarityScore` (0-100) computed via `computeOverallScore()` from paragraph-level Jaccard similarities. Verified in src/lib/integrity/plagiarism-engine.ts:630-633");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-023 Source matching — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558');
+      throw new Error('Unhandled analysis checkpoint: cp-023 ' + "Source matching — queries Crossref API and Semantic Scholar API in parallel to identify potential source documents. Verified in src/lib/integrity/plagiarism-engine.ts:553-558");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-024 Severity levels — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503');
+      throw new Error('Unhandled analysis checkpoint: cp-024 ' + "Severity levels — high (>=0.4), medium (>=0.2), low (<0.2) via `classifySeverity()`. Verified in src/lib/integrity/plagiarism-engine.ts:500-503");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-025 Match excerpts — each match includes `excerpt` (paragraph text truncated to 120 chars) and `source` object with title, authors, doi, url, year. Verified in src/lib/integrity/plagiarism-engine.ts:540-541,606-620');
+      throw new Error('Unhandled analysis checkpoint: cp-025 ' + "Match excerpts — each match includes `excerpt` (paragraph text truncated to 120 chars) and `source` object with title, authors, doi, url, year. Verified in src/lib/integrity/plagiarism-engine.ts:540-541,606-620");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('analysis / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-026 Skeleton loaders — uses `<Skeleton>` components for header icon (h-8 w-8), title (h-6 w-40), main content area (flex-1), and footer button (h-12 w-40). Verified in src/app/(app)/analysis/loading.tsx:1-17');
+      throw new Error('Unhandled analysis checkpoint: cp-026 ' + "Skeleton loaders — uses `<Skeleton>` components for header icon (h-8 w-8), title (h-6 w-40), main content area (flex-1), and footer button (h-12 w-40). Verified in src/app/(app)/analysis/loading.tsx:1-17");
     }
 
 
@@ -1396,8 +1396,58 @@ test.describe('analysis / spec-002', () => {
     }
   });
 
-  test('cp-027: Title titleAnalysis unavailable passed to ErrorDisplay component Verified in src', async ({ page }) => {
-    // Checkpoint 27: Title — `title="Analysis unavailable"` passed to ErrorDisplay component. Verified in src/app/(app)/analysis/error.tsx:8
+  test('cp-027: Smooth appearance loadingtsx uses same flex flex-col h-calc100vh-7rem layout as ', async ({ page }) => {
+    // Checkpoint 27: Smooth appearance — loading.tsx uses same `flex flex-col h-[calc(100vh-7rem)]` layout as page.tsx, preventing layout shift. Verified structurally.
+    // Section: Loading & Error States > Loading State (`loading.tsx`)
+
+    // Navigate to the page
+    await page.goto('/analysis', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+
+    // Take a screenshot as proof of page load
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/analysis/spec-002');
+    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
+
+    // Verify the page loaded without critical errors
+    const errors: string[] = [];
+    page.on('pageerror', (err) => errors.push(err.message));
+
+    // Wait for main content to be visible
+    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
+
+    const handled = await assertAnalysisCheckpoint({
+      page,
+      description: "Smooth appearance — loading.tsx uses same `flex flex-col h-[calc(100vh-7rem)]` layout as page.tsx, preventing layout shift. Verified structurally.",
+      section: "Loading & Error States",
+      subsection: "Loading State (`loading.tsx`)",
+      rootDir: process.cwd(),
+    });
+
+
+    // Screenshot as proof this test actually ran in a browser
+    await page.screenshot({
+      path: path.join(screenshotDir, 'cp-027.png'),
+      fullPage: false,
+    });
+
+    if (!handled) {
+      throw new Error('Unhandled analysis checkpoint: cp-027 ' + "Smooth appearance — loading.tsx uses same `flex flex-col h-[calc(100vh-7rem)]` layout as page.tsx, preventing layout shift. Verified structurally.");
+    }
+
+
+    // This test validates: Smooth appearance — loading.tsx uses same `flex flex-col h-[calc(100vh-7rem)]` layout as page.tsx, preventing layout shift. Verified structurally.
+    // The controller will parse results from Playwright JSON output.
+    // A PASS here means:
+    //   1. Page loaded without crash
+    //   2. Screenshot captured (proof of browser execution)
+    //   3. No uncaught page errors
+    if (errors.length > 0) {
+      throw new Error(`Page errors detected: ${errors.join('; ')}`);
+    }
+  });
+
+  test('cp-028: Title titleAnalysis unavailable passed to ErrorDisplay component Verified in src', async ({ page }) => {
+    // Checkpoint 28: Title — `title="Analysis unavailable"` passed to ErrorDisplay component. Verified in src/app/(app)/analysis/error.tsx:8
     // Section: Loading & Error States > Error State (`error.tsx`)
 
     // Navigate to the page
@@ -1426,12 +1476,12 @@ test.describe('analysis / spec-002', () => {
 
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
-      path: path.join(screenshotDir, 'cp-027.png'),
+      path: path.join(screenshotDir, 'cp-028.png'),
       fullPage: false,
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-027 Title — `title="Analysis unavailable"` passed to ErrorDisplay component. Verified in src/app/(app)/analysis/error.tsx:8');
+      throw new Error('Unhandled analysis checkpoint: cp-028 ' + "Title — `title=\"Analysis unavailable\"` passed to ErrorDisplay component. Verified in src/app/(app)/analysis/error.tsx:8");
     }
 
 
@@ -1446,8 +1496,8 @@ test.describe('analysis / spec-002', () => {
     }
   });
 
-  test('cp-028: Message messageWe couldnt load the writing analysis tool Please try again Verifi', async ({ page }) => {
-    // Checkpoint 28: Message — `message="We couldn't load the writing analysis tool. Please try again."` Verified in src/app/(app)/analysis/error.tsx:9
+  test('cp-029: Message messageWe couldnt load the writing analysis tool Please try again Verifi', async ({ page }) => {
+    // Checkpoint 29: Message — `message="We couldn't load the writing analysis tool. Please try again."` Verified in src/app/(app)/analysis/error.tsx:9
     // Section: Loading & Error States > Error State (`error.tsx`)
 
     // Navigate to the page
@@ -1476,12 +1526,12 @@ test.describe('analysis / spec-002', () => {
 
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
-      path: path.join(screenshotDir, 'cp-028.png'),
+      path: path.join(screenshotDir, 'cp-029.png'),
       fullPage: false,
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-028 Message — `message="We couldn\'t load the writing analysis tool. Please try again."` Verified in src/app/(app)/analysis/error.tsx:9');
+      throw new Error('Unhandled analysis checkpoint: cp-029 ' + "Message — `message=\"We couldn't load the writing analysis tool. Please try again.\"` Verified in src/app/(app)/analysis/error.tsx:9");
     }
 
 
@@ -1496,8 +1546,8 @@ test.describe('analysis / spec-002', () => {
     }
   });
 
-  test('cp-029: Retry option onRetryreset passes Nextjs error boundary reset function to ErrorDi', async ({ page }) => {
-    // Checkpoint 29: Retry option — `onRetry={reset}` passes Next.js error boundary reset function to ErrorDisplay. Verified in src/app/(app)/analysis/error.tsx:11
+  test('cp-030: Retry option onRetryreset passes Nextjs error boundary reset function to ErrorDi', async ({ page }) => {
+    // Checkpoint 30: Retry option — `onRetry={reset}` passes Next.js error boundary reset function to ErrorDisplay. Verified in src/app/(app)/analysis/error.tsx:11
     // Section: Loading & Error States > Error State (`error.tsx`)
 
     // Navigate to the page
@@ -1526,12 +1576,12 @@ test.describe('analysis / spec-002', () => {
 
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
-      path: path.join(screenshotDir, 'cp-029.png'),
+      path: path.join(screenshotDir, 'cp-030.png'),
       fullPage: false,
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-029 Retry option — `onRetry={reset}` passes Next.js error boundary reset function to ErrorDisplay. Verified in src/app/(app)/analysis/error.tsx:11');
+      throw new Error('Unhandled analysis checkpoint: cp-030 ' + "Retry option — `onRetry={reset}` passes Next.js error boundary reset function to ErrorDisplay. Verified in src/app/(app)/analysis/error.tsx:11");
     }
 
 
@@ -1546,8 +1596,8 @@ test.describe('analysis / spec-002', () => {
     }
   });
 
-  test('cp-030: Empty text analyze button disabledloading effectiveTexttrimlength 50 empty text ', async ({ page }) => {
-    // Checkpoint 30: Empty text — analyze button `disabled={loading || effectiveText.trim().length < 50}`, empty text = length 0 < 50 = disabled. No API call made. Verified in page.tsx:366
+  test('cp-031: Empty text analyze button disabledloading effectiveTexttrimlength 50 empty text ', async ({ page }) => {
+    // Checkpoint 31: Empty text — analyze button `disabled={loading || effectiveText.trim().length < 50}`, empty text = length 0 < 50 = disabled. No API call made. Verified in page.tsx:366
     // Section: Error Handling & Edge Cases > Input Validation
 
     // Navigate to the page
@@ -1576,12 +1626,12 @@ test.describe('analysis / spec-002', () => {
 
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
-      path: path.join(screenshotDir, 'cp-030.png'),
+      path: path.join(screenshotDir, 'cp-031.png'),
       fullPage: false,
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-030 Empty text — analyze button `disabled={loading || effectiveText.trim().length < 50}`, empty text = length 0 < 50 = disabled. No API call made. Verified in page.tsx:366');
+      throw new Error('Unhandled analysis checkpoint: cp-031 ' + "Empty text — analyze button `disabled={loading || effectiveText.trim().length < 50}`, empty text = length 0 < 50 = disabled. No API call made. Verified in page.tsx:366");
     }
 
 
@@ -1596,8 +1646,8 @@ test.describe('analysis / spec-002', () => {
     }
   });
 
-  test('cp-031: Text 50 characters same disabled check trimlength 50 disables button with disabl', async ({ page }) => {
-    // Checkpoint 31: Text < 50 characters — same disabled check: `trim().length < 50` disables button with `disabled:opacity-50` visual indication. Verified in page.tsx:366-367
+  test('cp-032: Text 50 characters same disabled check trimlength 50 disables button with disabl', async ({ page }) => {
+    // Checkpoint 32: Text < 50 characters — same disabled check: `trim().length < 50` disables button with `disabled:opacity-50` visual indication. Verified in page.tsx:366-367
     // Section: Error Handling & Edge Cases > Input Validation
 
     // Navigate to the page
@@ -1626,12 +1676,12 @@ test.describe('analysis / spec-002', () => {
 
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
-      path: path.join(screenshotDir, 'cp-031.png'),
+      path: path.join(screenshotDir, 'cp-032.png'),
       fullPage: false,
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-031 Text < 50 characters — same disabled check: `trim().length < 50` disables button with `disabled:opacity-50` visual indication. Verified in page.tsx:366-367');
+      throw new Error('Unhandled analysis checkpoint: cp-032 ' + "Text < 50 characters — same disabled check: `trim().length < 50` disables button with `disabled:opacity-50` visual indication. Verified in page.tsx:366-367");
     }
 
 
@@ -1646,8 +1696,58 @@ test.describe('analysis / spec-002', () => {
     }
   });
 
-  test('cp-032: Only whitespace effectiveTextsplitsfilterBooleanlength shows 0 words trimlength ', async ({ page }) => {
-    // Checkpoint 32: Only whitespace — `effectiveText.split(/\s+/).filter(Boolean).length` shows 0 words; `trim().length` is 0 so button disabled. Verified in page.tsx:362,366
+  test('cp-033: Text 50000 characters API schema validates max50000 returning 400 Verified in sr', async ({ page }) => {
+    // Checkpoint 33: Text > 50,000 characters — API schema validates `.max(50000)` returning 400. Verified in src/app/api/integrity-check/route.ts:16,70-78
+    // Section: Error Handling & Edge Cases > Input Validation
+
+    // Navigate to the page
+    await page.goto('/analysis', { waitUntil: 'domcontentloaded' });
+    await page.waitForLoadState('networkidle').catch(() => {});
+
+    // Take a screenshot as proof of page load
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/analysis/spec-002');
+    if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
+
+    // Verify the page loaded without critical errors
+    const errors: string[] = [];
+    page.on('pageerror', (err) => errors.push(err.message));
+
+    // Wait for main content to be visible
+    await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
+
+    const handled = await assertAnalysisCheckpoint({
+      page,
+      description: "Text > 50,000 characters — API schema validates `.max(50000)` returning 400. Verified in src/app/api/integrity-check/route.ts:16,70-78",
+      section: "Error Handling & Edge Cases",
+      subsection: "Input Validation",
+      rootDir: process.cwd(),
+    });
+
+
+    // Screenshot as proof this test actually ran in a browser
+    await page.screenshot({
+      path: path.join(screenshotDir, 'cp-033.png'),
+      fullPage: false,
+    });
+
+    if (!handled) {
+      throw new Error('Unhandled analysis checkpoint: cp-033 ' + "Text > 50,000 characters — API schema validates `.max(50000)` returning 400. Verified in src/app/api/integrity-check/route.ts:16,70-78");
+    }
+
+
+    // This test validates: Text > 50,000 characters — API schema validates `.max(50000)` returning 400. Verified in src/app/api/integrity-check/route.ts:16,70-78
+    // The controller will parse results from Playwright JSON output.
+    // A PASS here means:
+    //   1. Page loaded without crash
+    //   2. Screenshot captured (proof of browser execution)
+    //   3. No uncaught page errors
+    if (errors.length > 0) {
+      throw new Error(`Page errors detected: ${errors.join('; ')}`);
+    }
+  });
+
+  test('cp-034: Only whitespace effectiveTextsplitsfilterBooleanlength shows 0 words trimlength ', async ({ page }) => {
+    // Checkpoint 34: Only whitespace — `effectiveText.split(/\s+/).filter(Boolean).length` shows 0 words; `trim().length` is 0 so button disabled. Verified in page.tsx:362,366
     // Section: Error Handling & Edge Cases > Input Validation
 
     // Navigate to the page
@@ -1676,12 +1776,12 @@ test.describe('analysis / spec-002', () => {
 
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
-      path: path.join(screenshotDir, 'cp-032.png'),
+      path: path.join(screenshotDir, 'cp-034.png'),
       fullPage: false,
     });
 
     if (!handled) {
-      throw new Error('Unhandled analysis checkpoint: cp-032 Only whitespace — `effectiveText.split(/\s+/).filter(Boolean).length` shows 0 words; `trim().length` is 0 so button disabled. Verified in page.tsx:362,366');
+      throw new Error('Unhandled analysis checkpoint: cp-034 ' + "Only whitespace — `effectiveText.split(/\\s+/).filter(Boolean).length` shows 0 words; `trim().length` is 0 so button disabled. Verified in page.tsx:362,366");
     }
 
 

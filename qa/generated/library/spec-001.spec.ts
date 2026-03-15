@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for library/spec-001
  * Source: e2e/specs/library/spec-001.md
- * Generated: 2026-03-14T15:28:40.386Z
+ * Generated: 2026-03-15T13:02:52.542Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-000 Two-column layout: Collections sidebar (w-64) + main content (flex-1)');
+      throw new Error('Unhandled library checkpoint: cp-000 ' + "Two-column layout: Collections sidebar (w-64) + main content (flex-1)");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-001 Height: `h-[calc(100vh-7rem)]`');
+      throw new Error('Unhandled library checkpoint: cp-001 ' + "Height: `h-[calc(100vh-7rem)]`");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-002 Client-side page with server actions for data');
+      throw new Error('Unhandled library checkpoint: cp-002 ' + "Client-side page with server actions for data");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-003 Glass-panel styling throughout');
+      throw new Error('Unhandled library checkpoint: cp-003 ' + "Glass-panel styling throughout");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-004 Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)');
+      throw new Error('Unhandled library checkpoint: cp-004 ' + "Header text renders `Collections` with CSS `uppercase` styling (tracking-widest, muted text)");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-005 **All Papers** button — shows total paper count');
+      throw new Error('Unhandled library checkpoint: cp-005 ' + "**All Papers** button — shows total paper count");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-006 Active state highlighted when selected');
+      throw new Error('Unhandled library checkpoint: cp-006 ' + "Active state highlighted when selected");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-007 **Favorites** button — Star icon (amber-500 when filled), shows favorite count');
+      throw new Error('Unhandled library checkpoint: cp-007 ' + "**Favorites** button — Star icon (amber-500 when filled), shows favorite count");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-008 Active state highlighted when selected');
+      throw new Error('Unhandled library checkpoint: cp-008 ' + "Active state highlighted when selected");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-009 Divider line between standard and custom collections');
+      throw new Error('Unhandled library checkpoint: cp-009 ' + "Divider line between standard and custom collections");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-010 Dynamically derived from distinct `collection` values in papers');
+      throw new Error('Unhandled library checkpoint: cp-010 ' + "Dynamically derived from distinct `collection` values in papers");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-011 Each shows: Folder icon + collection name + paper count');
+      throw new Error('Unhandled library checkpoint: cp-011 ' + "Each shows: Folder icon + collection name + paper count");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-012 Clicking filters papers to that collection');
+      throw new Error('Unhandled library checkpoint: cp-012 ' + "Clicking filters papers to that collection");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-013 Active collection highlighted');
+      throw new Error('Unhandled library checkpoint: cp-013 ' + "Active collection highlighted");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-014 **Upload PDF** button — triggers file picker');
+      throw new Error('Unhandled library checkpoint: cp-014 ' + "**Upload PDF** button — triggers file picker");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-015 **New Collection** button — placeholder for future feature');
+      throw new Error('Unhandled library checkpoint: cp-015 ' + "**New Collection** button — placeholder for future feature");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-016 Placeholder: "Search papers..."');
+      throw new Error('Unhandled library checkpoint: cp-016 ' + "Placeholder: \"Search papers...\"");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-017 Debounced at 300ms');
+      throw new Error('Unhandled library checkpoint: cp-017 ' + "Debounced at 300ms");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-018 Searches across: title, journal, authors (case-insensitive)');
+      throw new Error('Unhandled library checkpoint: cp-018 ' + "Searches across: title, journal, authors (case-insensitive)");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-019 Results update as user types (after debounce)');
+      throw new Error('Unhandled library checkpoint: cp-019 ' + "Results update as user types (after debounce)");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-020 Clearing input restores full list');
+      throw new Error('Unhandled library checkpoint: cp-020 ' + "Clearing input restores full list");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-021 Selecting a sort option re-fetches and reorders papers');
+      throw new Error('Unhandled library checkpoint: cp-021 ' + "Selecting a sort option re-fetches and reorders papers");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-022 Current sort option visually indicated');
+      throw new Error('Unhandled library checkpoint: cp-022 ' + "Current sort option visually indicated");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-023 Dropdown populated from `getLibraryProjects()`');
+      throw new Error('Unhandled library checkpoint: cp-023 ' + "Dropdown populated from `getLibraryProjects()`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-024 Default: "All Projects"');
+      throw new Error('Unhandled library checkpoint: cp-024 ' + "Default: \"All Projects\"");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-025 Shows project titles from user\'s projects');
+      throw new Error('Unhandled library checkpoint: cp-025 ' + "Shows project titles from user's projects");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-026 Selecting a project filters to papers associated with that project');
+      throw new Error('Unhandled library checkpoint: cp-026 ' + "Selecting a project filters to papers associated with that project");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-027 Dropdown populated from `getLibraryStudyTypes()`');
+      throw new Error('Unhandled library checkpoint: cp-027 ' + "Dropdown populated from `getLibraryStudyTypes()`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-028 Default: "All Study Types"');
+      throw new Error('Unhandled library checkpoint: cp-028 ' + "Default: \"All Study Types\"");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-029 Shows distinct study types from user\'s papers');
+      throw new Error('Unhandled library checkpoint: cp-029 ' + "Shows distinct study types from user's papers");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-030 Selecting a type filters papers by exact match');
+      throw new Error('Unhandled library checkpoint: cp-030 ' + "Selecting a type filters papers by exact match");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-031 "From" number input — placeholder shows `From {yearRange.min}`');
+      throw new Error('Unhandled library checkpoint: cp-031 ' + "\"From\" number input — placeholder shows `From {yearRange.min}`");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-032 "To" number input — placeholder shows `To {yearRange.max}`');
+      throw new Error('Unhandled library checkpoint: cp-032 ' + "\"To\" number input — placeholder shows `To {yearRange.max}`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-033 Separator text: "to" between inputs');
+      throw new Error('Unhandled library checkpoint: cp-033 ' + "Separator text: \"to\" between inputs");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('library / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled library checkpoint: cp-034 Entering values filters papers within range (inclusive)');
+      throw new Error('Unhandled library checkpoint: cp-034 ' + "Entering values filters papers within range (inclusive)");
     }
 
 

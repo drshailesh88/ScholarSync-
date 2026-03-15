@@ -46,13 +46,13 @@
         "testMatch": [
           "**/*.@(spec|test).?(c|m)[jt]s?(x)"
         ],
-        "timeout": 30000
+        "timeout": 60000
       }
     ],
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.56.0",
+    "version": "1.56.1",
     "workers": 1,
     "webServer": {
       "command": "PORT=3001 npm run dev",
@@ -83,7 +83,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 10582,
+                      "duration": 4539,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:04.742Z",
+                      "startTime": "2026-03-15T12:59:25.254Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -123,7 +123,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1858,
+                      "duration": 1627,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:15.411Z",
+                      "startTime": "2026-03-15T12:59:29.871Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -163,7 +163,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -173,12 +173,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1832,
+                      "duration": 1705,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:17.288Z",
+                      "startTime": "2026-03-15T12:59:31.515Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -203,7 +203,7 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -213,12 +213,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1814,
+                      "duration": 1651,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:19.134Z",
+                      "startTime": "2026-03-15T12:59:33.237Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -239,11 +239,11 @@
             },
             {
               "title": "cp-004: RSS icon displayed",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
@@ -252,58 +252,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1777,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Rss\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Rss\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:723:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:268:27",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                          "column": 43,
-                          "line": 26
-                        },
-                        "snippet": "   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                            "column": 43,
-                            "line": 26
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Rss\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:723:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:268:27"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1695,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:20.965Z",
+                      "startTime": "2026-03-15T12:59:34.899Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec-001-cp-004-RSS-icon-displayed-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec-001-cp-004-RSS-icon-displayed-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec-001-cp-004-RSS-icon-displayed-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec-001-cp-004-RSS-icon-displayed-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                        "column": 43,
-                        "line": 26
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "4ae791a642985818a11a-9d131b8e9f2064011595",
@@ -317,22 +283,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1848,
+                      "duration": 1669,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:23.619Z",
+                      "startTime": "2026-03-15T12:59:36.603Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -353,71 +319,37 @@
             },
             {
               "title": "cp-006: Description Subscribe to medical journals PubMed searches or any RSS feed to sta",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1763,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Subscribe to medical journals\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Subscribe to medical journals\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:728:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:368:27",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                          "column": 43,
-                          "line": 26
-                        },
-                        "snippet": "   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                            "column": 43,
-                            "line": 26
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Subscribe to medical journals\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:728:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:368:27"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1627,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:25.554Z",
+                      "startTime": "2026-03-15T12:59:38.287Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e4280-ches-or-any-RSS-feed-to-sta-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e4280-ches-or-any-RSS-feed-to-sta-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e4280-ches-or-any-RSS-feed-to-sta-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e4280-ches-or-any-RSS-feed-to-sta-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                        "column": 43,
-                        "line": 26
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "4ae791a642985818a11a-e28189b4590e957a0696",
@@ -427,71 +359,37 @@
             },
             {
               "title": "cp-007: Add Your First Feed action button",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1900,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Add Your First Feed\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Add Your First Feed\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:733:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:418:27",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                          "column": 43,
-                          "line": 26
-                        },
-                        "snippet": "   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                            "column": 43,
-                            "line": 26
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected substring: \u001b[32m\"Add Your First Feed\"\u001b[39m\nReceived string:    \u001b[31m\"\\\"use client\\\";·\u001b[39m\n\u001b[31mimport { useEffect, useState } from \\\"react\\\";\u001b[39m\n\u001b[31mimport {\u001b[39m\n\u001b[31m  Plus,\u001b[39m\n\u001b[31m  Checks,\u001b[39m\n\u001b[31m  Export,\u001b[39m\n\u001b[31m  Upload,\u001b[39m\n\u001b[31m  List,\u001b[39m\n\u001b[31m  SquaresFour,\u001b[39m\n\u001b[31m  Rows,\u001b[39m\n\u001b[31m  SortAscending,\u001b[39m\n\u001b[31m  SortDescending,\u001b[39m\n\u001b[31m  MagnifyingGlass,\u001b[39m\n\u001b[31m} from \\\"@phosphor-icons/react\\\";\u001b[39m\n\u001b[31mimport { cn } from \\\"@/lib/utils\\\";\u001b[39m\n\u001b[31mimport { useFeedStore } from \\\"@/stores/feed-store\\\";\u001b[39m\n\u001b[31mimport { FeedSidebar } from \\\"@/components/feeds/feed-sidebar\\\";\u001b[39m\n\u001b[31mimport { ArticleList } from \\\"@/components/feeds/article-list\\\";\u001b[39m\n\u001b[31mimport { ArticleReader } from \\\"@/components/feeds/article-reader\\\";\u001b[39m\n\u001b[31mimport { CopilotPanel } from \\\"@/components/feeds/copilot-panel\\\";\u001b[39m\n\u001b[31mimport { FeedEmptyState } from \\\"@/components/feeds/feed-empty-state\\\";\u001b[39m\n\u001b[31mimport { AddFeedModal } from \\\"@/components/feeds/add-feed-modal\\\";\u001b[39m\n\u001b[31mimport { CitationModal } from \\\"@/components/feeds/citation-modal\\\";\u001b[39m\n\u001b[31mimport type { FeedArticleWithStatus } from \\\"@/types/feed\\\";·\u001b[39m\n\u001b[31mexport default function FeedsPage() {\u001b[39m\n\u001b[31m  const {\u001b[39m\n\u001b[31m    subscriptions,\u001b[39m\n\u001b[31m    articles,\u001b[39m\n\u001b[31m    selectedArticleId,\u001b[39m\n\u001b[31m    isLoadingSubscriptions,\u001b[39m\n\u001b[31m    totalUnread,\u001b[39m\n\u001b[31m    error,\u001b[39m\n\u001b[31m    copilotOpen,\u001b[39m\n\u001b[31m    sortBy,\u001b[39m\n\u001b[31m    layout,\u001b[39m\n\u001b[31m    loadSubscriptions,\u001b[39m\n\u001b[31m    loadArticles,\u001b[39m\n\u001b[31m    markAllRead,\u001b[39m\n\u001b[31m    setSelectedArticle,\u001b[39m\n\u001b[31m    setSortBy,\u001b[39m\n\u001b[31m    setLayout,\u001b[39m\n\u001b[31m    openCopilot,\u001b[39m\n\u001b[31m    clearError,\u001b[39m\n\u001b[31m  } = useFeedStore();·\u001b[39m\n\u001b[31m  const [showAddModal, setShowAddModal] = useState(false);\u001b[39m\n\u001b[31m  const [citeArticle, setCiteArticle] = useState<FeedArticleWithStatus | null>(null);·\u001b[39m\n\u001b[31m  // Load subscriptions on mount\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    loadSubscriptions();\u001b[39m\n\u001b[31m    loadArticles();\u001b[39m\n\u001b[31m  }, [loadSubscriptions, loadArticles]);·\u001b[39m\n\u001b[31m  // Keyboard shortcuts\u001b[39m\n\u001b[31m  useEffect(() => {\u001b[39m\n\u001b[31m    const handleKeyDown = (e: KeyboardEvent) => {\u001b[39m\n\u001b[31m      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;·\u001b[39m\n\u001b[31m      const currentIndex = articles.findIndex((a) => a.id === selectedArticleId);·\u001b[39m\n\u001b[31m      switch (e.key) {\u001b[39m\n\u001b[31m        case \\\"j\\\":\u001b[39m\n\u001b[31m          if (currentIndex < articles.length - 1) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex + 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"k\\\":\u001b[39m\n\u001b[31m          if (currentIndex > 0) {\u001b[39m\n\u001b[31m            setSelectedArticle(articles[currentIndex - 1].id);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"o\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const article = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (article?.link) window.open(article.link, \\\"_blank\\\");\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"s\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            useFeedStore.getState().toggleStar(selectedArticleId);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"c\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const citeTarget = articles.find((a) => a.id === selectedArticleId);\u001b[39m\n\u001b[31m            if (citeTarget) setCiteArticle(citeTarget);\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"a\\\":\u001b[39m\n\u001b[31m          if (selectedArticleId) {\u001b[39m\n\u001b[31m            const { copilotOpen: isOpen, openCopilot: doOpen, closeCopilot: doClose } = useFeedStore.getState();\u001b[39m\n\u001b[31m            if (isOpen) doClose();\u001b[39m\n\u001b[31m            else doOpen();\u001b[39m\n\u001b[31m          }\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m        case \\\"/\\\":\u001b[39m\n\u001b[31m          e.preventDefault();\u001b[39m\n\u001b[31m          document.querySelector<HTMLInputElement>('input[placeholder*=\\\"Search\\\"]')?.focus();\u001b[39m\n\u001b[31m          break;\u001b[39m\n\u001b[31m      }\u001b[39m\n\u001b[31m    };·\u001b[39m\n\u001b[31m    document.addEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m    return () => document.removeEventListener(\\\"keydown\\\", handleKeyDown);\u001b[39m\n\u001b[31m  }, [articles, selectedArticleId, setSelectedArticle]);·\u001b[39m\n\u001b[31m  const hasSubscriptions = subscriptions.length > 0 || isLoadingSubscriptions;·\u001b[39m\n\u001b[31m  return (\u001b[39m\n\u001b[31m    <div className=\\\"flex flex-col h-[calc(100vh-7rem)]\\\">\u001b[39m\n\u001b[31m      {/* Header */}\u001b[39m\n\u001b[31m      <div className=\\\"flex items-center justify-between px-1 mb-4 shrink-0\\\">\u001b[39m\n\u001b[31m        <div>\u001b[39m\n\u001b[31m          <h1 className=\\\"text-xl font-bold text-ink\\\">Journal Feed</h1>\u001b[39m\n\u001b[31m          {totalUnread > 0 && (\u001b[39m\n\u001b[31m            <p className=\\\"text-xs text-ink-muted mt-0.5\\\">\u001b[39m\n\u001b[31m              {totalUnread} unread article{totalUnread !== 1 ? \\\"s\\\" : \\\"\\\"}\u001b[39m\n\u001b[31m            </p>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m        <div className=\\\"flex items-center gap-2\\\">\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={async () => {\u001b[39m\n\u001b[31m              const res = await fetch(\\\"/api/feeds/opml/export\\\");\u001b[39m\n\u001b[31m              if (res.ok) {\u001b[39m\n\u001b[31m                const blob = await res.blob();\u001b[39m\n\u001b[31m                const url = URL.createObjectURL(blob);\u001b[39m\n\u001b[31m                const a = document.createElement(\\\"a\\\");\u001b[39m\n\u001b[31m                a.href = url;\u001b[39m\n\u001b[31m                a.download = \\\"scholarsync-feeds.opml\\\";\u001b[39m\n\u001b[31m                a.click();\u001b[39m\n\u001b[31m                URL.revokeObjectURL(url);\u001b[39m\n\u001b[31m              }\u001b[39m\n\u001b[31m            }}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Export size={16} />\u001b[39m\n\u001b[31m            Export\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <label className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors cursor-pointer\\\">\u001b[39m\n\u001b[31m            <Upload size={16} />\u001b[39m\n\u001b[31m            Import\u001b[39m\n\u001b[31m            <input\u001b[39m\n\u001b[31m              type=\\\"file\\\"\u001b[39m\n\u001b[31m              accept=\\\".opml,.xml\\\"\u001b[39m\n\u001b[31m              className=\\\"hidden\\\"\u001b[39m\n\u001b[31m              onChange={async (e) => {\u001b[39m\n\u001b[31m                const file = e.target.files?.[0];\u001b[39m\n\u001b[31m                if (!file) return;\u001b[39m\n\u001b[31m                const text = await file.text();\u001b[39m\n\u001b[31m                const res = await fetch(\\\"/api/feeds/opml/import\\\", {\u001b[39m\n\u001b[31m                  method: \\\"POST\\\",\u001b[39m\n\u001b[31m                  headers: { \\\"Content-Type\\\": \\\"application/xml\\\" },\u001b[39m\n\u001b[31m                  body: text,\u001b[39m\n\u001b[31m                });\u001b[39m\n\u001b[31m                const data = await res.json();\u001b[39m\n\u001b[31m                if (res.ok) {\u001b[39m\n\u001b[31m                  alert(`Imported ${data.imported} feeds, ${data.skipped} already subscribed, ${data.failed} failed.`);\u001b[39m\n\u001b[31m                  useFeedStore.getState().loadSubscriptions();\u001b[39m\n\u001b[31m                } else {\u001b[39m\n\u001b[31m                  alert(data.error || \\\"Import failed\\\");\u001b[39m\n\u001b[31m                }\u001b[39m\n\u001b[31m                e.target.value = \\\"\\\";\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </label>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => markAllRead()}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-ink-muted hover:text-ink hover:bg-surface-raised transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Checks size={16} />\u001b[39m\n\u001b[31m            Mark all read\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-xl p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"newest\\\", icon: SortDescending, label: \\\"Newest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"oldest\\\", icon: SortAscending, label: \\\"Oldest\\\" },\u001b[39m\n\u001b[31m              { key: \\\"relevance\\\", icon: MagnifyingGlass, label: \\\"Relevance\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setSortBy(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"flex items-center gap-1.5 px-3 py-2 rounded-[10px] text-xs font-medium transition-colors\\\",\u001b[39m\n\u001b[31m                  sortBy === key\u001b[39m\n\u001b[31m                    ? \\\"bg-surface text-ink shadow-sm\\\"\u001b[39m\n\u001b[31m                    : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m                {label}\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex items-center bg-surface-raised rounded-lg p-0.5\\\">\u001b[39m\n\u001b[31m            {([\u001b[39m\n\u001b[31m              { key: \\\"list\\\", icon: Rows, label: \\\"List\\\" },\u001b[39m\n\u001b[31m              { key: \\\"card\\\", icon: SquaresFour, label: \\\"Card\\\" },\u001b[39m\n\u001b[31m              { key: \\\"magazine\\\", icon: List, label: \\\"Magazine\\\" },\u001b[39m\n\u001b[31m            ] as const).map(({ key, icon: Icon, label }) => (\u001b[39m\n\u001b[31m              <button\u001b[39m\n\u001b[31m                key={key}\u001b[39m\n\u001b[31m                onClick={() => setLayout(key)}\u001b[39m\n\u001b[31m                className={cn(\u001b[39m\n\u001b[31m                  \\\"p-1.5 rounded-md transition-colors\\\",\u001b[39m\n\u001b[31m                  layout === key ? \\\"bg-surface text-ink shadow-sm\\\" : \\\"text-ink-muted hover:text-ink\\\"\u001b[39m\n\u001b[31m                )}\u001b[39m\n\u001b[31m                title={label}\u001b[39m\n\u001b[31m                aria-label={label}\u001b[39m\n\u001b[31m              >\u001b[39m\n\u001b[31m                <Icon size={16} />\u001b[39m\n\u001b[31m              </button>\u001b[39m\n\u001b[31m            ))}\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <button\u001b[39m\n\u001b[31m            onClick={() => setShowAddModal(true)}\u001b[39m\n\u001b[31m            className=\\\"flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors\\\"\u001b[39m\n\u001b[31m          >\u001b[39m\n\u001b[31m            <Plus size={16} weight=\\\"bold\\\" />\u001b[39m\n\u001b[31m            Add Feed\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      </div>·\u001b[39m\n\u001b[31m      {/* Error banner */}\u001b[39m\n\u001b[31m      {error && (\u001b[39m\n\u001b[31m        <div className=\\\"mx-1 mb-3 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center justify-between shrink-0\\\">\u001b[39m\n\u001b[31m          <span>{error}</span>\u001b[39m\n\u001b[31m          <button onClick={clearError} className=\\\"text-red-400 hover:text-red-300 text-xs font-medium\\\">\u001b[39m\n\u001b[31m            Dismiss\u001b[39m\n\u001b[31m          </button>\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      {/* Main content */}\u001b[39m\n\u001b[31m      {!hasSubscriptions ? (\u001b[39m\n\u001b[31m        <FeedEmptyState onAddFeed={() => setShowAddModal(true)} />\u001b[39m\n\u001b[31m      ) : (\u001b[39m\n\u001b[31m        <div className=\\\"flex gap-4 flex-1 min-h-0\\\">\u001b[39m\n\u001b[31m          <div className=\\\"hidden lg:block w-56 shrink-0\\\">\u001b[39m\n\u001b[31m            <FeedSidebar />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          <div className=\\\"flex-1 min-w-0\\\">\u001b[39m\n\u001b[31m            <ArticleList\u001b[39m\n\u001b[31m              onCite={(id) => {\u001b[39m\n\u001b[31m                const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m              onAI={(id) => {\u001b[39m\n\u001b[31m                setSelectedArticle(id);\u001b[39m\n\u001b[31m                setTimeout(() => useFeedStore.getState().openCopilot(), 50);\u001b[39m\n\u001b[31m              }}\u001b[39m\n\u001b[31m            />\u001b[39m\n\u001b[31m          </div>\u001b[39m\n\u001b[31m          {selectedArticleId && (\u001b[39m\n\u001b[31m            <div className=\\\"hidden xl:block w-[420px] shrink-0\\\">\u001b[39m\n\u001b[31m              {copilotOpen ? (\u001b[39m\n\u001b[31m                <CopilotPanel />\u001b[39m\n\u001b[31m              ) : (\u001b[39m\n\u001b[31m                <ArticleReader\u001b[39m\n\u001b[31m                  onOpenCopilot={() => openCopilot()}\u001b[39m\n\u001b[31m                  onCite={(id) => {\u001b[39m\n\u001b[31m                    const a = articles.find((x) => x.id === id);\u001b[39m\n\u001b[31m                    if (a) setCiteArticle(a);\u001b[39m\n\u001b[31m                  }}\u001b[39m\n\u001b[31m                />\u001b[39m\n\u001b[31m              )}\u001b[39m\n\u001b[31m            </div>\u001b[39m\n\u001b[31m          )}\u001b[39m\n\u001b[31m        </div>\u001b[39m\n\u001b[31m      )}·\u001b[39m\n\u001b[31m      <AddFeedModal open={showAddModal} onClose={() => setShowAddModal(false)} />\u001b[39m\n\u001b[31m      <CitationModal article={citeArticle} onClose={() => setCiteArticle(null)} />\u001b[39m\n\u001b[31m    </div>\u001b[39m\n\u001b[31m  );\u001b[39m\n\u001b[31m}\u001b[39m\n\u001b[31m\"\u001b[39m\n\n   at ../module-assertions/feeds.ts:26\n\n  24 |\n  25 | function expectSourceContains(rootDir: string, relativePath: string, needle: string) {\n> 26 |   expect(readFile(rootDir, relativePath)).toContain(needle);\n     |                                           ^\n  27 | }\n  28 |\n  29 | function expectSourceMatches(rootDir: string, relativePath: string, pattern: RegExp) {\n    at expectSourceContains (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:26:43)\n    at assertFeedsCheckpoint (/home/user/ScholarSync-/qa/module-assertions/feeds.ts:733:5)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-001.spec.ts:418:27"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1626,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:28.210Z",
+                      "startTime": "2026-03-15T12:59:39.931Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e5d4d-ur-First-Feed-action-button-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e5d4d-ur-First-Feed-action-button-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e5d4d-ur-First-Feed-action-button-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-001-feeds-spec--e5d4d-ur-First-Feed-action-button-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/module-assertions/feeds.ts",
-                        "column": 43,
-                        "line": 26
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "4ae791a642985818a11a-ea9fa72edbc6574a053a",
@@ -505,22 +403,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1844,
+                      "duration": 1687,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:31.061Z",
+                      "startTime": "2026-03-15T12:59:41.566Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -545,22 +443,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1727,
+                      "duration": 1611,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:32.990Z",
+                      "startTime": "2026-03-15T12:59:43.267Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -585,22 +483,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1832,
+                      "duration": 1654,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:34.736Z",
+                      "startTime": "2026-03-15T12:59:44.887Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -625,22 +523,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1743,
+                      "duration": 1590,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:36.580Z",
+                      "startTime": "2026-03-15T12:59:46.550Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -665,22 +563,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1757,
+                      "duration": 1625,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:38.332Z",
+                      "startTime": "2026-03-15T12:59:48.149Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -705,22 +603,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1770,
+                      "duration": 1626,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:40.099Z",
+                      "startTime": "2026-03-15T12:59:49.786Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -745,22 +643,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1761,
+                      "duration": 1688,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:41.880Z",
+                      "startTime": "2026-03-15T12:59:51.426Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -785,22 +683,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1773,
+                      "duration": 1604,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:43.651Z",
+                      "startTime": "2026-03-15T12:59:53.132Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -825,22 +723,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1805,
+                      "duration": 1692,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:45.435Z",
+                      "startTime": "2026-03-15T12:59:54.750Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -865,22 +763,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1785,
+                      "duration": 1642,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:47.251Z",
+                      "startTime": "2026-03-15T12:59:56.450Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -905,22 +803,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1771,
+                      "duration": 1656,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:49.056Z",
+                      "startTime": "2026-03-15T12:59:58.101Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -945,22 +843,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1805,
+                      "duration": 1574,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:50.848Z",
+                      "startTime": "2026-03-15T12:59:59.765Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -985,22 +883,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1836,
+                      "duration": 1625,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:52.663Z",
+                      "startTime": "2026-03-15T13:00:01.348Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1025,22 +923,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1913,
+                      "duration": 1644,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:54.516Z",
+                      "startTime": "2026-03-15T13:00:02.981Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1065,22 +963,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1789,
+                      "duration": 1653,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:56.442Z",
+                      "startTime": "2026-03-15T13:00:04.636Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1105,22 +1003,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1786,
+                      "duration": 1626,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:50:58.250Z",
+                      "startTime": "2026-03-15T13:00:06.298Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1145,22 +1043,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1794,
+                      "duration": 1688,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:00.046Z",
+                      "startTime": "2026-03-15T13:00:07.934Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1185,22 +1083,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1838,
+                      "duration": 1626,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:01.849Z",
+                      "startTime": "2026-03-15T13:00:09.632Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1225,22 +1123,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1807,
+                      "duration": 1672,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:03.698Z",
+                      "startTime": "2026-03-15T13:00:11.267Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1265,22 +1163,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1773,
+                      "duration": 1645,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:05.514Z",
+                      "startTime": "2026-03-15T13:00:12.947Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1305,22 +1203,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1771,
+                      "duration": 1598,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:07.298Z",
+                      "startTime": "2026-03-15T13:00:14.605Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1345,22 +1243,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1793,
+                      "duration": 1610,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:09.079Z",
+                      "startTime": "2026-03-15T13:00:16.217Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1385,22 +1283,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1797,
+                      "duration": 1672,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:10.881Z",
+                      "startTime": "2026-03-15T13:00:17.841Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1425,22 +1323,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1806,
+                      "duration": 1593,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:12.689Z",
+                      "startTime": "2026-03-15T13:00:19.531Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1465,22 +1363,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1858,
+                      "duration": 1670,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:14.514Z",
+                      "startTime": "2026-03-15T13:00:21.133Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1505,22 +1403,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1792,
+                      "duration": 1647,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:16.387Z",
+                      "startTime": "2026-03-15T13:00:22.811Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1545,22 +1443,22 @@
               "tags": [],
               "tests": [
                 {
-                  "timeout": 30000,
+                  "timeout": 60000,
                   "annotations": [],
                   "expectedStatus": "passed",
                   "projectId": "qa-chromium",
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1821,
+                      "duration": 1629,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T18:51:18.199Z",
+                      "startTime": "2026-03-15T13:00:24.467Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1586,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T18:50:02.503Z",
-    "duration": 78280.626,
-    "expected": 32,
+    "startTime": "2026-03-15T12:59:24.178Z",
+    "duration": 62036.236,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 3,
+    "unexpected": 0,
     "flaky": 0
   }
 }

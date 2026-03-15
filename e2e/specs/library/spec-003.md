@@ -1,8 +1,8 @@
 # library — Spec 003
 
-STATUS: PENDING
-TESTED: 0/35
-PASS: 0
+STATUS: DONE
+TESTED: 35/35
+PASS: 35
 FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/library
@@ -10,48 +10,48 @@ MODULE: library
 
 ---
 ### PDF Viewer
-- [ ] Full-screen modal with black backdrop and blur
-- [ ] Dynamically loaded component (react-pdf)
+- [x] PASS: Full-screen modal with black backdrop and blur
+- [x] PASS: Dynamically loaded component (react-pdf)
 #### Toolbar
-- [ ] **Previous page** button (disabled if page ≤ 1)
-- [ ] **Page counter**: "X / Y" (shows "..." while loading page count)
-- [ ] **Next page** button (disabled if page ≥ numPages)
-- [ ] **Zoom out** button (min 0.5×, step 0.25)
-- [ ] **Zoom percentage** display (e.g., "100%")
-- [ ] **Zoom in** button (max 3.0×, step 0.25)
-- [ ] **Fit width** button (resets to 1.0×)
-- [ ] No document title is shown in Library usage because `/library` does not pass a `title` prop
-- [ ] **Close** button (or press Escape)
+- [x] PASS: **Previous page** button (disabled if page ≤ 1)
+- [x] PASS: **Page counter**: "X / Y" (shows "..." while loading page count)
+- [x] PASS: **Next page** button (disabled if page ≥ numPages)
+- [x] PASS: **Zoom out** button (min 0.5×, step 0.25)
+- [x] PASS: **Zoom percentage** display (e.g., "100%")
+- [x] PASS: **Zoom in** button (max 3.0×, step 0.25)
+- [x] PASS: **Fit width** button (resets to 1.0×)
+- [x] PASS: No document title is shown in Library usage because `/library` does not pass a `title` prop
+- [x] PASS: **Close** button (or press Escape)
 #### PDF Rendering
-- [ ] Spinner while PDF loads
-- [ ] Spinner while individual page renders
-- [ ] Centered page with shadow
-- [ ] Responsive layout
+- [x] PASS: Spinner while PDF loads
+- [x] PASS: Spinner while individual page renders
+- [x] PASS: Centered page with shadow
+- [x] PASS: Responsive layout
 #### Error Handling
-- [ ] Red icon + error message on PDF load failure
-- [ ] 404 message: "The original PDF is not available for this paper. It may have been imported from search without a PDF upload."
+- [x] PASS: Red icon + error message on PDF load failure
+- [x] PASS: 404 message: "The original PDF is not available for this paper. It may have been imported from search without a PDF upload."
 #### Keyboard
-- [ ] Escape closes viewer
-- [ ] Arrow-key page navigation is not implemented in the current `PDFViewer`
+- [x] PASS: Escape closes viewer
+- [x] PASS: Arrow-key page navigation is not implemented in the current `PDFViewer`
 
 ### PDF Upload
-- [ ] "Upload PDF" button in sidebar
-- [ ] Hidden `<input type="file" accept=".pdf">` triggered on click
-- [ ] Button text changes to "Uploading..." during upload
-- [ ] Button disabled during upload
+- [x] PASS: "Upload PDF" button in sidebar
+- [x] PASS: Hidden `<input type="file" accept=".pdf">` triggered on click
+- [x] PASS: Button text changes to "Uploading..." during upload
+- [x] PASS: Button disabled during upload
 #### Upload Process (3 Steps)
-- [ ] Extracts PDF text plus title/author metadata when available
-- [ ] Triggers background text extraction and embedding
-- [ ] Sets `full_text_available = true`
+- [x] PASS: Extracts PDF text plus title/author metadata when available
+- [x] PASS: Triggers background text extraction and embedding
+- [x] PASS: Sets `full_text_available = true`
 #### After Upload
-- [ ] Paper appears in library list
-- [ ] PDF icon shown (source = "user_upload")
-- [ ] "View PDF" button available on the paper card
-- [ ] Error handling if any step fails
+- [x] PASS: Paper appears in library list
+- [x] PASS: PDF icon shown (source = "user_upload")
+- [x] PASS: "View PDF" button available on the paper card
+- [x] PASS: Error handling if any step fails
 
 ### Cite in Editor Integration
-- [ ] "Cite in Editor" button on each paper card
-- [ ] Stores pending citation in `sessionStorage`
-- [ ] Navigates to `/editor/new`
-- [ ] Editor retrieves citation from sessionStorage on load
-- [ ] Editor shows a pending-citation notice after consuming sessionStorage; citation is not auto-inserted
+- [x] PASS: "Cite in Editor" button on each paper card
+- [x] PASS: Stores pending citation in `sessionStorage`
+- [x] PASS: Navigates to `/editor/new`
+- [x] PASS: Editor retrieves citation from sessionStorage on load
+- [x] PASS: Editor shows a pending-citation notice after consuming sessionStorage; citation is not auto-inserted
