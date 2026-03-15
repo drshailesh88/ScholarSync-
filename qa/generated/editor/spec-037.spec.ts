@@ -1,13 +1,13 @@
 /**
- * Auto-generated Playwright test for research/spec-002
- * Source: e2e/specs/research/spec-002.md
- * Generated: 2026-03-15T17:15:28.627Z
+ * Auto-generated Playwright test for editor/spec-037
+ * Source: e2e/specs/editor/spec-037.md
+ * Generated: 2026-03-15T17:12:07.913Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
  * and artifact existence to determine verdicts.
  *
- * DO NOT EDIT — regenerate with: npx tsx qa/spec-to-playwright.ts research spec-002
+ * DO NOT EDIT — regenerate with: npx tsx qa/spec-to-playwright.ts editor spec-037
  */
 
 import { test, expect } from '@playwright/test';
@@ -17,10 +17,7 @@ import path from 'path';
 
 
 
-
-
-import { assertResearchCheckpoint } from '../../module-assertions/research';
-
+import { assertEditorCheckpoint } from '../../module-assertions/editor';
 
 
 
@@ -33,7 +30,10 @@ import { assertResearchCheckpoint } from '../../module-assertions/research';
 
 
 
-test.describe('research / spec-002', () => {
+
+
+
+test.describe('editor / spec-037', () => {
   test.beforeEach(async ({ page }) => {
     // Dev mode auth bypass — no Clerk needed
     const baseUrl = process.env.BASE_URL ?? 'http://127.0.0.1:3001';
@@ -46,16 +46,16 @@ test.describe('research / spec-002', () => {
     }]);
   });
 
-  test('cp-000: Toggle Show augmented queries hide toggle', async ({ page }) => {
-    // Checkpoint 0: Toggle — "Show augmented queries" / hide toggle
-    // Section: Augmented Queries
+  test('cp-000: Chat input has rounded-xl border radius with focusring-2 focusring-brand40 focus', async ({ page }) => {
+    // Checkpoint 0: Chat input has `rounded-xl` border radius with `focus:ring-2 focus:ring-brand/40` focus ring
+    // Section: Error Handling & Edge Cases > Studio Chat UI Specifics
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -65,11 +65,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Toggle — \"Show augmented queries\" / hide toggle",
-      section: "Augmented Queries",
-      subsection: "",
+      description: "Chat input has `rounded-xl` border radius with `focus:ring-2 focus:ring-brand/40` focus ring",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Chat UI Specifics",
       rootDir: process.cwd(),
     });
 
@@ -81,11 +81,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 ' + "Toggle — \"Show augmented queries\" / hide toggle");
+      throw new Error('Unhandled editor checkpoint: cp-000 ' + "Chat input has `rounded-xl` border radius with `focus:ring-2 focus:ring-brand/40` focus ring");
     }
 
 
-    // This test validates: Toggle — "Show augmented queries" / hide toggle
+    // This test validates: Chat input has `rounded-xl` border radius with `focus:ring-2 focus:ring-brand/40` focus ring
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -96,16 +96,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-001: Displays AI-expanded query variations from search response', async ({ page }) => {
-    // Checkpoint 1: Displays AI-expanded query variations from search response
-    // Section: Augmented Queries
+  test('cp-001: Chat form uses form onSubmit pattern Enter key in the input triggers form submis', async ({ page }) => {
+    // Checkpoint 1: Chat form uses `<form onSubmit>` pattern — Enter key in the input triggers form submission
+    // Section: Error Handling & Edge Cases > Studio Chat UI Specifics
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -115,11 +115,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Displays AI-expanded query variations from search response",
-      section: "Augmented Queries",
-      subsection: "",
+      description: "Chat form uses `<form onSubmit>` pattern — Enter key in the input triggers form submission",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Chat UI Specifics",
       rootDir: process.cwd(),
     });
 
@@ -131,11 +131,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 ' + "Displays AI-expanded query variations from search response");
+      throw new Error('Unhandled editor checkpoint: cp-001 ' + "Chat form uses `<form onSubmit>` pattern — Enter key in the input triggers form submission");
     }
 
 
-    // This test validates: Displays AI-expanded query variations from search response
+    // This test validates: Chat form uses `<form onSubmit>` pattern — Enter key in the input triggers form submission
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -146,16 +146,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-002: Helps users understand how their query was interpreted', async ({ page }) => {
-    // Checkpoint 2: Helps users understand how their query was interpreted
-    // Section: Augmented Queries
+  test('cp-002: Export dropdown container uses glass-panel class with w-48 192px width', async ({ page }) => {
+    // Checkpoint 2: Export dropdown container uses `glass-panel` class with `w-48` (192px) width
+    // Section: Error Handling & Edge Cases > Studio Export Dropdown Icon Details
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -165,11 +165,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Helps users understand how their query was interpreted",
-      section: "Augmented Queries",
-      subsection: "",
+      description: "Export dropdown container uses `glass-panel` class with `w-48` (192px) width",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Export Dropdown Icon Details",
       rootDir: process.cwd(),
     });
 
@@ -181,11 +181,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 ' + "Helps users understand how their query was interpreted");
+      throw new Error('Unhandled editor checkpoint: cp-002 ' + "Export dropdown container uses `glass-panel` class with `w-48` (192px) width");
     }
 
 
-    // This test validates: Helps users understand how their query was interpreted
+    // This test validates: Export dropdown container uses `glass-panel` class with `w-48` (192px) width
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -196,16 +196,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-003: AISynthesisPanel component displays AI-generated summary of search results', async ({ page }) => {
-    // Checkpoint 3: AISynthesisPanel component — displays AI-generated summary of search results
-    // Section: AI Summary
+  test('cp-003: PDF export button icon FilePdf uses text-red-400 color class', async ({ page }) => {
+    // Checkpoint 3: PDF export button icon `FilePdf` uses `text-red-400` color class
+    // Section: Error Handling & Edge Cases > Studio Export Dropdown Icon Details
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -215,11 +215,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "AISynthesisPanel component — displays AI-generated summary of search results",
-      section: "AI Summary",
-      subsection: "",
+      description: "PDF export button icon `FilePdf` uses `text-red-400` color class",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Export Dropdown Icon Details",
       rootDir: process.cwd(),
     });
 
@@ -231,11 +231,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 ' + "AISynthesisPanel component — displays AI-generated summary of search results");
+      throw new Error('Unhandled editor checkpoint: cp-003 ' + "PDF export button icon `FilePdf` uses `text-red-400` color class");
     }
 
 
-    // This test validates: AISynthesisPanel component — displays AI-generated summary of search results
+    // This test validates: PDF export button icon `FilePdf` uses `text-red-400` color class
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -246,16 +246,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-004: Loading state shown during generation', async ({ page }) => {
-    // Checkpoint 4: Loading state — shown during generation
-    // Section: AI Summary
+  test('cp-004: Word export button icon FileDoc uses text-blue-400 color class', async ({ page }) => {
+    // Checkpoint 4: Word export button icon `FileDoc` uses `text-blue-400` color class
+    // Section: Error Handling & Edge Cases > Studio Export Dropdown Icon Details
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -265,11 +265,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Loading state — shown during generation",
-      section: "AI Summary",
-      subsection: "",
+      description: "Word export button icon `FileDoc` uses `text-blue-400` color class",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Export Dropdown Icon Details",
       rootDir: process.cwd(),
     });
 
@@ -281,11 +281,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 ' + "Loading state — shown during generation");
+      throw new Error('Unhandled editor checkpoint: cp-004 ' + "Word export button icon `FileDoc` uses `text-blue-400` color class");
     }
 
 
-    // This test validates: Loading state — shown during generation
+    // This test validates: Word export button icon `FileDoc` uses `text-blue-400` color class
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -296,16 +296,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-005: Generated after search summarizes key findings across results', async ({ page }) => {
-    // Checkpoint 5: Generated after search — summarizes key findings across results
-    // Section: AI Summary
+  test('cp-005: PDF export button has rounded-t-lg border radius Word export button has rounded-', async ({ page }) => {
+    // Checkpoint 5: PDF export button has `rounded-t-lg` border radius; Word export button has `rounded-b-lg`
+    // Section: Error Handling & Edge Cases > Studio Export Dropdown Icon Details
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -315,11 +315,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Generated after search — summarizes key findings across results",
-      section: "AI Summary",
-      subsection: "",
+      description: "PDF export button has `rounded-t-lg` border radius; Word export button has `rounded-b-lg`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Export Dropdown Icon Details",
       rootDir: process.cwd(),
     });
 
@@ -331,11 +331,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 ' + "Generated after search — summarizes key findings across results");
+      throw new Error('Unhandled editor checkpoint: cp-005 ' + "PDF export button has `rounded-t-lg` border radius; Word export button has `rounded-b-lg`");
     }
 
 
-    // This test validates: Generated after search — summarizes key findings across results
+    // This test validates: PDF export button has `rounded-t-lg` border radius; Word export button has `rounded-b-lg`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -346,16 +346,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-006: Persisted saved in session storage', async ({ page }) => {
-    // Checkpoint 6: Persisted — saved in session storage
-    // Section: AI Summary
+  test('cp-006: CitationDialog receives documentIdStringdbDocumentId default falls back to liter', async ({ page }) => {
+    // Checkpoint 6: `CitationDialog` receives `documentId={String(dbDocumentId || "default")}` — falls back to literal string `"default"` when no DB document ID exists
+    // Section: Error Handling & Edge Cases > Editor Page Fallback Values and Conditions
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -365,11 +365,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Persisted — saved in session storage",
-      section: "AI Summary",
-      subsection: "",
+      description: "`CitationDialog` receives `documentId={String(dbDocumentId || \"default\")}` — falls back to literal string `\"default\"` when no DB document ID exists",
+      section: "Error Handling & Edge Cases",
+      subsection: "Editor Page Fallback Values and Conditions",
       rootDir: process.cwd(),
     });
 
@@ -381,11 +381,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 ' + "Persisted — saved in session storage");
+      throw new Error('Unhandled editor checkpoint: cp-006 ' + "`CitationDialog` receives `documentId={String(dbDocumentId || \"default\")}` — falls back to literal string `\"default\"` when no DB document ID exists");
     }
 
 
-    // This test validates: Persisted — saved in session storage
+    // This test validates: `CitationDialog` receives `documentId={String(dbDocumentId || "default")}` — falls back to literal string `"default"` when no DB document ID exists
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -396,16 +396,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-007: SGLT2 inhibitors cardiovascular outcomes', async ({ page }) => {
-    // Checkpoint 7: "SGLT2 inhibitors cardiovascular outcomes"
-    // Section: Suggested Searches
+  test('cp-007: ExportDialog receives contentdbContent editorContent type doc content ultimate f', async ({ page }) => {
+    // Checkpoint 7: `ExportDialog` receives `content={dbContent || editorContent || { type: "doc", content: [] }}` — ultimate fallback is an empty Tiptap document node
+    // Section: Error Handling & Edge Cases > Editor Page Fallback Values and Conditions
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -415,11 +415,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "\"SGLT2 inhibitors cardiovascular outcomes\"",
-      section: "Suggested Searches",
-      subsection: "",
+      description: "`ExportDialog` receives `content={dbContent || editorContent || { type: \"doc\", content: [] }}` — ultimate fallback is an empty Tiptap document node",
+      section: "Error Handling & Edge Cases",
+      subsection: "Editor Page Fallback Values and Conditions",
       rootDir: process.cwd(),
     });
 
@@ -431,11 +431,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 ' + "\"SGLT2 inhibitors cardiovascular outcomes\"");
+      throw new Error('Unhandled editor checkpoint: cp-007 ' + "`ExportDialog` receives `content={dbContent || editorContent || { type: \"doc\", content: [] }}` — ultimate fallback is an empty Tiptap document node");
     }
 
 
-    // This test validates: "SGLT2 inhibitors cardiovascular outcomes"
+    // This test validates: `ExportDialog` receives `content={dbContent || editorContent || { type: "doc", content: [] }}` — ultimate fallback is an empty Tiptap document node
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -446,16 +446,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-008: CAR-T cell therapy solid tumors', async ({ page }) => {
-    // Checkpoint 8: "CAR-T cell therapy solid tumors"
-    // Section: Suggested Searches
+  test('cp-008: VersionHistory panel only renders when all three conditions are true showVersion', async ({ page }) => {
+    // Checkpoint 8: `VersionHistory` panel only renders when all three conditions are true: `showVersionHistory && dbDocumentId && sectionId !== null`
+    // Section: Error Handling & Edge Cases > Editor Page Fallback Values and Conditions
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -465,11 +465,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "\"CAR-T cell therapy solid tumors\"",
-      section: "Suggested Searches",
-      subsection: "",
+      description: "`VersionHistory` panel only renders when all three conditions are true: `showVersionHistory && dbDocumentId && sectionId !== null`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Editor Page Fallback Values and Conditions",
       rootDir: process.cwd(),
     });
 
@@ -481,11 +481,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 ' + "\"CAR-T cell therapy solid tumors\"");
+      throw new Error('Unhandled editor checkpoint: cp-008 ' + "`VersionHistory` panel only renders when all three conditions are true: `showVersionHistory && dbDocumentId && sectionId !== null`");
     }
 
 
-    // This test validates: "CAR-T cell therapy solid tumors"
+    // This test validates: `VersionHistory` panel only renders when all three conditions are true: `showVersionHistory && dbDocumentId && sectionId !== null`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -496,16 +496,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-009: GLP-1 agonists weight management', async ({ page }) => {
-    // Checkpoint 9: "GLP-1 agonists weight management"
-    // Section: Suggested Searches
+  test('cp-009: Editor page computes sidebarOpen as logical OR of editorReferenceSidebarOpen edi', async ({ page }) => {
+    // Checkpoint 9: Editor page computes `sidebarOpen` as logical OR of `editorReferenceSidebarOpen` (editor store) and `referenceSidebarOpen` (reference store)
+    // Section: Error Handling & Edge Cases > Editor Page Reference Sidebar Dual-Store Sync
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -515,11 +515,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "\"GLP-1 agonists weight management\"",
-      section: "Suggested Searches",
-      subsection: "",
+      description: "Editor page computes `sidebarOpen` as logical OR of `editorReferenceSidebarOpen` (editor store) and `referenceSidebarOpen` (reference store)",
+      section: "Error Handling & Edge Cases",
+      subsection: "Editor Page Reference Sidebar Dual-Store Sync",
       rootDir: process.cwd(),
     });
 
@@ -531,11 +531,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 ' + "\"GLP-1 agonists weight management\"");
+      throw new Error('Unhandled editor checkpoint: cp-009 ' + "Editor page computes `sidebarOpen` as logical OR of `editorReferenceSidebarOpen` (editor store) and `referenceSidebarOpen` (reference store)");
     }
 
 
-    // This test validates: "GLP-1 agonists weight management"
+    // This test validates: Editor page computes `sidebarOpen` as logical OR of `editorReferenceSidebarOpen` (editor store) and `referenceSidebarOpen` (reference store)
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -546,16 +546,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-010: mRNA vaccine technology advances', async ({ page }) => {
-    // Checkpoint 10: "mRNA vaccine technology advances"
-    // Section: Suggested Searches
+  test('cp-010: handleSetReferenceSidebarOpen updates BOTH the editor store and the reference st', async ({ page }) => {
+    // Checkpoint 10: `handleSetReferenceSidebarOpen` updates BOTH the editor store and the reference store simultaneously
+    // Section: Error Handling & Edge Cases > Editor Page Reference Sidebar Dual-Store Sync
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -565,11 +565,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "\"mRNA vaccine technology advances\"",
-      section: "Suggested Searches",
-      subsection: "",
+      description: "`handleSetReferenceSidebarOpen` updates BOTH the editor store and the reference store simultaneously",
+      section: "Error Handling & Edge Cases",
+      subsection: "Editor Page Reference Sidebar Dual-Store Sync",
       rootDir: process.cwd(),
     });
 
@@ -581,11 +581,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 ' + "\"mRNA vaccine technology advances\"");
+      throw new Error('Unhandled editor checkpoint: cp-010 ' + "`handleSetReferenceSidebarOpen` updates BOTH the editor store and the reference store simultaneously");
     }
 
 
-    // This test validates: "mRNA vaccine technology advances"
+    // This test validates: `handleSetReferenceSidebarOpen` updates BOTH the editor store and the reference store simultaneously
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -596,16 +596,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-011: AI-assisted diagnostic imaging accuracy', async ({ page }) => {
-    // Checkpoint 11: "AI-assisted diagnostic imaging accuracy"
-    // Section: Suggested Searches
+  test('cp-011: A useEffect syncs the two stores when they fall out of sync if either store valu', async ({ page }) => {
+    // Checkpoint 11: A `useEffect` syncs the two stores when they fall out of sync — if either store value changes, both are set to the OR of their current values
+    // Section: Error Handling & Edge Cases > Editor Page Reference Sidebar Dual-Store Sync
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -615,11 +615,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "\"AI-assisted diagnostic imaging accuracy\"",
-      section: "Suggested Searches",
-      subsection: "",
+      description: "A `useEffect` syncs the two stores when they fall out of sync — if either store value changes, both are set to the OR of their current values",
+      section: "Error Handling & Edge Cases",
+      subsection: "Editor Page Reference Sidebar Dual-Store Sync",
       rootDir: process.cwd(),
     });
 
@@ -631,11 +631,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 ' + "\"AI-assisted diagnostic imaging accuracy\"");
+      throw new Error('Unhandled editor checkpoint: cp-011 ' + "A `useEffect` syncs the two stores when they fall out of sync — if either store value changes, both are set to the OR of their current values");
     }
 
 
-    // This test validates: "AI-assisted diagnostic imaging accuracy"
+    // This test validates: A `useEffect` syncs the two stores when they fall out of sync — if either store value changes, both are set to the OR of their current values
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -646,16 +646,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-012: Clicking a suggestion populates query and triggers search', async ({ page }) => {
-    // Checkpoint 12: Clicking a suggestion populates query and triggers search
-    // Section: Suggested Searches
+  test('cp-012: Reference sidebar container on editor page uses w-80 border-l border-border bg-s', async ({ page }) => {
+    // Checkpoint 12: Reference sidebar container on editor page uses `w-80 border-l border-border bg-surface shrink-0`
+    // Section: Error Handling & Edge Cases > Editor Page Reference Sidebar Dual-Store Sync
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -665,11 +665,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Clicking a suggestion populates query and triggers search",
-      section: "Suggested Searches",
-      subsection: "",
+      description: "Reference sidebar container on editor page uses `w-80 border-l border-border bg-surface shrink-0`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Editor Page Reference Sidebar Dual-Store Sync",
       rootDir: process.cwd(),
     });
 
@@ -681,11 +681,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 ' + "Clicking a suggestion populates query and triggers search");
+      throw new Error('Unhandled editor checkpoint: cp-012 ' + "Reference sidebar container on editor page uses `w-80 border-l border-border bg-surface shrink-0`");
     }
 
 
-    // This test validates: Clicking a suggestion populates query and triggers search
+    // This test validates: Reference sidebar container on editor page uses `w-80 border-l border-border bg-surface shrink-0`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -696,16 +696,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-013: Loaded on mount getRecentSearches server action', async ({ page }) => {
-    // Checkpoint 13: Loaded on mount — `getRecentSearches()` server action
-    // Section: Recent Search History
+  test('cp-013: AcademicEditoronUpdate sets editor store saveStatus to state saving immediately ', async ({ page }) => {
+    // Checkpoint 13: `AcademicEditor.onUpdate` sets editor store `saveStatus` to `{ state: "saving" }` immediately on every content change (before debounce fires)
+    // Section: Error Handling & Edge Cases > AcademicEditor Internal Save Status vs External Persistence
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -715,11 +715,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Loaded on mount — `getRecentSearches()` server action",
-      section: "Recent Search History",
-      subsection: "",
+      description: "`AcademicEditor.onUpdate` sets editor store `saveStatus` to `{ state: \"saving\" }` immediately on every content change (before debounce fires)",
+      section: "Error Handling & Edge Cases",
+      subsection: "AcademicEditor Internal Save Status vs External Persistence",
       rootDir: process.cwd(),
     });
 
@@ -731,11 +731,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 ' + "Loaded on mount — `getRecentSearches()` server action");
+      throw new Error('Unhandled editor checkpoint: cp-013 ' + "`AcademicEditor.onUpdate` sets editor store `saveStatus` to `{ state: \"saving\" }` immediately on every content change (before debounce fires)");
     }
 
 
-    // This test validates: Loaded on mount — `getRecentSearches()` server action
+    // This test validates: `AcademicEditor.onUpdate` sets editor store `saveStatus` to `{ state: "saving" }` immediately on every content change (before debounce fires)
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -746,16 +746,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-014: Saved on each search saveSearchQuery server action', async ({ page }) => {
-    // Checkpoint 14: Saved on each search — `saveSearchQuery()` server action
-    // Section: Recent Search History
+  test('cp-014: After debounce timer fires AcademicEditor sets state saved lastSavedAt new Date ', async ({ page }) => {
+    // Checkpoint 14: After debounce timer fires, `AcademicEditor` sets `{ state: "saved", lastSavedAt: new Date() }` — this happens before the parent's actual DB persistence completes
+    // Section: Error Handling & Edge Cases > AcademicEditor Internal Save Status vs External Persistence
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -765,11 +765,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Saved on each search — `saveSearchQuery()` server action",
-      section: "Recent Search History",
-      subsection: "",
+      description: "After debounce timer fires, `AcademicEditor` sets `{ state: \"saved\", lastSavedAt: new Date() }` — this happens before the parent's actual DB persistence completes",
+      section: "Error Handling & Edge Cases",
+      subsection: "AcademicEditor Internal Save Status vs External Persistence",
       rootDir: process.cwd(),
     });
 
@@ -781,11 +781,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 ' + "Saved on each search — `saveSearchQuery()` server action");
+      throw new Error('Unhandled editor checkpoint: cp-014 ' + "After debounce timer fires, `AcademicEditor` sets `{ state: \"saved\", lastSavedAt: new Date() }` — this happens before the parent's actual DB persistence completes");
     }
 
 
-    // This test validates: Saved on each search — `saveSearchQuery()` server action
+    // This test validates: After debounce timer fires, `AcademicEditor` sets `{ state: "saved", lastSavedAt: new Date() }` — this happens before the parent's actual DB persistence completes
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -796,16 +796,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-015: ClockCounterClockwise icon history indicator', async ({ page }) => {
-    // Checkpoint 15: ClockCounterClockwise icon — history indicator
-    // Section: Recent Search History
+  test('cp-015: This means the TopBar save indicator shows Saved after the debounce delay even t', async ({ page }) => {
+    // Checkpoint 15: This means the TopBar save indicator shows "Saved" after the debounce delay, even though the actual server save triggered by `handleEditorUpdate` may still be in progress or may fail
+    // Section: Error Handling & Edge Cases > AcademicEditor Internal Save Status vs External Persistence
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -815,11 +815,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "ClockCounterClockwise icon — history indicator",
-      section: "Recent Search History",
-      subsection: "",
+      description: "This means the TopBar save indicator shows \"Saved\" after the debounce delay, even though the actual server save triggered by `handleEditorUpdate` may still be in progress or may fail",
+      section: "Error Handling & Edge Cases",
+      subsection: "AcademicEditor Internal Save Status vs External Persistence",
       rootDir: process.cwd(),
     });
 
@@ -831,11 +831,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 ' + "ClockCounterClockwise icon — history indicator");
+      throw new Error('Unhandled editor checkpoint: cp-015 ' + "This means the TopBar save indicator shows \"Saved\" after the debounce delay, even though the actual server save triggered by `handleEditorUpdate` may still be in progress or may fail");
     }
 
 
-    // This test validates: ClockCounterClockwise icon — history indicator
+    // This test validates: This means the TopBar save indicator shows "Saved" after the debounce delay, even though the actual server save triggered by `handleEditorUpdate` may still be in progress or may fail
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -846,16 +846,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-016: Click to re-run clicking a past search populates and executes it', async ({ page }) => {
-    // Checkpoint 16: Click to re-run — clicking a past search populates and executes it
-    // Section: Recent Search History
+  test('cp-016: Footnote node parseHTML matches selector spandata-footnote-id', async ({ page }) => {
+    // Checkpoint 16: Footnote node `parseHTML` matches selector `span[data-footnote-id]`
+    // Section: Error Handling & Edge Cases > Footnote Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -865,11 +865,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Click to re-run — clicking a past search populates and executes it",
-      section: "Recent Search History",
-      subsection: "",
+      description: "Footnote node `parseHTML` matches selector `span[data-footnote-id]`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Footnote Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -881,11 +881,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 ' + "Click to re-run — clicking a past search populates and executes it");
+      throw new Error('Unhandled editor checkpoint: cp-016 ' + "Footnote node `parseHTML` matches selector `span[data-footnote-id]`");
     }
 
 
-    // This test validates: Click to re-run — clicking a past search populates and executes it
+    // This test validates: Footnote node `parseHTML` matches selector `span[data-footnote-id]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -896,16 +896,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-017: Save button FloppyDiskBookmarkSimple icon on each result card', async ({ page }) => {
-    // Checkpoint 17: Save button — FloppyDisk/BookmarkSimple icon on each result card
-    // Section: Paper Saving to Library
+  test('cp-017: Footnote id attribute maps to data-footnote-id HTML attribute', async ({ page }) => {
+    // Checkpoint 17: Footnote `id` attribute maps to `data-footnote-id` HTML attribute
+    // Section: Error Handling & Edge Cases > Footnote Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -915,11 +915,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Save button — FloppyDisk/BookmarkSimple icon on each result card",
-      section: "Paper Saving to Library",
-      subsection: "",
+      description: "Footnote `id` attribute maps to `data-footnote-id` HTML attribute",
+      section: "Error Handling & Edge Cases",
+      subsection: "Footnote Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -931,11 +931,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 ' + "Save button — FloppyDisk/BookmarkSimple icon on each result card");
+      throw new Error('Unhandled editor checkpoint: cp-017 ' + "Footnote `id` attribute maps to `data-footnote-id` HTML attribute");
     }
 
 
-    // This test validates: Save button — FloppyDisk/BookmarkSimple icon on each result card
+    // This test validates: Footnote `id` attribute maps to `data-footnote-id` HTML attribute
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -946,16 +946,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-018: Calls savePaper server action to persist to database', async ({ page }) => {
-    // Checkpoint 18: Calls `savePaper()` — server action to persist to database
-    // Section: Paper Saving to Library
+  test('cp-018: Footnote text attribute maps to data-footnote-text HTML attribute', async ({ page }) => {
+    // Checkpoint 18: Footnote `text` attribute maps to `data-footnote-text` HTML attribute
+    // Section: Error Handling & Edge Cases > Footnote Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -965,11 +965,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Calls `savePaper()` — server action to persist to database",
-      section: "Paper Saving to Library",
-      subsection: "",
+      description: "Footnote `text` attribute maps to `data-footnote-text` HTML attribute",
+      section: "Error Handling & Edge Cases",
+      subsection: "Footnote Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -981,11 +981,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 ' + "Calls `savePaper()` — server action to persist to database");
+      throw new Error('Unhandled editor checkpoint: cp-018 ' + "Footnote `text` attribute maps to `data-footnote-text` HTML attribute");
     }
 
 
-    // This test validates: Calls `savePaper()` — server action to persist to database
+    // This test validates: Footnote `text` attribute maps to `data-footnote-text` HTML attribute
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -996,16 +996,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-019: Visual state saved papers show filledhighlighted bookmark', async ({ page }) => {
-    // Checkpoint 19: Visual state — saved papers show filled/highlighted bookmark
-    // Section: Paper Saving to Library
+  test('cp-019: Footnote number attribute maps to data-footnote-number HTML attribute parsed wit', async ({ page }) => {
+    // Checkpoint 19: Footnote `number` attribute maps to `data-footnote-number` HTML attribute, parsed with `parseInt(value, 10)` defaulting to string `"1"`
+    // Section: Error Handling & Edge Cases > Footnote Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1015,11 +1015,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Visual state — saved papers show filled/highlighted bookmark",
-      section: "Paper Saving to Library",
-      subsection: "",
+      description: "Footnote `number` attribute maps to `data-footnote-number` HTML attribute, parsed with `parseInt(value, 10)` defaulting to string `\"1\"`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Footnote Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -1031,11 +1031,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 ' + "Visual state — saved papers show filled/highlighted bookmark");
+      throw new Error('Unhandled editor checkpoint: cp-019 ' + "Footnote `number` attribute maps to `data-footnote-number` HTML attribute, parsed with `parseInt(value, 10)` defaulting to string `\"1\"`");
     }
 
 
-    // This test validates: Visual state — saved papers show filled/highlighted bookmark
+    // This test validates: Footnote `number` attribute maps to `data-footnote-number` HTML attribute, parsed with `parseInt(value, 10)` defaulting to string `"1"`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1046,16 +1046,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-020: Tracked in saved Set prevents duplicate saves', async ({ page }) => {
-    // Checkpoint 20: Tracked in `saved` Set — prevents duplicate saves
-    // Section: Paper Saving to Library
+  test('cp-020: Footnote renderHTML outputs span classfootnote-marker contenteditablefalsesupnum', async ({ page }) => {
+    // Checkpoint 20: Footnote `renderHTML` outputs: `<span class="footnote-marker" contenteditable="false"><sup>{number}</sup></span>`
+    // Section: Error Handling & Edge Cases > Footnote Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1065,11 +1065,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Tracked in `saved` Set — prevents duplicate saves",
-      section: "Paper Saving to Library",
-      subsection: "",
+      description: "Footnote `renderHTML` outputs: `<span class=\"footnote-marker\" contenteditable=\"false\"><sup>{number}</sup></span>`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Footnote Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -1081,11 +1081,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 ' + "Tracked in `saved` Set — prevents duplicate saves");
+      throw new Error('Unhandled editor checkpoint: cp-020 ' + "Footnote `renderHTML` outputs: `<span class=\"footnote-marker\" contenteditable=\"false\"><sup>{number}</sup></span>`");
     }
 
 
-    // This test validates: Tracked in `saved` Set — prevents duplicate saves
+    // This test validates: Footnote `renderHTML` outputs: `<span class="footnote-marker" contenteditable="false"><sup>{number}</sup></span>`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1096,16 +1096,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-021: Library loaded on mount getUserPapers fetches existing library', async ({ page }) => {
-    // Checkpoint 21: Library loaded on mount — `getUserPapers()` fetches existing library
-    // Section: Paper Saving to Library
+  test('cp-021: Citation node parseHTML matches selector spandata-typecitation', async ({ page }) => {
+    // Checkpoint 21: Citation node `parseHTML` matches selector `span[data-type="citation"]`
+    // Section: Error Handling & Edge Cases > Citation Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1115,11 +1115,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Library loaded on mount — `getUserPapers()` fetches existing library",
-      section: "Paper Saving to Library",
-      subsection: "",
+      description: "Citation node `parseHTML` matches selector `span[data-type=\"citation\"]`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Citation Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -1131,11 +1131,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 ' + "Library loaded on mount — `getUserPapers()` fetches existing library");
+      throw new Error('Unhandled editor checkpoint: cp-021 ' + "Citation node `parseHTML` matches selector `span[data-type=\"citation\"]`");
     }
 
 
-    // This test validates: Library loaded on mount — `getUserPapers()` fetches existing library
+    // This test validates: Citation node `parseHTML` matches selector `span[data-type="citation"]`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1146,16 +1146,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-022: Per-paper Find Similar action triggers search for related papers', async ({ page }) => {
-    // Checkpoint 22: Per-paper "Find Similar" action — triggers search for related papers
-    // Section: Similar Papers (Find Similar)
+  test('cp-022: referenceIds attribute serialized as JSON string in data-reference-ids HTML attr', async ({ page }) => {
+    // Checkpoint 22: `referenceIds` attribute serialized as JSON string in `data-reference-ids` HTML attribute
+    // Section: Error Handling & Edge Cases > Citation Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1165,11 +1165,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Per-paper \"Find Similar\" action — triggers search for related papers",
-      section: "Similar Papers (Find Similar)",
-      subsection: "",
+      description: "`referenceIds` attribute serialized as JSON string in `data-reference-ids` HTML attribute",
+      section: "Error Handling & Edge Cases",
+      subsection: "Citation Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -1181,11 +1181,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 ' + "Per-paper \"Find Similar\" action — triggers search for related papers");
+      throw new Error('Unhandled editor checkpoint: cp-022 ' + "`referenceIds` attribute serialized as JSON string in `data-reference-ids` HTML attribute");
     }
 
 
-    // This test validates: Per-paper "Find Similar" action — triggers search for related papers
+    // This test validates: `referenceIds` attribute serialized as JSON string in `data-reference-ids` HTML attribute
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1196,16 +1196,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-023: Loading state tracked per paper ID in loadingSimilar Set', async ({ page }) => {
-    // Checkpoint 23: Loading state — tracked per paper ID in `loadingSimilar` Set
-    // Section: Similar Papers (Find Similar)
+  test('cp-023: overrides attribute serialized as JSON string in data-overrides HTML attribute o', async ({ page }) => {
+    // Checkpoint 23: `overrides` attribute serialized as JSON string in `data-overrides` HTML attribute; omitted entirely from HTML when `overrides` is null
+    // Section: Error Handling & Edge Cases > Citation Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1215,11 +1215,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Loading state — tracked per paper ID in `loadingSimilar` Set",
-      section: "Similar Papers (Find Similar)",
-      subsection: "",
+      description: "`overrides` attribute serialized as JSON string in `data-overrides` HTML attribute; omitted entirely from HTML when `overrides` is null",
+      section: "Error Handling & Edge Cases",
+      subsection: "Citation Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -1231,11 +1231,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 ' + "Loading state — tracked per paper ID in `loadingSimilar` Set");
+      throw new Error('Unhandled editor checkpoint: cp-023 ' + "`overrides` attribute serialized as JSON string in `data-overrides` HTML attribute; omitted entirely from HTML when `overrides` is null");
     }
 
 
-    // This test validates: Loading state — tracked per paper ID in `loadingSimilar` Set
+    // This test validates: `overrides` attribute serialized as JSON string in `data-overrides` HTML attribute; omitted entirely from HTML when `overrides` is null
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1246,16 +1246,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-024: Results stored in similarResults record by paper ID', async ({ page }) => {
-    // Checkpoint 24: Results — stored in `similarResults` record by paper ID
-    // Section: Similar Papers (Find Similar)
+  test('cp-024: Both referenceIds and overrides use JSONparse with fallback and null respectivel', async ({ page }) => {
+    // Checkpoint 24: Both `referenceIds` and `overrides` use `JSON.parse()` with fallback (`[]` and `null` respectively) on parse error
+    // Section: Error Handling & Edge Cases > Citation Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1265,11 +1265,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Results — stored in `similarResults` record by paper ID",
-      section: "Similar Papers (Find Similar)",
-      subsection: "",
+      description: "Both `referenceIds` and `overrides` use `JSON.parse()` with fallback (`[]` and `null` respectively) on parse error",
+      section: "Error Handling & Edge Cases",
+      subsection: "Citation Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -1281,11 +1281,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 ' + "Results — stored in `similarResults` record by paper ID");
+      throw new Error('Unhandled editor checkpoint: cp-024 ' + "Both `referenceIds` and `overrides` use `JSON.parse()` with fallback (`[]` and `null` respectively) on parse error");
     }
 
 
-    // This test validates: Results — stored in `similarResults` record by paper ID
+    // This test validates: Both `referenceIds` and `overrides` use `JSON.parse()` with fallback (`[]` and `null` respectively) on parse error
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1296,16 +1296,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-025: Error handling tracked in similarErrors Set', async ({ page }) => {
-    // Checkpoint 25: Error handling — tracked in `similarErrors` Set
-    // Section: Similar Papers (Find Similar)
+  test('cp-025: Citation extension addKeyboardShortcuts registers Mod-Shift-c lowercase c not up', async ({ page }) => {
+    // Checkpoint 25: Citation extension `addKeyboardShortcuts` registers `"Mod-Shift-c"` (lowercase `c`), not uppercase `C`
+    // Section: Error Handling & Edge Cases > Citation Node HTML Serialization
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1315,11 +1315,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Error handling — tracked in `similarErrors` Set",
-      section: "Similar Papers (Find Similar)",
-      subsection: "",
+      description: "Citation extension `addKeyboardShortcuts` registers `\"Mod-Shift-c\"` (lowercase `c`), not uppercase `C`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Citation Node HTML Serialization",
       rootDir: process.cwd(),
     });
 
@@ -1331,11 +1331,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 ' + "Error handling — tracked in `similarErrors` Set");
+      throw new Error('Unhandled editor checkpoint: cp-025 ' + "Citation extension `addKeyboardShortcuts` registers `\"Mod-Shift-c\"` (lowercase `c`), not uppercase `C`");
     }
 
 
-    // This test validates: Error handling — tracked in `similarErrors` Set
+    // This test validates: Citation extension `addKeyboardShortcuts` registers `"Mod-Shift-c"` (lowercase `c`), not uppercase `C`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1346,16 +1346,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-026: Empty results tracked in similarEmpty Set', async ({ page }) => {
-    // Checkpoint 26: Empty results — tracked in `similarEmpty` Set
-    // Section: Similar Papers (Find Similar)
+  test('cp-026: toCitationAuthors handles comma-separated names eg Smith John by splitting on wi', async ({ page }) => {
+    // Checkpoint 26: `toCitationAuthors()` handles comma-separated names (e.g. `"Smith, John"`) by splitting on `","` with first part as family name
+    // Section: Error Handling & Edge Cases > Studio Research Citation Author Parsing
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1365,11 +1365,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Empty results — tracked in `similarEmpty` Set",
-      section: "Similar Papers (Find Similar)",
-      subsection: "",
+      description: "`toCitationAuthors()` handles comma-separated names (e.g. `\"Smith, John\"`) by splitting on `\",\"` with first part as family name",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Research Citation Author Parsing",
       rootDir: process.cwd(),
     });
 
@@ -1381,11 +1381,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 ' + "Empty results — tracked in `similarEmpty` Set");
+      throw new Error('Unhandled editor checkpoint: cp-026 ' + "`toCitationAuthors()` handles comma-separated names (e.g. `\"Smith, John\"`) by splitting on `\",\"` with first part as family name");
     }
 
 
-    // This test validates: Empty results — tracked in `similarEmpty` Set
+    // This test validates: `toCitationAuthors()` handles comma-separated names (e.g. `"Smith, John"`) by splitting on `","` with first part as family name
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1396,16 +1396,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-027: Display similar papers shown inline below the originating result', async ({ page }) => {
-    // Checkpoint 27: Display — similar papers shown inline below the originating result
-    // Section: Similar Papers (Find Similar)
+  test('cp-027: toCitationAuthors handles space-separated names eg John Smith by taking the last', async ({ page }) => {
+    // Checkpoint 27: `toCitationAuthors()` handles space-separated names (e.g. `"John Smith"`) by taking the last word as family name and remaining words as given name
+    // Section: Error Handling & Edge Cases > Studio Research Citation Author Parsing
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1415,11 +1415,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Display — similar papers shown inline below the originating result",
-      section: "Similar Papers (Find Similar)",
-      subsection: "",
+      description: "`toCitationAuthors()` handles space-separated names (e.g. `\"John Smith\"`) by taking the last word as family name and remaining words as given name",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Research Citation Author Parsing",
       rootDir: process.cwd(),
     });
 
@@ -1431,11 +1431,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 ' + "Display — similar papers shown inline below the originating result");
+      throw new Error('Unhandled editor checkpoint: cp-027 ' + "`toCitationAuthors()` handles space-separated names (e.g. `\"John Smith\"`) by taking the last word as family name and remaining words as given name");
     }
 
 
-    // This test validates: Display — similar papers shown inline below the originating result
+    // This test validates: `toCitationAuthors()` handles space-separated names (e.g. `"John Smith"`) by taking the last word as family name and remaining words as given name
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1446,16 +1446,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-028: Toggle button showshides copilot panel', async ({ page }) => {
-    // Checkpoint 28: Toggle button — shows/hides copilot panel
-    // Section: AI Copilot / Synthesis Panel
+  test('cp-028: Single-word author names use the word as family name with empty string for given', async ({ page }) => {
+    // Checkpoint 28: Single-word author names use the word as family name with empty string for given name
+    // Section: Error Handling & Edge Cases > Studio Research Citation Author Parsing
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1465,11 +1465,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Toggle button — shows/hides copilot panel",
-      section: "AI Copilot / Synthesis Panel",
-      subsection: "",
+      description: "Single-word author names use the word as family name with empty string for given name",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Research Citation Author Parsing",
       rootDir: process.cwd(),
     });
 
@@ -1481,11 +1481,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 ' + "Toggle button — shows/hides copilot panel");
+      throw new Error('Unhandled editor checkpoint: cp-028 ' + "Single-word author names use the word as family name with empty string for given name");
     }
 
 
-    // This test validates: Toggle button — shows/hides copilot panel
+    // This test validates: Single-word author names use the word as family name with empty string for given name
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1496,16 +1496,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-029: AISynthesisPanel component renders synthesis interface', async ({ page }) => {
-    // Checkpoint 29: AISynthesisPanel component — renders synthesis interface
-    // Section: AI Copilot / Synthesis Panel
+  test('cp-029: Empty or whitespace-only author strings return family Unknown given', async ({ page }) => {
+    // Checkpoint 29: Empty or whitespace-only author strings return `{ family: "Unknown", given: "" }`
+    // Section: Error Handling & Edge Cases > Studio Research Citation Author Parsing
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1515,11 +1515,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "AISynthesisPanel component — renders synthesis interface",
-      section: "AI Copilot / Synthesis Panel",
-      subsection: "",
+      description: "Empty or whitespace-only author strings return `{ family: \"Unknown\", given: \"\" }`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Research Citation Author Parsing",
       rootDir: process.cwd(),
     });
 
@@ -1531,11 +1531,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 ' + "AISynthesisPanel component — renders synthesis interface");
+      throw new Error('Unhandled editor checkpoint: cp-029 ' + "Empty or whitespace-only author strings return `{ family: \"Unknown\", given: \"\" }`");
     }
 
 
-    // This test validates: AISynthesisPanel component — renders synthesis interface
+    // This test validates: Empty or whitespace-only author strings return `{ family: "Unknown", given: "" }`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1546,16 +1546,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-030: Uses useChat hook from ai-sdkreact with TextStreamChatTransport', async ({ page }) => {
-    // Checkpoint 30: Uses `useChat` hook — from `@ai-sdk/react` with `TextStreamChatTransport`
-    // Section: AI Copilot / Synthesis Panel
+  test('cp-030: buildResearchReference always creates CSL data with type article-journal regardl', async ({ page }) => {
+    // Checkpoint 30: `buildResearchReference()` always creates CSL data with `type: "article-journal"` regardless of actual source type
+    // Section: Error Handling & Edge Cases > Studio Research Citation Author Parsing
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1565,11 +1565,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Uses `useChat` hook — from `@ai-sdk/react` with `TextStreamChatTransport`",
-      section: "AI Copilot / Synthesis Panel",
-      subsection: "",
+      description: "`buildResearchReference()` always creates CSL data with `type: \"article-journal\"` regardless of actual source type",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Research Citation Author Parsing",
       rootDir: process.cwd(),
     });
 
@@ -1581,11 +1581,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 ' + "Uses `useChat` hook — from `@ai-sdk/react` with `TextStreamChatTransport`");
+      throw new Error('Unhandled editor checkpoint: cp-030 ' + "`buildResearchReference()` always creates CSL data with `type: \"article-journal\"` regardless of actual source type");
     }
 
 
-    // This test validates: Uses `useChat` hook — from `@ai-sdk/react` with `TextStreamChatTransport`
+    // This test validates: `buildResearchReference()` always creates CSL data with `type: "article-journal"` regardless of actual source type
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1596,16 +1596,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-031: Streaming responses token-by-token display', async ({ page }) => {
-    // Checkpoint 31: Streaming responses — token-by-token display
-    // Section: AI Copilot / Synthesis Panel
+  test('cp-031: Research reference stableKey falls back to a slugified title titletrimtoLowerCas', async ({ page }) => {
+    // Checkpoint 31: Research reference `stableKey` falls back to a slugified title (`title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")`) when neither DOI nor PMID is available
+    // Section: Error Handling & Edge Cases > Studio Research Citation Author Parsing
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1615,11 +1615,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Streaming responses — token-by-token display",
-      section: "AI Copilot / Synthesis Panel",
-      subsection: "",
+      description: "Research reference `stableKey` falls back to a slugified title (`title.trim().toLowerCase().replace(/[^a-z0-9]+/g, \"-\")`) when neither DOI nor PMID is available",
+      section: "Error Handling & Edge Cases",
+      subsection: "Studio Research Citation Author Parsing",
       rootDir: process.cwd(),
     });
 
@@ -1631,11 +1631,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 ' + "Streaming responses — token-by-token display");
+      throw new Error('Unhandled editor checkpoint: cp-031 ' + "Research reference `stableKey` falls back to a slugified title (`title.trim().toLowerCase().replace(/[^a-z0-9]+/g, \"-\")`) when neither DOI nor PMID is available");
     }
 
 
-    // This test validates: Streaming responses — token-by-token display
+    // This test validates: Research reference `stableKey` falls back to a slugified title (`title.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-")`) when neither DOI nor PMID is available
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1646,16 +1646,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-032: Streaming response text streams progressively via TextDecoder', async ({ page }) => {
-    // Checkpoint 32: Streaming response — text streams progressively via TextDecoder
-    // Section: Synthesis Report > Live Synthesis Behavior (`POST /api/research/synthesize`)
+  test('cp-032: Outline panel header text is Document Outline full phrase not abbreviated', async ({ page }) => {
+    // Checkpoint 32: Outline panel header text is `"Document Outline"` (full phrase, not abbreviated)
+    // Section: Error Handling & Edge Cases > Document Outline Header and Styling Details
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1665,11 +1665,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Streaming response — text streams progressively via TextDecoder",
-      section: "Synthesis Report",
-      subsection: "Live Synthesis Behavior (`POST /api/research/synthesize`)",
+      description: "Outline panel header text is `\"Document Outline\"` (full phrase, not abbreviated)",
+      section: "Error Handling & Edge Cases",
+      subsection: "Document Outline Header and Styling Details",
       rootDir: process.cwd(),
     });
 
@@ -1681,11 +1681,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 ' + "Streaming response — text streams progressively via TextDecoder");
+      throw new Error('Unhandled editor checkpoint: cp-032 ' + "Outline panel header text is `\"Document Outline\"` (full phrase, not abbreviated)");
     }
 
 
-    // This test validates: Streaming response — text streams progressively via TextDecoder
+    // This test validates: Outline panel header text is `"Document Outline"` (full phrase, not abbreviated)
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1696,16 +1696,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-033: Markdown output with N citation markers', async ({ page }) => {
-    // Checkpoint 33: Markdown output — with `[N]` citation markers
-    // Section: Synthesis Report > Live Synthesis Behavior (`POST /api/research/synthesize`)
+  test('cp-033: Outline header uses text-xs font-semibold text-ink-muted uppercase tracking-wide', async ({ page }) => {
+    // Checkpoint 33: Outline header uses `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling
+    // Section: Error Handling & Edge Cases > Document Outline Header and Styling Details
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1715,11 +1715,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Markdown output — with `[N]` citation markers",
-      section: "Synthesis Report",
-      subsection: "Live Synthesis Behavior (`POST /api/research/synthesize`)",
+      description: "Outline header uses `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling",
+      section: "Error Handling & Edge Cases",
+      subsection: "Document Outline Header and Styling Details",
       rootDir: process.cwd(),
     });
 
@@ -1731,11 +1731,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 ' + "Markdown output — with `[N]` citation markers");
+      throw new Error('Unhandled editor checkpoint: cp-033 ' + "Outline header uses `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling");
     }
 
 
-    // This test validates: Markdown output — with `[N]` citation markers
+    // This test validates: Outline header uses `text-xs font-semibold text-ink-muted uppercase tracking-wider` styling
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash
@@ -1746,16 +1746,16 @@ test.describe('research / spec-002', () => {
     }
   });
 
-  test('cp-034: Temperature generate mode uses 04 plan mode uses 03', async ({ page }) => {
-    // Checkpoint 34: Temperature — generate mode uses `0.4`; plan mode uses `0.3`
-    // Section: Synthesis Report > Live Synthesis Behavior (`POST /api/research/synthesize`)
+  test('cp-034: Collapsed outline toggle button title attribute is Document Outline', async ({ page }) => {
+    // Checkpoint 34: Collapsed outline toggle button `title` attribute is `"Document Outline"`
+    // Section: Error Handling & Edge Cases > Document Outline Header and Styling Details
 
     // Navigate to the page
-    await page.goto('/research', { waitUntil: 'domcontentloaded' });
+    await page.goto('/studio', { waitUntil: 'domcontentloaded' });
     await page.waitForLoadState('networkidle').catch(() => {});
 
     // Take a screenshot as proof of page load
-    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/research/spec-002');
+    const screenshotDir = path.join(process.cwd(), 'qa/artifacts/editor/spec-037');
     if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
 
     // Verify the page loaded without critical errors
@@ -1765,11 +1765,11 @@ test.describe('research / spec-002', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
-    const handled = await assertResearchCheckpoint({
+    const handled = await assertEditorCheckpoint({
       page,
-      description: "Temperature — generate mode uses `0.4`; plan mode uses `0.3`",
-      section: "Synthesis Report",
-      subsection: "Live Synthesis Behavior (`POST /api/research/synthesize`)",
+      description: "Collapsed outline toggle button `title` attribute is `\"Document Outline\"`",
+      section: "Error Handling & Edge Cases",
+      subsection: "Document Outline Header and Styling Details",
       rootDir: process.cwd(),
     });
 
@@ -1781,11 +1781,11 @@ test.describe('research / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 ' + "Temperature — generate mode uses `0.4`; plan mode uses `0.3`");
+      throw new Error('Unhandled editor checkpoint: cp-034 ' + "Collapsed outline toggle button `title` attribute is `\"Document Outline\"`");
     }
 
 
-    // This test validates: Temperature — generate mode uses `0.4`; plan mode uses `0.3`
+    // This test validates: Collapsed outline toggle button `title` attribute is `"Document Outline"`
     // The controller will parse results from Playwright JSON output.
     // A PASS here means:
     //   1. Page loaded without crash

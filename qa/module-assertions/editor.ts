@@ -1034,6 +1034,28 @@ export async function assertEditorCheckpoint(input: EditorCheckpointInput): Prom
   }
 
   // ════════════════════════════════════════════════════════════════
+  // Command Palette (shared component used on editor pages)
+  // ════════════════════════════════════════════════════════════════
+
+  if (d.includes("command palette input placeholder") && d.includes("Type a command or search")) {
+    expectSourceContains(rootDir, "src/components/ui/command-palette.tsx", "Type a command or search...");
+    return true;
+  }
+
+  if (d.includes("command palette closes on") && d.includes("Escape")) {
+    expectSourceContains(rootDir, "src/components/ui/command-palette.tsx", "Escape");
+    return true;
+  }
+
+  if (d.includes("command palette navigation commands include")) {
+    const src = readFile(rootDir, "src/components/ui/command-palette.tsx");
+    for (const label of ["Dashboard", "Studio", "Literature Search", "Notebook", "Library", "Archive", "Compliance", "Presentation", "Settings"]) {
+      expect(src).toContain(label);
+    }
+    return true;
+  }
+
+  // ════════════════════════════════════════════════════════════════
   // CATCH-ALL: return false for unhandled checkpoints
   // ════════════════════════════════════════════════════════════════
 

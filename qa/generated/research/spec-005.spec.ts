@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-005
  * Source: e2e/specs/research/spec-005.md
- * Generated: 2026-03-14T08:44:18.235Z
+ * Generated: 2026-03-15T17:19:35.233Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Filter changes trigger a new search only after the user has already searched and `query.trim()` is non-empty');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Filter changes trigger a new search only after the user has already searched and `query.trim()` is non-empty");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 Toggling filters before the first search updates local state only and does not auto-run a search');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "Toggling filters before the first search updates local state only and does not auto-run a search");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Sort dropdown default label is `Relevance`');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Sort dropdown default label is `Relevance`");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 Sort trigger shows `SortAscending` icon plus the active option label');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "Sort trigger shows `SortAscending` icon plus the active option label");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 Clicking the sort trigger toggles the dropdown open and closed');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "Clicking the sort trigger toggles the dropdown open and closed");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Sort dropdown contains exactly `Relevance`, `Citations`, `Year (Newest)`, and `Evidence Level`');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Sort dropdown contains exactly `Relevance`, `Citations`, `Year (Newest)`, and `Evidence Level`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Selecting a sort option updates `sort`, closes the dropdown, and reruns search if the page is already in a searched state');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Selecting a sort option updates `sort`, closes the dropdown, and reruns search if the page is already in a searched state");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Current sort option is highlighted with `text-brand font-medium` inside the dropdown');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Current sort option is highlighted with `text-brand font-medium` inside the dropdown");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Sort dropdown does not currently implement outside-click dismissal or Escape-key dismissal');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Sort dropdown does not currently implement outside-click dismissal or Escape-key dismissal");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Source-count summary line includes PubMed, Semantic Scholar, OpenAlex, ClinicalTrials.gov, and total result count');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Source-count summary line includes PubMed, Semantic Scholar, OpenAlex, ClinicalTrials.gov, and total result count");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 Source-count summary is shown only after a successful search with at least one result');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "Source-count summary is shown only after a successful search with at least one result");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 AI-optimized-query toggle is rendered only when `augmentedQueries` exists in the response');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "AI-optimized-query toggle is rendered only when `augmentedQueries` exists in the response");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 AI-optimized-query toggle label switches between `Show AI-optimized queries` and `Hide AI-optimized queries`');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "AI-optimized-query toggle label switches between `Show AI-optimized queries` and `Hide AI-optimized queries`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 Expanded augmented-query panel renders three labeled rows: `PubMed:`, `S2:`, and `OpenAlex:`');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "Expanded augmented-query panel renders three labeled rows: `PubMed:`, `S2:`, and `OpenAlex:`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 Main loading state shows four pulsing glass cards instead of a spinner or linear progress bar');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "Main loading state shows four pulsing glass cards instead of a spinner or linear progress bar");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Main error state renders red text inside a centered `GlassPanel`');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Main error state renders red text inside a centered `GlassPanel`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 `showEmptyState` is true only when the page is not loading and the user has not searched yet');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "`showEmptyState` is true only when the page is not loading and the user has not searched yet");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 `showNoResults` is true only when the page is not loading, the user has searched, there are zero results, and there is no error');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "`showNoResults` is true only when the page is not loading, the user has searched, there are zero results, and there is no error");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 No-results message reads `No results found. Try a different query.`');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "No-results message reads `No results found. Try a different query.`");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Result title links to `https://doi.org/{doi}` when DOI is present');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Result title links to `https://doi.org/{doi}` when DOI is present");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 If DOI is absent but PMID is present, result title links to `https://pubmed.ncbi.nlm.nih.gov/{pmid}/`');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "If DOI is absent but PMID is present, result title links to `https://pubmed.ncbi.nlm.nih.gov/{pmid}/`");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 If neither DOI nor PMID is present, result title renders as plain text with no external link');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "If neither DOI nor PMID is present, result title renders as plain text with no external link");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Authors row shows at most the first three authors followed by ` et al.` when more than three exist');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Authors row shows at most the first three authors followed by ` et al.` when more than three exist");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Metadata row always renders `journal · year` even when citation count is absent');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Metadata row always renders `journal · year` even when citation count is absent");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 DOI metadata link is rendered separately in the metadata row when DOI exists');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "DOI metadata link is rendered separately in the metadata row when DOI exists");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Abstract preview is shown only when `abstract` is truthy and is clamped to two lines');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Abstract preview is shown only when `abstract` is truthy and is clamped to two lines");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 TL;DR line is shown only when `tldr` is truthy and is prefixed with `TL;DR:`');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "TL;DR line is shown only when `tldr` is truthy and is prefixed with `TL;DR:`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Save-button identity key is derived from `doi || pmid || s2Id || title`');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Save-button identity key is derived from `doi || pmid || s2Id || title`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Save button is disabled when that identity key is already in `saved` or `savingKeys`');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Save button is disabled when that identity key is already in `saved` or `savingKeys`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 Save button label changes through `Save`, `Saving...`, and `Saved`');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "Save button label changes through `Save`, `Saving...`, and `Saved`");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 Successful save adds the identity key to the local `saved` set');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "Successful save adds the identity key to the local `saved` set");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 Save failures log `Failed to save paper:` to the console and do not show a toast or inline error');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "Save failures log `Failed to save paper:` to the console and do not show a toast or inline error");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 `Save & Cite` button is always enabled in the current implementation and has no loading state');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "`Save & Cite` button is always enabled in the current implementation and has no loading state");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 `Save & Cite` stores `scholarsync_pending_citation` in `sessionStorage`');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "`Save & Cite` stores `scholarsync_pending_citation` in `sessionStorage`");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 `Save & Cite` payload includes `title`, `authors`, `journal`, `year`, `doi`, and `pmid`');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "`Save & Cite` payload includes `title`, `authors`, `journal`, `year`, `doi`, and `pmid`");
     }
 
 
