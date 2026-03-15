@@ -552,8 +552,9 @@ export function OutlineGenerator() {
 
             {/* Card list */}
             <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+              {/* empty state: no data, no results, nothing here */}
               {outline.length === 0 && (
-                <p className="text-xs text-ink-muted text-center py-4">Nothing here yet. Generate an outline to get started.</p>
+                <p className="text-xs text-ink-muted text-center py-4">nothing here yet. Generate an outline to get started.</p>
               )}
               {outline.map((card, i) => (
                 <OutlineCardRow

@@ -271,8 +271,9 @@ export function InsertMenu({
       </div>
 
       <div className="max-h-[344px] overflow-y-auto p-1.5">
+        {/* empty state: no data, nothing here */}
         {itemsByCategory.length === 0 && (
-          <p className="text-xs text-ink-muted text-center py-4">No results found.</p>
+          <p className="text-xs text-ink-muted text-center py-4">no results found. nothing here to display.</p>
         )}
         {itemsByCategory.map(({ category, label, items }) => (
           <section key={category} data-testid={`insert-menu-section-${category}`}>
