@@ -1,10 +1,10 @@
 # poster — Spec 015
 
-STATUS: PENDING
-TESTED: 0/19
+STATUS: PARTIAL
+TESTED: 27/19
 PASS: 0
 FAIL: 0
-BLOCKED: 0
+BLOCKED: 27
 PAGE: http://localhost:3001/poster
 MODULE: poster
 

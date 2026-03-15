@@ -1,10 +1,10 @@
 # systematic-review — Spec 006
 
-STATUS: PENDING
-TESTED: 0/35
+STATUS: PARTIAL
+TESTED: 27/35
 PASS: 0
 FAIL: 0
-BLOCKED: 0
+BLOCKED: 27
 PAGE: http://localhost:3001/systematic-review
 MODULE: systematic-review
 

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for systematic-review/spec-021
  * Source: e2e/specs/systematic-review/spec-021.md
- * Generated: 2026-03-14T10:25:00.195Z
+ * Generated: 2026-03-15T04:37:20.246Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
