@@ -353,7 +353,7 @@ export async function assertSystematicReviewCheckpoint(
     return true;
   }
 
-  if (d.includes("srroomProvider") || (d.includes("liveblocks") && d.includes("room provider"))) {
+  if (d.includes("srroomprovider") || (d.includes("liveblocks") && d.includes("room provider"))) {
     expectSourceContains(rootDir, WORKFLOW_PAGE, "SRRoomProvider");
     return true;
   }
@@ -2178,7 +2178,7 @@ export async function assertSystematicReviewCheckpoint(
   // ══════════════════════════════════════════════════════════════════════
 
   // Liveblocks — real-time collaboration via SRRoomProvider
-  if (d.includes("liveblocks") && d.includes("real-time collaboration") && d.includes("srroomProvider")) {
+  if (d.includes("liveblocks") && d.includes("real-time collaboration") && d.includes("srroomprovider")) {
     expectSourceContains(rootDir, WORKFLOW_PAGE, "SRRoomProvider");
     return true;
   }
