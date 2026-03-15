@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-010
  * Source: e2e/specs/presentation/spec-010.md
- * Generated: 2026-03-14T10:21:05.977Z
+ * Generated: 2026-03-14T19:53:42.486Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**15.7** Views over time chart renders");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **15.7** Views over time chart renders');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**15.8** Data updates on panel open/refresh");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **15.8** Data updates on panel open/refresh');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**16.1** SharePanel renders");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **16.1** SharePanel renders');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**16.2** Public toggle switches between public and private");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **16.2** Public toggle switches between public and private');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**16.3** Share URL is displayed when public");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **16.3** Share URL is displayed when public');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**16.4** Copy URL button copies link to clipboard");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **16.4** Copy URL button copies link to clipboard');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**16.5** Password field allows setting an access password");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **16.5** Password field allows setting an access password');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**16.6** Expiration setting allows time-limited sharing");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **16.6** Expiration setting allows time-limited sharing');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**16.7** Toggling off public disables the share link");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **16.7** Toggling off public disables the share link');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**17.1** VersionHistoryPanel renders");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **17.1** VersionHistoryPanel renders');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**17.2** Save current version creates a snapshot");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **17.2** Save current version creates a snapshot');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**17.3** Version list shows saved versions with timestamps");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **17.3** Version list shows saved versions with timestamps');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**17.4** Restore version replaces current deck with selected version");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **17.4** Restore version replaces current deck with selected version');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**17.5** Delete version removes it from the list");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **17.5** Delete version removes it from the list');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**18.1** RecordingsPanel renders");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **18.1** RecordingsPanel renders');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**18.2** Recording setup UI (mic/camera permissions)");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **18.2** Recording setup UI (mic/camera permissions)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**18.3** Start recording begins capture");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **18.3** Start recording begins capture');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**18.4** Pause/Resume toggles recording state");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **18.4** Pause/Resume toggles recording state');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**18.5** Mute/Unmute toggles audio capture");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **18.5** Mute/Unmute toggles audio capture');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**18.6** Stop recording ends and saves the recording");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **18.6** Stop recording ends and saves the recording');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**18.7** Recording library lists saved recordings");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **18.7** Recording library lists saved recordings');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**18.8** Playback of saved recordings");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **18.8** Playback of saved recordings');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**19.2** Two-panel layout: main slide (2/3) + presenter panel (1/3)");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **19.2** Two-panel layout: main slide (2/3) + presenter panel (1/3)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**19.3** Presenter panel shows speaker notes");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **19.3** Presenter panel shows speaker notes');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**19.4** Presenter panel shows timer");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **19.4** Presenter panel shows timer');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**19.5** Presenter panel shows next slide preview");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **19.5** Presenter panel shows next slide preview');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**19.18** BroadcastChannel \"presenter-slide-sync\" is created on enter");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **19.18** BroadcastChannel "presenter-slide-sync" is created on enter');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**19.19** Slide index changes are broadcast to audience view");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **19.19** Slide index changes are broadcast to audience view');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**19.20** Screen mode changes (black/white/normal) are broadcast");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **19.20** Screen mode changes (black/white/normal) are broadcast');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**19.21** Init message is sent when audience connects");
+      throw new Error('Unhandled presentation checkpoint: cp-029 **19.21** Init message is sent when audience connects');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**19.22** Empty slide state shows \"No visible slides to present.\" with \"Exit Presentation\" button (`presenter-mode.tsx:634`, `:636`, `:639`)");
+      throw new Error('Unhandled presentation checkpoint: cp-030 **19.22** Empty slide state shows "No visible slides to present." with "Exit Presentation" button (`presenter-mode.tsx:634`, `:636`, `:639`)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**19.23** Timer auto-starts on mount (elapsed=0, running=true) (`presenter-mode.tsx:129-130`)");
+      throw new Error('Unhandled presentation checkpoint: cp-031 **19.23** Timer auto-starts on mount (elapsed=0, running=true) (`presenter-mode.tsx:129-130`)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**19.24** Timer section labeled \"Timer\" with Clock icon (`presenter-mode.tsx:773`, `:774`)");
+      throw new Error('Unhandled presentation checkpoint: cp-032 **19.24** Timer section labeled "Timer" with Clock icon (`presenter-mode.tsx:773`, `:774`)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**19.25** Timer pause/resume button toggles between Pause and Play icons (`presenter-mode.tsx:781`, `:783`, `:785-788`)");
+      throw new Error('Unhandled presentation checkpoint: cp-033 **19.25** Timer pause/resume button toggles between Pause and Play icons (`presenter-mode.tsx:781`, `:783`, `:785-788`)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**19.26** Presenter panel toggle: \"Hide Panel (N)\" / \"Show Panel (N)\" text (`presenter-mode.tsx:729`, `:732`)");
+      throw new Error('Unhandled presentation checkpoint: cp-034 **19.26** Presenter panel toggle: "Hide Panel (N)" / "Show Panel (N)" text (`presenter-mode.tsx:729`, `:732`)');
     }
 
 

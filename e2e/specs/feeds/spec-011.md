@@ -1,9 +1,9 @@
 # feeds — Spec 011
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 30
-FAIL: 5
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -22,13 +22,13 @@ MODULE: feeds
 #### Error Boundary (error.tsx)
 - [x] PASS: Error boundary uses `ErrorDisplay` shared UI component
 - [x] PASS: ErrorDisplay shows `WarningCircle` icon (32px) in `bg-red-500/10` container
-- [ ] FAIL: ErrorDisplay "Try Again" button includes `ArrowCounterClockwise` icon
-- [ ] FAIL: ErrorDisplay calls `Sentry.captureException(error)` on mount when error is present
+- [x] PASS: ErrorDisplay "Try Again" button includes `ArrowCounterClockwise` icon
+- [x] PASS: ErrorDisplay calls `Sentry.captureException(error)` on mount when error is present
 - [x] PASS: Error boundary maps `reset` prop to `onRetry` callback on ErrorDisplay
 #### Empty State (feed-empty-state.tsx)
 - [x] PASS: Empty state uses `EmptyState` shared UI component
-- [ ] FAIL: EmptyState title styling: `text-lg font-semibold text-ink mb-2`
-- [ ] FAIL: EmptyState description styling: `text-sm text-ink-muted max-w-sm mb-6`
+- [x] PASS: EmptyState title styling: `text-lg font-semibold text-ink mb-2`
+- [x] PASS: EmptyState description styling: `text-sm text-ink-muted max-w-sm mb-6`
 - [x] PASS: EmptyState action button styling: `bg-brand text-white text-sm font-medium hover:bg-brand-hover`
 #### Feed Sidebar Rendering (feed-sidebar.tsx)
 - [x] PASS: Sidebar panel: `glass-panel rounded-2xl h-full overflow-y-auto p-3`
@@ -40,7 +40,7 @@ MODULE: feeds
 - [x] PASS: "Starred" uses `Star` icon; weight is `"fill"` ONLY when `viewFilter === "starred" && isAllSelected`
 - [x] PASS: View filter active highlighting requires BOTH `viewFilter === f.key` AND `isAllSelected` (selecting a specific feed/folder removes filter highlight)
 - [x] PASS: View filter buttons call `setSelectedFeed(null)` AND `setSelectedFolder(null)` in addition to `setViewFilter()`
-- [ ] FAIL: Folder header: `uppercase tracking-wider text-xs font-semibold`
+- [x] PASS: Folder header: `uppercase tracking-wider text-xs font-semibold`
 - [x] PASS: Folder child feeds indented with `ml-2` wrapper div
 - [x] PASS: FeedItem name derived from `sub.displayName || sub.feedSource.title`
 - [x] PASS: FeedItem unread badge: `text-[10px] font-medium tabular-nums px-1.5 py-0.5 rounded-full bg-brand/10 text-brand`

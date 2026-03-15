@@ -1,9 +1,9 @@
 # feeds — Spec 016
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 31
-FAIL: 4
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -29,21 +29,21 @@ MODULE: feeds
 - [x] PASS: Suggestion chip hover: `hover:border-brand/30`
 - [x] PASS: Suggestion chips disabled when `copilotLoading` is true
 - [x] PASS: Chat input form border: `border-t border-border-subtle`
-- [ ] FAIL: Chat input styling: `rounded-xl bg-surface-raised border border-border text-ink text-xs`
+- [x] PASS: Chat input styling: `rounded-xl bg-surface-raised border border-border text-ink text-xs`
 - [x] PASS: Send button: `p-2 rounded-xl bg-brand text-white` with `PaperPlaneRight` icon (16px)
 - [x] PASS: Send button disabled: `copilotLoading || !input.trim()` (both conditions)
 - [x] PASS: Form submit: prevents default, trims input, clears local input state, then calls `sendCopilotMessage`
 - [x] PASS: Auto-scroll: `messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })` triggered on `copilotMessages` change
 #### Add Feed Modal (add-feed-modal.tsx)
-- [ ] FAIL: Modal title: "Add Feed" (not "Add a Feed" or "New Feed")
+- [x] PASS: Modal title: "Add Feed" (not "Add a Feed" or "New Feed")
 - [x] PASS: Modal max-width: `max-w-xl`
 - [x] PASS: Tab keys: `"url"` and `"browse"` (not `"Add URL"` / `"Browse Journals"`)
 - [x] PASS: RSS input icon: `Rss` (16px) positioned `left-3 top-1/2 -translate-y-1/2`
 - [x] PASS: RSS input type: `url` (enables browser URL validation)
 - [x] PASS: PubMed input icon: `MagnifyingGlass` (16px) positioned same as RSS
 - [x] PASS: PubMed input type: `text`
-- [ ] FAIL: RSS Add button text: "Adding..." during subscribe, "Add" normally
-- [ ] FAIL: PubMed Create Feed button text: "Creating..." during subscribe, "Create Feed" normally
+- [x] PASS: RSS Add button text: "Adding..." during subscribe, "Add" normally
+- [x] PASS: PubMed Create Feed button text: "Creating..." during subscribe, "Create Feed" normally
 - [x] PASS: Divider: "or" text centered between `border-t border-border-subtle` lines
 - [x] PASS: Error styling: `text-sm text-red-400 bg-red-500/10 px-3 py-2 rounded-xl`
 - [x] PASS: Successful URL add: clears `feedUrl` then calls `onClose()`

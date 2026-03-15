@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 7093,
+                      "duration": 11131,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:11.792Z",
+                      "startTime": "2026-03-14T19:05:33.000Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1695,
+                      "duration": 1783,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:18.984Z",
+                      "startTime": "2026-03-14T19:05:44.232Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -173,12 +173,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1690,
+                      "duration": 1776,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:20.699Z",
+                      "startTime": "2026-03-14T19:05:46.027Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -213,12 +213,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1667,
+                      "duration": 1832,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:22.407Z",
+                      "startTime": "2026-03-14T19:05:47.814Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -253,12 +253,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1702,
+                      "duration": 1811,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:24.087Z",
+                      "startTime": "2026-03-14T19:05:49.657Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -293,12 +293,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1695,
+                      "duration": 1759,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:25.803Z",
+                      "startTime": "2026-03-14T19:05:51.478Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -319,7 +319,7 @@
             },
             {
               "title": "cp-006: Related-papers intent fallthrough if related fetch fails chat endpoint still fir",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -332,58 +332,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1756,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-006 Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-006 Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts:384:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                          "column": 13,
-                          "line": 384
-                        },
-                        "snippet": "  382 |\n  383 |     if (!handled) {\n> 384 |       throw new Error('Unhandled feeds checkpoint: cp-006 Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires');\n      |             ^\n  385 |     }\n  386 |\n  387 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                            "column": 13,
-                            "line": 384
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-006 Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires\n\n  382 |\n  383 |     if (!handled) {\n> 384 |       throw new Error('Unhandled feeds checkpoint: cp-006 Related-papers intent fallthrough: if related fetch fails, chat endpoint still fires');\n      |             ^\n  385 |     }\n  386 |\n  387 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts:384:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1853,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:27.507Z",
+                      "startTime": "2026-03-14T19:05:53.248Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--7c792-ils-chat-endpoint-still-fir-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--7c792-ils-chat-endpoint-still-fir-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--7c792-ils-chat-endpoint-still-fir-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--7c792-ils-chat-endpoint-still-fir-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                        "column": 13,
-                        "line": 384
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "859a2defc1a68ce3874f-bb4407cda84120b61269",
@@ -404,15 +370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1714,
+                      "duration": 1814,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:30.033Z",
+                      "startTime": "2026-03-14T19:05:55.113Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -444,15 +410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1632,
+                      "duration": 1790,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:31.829Z",
+                      "startTime": "2026-03-14T19:05:56.940Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -484,15 +450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1663,
+                      "duration": 1791,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:33.477Z",
+                      "startTime": "2026-03-14T19:05:58.746Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -524,15 +490,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1657,
+                      "duration": 1787,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:35.156Z",
+                      "startTime": "2026-03-14T19:06:00.548Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -564,15 +530,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1652,
+                      "duration": 1808,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:36.825Z",
+                      "startTime": "2026-03-14T19:06:02.346Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -604,15 +570,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1725,
+                      "duration": 1777,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:38.489Z",
+                      "startTime": "2026-03-14T19:06:04.164Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -644,15 +610,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1690,
+                      "duration": 1770,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:40.223Z",
+                      "startTime": "2026-03-14T19:06:05.951Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -684,15 +650,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1672,
+                      "duration": 1862,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:41.924Z",
+                      "startTime": "2026-03-14T19:06:07.731Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -724,15 +690,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1639,
+                      "duration": 1833,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:43.605Z",
+                      "startTime": "2026-03-14T19:06:09.608Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -753,7 +719,7 @@
             },
             {
               "title": "cp-016: j does nothing when at last article currentIndex articleslength - 1",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -764,60 +730,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1690,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-016 `j` does nothing when at last article (`currentIndex >= articles.length - 1`)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-016 `j` does nothing when at last article (`currentIndex >= articles.length - 1`)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts:884:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                          "column": 13,
-                          "line": 884
-                        },
-                        "snippet": "  882 |\n  883 |     if (!handled) {\n> 884 |       throw new Error('Unhandled feeds checkpoint: cp-016 `j` does nothing when at last article (`currentIndex >= articles.length - 1`)');\n      |             ^\n  885 |     }\n  886 |\n  887 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                            "column": 13,
-                            "line": 884
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-016 `j` does nothing when at last article (`currentIndex >= articles.length - 1`)\n\n  882 |\n  883 |     if (!handled) {\n> 884 |       throw new Error('Unhandled feeds checkpoint: cp-016 `j` does nothing when at last article (`currentIndex >= articles.length - 1`)');\n      |             ^\n  885 |     }\n  886 |\n  887 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts:884:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1835,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:45.254Z",
+                      "startTime": "2026-03-14T19:06:11.467Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--2eb2a-entIndex-articleslength---1-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--2eb2a-entIndex-articleslength---1-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--2eb2a-entIndex-articleslength---1-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--2eb2a-entIndex-articleslength---1-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                        "column": 13,
-                        "line": 884
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "859a2defc1a68ce3874f-095aeb9ad30b13b4bc12",
@@ -827,7 +759,7 @@
             },
             {
               "title": "cp-017: k does nothing when at first article currentIndex 0",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -838,60 +770,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1770,
-                      "error": {
-                        "message": "Error: Unhandled feeds checkpoint: cp-017 `k` does nothing when at first article (`currentIndex <= 0`)",
-                        "stack": "Error: Unhandled feeds checkpoint: cp-017 `k` does nothing when at first article (`currentIndex <= 0`)\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts:934:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                          "column": 13,
-                          "line": 934
-                        },
-                        "snippet": "  932 |\n  933 |     if (!handled) {\n> 934 |       throw new Error('Unhandled feeds checkpoint: cp-017 `k` does nothing when at first article (`currentIndex <= 0`)');\n      |             ^\n  935 |     }\n  936 |\n  937 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                            "column": 13,
-                            "line": 934
-                          },
-                          "message": "Error: Unhandled feeds checkpoint: cp-017 `k` does nothing when at first article (`currentIndex <= 0`)\n\n  932 |\n  933 |     if (!handled) {\n> 934 |       throw new Error('Unhandled feeds checkpoint: cp-017 `k` does nothing when at first article (`currentIndex <= 0`)');\n      |             ^\n  935 |     }\n  936 |\n  937 |\n    at /home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts:934:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1849,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:47.713Z",
+                      "startTime": "2026-03-14T19:06:13.313Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--484b5-irst-article-currentIndex-0-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--484b5-irst-article-currentIndex-0-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--484b5-irst-article-currentIndex-0-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/feeds-spec-019-feeds-spec--484b5-irst-article-currentIndex-0-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/feeds/spec-019.spec.ts",
-                        "column": 13,
-                        "line": 934
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "859a2defc1a68ce3874f-e6ccb9907a97026c7b2b",
@@ -912,15 +810,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1715,
+                      "duration": 1891,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:50.294Z",
+                      "startTime": "2026-03-14T19:06:15.185Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -952,15 +850,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1702,
+                      "duration": 1827,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:52.093Z",
+                      "startTime": "2026-03-14T19:06:17.091Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -992,15 +890,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1630,
+                      "duration": 1837,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:53.807Z",
+                      "startTime": "2026-03-14T19:06:18.942Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1032,15 +930,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1670,
+                      "duration": 1778,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:55.458Z",
+                      "startTime": "2026-03-14T19:06:20.790Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1072,15 +970,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1660,
+                      "duration": 1807,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:57.136Z",
+                      "startTime": "2026-03-14T19:06:22.578Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1112,15 +1010,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1879,
+                      "duration": 1818,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:54:58.806Z",
+                      "startTime": "2026-03-14T19:06:24.395Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1152,15 +1050,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1702,
+                      "duration": 1995,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:55:00.693Z",
+                      "startTime": "2026-03-14T19:06:26.224Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1192,15 +1090,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1661,
+                      "duration": 1756,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:55:02.405Z",
+                      "startTime": "2026-03-14T19:06:28.229Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1232,15 +1130,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1710,
+                      "duration": 1789,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:55:04.075Z",
+                      "startTime": "2026-03-14T19:06:29.995Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1272,15 +1170,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2102,
+                      "duration": 1765,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:55:05.797Z",
+                      "startTime": "2026-03-14T19:06:31.794Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1306,11 +1204,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T14:54:09.877Z",
-    "duration": 58783.041999999994,
-    "expected": 25,
+    "startTime": "2026-03-14T19:05:30.866Z",
+    "duration": 63522.048,
+    "expected": 28,
     "skipped": 0,
-    "unexpected": 3,
+    "unexpected": 0,
     "flaky": 0
   }
 }

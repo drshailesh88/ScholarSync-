@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-009
  * Source: e2e/specs/slides-ai/spec-009.md
- * Generated: 2026-03-14T10:19:09.096Z
+ * Generated: 2026-03-14T21:52:55.987Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Editing any color marks theme as \"custom\"");
+      throw new Error('Unhandled slides checkpoint: cp-000 Editing any color marks theme as "custom"');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "**Heading font** dropdown (10 options):");
+      throw new Error('Unhandled slides checkpoint: cp-001 **Heading font** dropdown (10 options):');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Inter, Poppins, Roboto, Playfair Display, Merriweather, Source Sans 3, Lora, Fira Sans, Nunito, Space Grotesk");
+      throw new Error('Unhandled slides checkpoint: cp-002 Inter, Poppins, Roboto, Playfair Display, Merriweather, Source Sans 3, Lora, Fira Sans, Nunito, Space Grotesk');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "**Body font** dropdown (same 10 options)");
+      throw new Error('Unhandled slides checkpoint: cp-003 **Body font** dropdown (same 10 options)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "None | Sm | Md | Lg | Xl");
+      throw new Error('Unhandled slides checkpoint: cp-004 None | Sm | Md | Lg | Xl');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "None | Subtle | Strong");
+      throw new Error('Unhandled slides checkpoint: cp-005 None | Subtle | Strong');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "None | Subtle | Medium | Dramatic");
+      throw new Error('Unhandled slides checkpoint: cp-006 None | Subtle | Medium | Dramatic');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Compact | Comfortable | Spacious");
+      throw new Error('Unhandled slides checkpoint: cp-007 Compact | Comfortable | Spacious');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Max height 70vh with scrollable content");
+      throw new Error('Unhandled slides checkpoint: cp-008 Max height 70vh with scrollable content');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "All changes apply immediately (live preview)");
+      throw new Error('Unhandled slides checkpoint: cp-009 All changes apply immediately (live preview)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Custom edits set themeKey to \"custom\"");
+      throw new Error('Unhandled slides checkpoint: cp-010 Custom edits set themeKey to "custom"');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Close button to hide the panel");
+      throw new Error('Unhandled slides checkpoint: cp-011 Close button to hide the panel');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "\"Restructure deck\"");
+      throw new Error('Unhandled slides checkpoint: cp-012 "Restructure deck"');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "\"Shorten all slides\"");
+      throw new Error('Unhandled slides checkpoint: cp-013 "Shorten all slides"');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "\"Add citations everywhere\"");
+      throw new Error('Unhandled slides checkpoint: cp-014 "Add citations everywhere"');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "\"Improve flow\"");
+      throw new Error('Unhandled slides checkpoint: cp-015 "Improve flow"');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "\"Translate to...\"");
+      throw new Error('Unhandled slides checkpoint: cp-016 "Translate to..."');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "\"Make more visual\"");
+      throw new Error('Unhandled slides checkpoint: cp-017 "Make more visual"');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Click populates input and focuses");
+      throw new Error('Unhandled slides checkpoint: cp-018 Click populates input and focuses');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Message history with auto-scroll");
+      throw new Error('Unhandled slides checkpoint: cp-019 Message history with auto-scroll');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "**User messages:** brand background, right-aligned, rounded-br-sm");
+      throw new Error('Unhandled slides checkpoint: cp-020 **User messages:** brand background, right-aligned, rounded-br-sm');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "**AI messages:** surface-raised background, left-aligned, rounded-bl-sm");
+      throw new Error('Unhandled slides checkpoint: cp-021 **AI messages:** surface-raised background, left-aligned, rounded-bl-sm');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Loading state: \"Thinking...\" with spinner");
+      throw new Error('Unhandled slides checkpoint: cp-022 Loading state: "Thinking..." with spinner');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Textarea starts at `rows=1` and does not auto-resize");
+      throw new Error('Unhandled slides checkpoint: cp-023 Textarea starts at `rows=1` and does not auto-resize');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Placeholder: \"Ask the AI to change your deck...\"");
+      throw new Error('Unhandled slides checkpoint: cp-024 Placeholder: "Ask the AI to change your deck..."');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Send button (brand background, paper plane icon)");
+      throw new Error('Unhandled slides checkpoint: cp-025 Send button (brand background, paper plane icon)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Enter sends message; Shift+Enter for new line");
+      throw new Error('Unhandled slides checkpoint: cp-026 Enter sends message; Shift+Enter for new line');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Endpoint: `/api/slides/chat`");
+      throw new Error('Unhandled slides checkpoint: cp-027 Endpoint: `/api/slides/chat`');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Sends: deckId, message, simplified slides data, activeSlideId, audienceType");
+      throw new Error('Unhandled slides checkpoint: cp-028 Sends: deckId, message, simplified slides data, activeSlideId, audienceType');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Response: `{ summary, modifiedSlides[], newSlides[] }`");
+      throw new Error('Unhandled slides checkpoint: cp-029 Response: `{ summary, modifiedSlides[], newSlides[] }`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "**Direct application:** changes applied immediately to store");
+      throw new Error('Unhandled slides checkpoint: cp-030 **Direct application:** changes applied immediately to store');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Modified slides: updates title, contentBlocks, speakerNotes, layout");
+      throw new Error('Unhandled slides checkpoint: cp-031 Modified slides: updates title, contentBlocks, speakerNotes, layout');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "New slides: added to the deck");
+      throw new Error('Unhandled slides checkpoint: cp-032 New slides: added to the deck');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "**Title input** (required, red asterisk)");
+      throw new Error('Unhandled slides checkpoint: cp-033 **Title input** (required, red asterisk)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Description textarea — \"Describe your topic, key points, or paste an abstract...\"");
+      throw new Error('Unhandled slides checkpoint: cp-034 Description textarea — "Describe your topic, key points, or paste an abstract..."');
     }
 
 

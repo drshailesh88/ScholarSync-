@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6573,
+                      "duration": 10614,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:25.952Z",
+                      "startTime": "2026-03-14T18:42:01.411Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -133,12 +133,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1459,
+                      "duration": 1612,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:32.628Z",
+                      "startTime": "2026-03-14T18:42:12.131Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -159,7 +159,7 @@
             },
             {
               "title": "cp-002: Loading a saved session sets pageState running and progressMessage Loading saved",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -172,58 +172,24 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1509,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-002 Loading a saved session sets `pageState = \"running\"` and `progressMessage = \"Loading saved research...\"`.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-002 Loading a saved session sets `pageState = \"running\"` and `progressMessage = \"Loading saved research...\"`.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:184:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 184
-                        },
-                        "snippet": "  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled deep-research checkpoint: cp-002 Loading a saved session sets `pageState = \"running\"` and `progressMessage = \"Loading saved research...\"`.');\n      |             ^\n  185 |     }\n  186 |\n  187 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 184
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-002 Loading a saved session sets `pageState = \"running\"` and `progressMessage = \"Loading saved research...\"`.\n\n  182 |\n  183 |     if (!handled) {\n> 184 |       throw new Error('Unhandled deep-research checkpoint: cp-002 Loading a saved session sets `pageState = \"running\"` and `progressMessage = \"Loading saved research...\"`.');\n      |             ^\n  185 |     }\n  186 |\n  187 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:184:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1581,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:34.104Z",
+                      "startTime": "2026-03-14T18:42:13.762Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-1b603-ogressMessage-Loading-saved-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-1b603-ogressMessage-Loading-saved-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-1b603-ogressMessage-Loading-saved-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-1b603-ogressMessage-Loading-saved-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 184
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-eeb693b12f6fb90211df",
@@ -244,15 +210,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1481,
+                      "duration": 1641,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:36.390Z",
+                      "startTime": "2026-03-14T18:42:15.356Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -273,7 +239,7 @@
             },
             {
               "title": "cp-004: The synthetic loaded report always sets summary perspectives contradictions keyF",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -284,60 +250,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1493,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-004 The synthetic loaded report always sets `summary = \"\"`, `perspectives = []`, `contradictions = []`, `keyFindings = data.keyFindings || []`, `gaps = data.gaps || []`, `totalSources = data.sources?.length || 0`, `sources = data.sources || []`, and `markdownReport = data.markdownReport`.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-004 The synthetic loaded report always sets `summary = \"\"`, `perspectives = []`, `contradictions = []`, `keyFindings = data.keyFindings || []`, `gaps = data.gaps || []`, `totalSources = data.sources?.length || 0`, `sources = data.sources || []`, and `markdownReport = data.markdownReport`.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:284:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 284
-                        },
-                        "snippet": "  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled deep-research checkpoint: cp-004 The synthetic loaded report always sets `summary = \"\"`, `perspectives = []`, `contradictions = []`, `keyFindings = data.keyFindings || []`, `gaps = data.gaps || []`, `totalSources = data.sources?.length || 0`, `sources = data.sources || []`, and `markdownReport = data.markdownReport`.');\n      |             ^\n  285 |     }\n  286 |\n  287 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 284
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-004 The synthetic loaded report always sets `summary = \"\"`, `perspectives = []`, `contradictions = []`, `keyFindings = data.keyFindings || []`, `gaps = data.gaps || []`, `totalSources = data.sources?.length || 0`, `sources = data.sources || []`, and `markdownReport = data.markdownReport`.\n\n  282 |\n  283 |     if (!handled) {\n> 284 |       throw new Error('Unhandled deep-research checkpoint: cp-004 The synthetic loaded report always sets `summary = \"\"`, `perspectives = []`, `contradictions = []`, `keyFindings = data.keyFindings || []`, `gaps = data.gaps || []`, `totalSources = data.sources?.length || 0`, `sources = data.sources || []`, and `markdownReport = data.markdownReport`.');\n      |             ^\n  285 |     }\n  286 |\n  287 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:284:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1544,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:37.954Z",
+                      "startTime": "2026-03-14T18:42:17.008Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-3fd11-ectives-contradictions-keyF-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-3fd11-ectives-contradictions-keyF-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-3fd11-ectives-contradictions-keyF-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-3fd11-ectives-contradictions-keyF-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 284
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-3b67ab0518e960692b71",
@@ -347,7 +279,7 @@
             },
             {
               "title": "cp-005: Loading a saved session also sets topic datatopic mode datamode as ResearchMode ",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -358,60 +290,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1550,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-005 Loading a saved session also sets `topic = data.topic`, `mode = data.mode as ResearchMode`, and `pageState = \"done\"`.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-005 Loading a saved session also sets `topic = data.topic`, `mode = data.mode as ResearchMode`, and `pageState = \"done\"`.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:334:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 334
-                        },
-                        "snippet": "  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled deep-research checkpoint: cp-005 Loading a saved session also sets `topic = data.topic`, `mode = data.mode as ResearchMode`, and `pageState = \"done\"`.');\n      |             ^\n  335 |     }\n  336 |\n  337 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 334
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-005 Loading a saved session also sets `topic = data.topic`, `mode = data.mode as ResearchMode`, and `pageState = \"done\"`.\n\n  332 |\n  333 |     if (!handled) {\n> 334 |       throw new Error('Unhandled deep-research checkpoint: cp-005 Loading a saved session also sets `topic = data.topic`, `mode = data.mode as ResearchMode`, and `pageState = \"done\"`.');\n      |             ^\n  335 |     }\n  336 |\n  337 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:334:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1534,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:40.247Z",
+                      "startTime": "2026-03-14T18:42:18.563Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-e58b5-e-datamode-as-ResearchMode--qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-e58b5-e-datamode-as-ResearchMode--qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-e58b5-e-datamode-as-ResearchMode--qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-e58b5-e-datamode-as-ResearchMode--qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 334
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-19b28357ddf09f2f06dc",
@@ -432,15 +330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1474,
+                      "duration": 1615,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:42.668Z",
+                      "startTime": "2026-03-14T18:42:20.107Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -472,15 +370,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1416,
+                      "duration": 1556,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:44.224Z",
+                      "startTime": "2026-03-14T18:42:21.735Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -512,15 +410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1407,
+                      "duration": 1556,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:45.660Z",
+                      "startTime": "2026-03-14T18:42:23.314Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -552,15 +450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1404,
+                      "duration": 1534,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:47.084Z",
+                      "startTime": "2026-03-14T18:42:24.881Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -581,7 +479,7 @@
             },
             {
               "title": "cp-010: Desktop TOC is hidden below the lg breakpoint",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -592,60 +490,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1471,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-010 Desktop TOC is hidden below the `lg` breakpoint.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-010 Desktop TOC is hidden below the `lg` breakpoint.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:584:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 584
-                        },
-                        "snippet": "  582 |\n  583 |     if (!handled) {\n> 584 |       throw new Error('Unhandled deep-research checkpoint: cp-010 Desktop TOC is hidden below the `lg` breakpoint.');\n      |             ^\n  585 |     }\n  586 |\n  587 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 584
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-010 Desktop TOC is hidden below the `lg` breakpoint.\n\n  582 |\n  583 |     if (!handled) {\n> 584 |       throw new Error('Unhandled deep-research checkpoint: cp-010 Desktop TOC is hidden below the `lg` breakpoint.');\n      |             ^\n  585 |     }\n  586 |\n  587 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:584:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1510,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:48.502Z",
+                      "startTime": "2026-03-14T18:42:26.425Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f1388-den-below-the-lg-breakpoint-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f1388-den-below-the-lg-breakpoint-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f1388-den-below-the-lg-breakpoint-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f1388-den-below-the-lg-breakpoint-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 584
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-c84764463a1fe9fbe72b",
@@ -666,15 +530,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1466,
+                      "duration": 1550,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:50.795Z",
+                      "startTime": "2026-03-14T18:42:27.946Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -695,7 +559,7 @@
             },
             {
               "title": "cp-012: Mobile TOC closes on backdrop click or the X button",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -706,60 +570,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1540,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-012 Mobile TOC closes on backdrop click or the `X` button.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-012 Mobile TOC closes on backdrop click or the `X` button.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:684:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 684
-                        },
-                        "snippet": "  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled deep-research checkpoint: cp-012 Mobile TOC closes on backdrop click or the `X` button.');\n      |             ^\n  685 |     }\n  686 |\n  687 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 684
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-012 Mobile TOC closes on backdrop click or the `X` button.\n\n  682 |\n  683 |     if (!handled) {\n> 684 |       throw new Error('Unhandled deep-research checkpoint: cp-012 Mobile TOC closes on backdrop click or the `X` button.');\n      |             ^\n  685 |     }\n  686 |\n  687 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:684:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1515,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:52.346Z",
+                      "startTime": "2026-03-14T18:42:29.506Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-27645-kdrop-click-or-the-X-button-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-27645-kdrop-click-or-the-X-button-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-27645-kdrop-click-or-the-X-button-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-27645-kdrop-click-or-the-X-button-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 684
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-78d0d1fb967b5878008c",
@@ -769,7 +599,7 @@
             },
             {
               "title": "cp-013: There is no Escape key handler for the TOC or citations overlays",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -780,60 +610,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1542,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-013 There is no `Escape` key handler for the TOC or citations overlays.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-013 There is no `Escape` key handler for the TOC or citations overlays.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:734:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 734
-                        },
-                        "snippet": "  732 |\n  733 |     if (!handled) {\n> 734 |       throw new Error('Unhandled deep-research checkpoint: cp-013 There is no `Escape` key handler for the TOC or citations overlays.');\n      |             ^\n  735 |     }\n  736 |\n  737 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 734
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-013 There is no `Escape` key handler for the TOC or citations overlays.\n\n  732 |\n  733 |     if (!handled) {\n> 734 |       throw new Error('Unhandled deep-research checkpoint: cp-013 There is no `Escape` key handler for the TOC or citations overlays.');\n      |             ^\n  735 |     }\n  736 |\n  737 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:734:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1533,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:54.739Z",
+                      "startTime": "2026-03-14T18:42:31.031Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-a5a39-e-TOC-or-citations-overlays-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-a5a39-e-TOC-or-citations-overlays-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-a5a39-e-TOC-or-citations-overlays-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-a5a39-e-TOC-or-citations-overlays-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 734
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-a4337288bf915d91da5d",
@@ -854,15 +650,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1482,
+                      "duration": 1542,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:57.142Z",
+                      "startTime": "2026-03-14T18:42:32.575Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -894,15 +690,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1432,
+                      "duration": 1537,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:23:58.708Z",
+                      "startTime": "2026-03-14T18:42:34.128Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -934,15 +730,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1465,
+                      "duration": 1488,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:00.152Z",
+                      "startTime": "2026-03-14T18:42:35.676Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -974,15 +770,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1415,
+                      "duration": 1537,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:01.627Z",
+                      "startTime": "2026-03-14T18:42:37.174Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1014,15 +810,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1506,
+                      "duration": 1518,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:03.054Z",
+                      "startTime": "2026-03-14T18:42:38.722Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1054,15 +850,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1451,
+                      "duration": 1501,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:04.569Z",
+                      "startTime": "2026-03-14T18:42:40.255Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1094,15 +890,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1425,
+                      "duration": 1540,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:06.033Z",
+                      "startTime": "2026-03-14T18:42:41.773Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1134,15 +930,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1394,
+                      "duration": 1508,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:07.467Z",
+                      "startTime": "2026-03-14T18:42:43.323Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1174,15 +970,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1405,
+                      "duration": 1493,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:08.870Z",
+                      "startTime": "2026-03-14T18:42:44.840Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1203,7 +999,7 @@
             },
             {
               "title": "cp-023: Code blocks render as bordered code blocks inside pre without syntax highlightin",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1214,60 +1010,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1489,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-023 Code blocks render as bordered `<code>` blocks inside `<pre>` without syntax highlighting.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-023 Code blocks render as bordered `<code>` blocks inside `<pre>` without syntax highlighting.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:1234:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 1234
-                        },
-                        "snippet": "  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled deep-research checkpoint: cp-023 Code blocks render as bordered `<code>` blocks inside `<pre>` without syntax highlighting.');\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 1234
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-023 Code blocks render as bordered `<code>` blocks inside `<pre>` without syntax highlighting.\n\n  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled deep-research checkpoint: cp-023 Code blocks render as bordered `<code>` blocks inside `<pre>` without syntax highlighting.');\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:1234:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1470,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:10.284Z",
+                      "startTime": "2026-03-14T18:42:46.343Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-6f0cb--without-syntax-highlightin-qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-6f0cb--without-syntax-highlightin-qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-6f0cb--without-syntax-highlightin-qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-6f0cb--without-syntax-highlightin-qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 1234
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-01d928d9bd1f062b6112",
@@ -1288,15 +1050,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1468,
+                      "duration": 1490,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:12.587Z",
+                      "startTime": "2026-03-14T18:42:47.823Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1328,15 +1090,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1413,
+                      "duration": 1591,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:14.146Z",
+                      "startTime": "2026-03-14T18:42:49.324Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1368,15 +1130,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1413,
+                      "duration": 1504,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:15.575Z",
+                      "startTime": "2026-03-14T18:42:50.924Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1408,15 +1170,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1455,
+                      "duration": 1526,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:17.003Z",
+                      "startTime": "2026-03-14T18:42:52.438Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1448,15 +1210,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1508,
+                      "duration": 1490,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:18.467Z",
+                      "startTime": "2026-03-14T18:42:53.975Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1488,15 +1250,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1448,
+                      "duration": 1490,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:19.983Z",
+                      "startTime": "2026-03-14T18:42:55.475Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1528,15 +1290,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1501,
+                      "duration": 1538,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:21.441Z",
+                      "startTime": "2026-03-14T18:42:56.974Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1568,15 +1330,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1402,
+                      "duration": 1477,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:22.951Z",
+                      "startTime": "2026-03-14T18:42:58.521Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1597,7 +1359,7 @@
             },
             {
               "title": "cp-032: expandCitationNumbers supports single numbers comma-separated numbers semicolon-",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1608,60 +1370,26 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1526,
-                      "error": {
-                        "message": "Error: Unhandled deep-research checkpoint: cp-032 `expandCitationNumbers()` supports single numbers, comma-separated numbers, semicolon-separated numbers, and numeric ranges split by hyphen, en dash, or em dash.",
-                        "stack": "Error: Unhandled deep-research checkpoint: cp-032 `expandCitationNumbers()` supports single numbers, comma-separated numbers, semicolon-separated numbers, and numeric ranges split by hyphen, en dash, or em dash.\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:1684:13",
-                        "location": {
-                          "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                          "column": 13,
-                          "line": 1684
-                        },
-                        "snippet": "  1682 |\n  1683 |     if (!handled) {\n> 1684 |       throw new Error('Unhandled deep-research checkpoint: cp-032 `expandCitationNumbers()` supports single numbers, comma-separated numbers, semicolon-separated numbers, and numeric ranges split by hyphen, en dash, or em dash.');\n       |             ^\n  1685 |     }\n  1686 |\n  1687 |"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                            "column": 13,
-                            "line": 1684
-                          },
-                          "message": "Error: Unhandled deep-research checkpoint: cp-032 `expandCitationNumbers()` supports single numbers, comma-separated numbers, semicolon-separated numbers, and numeric ranges split by hyphen, en dash, or em dash.\n\n  1682 |\n  1683 |     if (!handled) {\n> 1684 |       throw new Error('Unhandled deep-research checkpoint: cp-032 `expandCitationNumbers()` supports single numbers, comma-separated numbers, semicolon-separated numbers, and numeric ranges split by hyphen, en dash, or em dash.');\n       |             ^\n  1685 |     }\n  1686 |\n  1687 |\n    at /home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts:1684:13"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1475,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:24.368Z",
+                      "startTime": "2026-03-14T18:43:00.009Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f43f4-eparated-numbers-semicolon--qa-chromium/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f43f4-eparated-numbers-semicolon--qa-chromium/error-context.md"
-                        },
-                        {
-                          "name": "trace",
-                          "contentType": "application/zip",
-                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f43f4-eparated-numbers-semicolon--qa-chromium/trace.zip"
+                          "path": "/home/user/ScholarSync-/test-results/deep-research-spec-010-dee-f43f4-eparated-numbers-semicolon--qa-chromium/test-finished-1.png"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/user/ScholarSync-/qa/generated/deep-research/spec-010.spec.ts",
-                        "column": 13,
-                        "line": 1684
-                      }
+                      ]
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "1612db4ea92c19056ecf-e730531a7dc10e8ba0d5",
@@ -1682,15 +1410,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1437,
+                      "duration": 1487,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:26.748Z",
+                      "startTime": "2026-03-14T18:43:01.493Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1722,15 +1450,15 @@
                   "projectName": "qa-chromium",
                   "results": [
                     {
-                      "workerIndex": 8,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1442,
+                      "duration": 1505,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-03-14T14:24:28.272Z",
+                      "startTime": "2026-03-14T18:43:02.992Z",
                       "annotations": [],
                       "attachments": [
                         {
@@ -1756,11 +1484,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-03-14T14:23:24.039Z",
-    "duration": 66256.254,
-    "expected": 27,
+    "startTime": "2026-03-14T18:41:59.280Z",
+    "duration": 65895.833,
+    "expected": 35,
     "skipped": 0,
-    "unexpected": 8,
+    "unexpected": 0,
     "flaky": 0
   }
 }

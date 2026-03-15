@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-022
  * Source: e2e/specs/presentation/spec-022.md
- * Generated: 2026-03-14T10:21:43.614Z
+ * Generated: 2026-03-14T20:08:08.956Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "Analytics error state is a compact inline red banner saying `Failed to load analytics data`");
+      throw new Error('Unhandled presentation checkpoint: cp-000 Analytics error state is a compact inline red banner saying `Failed to load analytics data`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "Slide heatmap and time-series charts are rendered only when corresponding data arrays are non-empty");
+      throw new Error('Unhandled presentation checkpoint: cp-001 Slide heatmap and time-series charts are rendered only when corresponding data arrays are non-empty');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "`VersionHistoryPanel` auto-clears success messages after three seconds");
+      throw new Error('Unhandled presentation checkpoint: cp-002 `VersionHistoryPanel` auto-clears success messages after three seconds');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "First click on `Restore` or `Delete` enters a confirm state; the destructive action happens on the second click");
+      throw new Error('Unhandled presentation checkpoint: cp-003 First click on `Restore` or `Delete` enters a confirm state; the destructive action happens on the second click');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "Compare selection caps at two versions and replaces the oldest selected version when a third is chosen");
+      throw new Error('Unhandled presentation checkpoint: cp-004 Compare selection caps at two versions and replaces the oldest selected version when a third is chosen');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "In this editor, version comparison is not shown; `onCompareVersions` simply closes the panel");
+      throw new Error('Unhandled presentation checkpoint: cp-005 In this editor, version comparison is not shown; `onCompareVersions` simply closes the panel');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "Presenter mode is lazily imported and wrapped in a full-screen `Loading presenter mode...` fallback");
+      throw new Error('Unhandled presentation checkpoint: cp-006 Presenter mode is lazily imported and wrapped in a full-screen `Loading presenter mode...` fallback');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "Audience view waits for an `init` message on `BroadcastChannel(\"presenter-slide-sync\")` before rendering slides");
+      throw new Error('Unhandled presentation checkpoint: cp-007 Audience view waits for an `init` message on `BroadcastChannel("presenter-slide-sync")` before rendering slides');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "Audience view posts `{ type: \"audience-ready\" }` to the broadcast channel on mount");
+      throw new Error('Unhandled presentation checkpoint: cp-008 Audience view posts `{ type: "audience-ready" }` to the broadcast channel on mount');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "Audience view waiting screen is full-screen black with spinner and text `Waiting for presenter connection...`");
+      throw new Error('Unhandled presentation checkpoint: cp-009 Audience view waiting screen is full-screen black with spinner and text `Waiting for presenter connection...`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "Audience view applies `screenMode` overlays for `black` and `white` on top of the current slide");
+      throw new Error('Unhandled presentation checkpoint: cp-010 Audience view applies `screenMode` overlays for `black` and `white` on top of the current slide');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "Audience view never renders presenter notes or toolbar controls");
+      throw new Error('Unhandled presentation checkpoint: cp-011 Audience view never renders presenter notes or toolbar controls');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "Module-level error route uses `ErrorDisplay` title `Presentations unavailable` and retry callback `reset`");
+      throw new Error('Unhandled presentation checkpoint: cp-012 Module-level error route uses `ErrorDisplay` title `Presentations unavailable` and retry callback `reset`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "The editor page does not render a visible saved/saving/unsaved status indicator even though autosave is debounced in code");
+      throw new Error('Unhandled presentation checkpoint: cp-013 The editor page does not render a visible saved/saving/unsaved status indicator even though autosave is debounced in code');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "Invalid `deckId` navigation redirects to `/presentation` instead of showing a dedicated in-editor error state");
+      throw new Error('Unhandled presentation checkpoint: cp-014 Invalid `deckId` navigation redirects to `/presentation` instead of showing a dedicated in-editor error state');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "The main editor implementation does not read from `slides-store.ts`; it keeps its own local React state and only uses the store indirectly through `ThemePicker` custom themes");
+      throw new Error('Unhandled presentation checkpoint: cp-015 The main editor implementation does not read from `slides-store.ts`; it keeps its own local React state and only uses the store indirectly through `ThemePicker` custom themes');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "Undo/redo, right-panel store state, and many `slides-store.ts` fields listed in the original doc are not wired into this specific page component");
+      throw new Error('Unhandled presentation checkpoint: cp-016 Undo/redo, right-panel store state, and many `slides-store.ts` fields listed in the original doc are not wired into this specific page component');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "Blank-mode submission does not show an inline validation error when title is empty; the primary button is simply disabled");
+      throw new Error('Unhandled presentation checkpoint: cp-017 Blank-mode submission does not show an inline validation error when title is empty; the primary button is simply disabled');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "AI wizard step 0 does not auto-advance when a source is selected; the user must click `Next`");
+      throw new Error('Unhandled presentation checkpoint: cp-018 AI wizard step 0 does not auto-advance when a source is selected; the user must click `Next`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "AI generation success does not auto-redirect; it waits for the user to click `Open Presentation`");
+      throw new Error('Unhandled presentation checkpoint: cp-019 AI generation success does not auto-redirect; it waits for the user to click `Open Presentation`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "The editor right sidebar is always the design panel; agent/comments/analytics/defense/history mount as additional slide-over columns, not tabs inside the design panel");
+      throw new Error('Unhandled presentation checkpoint: cp-020 The editor right sidebar is always the design panel; agent/comments/analytics/defense/history mount as additional slide-over columns, not tabs inside the design panel');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "`Social Export` is implemented in `SlideToolbar` but is not reachable from this editor because no `socialSlides` prop is supplied");
+      throw new Error('Unhandled presentation checkpoint: cp-021 `Social Export` is implemented in `SlideToolbar` but is not reachable from this editor because no `socialSlides` prop is supplied');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "Agent-panel undo currently reports success in chat but does not restore the prior slide snapshot client-side");
+      throw new Error('Unhandled presentation checkpoint: cp-022 Agent-panel undo currently reports success in chat but does not restore the prior slide snapshot client-side');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "Version comparison is not implemented in the editor; choosing two versions and invoking compare only closes the panel");
+      throw new Error('Unhandled presentation checkpoint: cp-023 Version comparison is not implemented in the editor; choosing two versions and invoking compare only closes the panel');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "Share-panel failures, export failures, and list-page load failures are console-only in the current UI");
+      throw new Error('Unhandled presentation checkpoint: cp-024 Share-panel failures, export failures, and list-page load failures are console-only in the current UI');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "Every slide renders inside an `aspect-video` container with `overflow-hidden`");
+      throw new Error('Unhandled presentation checkpoint: cp-025 Every slide renders inside an `aspect-video` container with `overflow-hidden`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "Slide background uses `theme.backgroundColor`, text uses `theme.textColor`, font uses `theme.fontFamily`");
+      throw new Error('Unhandled presentation checkpoint: cp-026 Slide background uses `theme.backgroundColor`, text uses `theme.textColor`, font uses `theme.fontFamily`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "Top accent bar height is `scale * 4px` using `theme.primaryColor`");
+      throw new Error('Unhandled presentation checkpoint: cp-027 Top accent bar height is `scale * 4px` using `theme.primaryColor`');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "Base font size is `scale * 16px`; all child sizes use relative `em` units");
+      throw new Error('Unhandled presentation checkpoint: cp-028 Base font size is `scale * 16px`; all child sizes use relative `em` units');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "Slide number renders at `bottom-[3%] right-[4%]` with `text-[0.6em] opacity-50` only when `showSlideNumber && slideNumber != null`");
+      throw new Error('Unhandled presentation checkpoint: cp-029 Slide number renders at `bottom-[3%] right-[4%]` with `text-[0.6em] opacity-50` only when `showSlideNumber && slideNumber != null`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "Theme resolution falls back to `PRESET_THEMES[themeKey]` then `PRESET_THEMES.modern`");
+      throw new Error('Unhandled presentation checkpoint: cp-030 Theme resolution falls back to `PRESET_THEMES[themeKey]` then `PRESET_THEMES.modern`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "Slide content area is inset by `p-[6%] pt-[8%]` in a flex-col container");
+      throw new Error('Unhandled presentation checkpoint: cp-031 Slide content area is inset by `p-[6%] pt-[8%]` in a flex-col container');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "`title_slide`: title at `text-[2em] font-bold` in `theme.primaryColor` and `theme.headingFontFamily`; subtitle at `text-[1em] opacity-70`; centered vertically");
+      throw new Error('Unhandled presentation checkpoint: cp-032 `title_slide`: title at `text-[2em] font-bold` in `theme.primaryColor` and `theme.headingFontFamily`; subtitle at `text-[1em] opacity-70`; centered vertically');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "`section_header`: accent divider bar (`w-[3em] h-[0.15em] rounded-full`) above title using `theme.accentColor`; title at `text-[1.8em] font-bold`");
+      throw new Error('Unhandled presentation checkpoint: cp-033 `section_header`: accent divider bar (`w-[3em] h-[0.15em] rounded-full`) above title using `theme.accentColor`; title at `text-[1.8em] font-bold`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-022', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "`two_column`: blocks split at `Math.ceil(blocks.length / 2)` into `grid grid-cols-2 gap-[1em]`");
+      throw new Error('Unhandled presentation checkpoint: cp-034 `two_column`: blocks split at `Math.ceil(blocks.length / 2)` into `grid grid-cols-2 gap-[1em]`');
     }
 
 

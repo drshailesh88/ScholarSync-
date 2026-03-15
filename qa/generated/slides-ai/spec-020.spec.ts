@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-020
  * Source: e2e/specs/slides-ai/spec-020.md
- * Generated: 2026-03-14T10:19:44.055Z
+ * Generated: 2026-03-14T22:03:00.781Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Background image frosted overlay uses `backdropFilter: blur(${intensity / 10}px)` where intensity is `overlayIntensity ?? 50`");
+      throw new Error('Unhandled slides checkpoint: cp-000 Background image frosted overlay uses `backdropFilter: blur(${intensity / 10}px)` where intensity is `overlayIntensity ?? 50`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Card wrapper uses `role=\"button\" tabIndex={0}` for accessibility");
+      throw new Error('Unhandled slides checkpoint: cp-001 Card wrapper uses `role="button" tabIndex={0}` for accessibility');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Prompt step header: Sparkle icon (28px, duotone) in a `w-14 h-14 rounded-2xl bg-brand/10` container");
+      throw new Error('Unhandled slides checkpoint: cp-002 Prompt step header: Sparkle icon (28px, duotone) in a `w-14 h-14 rounded-2xl bg-brand/10` container');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Prompt step title: `\"Create a new presentation\"`");
+      throw new Error('Unhandled slides checkpoint: cp-003 Prompt step title: `"Create a new presentation"`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Prompt step subtitle: `\"Describe your topic and we will generate an editable outline you can refine before creating slides.\"`");
+      throw new Error('Unhandled slides checkpoint: cp-004 Prompt step subtitle: `"Describe your topic and we will generate an editable outline you can refine before creating slides."`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Title input placeholder: `\"e.g. The Role of CRISPR in Gene Therapy\"`");
+      throw new Error('Unhandled slides checkpoint: cp-005 Title input placeholder: `"e.g. The Role of CRISPR in Gene Therapy"`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Description label includes `\"(optional)\"` in faint text");
+      throw new Error('Unhandled slides checkpoint: cp-006 Description label includes `"(optional)"` in faint text');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Audience picker active state: `border-brand bg-brand/5 text-brand`");
+      throw new Error('Unhandled slides checkpoint: cp-007 Audience picker active state: `border-brand bg-brand/5 text-brand`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Card count slider label shows `\"Cards: ${cardCount}\"`");
+      throw new Error('Unhandled slides checkpoint: cp-008 Card count slider label shows `"Cards: ${cardCount}"`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Outline step header: `\"Edit your outline\"` with `PencilSimple` icon (20px, duotone)");
+      throw new Error('Unhandled slides checkpoint: cp-009 Outline step header: `"Edit your outline"` with `PencilSimple` icon (20px, duotone)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Outline step subtitle: `\"Reorder, add, remove, or edit cards and bullet points before generating.\"`");
+      throw new Error('Unhandled slides checkpoint: cp-010 Outline step subtitle: `"Reorder, add, remove, or edit cards and bullet points before generating."`');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Outline card number shown as brand circle badge at top-left (`-top-2.5 -left-2.5 w-6 h-6`)");
+      throw new Error('Unhandled slides checkpoint: cp-011 Outline card number shown as brand circle badge at top-left (`-top-2.5 -left-2.5 w-6 h-6`)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Outline card remove button has red hover: `hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500`");
+      throw new Error('Unhandled slides checkpoint: cp-012 Outline card remove button has red hover: `hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Outline card list scrollable: `max-h-[50vh] overflow-y-auto`");
+      throw new Error('Unhandled slides checkpoint: cp-013 Outline card list scrollable: `max-h-[50vh] overflow-y-auto`');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Individual bullet remove buttons show on group-hover with red styling");
+      throw new Error('Unhandled slides checkpoint: cp-014 Individual bullet remove buttons show on group-hover with red styling');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Theme step title: `\"Pick a theme\"`");
+      throw new Error('Unhandled slides checkpoint: cp-015 Theme step title: `"Pick a theme"`');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Theme step subtitle: `\"Select a visual style for your presentation. You can change this later.\"`");
+      throw new Error('Unhandled slides checkpoint: cp-016 Theme step subtitle: `"Select a visual style for your presentation. You can change this later."`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Theme step swatches use `flex flex-wrap justify-center gap-3` — NOT a 4-column grid as stated in original doc");
+      throw new Error('Unhandled slides checkpoint: cp-017 Theme step swatches use `flex flex-wrap justify-center gap-3` — NOT a 4-column grid as stated in original doc');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "`SegmentedControl` uses `role=\"radiogroup\"` with `aria-checked` on each option");
+      throw new Error('Unhandled slides checkpoint: cp-018 `SegmentedControl` uses `role="radiogroup"` with `aria-checked` on each option');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Small theme swatches are `64x36px` (not large cards)");
+      throw new Error('Unhandled slides checkpoint: cp-019 Small theme swatches are `64x36px` (not large cards)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Small theme swatch check badge is in BOTTOM-RIGHT corner (`bottom-0.5 right-0.5 w-3.5 h-3.5`), not top-right");
+      throw new Error('Unhandled slides checkpoint: cp-020 Small theme swatch check badge is in BOTTOM-RIGHT corner (`bottom-0.5 right-0.5 w-3.5 h-3.5`), not top-right');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Section headings use `\"mt-3 mb-1.5 first:mt-0\"` spacing");
+      throw new Error('Unhandled slides checkpoint: cp-021 Section headings use `"mt-3 mb-1.5 first:mt-0"` spacing');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Layout picker uses a 2-column grid (`grid-cols-2 gap-2`) with max-h-96 overflow-y-auto");
+      throw new Error('Unhandled slides checkpoint: cp-022 Layout picker uses a 2-column grid (`grid-cols-2 gap-2`) with max-h-96 overflow-y-auto');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Header shows `\"Smart Layouts\"` title with subtitle `\"Replace this card's content with a pre-built layout\"`");
+      throw new Error('Unhandled slides checkpoint: cp-023 Header shows `"Smart Layouts"` title with subtitle `"Replace this card\'s content with a pre-built layout"`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Each smart layout maps to a `SlideLayout` via `LAYOUT_MAP` (e.g., `two_column → \"two_column\"`, `chart_with_caption → \"chart_slide\"`)");
+      throw new Error('Unhandled slides checkpoint: cp-024 Each smart layout maps to a `SlideLayout` via `LAYOUT_MAP` (e.g., `two_column → "two_column"`, `chart_with_caption → "chart_slide"`)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Picker closes on Escape and click-outside");
+      throw new Error('Unhandled slides checkpoint: cp-025 Picker closes on Escape and click-outside');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Mode toggle buttons use inline SVG icons (not Phosphor icon components)");
+      throw new Error('Unhandled slides checkpoint: cp-026 Mode toggle buttons use inline SVG icons (not Phosphor icon components)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "\"Slides\" SVG: rectangle with vertical divider line; \"Create\" SVG: star outline path");
+      throw new Error('Unhandled slides checkpoint: cp-027 "Slides" SVG: rectangle with vertical divider line; "Create" SVG: star outline path');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "`ModeSelectionScreen` subtitle text: `\"You can switch anytime with the toggle\"` (not just \"You can switch anytime\")");
+      throw new Error('Unhandled slides checkpoint: cp-028 `ModeSelectionScreen` subtitle text: `"You can switch anytime with the toggle"` (not just "You can switch anytime")');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Mode selection cards are `w-64` with `p-8 rounded-2xl`");
+      throw new Error('Unhandled slides checkpoint: cp-029 Mode selection cards are `w-64` with `p-8 rounded-2xl`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Mode selection icon containers: `w-16 h-16 rounded-xl bg-brand/10`");
+      throw new Error('Unhandled slides checkpoint: cp-030 Mode selection icon containers: `w-16 h-16 rounded-xl bg-brand/10`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Search input auto-focuses on mount via `inputRef.current?.focus()`");
+      throw new Error('Unhandled slides checkpoint: cp-031 Search input auto-focuses on mount via `inputRef.current?.focus()`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Smart Layouts entry hidden when search query is non-empty");
+      throw new Error('Unhandled slides checkpoint: cp-032 Smart Layouts entry hidden when search query is non-empty');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Empty search results show: `\"No blocks found\"` centered text");
+      throw new Error('Unhandled slides checkpoint: cp-033 Empty search results show: `"No blocks found"` centered text');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Category order is hardcoded: `[\"content\", \"media\", \"academic\"]`");
+      throw new Error('Unhandled slides checkpoint: cp-034 Category order is hardcoded: `["content", "media", "academic"]`');
     }
 
 

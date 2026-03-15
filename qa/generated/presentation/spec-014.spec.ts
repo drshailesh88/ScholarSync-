@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-014
  * Source: e2e/specs/presentation/spec-014.md
- * Generated: 2026-03-14T10:21:18.557Z
+ * Generated: 2026-03-14T19:58:32.016Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**26.15** Style section header \"Style\" (`custom-theme-builder.tsx:290`)");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **26.15** Style section header "Style" (`custom-theme-builder.tsx:290`)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**26.16** Border Radius button group from BORDER_RADIUS_OPTIONS (`custom-theme-builder.tsx:293`, `:295`, `:299`)");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **26.16** Border Radius button group from BORDER_RADIUS_OPTIONS (`custom-theme-builder.tsx:293`, `:295`, `:299`)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**26.17** Shadow Style button group from SHADOW_OPTIONS (`custom-theme-builder.tsx:314`, `:316`, `:320`)");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **26.17** Shadow Style button group from SHADOW_OPTIONS (`custom-theme-builder.tsx:314`, `:316`, `:320`)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**26.18** Card Spacing button group from CARD_SPACING_OPTIONS (`custom-theme-builder.tsx:334`, `:336`, `:340`)");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **26.18** Card Spacing button group from CARD_SPACING_OPTIONS (`custom-theme-builder.tsx:334`, `:336`, `:340`)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**26.19** \"Advanced\" toggle button (`custom-theme-builder.tsx:364`, `:360`)");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **26.19** "Advanced" toggle button (`custom-theme-builder.tsx:364`, `:360`)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**26.20** Advanced panel visibility conditional on `showAdvanced` (`custom-theme-builder.tsx:366`)");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **26.20** Advanced panel visibility conditional on `showAdvanced` (`custom-theme-builder.tsx:366`)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**26.21** Code Background color picker (`custom-theme-builder.tsx:368`)");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **26.21** Code Background color picker (`custom-theme-builder.tsx:368`)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**26.22** Callout Background color picker (`custom-theme-builder.tsx:369`)");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **26.22** Callout Background color picker (`custom-theme-builder.tsx:369`)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**26.23** Gradient From color picker (`custom-theme-builder.tsx:370`)");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **26.23** Gradient From color picker (`custom-theme-builder.tsx:370`)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**26.24** Gradient To color picker (`custom-theme-builder.tsx:371`)");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **26.24** Gradient To color picker (`custom-theme-builder.tsx:371`)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**26.25** Border Color picker (`custom-theme-builder.tsx:372`)");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **26.25** Border Color picker (`custom-theme-builder.tsx:372`)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**26.26** Border Style button group from BORDER_STYLE_OPTIONS (`custom-theme-builder.tsx:374`, `:376`, `:380`)");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **26.26** Border Style button group from BORDER_STYLE_OPTIONS (`custom-theme-builder.tsx:374`, `:376`, `:380`)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**26.27** Preview section header \"Preview\" (`custom-theme-builder.tsx:400`)");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **26.27** Preview section header "Preview" (`custom-theme-builder.tsx:400`)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**26.28** Sample Title text renders (`custom-theme-builder.tsx:416`)");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **26.28** Sample Title text renders (`custom-theme-builder.tsx:416`)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**26.29** Body text preview renders (`custom-theme-builder.tsx:426`)");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **26.29** Body text preview renders (`custom-theme-builder.tsx:426`)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**26.30** Accent callout block renders (`custom-theme-builder.tsx:444`)");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **26.30** Accent callout block renders (`custom-theme-builder.tsx:444`)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**26.31** Code sample `const x = 42;` renders (`custom-theme-builder.tsx:455`)");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **26.31** Code sample `const x = 42;` renders (`custom-theme-builder.tsx:455`)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**26.32** Theme Name label and input with placeholder \"My Custom Theme\" (`custom-theme-builder.tsx:465`, `:470`)");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **26.32** Theme Name label and input with placeholder "My Custom Theme" (`custom-theme-builder.tsx:465`, `:470`)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**26.33** Name validation: empty name shows \"Theme name is required\" error (`custom-theme-builder.tsx:476`)");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **26.33** Name validation: empty name shows "Theme name is required" error (`custom-theme-builder.tsx:476`)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**26.34** Name error highlights input border red (`custom-theme-builder.tsx:473`)");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **26.34** Name error highlights input border red (`custom-theme-builder.tsx:473`)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**26.35** Cancel button closes builder (`custom-theme-builder.tsx:484`, `:481`)");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **26.35** Cancel button closes builder (`custom-theme-builder.tsx:484`, `:481`)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**26.36** \"Apply Without Saving\" button applies theme without persisting (`custom-theme-builder.tsx:491`, `:488`)");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **26.36** "Apply Without Saving" button applies theme without persisting (`custom-theme-builder.tsx:491`, `:488`)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**26.37** \"Save as Custom Theme\" button saves and applies (`custom-theme-builder.tsx:498`, `:495`)");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **26.37** "Save as Custom Theme" button saves and applies (`custom-theme-builder.tsx:498`, `:495`)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**26.38** Initial state: config=defaultThemeConfig, themeName=\"\", startFrom=\"scratch\", showAdvanced=false, nameError=false, fontSizeScale=\"default\" (`custom-theme-builder.tsx:118-123`)");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **26.38** Initial state: config=defaultThemeConfig, themeName="", startFrom="scratch", showAdvanced=false, nameError=false, fontSizeScale="default" (`custom-theme-builder.tsx:118-123`)');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**27.1** Modal opens with no format selected (`social-export-modal.tsx:61`)");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **27.1** Modal opens with no format selected (`social-export-modal.tsx:61`)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**27.2** Format grid renders SOCIAL_FORMATS entries (`social-export-modal.tsx:198`)");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **27.2** Format grid renders SOCIAL_FORMATS entries (`social-export-modal.tsx:198`)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**27.3** Each format card shows icon (when available) and aspect ratio badge (`social-export-modal.tsx:207`, `:217`)");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **27.3** Each format card shows icon (when available) and aspect ratio badge (`social-export-modal.tsx:207`, `:217`)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**27.4** Clicking format card selects it (`social-export-modal.tsx:204`)");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **27.4** Clicking format card selects it (`social-export-modal.tsx:204`)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**27.5** Header shows \"Export for Social Media\" when no format selected, \"Export as {name}\" when selected (`social-export-modal.tsx:180`)");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **27.5** Header shows "Export for Social Media" when no format selected, "Export as {name}" when selected (`social-export-modal.tsx:180`)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**27.6** Back button returns to format grid (`social-export-modal.tsx:173`)");
+      throw new Error('Unhandled presentation checkpoint: cp-029 **27.6** Back button returns to format grid (`social-export-modal.tsx:173`)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**27.7** Close button dismisses modal (`social-export-modal.tsx:163`, `:186`)");
+      throw new Error('Unhandled presentation checkpoint: cp-030 **27.7** Close button dismisses modal (`social-export-modal.tsx:163`, `:186`)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**27.8** Thread editor shows per-tweet textarea with editable content (`social-export-modal.tsx:236`, `:257`)");
+      throw new Error('Unhandled presentation checkpoint: cp-031 **27.8** Thread editor shows per-tweet textarea with editable content (`social-export-modal.tsx:236`, `:257`)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**27.9** Each tweet shows \"Tweet N of M\" label (`social-export-modal.tsx:240`)");
+      throw new Error('Unhandled presentation checkpoint: cp-032 **27.9** Each tweet shows "Tweet N of M" label (`social-export-modal.tsx:240`)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**27.10** Character count shows \"/280\" suffix (`social-export-modal.tsx:252`)");
+      throw new Error('Unhandled presentation checkpoint: cp-033 **27.10** Character count shows "/280" suffix (`social-export-modal.tsx:252`)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**27.11** Count turns red when > 280 characters (`social-export-modal.tsx:245`)");
+      throw new Error('Unhandled presentation checkpoint: cp-034 **27.11** Count turns red when > 280 characters (`social-export-modal.tsx:245`)');
     }
 
 

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-007
  * Source: e2e/specs/projects/spec-007.md
- * Generated: 2026-03-14T09:24:36.136Z
+ * Generated: 2026-03-14T15:24:56.491Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 ' + "Create payload sends `target_journal` only when the trimmed field is non-empty");
+      throw new Error('Unhandled projects checkpoint: cp-000 Create payload sends `target_journal` only when the trimmed field is non-empty');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 ' + "Create payload sends `deadline` only when the field is non-empty");
+      throw new Error('Unhandled projects checkpoint: cp-001 Create payload sends `deadline` only when the field is non-empty');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 ' + "Successful creation closes the modal before navigating");
+      throw new Error('Unhandled projects checkpoint: cp-002 Successful creation closes the modal before navigating');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 ' + "Successful creation routes to `/editor/new?project={created.id}`");
+      throw new Error('Unhandled projects checkpoint: cp-003 Successful creation routes to `/editor/new?project={created.id}`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 ' + "Failed creation logs `Failed to create project:` to the console and leaves the modal open");
+      throw new Error('Unhandled projects checkpoint: cp-004 Failed creation logs `Failed to create project:` to the console and leaves the modal open');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Opening the status modal copies the clicked project into `statusTarget`");
+      throw new Error('Unhandled projects checkpoint: cp-005 Opening the status modal copies the clicked project into `statusTarget`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 ' + "Opening the status modal initializes `pendingStatus` from `project.status ?? \"planning\"`");
+      throw new Error('Unhandled projects checkpoint: cp-006 Opening the status modal initializes `pendingStatus` from `project.status ?? "planning"`');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 ' + "Status modal subtitle renders `Change status for {project title}`");
+      throw new Error('Unhandled projects checkpoint: cp-007 Status modal subtitle renders `Change status for {project title}`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 ' + "Primary status pipeline renders `planning`, `drafting`, `reviewing`, and `completed` in order");
+      throw new Error('Unhandled projects checkpoint: cp-008 Primary status pipeline renders `planning`, `drafting`, `reviewing`, and `completed` in order');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 ' + "Archived status is rendered in a separate section under a divider");
+      throw new Error('Unhandled projects checkpoint: cp-009 Archived status is rendered in a separate section under a divider');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 ' + "Selected status option shows a trailing `Selected` label");
+      throw new Error('Unhandled projects checkpoint: cp-010 Selected status option shows a trailing `Selected` label');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 ' + "`Update Status` is disabled when `pendingStatus` matches the current project status");
+      throw new Error('Unhandled projects checkpoint: cp-011 `Update Status` is disabled when `pendingStatus` matches the current project status');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 ' + "`Update Status` is disabled while `updatingStatus` is true");
+      throw new Error('Unhandled projects checkpoint: cp-012 `Update Status` is disabled while `updatingStatus` is true');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 ' + "Successful status updates close the modal before awaiting the server action");
+      throw new Error('Unhandled projects checkpoint: cp-013 Successful status updates close the modal before awaiting the server action');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 ' + "Failed status updates log `Failed to update project status:` to the console");
+      throw new Error('Unhandled projects checkpoint: cp-014 Failed status updates log `Failed to update project status:` to the console');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 ' + "Failed status updates re-fetch projects to restore canonical server state");
+      throw new Error('Unhandled projects checkpoint: cp-015 Failed status updates re-fetch projects to restore canonical server state');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 ' + "Delete removes the project from local state before `deleteProject(id)` resolves");
+      throw new Error('Unhandled projects checkpoint: cp-016 Delete removes the project from local state before `deleteProject(id)` resolves');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 ' + "Failed delete restores server truth by calling `fetchProjects()`");
+      throw new Error('Unhandled projects checkpoint: cp-017 Failed delete restores server truth by calling `fetchProjects()`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 ' + "Archive updates local `status` to `archived` before `archiveProject(id)` resolves");
+      throw new Error('Unhandled projects checkpoint: cp-018 Archive updates local `status` to `archived` before `archiveProject(id)` resolves');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 ' + "Failed archive restores server truth by calling `fetchProjects()`");
+      throw new Error('Unhandled projects checkpoint: cp-019 Failed archive restores server truth by calling `fetchProjects()`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 ' + "Status updates mutate the matching project in local state before `updateProjectStatus()` resolves");
+      throw new Error('Unhandled projects checkpoint: cp-020 Status updates mutate the matching project in local state before `updateProjectStatus()` resolves');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 ' + "Zero-state empty view renders only when `projects.length === 0` and `loading === false`");
+      throw new Error('Unhandled projects checkpoint: cp-021 Zero-state empty view renders only when `projects.length === 0` and `loading === false`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 ' + "Filtered-empty state renders only when `projects.length > 0 && filtered.length === 0`");
+      throw new Error('Unhandled projects checkpoint: cp-022 Filtered-empty state renders only when `projects.length > 0 && filtered.length === 0`');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 ' + "Filtered-empty state does not render a clear-filters button in the current implementation");
+      throw new Error('Unhandled projects checkpoint: cp-023 Filtered-empty state does not render a clear-filters button in the current implementation');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 ' + "`formatDate(null)` returns an em dash (`—`)");
+      throw new Error('Unhandled projects checkpoint: cp-024 `formatDate(null)` returns an em dash (`—`)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-025 ' + "Route-level `ProjectsLoading` is a server component (no `\"use client\"` directive)");
+      throw new Error('Unhandled projects checkpoint: cp-025 Route-level `ProjectsLoading` is a server component (no `"use client"` directive)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-026 ' + "Route-level skeleton wraps content in `max-w-5xl mx-auto`");
+      throw new Error('Unhandled projects checkpoint: cp-026 Route-level skeleton wraps content in `max-w-5xl mx-auto`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-027 ' + "Route-level skeleton renders a title placeholder (`Skeleton` with `h-8 w-40`) and a button placeholder (`Skeleton` with `h-10 w-36 rounded-xl`)");
+      throw new Error('Unhandled projects checkpoint: cp-027 Route-level skeleton renders a title placeholder (`Skeleton` with `h-8 w-40`) and a button placeholder (`Skeleton` with `h-10 w-36 rounded-xl`)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-028 ' + "Route-level skeleton renders `SkeletonTable` with exactly 6 rows");
+      throw new Error('Unhandled projects checkpoint: cp-028 Route-level skeleton renders `SkeletonTable` with exactly 6 rows');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-029 ' + "Route-level skeleton is distinct from the page component's own `SpinnerGap` loading spinner");
+      throw new Error('Unhandled projects checkpoint: cp-029 Route-level skeleton is distinct from the page component\'s own `SpinnerGap` loading spinner');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-030 ' + "`SkeletonTable` rows each contain a square icon placeholder (`h-10 w-10 rounded-lg`), two text lines, and a badge placeholder (`h-6 w-20 rounded-full`)");
+      throw new Error('Unhandled projects checkpoint: cp-030 `SkeletonTable` rows each contain a square icon placeholder (`h-10 w-10 rounded-lg`), two text lines, and a badge placeholder (`h-6 w-20 rounded-full`)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-031 ' + "`error.tsx` is a client component (`\"use client\"` directive)");
+      throw new Error('Unhandled projects checkpoint: cp-031 `error.tsx` is a client component (`"use client"` directive)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-032 ' + "Error page renders `ErrorDisplay` with `title=\"Projects unavailable\"` and `message=\"We couldn't load your projects. Please try again.\"`");
+      throw new Error('Unhandled projects checkpoint: cp-032 Error page renders `ErrorDisplay` with `title="Projects unavailable"` and `message="We couldn\'t load your projects. Please try again."`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-033 ' + "Error page passes `error` and `reset` (as `onRetry`) to `ErrorDisplay`");
+      throw new Error('Unhandled projects checkpoint: cp-033 Error page passes `error` and `reset` (as `onRetry`) to `ErrorDisplay`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('projects / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-034 ' + "`ErrorDisplay` shows a `WarningCircle` icon inside a `w-16 h-16 rounded-2xl bg-red-500/10` container");
+      throw new Error('Unhandled projects checkpoint: cp-034 `ErrorDisplay` shows a `WarningCircle` icon inside a `w-16 h-16 rounded-2xl bg-red-500/10` container');
     }
 
 

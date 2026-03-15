@@ -1,9 +1,9 @@
 # feeds — Spec 004
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 6
-FAIL: 29
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/feeds
 MODULE: feeds
@@ -16,46 +16,46 @@ MODULE: feeds
 
 ### AI Copilot Panel
 #### Header
-- [ ] FAIL: Sparkle icon in brand/20 background
+- [x] PASS: Sparkle icon in brand/20 background
 - [x] PASS: Title: "AI Copilot"
-- [ ] FAIL: Close button (X icon)
+- [x] PASS: Close button (X icon)
 #### Compact Article Header
-- [ ] FAIL: Article title (line-clamp-2)
-- [ ] FAIL: Authors, journal, year
+- [x] PASS: Article title (line-clamp-2)
+- [x] PASS: Authors, journal, year
 #### Chat Messages
-- [ ] FAIL: User messages: surface-raised background, right-aligned
-- [ ] FAIL: Assistant messages: brand/5 background, left-aligned with Sparkle icon
-- [ ] FAIL: Loading indicator: 3 animated dots
-- [ ] FAIL: Streaming: text appears incrementally
-- [ ] FAIL: Auto-scroll to latest message
+- [x] PASS: User messages: surface-raised background, right-aligned
+- [x] PASS: Assistant messages: brand/5 background, left-aligned with Sparkle icon
+- [x] PASS: Loading indicator: 3 animated dots
+- [x] PASS: Streaming: text appears incrementally
+- [x] PASS: Auto-scroll to latest message
 #### Suggested Questions
-- [ ] FAIL: Clickable chips with follow-up question text
-- [ ] FAIL: Clicking sends the suggestion as a message
+- [x] PASS: Clickable chips with follow-up question text
+- [x] PASS: Clicking sends the suggestion as a message
 #### Chat Input
-- [ ] FAIL: Placeholder: "Ask about this paper..."
-- [ ] FAIL: PaperPlaneRight send button (brand background)
-- [ ] FAIL: Disabled when loading or input empty
+- [x] PASS: Placeholder: "Ask about this paper..."
+- [x] PASS: PaperPlaneRight send button (brand background)
+- [x] PASS: Disabled when loading or input empty
 #### Initial State (No Messages)
-- [ ] FAIL: Centered Sparkle icon (large, brand/10 bg)
-- [ ] FAIL: "Ask me about this paper"
-- [ ] FAIL: "Click Summarize for a quick overview, or ask any question about the study."
+- [x] PASS: Centered Sparkle icon (large, brand/10 bg)
+- [x] PASS: "Ask me about this paper"
+- [x] PASS: "Click Summarize for a quick overview, or ask any question about the study."
 #### Copilot APIs
 - [x] PASS: `POST /api/feeds/copilot/summarize` — returns summary + suggestions + source tier
 - [x] PASS: `POST /api/feeds/copilot/chat` — SSE streaming chat response
 
 ### Add Feed Modal
 #### Tabs
-- [ ] FAIL: "Add URL" tab
-- [ ] FAIL: "Browse Journals" tab
+- [x] PASS: "Add URL" tab
+- [x] PASS: "Browse Journals" tab
 #### Add URL Tab
-- [ ] FAIL: Label: "RSS / Atom Feed URL"
-- [ ] FAIL: Input placeholder: "https://example.com/feed.xml"
-- [ ] FAIL: "Add" button (loading: "Adding...")
-- [ ] FAIL: Enter key submits
-- [ ] FAIL: Validates URL and subscribes
-- [ ] FAIL: Label: "PubMed Search Query"
+- [x] PASS: Label: "RSS / Atom Feed URL"
+- [x] PASS: Input placeholder: "https://example.com/feed.xml"
+- [x] PASS: "Add" button (loading: "Adding...")
+- [x] PASS: Enter key submits
+- [x] PASS: Validates URL and subscribes
+- [x] PASS: Label: "PubMed Search Query"
 - [x] PASS: Input placeholder: `e.g. "machine learning" AND radiology`
-- [ ] FAIL: "Create Feed" button (loading: "Creating...")
-- [ ] FAIL: Enter key submits
-- [ ] FAIL: Creates live PubMed search feed
-- [ ] FAIL: Red background (red-500/10) with error text
+- [x] PASS: "Create Feed" button (loading: "Creating...")
+- [x] PASS: Enter key submits
+- [x] PASS: Creates live PubMed search feed
+- [x] PASS: Red background (red-500/10) with error text

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-024
  * Source: e2e/specs/slides/spec-024.md
- * Generated: 2026-03-14T10:18:40.925Z
+ * Generated: 2026-03-14T18:30:05.170Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "`VersionHistoryPanel` `onDeckRestored` callback closes the right panel and reloads the deck via `loadDeck(deckId)`");
+      throw new Error('Unhandled slides checkpoint: cp-000 `VersionHistoryPanel` `onDeckRestored` callback closes the right panel and reloads the deck via `loadDeck(deckId)`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "`deleteMaster(id)` removes the master AND sets `masterId` to `undefined` on all slides that used it");
+      throw new Error('Unhandled slides checkpoint: cp-001 `deleteMaster(id)` removes the master AND sets `masterId` to `undefined` on all slides that used it');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "The page title on `/slides` is `Presentations` (h1), not `Slides` or `Slide Decks`");
+      throw new Error('Unhandled slides checkpoint: cp-002 The page title on `/slides` is `Presentations` (h1), not `Slides` or `Slide Decks`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "The empty-state heading is `No presentations yet`, not `No decks found` or similar");
+      throw new Error('Unhandled slides checkpoint: cp-003 The empty-state heading is `No presentations yet`, not `No decks found` or similar');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Deck delete confirmation dialog uses native `confirm()` with text `Delete this presentation?` (not a custom modal)");
+      throw new Error('Unhandled slides checkpoint: cp-004 Deck delete confirmation dialog uses native `confirm()` with text `Delete this presentation?` (not a custom modal)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "The `Visualize` button tooltip reads `Visualize (Ctrl+Shift+V)`, not `Cmd+Shift+V`");
+      throw new Error('Unhandled slides checkpoint: cp-005 The `Visualize` button tooltip reads `Visualize (Ctrl+Shift+V)`, not `Cmd+Shift+V`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "F5 (present from beginning) first navigates to the first *sorted* slide before setting `isPresenting`; Shift+F5 keeps the current slide");
+      throw new Error('Unhandled slides checkpoint: cp-006 F5 (present from beginning) first navigates to the first *sorted* slide before setting `isPresenting`; Shift+F5 keeps the current slide');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Global Escape handler cascades in exact order: exit editing → deselect blocks → exit presenting; it does NOT close find/replace");
+      throw new Error('Unhandled slides checkpoint: cp-007 Global Escape handler cascades in exact order: exit editing → deselect blocks → exit presenting; it does NOT close find/replace');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Tab cycling between blocks requires at least one block to be selected first; it does not work from a zero-selection state");
+      throw new Error('Unhandled slides checkpoint: cp-008 Tab cycling between blocks requires at least one block to be selected first; it does not work from a zero-selection state');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "The `Properties Panel` width is `w-72`, not `w-80` — agent/defense/comments/versions/analytics panels use `w-80`");
+      throw new Error('Unhandled slides checkpoint: cp-009 The `Properties Panel` width is `w-72`, not `w-80` — agent/defense/comments/versions/analytics panels use `w-80`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Slide import preview cards show `line-clamp-3` on `previewText` only when `previewText` is truthy (conditional rendering)");
+      throw new Error('Unhandled slides checkpoint: cp-010 Slide import preview cards show `line-clamp-3` on `previewText` only when `previewText` is truthy (conditional rendering)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Completed StatusChip shows a static dot (`h-2 w-2 rounded-full`), not a checkmark icon");
+      throw new Error('Unhandled slides checkpoint: cp-011 Completed StatusChip shows a static dot (`h-2 w-2 rounded-full`), not a checkmark icon');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "`showSharePanel` store state is set by Share button but `SlidesModeLayout` does not render a `SharePanel` component");
+      throw new Error('Unhandled slides checkpoint: cp-012 `showSharePanel` store state is set by Share button but `SlidesModeLayout` does not render a `SharePanel` component');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-024', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "`SlideSorterView` is only rendered when `showSlideSorter` is true (toggled from toolbar GridFour button)");
+      throw new Error('Unhandled slides checkpoint: cp-013 `SlideSorterView` is only rendered when `showSlideSorter` is true (toggled from toolbar GridFour button)');
     }
 
 

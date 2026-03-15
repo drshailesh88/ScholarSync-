@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-016
  * Source: e2e/specs/presentation/spec-016.md
- * Generated: 2026-03-14T10:21:24.843Z
+ * Generated: 2026-03-14T20:00:56.312Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**28.14** \"API Key\" label and input with placeholder \"Your Zotero API key\" (`reference-import-panel.tsx:385`, `:390`, `:391`)");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **28.14** "API Key" label and input with placeholder "Your Zotero API key" (`reference-import-panel.tsx:385`, `:390`, `:391`)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**28.15** \"User ID\" label and input with placeholder \"Numeric user ID\" (`reference-import-panel.tsx:397`, `:401`, `:402`)");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **28.15** "User ID" label and input with placeholder "Numeric user ID" (`reference-import-panel.tsx:397`, `:401`, `:402`)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**28.16** \"Connect & Import\" button, disabled when loading or fields empty (`reference-import-panel.tsx:408-409`, `:412`)");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **28.16** "Connect & Import" button, disabled when loading or fields empty (`reference-import-panel.tsx:408-409`, `:412`)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**28.17** Button shows \"Fetching...\" with CircleNotch spinner while loading (`reference-import-panel.tsx:417-418`, `:422`)");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **28.17** Button shows "Fetching..." with CircleNotch spinner while loading (`reference-import-panel.tsx:417-418`, `:422`)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**28.18** API: POST /api/references/zotero (`reference-import-panel.tsx:154`)");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **28.18** API: POST /api/references/zotero (`reference-import-panel.tsx:154`)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**28.19** Errors show \"Zotero fetch failed\" fallback (`reference-import-panel.tsx:181`)");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **28.19** Errors show "Zotero fetch failed" fallback (`reference-import-panel.tsx:181`)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**28.20** Help text: \"Look up a single reference by its DOI.\" (`reference-import-panel.tsx:430`, `:433`)");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **28.20** Help text: "Look up a single reference by its DOI." (`reference-import-panel.tsx:430`, `:433`)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**28.21** DOI input with placeholder \"e.g., 10.1038/nature12373\" (`reference-import-panel.tsx:438`, `:442`)");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **28.21** DOI input with placeholder "e.g., 10.1038/nature12373" (`reference-import-panel.tsx:438`, `:442`)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**28.22** Enter key triggers lookup (`reference-import-panel.tsx:439`)");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **28.22** Enter key triggers lookup (`reference-import-panel.tsx:439`)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**28.23** \"Lookup\" button with MagnifyingGlass icon, disabled when loading or empty (`reference-import-panel.tsx:446-447`, `:450`, `:455-458`, `:460`)");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **28.23** "Lookup" button with MagnifyingGlass icon, disabled when loading or empty (`reference-import-panel.tsx:446-447`, `:450`, `:455-458`, `:460`)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**28.24** API: POST /api/references/parse for DOI (`reference-import-panel.tsx:200`)");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **28.24** API: POST /api/references/parse for DOI (`reference-import-panel.tsx:200`)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**28.25** Errors show \"DOI lookup failed\" fallback (`reference-import-panel.tsx:222`)");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **28.25** Errors show "DOI lookup failed" fallback (`reference-import-panel.tsx:222`)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**28.26** Error banner with Warning icon and dismiss X button (`reference-import-panel.tsx:468`, `:470`, `:472-473`)");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **28.26** Error banner with Warning icon and dismiss X button (`reference-import-panel.tsx:468`, `:470`, `:472-473`)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**28.27** Loading state shows \"Processing...\" with CircleNotch spinner (`reference-import-panel.tsx:479`, `:481`, `:482`)");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **28.27** Loading state shows "Processing..." with CircleNotch spinner (`reference-import-panel.tsx:479`, `:481`, `:482`)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**28.28** Header shows \"N references imported\" with count (`reference-import-panel.tsx:487`, `:492`)");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **28.28** Header shows "N references imported" with count (`reference-import-panel.tsx:487`, `:492`)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**28.29** Selected count badge shown when > 0: \"(N selected)\" (`reference-import-panel.tsx:493`, `:495`)");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **28.29** Selected count badge shown when > 0: "(N selected)" (`reference-import-panel.tsx:493`, `:495`)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**28.30** \"Select all\" button (`reference-import-panel.tsx:508`, `:511`)");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **28.30** "Select all" button (`reference-import-panel.tsx:508`, `:511`)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**28.31** \"Clear\" button (`reference-import-panel.tsx:514`, `:517`)");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **28.31** "Clear" button (`reference-import-panel.tsx:514`, `:517`)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**28.32** Filter toggle button with Funnel icon and CaretUp/CaretDown (`reference-import-panel.tsx:501`, `:504-505`)");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **28.32** Filter toggle button with Funnel icon and CaretUp/CaretDown (`reference-import-panel.tsx:501`, `:504-505`)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**28.33** Search input with placeholder \"Search references...\" (`reference-import-panel.tsx:532-533`)");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **28.33** Search input with placeholder "Search references..." (`reference-import-panel.tsx:532-533`)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**28.34** Type filter dropdown showing \"All types\" + unique types (`reference-import-panel.tsx:537`, `:540`, `:543-544`)");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **28.34** Type filter dropdown showing "All types" + unique types (`reference-import-panel.tsx:537`, `:540`, `:543-544`)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**28.35** Per-reference row: clickable, selected state with brand border (`reference-import-panel.tsx:559`, `:562`)");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **28.35** Per-reference row: clickable, selected state with brand border (`reference-import-panel.tsx:559`, `:562`)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**28.36** Checkbox indicator: Check icon when selected, empty border otherwise (`reference-import-panel.tsx:571`, `:576-577`)");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **28.36** Checkbox indicator: Check icon when selected, empty border otherwise (`reference-import-panel.tsx:571`, `:576-577`)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**28.37** Reference title displayed (`reference-import-panel.tsx:587`)");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **28.37** Reference title displayed (`reference-import-panel.tsx:587`)');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**28.38** Authors: first 3 joined, or \"Unknown authors\" fallback (`reference-import-panel.tsx:587`)");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **28.38** Authors: first 3 joined, or "Unknown authors" fallback (`reference-import-panel.tsx:587`)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**28.39** Journal name shown when present (`reference-import-panel.tsx:593`)");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **28.39** Journal name shown when present (`reference-import-panel.tsx:593`)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**28.40** Remove button with X icon per reference (`reference-import-panel.tsx:602`, `:608`)");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **28.40** Remove button with X icon per reference (`reference-import-panel.tsx:602`, `:608`)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**28.41** \"No references match your filter.\" empty filter state (`reference-import-panel.tsx:613`, `:615`)");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **28.41** "No references match your filter." empty filter state (`reference-import-panel.tsx:613`, `:615`)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**28.42** \"Use N Selected Reference{plural}\" button, disabled when 0 selected (`reference-import-panel.tsx:622-623`, `:626`, `:631-632`)");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **28.42** "Use N Selected Reference{plural}" button, disabled when 0 selected (`reference-import-panel.tsx:622-623`, `:626`, `:631-632`)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "`/presentation` initializes with `loading = true` and calls `getUserDecks()` from a client `useEffect`");
+      throw new Error('Unhandled presentation checkpoint: cp-029 `/presentation` initializes with `loading = true` and calls `getUserDecks()` from a client `useEffect`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "`/presentation` header action label is `New Presentation` without a leading `+` character");
+      throw new Error('Unhandled presentation checkpoint: cp-030 `/presentation` header action label is `New Presentation` without a leading `+` character');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "List-page loading state renders exactly three pulsing aspect-video rectangles");
+      throw new Error('Unhandled presentation checkpoint: cp-031 List-page loading state renders exactly three pulsing aspect-video rectangles');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "Route-level `src/app/(app)/presentation/loading.tsx` separately renders a skeleton heading plus six `SkeletonCard` placeholders");
+      throw new Error('Unhandled presentation checkpoint: cp-032 Route-level `src/app/(app)/presentation/loading.tsx` separately renders a skeleton heading plus six `SkeletonCard` placeholders');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "Empty-state CTA button uses `Sparkle` icon and label `Create Presentation`");
+      throw new Error('Unhandled presentation checkpoint: cp-033 Empty-state CTA button uses `Sparkle` icon and label `Create Presentation`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-016', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "Empty-state helper text explicitly says users can create from papers, documents, or start from scratch");
+      throw new Error('Unhandled presentation checkpoint: cp-034 Empty-state helper text explicitly says users can create from papers, documents, or start from scratch');
     }
 
 

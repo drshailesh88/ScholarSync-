@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-014
  * Source: e2e/specs/slides/spec-014.md
- * Generated: 2026-03-14T10:18:08.996Z
+ * Generated: 2026-03-14T20:53:55.828Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "3 Slides + Notes — Slides left, notes right");
+      throw new Error('Unhandled slides checkpoint: cp-000 3 Slides + Notes — Slides left, notes right');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "6 Slides — Grid layout");
+      throw new Error('Unhandled slides checkpoint: cp-001 6 Slides — Grid layout');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Outline — Text-based outline");
+      throw new Error('Unhandled slides checkpoint: cp-002 Outline — Text-based outline');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "**Options:**");
+      throw new Error('Unhandled slides checkpoint: cp-003 **Options:**');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Include slide numbers toggle");
+      throw new Error('Unhandled slides checkpoint: cp-004 Include slide numbers toggle');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Include header toggle");
+      throw new Error('Unhandled slides checkpoint: cp-005 Include header toggle');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Include speaker notes toggle");
+      throw new Error('Unhandled slides checkpoint: cp-006 Include speaker notes toggle');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Paper size: Letter / A4");
+      throw new Error('Unhandled slides checkpoint: cp-007 Paper size: Letter / A4');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Export button with loading state");
+      throw new Error('Unhandled slides checkpoint: cp-008 Export button with loading state');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Close button");
+      throw new Error('Unhandled slides checkpoint: cp-009 Close button');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Color input field");
+      throw new Error('Unhandled slides checkpoint: cp-010 Color input field');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Visual color picker interface");
+      throw new Error('Unhandled slides checkpoint: cp-011 Visual color picker interface');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Theme color swatches (primary, secondary, accent, text, background)");
+      throw new Error('Unhandled slides checkpoint: cp-012 Theme color swatches (primary, secondary, accent, text, background)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Configurable placement (e.g., \"right\")");
+      throw new Error('Unhandled slides checkpoint: cp-013 Configurable placement (e.g., "right")');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Used throughout: background, overlay, custom theme builder, master editor");
+      throw new Error('Unhandled slides checkpoint: cp-014 Used throughout: background, overlay, custom theme builder, master editor');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Gradient type (linear)");
+      throw new Error('Unhandled slides checkpoint: cp-015 Gradient type (linear)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Angle control");
+      throw new Error('Unhandled slides checkpoint: cp-016 Angle control');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Color stops with position");
+      throw new Error('Unhandled slides checkpoint: cp-017 Color stops with position');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Add/remove color stops");
+      throw new Error('Unhandled slides checkpoint: cp-018 Add/remove color stops');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Theme color quick picks");
+      throw new Error('Unhandled slides checkpoint: cp-019 Theme color quick picks');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Live preview of gradient");
+      throw new Error('Unhandled slides checkpoint: cp-020 Live preview of gradient');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Double-click to enter edit mode");
+      throw new Error('Unhandled slides checkpoint: cp-021 Double-click to enter edit mode');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "ContentEditable text editing");
+      throw new Error('Unhandled slides checkpoint: cp-022 ContentEditable text editing');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Text formatting options available during editing");
+      throw new Error('Unhandled slides checkpoint: cp-023 Text formatting options available during editing');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Exit edit on Escape or click outside");
+      throw new Error('Unhandled slides checkpoint: cp-024 Exit edit on Escape or click outside');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Double-click to edit bullet items");
+      throw new Error('Unhandled slides checkpoint: cp-025 Double-click to edit bullet items');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Add/remove bullet points");
+      throw new Error('Unhandled slides checkpoint: cp-026 Add/remove bullet points');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Toggle ordered/unordered");
+      throw new Error('Unhandled slides checkpoint: cp-027 Toggle ordered/unordered');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Click cells to edit content");
+      throw new Error('Unhandled slides checkpoint: cp-028 Click cells to edit content');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Add/remove rows and columns");
+      throw new Error('Unhandled slides checkpoint: cp-029 Add/remove rows and columns');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Cell text editing");
+      throw new Error('Unhandled slides checkpoint: cp-030 Cell text editing');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Renders slides with full fidelity in all contexts:");
+      throw new Error('Unhandled slides checkpoint: cp-031 Renders slides with full fidelity in all contexts:');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Canvas WYSIWYG editor");
+      throw new Error('Unhandled slides checkpoint: cp-032 Canvas WYSIWYG editor');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Filmstrip thumbnails");
+      throw new Error('Unhandled slides checkpoint: cp-033 Filmstrip thumbnails');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-014', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Presenter mode");
+      throw new Error('Unhandled slides checkpoint: cp-034 Presenter mode');
     }
 
 

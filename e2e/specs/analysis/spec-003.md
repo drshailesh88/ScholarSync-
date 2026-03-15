@@ -1,9 +1,9 @@
 # analysis — Spec 003
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 30
-FAIL: 5
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -39,12 +39,12 @@ MODULE: analysis
 - [x] PASS: Instant readability badge uses the local analysis labels from the live UI (`Easy`, `Standard`, `Difficult`, `Very Difficult`) — writing-analysis.ts:133-138: `getReadabilityLabel` returns exactly these four labels; page.tsx:388 renders `clientMetrics.readabilityLabel` in CircularGauge
 - [x] PASS: Client issue summaries show a `+N more issues` footer when more than 10 issues are detected — page.tsx:455-466: renders first 10 issues via `clientIssues.slice(0, 10)`, then `{clientIssues.length > 10 && (<p>+{clientIssues.length - 10} more issues</p>)}`
 #### Results Mode
-- [ ] FAIL: Results mode keeps the word, sentence, and paragraph summary cards above the right-side tabs — page.tsx:532-547: word/sentence/paragraph grid renders before `<Tabs>` at line 549
-- [ ] FAIL: "Analyze New Text" resets the result view, clears stored paragraphs, and returns the right-side panel to the Issues tab — page.tsx:482-486: `onClick={() => { setResult(null); setParagraphs([]); setActiveTab("issues"); }}`
+- [x] PASS: Results mode keeps the word, sentence, and paragraph summary cards above the right-side tabs — page.tsx:532-547: word/sentence/paragraph grid renders before `<Tabs>` at line 549
+- [x] PASS: "Analyze New Text" resets the result view, clears stored paragraphs, and returns the right-side panel to the Issues tab — page.tsx:482-486: `onClick={() => { setResult(null); setParagraphs([]); setActiveTab("issues"); }}`
 - [x] PASS: Issues tab shows a positive empty state message when no AI suggestions are returned: "No issues detected. Your writing looks great!" — page.tsx:554-557: conditional renders this exact string when `suggestions.length === 0`
-- [ ] FAIL: Local issue cards in results mode are grouped under a dedicated "Writing Issues (write-good)" section beneath AI suggestions — page.tsx:573-579: `{clientIssues.length > 0 && (<><p>Writing Issues (write-good)</p>…</>)}` renders after AI suggestion cards
-- [ ] FAIL: Results-mode write-good issues show a `+N more issues` footer when more than 15 issues are available — page.tsx:611-614: `{clientIssues.length > 15 && (<p>+{clientIssues.length - 15} more issues</p>)}`
-- [ ] FAIL: Paragraph Breakdown in Detailed Metrics renders only when paragraph-level AI analysis entries are returned — page.tsx:757: `{result.paragraphAnalysis.length > 0 && (<div>…<h4>Paragraph Breakdown</h4>…</div>)}`
+- [x] PASS: Local issue cards in results mode are grouped under a dedicated "Writing Issues (write-good)" section beneath AI suggestions — page.tsx:573-579: `{clientIssues.length > 0 && (<><p>Writing Issues (write-good)</p>…</>)}` renders after AI suggestion cards
+- [x] PASS: Results-mode write-good issues show a `+N more issues` footer when more than 15 issues are available — page.tsx:611-614: `{clientIssues.length > 15 && (<p>+{clientIssues.length - 15} more issues</p>)}`
+- [x] PASS: Paragraph Breakdown in Detailed Metrics renders only when paragraph-level AI analysis entries are returned — page.tsx:757: `{result.paragraphAnalysis.length > 0 && (<div>…<h4>Paragraph Breakdown</h4>…</div>)}`
 #### Integration Risks
 - [x] PASS: The page-local `AnalysisResult` type expects top-level `humanScore`, `aiScore`, `paragraphAnalysis`, and `plagiarismIndicators` — page.tsx:29-41: interface defines these as top-level fields
 - [x] PASS: `POST /api/integrity-check` returns those values under nested `aiDetection` and `plagiarism` objects instead — API returns `IntegrityCheckResult` (types.ts:145-165) with nested `aiDetection.humanScore`, `aiDetection.paragraphs`, `plagiarism.matches`

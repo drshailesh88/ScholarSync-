@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-025
  * Source: e2e/specs/presentation/spec-025.md
- * Generated: 2026-03-14T10:21:53.059Z
+ * Generated: 2026-03-14T20:11:46.271Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "Completed steps show `Check` icon; current step: `bg-brand/10 text-brand border-brand`; future: `bg-surface-raised text-ink-muted`");
+      throw new Error('Unhandled presentation checkpoint: cp-000 Completed steps show `Check` icon; current step: `bg-brand/10 text-brand border-brand`; future: `bg-surface-raised text-ink-muted`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "Steps separated by `w-8 h-px bg-border` dividers");
+      throw new Error('Unhandled presentation checkpoint: cp-001 Steps separated by `w-8 h-px bg-border` dividers');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "Heading `\"Select Source Material\"` with subheading `\"Choose where to generate your presentation from\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-002 Heading `"Select Source Material"` with subheading `"Choose where to generate your presentation from"`');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "Deep Research: full-width card with `Sparkle` icon, text `\"From Deep Research\"`, description `\"Import findings from a Deep Research session\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-003 Deep Research: full-width card with `Sparkle` icon, text `"From Deep Research"`, description `"Import findings from a Deep Research session"`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "Deep Research input: `type=\"number\"` placeholder `\"Deep Research session ID\"`; only renders when `sourceType === \"deep_research\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-004 Deep Research input: `type="number"` placeholder `"Deep Research session ID"`; only renders when `sourceType === "deep_research"`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "Text validation: `rawText.trim().length > 50`; URL validation: at least one fetched source; Import deck: `importedDeck != null`");
+      throw new Error('Unhandled presentation checkpoint: cp-005 Text validation: `rawText.trim().length > 50`; URL validation: at least one fetched source; Import deck: `importedDeck != null`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "Disabled Next: `bg-surface-raised text-ink-muted cursor-not-allowed`");
+      throw new Error('Unhandled presentation checkpoint: cp-006 Disabled Next: `bg-surface-raised text-ink-muted cursor-not-allowed`');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "Heading `\"Template & Audience\"` sub `\"Choose a presentation template and target audience\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-007 Heading `"Template & Audience"` sub `"Choose a presentation template and target audience"`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "Template label: `\"Presentation Template\"` with `\"(optional)\"`; uses `TemplateSelector` with `onAudienceChange`");
+      throw new Error('Unhandled presentation checkpoint: cp-008 Template label: `"Presentation Template"` with `"(optional)"`; uses `TemplateSelector` with `onAudienceChange`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "10 audience pill buttons: General, Thesis Defense, Conference, Journal Club, Classroom, Grant Presentation, Poster Session, Systematic Review, Patient Case, Grand Rounds");
+      throw new Error('Unhandled presentation checkpoint: cp-009 10 audience pill buttons: General, Thesis Defense, Conference, Journal Club, Classroom, Grant Presentation, Poster Session, Systematic Review, Patient Case, Grand Rounds');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "Selected audience: `border-brand bg-brand/5 text-brand`; Next always enabled; Back preserves source state");
+      throw new Error('Unhandled presentation checkpoint: cp-010 Selected audience: `border-brand bg-brand/5 text-brand`; Next always enabled; Back preserves source state');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "Heading `\"Configure Presentation\"` sub `\"Set title, theme, and generation preferences\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-011 Heading `"Configure Presentation"` sub `"Set title, theme, and generation preferences"`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "Title placeholder `\"Presentation title\"` with `autoFocus`; slide count label `\"Target Slide Count: {slideCount}\"` range min=5 max=30");
+      throw new Error('Unhandled presentation checkpoint: cp-012 Title placeholder `"Presentation title"` with `autoFocus`; slide count label `"Target Slide Count: {slideCount}"` range min=5 max=30');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "Citation style label `\"Citation Style\"` as pill buttons; theme label `\"Theme\"` in `grid grid-cols-7 gap-2`");
+      throw new Error('Unhandled presentation checkpoint: cp-013 Citation style label `"Citation Style"` as pill buttons; theme label `"Theme"` in `grid grid-cols-7 gap-2`');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "Theme tiles: `aspect-video` with name at `text-[8px] font-bold`; selected: `border-brand ring-1 ring-brand/30`");
+      throw new Error('Unhandled presentation checkpoint: cp-014 Theme tiles: `aspect-video` with name at `text-[8px] font-bold`; selected: `border-brand ring-1 ring-brand/30`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "Structure preview toggle: `\"Template Structure Preview ({name})\"` with CaretUp/CaretDown; `max-h-64 overflow-y-auto`; shows numeric slot index, title, (optional), guidance (line-clamp-1), layout name");
+      throw new Error('Unhandled presentation checkpoint: cp-015 Structure preview toggle: `"Template Structure Preview ({name})"` with CaretUp/CaretDown; `max-h-64 overflow-y-auto`; shows numeric slot index, title, (optional), guidance (line-clamp-1), layout name');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "Instructions label `\"Additional Instructions\"` `\"(optional)\"`; placeholder `\"e.g., Focus on methodology, include more charts...\"`; 3 rows; empty sent as `undefined`");
+      throw new Error('Unhandled presentation checkpoint: cp-016 Instructions label `"Additional Instructions"` `"(optional)"`; placeholder `"e.g., Focus on methodology, include more charts..."`; 3 rows; empty sent as `undefined`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "Generate button: `Sparkle` icon + `\"Generate\"`; disabled when `title.trim().length === 0`");
+      throw new Error('Unhandled presentation checkpoint: cp-017 Generate button: `Sparkle` icon + `"Generate"`; disabled when `title.trim().length === 0`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "Heading `\"Generating Presentation\"` sub `\"AI is creating your slide deck\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-018 Heading `"Generating Presentation"` sub `"AI is creating your slide deck"`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "Progress rows: `\"Preprocessing content\"`, `\"Generating slides\"`, `\"Generating bibliography\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-019 Progress rows: `"Preprocessing content"`, `"Generating slides"`, `"Generating bibliography"`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "4 states: pending (empty circle), loading (CircleNotch brand spin), done (green Check bold), error (red Warning)");
+      throw new Error('Unhandled presentation checkpoint: cp-020 4 states: pending (empty circle), loading (CircleNotch brand spin), done (green Check bold), error (red Warning)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "`handleStartGeneration` calls `setStep(3)` then `handlePreprocess()` — step changes before preprocess");
+      throw new Error('Unhandled presentation checkpoint: cp-021 `handleStartGeneration` calls `setStep(3)` then `handlePreprocess()` — step changes before preprocess');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "`AutoTrigger`: 500ms setTimeout fires `handleGenerate` when `preprocessedData && !generating && !generationResult && !error`");
+      throw new Error('Unhandled presentation checkpoint: cp-022 `AutoTrigger`: 500ms setTimeout fires `handleGenerate` when `preprocessedData && !generating && !generationResult && !error`');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "Bibliography: simulated 1500ms timeout after slides succeed");
+      throw new Error('Unhandled presentation checkpoint: cp-023 Bibliography: simulated 1500ms timeout after slides succeed');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "Success: `\"Generated {slideCount} slides successfully\"` + optional `\" using the {name} template\"`; green `bg-green-500/10`; CTA `\"Open Presentation\"` with ArrowRight");
+      throw new Error('Unhandled presentation checkpoint: cp-024 Success: `"Generated {slideCount} slides successfully"` + optional `" using the {name} template"`; green `bg-green-500/10`; CTA `"Open Presentation"` with ArrowRight');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "Error: red `bg-red-500/10` with Warning; Retry reruns preprocess if empty else handleGenerate; Back resets error+data+result to step 2");
+      throw new Error('Unhandled presentation checkpoint: cp-025 Error: red `bg-red-500/10` with Warning; Retry reruns preprocess if empty else handleGenerate; Back resets error+data+result to step 2');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "References → `\"text\"` + `formatReferencesAsContent`; URL → `\"text\"` + fetch `/api/slides/fetch-url` per source + concatenate `\"--- Source: {title} ---\"`; Import → `\"text\"` + `importedDeck.sourceText`");
+      throw new Error('Unhandled presentation checkpoint: cp-026 References → `"text"` + `formatReferencesAsContent`; URL → `"text"` + fetch `/api/slides/fetch-url` per source + concatenate `"--- Source: {title} ---"`; Import → `"text"` + `importedDeck.sourceText`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "Stream: `getReader()` + `TextDecoder`; only `\"0:\"` prefixed lines parsed via `JSON.parse`; malformed skipped silently");
+      throw new Error('Unhandled presentation checkpoint: cp-027 Stream: `getReader()` + `TextDecoder`; only `"0:"` prefixed lines parsed via `JSON.parse`; malformed skipped silently');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "Generate request sends: `preprocessedData`, `title`, `audienceType`, `slideCount`, `themeKey`, optional `additionalInstructions`, optional `templateId`, `citationStyle`");
+      throw new Error('Unhandled presentation checkpoint: cp-028 Generate request sends: `preprocessedData`, `title`, `audienceType`, `slideCount`, `themeKey`, optional `additionalInstructions`, optional `templateId`, `citationStyle`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "3 tabs: `File Upload`, `Zotero`, `DOI Lookup` in `bg-surface-raised rounded-xl` bar");
+      throw new Error('Unhandled presentation checkpoint: cp-029 3 tabs: `File Upload`, `Zotero`, `DOI Lookup` in `bg-surface-raised rounded-xl` bar');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "Active tab: `bg-white text-ink shadow-sm` / dark `bg-surface text-ink`; inactive: `text-ink-muted hover:text-ink`");
+      throw new Error('Unhandled presentation checkpoint: cp-030 Active tab: `bg-white text-ink shadow-sm` / dark `bg-surface text-ink`; inactive: `text-ink-muted hover:text-ink`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "Switching tabs clears error");
+      throw new Error('Unhandled presentation checkpoint: cp-031 Switching tabs clears error');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "`FileArrowUp` icon size 28; text: `\"Drop a .bib or .ris file here\"` (bold) / `\"or click to browse\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-032 `FileArrowUp` icon size 28; text: `"Drop a .bib or .ris file here"` (bold) / `"or click to browse"`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "Format text: `\"Supports BibTeX (.bib), RIS (.ris), and CSL-JSON (.json)\"`; accepts `.bib,.ris,.json,.txt`");
+      throw new Error('Unhandled presentation checkpoint: cp-033 Format text: `"Supports BibTeX (.bib), RIS (.ris), and CSL-JSON (.json)"`; accepts `.bib,.ris,.json,.txt`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-025', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "Tip: `\"Tip: Export your Mendeley library as BibTeX, then upload here.\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-034 Tip: `"Tip: Export your Mendeley library as BibTeX, then upload here."`');
     }
 
 

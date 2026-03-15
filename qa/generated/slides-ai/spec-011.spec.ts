@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-011
  * Source: e2e/specs/slides-ai/spec-011.md
- * Generated: 2026-03-14T10:19:15.538Z
+ * Generated: 2026-03-14T21:15:43.900Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Opens from \"Add Block\" button at bottom of active card");
+      throw new Error('Unhandled slides checkpoint: cp-000 Opens from "Add Block" button at bottom of active card');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Search bar at top (sticky)");
+      throw new Error('Unhandled slides checkpoint: cp-001 Search bar at top (sticky)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "**Smart Layouts** entry (dashed border, special styling)");
+      throw new Error('Unhandled slides checkpoint: cp-002 **Smart Layouts** entry (dashed border, special styling)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "**Block categories:**");
+      throw new Error('Unhandled slides checkpoint: cp-003 **Block categories:**');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "**Content:** Text, Bullets, Quote, Shape, Citation, Divider, Toggle, Nested Card");
+      throw new Error('Unhandled slides checkpoint: cp-004 **Content:** Text, Bullets, Quote, Shape, Citation, Divider, Toggle, Nested Card');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "**Media & Data:** Image, Chart, Table, Infographic, Illustration, Media, Embed");
+      throw new Error('Unhandled slides checkpoint: cp-005 **Media & Data:** Image, Chart, Table, Infographic, Illustration, Media, Embed');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "**Academic:** Equation, Diagram, Code, Callout, Statistic, Bibliography, Timeline");
+      throw new Error('Unhandled slides checkpoint: cp-006 **Academic:** Equation, Diagram, Code, Callout, Statistic, Bibliography, Timeline');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Category headers in uppercase");
+      throw new Error('Unhandled slides checkpoint: cp-007 Category headers in uppercase');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Items listed with hover highlight");
+      throw new Error('Unhandled slides checkpoint: cp-008 Items listed with hover highlight');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Click inserts block via `createDefaultBlock(type)`");
+      throw new Error('Unhandled slides checkpoint: cp-009 Click inserts block via `createDefaultBlock(type)`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Escape or click outside closes menu");
+      throw new Error('Unhandled slides checkpoint: cp-010 Escape or click outside closes menu');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "**Supported services:**");
+      throw new Error('Unhandled slides checkpoint: cp-011 **Supported services:**');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "YouTube → auto-converts to embed URL");
+      throw new Error('Unhandled slides checkpoint: cp-012 YouTube → auto-converts to embed URL');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Vimeo → auto-converts to embed URL");
+      throw new Error('Unhandled slides checkpoint: cp-013 Vimeo → auto-converts to embed URL');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Figma → embed with share URL");
+      throw new Error('Unhandled slides checkpoint: cp-014 Figma → embed with share URL');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Google Docs/Sheets → pub URL conversion");
+      throw new Error('Unhandled slides checkpoint: cp-015 Google Docs/Sheets → pub URL conversion');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Twitter/X → link fallback (no iframe)");
+      throw new Error('Unhandled slides checkpoint: cp-016 Twitter/X → link fallback (no iframe)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Generic → direct URL in iframe");
+      throw new Error('Unhandled slides checkpoint: cp-017 Generic → direct URL in iframe');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Aspect ratio options: 16:9, 4:3, 1:1");
+      throw new Error('Unhandled slides checkpoint: cp-018 Aspect ratio options: 16:9, 4:3, 1:1');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Optional title above embed");
+      throw new Error('Unhandled slides checkpoint: cp-019 Optional title above embed');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Lazy loading iframes");
+      throw new Error('Unhandled slides checkpoint: cp-020 Lazy loading iframes');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Sandbox: `allow-scripts allow-same-origin`");
+      throw new Error('Unhandled slides checkpoint: cp-021 Sandbox: `allow-scripts allow-same-origin`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Empty state: \"No embed URL provided\" with globe icon");
+      throw new Error('Unhandled slides checkpoint: cp-022 Empty state: "No embed URL provided" with globe icon');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Clickable header with Cards icon + title + chevron");
+      throw new Error('Unhandled slides checkpoint: cp-023 Clickable header with Cards icon + title + chevron');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Collapse/expand with Framer Motion animation (250ms)");
+      throw new Error('Unhandled slides checkpoint: cp-024 Collapse/expand with Framer Motion animation (250ms)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Nested blocks rendered via BLOCK_REGISTRY");
+      throw new Error('Unhandled slides checkpoint: cp-025 Nested blocks rendered via BLOCK_REGISTRY');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Visual nesting: darker background, divider on expand");
+      throw new Error('Unhandled slides checkpoint: cp-026 Visual nesting: darker background, divider on expand');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Default state: collapsed");
+      throw new Error('Unhandled slides checkpoint: cp-027 Default state: collapsed');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Clickable header with rotating chevron");
+      throw new Error('Unhandled slides checkpoint: cp-028 Clickable header with rotating chevron');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Content rendered from HTML (dangerouslySetInnerHTML)");
+      throw new Error('Unhandled slides checkpoint: cp-029 Content rendered from HTML (dangerouslySetInnerHTML)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "`defaultOpen` prop (defaults false)");
+      throw new Error('Unhandled slides checkpoint: cp-030 `defaultOpen` prop (defaults false)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Framer Motion expand/collapse animation");
+      throw new Error('Unhandled slides checkpoint: cp-031 Framer Motion expand/collapse animation');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Left padding for visual hierarchy");
+      throw new Error('Unhandled slides checkpoint: cp-032 Left padding for visual hierarchy');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Activated from presentation controls");
+      throw new Error('Unhandled slides checkpoint: cp-033 Activated from presentation controls');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-011', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Progressive reveal: one block at a time");
+      throw new Error('Unhandled slides checkpoint: cp-034 Progressive reveal: one block at a time');
     }
 
 

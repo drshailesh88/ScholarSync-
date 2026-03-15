@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-013
  * Source: e2e/specs/slides-ai/spec-013.md
- * Generated: 2026-03-14T10:19:21.909Z
+ * Generated: 2026-03-14T21:18:15.902Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "`addAgentChatMessage(msg)` — adds to history");
+      throw new Error('Unhandled slides checkpoint: cp-000 `addAgentChatMessage(msg)` — adds to history');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "`markChatMessageApplied(msgId)` — marks changes as applied");
+      throw new Error('Unhandled slides checkpoint: cp-001 `markChatMessageApplied(msgId)` — marks changes as applied');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "`clearAgentChatHistory()` — clears all messages");
+      throw new Error('Unhandled slides checkpoint: cp-002 `clearAgentChatHistory()` — clears all messages');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "`agentPanelOpen`: boolean — controls Gamma agent panel visibility");
+      throw new Error('Unhandled slides checkpoint: cp-003 `agentPanelOpen`: boolean — controls Gamma agent panel visibility');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "`setAgentPanelOpen(v)` — toggle agent panel");
+      throw new Error('Unhandled slides checkpoint: cp-004 `setAgentPanelOpen(v)` — toggle agent panel');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "`rightPanel` options include \"agent\" alongside properties, comments, etc.");
+      throw new Error('Unhandled slides checkpoint: cp-005 `rightPanel` options include "agent" alongside properties, comments, etc.');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "`SlidesAgentPanel` reads context from `getActiveSlide()`, `getSelectedBlock()`, and `getPrimarySelectedBlockIndex()` on every render instead of caching selection locally");
+      throw new Error('Unhandled slides checkpoint: cp-006 `SlidesAgentPanel` reads context from `getActiveSlide()`, `getSelectedBlock()`, and `getPrimarySelectedBlockIndex()` on every render instead of caching selection locally');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Slides agent quick-action set is derived from the selected block type and recalculates when selection changes");
+      throw new Error('Unhandled slides checkpoint: cp-007 Slides agent quick-action set is derived from the selected block type and recalculates when selection changes');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Slides agent context badge icon returns `null` when no recognized block type is selected");
+      throw new Error('Unhandled slides checkpoint: cp-008 Slides agent context badge icon returns `null` when no recognized block type is selected');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Slides agent input is focused on mount via `inputRef.current?.focus()`");
+      throw new Error('Unhandled slides checkpoint: cp-009 Slides agent input is focused on mount via `inputRef.current?.focus()`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Slides agent textarea auto-resizes up to 120px height while typing");
+      throw new Error('Unhandled slides checkpoint: cp-010 Slides agent textarea auto-resizes up to 120px height while typing');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Sending a slides-agent message resets the textarea height back to `auto`");
+      throw new Error('Unhandled slides checkpoint: cp-011 Sending a slides-agent message resets the textarea height back to `auto`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Slides agent ignores send attempts when `deckId` is missing");
+      throw new Error('Unhandled slides checkpoint: cp-012 Slides agent ignores send attempts when `deckId` is missing');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Slides agent trims whitespace and ignores empty prompts");
+      throw new Error('Unhandled slides checkpoint: cp-013 Slides agent trims whitespace and ignores empty prompts');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Slash command parsing only maps `/learn ` to `learn` and `/draft ` to `draft`");
+      throw new Error('Unhandled slides checkpoint: cp-014 Slash command parsing only maps `/learn ` to `learn` and `/draft ` to `draft`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "`/visual ` and `/illustrate ` are kept in `chat` mode and passed through as prompt text hints");
+      throw new Error('Unhandled slides checkpoint: cp-015 `/visual ` and `/illustrate ` are kept in `chat` mode and passed through as prompt text hints');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Slides agent includes only the last 10 chat messages in the API request context");
+      throw new Error('Unhandled slides checkpoint: cp-016 Slides agent includes only the last 10 chat messages in the API request context');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "In chat mode, slides agent sends `slides`, `activeSlideId`, `audienceType`, and `chatHistory` with the prompt");
+      throw new Error('Unhandled slides checkpoint: cp-017 In chat mode, slides agent sends `slides`, `activeSlideId`, `audienceType`, and `chatHistory` with the prompt');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "When a block is selected, slides agent also sends `selectedBlockIndex`, `selectedBlockType`, and serialized `selectedBlockContent`");
+      throw new Error('Unhandled slides checkpoint: cp-018 When a block is selected, slides agent also sends `selectedBlockIndex`, `selectedBlockType`, and serialized `selectedBlockContent`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "In legacy `learn` and `draft` modes, slides agent sends `slideContent` for the active slide instead of full block context");
+      throw new Error('Unhandled slides checkpoint: cp-019 In legacy `learn` and `draft` modes, slides agent sends `slideContent` for the active slide instead of full block context');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Slides agent normalizes `/learn` responses by appending a `Suggested papers:` list when `papers` are returned");
+      throw new Error('Unhandled slides checkpoint: cp-020 Slides agent normalizes `/learn` responses by appending a `Suggested papers:` list when `papers` are returned');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Slides agent normalizes `/draft` responses by converting generated content blocks into one slide-level suggested change targeting the active slide");
+      throw new Error('Unhandled slides checkpoint: cp-021 Slides agent normalizes `/draft` responses by converting generated content blocks into one slide-level suggested change targeting the active slide');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Slides agent simulates streaming locally by revealing assistant text word-by-word with a ~20ms delay");
+      throw new Error('Unhandled slides checkpoint: cp-022 Slides agent simulates streaming locally by revealing assistant text word-by-word with a ~20ms delay');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "While simulated streaming is in progress, assistant text is held in `streamedText` and not yet added to `agentChatHistory`");
+      throw new Error('Unhandled slides checkpoint: cp-023 While simulated streaming is in progress, assistant text is held in `streamedText` and not yet added to `agentChatHistory`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Slides agent request failures surface as an assistant chat message with `Something went wrong: ... Please try again.`");
+      throw new Error('Unhandled slides checkpoint: cp-024 Slides agent request failures surface as an assistant chat message with `Something went wrong: ... Please try again.`');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Applying a suggested block-level change replaces only the targeted block index inside that slide’s `contentBlocks`");
+      throw new Error('Unhandled slides checkpoint: cp-025 Applying a suggested block-level change replaces only the targeted block index inside that slide’s `contentBlocks`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Applying a suggested slide-level change calls `updateSlide(change.slideId, slideChanges)` directly");
+      throw new Error('Unhandled slides checkpoint: cp-026 Applying a suggested slide-level change calls `updateSlide(change.slideId, slideChanges)` directly');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Single-change apply filters suggestions down to the active slide when one is active");
+      throw new Error('Unhandled slides checkpoint: cp-027 Single-change apply filters suggestions down to the active slide when one is active');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "`Apply to All` uses the full suggested-change list without active-slide filtering");
+      throw new Error('Unhandled slides checkpoint: cp-028 `Apply to All` uses the full suggested-change list without active-slide filtering');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Applied suggestion sets are tracked by `markApplied(msgId)` in store-backed chat history");
+      throw new Error('Unhandled slides checkpoint: cp-029 Applied suggestion sets are tracked by `markApplied(msgId)` in store-backed chat history');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "`agentChatHistory` is capped to the last 50 messages through the slides store");
+      throw new Error('Unhandled slides checkpoint: cp-030 `agentChatHistory` is capped to the last 50 messages through the slides store');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "`GammaModeLayout` opens `OutlineGenerator` whenever `slides.length === 0`, regardless of whether create mode was entered from the full-screen selector or the toolbar toggle");
+      throw new Error('Unhandled slides checkpoint: cp-031 `GammaModeLayout` opens `OutlineGenerator` whenever `slides.length === 0`, regardless of whether create mode was entered from the full-screen selector or the toolbar toggle');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Gamma layout right panel width is `w-[360px]`, not a generic `w-80`");
+      throw new Error('Unhandled slides checkpoint: cp-032 Gamma layout right panel width is `w-[360px]`, not a generic `w-80`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "`GammaToolbar` title button shows `Untitled Deck` when the deck title is empty");
+      throw new Error('Unhandled slides checkpoint: cp-033 `GammaToolbar` title button shows `Untitled Deck` when the deck title is empty');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Entering gamma-toolbar title edit mode seeds `titleDraft` from the latest store title before focusing the input");
+      throw new Error('Unhandled slides checkpoint: cp-034 Entering gamma-toolbar title edit mode seeds `titleDraft` from the latest store title before focusing the input');
     }
 
 

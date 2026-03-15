@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-023
  * Source: e2e/specs/slides/spec-023.md
- * Generated: 2026-03-14T10:18:37.803Z
+ * Generated: 2026-03-14T18:28:57.877Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "`/api/slides/import-pptx` returns 401 `{ error: \"Unauthorized\" }` for unauthenticated users");
+      throw new Error('Unhandled slides checkpoint: cp-000 `/api/slides/import-pptx` returns 401 `{ error: "Unauthorized" }` for unauthenticated users');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "`/api/slides/import-pptx` returns 400 `{ error: \"Please upload a .pptx file\" }` when no file or wrong type");
+      throw new Error('Unhandled slides checkpoint: cp-001 `/api/slides/import-pptx` returns 400 `{ error: "Please upload a .pptx file" }` when no file or wrong type');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "`/api/slides/import-pptx` returns 400 `{ error: \"File exceeds 50MB limit\" }` for oversized files");
+      throw new Error('Unhandled slides checkpoint: cp-002 `/api/slides/import-pptx` returns 400 `{ error: "File exceeds 50MB limit" }` for oversized files');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "`/api/slides/import-pptx` returns 400 `{ error: \"Password-protected files are not supported\" }` for encrypted PPTX");
+      throw new Error('Unhandled slides checkpoint: cp-003 `/api/slides/import-pptx` returns 400 `{ error: "Password-protected files are not supported" }` for encrypted PPTX');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "`/api/slides/import-pptx` returns 500 `{ error: \"Import failed\" }` on unexpected server error");
+      throw new Error('Unhandled slides checkpoint: cp-004 `/api/slides/import-pptx` returns 500 `{ error: "Import failed" }` on unexpected server error');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "`/api/slides/import-pptx` creates deck with description `Imported from {filename}` plus optional theme name");
+      throw new Error('Unhandled slides checkpoint: cp-005 `/api/slides/import-pptx` creates deck with description `Imported from {filename}` plus optional theme name');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "`/api/slides/import-pptx` processes image assets via `storeImportedSlideAsset` and patches image block URLs");
+      throw new Error('Unhandled slides checkpoint: cp-006 `/api/slides/import-pptx` processes image assets via `storeImportedSlideAsset` and patches image block URLs');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "`/api/slides/import-pptx` appends `Presentation contains no slides` to warnings when `slideCount === 0`");
+      throw new Error('Unhandled slides checkpoint: cp-007 `/api/slides/import-pptx` appends `Presentation contains no slides` to warnings when `slideCount === 0`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "All three API routes enforce rate limiting via `checkRateLimit` before processing");
+      throw new Error('Unhandled slides checkpoint: cp-008 All three API routes enforce rate limiting via `checkRateLimit` before processing');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Toolbar renders `CollaborationAvatarsSlot` between the A11y button and the Present button");
+      throw new Error('Unhandled slides checkpoint: cp-009 Toolbar renders `CollaborationAvatarsSlot` between the A11y button and the Present button');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Avatars slot is imported from `collaboration-slots` as `AvatarsSlot`");
+      throw new Error('Unhandled slides checkpoint: cp-010 Avatars slot is imported from `collaboration-slots` as `AvatarsSlot`');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "`BlockPropertyEditor` is shown when exactly one block is selected AND the block type is NOT `text`, `bullets`, or `quote`");
+      throw new Error('Unhandled slides checkpoint: cp-011 `BlockPropertyEditor` is shown when exactly one block is selected AND the block type is NOT `text`, `bullets`, or `quote`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Single-block alignment buttons are disabled when the selected block has no `position` property");
+      throw new Error('Unhandled slides checkpoint: cp-012 Single-block alignment buttons are disabled when the selected block has no `position` property');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "`ModeSelector` renders two buttons: `Slides` and `Create` (not `Slides Mode` / `Create Mode`)");
+      throw new Error('Unhandled slides checkpoint: cp-013 `ModeSelector` renders two buttons: `Slides` and `Create` (not `Slides Mode` / `Create Mode`)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Active mode button has classes `bg-brand text-white shadow-sm`");
+      throw new Error('Unhandled slides checkpoint: cp-014 Active mode button has classes `bg-brand text-white shadow-sm`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Each mode button includes an inline SVG icon (slides grid icon for Slides, star icon for Create)");
+      throw new Error('Unhandled slides checkpoint: cp-015 Each mode button includes an inline SVG icon (slides grid icon for Slides, star icon for Create)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Wizard shows 3 progress dots at the top center (for topic, audience, theme steps)");
+      throw new Error('Unhandled slides checkpoint: cp-016 Wizard shows 3 progress dots at the top center (for topic, audience, theme steps)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Active step dot is `bg-brand`, completed steps are `bg-brand/40`, future steps are `bg-border`");
+      throw new Error('Unhandled slides checkpoint: cp-017 Active step dot is `bg-brand`, completed steps are `bg-brand/40`, future steps are `bg-border`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "During generating step, the third dot shows as active (`bg-brand`)");
+      throw new Error('Unhandled slides checkpoint: cp-018 During generating step, the third dot shows as active (`bg-brand`)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Each audience option shows a description beneath the label: `General audience presentation`, `Academic conference talk`, `Dissertation or thesis defense`, `Paper review meeting`, `Teaching or lecture`, `Funding proposal`, `Poster presentation`");
+      throw new Error('Unhandled slides checkpoint: cp-019 Each audience option shows a description beneath the label: `General audience presentation`, `Academic conference talk`, `Dissertation or thesis defense`, `Paper review meeting`, `Teaching or lecture`, `Funding proposal`, `Poster presentation`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Audience options are rendered in a `grid-cols-2` layout (7 options = one orphan cell)");
+      throw new Error('Unhandled slides checkpoint: cp-020 Audience options are rendered in a `grid-cols-2` layout (7 options = one orphan cell)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Selected audience card has `border-brand bg-brand/5`");
+      throw new Error('Unhandled slides checkpoint: cp-021 Selected audience card has `border-brand bg-brand/5`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Audience step includes a `Back` button that returns to topic step");
+      throw new Error('Unhandled slides checkpoint: cp-022 Audience step includes a `Back` button that returns to topic step');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Theme step includes a `Back` button that returns to audience step");
+      throw new Error('Unhandled slides checkpoint: cp-023 Theme step includes a `Back` button that returns to audience step');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Topic step has no Back button");
+      throw new Error('Unhandled slides checkpoint: cp-024 Topic step has no Back button');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Generating step sub-text is `Setting up your deck and generating initial slides...`");
+      throw new Error('Unhandled slides checkpoint: cp-025 Generating step sub-text is `Setting up your deck and generating initial slides...`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Create button during generation shows spinner + `Creating...` (not `Create Presentation`)");
+      throw new Error('Unhandled slides checkpoint: cp-026 Create button during generation shows spinner + `Creating...` (not `Create Presentation`)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Parsing phase copy: `Extracting slide structure and preview content...`");
+      throw new Error('Unhandled slides checkpoint: cp-027 Parsing phase copy: `Extracting slide structure and preview content...`');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Ready phase copy: `Preview the extracted slides before importing them into ScholarSync.`");
+      throw new Error('Unhandled slides checkpoint: cp-028 Ready phase copy: `Preview the extracted slides before importing them into ScholarSync.`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Importing phase copy: `Uploading assets and creating the imported deck...`");
+      throw new Error('Unhandled slides checkpoint: cp-029 Importing phase copy: `Uploading assets and creating the imported deck...`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Idle-with-error copy: `The selected file could not be imported.`");
+      throw new Error('Unhandled slides checkpoint: cp-030 Idle-with-error copy: `The selected file could not be imported.`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Export-all-PNG timeout before capture is 120ms (after 2 animation frames + `document.fonts.ready`)");
+      throw new Error('Unhandled slides checkpoint: cp-031 Export-all-PNG timeout before capture is 120ms (after 2 animation frames + `document.fonts.ready`)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Export-all-PNG sorts slides by `sortOrder` before rendering");
+      throw new Error('Unhandled slides checkpoint: cp-032 Export-all-PNG sorts slides by `sortOrder` before rendering');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Export-all-PNG uses `createRoot` from `react-dom/client` for off-screen rendering");
+      throw new Error('Unhandled slides checkpoint: cp-033 Export-all-PNG uses `createRoot` from `react-dom/client` for off-screen rendering');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-023', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "After export-all-PNG completes, root is unmounted and container is removed from DOM");
+      throw new Error('Unhandled slides checkpoint: cp-034 After export-all-PNG completes, root is unmounted and container is removed from DOM');
     }
 
 

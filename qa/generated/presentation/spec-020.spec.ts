@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-020
  * Source: e2e/specs/presentation/spec-020.md
- * Generated: 2026-03-14T10:21:37.364Z
+ * Generated: 2026-03-14T20:05:44.664Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "Slide thumbnails are rendered through `SlideRenderer` at `scale={0.35}` and wrapped in `pointer-events-none`");
+      throw new Error('Unhandled presentation checkpoint: cp-000 Slide thumbnails are rendered through `SlideRenderer` at `scale={0.35}` and wrapped in `pointer-events-none`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "Drag-reordering visual feedback lowers opacity for the dragged slide and adds a brand ring on the hovered drop target");
+      throw new Error('Unhandled presentation checkpoint: cp-001 Drag-reordering visual feedback lowers opacity for the dragged slide and adds a brand ring on the hovered drop target');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "Delete-slide affordance only appears on hover and only when the deck contains more than one slide");
+      throw new Error('Unhandled presentation checkpoint: cp-002 Delete-slide affordance only appears on hover and only when the deck contains more than one slide');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "Sidebar comment badges show total comment count and switch color based on unresolved count");
+      throw new Error('Unhandled presentation checkpoint: cp-003 Sidebar comment badges show total comment count and switch color based on unresolved count');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "Sidebar slide label format is `{index}. {title || \"Untitled\"}`");
+      throw new Error('Unhandled presentation checkpoint: cp-004 Sidebar slide label format is `{index}. {title || "Untitled"}`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "`SlideCanvas` empty state copy is `Select a slide to start editing`");
+      throw new Error('Unhandled presentation checkpoint: cp-005 `SlideCanvas` empty state copy is `Select a slide to start editing`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "Preview mode shows only the rendered slide inside a centered `max-w-3xl` frame");
+      throw new Error('Unhandled presentation checkpoint: cp-006 Preview mode shows only the rendered slide inside a centered `max-w-3xl` frame');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "Edit mode shows both the rendered slide preview and a form/editor card beneath it");
+      throw new Error('Unhandled presentation checkpoint: cp-007 Edit mode shows both the rendered slide preview and a form/editor card beneath it');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "Subtitle input is only rendered for `title_slide`, `title_content`, and `section_header` layouts");
+      throw new Error('Unhandled presentation checkpoint: cp-008 Subtitle input is only rendered for `title_slide`, `title_content`, and `section_header` layouts');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "Content-block editing is delegated entirely to `ContentBlockEditor`");
+      throw new Error('Unhandled presentation checkpoint: cp-009 Content-block editing is delegated entirely to `ContentBlockEditor`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "`SpeakerNotesPanel` is always mounted below the slide canvas within the center column");
+      throw new Error('Unhandled presentation checkpoint: cp-010 `SpeakerNotesPanel` is always mounted below the slide canvas within the center column');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "Toolbar edit toggle label flips between `Editing` and `Preview`");
+      throw new Error('Unhandled presentation checkpoint: cp-011 Toolbar edit toggle label flips between `Editing` and `Preview`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "Toolbar edit toggle icon flips between `PencilSimple` and `Eye`");
+      throw new Error('Unhandled presentation checkpoint: cp-012 Toolbar edit toggle icon flips between `PencilSimple` and `Eye`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "Toolbar comments button shows an unresolved-count badge only when the count is greater than zero");
+      throw new Error('Unhandled presentation checkpoint: cp-013 Toolbar comments button shows an unresolved-count badge only when the count is greater than zero');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "Toolbar `PDF` export button renders only because the editor passes `onExportPdf`");
+      throw new Error('Unhandled presentation checkpoint: cp-014 Toolbar `PDF` export button renders only because the editor passes `onExportPdf`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "`Export PPTX` and `PDF` share the same `exporting` disabled state");
+      throw new Error('Unhandled presentation checkpoint: cp-015 `Export PPTX` and `PDF` share the same `exporting` disabled state');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "`Export PPTX` changes its label to `Exporting...` while either export path is active");
+      throw new Error('Unhandled presentation checkpoint: cp-016 `Export PPTX` changes its label to `Exporting...` while either export path is active');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "`PDF` button text does not change while exporting; only its disabled styling updates");
+      throw new Error('Unhandled presentation checkpoint: cp-017 `PDF` button text does not change while exporting; only its disabled styling updates');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "Toolbar `Social Export` button is not rendered in the current editor because no `socialSlides` prop is passed");
+      throw new Error('Unhandled presentation checkpoint: cp-018 Toolbar `Social Export` button is not rendered in the current editor because no `socialSlides` prop is passed');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "Export PPTX posts to `/api/export/pptx` using the current local slide state");
+      throw new Error('Unhandled presentation checkpoint: cp-019 Export PPTX posts to `/api/export/pptx` using the current local slide state');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "Export PDF posts to `/api/export/presentation-pdf` using the current local slide state");
+      throw new Error('Unhandled presentation checkpoint: cp-020 Export PDF posts to `/api/export/presentation-pdf` using the current local slide state');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "Successful PPTX export downloads `{deck title}.pptx` without title sanitization");
+      throw new Error('Unhandled presentation checkpoint: cp-021 Successful PPTX export downloads `{deck title}.pptx` without title sanitization');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "Successful PDF export downloads `{deck title}_handout.pdf` without title sanitization at the editor layer");
+      throw new Error('Unhandled presentation checkpoint: cp-022 Successful PDF export downloads `{deck title}_handout.pdf` without title sanitization at the editor layer');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "Export failures are logged to console only and do not show inline error UI");
+      throw new Error('Unhandled presentation checkpoint: cp-023 Export failures are logged to console only and do not show inline error UI');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "Opening AI Agent closes Defense Prep, Analytics, and Comments if they were open");
+      throw new Error('Unhandled presentation checkpoint: cp-024 Opening AI Agent closes Defense Prep, Analytics, and Comments if they were open');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "Opening Defense Prep closes AI Agent, Analytics, and Comments if they were open");
+      throw new Error('Unhandled presentation checkpoint: cp-025 Opening Defense Prep closes AI Agent, Analytics, and Comments if they were open');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "Opening Analytics closes Comments, AI Agent, and Defense Prep if they were open");
+      throw new Error('Unhandled presentation checkpoint: cp-026 Opening Analytics closes Comments, AI Agent, and Defense Prep if they were open');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "Opening Comments closes Analytics, AI Agent, Defense Prep, and Version History if they were open");
+      throw new Error('Unhandled presentation checkpoint: cp-027 Opening Comments closes Analytics, AI Agent, Defense Prep, and Version History if they were open');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "Opening Version History closes Comments, Analytics, AI Agent, and Defense Prep if they were open");
+      throw new Error('Unhandled presentation checkpoint: cp-028 Opening Version History closes Comments, Analytics, AI Agent, and Defense Prep if they were open');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "Comments, Analytics, Agent, Defense Prep, and Version History slide-over panels each mount as a `w-80` right column");
+      throw new Error('Unhandled presentation checkpoint: cp-029 Comments, Analytics, Agent, Defense Prep, and Version History slide-over panels each mount as a `w-80` right column');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "`AiToolsDropdown` disables all actions while one AI slide edit is in progress");
+      throw new Error('Unhandled presentation checkpoint: cp-030 `AiToolsDropdown` disables all actions while one AI slide edit is in progress');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "AI slide tools endpoint payload includes `title`, `subtitle`, `contentBlocks`, and `speakerNotes` for the active slide");
+      throw new Error('Unhandled presentation checkpoint: cp-031 AI slide tools endpoint payload includes `title`, `subtitle`, `contentBlocks`, and `speakerNotes` for the active slide');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "Successful AI slide edits may update both `contentBlocks` and `speakerNotes`");
+      throw new Error('Unhandled presentation checkpoint: cp-032 Successful AI slide edits may update both `contentBlocks` and `speakerNotes`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "`AiToolsDropdown` shows one inline red error line when an action fails");
+      throw new Error('Unhandled presentation checkpoint: cp-033 `AiToolsDropdown` shows one inline red error line when an action fails');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "`CoachPanel` run button is disabled when the deck has zero slides");
+      throw new Error('Unhandled presentation checkpoint: cp-034 `CoachPanel` run button is disabled when the deck has zero slides');
     }
 
 

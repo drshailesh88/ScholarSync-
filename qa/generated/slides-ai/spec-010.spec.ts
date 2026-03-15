@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-010
  * Source: e2e/specs/slides-ai/spec-010.md
- * Generated: 2026-03-14T10:19:12.327Z
+ * Generated: 2026-03-14T22:15:41.284Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Audience selector — 10 audience types with icons:");
+      throw new Error('Unhandled slides checkpoint: cp-000 Audience selector — 10 audience types with icons:');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "**Card count slider** (3–20 cards)");
+      throw new Error('Unhandled slides checkpoint: cp-001 **Card count slider** (3–20 cards)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "\"Generate Outline\" button (Sparkle icon)");
+      throw new Error('Unhandled slides checkpoint: cp-002 "Generate Outline" button (Sparkle icon)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Loading spinner during generation");
+      throw new Error('Unhandled slides checkpoint: cp-003 Loading spinner during generation');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Scrollable vertical list of editable outline cards");
+      throw new Error('Unhandled slides checkpoint: cp-004 Scrollable vertical list of editable outline cards');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Each card row shows:");
+      throw new Error('Unhandled slides checkpoint: cp-005 Each card row shows:');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Card title input (editable)");
+      throw new Error('Unhandled slides checkpoint: cp-006 Card title input (editable)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Bullet point inputs (editable, add/remove)");
+      throw new Error('Unhandled slides checkpoint: cp-007 Bullet point inputs (editable, add/remove)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Move up button (disabled at position 1)");
+      throw new Error('Unhandled slides checkpoint: cp-008 Move up button (disabled at position 1)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Move down button (disabled at last position)");
+      throw new Error('Unhandled slides checkpoint: cp-009 Move down button (disabled at last position)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Delete button (disabled if only 1 card)");
+      throw new Error('Unhandled slides checkpoint: cp-010 Delete button (disabled if only 1 card)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "\"Add another card\" button at bottom");
+      throw new Error('Unhandled slides checkpoint: cp-011 "Add another card" button at bottom');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Back button → returns to Step 1");
+      throw new Error('Unhandled slides checkpoint: cp-012 Back button → returns to Step 1');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "\"Choose Theme\" button → advances to Step 3");
+      throw new Error('Unhandled slides checkpoint: cp-013 "Choose Theme" button → advances to Step 3');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Flex-wrapped row of large theme swatches (120x72px)");
+      throw new Error('Unhandled slides checkpoint: cp-014 Flex-wrapped row of large theme swatches (120x72px)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Theme name label on each swatch");
+      throw new Error('Unhandled slides checkpoint: cp-015 Theme name label on each swatch');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Selected theme: brand border + ring + check mark");
+      throw new Error('Unhandled slides checkpoint: cp-016 Selected theme: brand border + ring + check mark');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Hover: scale 1.03 effect");
+      throw new Error('Unhandled slides checkpoint: cp-017 Hover: scale 1.03 effect');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Back button → returns to Step 2");
+      throw new Error('Unhandled slides checkpoint: cp-018 Back button → returns to Step 2');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "\"Create Presentation\" button → starts generation (Step 4)");
+      throw new Error('Unhandled slides checkpoint: cp-019 "Create Presentation" button → starts generation (Step 4)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Spinner + \"Creating your presentation\" message");
+      throw new Error('Unhandled slides checkpoint: cp-020 Spinner + "Creating your presentation" message');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Status messages stream in:");
+      throw new Error('Unhandled slides checkpoint: cp-021 Status messages stream in:');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "\"Setting up theme...\"");
+      throw new Error('Unhandled slides checkpoint: cp-022 "Setting up theme..."');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "\"Generating your presentation...\"");
+      throw new Error('Unhandled slides checkpoint: cp-023 "Generating your presentation..."');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "\"Loading your deck...\"");
+      throw new Error('Unhandled slides checkpoint: cp-024 "Loading your deck..."');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Streaming from `/api/slides/generate-stream` (newline-delimited JSON)");
+      throw new Error('Unhandled slides checkpoint: cp-025 Streaming from `/api/slides/generate-stream` (newline-delimited JSON)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Stream events: status, images, complete, error");
+      throw new Error('Unhandled slides checkpoint: cp-026 Stream events: status, images, complete, error');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "On completion, slides load into the editor");
+      throw new Error('Unhandled slides checkpoint: cp-027 On completion, slides load into the editor');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "`/api/slides/outline` — generates outline from prompt");
+      throw new Error('Unhandled slides checkpoint: cp-028 `/api/slides/outline` — generates outline from prompt');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "`/api/slides/generate-stream` — streams full deck generation");
+      throw new Error('Unhandled slides checkpoint: cp-029 `/api/slides/generate-stream` — streams full deck generation');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "10 pre-built layout templates:");
+      throw new Error('Unhandled slides checkpoint: cp-030 10 pre-built layout templates:');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Floating panel appears in block inserter menu");
+      throw new Error('Unhandled slides checkpoint: cp-031 Floating panel appears in block inserter menu');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Dashed border entry with icon + label + description");
+      throw new Error('Unhandled slides checkpoint: cp-032 Dashed border entry with icon + label + description');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Click replaces active slide's contentBlocks with template");
+      throw new Error('Unhandled slides checkpoint: cp-033 Click replaces active slide\'s contentBlocks with template');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-010', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Auto-closes after selection");
+      throw new Error('Unhandled slides checkpoint: cp-034 Auto-closes after selection');
     }
 
 

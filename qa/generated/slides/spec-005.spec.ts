@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-005
  * Source: e2e/specs/slides/spec-005.md
- * Generated: 2026-03-14T10:17:40.622Z
+ * Generated: 2026-03-14T20:50:35.373Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Opens from toolbar button (anchored to button position)");
+      throw new Error('Unhandled slides checkpoint: cp-000 Opens from toolbar button (anchored to button position)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Search bar with live filtering (\"Search blocks...\")");
+      throw new Error('Unhandled slides checkpoint: cp-001 Search bar with live filtering ("Search blocks...")');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Blocks organized by category: Content | Media | Academic");
+      throw new Error('Unhandled slides checkpoint: cp-002 Blocks organized by category: Content | Media | Academic');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Category headers shown");
+      throw new Error('Unhandled slides checkpoint: cp-003 Category headers shown');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Keyboard navigation: Arrow Up/Down to move, Enter to insert");
+      throw new Error('Unhandled slides checkpoint: cp-004 Keyboard navigation: Arrow Up/Down to move, Enter to insert');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Escape closes the menu");
+      throw new Error('Unhandled slides checkpoint: cp-005 Escape closes the menu');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Click outside closes the menu");
+      throw new Error('Unhandled slides checkpoint: cp-006 Click outside closes the menu');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Shape block shows expandable submenu with shape grid (4 columns)");
+      throw new Error('Unhandled slides checkpoint: cp-007 Shape block shows expandable submenu with shape grid (4 columns)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Shape categories: geometric shapes grouped by type");
+      throw new Error('Unhandled slides checkpoint: cp-008 Shape categories: geometric shapes grouped by type');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "AI Visualize button (sparkle icon) for diagram, infographic, chart types");
+      throw new Error('Unhandled slides checkpoint: cp-009 AI Visualize button (sparkle icon) for diagram, infographic, chart types');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Empty state: \"No blocks found\" when search yields no results");
+      throw new Error('Unhandled slides checkpoint: cp-010 Empty state: "No blocks found" when search yields no results');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "\"+\" inserter button on the canvas for quick block insertion");
+      throw new Error('Unhandled slides checkpoint: cp-011 "+" inserter button on the canvas for quick block insertion');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Inserts block at a default position on the slide");
+      throw new Error('Unhandled slides checkpoint: cp-012 Inserts block at a default position on the slide');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Uses `createDefaultBlock()` factory with type-specific defaults");
+      throw new Error('Unhandled slides checkpoint: cp-013 Uses `createDefaultBlock()` factory with type-specific defaults');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Two tabs: \"Design\" and \"Animation\"");
+      throw new Error('Unhandled slides checkpoint: cp-014 Two tabs: "Design" and "Animation"');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Switching tabs shows the corresponding section");
+      throw new Error('Unhandled slides checkpoint: cp-015 Switching tabs shows the corresponding section');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Shows \"Align selected block to canvas\" controls");
+      throw new Error('Unhandled slides checkpoint: cp-016 Shows "Align selected block to canvas" controls');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "6 alignment buttons: Left, Center, Right, Top, Middle, Bottom");
+      throw new Error('Unhandled slides checkpoint: cp-017 6 alignment buttons: Left, Center, Right, Top, Middle, Bottom');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "**Rotation** controls:");
+      throw new Error('Unhandled slides checkpoint: cp-018 **Rotation** controls:');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Numeric input (0–360 degrees)");
+      throw new Error('Unhandled slides checkpoint: cp-019 Numeric input (0–360 degrees)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Quick-set buttons: 0°, 90°, 180°, 270°");
+      throw new Error('Unhandled slides checkpoint: cp-020 Quick-set buttons: 0°, 90°, 180°, 270°');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Flip Horizontal button");
+      throw new Error('Unhandled slides checkpoint: cp-021 Flip Horizontal button');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Flip Vertical button");
+      throw new Error('Unhandled slides checkpoint: cp-022 Flip Vertical button');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Shows count of selected blocks (e.g., \"3 blocks selected\")");
+      throw new Error('Unhandled slides checkpoint: cp-023 Shows count of selected blocks (e.g., "3 blocks selected")');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "\"Delete All\" button (red/danger)");
+      throw new Error('Unhandled slides checkpoint: cp-024 "Delete All" button (red/danger)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Align — 6 buttons: Left, Center, Right, Top, Middle, Bottom");
+      throw new Error('Unhandled slides checkpoint: cp-025 Align — 6 buttons: Left, Center, Right, Top, Middle, Bottom');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Distribute — Horizontal and Vertical (disabled if < 3 blocks)");
+      throw new Error('Unhandled slides checkpoint: cp-026 Distribute — Horizontal and Vertical (disabled if < 3 blocks)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Shown when exactly one non-text block is selected");
+      throw new Error('Unhandled slides checkpoint: cp-027 Shown when exactly one non-text block is selected');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "`BlockPropertyEditor` renders type-specific controls");
+      throw new Error('Unhandled slides checkpoint: cp-028 `BlockPropertyEditor` renders type-specific controls');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Properties vary by block type (chart data, image URL, code language, etc.)");
+      throw new Error('Unhandled slides checkpoint: cp-029 Properties vary by block type (chart data, image URL, code language, etc.)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "**Background Type toggle:** Solid | Gradient | Image");
+      throw new Error('Unhandled slides checkpoint: cp-030 **Background Type toggle:** Solid | Gradient | Image');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "**Solid:** Color picker with theme color swatches");
+      throw new Error('Unhandled slides checkpoint: cp-031 **Solid:** Color picker with theme color swatches');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "**Gradient:** Gradient editor with:");
+      throw new Error('Unhandled slides checkpoint: cp-032 **Gradient:** Gradient editor with:');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Type selector (linear)");
+      throw new Error('Unhandled slides checkpoint: cp-033 Type selector (linear)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Angle control");
+      throw new Error('Unhandled slides checkpoint: cp-034 Angle control');
     }
 
 

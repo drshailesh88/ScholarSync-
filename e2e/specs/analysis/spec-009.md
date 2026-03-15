@@ -1,9 +1,9 @@
 # analysis — Spec 009
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 31
-FAIL: 4
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -29,14 +29,14 @@ MODULE: analysis
 - [x] PASS: Count badge is rendered only when `tab.count !== undefined` (~line 41)
 #### `src/components/ui/error-display.tsx` — Error Page Details
 - [x] PASS: Error page reports errors to Sentry via `Sentry.captureException(error)` in a `useEffect` (~line 23-27)
-- [ ] FAIL: Error page displays a `WarningCircle` icon (size 32) inside a red-tinted rounded container (~line 35-36)
-- [ ] FAIL: Retry button text is "Try Again" with an `ArrowCounterClockwise` icon (size 16) (~line 43-46)
+- [x] PASS: Error page displays a `WarningCircle` icon (size 32) inside a red-tinted rounded container (~line 35-36)
+- [x] PASS: Retry button text is "Try Again" with an `ArrowCounterClockwise` icon (size 16) (~line 43-46)
 #### `src/app/(app)/analysis/loading.tsx` — Loading Skeleton Structure
-- [ ] FAIL: Loading skeleton renders exactly 4 `Skeleton` elements: back-button placeholder (h-8 w-8 rounded-lg), title placeholder (h-6 w-40), textarea placeholder (flex-1 rounded-2xl), and a footer row with word-count placeholder (h-4 w-20) plus button placeholder (h-12 w-40 rounded-xl) (~lines 6-15)
+- [x] PASS: Loading skeleton renders exactly 4 `Skeleton` elements: back-button placeholder (h-8 w-8 rounded-lg), title placeholder (h-6 w-40), textarea placeholder (flex-1 rounded-2xl), and a footer row with word-count placeholder (h-4 w-20) plus button placeholder (h-12 w-40 rounded-xl) (~lines 6-15)
 - [x] PASS: Loading skeleton mirrors the page layout height: `h-[calc(100vh-7rem)]` (~line 5)
 #### `src/app/(app)/analysis/page.tsx` — Additional UI Details
 - [x] PASS: Page container uses `h-[calc(100vh-7rem)]` for viewport height minus header (~line 203)
-- [ ] FAIL: Analyze button uses `rounded-xl px-6 py-3` — not rounded-lg (~line 344)
+- [x] PASS: Analyze button uses `rounded-xl px-6 py-3` — not rounded-lg (~line 344)
 - [x] PASS: Legend swatches in results mode use `w-3 h-3 rounded` with both `bg-{color}-500/30` AND `border border-{color}-500` (~lines 245-255)
 - [x] PASS: Results-mode reset button text is `← Analyze New Text` (using `&larr;` HTML entity), not "Back to Analyze New Text" (~line 464)
 - [x] PASS: Results-mode reset button is styled as text link: `text-xs text-brand hover:text-brand-hover font-medium` (~line 462)

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-015
  * Source: e2e/specs/slides-ai/spec-015.md
- * Generated: 2026-03-14T10:19:28.179Z
+ * Generated: 2026-03-14T21:20:48.669Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Starting full Gamma deck generation immediately sets step to `generating` before the stream request returns");
+      throw new Error('Unhandled slides checkpoint: cp-000 Starting full Gamma deck generation immediately sets step to `generating` before the stream request returns');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Gamma deck generation serializes the outline into a numbered `Card N: Title` text outline before sending it as `description`");
+      throw new Error('Unhandled slides checkpoint: cp-001 Gamma deck generation serializes the outline into a numbered `Card N: Title` text outline before sending it as `description`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Gamma deck generation persists the selected theme to store through `setTheme(selectedTheme, PRESET_THEMES[selectedTheme])` before requesting the stream");
+      throw new Error('Unhandled slides checkpoint: cp-002 Gamma deck generation persists the selected theme to store through `setTheme(selectedTheme, PRESET_THEMES[selectedTheme])` before requesting the stream');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Gamma deck generation stream reads newline-delimited JSON objects from `/api/slides/generate-stream`");
+      throw new Error('Unhandled slides checkpoint: cp-003 Gamma deck generation stream reads newline-delimited JSON objects from `/api/slides/generate-stream`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Gamma generation stream updates `generationProgress` from each event’s `message` field");
+      throw new Error('Unhandled slides checkpoint: cp-004 Gamma generation stream updates `generationProgress` from each event’s `message` field');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Gamma generation stream throws immediately when an event of type `error` is received");
+      throw new Error('Unhandled slides checkpoint: cp-005 Gamma generation stream throws immediately when an event of type `error` is received');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "After the stream completes, Gamma generation sets progress text to `Loading your deck...` and calls `loadDeck(deckId)`");
+      throw new Error('Unhandled slides checkpoint: cp-006 After the stream completes, Gamma generation sets progress text to `Loading your deck...` and calls `loadDeck(deckId)`');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Gamma deck generation failures return the wizard to the `outline` step rather than keeping the user on the generating screen");
+      throw new Error('Unhandled slides checkpoint: cp-007 Gamma deck generation failures return the wizard to the `outline` step rather than keeping the user on the generating screen');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "`GammaAgentPanel` quick-action chips only prefill the input text; they do not auto-send the command");
+      throw new Error('Unhandled slides checkpoint: cp-008 `GammaAgentPanel` quick-action chips only prefill the input text; they do not auto-send the command');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Gamma agent header close button calls `setAgentPanelOpen(false)` directly");
+      throw new Error('Unhandled slides checkpoint: cp-009 Gamma agent header close button calls `setAgentPanelOpen(false)` directly');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Gamma agent send is disabled while loading or when the trimmed input is empty");
+      throw new Error('Unhandled slides checkpoint: cp-010 Gamma agent send is disabled while loading or when the trimmed input is empty');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Gamma agent API payload always sends `deckId`, `message`, `slides`, `activeSlideId`, and `audienceType`");
+      throw new Error('Unhandled slides checkpoint: cp-011 Gamma agent API payload always sends `deckId`, `message`, `slides`, `activeSlideId`, and `audienceType`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Gamma agent applies `modifiedSlides` by patching existing slides and `newSlides` by calling `addSlide()` first, then `updateSlide()`");
+      throw new Error('Unhandled slides checkpoint: cp-012 Gamma agent applies `modifiedSlides` by patching existing slides and `newSlides` by calling `addSlide()` first, then `updateSlide()`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Gamma agent adds assistant summary text even when the response modified slides successfully with no visible UI diff summary beyond that message");
+      throw new Error('Unhandled slides checkpoint: cp-013 Gamma agent adds assistant summary text even when the response modified slides successfully with no visible UI diff summary beyond that message');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Gamma agent error responses are converted into assistant chat bubbles instead of a separate inline alert");
+      throw new Error('Unhandled slides checkpoint: cp-014 Gamma agent error responses are converted into assistant chat bubbles instead of a separate inline alert');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "`CardOutlineSidebar` truncates card titles over 20 characters with an ellipsis character");
+      throw new Error('Unhandled slides checkpoint: cp-015 `CardOutlineSidebar` truncates card titles over 20 characters with an ellipsis character');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Card-outline row action menu is opened by a `DotsThree` button, not a context menu/right-click");
+      throw new Error('Unhandled slides checkpoint: cp-016 Card-outline row action menu is opened by a `DotsThree` button, not a context menu/right-click');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Card-outline row menu contains only `Duplicate` and `Delete`");
+      throw new Error('Unhandled slides checkpoint: cp-017 Card-outline row menu contains only `Duplicate` and `Delete`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Card-outline delete is disabled when the deck contains only one slide/card");
+      throw new Error('Unhandled slides checkpoint: cp-018 Card-outline delete is disabled when the deck contains only one slide/card');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Card-outline insert-between `+` buttons are hover/focus-revealed between cards");
+      throw new Error('Unhandled slides checkpoint: cp-019 Card-outline insert-between `+` buttons are hover/focus-revealed between cards');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Card-outline footer button label is `Add card`");
+      throw new Error('Unhandled slides checkpoint: cp-020 Card-outline footer button label is `Add card`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "`CardStack` empty state shows a dashed border button with `Add your first card`");
+      throw new Error('Unhandled slides checkpoint: cp-021 `CardStack` empty state shows a dashed border button with `Add your first card`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Card stack uses `setActiveSlide(slide.id)` on click and also supports keyboard activation with `Enter` or `Space`");
+      throw new Error('Unhandled slides checkpoint: cp-022 Card stack uses `setActiveSlide(slide.id)` on click and also supports keyboard activation with `Enter` or `Space`');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Only the active Gamma card shows per-card action buttons for background and sparkle menus");
+      throw new Error('Unhandled slides checkpoint: cp-023 Only the active Gamma card shows per-card action buttons for background and sparkle menus');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Card-stack end-of-list insert button remains visible below the final card");
+      throw new Error('Unhandled slides checkpoint: cp-024 Card-stack end-of-list insert button remains visible below the final card');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "In Slides-mode AI chat, quick-action chips do not always send immediately in every context described by the original doc; the panel builds the outgoing request differently for `chat`, `learn`, and `draft` modes");
+      throw new Error('Unhandled slides checkpoint: cp-025 In Slides-mode AI chat, quick-action chips do not always send immediately in every context described by the original doc; the panel builds the outgoing request differently for `chat`, `learn`, and `draft` modes');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "`/visual` and `/illustrate` are not separate backend modes in `SlidesAgentPanel`; they stay in `chat` mode and are sent as prompt text");
+      throw new Error('Unhandled slides checkpoint: cp-026 `/visual` and `/illustrate` are not separate backend modes in `SlidesAgentPanel`; they stay in `chat` mode and are sent as prompt text');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Gamma quick-action chips only populate the input field; they do not dispatch the request until the user sends it");
+      throw new Error('Unhandled slides checkpoint: cp-027 Gamma quick-action chips only populate the input field; they do not dispatch the request until the user sends it');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Gamma mode does not show the three-panel card layout when a deck has zero slides; it shows the outline generator instead");
+      throw new Error('Unhandled slides checkpoint: cp-028 Gamma mode does not show the three-panel card layout when a deck has zero slides; it shows the outline generator instead');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Gamma export errors use `alert()` rather than inline toast/banner UI");
+      throw new Error('Unhandled slides checkpoint: cp-029 Gamma export errors use `alert()` rather than inline toast/banner UI');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Switching from Gamma to Slides mode is gated by a browser confirmation dialog, not an inline custom modal");
+      throw new Error('Unhandled slides checkpoint: cp-030 Switching from Gamma to Slides mode is gated by a browser confirmation dialog, not an inline custom modal');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "The Gamma right-side agent panel is controlled by `agentPanelOpen`, not by `rightPanel`");
+      throw new Error('Unhandled slides checkpoint: cp-031 The Gamma right-side agent panel is controlled by `agentPanelOpen`, not by `rightPanel`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "The card-outline sidebar menu is a small local dropdown with `Duplicate` and `Delete`, not a full context menu with filmstrip-style actions");
+      throw new Error('Unhandled slides checkpoint: cp-032 The card-outline sidebar menu is a small local dropdown with `Duplicate` and `Delete`, not a full context menu with filmstrip-style actions');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Loading state displays centered spinner (brand border, transparent top) with text \"Loading presentation...\"");
+      throw new Error('Unhandled slides checkpoint: cp-033 Loading state displays centered spinner (brand border, transparent top) with text "Loading presentation..."');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Error state displays \"Deck not found or access denied.\" in red-500 with \"Back to presentations\" link to `/slides`");
+      throw new Error('Unhandled slides checkpoint: cp-034 Error state displays "Deck not found or access denied." in red-500 with "Back to presentations" link to `/slides`');
     }
 
 

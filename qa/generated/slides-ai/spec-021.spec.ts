@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-021
  * Source: e2e/specs/slides-ai/spec-021.md
- * Generated: 2026-03-14T10:19:47.220Z
+ * Generated: 2026-03-14T21:32:50.438Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Category labels: `content → \"Content\"`, `media → \"Media & Data\"`, `academic → \"Academic\"`");
+      throw new Error('Unhandled slides checkpoint: cp-000 Category labels: `content → "Content"`, `media → "Media & Data"`, `academic → "Academic"`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Slides-agent quick-action chips SET INPUT TEXT only and do NOT auto-send; original Section 3 line 96 (\"Clicking a chip sends the action as a message\") is incorrect for SlidesAgentPanel — behavior matches GammaAgentPanel");
+      throw new Error('Unhandled slides checkpoint: cp-001 Slides-agent quick-action chips SET INPUT TEXT only and do NOT auto-send; original Section 3 line 96 ("Clicking a chip sends the action as a message") is incorrect for SlidesAgentPanel — behavior matches GammaAgentPanel');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "GammaAgentPanel uses local React `useState` for messages, NOT the store-backed `agentChatHistory` (which is only used by SlidesAgentPanel)");
+      throw new Error('Unhandled slides checkpoint: cp-002 GammaAgentPanel uses local React `useState` for messages, NOT the store-backed `agentChatHistory` (which is only used by SlidesAgentPanel)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "ThemeCustomizer small theme swatches (64×36px) show the check badge in the BOTTOM-RIGHT corner, not top-right as stated");
+      throw new Error('Unhandled slides checkpoint: cp-003 ThemeCustomizer small theme swatches (64×36px) show the check badge in the BOTTOM-RIGHT corner, not top-right as stated');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Outline wizard theme step uses `flex-wrap justify-center gap-3`, not a `4-column grid` as original Section 16 claims");
+      throw new Error('Unhandled slides checkpoint: cp-004 Outline wizard theme step uses `flex-wrap justify-center gap-3`, not a `4-column grid` as original Section 16 claims');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Card accent bar in CardStack is `h-1` (4px), not `1px` as original Section 10 claims");
+      throw new Error('Unhandled slides checkpoint: cp-005 Card accent bar in CardStack is `h-1` (4px), not `1px` as original Section 10 claims');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Active card in CardStack uses `ring-1 ring-brand/30`, not `ring-2` + blue border as original Section 10 claims");
+      throw new Error('Unhandled slides checkpoint: cp-006 Active card in CardStack uses `ring-1 ring-brand/30`, not `ring-2` + blue border as original Section 10 claims');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "CardSparkleMenu silently swallows API errors — there is no user-facing error message (original Section 12 says \"Error messages displayed on failure\" for other panels but sparkle menu has empty `catch {}`)");
+      throw new Error('Unhandled slides checkpoint: cp-007 CardSparkleMenu silently swallows API errors — there is no user-facing error message (original Section 12 says "Error messages displayed on failure" for other panels but sparkle menu has empty `catch {}`)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "PDF export in Slides mode opens `HandoutExportDialog` with layout/options before downloading (not a direct single-click download like PPTX)");
+      throw new Error('Unhandled slides checkpoint: cp-008 PDF export in Slides mode opens `HandoutExportDialog` with layout/options before downloading (not a direct single-click download like PPTX)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Only PPTX export receives `themeConfig` from Gamma mode's `export-deck.ts`; PDF export does not send theme");
+      throw new Error('Unhandled slides checkpoint: cp-009 Only PPTX export receives `themeConfig` from Gamma mode\'s `export-deck.ts`; PDF export does not send theme');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Server-side `cardCount` validation allows up to 30 (`z.number().int().min(3).max(30)`), while UI slider limits to 20");
+      throw new Error('Unhandled slides checkpoint: cp-010 Server-side `cardCount` validation allows up to 30 (`z.number().int().min(3).max(30)`), while UI slider limits to 20');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "No `loading.tsx` or `error.tsx` route-level files exist under `src/app/(app)/slides/`; all loading/error UI is handled within `SlidesWorkspace` component");
+      throw new Error('Unhandled slides checkpoint: cp-011 No `loading.tsx` or `error.tsx` route-level files exist under `src/app/(app)/slides/`; all loading/error UI is handled within `SlidesWorkspace` component');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "`HandoutExportDialog` opens with UI defaults `layout=\"three_up_notes\"` and `paperSize=\"letter\"` even though the PDF route schema defaults `layout` to `\"full_slide\"`");
+      throw new Error('Unhandled slides checkpoint: cp-012 `HandoutExportDialog` opens with UI defaults `layout="three_up_notes"` and `paperSize="letter"` even though the PDF route schema defaults `layout` to `"full_slide"`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "`HandoutExportDialog` disables the `Include speaker notes` checkbox unless `layout === \"three_up_notes\"`");
+      throw new Error('Unhandled slides checkpoint: cp-013 `HandoutExportDialog` disables the `Include speaker notes` checkbox unless `layout === "three_up_notes"`');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Slides-mode PPTX/PDF export failures only log to `console.error`; unlike Gamma export, there is no user-facing alert, toast, or inline error state");
+      throw new Error('Unhandled slides checkpoint: cp-014 Slides-mode PPTX/PDF export failures only log to `console.error`; unlike Gamma export, there is no user-facing alert, toast, or inline error state');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "`CardBackgroundPicker` always renders the image URL input; only image-position and overlay controls are conditional on a populated `imageUrl`");
+      throw new Error('Unhandled slides checkpoint: cp-015 `CardBackgroundPicker` always renders the image URL input; only image-position and overlay controls are conditional on a populated `imageUrl`');
     }
 
 

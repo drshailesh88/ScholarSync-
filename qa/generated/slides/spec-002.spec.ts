@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-002
  * Source: e2e/specs/slides/spec-002.md
- * Generated: 2026-03-14T10:17:31.195Z
+ * Generated: 2026-03-14T18:05:14.487Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "All slides displayed as thumbnails with slide numbers");
+      throw new Error('Unhandled slides checkpoint: cp-000 All slides displayed as thumbnails with slide numbers');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Active slide has a highlighted border");
+      throw new Error('Unhandled slides checkpoint: cp-001 Active slide has a highlighted border');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Clicking a thumbnail activates that slide");
+      throw new Error('Unhandled slides checkpoint: cp-002 Clicking a thumbnail activates that slide');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Shift+Click toggles multi-slide selection");
+      throw new Error('Unhandled slides checkpoint: cp-003 Shift+Click toggles multi-slide selection');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Hidden slides appear at 50% opacity with an eye-slash icon");
+      throw new Error('Unhandled slides checkpoint: cp-004 Hidden slides appear at 50% opacity with an eye-slash icon');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Regenerating slides show \"Regenerating...\" status label");
+      throw new Error('Unhandled slides checkpoint: cp-005 Regenerating slides show "Regenerating..." status label');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Collaboration presence dots shown per slide");
+      throw new Error('Unhandled slides checkpoint: cp-006 Collaboration presence dots shown per slide');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Drag handle appears on hover (6-dot icon)");
+      throw new Error('Unhandled slides checkpoint: cp-007 Drag handle appears on hover (6-dot icon)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Dragging a slide reorders it in the filmstrip");
+      throw new Error('Unhandled slides checkpoint: cp-008 Dragging a slide reorders it in the filmstrip');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Drop target highlights correctly");
+      throw new Error('Unhandled slides checkpoint: cp-009 Drop target highlights correctly');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Reorder persists after release");
+      throw new Error('Unhandled slides checkpoint: cp-010 Reorder persists after release');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "\"+ Add Slide\" button at bottom of filmstrip");
+      throw new Error('Unhandled slides checkpoint: cp-011 "+ Add Slide" button at bottom of filmstrip');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "New slide inserted after active slide");
+      throw new Error('Unhandled slides checkpoint: cp-012 New slide inserted after active slide');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "New Slide — inserts after the right-clicked slide");
+      throw new Error('Unhandled slides checkpoint: cp-013 New Slide — inserts after the right-clicked slide');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Duplicate Slide — creates a copy");
+      throw new Error('Unhandled slides checkpoint: cp-014 Duplicate Slide — creates a copy');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Copy Slide — copies to clipboard");
+      throw new Error('Unhandled slides checkpoint: cp-015 Copy Slide — copies to clipboard');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Cut Slide — copies and removes (disabled if only 1 slide)");
+      throw new Error('Unhandled slides checkpoint: cp-016 Cut Slide — copies and removes (disabled if only 1 slide)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Paste Slide — pastes from clipboard (disabled if clipboard empty)");
+      throw new Error('Unhandled slides checkpoint: cp-017 Paste Slide — pastes from clipboard (disabled if clipboard empty)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Move to Beginning — moves slide to position 1");
+      throw new Error('Unhandled slides checkpoint: cp-018 Move to Beginning — moves slide to position 1');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Move to End — moves slide to last position");
+      throw new Error('Unhandled slides checkpoint: cp-019 Move to End — moves slide to last position');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Regenerate with AI... — opens regenerate dialog");
+      throw new Error('Unhandled slides checkpoint: cp-020 Regenerate with AI... — opens regenerate dialog');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Regenerate Selected Slides... — batch regenerate (multi-select)");
+      throw new Error('Unhandled slides checkpoint: cp-021 Regenerate Selected Slides... — batch regenerate (multi-select)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Hide Slide — toggles hidden flag");
+      throw new Error('Unhandled slides checkpoint: cp-022 Hide Slide — toggles hidden flag');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Change Layout... — submenu with all standard layouts");
+      throw new Error('Unhandled slides checkpoint: cp-023 Change Layout... — submenu with all standard layouts');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Apply Master... — submenu with \"No Master\" + all masters");
+      throw new Error('Unhandled slides checkpoint: cp-024 Apply Master... — submenu with "No Master" + all masters');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Export as PNG HD — exports current slide as PNG (Shift+Click = 3x scale)");
+      throw new Error('Unhandled slides checkpoint: cp-025 Export as PNG HD — exports current slide as PNG (Shift+Click = 3x scale)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Export as SVG — exports current slide as SVG");
+      throw new Error('Unhandled slides checkpoint: cp-026 Export as SVG — exports current slide as SVG');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Delete Slide — removes slide (disabled if only 1 slide, red/danger style)");
+      throw new Error('Unhandled slides checkpoint: cp-027 Delete Slide — removes slide (disabled if only 1 slide, red/danger style)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Click on title text to enter inline edit mode");
+      throw new Error('Unhandled slides checkpoint: cp-028 Click on title text to enter inline edit mode');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Click on subtitle text to enter inline edit mode");
+      throw new Error('Unhandled slides checkpoint: cp-029 Click on subtitle text to enter inline edit mode');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Changes save on blur / click away");
+      throw new Error('Unhandled slides checkpoint: cp-030 Changes save on blur / click away');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Master slide placeholder prompts shown when empty");
+      throw new Error('Unhandled slides checkpoint: cp-031 Master slide placeholder prompts shown when empty');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Click a block to select it (blue selection outline)");
+      throw new Error('Unhandled slides checkpoint: cp-032 Click a block to select it (blue selection outline)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Shift+Click to add/remove from multi-selection");
+      throw new Error('Unhandled slides checkpoint: cp-033 Shift+Click to add/remove from multi-selection');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Click on canvas background deselects all blocks");
+      throw new Error('Unhandled slides checkpoint: cp-034 Click on canvas background deselects all blocks');
     }
 
 

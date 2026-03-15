@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for onboarding/spec-007
  * Source: e2e/specs/onboarding/spec-007.md
- * Generated: 2026-03-14T09:16:27.592Z
+ * Generated: 2026-03-14T15:17:33.016Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output

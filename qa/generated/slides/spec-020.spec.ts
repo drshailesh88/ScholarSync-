@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-020
  * Source: e2e/specs/slides/spec-020.md
- * Generated: 2026-03-14T10:18:28.051Z
+ * Generated: 2026-03-14T18:25:36.031Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Slides in sorter are drag-to-reorder via dnd-kit `SortableContext`");
+      throw new Error('Unhandled slides checkpoint: cp-000 Slides in sorter are drag-to-reorder via dnd-kit `SortableContext`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "`Space` key advances to next slide/reveal step (same as ArrowRight)");
+      throw new Error('Unhandled slides checkpoint: cp-001 `Space` key advances to next slide/reveal step (same as ArrowRight)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "`Enter` key advances to next slide unless jump buffer is active, in which case it jumps to typed slide number");
+      throw new Error('Unhandled slides checkpoint: cp-002 `Enter` key advances to next slide unless jump buffer is active, in which case it jumps to typed slide number');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "`Backspace` key goes to previous slide unless jump buffer is active, in which case it deletes last digit");
+      throw new Error('Unhandled slides checkpoint: cp-003 `Backspace` key goes to previous slide unless jump buffer is active, in which case it deletes last digit');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "`B` key toggles black screen mode on/off");
+      throw new Error('Unhandled slides checkpoint: cp-004 `B` key toggles black screen mode on/off');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "`W` key toggles white screen mode on/off");
+      throw new Error('Unhandled slides checkpoint: cp-005 `W` key toggles white screen mode on/off');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "`N` key toggles presenter panel visibility on/off");
+      throw new Error('Unhandled slides checkpoint: cp-006 `N` key toggles presenter panel visibility on/off');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "`Home` key jumps to first slide in presenter mode");
+      throw new Error('Unhandled slides checkpoint: cp-007 `Home` key jumps to first slide in presenter mode');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "`End` key jumps to last slide in presenter mode");
+      throw new Error('Unhandled slides checkpoint: cp-008 `End` key jumps to last slide in presenter mode');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Number keys typed in presenter mode accumulate in a jump buffer with 1.5s timeout");
+      throw new Error('Unhandled slides checkpoint: cp-009 Number keys typed in presenter mode accumulate in a jump buffer with 1.5s timeout');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Jump buffer is displayed in the slide-number input field and submitted via Enter");
+      throw new Error('Unhandled slides checkpoint: cp-010 Jump buffer is displayed in the slide-number input field and submitted via Enter');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Presenter panel includes an `Audience` button that opens a separate window at `/presentation/audience`");
+      throw new Error('Unhandled slides checkpoint: cp-011 Presenter panel includes an `Audience` button that opens a separate window at `/presentation/audience`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Audience window opens with dimensions `width=1280,height=720,menubar=no,toolbar=no`");
+      throw new Error('Unhandled slides checkpoint: cp-012 Audience window opens with dimensions `width=1280,height=720,menubar=no,toolbar=no`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Presenter uses `BroadcastChannel(\"presenter-slide-sync\")` to sync slide index to audience window");
+      throw new Error('Unhandled slides checkpoint: cp-013 Presenter uses `BroadcastChannel("presenter-slide-sync")` to sync slide index to audience window');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "BroadcastChannel sends `init` with slide render payload (`slides`, `masters`, `themeKey`, `themeConfig`, `screenMode`) when audience window sends `audience-ready`");
+      throw new Error('Unhandled slides checkpoint: cp-014 BroadcastChannel sends `init` with slide render payload (`slides`, `masters`, `themeKey`, `themeConfig`, `screenMode`) when audience window sends `audience-ready`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "BroadcastChannel sends `slide` message with current index on each slide change");
+      throw new Error('Unhandled slides checkpoint: cp-015 BroadcastChannel sends `slide` message with current index on each slide change');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "BroadcastChannel sends `screen-mode` message when black/white screen toggles");
+      throw new Error('Unhandled slides checkpoint: cp-016 BroadcastChannel sends `screen-mode` message when black/white screen toggles');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Fullscreen toggle button (ArrowsOut icon) calls `requestFullscreen()` on the presenter container");
+      throw new Error('Unhandled slides checkpoint: cp-017 Fullscreen toggle button (ArrowsOut icon) calls `requestFullscreen()` on the presenter container');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Escape in presenter mode exits fullscreen first if `document.fullscreenElement` exists, then calls `onExit`");
+      throw new Error('Unhandled slides checkpoint: cp-018 Escape in presenter mode exits fullscreen first if `document.fullscreenElement` exists, then calls `onExit`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Zero visible slides shows `No visible slides to present.` with `Exit Presentation` button");
+      throw new Error('Unhandled slides checkpoint: cp-019 Zero visible slides shows `No visible slides to present.` with `Exit Presentation` button');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Empty speaker notes show italic text `No speaker notes for this slide.`");
+      throw new Error('Unhandled slides checkpoint: cp-020 Empty speaker notes show italic text `No speaker notes for this slide.`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Last slide shows `End of presentation` italic text in the Next Slide section");
+      throw new Error('Unhandled slides checkpoint: cp-021 Last slide shows `End of presentation` italic text in the Next Slide section');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Animation progress text reads `Build {current} of {total}` with optional click/auto breakdown");
+      throw new Error('Unhandled slides checkpoint: cp-022 Animation progress text reads `Build {current} of {total}` with optional click/auto breakdown');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "When reveal sequence is complete, progress shows ` • Next click advances slide`");
+      throw new Error('Unhandled slides checkpoint: cp-023 When reveal sequence is complete, progress shows ` • Next click advances slide`');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Presenter help text at bottom reads `Keys: Right/Space/Enter next, Left/Backspace prev, Home/End, digits + Enter jump, B black, W white.`");
+      throw new Error('Unhandled slides checkpoint: cp-024 Presenter help text at bottom reads `Keys: Right/Space/Enter next, Left/Backspace prev, Home/End, digits + Enter jump, B black, W white.`');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Presenter panel toggle button text alternates between `Hide Panel (N)` and `Show Panel (N)`");
+      throw new Error('Unhandled slides checkpoint: cp-025 Presenter panel toggle button text alternates between `Hide Panel (N)` and `Show Panel (N)`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Exit button in presenter has hover class `hover:bg-red-600/80`");
+      throw new Error('Unhandled slides checkpoint: cp-026 Exit button in presenter has hover class `hover:bg-red-600/80`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Notes font size buttons are labeled `S`, `M`, `L` (not `Small`, `Medium`, `Large`)");
+      throw new Error('Unhandled slides checkpoint: cp-027 Notes font size buttons are labeled `S`, `M`, `L` (not `Small`, `Medium`, `Large`)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Font size `small` maps to `text-sm`, `medium` to `text-base`, `large` to `text-lg`");
+      throw new Error('Unhandled slides checkpoint: cp-028 Font size `small` maps to `text-sm`, `medium` to `text-base`, `large` to `text-lg`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Store default `transition` is `\"fade\"` (not `\"none\"`)");
+      throw new Error('Unhandled slides checkpoint: cp-029 Store default `transition` is `"fade"` (not `"none"`)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Store default `gridSize` is `5`");
+      throw new Error('Unhandled slides checkpoint: cp-030 Store default `gridSize` is `5`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Store default `agentMode` is `\"draft\"`");
+      throw new Error('Unhandled slides checkpoint: cp-031 Store default `agentMode` is `"draft"`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Store default `rightPanel` is `\"properties\"` (panel open by default)");
+      throw new Error('Unhandled slides checkpoint: cp-032 Store default `rightPanel` is `"properties"` (panel open by default)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Store default `showRulers` is `false`");
+      throw new Error('Unhandled slides checkpoint: cp-033 Store default `showRulers` is `false`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-020', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Store default `showGrid` is `false`");
+      throw new Error('Unhandled slides checkpoint: cp-034 Store default `showGrid` is `false`');
     }
 
 

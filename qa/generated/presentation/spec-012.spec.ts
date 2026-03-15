@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-012
  * Source: e2e/specs/presentation/spec-012.md
- * Generated: 2026-03-14T10:21:12.250Z
+ * Generated: 2026-03-14T19:56:07.339Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**20.9** Slide transitions match presenter transitions");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **20.9** Slide transitions match presenter transitions');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**21.15** Each action sends request to `/api/presentations/edit-slide`");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **21.15** Each action sends request to `/api/presentations/edit-slide`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**21.16** Modified content blocks replace current blocks on success");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **21.16** Modified content blocks replace current blocks on success');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**21.17** Loading indicator shown during AI processing");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **21.17** Loading indicator shown during AI processing');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**21.18** Error message displayed on failure");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **21.18** Error message displayed on failure');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**22.22** Theme picker renders preview swatches for all themes");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **22.22** Theme picker renders preview swatches for all themes');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**22.23** Selecting a theme applies it to the entire deck");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **22.23** Selecting a theme applies it to the entire deck');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**22.24** Theme change is reflected in sidebar thumbnails");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **22.24** Theme change is reflected in sidebar thumbnails');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**22.25** Custom themes are supported and persistable");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **22.25** Custom themes are supported and persistable');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**23.1** Accepts title (1-500 chars), preprocessedData (1-200k), audienceType");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **23.1** Accepts title (1-500 chars), preprocessedData (1-200k), audienceType');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**23.2** Optional params: slideCount, themeKey");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **23.2** Optional params: slideCount, themeKey');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**23.3** Uses model `claude-sonnet-4-20250514`");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **23.3** Uses model `claude-sonnet-4-20250514`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**23.4** Returns generated deck structure");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **23.4** Returns generated deck structure');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**23.5** Validates title length (1-500)");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **23.5** Validates title length (1-500)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**23.6** Validates preprocessedData length (1-200k)");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **23.6** Validates preprocessedData length (1-200k)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**23.7** Returns 400 on invalid input");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **23.7** Returns 400 on invalid input');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**23.8** Accepts sourceType and data payload");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **23.8** Accepts sourceType and data payload');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**23.9** Streams response back to client");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **23.9** Streams response back to client');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**23.10** Handles all 7 source types (papers/document/text/deep_research/references/url/import_deck)");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **23.10** Handles all 7 source types (papers/document/text/deep_research/references/url/import_deck)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**23.11** Accepts deckId, command (1-2000 chars), slides (1-100)");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **23.11** Accepts deckId, command (1-2000 chars), slides (1-100)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**23.12** Returns modifiedSlides array and summary string");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **23.12** Returns modifiedSlides array and summary string');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**23.13** Validates command length (1-2000)");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **23.13** Validates command length (1-2000)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**23.14** Validates slides count (1-100)");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **23.14** Validates slides count (1-100)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**23.15** Accepts slides for evaluation");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **23.15** Accepts slides for evaluation');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**23.16** Returns CoachEvaluation with overall score and 5 dimensions");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **23.16** Returns CoachEvaluation with overall score and 5 dimensions');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**23.17** Accepts difficulty, focusAreas, conversationHistory");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **23.17** Accepts difficulty, focusAreas, conversationHistory');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**23.18** Returns question, answer evaluation, follow-ups");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **23.18** Returns question, answer evaluation, follow-ups');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**23.19** Accepts action and contentBlocks");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **23.19** Accepts action and contentBlocks');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**23.20** Returns modified content blocks");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **23.20** Returns modified content blocks');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**23.21** Uses model `claude-haiku-4-5-20251001`");
+      throw new Error('Unhandled presentation checkpoint: cp-029 **23.21** Uses model `claude-haiku-4-5-20251001`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**24.1** `deckId` -- tracks active deck identifier");
+      throw new Error('Unhandled presentation checkpoint: cp-030 **24.1** `deckId` -- tracks active deck identifier');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**24.2** `slides` -- array of slide objects");
+      throw new Error('Unhandled presentation checkpoint: cp-031 **24.2** `slides` -- array of slide objects');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**24.3** `activeSlideId` -- currently selected slide");
+      throw new Error('Unhandled presentation checkpoint: cp-032 **24.3** `activeSlideId` -- currently selected slide');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**24.4** `themeKey` -- selected theme identifier");
+      throw new Error('Unhandled presentation checkpoint: cp-033 **24.4** `themeKey` -- selected theme identifier');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-012', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**24.5** `themeConfig` -- resolved theme configuration");
+      throw new Error('Unhandled presentation checkpoint: cp-034 **24.5** `themeConfig` -- resolved theme configuration');
     }
 
 

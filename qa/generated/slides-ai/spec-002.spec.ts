@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-002
  * Source: e2e/specs/slides-ai/spec-002.md
- * Generated: 2026-03-14T10:18:47.120Z
+ * Generated: 2026-03-14T22:06:36.323Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "\"Suggest visual\"");
+      throw new Error('Unhandled slides checkpoint: cp-000 "Suggest visual"');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "**Text block actions** (text, bullets, quote, callout):");
+      throw new Error('Unhandled slides checkpoint: cp-001 **Text block actions** (text, bullets, quote, callout):');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "\"Rewrite\"");
+      throw new Error('Unhandled slides checkpoint: cp-002 "Rewrite"');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "\"Shorten\"");
+      throw new Error('Unhandled slides checkpoint: cp-003 "Shorten"');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "\"Expand\"");
+      throw new Error('Unhandled slides checkpoint: cp-004 "Expand"');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "\"Academic tone\"");
+      throw new Error('Unhandled slides checkpoint: cp-005 "Academic tone"');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "\"Fix formatting\"");
+      throw new Error('Unhandled slides checkpoint: cp-006 "Fix formatting"');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "\"Add citations\"");
+      throw new Error('Unhandled slides checkpoint: cp-007 "Add citations"');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "**Chart block actions:**");
+      throw new Error('Unhandled slides checkpoint: cp-008 **Chart block actions:**');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "\"Change chart type\"");
+      throw new Error('Unhandled slides checkpoint: cp-009 "Change chart type"');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "\"Add labels\"");
+      throw new Error('Unhandled slides checkpoint: cp-010 "Add labels"');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "\"Simplify data\"");
+      throw new Error('Unhandled slides checkpoint: cp-011 "Simplify data"');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "\"Improve colors\"");
+      throw new Error('Unhandled slides checkpoint: cp-012 "Improve colors"');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "\"Add title\"");
+      throw new Error('Unhandled slides checkpoint: cp-013 "Add title"');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "\"Convert to table\"");
+      throw new Error('Unhandled slides checkpoint: cp-014 "Convert to table"');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "**Image block actions:**");
+      throw new Error('Unhandled slides checkpoint: cp-015 **Image block actions:**');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "\"Generate image\"");
+      throw new Error('Unhandled slides checkpoint: cp-016 "Generate image"');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "\"Suggest alternative\"");
+      throw new Error('Unhandled slides checkpoint: cp-017 "Suggest alternative"');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "\"Add caption\"");
+      throw new Error('Unhandled slides checkpoint: cp-018 "Add caption"');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "\"Resize\"");
+      throw new Error('Unhandled slides checkpoint: cp-019 "Resize"');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "\"Add border\"");
+      throw new Error('Unhandled slides checkpoint: cp-020 "Add border"');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "\"Replace with diagram\"");
+      throw new Error('Unhandled slides checkpoint: cp-021 "Replace with diagram"');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "**Table block actions:**");
+      throw new Error('Unhandled slides checkpoint: cp-022 **Table block actions:**');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "\"Add row\"");
+      throw new Error('Unhandled slides checkpoint: cp-023 "Add row"');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "\"Add column\"");
+      throw new Error('Unhandled slides checkpoint: cp-024 "Add column"');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "\"Simplify\"");
+      throw new Error('Unhandled slides checkpoint: cp-025 "Simplify"');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "\"Add caption\"");
+      throw new Error('Unhandled slides checkpoint: cp-026 "Add caption"');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "\"Improve formatting\"");
+      throw new Error('Unhandled slides checkpoint: cp-027 "Improve formatting"');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "\"Convert to chart\"");
+      throw new Error('Unhandled slides checkpoint: cp-028 "Convert to chart"');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Clicking a chip sets the input text and focuses the textarea; the user still has to send it");
+      throw new Error('Unhandled slides checkpoint: cp-029 Clicking a chip sets the input text and focuses the textarea; the user still has to send it');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Message history area with auto-scroll on new messages");
+      throw new Error('Unhandled slides checkpoint: cp-030 Message history area with auto-scroll on new messages');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "User messages styled differently from assistant messages");
+      throw new Error('Unhandled slides checkpoint: cp-031 User messages styled differently from assistant messages');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "**Streaming text display:**");
+      throw new Error('Unhandled slides checkpoint: cp-032 **Streaming text display:**');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Text reveals progressively (word-by-word, ~20ms per word)");
+      throw new Error('Unhandled slides checkpoint: cp-033 Text reveals progressively (word-by-word, ~20ms per word)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-002', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Animated cursor during streaming");
+      throw new Error('Unhandled slides checkpoint: cp-034 Animated cursor during streaming');
     }
 
 

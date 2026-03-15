@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-021
  * Source: e2e/specs/slides/spec-021.md
- * Generated: 2026-03-14T10:18:31.427Z
+ * Generated: 2026-03-14T18:26:43.453Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Store default `snapToGrid` is `false`");
+      throw new Error('Unhandled slides checkpoint: cp-000 Store default `snapToGrid` is `false`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "`gridSize` is clamped to range `[1, 100]` and non-finite values fall back to `5`");
+      throw new Error('Unhandled slides checkpoint: cp-001 `gridSize` is clamped to range `[1, 100]` and non-finite values fall back to `5`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Undo entries coalesce with a 500ms debounce timer before flushing to the undo stack");
+      throw new Error('Unhandled slides checkpoint: cp-002 Undo entries coalesce with a 500ms debounce timer before flushing to the undo stack');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Maximum undo history is 50 entries (`MAX_UNDO_HISTORY = 50`)");
+      throw new Error('Unhandled slides checkpoint: cp-003 Maximum undo history is 50 entries (`MAX_UNDO_HISTORY = 50`)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Any new action clears the redo stack");
+      throw new Error('Unhandled slides checkpoint: cp-004 Any new action clears the redo stack');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Debounced save fires 800ms after last `updateSlide` call");
+      throw new Error('Unhandled slides checkpoint: cp-005 Debounced save fires 800ms after last `updateSlide` call');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Save status transitions: `idle` → `saving` → `saved` → `idle` (auto-reset after 1500ms)");
+      throw new Error('Unhandled slides checkpoint: cp-006 Save status transitions: `idle` → `saving` → `saved` → `idle` (auto-reset after 1500ms)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Save status transitions to `error` on server failure with no auto-reset");
+      throw new Error('Unhandled slides checkpoint: cp-007 Save status transitions to `error` on server failure with no auto-reset');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Agent chat history is capped at 50 messages (`MAX_CHAT_HISTORY = 50`)");
+      throw new Error('Unhandled slides checkpoint: cp-008 Agent chat history is capped at 50 messages (`MAX_CHAT_HISTORY = 50`)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "`AgentMode` type has four values: `\"learn\"`, `\"draft\"`, `\"visual\"`, `\"illustrate\"`");
+      throw new Error('Unhandled slides checkpoint: cp-009 `AgentMode` type has four values: `"learn"`, `"draft"`, `"visual"`, `"illustrate"`');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "`loadDeck` resets `agentChatHistory` to `[]`, `editingBlockIndex` to `null`, `saveStatus` to `\"idle\"`");
+      throw new Error('Unhandled slides checkpoint: cp-010 `loadDeck` resets `agentChatHistory` to `[]`, `editingBlockIndex` to `null`, `saveStatus` to `"idle"`');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "`loadDeck` sets `activeSlideId` to the first slide's ID (or `null` if empty)");
+      throw new Error('Unhandled slides checkpoint: cp-011 `loadDeck` sets `activeSlideId` to the first slide\'s ID (or `null` if empty)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "`loadDeck` sets `selectedSlideIds` to a `Set` containing only the first slide's ID");
+      throw new Error('Unhandled slides checkpoint: cp-012 `loadDeck` sets `selectedSlideIds` to a `Set` containing only the first slide\'s ID');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "`duplicateSlide` appends ` (copy)` to the source slide's title");
+      throw new Error('Unhandled slides checkpoint: cp-013 `duplicateSlide` appends ` (copy)` to the source slide\'s title');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "`duplicateSlide` preserves source `transition`, `hidden`, `cardBackground`, and `masterId`");
+      throw new Error('Unhandled slides checkpoint: cp-014 `duplicateSlide` preserves source `transition`, `hidden`, `cardBackground`, and `masterId`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "`duplicateSlide` activates and selects the newly created slide");
+      throw new Error('Unhandled slides checkpoint: cp-015 `duplicateSlide` activates and selects the newly created slide');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "`deleteSlide` uses optimistic update: removes from state before server call");
+      throw new Error('Unhandled slides checkpoint: cp-016 `deleteSlide` uses optimistic update: removes from state before server call');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "`deleteSlide` reverts to previous state (`slides`, `activeSlideId`, `selectedSlideIds`) on server failure");
+      throw new Error('Unhandled slides checkpoint: cp-017 `deleteSlide` reverts to previous state (`slides`, `activeSlideId`, `selectedSlideIds`) on server failure');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "When the deleted slide was active, `activeSlideId` falls back to `filtered[0].id`");
+      throw new Error('Unhandled slides checkpoint: cp-018 When the deleted slide was active, `activeSlideId` falls back to `filtered[0].id`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "After deletion, if `selectedSlideIds` becomes empty and `newActiveId` is not null, the active slide is added to selection");
+      throw new Error('Unhandled slides checkpoint: cp-019 After deletion, if `selectedSlideIds` becomes empty and `newActiveId` is not null, the active slide is added to selection');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "`addSlide` creates a slide with layout `\"title_content\"`, title `\"New Slide\"`, one text block `{ type: \"text\", data: { text: \"Click to add content\", style: \"body\" } }`");
+      throw new Error('Unhandled slides checkpoint: cp-020 `addSlide` creates a slide with layout `"title_content"`, title `"New Slide"`, one text block `{ type: "text", data: { text: "Click to add content", style: "body" } }`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "`addSlide` failure sets `saveStatus` to `\"error\"` and returns `null`");
+      throw new Error('Unhandled slides checkpoint: cp-021 `addSlide` failure sets `saveStatus` to `"error"` and returns `null`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "`setActiveSlide` resets `selectedBlockIndices` to empty, `allBlocksSelected` to `false`, and `editingBlockIndex` to `null`");
+      throw new Error('Unhandled slides checkpoint: cp-022 `setActiveSlide` resets `selectedBlockIndices` to empty, `allBlocksSelected` to `false`, and `editingBlockIndex` to `null`');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "`selectBlock` with `addToSelection=true` toggles the block in/out of multi-selection");
+      throw new Error('Unhandled slides checkpoint: cp-023 `selectBlock` with `addToSelection=true` toggles the block in/out of multi-selection');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "`deleteSelectedBlocks` also resets `editingBlockIndex` to `null`");
+      throw new Error('Unhandled slides checkpoint: cp-024 `deleteSelectedBlocks` also resets `editingBlockIndex` to `null`');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "`Tab` cycling only works when `selectedBlockIndices.size > 0` AND `allBlocksSelected` is false");
+      throw new Error('Unhandled slides checkpoint: cp-025 `Tab` cycling only works when `selectedBlockIndices.size > 0` AND `allBlocksSelected` is false');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "`Tab` cycling requires a `primarySelectedBlockIndex` to be non-null; otherwise no-op");
+      throw new Error('Unhandled slides checkpoint: cp-026 `Tab` cycling requires a `primarySelectedBlockIndex` to be non-null; otherwise no-op');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "`Delete`/`Backspace` respects lock: if any selected block has `locked: true`, the entire deletion is skipped");
+      throw new Error('Unhandled slides checkpoint: cp-027 `Delete`/`Backspace` respects lock: if any selected block has `locked: true`, the entire deletion is skipped');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Handout dialog default layout is `\"three_up_notes\"` (not `\"full_slide\"`)");
+      throw new Error('Unhandled slides checkpoint: cp-028 Handout dialog default layout is `"three_up_notes"` (not `"full_slide"`)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Handout dialog defaults: `includeSlideNumbers: true`, `includeHeader: true`, `includeSpeakerNotes: true`, `paperSize: \"letter\"`");
+      throw new Error('Unhandled slides checkpoint: cp-029 Handout dialog defaults: `includeSlideNumbers: true`, `includeHeader: true`, `includeSpeakerNotes: true`, `paperSize: "letter"`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Speaker notes toggle is disabled unless layout is `\"three_up_notes\"`");
+      throw new Error('Unhandled slides checkpoint: cp-030 Speaker notes toggle is disabled unless layout is `"three_up_notes"`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Outline layout description is `Text document, no images`");
+      throw new Error('Unhandled slides checkpoint: cp-031 Outline layout description is `Text document, no images`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Six Slides layout description is `3x2 grid`");
+      throw new Error('Unhandled slides checkpoint: cp-032 Six Slides layout description is `3x2 grid`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Dialog title reads `Export PDF Handout` with FilePdf icon");
+      throw new Error('Unhandled slides checkpoint: cp-033 Dialog title reads `Export PDF Handout` with FilePdf icon');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-021', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Export button text toggles between `Export PDF` and `Exporting...`");
+      throw new Error('Unhandled slides checkpoint: cp-034 Export button text toggles between `Export PDF` and `Exporting...`');
     }
 
 

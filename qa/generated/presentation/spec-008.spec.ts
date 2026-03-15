@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-008
  * Source: e2e/specs/presentation/spec-008.md
- * Generated: 2026-03-14T10:20:59.711Z
+ * Generated: 2026-03-14T19:50:22.000Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**12.2** Clicking \"Run Coach\" triggers evaluation API call");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **12.2** Clicking "Run Coach" triggers evaluation API call');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**12.3** Overall score displays as X/10");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **12.3** Overall score displays as X/10');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**12.4** Structure dimension bar renders with score");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **12.4** Structure dimension bar renders with score');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**12.5** Evidence dimension bar renders with score");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **12.5** Evidence dimension bar renders with score');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**12.6** Narrative dimension bar renders with score");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **12.6** Narrative dimension bar renders with score');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**12.7** Design dimension bar renders with score");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **12.7** Design dimension bar renders with score');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**12.8** Audience Fit dimension bar renders with score");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **12.8** Audience Fit dimension bar renders with score');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**12.9** Suggestions are grouped per slide");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **12.9** Suggestions are grouped per slide');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**12.10** Each suggestion is actionable/readable");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **12.10** Each suggestion is actionable/readable');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**12.11** Re-running coach updates the scores");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **12.11** Re-running coach updates the scores');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**13.1** DefensePrepPanel renders");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **13.1** DefensePrepPanel renders');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**13.12** Multiple focus areas can be selected simultaneously");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **13.12** Multiple focus areas can be selected simultaneously');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**13.13** Starting a session generates a question");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **13.13** Starting a session generates a question');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**13.14** User can submit an answer to the question");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **13.14** User can submit an answer to the question');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**13.15** Evaluation of the answer is returned");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **13.15** Evaluation of the answer is returned');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**13.16** Follow-up questions are generated based on conversation");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **13.16** Follow-up questions are generated based on conversation');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**13.17** Session summary is available after ending the session");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **13.17** Session summary is available after ending the session');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**13.18** Conversation history is maintained during the session");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **13.18** Conversation history is maintained during the session');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**13.19** Panel header shows \"Defense Prep\" with GraduationCap icon (`defense-prep-panel.tsx:282`, `:283`)");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **13.19** Panel header shows "Defense Prep" with GraduationCap icon (`defense-prep-panel.tsx:282`, `:283`)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**13.20** Descriptive help text below header (`defense-prep-panel.tsx:288`)");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **13.20** Descriptive help text below header (`defense-prep-panel.tsx:288`)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**13.21** Difficulty section labeled \"Difficulty\" (`defense-prep-panel.tsx:295`)");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **13.21** Difficulty section labeled "Difficulty" (`defense-prep-panel.tsx:295`)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**13.22** Difficulty buttons rendered from DIFFICULTIES array (`defense-prep-panel.tsx:298`, `:301`)");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **13.22** Difficulty buttons rendered from DIFFICULTIES array (`defense-prep-panel.tsx:298`, `:301`)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**13.23** Selected difficulty shows `border-brand bg-brand/5` (`defense-prep-panel.tsx:304`)");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **13.23** Selected difficulty shows `border-brand bg-brand/5` (`defense-prep-panel.tsx:304`)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**13.24** Focus areas labeled \"Focus Areas (optional)\" (`defense-prep-panel.tsx:319`)");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **13.24** Focus areas labeled "Focus Areas (optional)" (`defense-prep-panel.tsx:319`)');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**13.25** Focus area buttons rendered from FOCUS_AREAS array (`defense-prep-panel.tsx:322`, `:325`)");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **13.25** Focus area buttons rendered from FOCUS_AREAS array (`defense-prep-panel.tsx:322`, `:325`)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**13.26** Selected focus area shows `border-brand bg-brand/10 text-brand` (`defense-prep-panel.tsx:328`)");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **13.26** Selected focus area shows `border-brand bg-brand/10 text-brand` (`defense-prep-panel.tsx:328`)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**13.27** \"Start Session\" button with Play icon (`defense-prep-panel.tsx:343`, `:352`, `:353`)");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **13.27** "Start Session" button with Play icon (`defense-prep-panel.tsx:343`, `:352`, `:353`)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**13.28** Start button disabled when slides.length === 0 (`defense-prep-panel.tsx:344`, `:347`)");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **13.28** Start button disabled when slides.length === 0 (`defense-prep-panel.tsx:344`, `:347`)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**13.29** Default difficulty is \"moderate\" (`defense-prep-panel.tsx:95`)");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **13.29** Default difficulty is "moderate" (`defense-prep-panel.tsx:95`)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**13.30** Default focus areas is empty array (`defense-prep-panel.tsx:96`)");
+      throw new Error('Unhandled presentation checkpoint: cp-029 **13.30** Default focus areas is empty array (`defense-prep-panel.tsx:96`)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**13.31** Session summary screen shows Trophy icon and \"Session Complete\" header (`defense-prep-panel.tsx:365`, `:366`)");
+      throw new Error('Unhandled presentation checkpoint: cp-030 **13.31** Session summary screen shows Trophy icon and "Session Complete" header (`defense-prep-panel.tsx:365`, `:366`)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**13.32** Summary score displays a large numeric score with separate \"out of 10\" label (`defense-prep-panel.tsx:371-374`)");
+      throw new Error('Unhandled presentation checkpoint: cp-031 **13.32** Summary score displays a large numeric score with separate "out of 10" label (`defense-prep-panel.tsx:371-374`)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**13.33** \"Strengths\" list with Target icon (`defense-prep-panel.tsx:379`, `:381`, `:385`)");
+      throw new Error('Unhandled presentation checkpoint: cp-032 **13.33** "Strengths" list with Target icon (`defense-prep-panel.tsx:379`, `:381`, `:385`)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**13.34** \"Areas for Improvement\" list with Lightning icon (`defense-prep-panel.tsx:399`, `:401`, `:405`)");
+      throw new Error('Unhandled presentation checkpoint: cp-033 **13.34** "Areas for Improvement" list with Lightning icon (`defense-prep-panel.tsx:399`, `:401`, `:405`)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**13.35** \"Suggested Talking Points\" list shown when talkingPoints > 0 (`defense-prep-panel.tsx:417`, `:420`, `:423`)");
+      throw new Error('Unhandled presentation checkpoint: cp-034 **13.35** "Suggested Talking Points" list shown when talkingPoints > 0 (`defense-prep-panel.tsx:417`, `:420`, `:423`)');
     }
 
 

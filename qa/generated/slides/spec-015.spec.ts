@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-015
  * Source: e2e/specs/slides/spec-015.md
- * Generated: 2026-03-14T10:18:12.262Z
+ * Generated: 2026-03-14T18:19:58.639Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Image export");
+      throw new Error('Unhandled slides checkpoint: cp-000 Image export');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Supports all layout types");
+      throw new Error('Unhandled slides checkpoint: cp-001 Supports all layout types');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Applies theme via ThemeProvider");
+      throw new Error('Unhandled slides checkpoint: cp-002 Applies theme via ThemeProvider');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Renders master slide fixed blocks and placeholders");
+      throw new Error('Unhandled slides checkpoint: cp-003 Renders master slide fixed blocks and placeholders');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Handles card background (solid, gradient, image + overlay)");
+      throw new Error('Unhandled slides checkpoint: cp-004 Handles card background (solid, gradient, image + overlay)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Shows slide numbers");
+      throw new Error('Unhandled slides checkpoint: cp-005 Shows slide numbers');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Renders institution kit (logo, footer, name)");
+      throw new Error('Unhandled slides checkpoint: cp-006 Renders institution kit (logo, footer, name)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Block animation CSS stylesheet applied");
+      throw new Error('Unhandled slides checkpoint: cp-007 Block animation CSS stylesheet applied');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Cmd+Z undoes the last canvas/slide change");
+      throw new Error('Unhandled slides checkpoint: cp-008 Cmd+Z undoes the last canvas/slide change');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Cmd+Y / Cmd+Shift+Z redoes");
+      throw new Error('Unhandled slides checkpoint: cp-009 Cmd+Y / Cmd+Shift+Z redoes');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Undo/redo disabled when inside text editing");
+      throw new Error('Unhandled slides checkpoint: cp-010 Undo/redo disabled when inside text editing');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Undo/redo scoped to slides store state changes");
+      throw new Error('Unhandled slides checkpoint: cp-011 Undo/redo scoped to slides store state changes');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Cmd+Shift+V toggles the visualize popover");
+      throw new Error('Unhandled slides checkpoint: cp-012 Cmd+Shift+V toggles the visualize popover');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Provides AI-powered visualization of selected content");
+      throw new Error('Unhandled slides checkpoint: cp-013 Provides AI-powered visualization of selected content');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Only activates when not in an editable text target");
+      throw new Error('Unhandled slides checkpoint: cp-014 Only activates when not in an editable text target');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "`/slides` loads decks via `getUserDecks()` and normalizes missing fields to fallback values before rendering");
+      throw new Error('Unhandled slides checkpoint: cp-015 `/slides` loads decks via `getUserDecks()` and normalizes missing fields to fallback values before rendering');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Slides list ignores deck-load errors silently and still exits the loading state");
+      throw new Error('Unhandled slides checkpoint: cp-016 Slides list ignores deck-load errors silently and still exits the loading state');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Slides list loading state is a centered spinner only, not skeleton cards");
+      throw new Error('Unhandled slides checkpoint: cp-017 Slides list loading state is a centered spinner only, not skeleton cards');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Header subtitle on `/slides` reads `Create, import, and manage your slide decks`");
+      throw new Error('Unhandled slides checkpoint: cp-018 Header subtitle on `/slides` reads `Create, import, and manage your slide decks`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Primary create CTA label on `/slides` is `Create New`");
+      throw new Error('Unhandled slides checkpoint: cp-019 Primary create CTA label on `/slides` is `Create New`');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Import CTA label on `/slides` is `Import Presentation`");
+      throw new Error('Unhandled slides checkpoint: cp-020 Import CTA label on `/slides` is `Import Presentation`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Import flow uses a hidden file input triggered by the header button and the empty-state button");
+      throw new Error('Unhandled slides checkpoint: cp-021 Import flow uses a hidden file input triggered by the header button and the empty-state button');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Import accepts `.pptx` extension and PowerPoint MIME type through the native file input `accept` attribute");
+      throw new Error('Unhandled slides checkpoint: cp-022 Import accepts `.pptx` extension and PowerPoint MIME type through the native file input `accept` attribute');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Import preview is rendered inline on the page beneath the header rather than in a modal dialog");
+      throw new Error('Unhandled slides checkpoint: cp-023 Import preview is rendered inline on the page beneath the header rather than in a modal dialog');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Import state card remains visible whenever `importPhase !== \"idle\"` or a preview/error exists");
+      throw new Error('Unhandled slides checkpoint: cp-024 Import state card remains visible whenever `importPhase !== "idle"` or a preview/error exists');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Import state card header text is always `Import Presentation`");
+      throw new Error('Unhandled slides checkpoint: cp-025 Import state card header text is always `Import Presentation`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Import state card includes a close `X` button that fully resets import phase, preview, and error state");
+      throw new Error('Unhandled slides checkpoint: cp-026 Import state card includes a close `X` button that fully resets import phase, preview, and error state');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Import phase copy changes between parsing, ready, importing, and idle-with-error states");
+      throw new Error('Unhandled slides checkpoint: cp-027 Import phase copy changes between parsing, ready, importing, and idle-with-error states');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Import progress chips are labeled `Extracting preview` and `Creating deck`");
+      throw new Error('Unhandled slides checkpoint: cp-028 Import progress chips are labeled `Extracting preview` and `Creating deck`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Active import chip shows a spinning `CircleNotch`; completed chip shows a static dot");
+      throw new Error('Unhandled slides checkpoint: cp-029 Active import chip shows a spinning `CircleNotch`; completed chip shows a static dot');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Selecting a non-`.pptx` file shows `Please upload a .pptx file`");
+      throw new Error('Unhandled slides checkpoint: cp-030 Selecting a non-`.pptx` file shows `Please upload a .pptx file`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Selecting a file over the max size shows `File exceeds 50MB limit`");
+      throw new Error('Unhandled slides checkpoint: cp-031 Selecting a file over the max size shows `File exceeds 50MB limit`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Selecting a password-protected deck shows `Password-protected files are not supported`");
+      throw new Error('Unhandled slides checkpoint: cp-032 Selecting a password-protected deck shows `Password-protected files are not supported`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Generic PPTX parse failures show `Could not read this file. Is it a valid PowerPoint presentation?`");
+      throw new Error('Unhandled slides checkpoint: cp-033 Generic PPTX parse failures show `Could not read this file. Is it a valid PowerPoint presentation?`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-015', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "While parsing, the import card shows a large inline loading row with text `Parsing PowerPoint structure and extracting slide previews...`");
+      throw new Error('Unhandled slides checkpoint: cp-034 While parsing, the import card shows a large inline loading row with text `Parsing PowerPoint structure and extracting slide previews...`');
     }
 
 

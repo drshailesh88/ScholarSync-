@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-007
  * Source: e2e/specs/presentation/spec-007.md
- * Generated: 2026-03-14T10:20:56.582Z
+ * Generated: 2026-03-14T19:48:54.492Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**9.105** Hierarchy: root node at top with child nodes below, connected by lines (`infographic-block.tsx:216`, `:225`)");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **9.105** Hierarchy: root node at top with child nodes below, connected by lines (`infographic-block.tsx:216`, `:225`)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**9.106** Pyramid: stacked layers narrowing upward (`infographic-block.tsx:256`)");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **9.106** Pyramid: stacked layers narrowing upward (`infographic-block.tsx:256`)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**9.107** Comparison grid: side-by-side items for comparison (`infographic-block.tsx:310`)");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **9.107** Comparison grid: side-by-side items for comparison (`infographic-block.tsx:310`)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**9.108** Venn diagram: overlapping circles (`infographic-block.tsx:346`)");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **9.108** Venn diagram: overlapping circles (`infographic-block.tsx:346`)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**9.109** Matrix: four-quadrant grid layout (`infographic-block.tsx:404-438`)");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **9.109** Matrix: four-quadrant grid layout (`infographic-block.tsx:404-438`)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**9.110** Radial: center node with radiating spokes to outer items (`infographic-block.tsx:442-476`)");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **9.110** Radial: center node with radiating spokes to outer items (`infographic-block.tsx:442-476`)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**9.112** Checklist: items with done/active/pending states, alternating row bands, and checkmark on done (`infographic-block.tsx:521-563`)");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **9.112** Checklist: items with done/active/pending states, alternating row bands, and checkmark on done (`infographic-block.tsx:521-563`)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**9.113** Cause-effect: effect node with branching causes (`infographic-block.tsx:566-600`)");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **9.113** Cause-effect: effect node with branching causes (`infographic-block.tsx:566-600`)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**9.114** Icon array: grid of repeated icon items with legend counts (`infographic-block.tsx:604-657`)");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **9.114** Icon array: grid of repeated icon items with legend counts (`infographic-block.tsx:604-657`)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**9.115** Pictograph: repeated icon units with fractional last unit for ratio display (`infographic-block.tsx:643`, `:674`, `:688`, `:700`)");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **9.115** Pictograph: repeated icon units with fractional last unit for ratio display (`infographic-block.tsx:643`, `:674`, `:688`, `:700`)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**9.117** Per-item opacity applied when `item.opacity != null` (`infographic-block.tsx:63`, `:136`, `:181`)");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **9.117** Per-item opacity applied when `item.opacity != null` (`infographic-block.tsx:63`, `:136`, `:181`)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**9.118** Per-item border when `item.borderColor` present (`infographic-block.tsx:147`, `:183`)");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **9.118** Per-item border when `item.borderColor` present (`infographic-block.tsx:147`, `:183`)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**9.119** Per-item bold weight when `item.bold` (`infographic-block.tsx:151`, `:186`)");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **9.119** Per-item bold weight when `item.bold` (`infographic-block.tsx:151`, `:186`)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**9.120** Highlighted items get drop-shadow glow effect (`infographic-block.tsx:63`)");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **9.120** Highlighted items get drop-shadow glow effect (`infographic-block.tsx:63`)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**9.121** Description text shown conditionally per item (`infographic-block.tsx:154`, `:189`, `:237`, `:392`, `:428`, `:500`)");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **9.121** Description text shown conditionally per item (`infographic-block.tsx:154`, `:189`, `:237`, `:392`, `:428`, `:500`)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**9.122** Value text shown conditionally (`infographic-block.tsx:196`, `:554`)");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **9.122** Value text shown conditionally (`infographic-block.tsx:196`, `:554`)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**9.123** Title shown conditionally above infographic (`infographic-block.tsx:856`)");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **9.123** Title shown conditionally above infographic (`infographic-block.tsx:856`)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**9.124** Caption shown conditionally below (`infographic-block.tsx:870`)");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **9.124** Caption shown conditionally below (`infographic-block.tsx:870`)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**9.125** Interactive mode renders SvgTooltip for hover details (`infographic-block.tsx:868`)");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **9.125** Interactive mode renders SvgTooltip for hover details (`infographic-block.tsx:868`)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**9.126** Checklist done items show strikethrough text (`infographic-block.tsx:544-550`)");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **9.126** Checklist done items show strikethrough text (`infographic-block.tsx:544-550`)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**9.127** Checklist active items show filled circle indicator (`infographic-block.tsx:541-542`)");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **9.127** Checklist active items show filled circle indicator (`infographic-block.tsx:541-542`)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**10.12** Comments badge shows unresolved count");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **10.12** Comments badge shows unresolved count');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**10.13** Only one right panel is open at a time");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **10.13** Only one right panel is open at a time');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**10.14** Clicking active panel button closes it");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **10.14** Clicking active panel button closes it');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**11.1** AgentPanel renders as chat interface");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **11.1** AgentPanel renders as chat interface');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**11.2** Text input field for custom commands");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **11.2** Text input field for custom commands');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**11.3** Send button submits the command");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **11.3** Send button submits the command');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**11.4** Response streams and renders in the chat");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **11.4** Response streams and renders in the chat');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**11.11** Quick action buttons trigger the corresponding AI command");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **11.11** Quick action buttons trigger the corresponding AI command');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**11.12** Custom command input accepts freeform text (up to 2000 chars)");
+      throw new Error('Unhandled presentation checkpoint: cp-029 **11.12** Custom command input accepts freeform text (up to 2000 chars)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**11.13** Undo action reverts the last agent change");
+      throw new Error('Unhandled presentation checkpoint: cp-030 **11.13** Undo action reverts the last agent change');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**11.14** Redo action re-applies a reverted change");
+      throw new Error('Unhandled presentation checkpoint: cp-031 **11.14** Redo action re-applies a reverted change');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**11.15** Agent returns modifiedSlides and summary");
+      throw new Error('Unhandled presentation checkpoint: cp-032 **11.15** Agent returns modifiedSlides and summary');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**11.16** Modified slides are applied to the deck");
+      throw new Error('Unhandled presentation checkpoint: cp-033 **11.16** Modified slides are applied to the deck');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**12.1** CoachPanel renders with \"Run Coach\" button");
+      throw new Error('Unhandled presentation checkpoint: cp-034 **12.1** CoachPanel renders with "Run Coach" button');
     }
 
 

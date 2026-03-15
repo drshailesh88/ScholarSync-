@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-005
  * Source: e2e/specs/presentation/spec-005.md
- * Generated: 2026-03-14T10:20:50.249Z
+ * Generated: 2026-03-14T19:45:42.679Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**9.32** Delete block button with Trash icon (`content-block-editor.tsx:117`, `:120`)");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **9.32** Delete block button with Trash icon (`content-block-editor.tsx:117`, `:120`)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**9.33** Add block menu shows content categories (BLOCK_CATEGORIES.content) (`content-block-editor.tsx:135`)");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **9.33** Add block menu shows content categories (BLOCK_CATEGORIES.content) (`content-block-editor.tsx:135`)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**9.34** Add block menu shows media categories (BLOCK_CATEGORIES.media) (`content-block-editor.tsx:145`)");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **9.34** Add block menu shows media categories (BLOCK_CATEGORIES.media) (`content-block-editor.tsx:145`)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**9.35** \"More\" toggle button expands academic block categories (`content-block-editor.tsx:156`, `:159`, `:170`)");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **9.35** "More" toggle button expands academic block categories (`content-block-editor.tsx:156`, `:159`, `:170`)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**9.36** Academic categories visible when showAllBlocks=true (`content-block-editor.tsx:172`)");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **9.36** Academic categories visible when showAllBlocks=true (`content-block-editor.tsx:172`)');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**9.37** Style selector dropdown (Title/Subtitle/Body/Caption) shown when active (`content-block-editor.tsx:204`, `:210-213`)");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **9.37** Style selector dropdown (Title/Subtitle/Body/Caption) shown when active (`content-block-editor.tsx:204`, `:210-213`)');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**9.38** Text content editable via EditableText component (`content-block-editor.tsx:218`)");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **9.38** Text content editable via EditableText component (`content-block-editor.tsx:218`)');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**9.39** \"Numbered\" checkbox to toggle ordered/unordered (`content-block-editor.tsx:232`, `:237`, `:240`)");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **9.39** "Numbered" checkbox to toggle ordered/unordered (`content-block-editor.tsx:232`, `:237`, `:240`)');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**9.40** Each bullet item editable via EditableText (`content-block-editor.tsx:244`, `:251`)");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **9.40** Each bullet item editable via EditableText (`content-block-editor.tsx:244`, `:251`)');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**9.41** Remove bullet button shown when active and items > 1 (`content-block-editor.tsx:258`, `:260`)");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **9.41** Remove bullet button shown when active and items > 1 (`content-block-editor.tsx:258`, `:260`)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**9.42** \"+ Add item\" button to append new bullet (`content-block-editor.tsx:271`, `:273`, `:276`)");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **9.42** "+ Add item" button to append new bullet (`content-block-editor.tsx:271`, `:273`, `:276`)');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**9.43** Quote text editable via EditableText (`content-block-editor.tsx:288`)");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **9.43** Quote text editable via EditableText (`content-block-editor.tsx:288`)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**9.44** Attribution field with placeholder \"Attribution\" (`content-block-editor.tsx:291`, `:293`, `:295`)");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **9.44** Attribution field with placeholder "Attribution" (`content-block-editor.tsx:291`, `:293`, `:295`)');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**9.45** Citation text editable (`content-block-editor.tsx:303`, `:305`)");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **9.45** Citation text editable (`content-block-editor.tsx:303`, `:305`)');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**9.46** Source field with placeholder \"Source\" (`content-block-editor.tsx:308`, `:310`, `:312`)");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **9.46** Source field with placeholder "Source" (`content-block-editor.tsx:308`, `:310`, `:312`)');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**9.47** DOI field with placeholder \"DOI (e.g., 10.1000/xyz123)\" (`content-block-editor.tsx:318`, `:320`)");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **9.47** DOI field with placeholder "DOI (e.g., 10.1000/xyz123)" (`content-block-editor.tsx:318`, `:320`)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**9.48** Year field with placeholder \"Year\" (`content-block-editor.tsx:324`, `:326`)");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **9.48** Year field with placeholder "Year" (`content-block-editor.tsx:324`, `:326`)');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**9.49** Image preview when URL exists (`content-block-editor.tsx:336`)");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **9.49** Image preview when URL exists (`content-block-editor.tsx:336`)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**9.50** Alt text field with placeholder \"Alt text\" shown when active (`content-block-editor.tsx:343-344`, `:346`, `:348`)");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **9.50** Alt text field with placeholder "Alt text" shown when active (`content-block-editor.tsx:343-344`, `:346`, `:348`)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**9.51** Header cells editable via EditableText when active (`content-block-editor.tsx:370`, `:372`, `:375`)");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **9.51** Header cells editable via EditableText when active (`content-block-editor.tsx:370`, `:372`, `:375`)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**9.52** Body cells editable via EditableText when active (`content-block-editor.tsx:388`, `:390`, `:392`, `:395`)");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **9.52** Body cells editable via EditableText when active (`content-block-editor.tsx:388`, `:390`, `:392`, `:395`)');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**9.53** \"LaTeX Math\" label with MathOperations icon (`content-block-editor.tsx:420`, `:421`)");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **9.53** "LaTeX Math" label with MathOperations icon (`content-block-editor.tsx:420`, `:421`)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**9.54** \"Display mode\" checkbox when active (`content-block-editor.tsx:422`, `:427`, `:430`)");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **9.54** "Display mode" checkbox when active (`content-block-editor.tsx:422`, `:427`, `:430`)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**9.55** Expression textarea with placeholder `e.g., E = mc^2 or \\frac{a}{b}` (`content-block-editor.tsx:436`, `:439`)");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **9.55** Expression textarea with placeholder `e.g., E = mc^2 or \frac{a}{b}` (`content-block-editor.tsx:436`, `:439`)');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**9.56** Caption field with placeholder \"Caption\" shown when caption exists and active (`content-block-editor.tsx:441`, `:444`, `:446`)");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **9.56** Caption field with placeholder "Caption" shown when caption exists and active (`content-block-editor.tsx:441`, `:444`, `:446`)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**9.57** \"Mermaid Diagram\" label with TreeStructure icon (`content-block-editor.tsx:456`, `:457`)");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **9.57** "Mermaid Diagram" label with TreeStructure icon (`content-block-editor.tsx:456`, `:457`)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**9.58** Diagram type selector with options: Flowchart, Sequence, Class Diagram, Gantt, Mind Map, Timeline, PRISMA Flow (`content-block-editor.tsx:458`, `:461`, `:464-470`)");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **9.58** Diagram type selector with options: Flowchart, Sequence, Class Diagram, Gantt, Mind Map, Timeline, PRISMA Flow (`content-block-editor.tsx:458`, `:461`, `:464-470`)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**9.59** Syntax textarea with placeholder (`content-block-editor.tsx:476`, `:479`)");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **9.59** Syntax textarea with placeholder (`content-block-editor.tsx:476`, `:479`)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**9.60** \"Code\" label with Code icon (`content-block-editor.tsx:488`, `:489`)");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **9.60** "Code" label with Code icon (`content-block-editor.tsx:488`, `:489`)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**9.61** Language input with placeholder \"Language\" when active (`content-block-editor.tsx:490`, `:493`, `:495`)");
+      throw new Error('Unhandled presentation checkpoint: cp-029 **9.61** Language input with placeholder "Language" when active (`content-block-editor.tsx:490`, `:493`, `:495`)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**9.62** Code textarea with placeholder \"// Your code here\" (`content-block-editor.tsx:501`, `:505`)");
+      throw new Error('Unhandled presentation checkpoint: cp-030 **9.62** Code textarea with placeholder "// Your code here" (`content-block-editor.tsx:501`, `:505`)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**9.63** Style selector dropdown with options: Info, Warning, Success, Key Finding, Limitation, Methodology, Clinical Note (`content-block-editor.tsx:521`, `:524`, `:527-533`)");
+      throw new Error('Unhandled presentation checkpoint: cp-031 **9.63** Style selector dropdown with options: Info, Warning, Success, Key Finding, Limitation, Methodology, Clinical Note (`content-block-editor.tsx:521`, `:524`, `:527-533`)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**9.64** Callout title editable when block has title (`content-block-editor.tsx:536`, `:537`, `:539`)");
+      throw new Error('Unhandled presentation checkpoint: cp-032 **9.64** Callout title editable when block has title (`content-block-editor.tsx:536`, `:537`, `:539`)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**9.65** Callout body text editable (`content-block-editor.tsx:544`, `:546`)");
+      throw new Error('Unhandled presentation checkpoint: cp-033 **9.65** Callout body text editable (`content-block-editor.tsx:544`, `:546`)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**9.66** Label field with placeholder \"Metric name\" (`content-block-editor.tsx:557`, `:559`, `:561`)");
+      throw new Error('Unhandled presentation checkpoint: cp-034 **9.66** Label field with placeholder "Metric name" (`content-block-editor.tsx:557`, `:559`, `:561`)');
     }
 
 

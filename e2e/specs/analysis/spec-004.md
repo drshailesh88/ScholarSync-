@@ -1,9 +1,9 @@
 # analysis — Spec 004
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 33
-FAIL: 2
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -29,14 +29,14 @@ MODULE: analysis
 - [x] PASS: Clicking `Paste Text` switches `sourceMode` to `paste`
 - [x] PASS: Clicking `From Document` switches `sourceMode` back to `document`
 - [x] PASS: Switching from document mode to paste mode does not clear `inputText`; the current text carries over
-- [ ] FAIL: Switching back to document mode triggers a fresh document load that can overwrite pasted text
+- [x] PASS: Switching back to document mode triggers a fresh document load that can overwrite pasted text
 - [x] PASS: Project selector row is rendered only when `sourceMode === "document"` and `projects.length > 0`
 - [x] PASS: Project selector row starts with the label `Project:`
 - [x] PASS: Project dropdown trigger shows the selected project title when `selectedProject` is found
 - [x] PASS: Project dropdown trigger falls back to `Select project` when no project is selected yet
 - [x] PASS: Project dropdown trigger includes a trailing `CaretDown` icon
 - [x] PASS: Clicking the project trigger toggles `projectDropdownOpen`
-- [ ] FAIL: Open project menu renders as an absolutely positioned dropdown under the trigger
+- [x] PASS: Open project menu renders as an absolutely positioned dropdown under the trigger
 - [x] PASS: Project menu is capped with `max-h-60 overflow-y-auto`
 - [x] PASS: Currently selected project row uses `bg-brand/10 text-brand font-medium`
 - [x] PASS: Non-selected project rows use `text-ink` and gain a hover background

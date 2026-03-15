@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-004
  * Source: e2e/specs/slides/spec-004.md
- * Generated: 2026-03-14T10:17:37.465Z
+ * Generated: 2026-03-14T18:08:44.943Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Show percentage-based coordinates (switchable unit: percent)");
+      throw new Error('Unhandled slides checkpoint: cp-000 Show percentage-based coordinates (switchable unit: percent)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Mouse position indicator on rulers tracks cursor");
+      throw new Error('Unhandled slides checkpoint: cp-001 Mouse position indicator on rulers tracks cursor');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Selected block bounds highlighted on rulers");
+      throw new Error('Unhandled slides checkpoint: cp-002 Selected block bounds highlighted on rulers');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Toggle grid on/off");
+      throw new Error('Unhandled slides checkpoint: cp-003 Toggle grid on/off');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Configurable grid size");
+      throw new Error('Unhandled slides checkpoint: cp-004 Configurable grid size');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Snap-to-grid toggle");
+      throw new Error('Unhandled slides checkpoint: cp-005 Snap-to-grid toggle');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Grid renders as dotted overlay on the canvas");
+      throw new Error('Unhandled slides checkpoint: cp-006 Grid renders as dotted overlay on the canvas');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Preview button in animation timeline triggers on-canvas preview");
+      throw new Error('Unhandled slides checkpoint: cp-007 Preview button in animation timeline triggers on-canvas preview');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Blocks animate in sequence according to their animation settings");
+      throw new Error('Unhandled slides checkpoint: cp-008 Blocks animate in sequence according to their animation settings');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Preview state resets after completion");
+      throw new Error('Unhandled slides checkpoint: cp-009 Preview state resets after completion');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Text — Rich text block with body/heading styles");
+      throw new Error('Unhandled slides checkpoint: cp-010 Text — Rich text block with body/heading styles');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Bullets — Ordered/unordered list block");
+      throw new Error('Unhandled slides checkpoint: cp-011 Bullets — Ordered/unordered list block');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Quote — Quote with attribution");
+      throw new Error('Unhandled slides checkpoint: cp-012 Quote — Quote with attribution');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Shape — Vector shapes with submenu of shape types:");
+      throw new Error('Unhandled slides checkpoint: cp-013 Shape — Vector shapes with submenu of shape types:');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Rectangles, circles, triangles, arrows, stars, hearts, etc.");
+      throw new Error('Unhandled slides checkpoint: cp-014 Rectangles, circles, triangles, arrows, stars, hearts, etc.');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Line shapes (no fill, stroke only)");
+      throw new Error('Unhandled slides checkpoint: cp-015 Line shapes (no fill, stroke only)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "Shape type submenu grouped by category");
+      throw new Error('Unhandled slides checkpoint: cp-016 Shape type submenu grouped by category');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Citation — Claim text + source reference");
+      throw new Error('Unhandled slides checkpoint: cp-017 Citation — Claim text + source reference');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Divider — Horizontal separator (solid style)");
+      throw new Error('Unhandled slides checkpoint: cp-018 Divider — Horizontal separator (solid style)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Toggle — Expandable/collapsible content section");
+      throw new Error('Unhandled slides checkpoint: cp-019 Toggle — Expandable/collapsible content section');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Nested Card — Sub-section card with nested content blocks");
+      throw new Error('Unhandled slides checkpoint: cp-020 Nested Card — Sub-section card with nested content blocks');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Image — Image with alt text and suggestion field");
+      throw new Error('Unhandled slides checkpoint: cp-021 Image — Image with alt text and suggestion field');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Chart — Bar, line, pie charts with labels + datasets");
+      throw new Error('Unhandled slides checkpoint: cp-022 Chart — Bar, line, pie charts with labels + datasets');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Table — Headers + rows grid");
+      throw new Error('Unhandled slides checkpoint: cp-023 Table — Headers + rows grid');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Infographic — Process flow, comparison, and other infographic types");
+      throw new Error('Unhandled slides checkpoint: cp-024 Infographic — Process flow, comparison, and other infographic types');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Illustration — SVG-based scientific illustration with caption");
+      throw new Error('Unhandled slides checkpoint: cp-025 Illustration — SVG-based scientific illustration with caption');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Media — Video/audio embed (URL, autoplay, loop, muted options)");
+      throw new Error('Unhandled slides checkpoint: cp-026 Media — Video/audio embed (URL, autoplay, loop, muted options)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Embed — Generic URL embed (iframe)");
+      throw new Error('Unhandled slides checkpoint: cp-027 Embed — Generic URL embed (iframe)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Equation (Math) — LaTeX math expression with display mode");
+      throw new Error('Unhandled slides checkpoint: cp-028 Equation (Math) — LaTeX math expression with display mode');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Diagram — Mermaid syntax diagram (flowchart, sequence, etc.)");
+      throw new Error('Unhandled slides checkpoint: cp-029 Diagram — Mermaid syntax diagram (flowchart, sequence, etc.)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Code — Syntax-highlighted code block with language selector");
+      throw new Error('Unhandled slides checkpoint: cp-030 Code — Syntax-highlighted code block with language selector');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Callout — Info/warning/error callout box");
+      throw new Error('Unhandled slides checkpoint: cp-031 Callout — Info/warning/error callout box');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Statistic — Key metric with label, value, interpretation");
+      throw new Error('Unhandled slides checkpoint: cp-032 Statistic — Key metric with label, value, interpretation');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Bibliography — Reference list with citation style");
+      throw new Error('Unhandled slides checkpoint: cp-033 Bibliography — Reference list with citation style');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-004', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Timeline — Timeline entries with dates, labels, status");
+      throw new Error('Unhandled slides checkpoint: cp-034 Timeline — Timeline entries with dates, labels, status');
     }
 
 

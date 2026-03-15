@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-001
  * Source: e2e/specs/presentation/spec-001.md
- * Generated: 2026-03-14T10:20:37.707Z
+ * Generated: 2026-03-14T19:38:55.728Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "**1.10** Loading state renders 3 skeleton cards");
+      throw new Error('Unhandled presentation checkpoint: cp-000 **1.10** Loading state renders 3 skeleton cards');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "**1.11** Empty state shows \"No presentations yet\" message");
+      throw new Error('Unhandled presentation checkpoint: cp-001 **1.11** Empty state shows "No presentations yet" message');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "**1.12** Empty state shows \"Create Presentation\" CTA button");
+      throw new Error('Unhandled presentation checkpoint: cp-002 **1.12** Empty state shows "Create Presentation" CTA button');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "**1.13** CTA navigates to `/presentation/new`");
+      throw new Error('Unhandled presentation checkpoint: cp-003 **1.13** CTA navigates to `/presentation/new`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "**1.14** Cards are clickable and navigate to `/presentation/[deckId]`");
+      throw new Error('Unhandled presentation checkpoint: cp-004 **1.14** Cards are clickable and navigate to `/presentation/[deckId]`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "**2.5** Audience option: General");
+      throw new Error('Unhandled presentation checkpoint: cp-005 **2.5** Audience option: General');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "**2.6** Audience option: Thesis Defense");
+      throw new Error('Unhandled presentation checkpoint: cp-006 **2.6** Audience option: Thesis Defense');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "**2.7** Audience option: Conference");
+      throw new Error('Unhandled presentation checkpoint: cp-007 **2.7** Audience option: Conference');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "**2.8** Audience option: Journal Club");
+      throw new Error('Unhandled presentation checkpoint: cp-008 **2.8** Audience option: Journal Club');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "**2.9** Audience option: Classroom");
+      throw new Error('Unhandled presentation checkpoint: cp-009 **2.9** Audience option: Classroom');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "**2.10** Only one audience button is selectable at a time");
+      throw new Error('Unhandled presentation checkpoint: cp-010 **2.10** Only one audience button is selectable at a time');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "**2.11** Theme picker is visible and functional");
+      throw new Error('Unhandled presentation checkpoint: cp-011 **2.11** Theme picker is visible and functional');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "**2.12** \"Create Blank Deck\" button is present");
+      throw new Error('Unhandled presentation checkpoint: cp-012 **2.12** "Create Blank Deck" button is present');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "**2.13** Submitting without title shows validation error");
+      throw new Error('Unhandled presentation checkpoint: cp-013 **2.13** Submitting without title shows validation error');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "**2.14** Submitting with valid title creates deck and navigates to editor");
+      throw new Error('Unhandled presentation checkpoint: cp-014 **2.14** Submitting with valid title creates deck and navigates to editor');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "**2.15** Toggle/link to switch to AI mode");
+      throw new Error('Unhandled presentation checkpoint: cp-015 **2.15** Toggle/link to switch to AI mode');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "**3.1** Step 0 header displays \"Select Source\"");
+      throw new Error('Unhandled presentation checkpoint: cp-016 **3.1** Step 0 header displays "Select Source"');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "**3.2** SourceSelector component renders");
+      throw new Error('Unhandled presentation checkpoint: cp-017 **3.2** SourceSelector component renders');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "**3.3** Source option: Papers");
+      throw new Error('Unhandled presentation checkpoint: cp-018 **3.3** Source option: Papers');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "**3.4** Source option: Document");
+      throw new Error('Unhandled presentation checkpoint: cp-019 **3.4** Source option: Document');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "**3.5** Source option: Text");
+      throw new Error('Unhandled presentation checkpoint: cp-020 **3.5** Source option: Text');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "**3.6** Source option: Deep Research");
+      throw new Error('Unhandled presentation checkpoint: cp-021 **3.6** Source option: Deep Research');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "**3.7** Source option: References");
+      throw new Error('Unhandled presentation checkpoint: cp-022 **3.7** Source option: References');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "**3.8** Source option: URL");
+      throw new Error('Unhandled presentation checkpoint: cp-023 **3.8** Source option: URL');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "**3.9** Source option: Import Deck");
+      throw new Error('Unhandled presentation checkpoint: cp-024 **3.9** Source option: Import Deck');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "**3.42** Source option grid renders from SOURCE_OPTIONS array (`source-selector.tsx:121`, `:124`)");
+      throw new Error('Unhandled presentation checkpoint: cp-025 **3.42** Source option grid renders from SOURCE_OPTIONS array (`source-selector.tsx:121`, `:124`)');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "**3.43** Papers icon: BookOpen (`source-selector.tsx:68`)");
+      throw new Error('Unhandled presentation checkpoint: cp-026 **3.43** Papers icon: BookOpen (`source-selector.tsx:68`)');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "**3.44** Document icon: FileText (`source-selector.tsx:74`)");
+      throw new Error('Unhandled presentation checkpoint: cp-027 **3.44** Document icon: FileText (`source-selector.tsx:74`)');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "**3.45** Text icon: TextT (`source-selector.tsx:80`)");
+      throw new Error('Unhandled presentation checkpoint: cp-028 **3.45** Text icon: TextT (`source-selector.tsx:80`)');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "**3.46** References icon: BookBookmark (`source-selector.tsx:86`)");
+      throw new Error('Unhandled presentation checkpoint: cp-029 **3.46** References icon: BookBookmark (`source-selector.tsx:86`)');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "**3.47** URL icon: Globe (`source-selector.tsx:92`)");
+      throw new Error('Unhandled presentation checkpoint: cp-030 **3.47** URL icon: Globe (`source-selector.tsx:92`)');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "**3.48** Import Deck icon: Presentation (`source-selector.tsx:98`)");
+      throw new Error('Unhandled presentation checkpoint: cp-031 **3.48** Import Deck icon: Presentation (`source-selector.tsx:98`)');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "**3.49** Selected source shows `border-brand bg-brand/5 text-brand` (`source-selector.tsx:127`)");
+      throw new Error('Unhandled presentation checkpoint: cp-032 **3.49** Selected source shows `border-brand bg-brand/5 text-brand` (`source-selector.tsx:127`)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "**3.50** Papers path: comma-separated IDs input with placeholder \"e.g., 1, 2, 3\" (`source-selector.tsx:139`, `:142`, `:146`, `:153`)");
+      throw new Error('Unhandled presentation checkpoint: cp-033 **3.50** Papers path: comma-separated IDs input with placeholder "e.g., 1, 2, 3" (`source-selector.tsx:139`, `:142`, `:146`, `:153`)');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "**3.51** Papers helper: \"Enter the IDs of papers from your library to generate slides from\" (`source-selector.tsx:157`)");
+      throw new Error('Unhandled presentation checkpoint: cp-034 **3.51** Papers helper: "Enter the IDs of papers from your library to generate slides from" (`source-selector.tsx:157`)');
     }
 
 

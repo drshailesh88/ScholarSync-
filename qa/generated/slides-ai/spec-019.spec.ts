@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides-ai/spec-019
  * Source: e2e/specs/slides-ai/spec-019.md
- * Generated: 2026-03-14T10:19:40.842Z
+ * Generated: 2026-03-14T22:01:30.482Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Error message format: `\"Something went wrong: ${err.message}. Please try again.\"`");
+      throw new Error('Unhandled slides checkpoint: cp-000 Error message format: `"Something went wrong: ${err.message}. Please try again."`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Fallback assistant message when API returns no summary: `\"Changes applied.\"`");
+      throw new Error('Unhandled slides checkpoint: cp-001 Fallback assistant message when API returns no summary: `"Changes applied."`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Input textarea `rows={1}`, no auto-resize (unlike Slides agent which auto-resizes)");
+      throw new Error('Unhandled slides checkpoint: cp-002 Input textarea `rows={1}`, no auto-resize (unlike Slides agent which auto-resizes)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Input `aria-label=\"Send message\"` on send button");
+      throw new Error('Unhandled slides checkpoint: cp-003 Input `aria-label="Send message"` on send button');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Empty state prompt text: `\"Ask the AI to modify your entire deck, or pick a quick action:\"`");
+      throw new Error('Unhandled slides checkpoint: cp-004 Empty state prompt text: `"Ask the AI to modify your entire deck, or pick a quick action:"`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Input focused on mount via `useEffect` with `inputRef.current?.focus()`");
+      throw new Error('Unhandled slides checkpoint: cp-005 Input focused on mount via `useEffect` with `inputRef.current?.focus()`');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Dropdown has `\"AI Actions\"` header (10px uppercase tracking-wider ink-muted) above the action list");
+      throw new Error('Unhandled slides checkpoint: cp-006 Dropdown has `"AI Actions"` header (10px uppercase tracking-wider ink-muted) above the action list');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Each action constructs a slide-specific prompt via `buildMessage(slideId)` with exact instructions (e.g., \"Improve the writing quality of slide ID ${id}. Make it more polished and professional.\")");
+      throw new Error('Unhandled slides checkpoint: cp-007 Each action constructs a slide-specific prompt via `buildMessage(slideId)` with exact instructions (e.g., "Improve the writing quality of slide ID ${id}. Make it more polished and professional.")');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Sparkle menu errors are silently swallowed — `catch {}` block with no user-facing error message");
+      throw new Error('Unhandled slides checkpoint: cp-008 Sparkle menu errors are silently swallowed — `catch {}` block with no user-facing error message');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Loading overlay shows `\"AI is working...\"` text alongside spinner (not just spinner)");
+      throw new Error('Unhandled slides checkpoint: cp-009 Loading overlay shows `"AI is working..."` text alongside spinner (not just spinner)');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Dropdown has `role=\"menu\"`, each action button has `role=\"menuitem\"`");
+      throw new Error('Unhandled slides checkpoint: cp-010 Dropdown has `role="menu"`, each action button has `role="menuitem"`');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Trigger button has `aria-label=\"AI card actions\"` and `aria-expanded={open}`");
+      throw new Error('Unhandled slides checkpoint: cp-011 Trigger button has `aria-label="AI card actions"` and `aria-expanded={open}`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Trigger button uses `Sparkle`; `ImageSquare` belongs to `CardBackgroundButton`");
+      throw new Error('Unhandled slides checkpoint: cp-012 Trigger button uses `Sparkle`; `ImageSquare` belongs to `CardBackgroundButton`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Exactly 12 preset color hex values: `#ffffff`, `#f8fafc`, `#f1f5f9`, `#e2e8f0`, `#1e293b`, `#0f172a`, `#fef2f2`, `#fef9c3`, `#ecfdf5`, `#eff6ff`, `#f5f3ff`, `#fdf2f8`");
+      throw new Error('Unhandled slides checkpoint: cp-013 Exactly 12 preset color hex values: `#ffffff`, `#f8fafc`, `#f1f5f9`, `#e2e8f0`, `#1e293b`, `#0f172a`, `#fef2f2`, `#fef9c3`, `#ecfdf5`, `#eff6ff`, `#f5f3ff`, `#fdf2f8`');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Theme colors (primary, background, surface, text) are prepended to presets and deduplicated via `Set`");
+      throw new Error('Unhandled slides checkpoint: cp-014 Theme colors (primary, background, surface, text) are prepended to presets and deduplicated via `Set`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "Custom color uses a `ColorPicker` component (not a raw color input)");
+      throw new Error('Unhandled slides checkpoint: cp-015 Custom color uses a `ColorPicker` component (not a raw color input)');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "\"Right\" image position icon is `Columns` with `style={{ transform: \"scaleX(-1)\" }}` to mirror it");
+      throw new Error('Unhandled slides checkpoint: cp-016 "Right" image position icon is `Columns` with `style={{ transform: "scaleX(-1)" }}` to mirror it');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Overlay type controls only show when `imageUrl` is set AND `imagePosition !== \"none\"`");
+      throw new Error('Unhandled slides checkpoint: cp-017 Overlay type controls only show when `imageUrl` is set AND `imagePosition !== "none"`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Overlay intensity and color controls only show when `overlayType !== \"none\"`");
+      throw new Error('Unhandled slides checkpoint: cp-018 Overlay intensity and color controls only show when `overlayType !== "none"`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Overlay intensity defaults to `50` (shown as `50%`)");
+      throw new Error('Unhandled slides checkpoint: cp-019 Overlay intensity defaults to `50` (shown as `50%`)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Overlay color defaults to `#000000`");
+      throw new Error('Unhandled slides checkpoint: cp-020 Overlay color defaults to `#000000`');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Reset button text: `\"Reset to default\"` (clears `cardBackground` to `undefined`)");
+      throw new Error('Unhandled slides checkpoint: cp-021 Reset button text: `"Reset to default"` (clears `cardBackground` to `undefined`)');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "Picker width is `w-72` (288px)");
+      throw new Error('Unhandled slides checkpoint: cp-022 Picker width is `w-72` (288px)');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "`CardBackgroundButton` closes on `Escape` keypress");
+      throw new Error('Unhandled slides checkpoint: cp-023 `CardBackgroundButton` closes on `Escape` keypress');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "`CardBackgroundButton` trigger has `aria-label=\"Card background settings\"` and `aria-expanded`");
+      throw new Error('Unhandled slides checkpoint: cp-024 `CardBackgroundButton` trigger has `aria-label="Card background settings"` and `aria-expanded`');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Trigger icon is `ImageSquare` (not just \"Image icon\")");
+      throw new Error('Unhandled slides checkpoint: cp-025 Trigger icon is `ImageSquare` (not just "Image icon")');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Existing subtitles are editable in active state via `EditableTextBlock` with `style=\"subtitle\"` and placeholder `\"Subtitle...\"`");
+      throw new Error('Unhandled slides checkpoint: cp-026 Existing subtitles are editable in active state via `EditableTextBlock` with `style="subtitle"` and placeholder `"Subtitle..."`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Non-active cards show `\"Untitled Card\"` when title is empty");
+      throw new Error('Unhandled slides checkpoint: cp-027 Non-active cards show `"Untitled Card"` when title is empty');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Empty state (active card, 0 content blocks): italic muted text `\"Click here to start typing, or type / for commands\"`");
+      throw new Error('Unhandled slides checkpoint: cp-028 Empty state (active card, 0 content blocks): italic muted text `"Click here to start typing, or type / for commands"`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Text block inline editing supports `fontFamily`, `fontSize`, and `color` properties from block data");
+      throw new Error('Unhandled slides checkpoint: cp-029 Text block inline editing supports `fontFamily`, `fontSize`, and `color` properties from block data');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Bullets block editing passes `ordered` flag to toggle ordered/unordered lists");
+      throw new Error('Unhandled slides checkpoint: cp-030 Bullets block editing passes `ordered` flag to toggle ordered/unordered lists');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Insert buttons between cards show `\"Add card\"` text label alongside the Plus icon (not just \"+\")");
+      throw new Error('Unhandled slides checkpoint: cp-031 Insert buttons between cards show `"Add card"` text label alongside the Plus icon (not just "+")');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Active card border is `border-brand ring-1 ring-brand/30` (ring-1, not ring-2 as documented in Section 10)");
+      throw new Error('Unhandled slides checkpoint: cp-032 Active card border is `border-brand ring-1 ring-brand/30` (ring-1, not ring-2 as documented in Section 10)');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Card accent bar is `h-1` (4px), not `1px` as stated in original doc");
+      throw new Error('Unhandled slides checkpoint: cp-033 Card accent bar is `h-1` (4px), not `1px` as stated in original doc');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides-ai / spec-019', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Side images (left/right) take `w-2/5` of card width with `min-h-[200px]`");
+      throw new Error('Unhandled slides checkpoint: cp-034 Side images (left/right) take `w-2/5` of card width with `min-h-[200px]`');
     }
 
 

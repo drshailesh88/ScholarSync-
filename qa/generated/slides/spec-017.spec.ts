@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-017
  * Source: e2e/specs/slides/spec-017.md
- * Generated: 2026-03-14T10:18:18.598Z
+ * Generated: 2026-03-14T18:22:12.789Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Initial title slide is created as `title_slide` with a subtitle-style text block instead of using the slide `subtitle` field");
+      throw new Error('Unhandled slides checkpoint: cp-000 Initial title slide is created as `title_slide` with a subtitle-style text block instead of using the slide `subtitle` field');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Initial title slide body text is description content or fallback text `Click to add subtitle`");
+      throw new Error('Unhandled slides checkpoint: cp-001 Initial title slide body text is description content or fallback text `Click to add subtitle`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "After the initial slide is created, the route redirects to `/slides/{deckId}` without waiting for AI generation");
+      throw new Error('Unhandled slides checkpoint: cp-002 After the initial slide is created, the route redirects to `/slides/{deckId}` without waiting for AI generation');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Background AI generation is only triggered when description text is non-empty");
+      throw new Error('Unhandled slides checkpoint: cp-003 Background AI generation is only triggered when description text is non-empty');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Background generation posts to `/api/slides/generate-stream` with `deckId`, `title`, `description`, `audienceType`, and `themeKey`");
+      throw new Error('Unhandled slides checkpoint: cp-004 Background generation posts to `/api/slides/generate-stream` with `deckId`, `title`, `description`, `audienceType`, and `themeKey`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Background generation failures are swallowed and do not interrupt deck creation or navigation");
+      throw new Error('Unhandled slides checkpoint: cp-005 Background generation failures are swallowed and do not interrupt deck creation or navigation');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "New-deck creation failures show inline error text `Failed to create presentation. Please try again.` and return the wizard to the `theme` step");
+      throw new Error('Unhandled slides checkpoint: cp-006 New-deck creation failures show inline error text `Failed to create presentation. Please try again.` and return the wizard to the `theme` step');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "`/slides/[deckId]` rejects invalid numeric params locally and shows inline red text `Invalid deck ID`");
+      throw new Error('Unhandled slides checkpoint: cp-007 `/slides/[deckId]` rejects invalid numeric params locally and shows inline red text `Invalid deck ID`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Valid deck IDs mount `CollaborationProvider` with empty initial deck meta and then load the real deck through `SlidesWorkspace`");
+      throw new Error('Unhandled slides checkpoint: cp-008 Valid deck IDs mount `CollaborationProvider` with empty initial deck meta and then load the real deck through `SlidesWorkspace`');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "`SlidesWorkspace` shows a centered spinner and `Loading presentation...` while `loadDeck(deckId)` is running");
+      throw new Error('Unhandled slides checkpoint: cp-009 `SlidesWorkspace` shows a centered spinner and `Loading presentation...` while `loadDeck(deckId)` is running');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "`SlidesWorkspace` error state shows red text `Deck not found or access denied.` plus a `Back to presentations` link");
+      throw new Error('Unhandled slides checkpoint: cp-010 `SlidesWorkspace` error state shows red text `Deck not found or access denied.` plus a `Back to presentations` link');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Empty decks do not open directly into the slides editor; they first show `ModeSelectionScreen`");
+      throw new Error('Unhandled slides checkpoint: cp-011 Empty decks do not open directly into the slides editor; they first show `ModeSelectionScreen`');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "`ModeSelectionScreen` title is `How do you want to work?`");
+      throw new Error('Unhandled slides checkpoint: cp-012 `ModeSelectionScreen` title is `How do you want to work?`');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Mode-selection helper copy says `You can switch anytime with the toggle`");
+      throw new Error('Unhandled slides checkpoint: cp-013 Mode-selection helper copy says `You can switch anytime with the toggle`');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "Mode-selection cards are `Slides Mode` and `Create Mode`");
+      throw new Error('Unhandled slides checkpoint: cp-014 Mode-selection cards are `Slides Mode` and `Create Mode`');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "`Slides Mode` card helper text is `Click and build like PowerPoint`");
+      throw new Error('Unhandled slides checkpoint: cp-015 `Slides Mode` card helper text is `Click and build like PowerPoint`');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "`Create Mode` card helper text is `AI builds it, you refine`");
+      throw new Error('Unhandled slides checkpoint: cp-016 `Create Mode` card helper text is `AI builds it, you refine`');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Once a deck has at least one slide, mode selection is skipped on later loads");
+      throw new Error('Unhandled slides checkpoint: cp-017 Once a deck has at least one slide, mode selection is skipped on later loads');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "`SlidesWorkspace` wraps the editor in `ThemeProvider theme={themeConfig}`");
+      throw new Error('Unhandled slides checkpoint: cp-018 `SlidesWorkspace` wraps the editor in `ThemeProvider theme={themeConfig}`');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Presenter mode in `SlidesWorkspace` filters out hidden slides before constructing the presenter slide list");
+      throw new Error('Unhandled slides checkpoint: cp-019 Presenter mode in `SlidesWorkspace` filters out hidden slides before constructing the presenter slide list');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Presenter start index is derived from the currently active non-hidden slide, falling back to 0");
+      throw new Error('Unhandled slides checkpoint: cp-020 Presenter start index is derived from the currently active non-hidden slide, falling back to 0');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Presenter mode fallback is a full-screen black overlay with `Loading presenter mode...`");
+      throw new Error('Unhandled slides checkpoint: cp-021 Presenter mode fallback is a full-screen black overlay with `Loading presenter mode...`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "`SlidesModeLayout` registers global keyboard shortcuts on mount");
+      throw new Error('Unhandled slides checkpoint: cp-022 `SlidesModeLayout` registers global keyboard shortcuts on mount');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "`SlidesModeLayout` keeps export state local with a single `exporting` boolean shared across all export actions");
+      throw new Error('Unhandled slides checkpoint: cp-023 `SlidesModeLayout` keeps export state local with a single `exporting` boolean shared across all export actions');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "`SlidesModeLayout` opens a handout-export dialog for PDF instead of exporting immediately");
+      throw new Error('Unhandled slides checkpoint: cp-024 `SlidesModeLayout` opens a handout-export dialog for PDF instead of exporting immediately');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Current-slide PNG export looks up the canvas via `[data-testid=\"slide-ruler-surface\"]`");
+      throw new Error('Unhandled slides checkpoint: cp-025 Current-slide PNG export looks up the canvas via `[data-testid="slide-ruler-surface"]`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Shift+Click on PNG export raises output scale from 2x to 3x");
+      throw new Error('Unhandled slides checkpoint: cp-026 Shift+Click on PNG export raises output scale from 2x to 3x');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Current-slide PNG filenames are sanitized to `{safeTitle}_slide_{slideNumber}.png`");
+      throw new Error('Unhandled slides checkpoint: cp-027 Current-slide PNG filenames are sanitized to `{safeTitle}_slide_{slideNumber}.png`');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "Current-slide SVG filenames are sanitized to `{safeTitle}_slide_{slideNumber}.svg`");
+      throw new Error('Unhandled slides checkpoint: cp-028 Current-slide SVG filenames are sanitized to `{safeTitle}_slide_{slideNumber}.svg`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Export-all-PNG renders hidden off-screen `SlideRendererV2` instances for every slide before zipping them");
+      throw new Error('Unhandled slides checkpoint: cp-029 Export-all-PNG renders hidden off-screen `SlideRendererV2` instances for every slide before zipping them');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Export-all-PNG waits for two animation frames, `document.fonts.ready`, and an additional timeout before capture");
+      throw new Error('Unhandled slides checkpoint: cp-030 Export-all-PNG waits for two animation frames, `document.fonts.ready`, and an additional timeout before capture');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Export-all-PNG downloads `{safeTitle}_slides_png.zip`");
+      throw new Error('Unhandled slides checkpoint: cp-031 Export-all-PNG downloads `{safeTitle}_slides_png.zip`');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "Export errors for PNG/SVG/ZIP are logged to console only");
+      throw new Error('Unhandled slides checkpoint: cp-032 Export errors for PNG/SVG/ZIP are logged to console only');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "The slides layout always renders `PresenceBridgeSlot` above the workspace");
+      throw new Error('Unhandled slides checkpoint: cp-033 The slides layout always renders `PresenceBridgeSlot` above the workspace');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-017', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "Right-side panels in slides mode are controlled exclusively through `rightPanel` store state");
+      throw new Error('Unhandled slides checkpoint: cp-034 Right-side panels in slides mode are controlled exclusively through `rightPanel` store state');
     }
 
 

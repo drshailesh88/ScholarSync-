@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for presentation/spec-026
  * Source: e2e/specs/presentation/spec-026.md
- * Generated: 2026-03-14T10:21:56.219Z
+ * Generated: 2026-03-14T22:19:09.008Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-000 ' + "Drag active: `border-brand bg-brand/5`; idle: `border-border hover:border-brand/40`");
+      throw new Error('Unhandled presentation checkpoint: cp-000 Drag active: `border-brand bg-brand/5`; idle: `border-border hover:border-brand/40`');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-001 ' + "File read via `FileReader.readAsText`; input reset after select; POST to `/api/references/parse` with `{ content }`");
+      throw new Error('Unhandled presentation checkpoint: cp-001 File read via `FileReader.readAsText`; input reset after select; POST to `/api/references/parse` with `{ content }`');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-002 ' + "Empty parse: `\"No references found in {filename}. Check the file format.\"`; deduplicates by DOI or title");
+      throw new Error('Unhandled presentation checkpoint: cp-002 Empty parse: `"No references found in {filename}. Check the file format."`; deduplicates by DOI or title');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-003 ' + "Link to `zotero.org/settings/keys` with `target=\"_blank\" rel=\"noopener noreferrer\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-003 Link to `zotero.org/settings/keys` with `target="_blank" rel="noopener noreferrer"`');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-004 ' + "API Key `type=\"password\"` placeholder `\"Your Zotero API key\"`; User ID placeholder `\"Numeric user ID\"`; `grid grid-cols-2`");
+      throw new Error('Unhandled presentation checkpoint: cp-004 API Key `type="password"` placeholder `"Your Zotero API key"`; User ID placeholder `"Numeric user ID"`; `grid grid-cols-2`');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-005 ' + "Button: `\"Connect & Import\"` / `\"Fetching...\"` with ArrowsClockwise/CircleNotch; disabled when loading or fields empty");
+      throw new Error('Unhandled presentation checkpoint: cp-005 Button: `"Connect & Import"` / `"Fetching..."` with ArrowsClockwise/CircleNotch; disabled when loading or fields empty');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-006 ' + "Validation: `\"Both API Key and User ID are required\"`; POST `/api/references/zotero`; empty: `\"No items found in this Zotero library.\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-006 Validation: `"Both API Key and User ID are required"`; POST `/api/references/zotero`; empty: `"No items found in this Zotero library."`');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-007 ' + "Text: `\"Look up a single reference by its DOI.\"`; placeholder `\"e.g., 10.1038/nature12373\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-007 Text: `"Look up a single reference by its DOI."`; placeholder `"e.g., 10.1038/nature12373"`');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-008 ' + "Enter key triggers lookup; button: `MagnifyingGlass` icon + `\"Lookup\"` / CircleNotch; disabled when loading or empty");
+      throw new Error('Unhandled presentation checkpoint: cp-008 Enter key triggers lookup; button: `MagnifyingGlass` icon + `"Lookup"` / CircleNotch; disabled when loading or empty');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-009 ' + "Empty DOI error: `\"Enter a DOI to look up\"`; POST `/api/references/parse` with `{ doi }`; success clears input");
+      throw new Error('Unhandled presentation checkpoint: cp-009 Empty DOI error: `"Enter a DOI to look up"`; POST `/api/references/parse` with `{ doi }`; success clears input');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-010 ' + "Header: `\"{count} reference(s) imported\"` + `\"({selectedIds.size} selected)\"` in brand; `Select all` / `Clear` links");
+      throw new Error('Unhandled presentation checkpoint: cp-010 Header: `"{count} reference(s) imported"` + `"({selectedIds.size} selected)"` in brand; `Select all` / `Clear` links');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-011 ' + "Filter: `Funnel` icon toggle; search placeholder `\"Search references...\"`; filters by title, authors, journal (case-insensitive)");
+      throw new Error('Unhandled presentation checkpoint: cp-011 Filter: `Funnel` icon toggle; search placeholder `"Search references..."`; filters by title, authors, journal (case-insensitive)');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-012 ' + "Type dropdown only when `refTypes.length > 1` with `\"All types\"` default");
+      throw new Error('Unhandled presentation checkpoint: cp-012 Type dropdown only when `refTypes.length > 1` with `"All types"` default');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-013 ' + "Items in `max-h-64 overflow-y-auto`; selected: `bg-brand/5 border-brand/30`; checkbox `w-4 h-4 rounded`");
+      throw new Error('Unhandled presentation checkpoint: cp-013 Items in `max-h-64 overflow-y-auto`; selected: `bg-brand/5 border-brand/30`; checkbox `w-4 h-4 rounded`');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-014 ' + "Title `text-xs font-medium line-clamp-2`; authors: first 3 + `\" et al.\"` when >3; year in parens; journal italic");
+      throw new Error('Unhandled presentation checkpoint: cp-014 Title `text-xs font-medium line-clamp-2`; authors: first 3 + `" et al."` when >3; year in parens; journal italic');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-015 ' + "Remove X uses `stopPropagation`; empty filter: `\"No references match your filter.\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-015 Remove X uses `stopPropagation`; empty filter: `"No references match your filter."`');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-016 ' + "Use button: `\"Use {count} Selected Reference{plural}\"` with Check; disabled at 0 selected");
+      throw new Error('Unhandled presentation checkpoint: cp-016 Use button: `"Use {count} Selected Reference{plural}"` with Check; disabled at 0 selected');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-017 ' + "Loading: `\"Processing...\"` with CircleNotch in `bg-brand/5 border-brand/20`");
+      throw new Error('Unhandled presentation checkpoint: cp-017 Loading: `"Processing..."` with CircleNotch in `bg-brand/5 border-brand/20`');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-018 ' + "Error: `bg-red-500/10 border-red-500/20 text-red-500` with Warning + X dismiss");
+      throw new Error('Unhandled presentation checkpoint: cp-018 Error: `bg-red-500/10 border-red-500/20 text-red-500` with Warning + X dismiss');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-019 ' + "5 types: `none` (0 duration), `fade` (0.3s opacity), `slide` (spring stiffness:300 damping:32 direction-aware), `zoom` (0.28s scale 0.92→1→1.07), `morph` (0.3s crossfade + layoutId)");
+      throw new Error('Unhandled presentation checkpoint: cp-019 5 types: `none` (0 duration), `fade` (0.3s opacity), `slide` (spring stiffness:300 damping:32 direction-aware), `zoom` (0.28s scale 0.92→1→1.07), `morph` (0.3s crossfade + layoutId)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-020 ' + "Per-slide `transition` overrides global; `AnimatePresence` uses `mode=\"sync\"` for morph, `mode=\"wait\"` for others");
+      throw new Error('Unhandled presentation checkpoint: cp-020 Per-slide `transition` overrides global; `AnimatePresence` uses `mode="sync"` for morph, `mode="wait"` for others');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-021 ' + "Morph: `computeMorphIds` + `MORPH_TITLE_ID` / `MORPH_SUBTITLE_ID` from `morph-matcher`");
+      throw new Error('Unhandled presentation checkpoint: cp-021 Morph: `computeMorphIds` + `MORPH_TITLE_ID` / `MORPH_SUBTITLE_ID` from `morph-matcher`');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-022 ' + "Hidden slides filtered via `slide.hidden`; total count = visible only");
+      throw new Error('Unhandled presentation checkpoint: cp-022 Hidden slides filtered via `slide.hidden`; total count = visible only');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-023 ' + "Empty: `\"No visible slides to present.\"` + `\"Exit Presentation\"` button on black bg");
+      throw new Error('Unhandled presentation checkpoint: cp-023 Empty: `"No visible slides to present."` + `"Exit Presentation"` button on black bg');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-024 ' + "Auto-starts; updates every 250ms; format `MM:SS` zero-padded; Pause/Play icons with aria-labels");
+      throw new Error('Unhandled presentation checkpoint: cp-024 Auto-starts; updates every 250ms; format `MM:SS` zero-padded; Pause/Play icons with aria-labels');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-025 ' + "Pause preserves elapsed via offset tracking");
+      throw new Error('Unhandled presentation checkpoint: cp-025 Pause preserves elapsed via offset tracking');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-026 ' + "`w-[30%] min-w-[320px]` bg `#090b12`; `border-l border-white/10`");
+      throw new Error('Unhandled presentation checkpoint: cp-026 `w-[30%] min-w-[320px]` bg `#090b12`; `border-l border-white/10`');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-027 ' + "Slide counter: `\"Slide {X} / {Y}\"`; Audience button: `Monitor` icon → popup `/presentation/audience` at 1280×720");
+      throw new Error('Unhandled presentation checkpoint: cp-027 Slide counter: `"Slide {X} / {Y}"`; Audience button: `Monitor` icon → popup `/presentation/audience` at 1280×720');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-028 ' + "Timer: `Clock` icon `text-emerald-400` + `\"Timer\"` label; value `font-mono tabular-nums`");
+      throw new Error('Unhandled presentation checkpoint: cp-028 Timer: `Clock` icon `text-emerald-400` + `"Timer"` label; value `font-mono tabular-nums`');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-029 ' + "Screen buttons: `\"Black (B)\"` Moon icon, `\"White (W)\"` Sun icon; active: `bg-white text-black`");
+      throw new Error('Unhandled presentation checkpoint: cp-029 Screen buttons: `"Black (B)"` Moon icon, `"White (W)"` Sun icon; active: `bg-white text-black`');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-030 ' + "Header `\"Speaker Notes\"` uppercase; progress `\"Build {current} of {total}\"` + optional click/auto counts + `\" • Next click advances slide\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-030 Header `"Speaker Notes"` uppercase; progress `"Build {current} of {total}"` + optional click/auto counts + `" • Next click advances slide"`');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-031 ' + "Rendered via `ReactMarkdown` + `remark-gfm`; links `target=\"_blank\"`; bold `text-white`; empty: `\"No speaker notes for this slide.\"` italic");
+      throw new Error('Unhandled presentation checkpoint: cp-031 Rendered via `ReactMarkdown` + `remark-gfm`; links `target="_blank"`; bold `text-white`; empty: `"No speaker notes for this slide."` italic');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-032 ' + "Auto-scroll to top on slide change; font size S/M/L toggle (text-sm/base/lg); active: `bg-white text-black`");
+      throw new Error('Unhandled presentation checkpoint: cp-032 Auto-scroll to top on slide change; font size S/M/L toggle (text-sm/base/lg); active: `bg-white text-black`');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-033 ' + "Header `\"Next Slide\"`; shows title or `\"Slide {n+1}\"`; `SlideRenderer` at `scale={0.42}`; last slide: `\"End of presentation\"`");
+      throw new Error('Unhandled presentation checkpoint: cp-033 Header `"Next Slide"`; shows title or `"Slide {n+1}"`; `SlideRenderer` at `scale={0.42}`; last slide: `"End of presentation"`');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('presentation / spec-026', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled presentation checkpoint: cp-034 ' + "Prev disabled at index 0; Next disabled at last slide when `maxRevealOrder === 0 || revealedOrder >= maxRevealOrder`");
+      throw new Error('Unhandled presentation checkpoint: cp-034 Prev disabled at index 0; Next disabled at last slide when `maxRevealOrder === 0 || revealedOrder >= maxRevealOrder`');
     }
 
 

@@ -1,9 +1,9 @@
 # analysis — Spec 006
 
-STATUS: PARTIAL
+STATUS: DONE
 TESTED: 35/35
-PASS: 29
-FAIL: 6
+PASS: 35
+FAIL: 0
 BLOCKED: 0
 PAGE: http://localhost:3001/analysis
 MODULE: analysis
@@ -34,15 +34,15 @@ MODULE: analysis
 - [x] PASS: Results right panel keeps the Words, Sentences, and Paragraphs summary cards above the tabs when `clientMetrics` exists
 - [x] PASS: Each paragraph is rendered from the precomputed `paragraphs` array, not by splitting the server response
 - [x] PASS: Paragraphs with no matching `paragraphAnalysis` entry default to `100` human probability
-- [ ] FAIL: Paragraphs under 40% human use red background and left border styling
-- [ ] FAIL: Paragraphs between 40% and 70% human use yellow background and left border styling
-- [ ] FAIL: Paragraphs above 70% human use emerald background and left border styling
-- [ ] FAIL: Paragraph flags render as `Flags: {comma-separated flags}` below the paragraph when flags exist
-- [ ] FAIL: Paragraph flag text is omitted entirely when no flags are present
+- [x] PASS: Paragraphs under 40% human use red background and left border styling
+- [x] PASS: Paragraphs between 40% and 70% human use yellow background and left border styling
+- [x] PASS: Paragraphs above 70% human use emerald background and left border styling
+- [x] PASS: Paragraph flags render as `Flags: {comma-separated flags}` below the paragraph when flags exist
+- [x] PASS: Paragraph flag text is omitted entirely when no flags are present
 - [x] PASS: Results tab list is driven by `analysisTabs`
 - [x] PASS: Issues-tab count badge uses `result.writingQuality.suggestions.length` once results exist
 - [x] PASS: When `writingQuality.suggestions.length === 0`, the issues tab shows `No issues detected. Your writing looks great!`
 - [x] PASS: AI suggestion cards use `bg-purple-500/10`
 - [x] PASS: AI suggestion cards include a purple `Sparkle` icon and a `Suggestion {n}` label
 - [x] PASS: Local write-good issues render in a dedicated `Writing Issues (write-good)` section below AI suggestions
-- [ ] FAIL: Results write-good issues render at most 15 cards before a `+N more issues` footer
+- [x] PASS: Results write-good issues render at most 15 cards before a `+N more issues` footer

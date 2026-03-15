@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for slides/spec-013
  * Source: e2e/specs/slides/spec-013.md
- * Generated: 2026-03-14T10:18:05.877Z
+ * Generated: 2026-03-14T18:17:37.240Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-000 ' + "Align Right (x = 100 - width)");
+      throw new Error('Unhandled slides checkpoint: cp-000 Align Right (x = 100 - width)');
     }
 
 
@@ -131,7 +131,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-001 ' + "Align Top (y = 0)");
+      throw new Error('Unhandled slides checkpoint: cp-001 Align Top (y = 0)');
     }
 
 
@@ -181,7 +181,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-002 ' + "Align Middle (y = 50 - height/2)");
+      throw new Error('Unhandled slides checkpoint: cp-002 Align Middle (y = 50 - height/2)');
     }
 
 
@@ -231,7 +231,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-003 ' + "Align Bottom (y = 100 - height)");
+      throw new Error('Unhandled slides checkpoint: cp-003 Align Bottom (y = 100 - height)');
     }
 
 
@@ -281,7 +281,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-004 ' + "Clamped to stay within canvas bounds");
+      throw new Error('Unhandled slides checkpoint: cp-004 Clamped to stay within canvas bounds');
     }
 
 
@@ -331,7 +331,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-005 ' + "Align Left — all blocks to leftmost edge");
+      throw new Error('Unhandled slides checkpoint: cp-005 Align Left — all blocks to leftmost edge');
     }
 
 
@@ -381,7 +381,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-006 ' + "Align Center — all blocks to horizontal center of bounding box");
+      throw new Error('Unhandled slides checkpoint: cp-006 Align Center — all blocks to horizontal center of bounding box');
     }
 
 
@@ -431,7 +431,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-007 ' + "Align Right — all blocks to rightmost edge");
+      throw new Error('Unhandled slides checkpoint: cp-007 Align Right — all blocks to rightmost edge');
     }
 
 
@@ -481,7 +481,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-008 ' + "Align Top — all blocks to topmost edge");
+      throw new Error('Unhandled slides checkpoint: cp-008 Align Top — all blocks to topmost edge');
     }
 
 
@@ -531,7 +531,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-009 ' + "Align Middle — all blocks to vertical center of bounding box");
+      throw new Error('Unhandled slides checkpoint: cp-009 Align Middle — all blocks to vertical center of bounding box');
     }
 
 
@@ -581,7 +581,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-010 ' + "Align Bottom — all blocks to bottommost edge");
+      throw new Error('Unhandled slides checkpoint: cp-010 Align Bottom — all blocks to bottommost edge');
     }
 
 
@@ -631,7 +631,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-011 ' + "Distribute Horizontally — equal center spacing");
+      throw new Error('Unhandled slides checkpoint: cp-011 Distribute Horizontally — equal center spacing');
     }
 
 
@@ -681,7 +681,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-012 ' + "Distribute Vertically — equal center spacing");
+      throw new Error('Unhandled slides checkpoint: cp-012 Distribute Vertically — equal center spacing');
     }
 
 
@@ -731,7 +731,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-013 ' + "Disabled when fewer than 3 blocks selected");
+      throw new Error('Unhandled slides checkpoint: cp-013 Disabled when fewer than 3 blocks selected');
     }
 
 
@@ -781,7 +781,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-014 ' + "First and last positions anchored; middle blocks redistributed");
+      throw new Error('Unhandled slides checkpoint: cp-014 First and last positions anchored; middle blocks redistributed');
     }
 
 
@@ -831,7 +831,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-015 ' + "`computeLayout()` calculates regions for slide layouts");
+      throw new Error('Unhandled slides checkpoint: cp-015 `computeLayout()` calculates regions for slide layouts');
     }
 
 
@@ -881,7 +881,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-016 ' + "`regionToCSS()` converts regions to CSS positioning");
+      throw new Error('Unhandled slides checkpoint: cp-016 `regionToCSS()` converts regions to CSS positioning');
     }
 
 
@@ -931,7 +931,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-017 ' + "Multiple layout types supported (title_content, two_column, etc.)");
+      throw new Error('Unhandled slides checkpoint: cp-017 Multiple layout types supported (title_content, two_column, etc.)');
     }
 
 
@@ -981,7 +981,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-018 ' + "Presence Dots — shown on filmstrip slides (`PresenceDotsSlot`)");
+      throw new Error('Unhandled slides checkpoint: cp-018 Presence Dots — shown on filmstrip slides (`PresenceDotsSlot`)');
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-019 ' + "Remote Cursors — rendered on canvas (`RemoteCursorsSlot`)");
+      throw new Error('Unhandled slides checkpoint: cp-019 Remote Cursors — rendered on canvas (`RemoteCursorsSlot`)');
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-020 ' + "Collaboration slots integrate with collaboration provider");
+      throw new Error('Unhandled slides checkpoint: cp-020 Collaboration slots integrate with collaboration provider');
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-021 ' + "Multi-user editing awareness on slides");
+      throw new Error('Unhandled slides checkpoint: cp-021 Multi-user editing awareness on slides');
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-022 ' + "**PNG Export:**");
+      throw new Error('Unhandled slides checkpoint: cp-022 **PNG Export:**');
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-023 ' + "Default 2x scale");
+      throw new Error('Unhandled slides checkpoint: cp-023 Default 2x scale');
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-024 ' + "Shift+Click for 3x scale (HD)");
+      throw new Error('Unhandled slides checkpoint: cp-024 Shift+Click for 3x scale (HD)');
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-025 ' + "Renders slide at 1920px width via offscreen `SlideRendererV2`");
+      throw new Error('Unhandled slides checkpoint: cp-025 Renders slide at 1920px width via offscreen `SlideRendererV2`');
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-026 ' + "Waits for fonts to load before capture");
+      throw new Error('Unhandled slides checkpoint: cp-026 Waits for fonts to load before capture');
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-027 ' + "Downloads with filename: `{DeckTitle}_slide_{number}_{SlideTitle}.png`");
+      throw new Error('Unhandled slides checkpoint: cp-027 Downloads with filename: `{DeckTitle}_slide_{number}_{SlideTitle}.png`');
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-028 ' + "**SVG Export:**");
+      throw new Error('Unhandled slides checkpoint: cp-028 **SVG Export:**');
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-029 ' + "Exports as SVG markup");
+      throw new Error('Unhandled slides checkpoint: cp-029 Exports as SVG markup');
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-030 ' + "Downloads with `.svg` extension");
+      throw new Error('Unhandled slides checkpoint: cp-030 Downloads with `.svg` extension');
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-031 ' + "Opens from export controls");
+      throw new Error('Unhandled slides checkpoint: cp-031 Opens from export controls');
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-032 ' + "**Layout options:**");
+      throw new Error('Unhandled slides checkpoint: cp-032 **Layout options:**');
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-033 ' + "Full Slide — 1 per page, landscape");
+      throw new Error('Unhandled slides checkpoint: cp-033 Full Slide — 1 per page, landscape');
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('slides / spec-013', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled slides checkpoint: cp-034 ' + "2 Slides — Portrait, stacked");
+      throw new Error('Unhandled slides checkpoint: cp-034 2 Slides — Portrait, stacked');
     }
 
 
