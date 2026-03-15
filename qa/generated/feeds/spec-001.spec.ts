@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for feeds/spec-001
  * Source: e2e/specs/feeds/spec-001.md
- * Generated: 2026-03-14T18:50:01.291Z
+ * Generated: 2026-03-15T15:11:10.531Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-000 Three-column layout: Sidebar (w-56) | Article List (flex) | Reader/Copilot (420px)');
+      throw new Error('Unhandled feeds checkpoint: cp-000 ' + "Three-column layout: Sidebar (w-56) | Article List (flex) | Reader/Copilot (420px)");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-001 Sidebar hidden on mobile, visible on `lg` breakpoint');
+      throw new Error('Unhandled feeds checkpoint: cp-001 ' + "Sidebar hidden on mobile, visible on `lg` breakpoint");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-002 Reader/Copilot hidden on mobile, visible on `xl` breakpoint');
+      throw new Error('Unhandled feeds checkpoint: cp-002 ' + "Reader/Copilot hidden on mobile, visible on `xl` breakpoint");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-003 Responsive stacking on smaller viewports');
+      throw new Error('Unhandled feeds checkpoint: cp-003 ' + "Responsive stacking on smaller viewports");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-004 RSS icon displayed');
+      throw new Error('Unhandled feeds checkpoint: cp-004 ' + "RSS icon displayed");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-005 Title: "Your Journal Feed is empty"');
+      throw new Error('Unhandled feeds checkpoint: cp-005 ' + "Title: \"Your Journal Feed is empty\"");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-006 Description: "Subscribe to medical journals, PubMed searches, or any RSS feed to stay current with the latest research."');
+      throw new Error('Unhandled feeds checkpoint: cp-006 ' + "Description: \"Subscribe to medical journals, PubMed searches, or any RSS feed to stay current with the latest research.\"");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-007 "Add Your First Feed" action button');
+      throw new Error('Unhandled feeds checkpoint: cp-007 ' + "\"Add Your First Feed\" action button");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-008 Title: "Journal Feed"');
+      throw new Error('Unhandled feeds checkpoint: cp-008 ' + "Title: \"Journal Feed\"");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-009 Unread badge: "{totalUnread} unread article(s)"');
+      throw new Error('Unhandled feeds checkpoint: cp-009 ' + "Unread badge: \"{totalUnread} unread article(s)\"");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-010 Red background (red-500/10) when error present');
+      throw new Error('Unhandled feeds checkpoint: cp-010 ' + "Red background (red-500/10) when error present");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-011 Error text displayed');
+      throw new Error('Unhandled feeds checkpoint: cp-011 ' + "Error text displayed");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-012 Dismiss button (X) clears error');
+      throw new Error('Unhandled feeds checkpoint: cp-012 ' + "Dismiss button (X) clears error");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-013 "FILTER" header with FunnelSimple icon');
+      throw new Error('Unhandled feeds checkpoint: cp-013 ' + "\"FILTER\" header with FunnelSimple icon");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-014 All Articles — RSS icon, shows all articles');
+      throw new Error('Unhandled feeds checkpoint: cp-014 ' + "All Articles — RSS icon, shows all articles");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-015 Unread — Circle icon (brand color), filters to unread only');
+      throw new Error('Unhandled feeds checkpoint: cp-015 ' + "Unread — Circle icon (brand color), filters to unread only");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-016 Starred — Star icon (filled when selected), filters to starred');
+      throw new Error('Unhandled feeds checkpoint: cp-016 ' + "Starred — Star icon (filled when selected), filters to starred");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-017 Active filter visually highlighted');
+      throw new Error('Unhandled feeds checkpoint: cp-017 ' + "Active filter visually highlighted");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-018 Subscriptions grouped by folder name');
+      throw new Error('Unhandled feeds checkpoint: cp-018 ' + "Subscriptions grouped by folder name");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-019 Folder header shows: folder name + unread count (right-aligned)');
+      throw new Error('Unhandled feeds checkpoint: cp-019 ' + "Folder header shows: folder name + unread count (right-aligned)");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-020 Clicking folder filters articles to that folder');
+      throw new Error('Unhandled feeds checkpoint: cp-020 ' + "Clicking folder filters articles to that folder");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-021 Selected folder: `bg-surface-raised`, `text-ink`');
+      throw new Error('Unhandled feeds checkpoint: cp-021 ' + "Selected folder: `bg-surface-raised`, `text-ink`");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-022 Unselected hover: `text-ink-muted` → `text-ink`');
+      throw new Error('Unhandled feeds checkpoint: cp-022 ' + "Unselected hover: `text-ink-muted` → `text-ink`");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-023 Favicon (4×4) + truncated feed name');
+      throw new Error('Unhandled feeds checkpoint: cp-023 ' + "Favicon (4×4) + truncated feed name");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-024 Unread badge (small pill, brand background) if unread > 0');
+      throw new Error('Unhandled feeds checkpoint: cp-024 ' + "Unread badge (small pill, brand background) if unread > 0");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-025 Clicking selects that feed (filters articles)');
+      throw new Error('Unhandled feeds checkpoint: cp-025 ' + "Clicking selects that feed (filters articles)");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-026 Mute button appears on hover (Bell/BellSlash icon)');
+      throw new Error('Unhandled feeds checkpoint: cp-026 ' + "Mute button appears on hover (Bell/BellSlash icon)");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-027 Click toggles mute state via `PATCH /api/feeds/{id}`');
+      throw new Error('Unhandled feeds checkpoint: cp-027 ' + "Click toggles mute state via `PATCH /api/feeds/{id}`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-028 Optimistic UI update');
+      throw new Error('Unhandled feeds checkpoint: cp-028 ' + "Optimistic UI update");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-029 Muted feeds: BellSlash icon shown');
+      throw new Error('Unhandled feeds checkpoint: cp-029 ' + "Muted feeds: BellSlash icon shown");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-030 "FEEDS" header (uppercase)');
+      throw new Error('Unhandled feeds checkpoint: cp-030 ' + "\"FEEDS\" header (uppercase)");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-031 Same FeedItem layout as folder feeds');
+      throw new Error('Unhandled feeds checkpoint: cp-031 ' + "Same FeedItem layout as folder feeds");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-032 Article search bar at top');
+      throw new Error('Unhandled feeds checkpoint: cp-032 ' + "Article search bar at top");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-033 Articles render based on selected layout mode');
+      throw new Error('Unhandled feeds checkpoint: cp-033 ' + "Articles render based on selected layout mode");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('feeds / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled feeds checkpoint: cp-034 5 skeleton cards displayed while loading');
+      throw new Error('Unhandled feeds checkpoint: cp-034 ' + "5 skeleton cards displayed while loading");
     }
 
 

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for research/spec-001
  * Source: e2e/specs/research/spec-001.md
- * Generated: 2026-03-14T07:36:24.763Z
+ * Generated: 2026-03-15T15:10:55.225Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-000 Single-line input — primary query field is a single-line text `<input>`');
+      throw new Error('Unhandled research checkpoint: cp-000 ' + "Single-line input — primary query field is a single-line text `<input>`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-001 Placeholder — "Search 200M+ papers — try \'CRISPR sickle cell gene therapy\'"');
+      throw new Error('Unhandled research checkpoint: cp-001 ' + "Placeholder — \"Search 200M+ papers — try 'CRISPR sickle cell gene therapy'\"");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-002 Enter key — submits search (without Shift)');
+      throw new Error('Unhandled research checkpoint: cp-002 ' + "Enter key — submits search (without Shift)");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-003 Search button — text-only button, disabled only while searching');
+      throw new Error('Unhandled research checkpoint: cp-003 ' + "Search button — text-only button, disabled only while searching");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-004 Loading state — button label changes to "Searching..." during search');
+      throw new Error('Unhandled research checkpoint: cp-004 ' + "Loading state — button label changes to \"Searching...\" during search");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-005 Year Start — number input with placeholder `From`');
+      throw new Error('Unhandled research checkpoint: cp-005 ' + "Year Start — number input with placeholder `From`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-006 Year End — number input with placeholder `To`');
+      throw new Error('Unhandled research checkpoint: cp-006 ' + "Year End — number input with placeholder `To`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-007 Year inputs — current implementation does not apply explicit `min` or `max` attributes');
+      throw new Error('Unhandled research checkpoint: cp-007 ' + "Year inputs — current implementation does not apply explicit `min` or `max` attributes");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-008 Changing filters triggers new search automatically (after init)');
+      throw new Error('Unhandled research checkpoint: cp-008 ' + "Changing filters triggers new search automatically (after init)");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-009 Filter state persisted in sessionStorage');
+      throw new Error('Unhandled research checkpoint: cp-009 ' + "Filter state persisted in sessionStorage");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-010 Sort dropdown — CaretDown caret icon, toggles on click');
+      throw new Error('Unhandled research checkpoint: cp-010 ' + "Sort dropdown — CaretDown caret icon, toggles on click");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-011 Active sort — highlighted in dropdown');
+      throw new Error('Unhandled research checkpoint: cp-011 ' + "Active sort — highlighted in dropdown");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-012 Sort change — re-sorts existing results (or triggers new search)');
+      throw new Error('Unhandled research checkpoint: cp-012 ' + "Sort change — re-sorts existing results (or triggers new search)");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-013 Multi-source search — PubMed, Semantic Scholar, OpenAlex, and ClinicalTrials.gov searched in parallel');
+      throw new Error('Unhandled research checkpoint: cp-013 ' + "Multi-source search — PubMed, Semantic Scholar, OpenAlex, and ClinicalTrials.gov searched in parallel");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-014 **4.5-second timeout** per source');
+      throw new Error('Unhandled research checkpoint: cp-014 ' + "**4.5-second timeout** per source");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-015 Reciprocal Rank Fusion — merges results across sources');
+      throw new Error('Unhandled research checkpoint: cp-015 ' + "Reciprocal Rank Fusion — merges results across sources");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-016 Rate limiting — enforced per user');
+      throw new Error('Unhandled research checkpoint: cp-016 ' + "Rate limiting — enforced per user");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-017 Per page — 20 results per request');
+      throw new Error('Unhandled research checkpoint: cp-017 ' + "Per page — 20 results per request");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-018 Skeleton loader — 4 placeholder cards during in-page search');
+      throw new Error('Unhandled research checkpoint: cp-018 ' + "Skeleton loader — 4 placeholder cards during in-page search");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-019 Source counts — PubMed, Semantic Scholar, OpenAlex, Clinical Trials counts');
+      throw new Error('Unhandled research checkpoint: cp-019 ' + "Source counts — PubMed, Semantic Scholar, OpenAlex, Clinical Trials counts");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-020 Empty state (before search) — recent searches, recently saved papers, suggested searches, and optional `Loading your history...`');
+      throw new Error('Unhandled research checkpoint: cp-020 ' + "Empty state (before search) — recent searches, recently saved papers, suggested searches, and optional `Loading your history...`");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-021 Empty state (no results) — "No results found. Try a different query."');
+      throw new Error('Unhandled research checkpoint: cp-021 ' + "Empty state (no results) — \"No results found. Try a different query.\"");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-022 Evidence badge displayed on each result card');
+      throw new Error('Unhandled research checkpoint: cp-022 ' + "Evidence badge displayed on each result card");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-023 Used in sort-by-evidence ordering');
+      throw new Error('Unhandled research checkpoint: cp-023 ' + "Used in sort-by-evidence ordering");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-024 Title — links to DOI when available, otherwise to PubMed when PMID exists');
+      throw new Error('Unhandled research checkpoint: cp-024 ' + "Title — links to DOI when available, otherwise to PubMed when PMID exists");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-025 Authors — truncated with "et al." if more than 3 authors');
+      throw new Error('Unhandled research checkpoint: cp-025 ' + "Authors — truncated with \"et al.\" if more than 3 authors");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-026 Journal — journal name');
+      throw new Error('Unhandled research checkpoint: cp-026 ' + "Journal — journal name");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-027 Year — publication year');
+      throw new Error('Unhandled research checkpoint: cp-027 ' + "Year — publication year");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-028 Evidence level badge — color-coded (see Section 6)');
+      throw new Error('Unhandled research checkpoint: cp-028 ' + "Evidence level badge — color-coded (see Section 6)");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-029 Citation count — number of citations');
+      throw new Error('Unhandled research checkpoint: cp-029 ' + "Citation count — number of citations");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-030 DOI link — text link labeled `DOI` in the metadata row when DOI exists');
+      throw new Error('Unhandled research checkpoint: cp-030 ' + "DOI link — text link labeled `DOI` in the metadata row when DOI exists");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-031 Open Access indicator — if applicable');
+      throw new Error('Unhandled research checkpoint: cp-031 ' + "Open Access indicator — if applicable");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-032 Save button — FloppyDisk icon, saves to library');
+      throw new Error('Unhandled research checkpoint: cp-032 ' + "Save button — FloppyDisk icon, saves to library");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-033 Save & Cite button — saves the paper and routes to `/editor/new`');
+      throw new Error('Unhandled research checkpoint: cp-033 ' + "Save & Cite button — saves the paper and routes to `/editor/new`");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled research checkpoint: cp-034 Similar button — shown only when Semantic Scholar ID exists');
+      throw new Error('Unhandled research checkpoint: cp-034 ' + "Similar button — shown only when Semantic Scholar ID exists");
     }
 
 

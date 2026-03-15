@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for onboarding/spec-007
  * Source: e2e/specs/onboarding/spec-007.md
- * Generated: 2026-03-14T15:17:33.016Z
+ * Generated: 2026-03-15T15:27:23.354Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-000 `error.tsx` has its own `"use client"` directive');
+      throw new Error('Unhandled onboarding checkpoint: cp-000 ' + "`error.tsx` has its own `\"use client\"` directive");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-001 `ErrorDisplay` calls `Sentry.captureException(error)` in `useEffect`');
+      throw new Error('Unhandled onboarding checkpoint: cp-001 ' + "`ErrorDisplay` calls `Sentry.captureException(error)` in `useEffect`");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-002 Error retry button text is `Try Again`');
+      throw new Error('Unhandled onboarding checkpoint: cp-002 ' + "Error retry button text is `Try Again`");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-003 Error retry button uses `bg-brand text-white rounded-xl hover:bg-brand-hover transition-colors`');
+      throw new Error('Unhandled onboarding checkpoint: cp-003 ' + "Error retry button uses `bg-brand text-white rounded-xl hover:bg-brand-hover transition-colors`");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-004 `ErrorDisplay` only renders the retry button when `onRetry` is provided');
+      throw new Error('Unhandled onboarding checkpoint: cp-004 ' + "`ErrorDisplay` only renders the retry button when `onRetry` is provided");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-005 Error icon wrapper uses `w-16 h-16 rounded-2xl bg-red-500/10 text-red-500`');
+      throw new Error('Unhandled onboarding checkpoint: cp-005 ' + "Error icon wrapper uses `w-16 h-16 rounded-2xl bg-red-500/10 text-red-500`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-006 Goal-card check icon uses `weight="bold"`');
+      throw new Error('Unhandled onboarding checkpoint: cp-006 ' + "Goal-card check icon uses `weight=\"bold\"`");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-007 Goal icon container uses `w-10 h-10 rounded-lg` with conditional background styling');
+      throw new Error('Unhandled onboarding checkpoint: cp-007 ' + "Goal icon container uses `w-10 h-10 rounded-lg` with conditional background styling");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-008 Selected goal icon container changes to `bg-brand/10 text-brand`; unselected uses `bg-surface-raised text-ink-muted`');
+      throw new Error('Unhandled onboarding checkpoint: cp-008 ' + "Selected goal icon container changes to `bg-brand/10 text-brand`; unselected uses `bg-surface-raised text-ink-muted`");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-009 Goal cards use `text-left` so label and description alignment stay left-aligned');
+      throw new Error('Unhandled onboarding checkpoint: cp-009 ' + "Goal cards use `text-left` so label and description alignment stay left-aligned");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-010 `handleComplete` is wrapped in `useCallback` with deps `[name, institution, selectedSpecialties, router]`');
+      throw new Error('Unhandled onboarding checkpoint: cp-010 ' + "`handleComplete` is wrapped in `useCallback` with deps `[name, institution, selectedSpecialties, router]`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-011 `selectedGoals` is excluded from the dependency array because `handleComplete` does not reference it');
+      throw new Error('Unhandled onboarding checkpoint: cp-011 ' + "`selectedGoals` is excluded from the dependency array because `handleComplete` does not reference it");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-012 Successful completion writes `updated_at` twice: once in `updateUserProfile` and once in `/api/onboarding/complete`');
+      throw new Error('Unhandled onboarding checkpoint: cp-012 ' + "Successful completion writes `updated_at` twice: once in `updateUserProfile` and once in `/api/onboarding/complete`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-013 HTTP error responses from `/api/onboarding/complete` do not enter the client `catch` unless `fetch()` itself throws');
+      throw new Error('Unhandled onboarding checkpoint: cp-013 ' + "HTTP error responses from `/api/onboarding/complete` do not enter the client `catch` unless `fetch()` itself throws");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-014 `updateUserProfile` accepts 8 optional profile fields, but onboarding sends only `full_name`, `specialty`, and `bio`');
+      throw new Error('Unhandled onboarding checkpoint: cp-014 ' + "`updateUserProfile` accepts 8 optional profile fields, but onboarding sends only `full_name`, `specialty`, and `bio`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-015 `updateUserProfile` builds a sparse payload and only sets columns whose values are not `undefined`');
+      throw new Error('Unhandled onboarding checkpoint: cp-015 ' + "`updateUserProfile` builds a sparse payload and only sets columns whose values are not `undefined`");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-016 Step panels swap via conditional rendering with no animation wrapper around the content');
+      throw new Error('Unhandled onboarding checkpoint: cp-016 ' + "Step panels swap via conditional rendering with no animation wrapper around the content");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-017 Progress bar state changes animate via `transition-all`');
+      throw new Error('Unhandled onboarding checkpoint: cp-017 ' + "Progress bar state changes animate via `transition-all`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-018 Wizard progress and form state reset on page refresh');
+      throw new Error('Unhandled onboarding checkpoint: cp-018 ' + "Wizard progress and form state reset on page refresh");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-019 Onboarding state is `useState` only; there is no `localStorage`, `sessionStorage`, or mount-time restore');
+      throw new Error('Unhandled onboarding checkpoint: cp-019 ' + "Onboarding state is `useState` only; there is no `localStorage`, `sessionStorage`, or mount-time restore");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-020 Continue and Complete buttons both use `hover:bg-brand-hover transition-colors`');
+      throw new Error('Unhandled onboarding checkpoint: cp-020 ' + "Continue and Complete buttons both use `hover:bg-brand-hover transition-colors`");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-021 Complete button uses `disabled:opacity-50` while saving');
+      throw new Error('Unhandled onboarding checkpoint: cp-021 ' + "Complete button uses `disabled:opacity-50` while saving");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-022 Back button uses `hover:text-ink transition-colors`');
+      throw new Error('Unhandled onboarding checkpoint: cp-022 ' + "Back button uses `hover:text-ink transition-colors`");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-023 Loading navigation skeletons include `rounded-xl`');
+      throw new Error('Unhandled onboarding checkpoint: cp-023 ' + "Loading navigation skeletons include `rounded-xl`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-024 Welcome-step inputs use `rounded-xl`, distinct from the card\'s `rounded-2xl`');
+      throw new Error('Unhandled onboarding checkpoint: cp-024 ' + "Welcome-step inputs use `rounded-xl`, distinct from the card's `rounded-2xl`");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-025 Welcome-step inputs use `px-4 py-3 bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40`');
+      throw new Error('Unhandled onboarding checkpoint: cp-025 ' + "Welcome-step inputs use `px-4 py-3 bg-surface-raised border border-border text-sm text-ink focus:outline-none focus:ring-2 focus:ring-brand/40`");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-026 Welcome-step labels use `block text-xs font-medium text-ink-muted mb-1.5`');
+      throw new Error('Unhandled onboarding checkpoint: cp-026 ' + "Welcome-step labels use `block text-xs font-medium text-ink-muted mb-1.5`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-027 `Skeleton` base classes are `animate-pulse rounded-lg bg-surface-raised`');
+      throw new Error('Unhandled onboarding checkpoint: cp-027 ' + "`Skeleton` base classes are `animate-pulse rounded-lg bg-surface-raised`");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-028 Loading placeholders use Tailwind `animate-pulse`, not a shimmer gradient');
+      throw new Error('Unhandled onboarding checkpoint: cp-028 ' + "Loading placeholders use Tailwind `animate-pulse`, not a shimmer gradient");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-029 In production without valid Clerk keys, `getCurrentUserId()` throws a configuration error instead of an auth error');
+      throw new Error('Unhandled onboarding checkpoint: cp-029 ' + "In production without valid Clerk keys, `getCurrentUserId()` throws a configuration error instead of an auth error");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-030 In development, a missing session falls back to `DEV_USER_ID = "dev_user_001"`');
+      throw new Error('Unhandled onboarding checkpoint: cp-030 ' + "In development, a missing session falls back to `DEV_USER_ID = \"dev_user_001\"`");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('onboarding / spec-007', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled onboarding checkpoint: cp-031 Feature tour constants use `title` / `desc`, while goal constants use `label` / `description`');
+      throw new Error('Unhandled onboarding checkpoint: cp-031 ' + "Feature tour constants use `title` / `desc`, while goal constants use `label` / `description`");
     }
 
 

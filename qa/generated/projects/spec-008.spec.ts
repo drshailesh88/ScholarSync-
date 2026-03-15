@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-008
  * Source: e2e/specs/projects/spec-008.md
- * Generated: 2026-03-14T15:26:03.386Z
+ * Generated: 2026-03-15T15:43:51.631Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 `ErrorDisplay` shows a "Try Again" button with `ArrowCounterClockwise` icon when `onRetry` is provided');
+      throw new Error('Unhandled projects checkpoint: cp-000 ' + "`ErrorDisplay` shows a \"Try Again\" button with `ArrowCounterClockwise` icon when `onRetry` is provided");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 `ErrorDisplay` calls `Sentry.captureException(error)` on mount to report the error');
+      throw new Error('Unhandled projects checkpoint: cp-001 ' + "`ErrorDisplay` calls `Sentry.captureException(error)` on mount to report the error");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 Modal prevents background scrolling by setting `document.body.style.overflow = "hidden"` when open');
+      throw new Error('Unhandled projects checkpoint: cp-002 ' + "Modal prevents background scrolling by setting `document.body.style.overflow = \"hidden\"` when open");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 Modal restores `document.body.style.overflow` to `""` on close or unmount (cleanup in useEffect)');
+      throw new Error('Unhandled projects checkpoint: cp-003 ' + "Modal restores `document.body.style.overflow` to `\"\"` on close or unmount (cleanup in useEffect)");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 Modal backdrop uses `bg-black/50 backdrop-blur-sm`');
+      throw new Error('Unhandled projects checkpoint: cp-004 ' + "Modal backdrop uses `bg-black/50 backdrop-blur-sm`");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 Modal content panel constrained to `max-w-lg` width with `glass-panel` class');
+      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Modal content panel constrained to `max-w-lg` width with `glass-panel` class");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 Modal Escape key listener is attached at the `document` level (global keydown), not scoped to the modal element');
+      throw new Error('Unhandled projects checkpoint: cp-006 ' + "Modal Escape key listener is attached at the `document` level (global keydown), not scoped to the modal element");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 Modal renders `null` when `open` is false (conditional rendering, not CSS hidden)');
+      throw new Error('Unhandled projects checkpoint: cp-007 ' + "Modal renders `null` when `open` is false (conditional rendering, not CSS hidden)");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 `getIcon(null)` and `getIcon("unknown_type")` both fall back to `FileText` icon');
+      throw new Error('Unhandled projects checkpoint: cp-008 ' + "`getIcon(null)` and `getIcon(\"unknown_type\")` both fall back to `FileText` icon");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 `getStatus(null)` and `getStatus("unknown_status")` both fall back to `statusMap.planning` (brand-colored "Planning" badge)');
+      throw new Error('Unhandled projects checkpoint: cp-009 ' + "`getStatus(null)` and `getStatus(\"unknown_status\")` both fall back to `statusMap.planning` (brand-colored \"Planning\" badge)");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 Grid card action buttons have no `title` attributes (list view uses `title="Edit project"`, `title="Archive project"`, `title="Delete project"`)');
+      throw new Error('Unhandled projects checkpoint: cp-010 ' + "Grid card action buttons have no `title` attributes (list view uses `title=\"Edit project\"`, `title=\"Archive project\"`, `title=\"Delete project\"`)");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 Grid card action icons render at `size={14}` vs list view\'s `size={16}`');
+      throw new Error('Unhandled projects checkpoint: cp-011 ' + "Grid card action icons render at `size={14}` vs list view's `size={16}`");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 Grid card `CaretDown` icon renders at `size={10}` vs list view\'s `size={12}`');
+      throw new Error('Unhandled projects checkpoint: cp-012 ' + "Grid card `CaretDown` icon renders at `size={10}` vs list view's `size={12}`");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 Grid card title changes to brand color on hover via `group-hover:text-brand transition-colors`');
+      throw new Error('Unhandled projects checkpoint: cp-013 ' + "Grid card title changes to brand color on hover via `group-hover:text-brand transition-colors`");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 Grid card uses `glass-panel rounded-2xl overflow-hidden cursor-pointer hover:bg-surface-raised/30 transition-all group` styling');
+      throw new Error('Unhandled projects checkpoint: cp-014 ' + "Grid card uses `glass-panel rounded-2xl overflow-hidden cursor-pointer hover:bg-surface-raised/30 transition-all group` styling");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 Deadline and Citation Style fields are side-by-side in a 2-column grid layout (`grid grid-cols-2 gap-3`)');
+      throw new Error('Unhandled projects checkpoint: cp-015 ' + "Deadline and Citation Style fields are side-by-side in a 2-column grid layout (`grid grid-cols-2 gap-3`)");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 Target Journal label includes `(optional)` hint styled with `text-ink-muted/60`');
+      throw new Error('Unhandled projects checkpoint: cp-016 ' + "Target Journal label includes `(optional)` hint styled with `text-ink-muted/60`");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 Deadline label includes `(optional)` hint styled with `text-ink-muted/60`');
+      throw new Error('Unhandled projects checkpoint: cp-017 ' + "Deadline label includes `(optional)` hint styled with `text-ink-muted/60`");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 `citation_style` is always included in the create payload (not conditional like `target_journal` and `deadline`)');
+      throw new Error('Unhandled projects checkpoint: cp-018 ' + "`citation_style` is always included in the create payload (not conditional like `target_journal` and `deadline`)");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 `creating` state resets to `false` in a `finally` block — the Create Project button re-enables even after a failed creation attempt');
+      throw new Error('Unhandled projects checkpoint: cp-019 ' + "`creating` state resets to `false` in a `finally` block — the Create Project button re-enables even after a failed creation attempt");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 Both "Create Project" and "Update Status" buttons use `disabled:opacity-50 disabled:cursor-not-allowed` when disabled');
+      throw new Error('Unhandled projects checkpoint: cp-020 ' + "Both \"Create Project\" and \"Update Status\" buttons use `disabled:opacity-50 disabled:cursor-not-allowed` when disabled");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 DataTable wraps the `<table>` in `overflow-x-auto rounded-xl border border-border`');
+      throw new Error('Unhandled projects checkpoint: cp-021 ' + "DataTable wraps the `<table>` in `overflow-x-auto rounded-xl border border-border`");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 DataTable header row uses `bg-surface-raised/50` background with `font-medium text-ink-muted` column headers');
+      throw new Error('Unhandled projects checkpoint: cp-022 ' + "DataTable header row uses `bg-surface-raised/50` background with `font-medium text-ink-muted` column headers");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 DataTable body rows use index-based keys (`key={idx}`), not project IDs');
+      throw new Error('Unhandled projects checkpoint: cp-023 ' + "DataTable body rows use index-based keys (`key={idx}`), not project IDs");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 DataTable rows without `onRowClick` have no cursor or hover styles; rows with `onRowClick` get `cursor-pointer hover:bg-surface-raised/50`');
+      throw new Error('Unhandled projects checkpoint: cp-024 ' + "DataTable rows without `onRowClick` have no cursor or hover styles; rows with `onRowClick` get `cursor-pointer hover:bg-surface-raised/50`");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-025 `getProjects()` returns `[]` immediately if the initial query finds zero rows (skips paper/doc count queries)');
+      throw new Error('Unhandled projects checkpoint: cp-025 ' + "`getProjects()` returns `[]` immediately if the initial query finds zero rows (skips paper/doc count queries)");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-026 `getProjects()` doc count query filters by `isNull(synthesisDocuments.deleted_at)` — only non-deleted documents count toward `doc_count`');
+      throw new Error('Unhandled projects checkpoint: cp-026 ' + "`getProjects()` doc count query filters by `isNull(synthesisDocuments.deleted_at)` — only non-deleted documents count toward `doc_count`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-027 `updateProject()` revalidates both `/projects` and `/dashboard` (so `updateProjectStatus()` and `archiveProject()` also revalidate both)');
+      throw new Error('Unhandled projects checkpoint: cp-027 ' + "`updateProject()` revalidates both `/projects` and `/dashboard` (so `updateProjectStatus()` and `archiveProject()` also revalidate both)");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-028 `deleteProject()` revalidates both `/projects` and `/dashboard`');
+      throw new Error('Unhandled projects checkpoint: cp-028 ' + "`deleteProject()` revalidates both `/projects` and `/dashboard`");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-029 `createProject()` has server-side fallbacks: `project_type` defaults to `"review_article"` if falsy, `citation_style` defaults to `"vancouver"` if falsy');
+      throw new Error('Unhandled projects checkpoint: cp-029 ' + "`createProject()` has server-side fallbacks: `project_type` defaults to `\"review_article\"` if falsy, `citation_style` defaults to `\"vancouver\"` if falsy");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-030 `fetchProjects()` sets `loading` to `true` on every invocation — error recovery after failed delete/archive briefly shows the loading spinner across the entire page');
+      throw new Error('Unhandled projects checkpoint: cp-030 ' + "`fetchProjects()` sets `loading` to `true` on every invocation — error recovery after failed delete/archive briefly shows the loading spinner across the entire page");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-031 `handleStatusUpdate` clears `statusTarget` to `null` in its `finally` block (runs after the server call), in addition to the modal `onClose` handler');
+      throw new Error('Unhandled projects checkpoint: cp-031 ' + "`handleStatusUpdate` clears `statusTarget` to `null` in its `finally` block (runs after the server call), in addition to the modal `onClose` handler");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-032 Status update: `setShowStatusModal(false)` fires before `await updateProjectStatus()` — the server call runs after the modal is already closed');
+      throw new Error('Unhandled projects checkpoint: cp-032 ' + "Status update: `setShowStatusModal(false)` fires before `await updateProjectStatus()` — the server call runs after the modal is already closed");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-033 Returns `"Just now"` for timestamps less than 1 minute ago');
+      throw new Error('Unhandled projects checkpoint: cp-033 ' + "Returns `\"Just now\"` for timestamps less than 1 minute ago");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('projects / spec-008', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-034 Returns `"{N}m ago"` for timestamps between 1–59 minutes ago');
+      throw new Error('Unhandled projects checkpoint: cp-034 ' + "Returns `\"{N}m ago\"` for timestamps between 1–59 minutes ago");
     }
 
 

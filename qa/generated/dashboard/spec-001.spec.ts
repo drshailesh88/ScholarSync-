@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for dashboard/spec-001
  * Source: e2e/specs/dashboard/spec-001.md
- * Generated: 2026-03-12T17:38:37.049Z
+ * Generated: 2026-03-15T15:14:31.358Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -13,6 +13,25 @@
 import { test, expect } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import { assertDashboardCheckpoint } from '../../module-assertions/dashboard';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 test.describe('dashboard / spec-001', () => {
   test.beforeEach(async ({ page }) => {
@@ -46,11 +65,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Page renders with all sections visible",
+      section: "Page Overview",
+      subsection: "Layout",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-000.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-000 ' + "Page renders with all sections visible");
+    }
+
 
     // This test validates: Page renders with all sections visible
     // The controller will parse results from Playwright JSON output.
@@ -82,11 +115,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "`force-dynamic` — always fetches fresh data on load",
+      section: "Page Overview",
+      subsection: "Layout",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-001.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-001 ' + "`force-dynamic` — always fetches fresh data on load");
+    }
+
 
     // This test validates: `force-dynamic` — always fetches fresh data on load
     // The controller will parse results from Playwright JSON output.
@@ -118,11 +165,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Content constrained to `max-w-5xl` width",
+      section: "Page Overview",
+      subsection: "Layout",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-002.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-002 ' + "Content constrained to `max-w-5xl` width");
+    }
+
 
     // This test validates: Content constrained to `max-w-5xl` width
     // The controller will parse results from Playwright JSON output.
@@ -154,11 +215,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Responsive: stacks to single column on mobile",
+      section: "Page Overview",
+      subsection: "Layout",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-003.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-003 ' + "Responsive: stacks to single column on mobile");
+    }
+
 
     // This test validates: Responsive: stacks to single column on mobile
     // The controller will parse results from Playwright JSON output.
@@ -190,11 +265,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Section title \"What do you want to do today?\" displayed",
+      section: "Action Cards",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-004.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-004 ' + "Section title \"What do you want to do today?\" displayed");
+    }
+
 
     // This test validates: Section title "What do you want to do today?" displayed
     // The controller will parse results from Playwright JSON output.
@@ -226,11 +315,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Grid layout: 1 column mobile → 2 columns tablet → 4 columns desktop",
+      section: "Action Cards",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-005.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-005 ' + "Grid layout: 1 column mobile → 2 columns tablet → 4 columns desktop");
+    }
+
 
     // This test validates: Grid layout: 1 column mobile → 2 columns tablet → 4 columns desktop
     // The controller will parse results from Playwright JSON output.
@@ -262,11 +365,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Icon: GlobeHemisphereWest with `bg-sky-500/10` background",
+      section: "Action Cards",
+      subsection: "Card: Literature Search (sky accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-006.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-006 ' + "Icon: GlobeHemisphereWest with `bg-sky-500/10` background");
+    }
+
 
     // This test validates: Icon: GlobeHemisphereWest with `bg-sky-500/10` background
     // The controller will parse results from Playwright JSON output.
@@ -298,11 +415,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Title: \"Literature Search\"",
+      section: "Action Cards",
+      subsection: "Card: Literature Search (sky accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-007.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-007 ' + "Title: \"Literature Search\"");
+    }
+
 
     // This test validates: Title: "Literature Search"
     // The controller will parse results from Playwright JSON output.
@@ -334,11 +465,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Description: \"Query 200M+ academic papers. Extract consensus.\"",
+      section: "Action Cards",
+      subsection: "Card: Literature Search (sky accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-008.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-008 ' + "Description: \"Query 200M+ academic papers. Extract consensus.\"");
+    }
+
 
     // This test validates: Description: "Query 200M+ academic papers. Extract consensus."
     // The controller will parse results from Playwright JSON output.
@@ -370,11 +515,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Click navigates to `/research`",
+      section: "Action Cards",
+      subsection: "Card: Literature Search (sky accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-009.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-009 ' + "Click navigates to `/research`");
+    }
+
 
     // This test validates: Click navigates to `/research`
     // The controller will parse results from Playwright JSON output.
@@ -406,11 +565,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Hover: -translate-y-1 (moves UP), glow shadow, `border-sky-500/30`",
+      section: "Action Cards",
+      subsection: "Card: Literature Search (sky accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-010.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-010 ' + "Hover: -translate-y-1 (moves UP), glow shadow, `border-sky-500/30`");
+    }
+
 
     // This test validates: Hover: -translate-y-1 (moves UP), glow shadow, `border-sky-500/30`
     // The controller will parse results from Playwright JSON output.
@@ -442,11 +615,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Icon scales up on hover",
+      section: "Action Cards",
+      subsection: "Card: Literature Search (sky accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-011.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-011 ' + "Icon scales up on hover");
+    }
+
 
     // This test validates: Icon scales up on hover
     // The controller will parse results from Playwright JSON output.
@@ -478,11 +665,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Icon: PenNib with `bg-indigo-500/10` background",
+      section: "Action Cards",
+      subsection: "Card: Write & Draft (indigo accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-012.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-012 ' + "Icon: PenNib with `bg-indigo-500/10` background");
+    }
+
 
     // This test validates: Icon: PenNib with `bg-indigo-500/10` background
     // The controller will parse results from Playwright JSON output.
@@ -514,11 +715,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Title: \"Write & Draft\"",
+      section: "Action Cards",
+      subsection: "Card: Write & Draft (indigo accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-013.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-013 ' + "Title: \"Write & Draft\"");
+    }
+
 
     // This test validates: Title: "Write & Draft"
     // The controller will parse results from Playwright JSON output.
@@ -550,11 +765,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Description: \"Open the luminous studio. Start writing with focus.\"",
+      section: "Action Cards",
+      subsection: "Card: Write & Draft (indigo accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-014.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-014 ' + "Description: \"Open the luminous studio. Start writing with focus.\"");
+    }
+
 
     // This test validates: Description: "Open the luminous studio. Start writing with focus."
     // The controller will parse results from Playwright JSON output.
@@ -586,11 +815,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Click navigates to `/studio`",
+      section: "Action Cards",
+      subsection: "Card: Write & Draft (indigo accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-015.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-015 ' + "Click navigates to `/studio`");
+    }
+
 
     // This test validates: Click navigates to `/studio`
     // The controller will parse results from Playwright JSON output.
@@ -622,11 +865,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Hover: -translate-y-1 (moves UP), glow shadow, `border-indigo-500/30`",
+      section: "Action Cards",
+      subsection: "Card: Write & Draft (indigo accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-016.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-016 ' + "Hover: -translate-y-1 (moves UP), glow shadow, `border-indigo-500/30`");
+    }
+
 
     // This test validates: Hover: -translate-y-1 (moves UP), glow shadow, `border-indigo-500/30`
     // The controller will parse results from Playwright JSON output.
@@ -658,11 +915,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Icon: GraduationCap with `bg-emerald-500/10` background",
+      section: "Action Cards",
+      subsection: "Card: Learn Mode (emerald accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-017.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-017 ' + "Icon: GraduationCap with `bg-emerald-500/10` background");
+    }
+
 
     // This test validates: Icon: GraduationCap with `bg-emerald-500/10` background
     // The controller will parse results from Playwright JSON output.
@@ -694,11 +965,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Title: \"Learn Mode\"",
+      section: "Action Cards",
+      subsection: "Card: Learn Mode (emerald accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-018.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-018 ' + "Title: \"Learn Mode\"");
+    }
+
 
     // This test validates: Title: "Learn Mode"
     // The controller will parse results from Playwright JSON output.
@@ -730,11 +1015,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Description: \"Socratic AI tutor. Think critically, learn deeply.\"",
+      section: "Action Cards",
+      subsection: "Card: Learn Mode (emerald accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-019.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-019 ' + "Description: \"Socratic AI tutor. Think critically, learn deeply.\"");
+    }
+
 
     // This test validates: Description: "Socratic AI tutor. Think critically, learn deeply."
     // The controller will parse results from Playwright JSON output.
@@ -766,11 +1065,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Click navigates to `/studio?mode=learn`",
+      section: "Action Cards",
+      subsection: "Card: Learn Mode (emerald accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-020.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-020 ' + "Click navigates to `/studio?mode=learn`");
+    }
+
 
     // This test validates: Click navigates to `/studio?mode=learn`
     // The controller will parse results from Playwright JSON output.
@@ -802,11 +1115,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Hover: -translate-y-1 (moves UP), glow shadow, `border-emerald-500/30`",
+      section: "Action Cards",
+      subsection: "Card: Learn Mode (emerald accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-021.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-021 ' + "Hover: -translate-y-1 (moves UP), glow shadow, `border-emerald-500/30`");
+    }
+
 
     // This test validates: Hover: -translate-y-1 (moves UP), glow shadow, `border-emerald-500/30`
     // The controller will parse results from Playwright JSON output.
@@ -838,11 +1165,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Icon: ShieldCheck with `bg-amber-500/10` background",
+      section: "Action Cards",
+      subsection: "Card: Final Checks (amber accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-022.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-022 ' + "Icon: ShieldCheck with `bg-amber-500/10` background");
+    }
+
 
     // This test validates: Icon: ShieldCheck with `bg-amber-500/10` background
     // The controller will parse results from Playwright JSON output.
@@ -874,11 +1215,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Title: \"Final Checks\"",
+      section: "Action Cards",
+      subsection: "Card: Final Checks (amber accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-023.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-023 ' + "Title: \"Final Checks\"");
+    }
+
 
     // This test validates: Title: "Final Checks"
     // The controller will parse results from Playwright JSON output.
@@ -910,11 +1265,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Description: \"Run plagiarism and AI-detection compliance audits.\"",
+      section: "Action Cards",
+      subsection: "Card: Final Checks (amber accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-024.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-024 ' + "Description: \"Run plagiarism and AI-detection compliance audits.\"");
+    }
+
 
     // This test validates: Description: "Run plagiarism and AI-detection compliance audits."
     // The controller will parse results from Playwright JSON output.
@@ -946,11 +1315,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Click navigates to `/compliance`",
+      section: "Action Cards",
+      subsection: "Card: Final Checks (amber accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-025.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-025 ' + "Click navigates to `/compliance`");
+    }
+
 
     // This test validates: Click navigates to `/compliance`
     // The controller will parse results from Playwright JSON output.
@@ -982,11 +1365,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Hover: -translate-y-1 (moves UP), glow shadow, `border-amber-500/30`",
+      section: "Action Cards",
+      subsection: "Card: Final Checks (amber accent)",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-026.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-026 ' + "Hover: -translate-y-1 (moves UP), glow shadow, `border-amber-500/30`");
+    }
+
 
     // This test validates: Hover: -translate-y-1 (moves UP), glow shadow, `border-amber-500/30`
     // The controller will parse results from Playwright JSON output.
@@ -1018,11 +1415,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Glass-panel styling (`glass-panel rounded-2xl`)",
+      section: "Action Cards",
+      subsection: "Common Card Behavior",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-027.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-027 ' + "Glass-panel styling (`glass-panel rounded-2xl`)");
+    }
+
 
     // This test validates: Glass-panel styling (`glass-panel rounded-2xl`)
     // The controller will parse results from Playwright JSON output.
@@ -1054,11 +1465,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Smooth `transition-all` on hover",
+      section: "Action Cards",
+      subsection: "Common Card Behavior",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-028.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-028 ' + "Smooth `transition-all` on hover");
+    }
+
 
     // This test validates: Smooth `transition-all` on hover
     // The controller will parse results from Playwright JSON output.
@@ -1090,11 +1515,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Cursor pointer on hover",
+      section: "Action Cards",
+      subsection: "Common Card Behavior",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-029.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-029 ' + "Cursor pointer on hover");
+    }
+
 
     // This test validates: Cursor pointer on hover
     // The controller will parse results from Playwright JSON output.
@@ -1126,11 +1565,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "All four cards render at equal height",
+      section: "Action Cards",
+      subsection: "Common Card Behavior",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-030.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-030 ' + "All four cards render at equal height");
+    }
+
 
     // This test validates: All four cards render at equal height
     // The controller will parse results from Playwright JSON output.
@@ -1162,11 +1615,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Section title \"Your Research at a Glance\" displayed",
+      section: "Stats Overview",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-031.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-031 ' + "Section title \"Your Research at a Glance\" displayed");
+    }
+
 
     // This test validates: Section title "Your Research at a Glance" displayed
     // The controller will parse results from Playwright JSON output.
@@ -1198,11 +1665,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Grid layout: 2 columns mobile → 4 columns (`sm:` breakpoint, 640px+)",
+      section: "Stats Overview",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-032.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-032 ' + "Grid layout: 2 columns mobile → 4 columns (`sm:` breakpoint, 640px+)");
+    }
+
 
     // This test validates: Grid layout: 2 columns mobile → 4 columns (`sm:` breakpoint, 640px+)
     // The controller will parse results from Playwright JSON output.
@@ -1234,11 +1715,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Each card shows large bold number",
+      section: "Stats Overview",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-033.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-033 ' + "Each card shows large bold number");
+    }
+
 
     // This test validates: Each card shows large bold number
     // The controller will parse results from Playwright JSON output.
@@ -1270,11 +1765,25 @@ test.describe('dashboard / spec-001', () => {
     // Wait for main content to be visible
     await expect(page.locator('body')).toBeVisible({ timeout: 10000 });
 
+    const handled = await assertDashboardCheckpoint({
+      page,
+      description: "Each card shows label text below number",
+      section: "Stats Overview",
+      subsection: "",
+      rootDir: process.cwd(),
+    });
+
+
     // Screenshot as proof this test actually ran in a browser
     await page.screenshot({
       path: path.join(screenshotDir, 'cp-034.png'),
       fullPage: false,
     });
+
+    if (!handled) {
+      throw new Error('Unhandled dashboard checkpoint: cp-034 ' + "Each card shows label text below number");
+    }
+
 
     // This test validates: Each card shows label text below number
     // The controller will parse results from Playwright JSON output.

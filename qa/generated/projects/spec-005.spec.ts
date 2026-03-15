@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-005
  * Source: e2e/specs/projects/spec-005.md
- * Generated: 2026-03-14T15:22:43.560Z
+ * Generated: 2026-03-15T15:40:57.392Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 Route-level error UI passes `error` and `reset` into `ErrorDisplay`');
+      throw new Error('Unhandled projects checkpoint: cp-000 ' + "Route-level error UI passes `error` and `reset` into `ErrorDisplay`");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 Projects returned ordered by `updated_at` DESC (most recent first)');
+      throw new Error('Unhandled projects checkpoint: cp-001 ' + "Projects returned ordered by `updated_at` DESC (most recent first)");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 New actions that modify a project update `updated_at`, moving it to the top');
+      throw new Error('Unhandled projects checkpoint: cp-002 ' + "New actions that modify a project update `updated_at`, moving it to the top");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 `createProject` revalidates `/projects` and `/dashboard`');
+      throw new Error('Unhandled projects checkpoint: cp-003 ' + "`createProject` revalidates `/projects` and `/dashboard`");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 `updateProject`, `updateProjectStatus`, `archiveProject`, and `deleteProject` all revalidate `/projects` and `/dashboard`');
+      throw new Error('Unhandled projects checkpoint: cp-004 ' + "`updateProject`, `updateProjectStatus`, `archiveProject`, and `deleteProject` all revalidate `/projects` and `/dashboard`");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 Default `viewMode` is `list` on first render');
+      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Default `viewMode` is `list` on first render");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 Initial in-component fetch shows a centered `SpinnerGap` loading indicator while `getProjects()` resolves');
+      throw new Error('Unhandled projects checkpoint: cp-006 ' + "Initial in-component fetch shows a centered `SpinnerGap` loading indicator while `getProjects()` resolves");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 Clicking an entire list row navigates to `/studio/{project_id}` via `DataTable` row click');
+      throw new Error('Unhandled projects checkpoint: cp-007 ' + "Clicking an entire list row navigates to `/studio/{project_id}` via `DataTable` row click");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 `updated_at` falls back to an em dash (`—`) when a project has no last-edited timestamp');
+      throw new Error('Unhandled projects checkpoint: cp-008 ' + "`updated_at` falls back to an em dash (`—`) when a project has no last-edited timestamp");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 Closing the New Project modal resets all create-form fields back to their defaults');
+      throw new Error('Unhandled projects checkpoint: cp-009 ' + "Closing the New Project modal resets all create-form fields back to their defaults");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 Successful project creation redirects to `/editor/new?project={newProjectId}`');
+      throw new Error('Unhandled projects checkpoint: cp-010 ' + "Successful project creation redirects to `/editor/new?project={newProjectId}`");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 Archived projects hide the Archive action button in both list rows and grid cards');
+      throw new Error('Unhandled projects checkpoint: cp-011 ' + "Archived projects hide the Archive action button in both list rows and grid cards");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 Grid footer pluralizes resource counts (`1 paper` vs `2 papers`, `1 doc` vs `2 docs`)');
+      throw new Error('Unhandled projects checkpoint: cp-012 ' + "Grid footer pluralizes resource counts (`1 paper` vs `2 papers`, `1 doc` vs `2 docs`)");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 Inline status and action controls call `stopPropagation()` so they do not trigger row/card navigation');
+      throw new Error('Unhandled projects checkpoint: cp-013 ' + "Inline status and action controls call `stopPropagation()` so they do not trigger row/card navigation");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 Failed delete requests trigger `fetchProjects()` to restore the server state after optimistic removal');
+      throw new Error('Unhandled projects checkpoint: cp-014 ' + "Failed delete requests trigger `fetchProjects()` to restore the server state after optimistic removal");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 Failed archive requests trigger `fetchProjects()` to restore the server state after optimistic archiving');
+      throw new Error('Unhandled projects checkpoint: cp-015 ' + "Failed archive requests trigger `fetchProjects()` to restore the server state after optimistic archiving");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 Failed status updates trigger `fetchProjects()` to restore the server state after optimistic badge changes');
+      throw new Error('Unhandled projects checkpoint: cp-016 ' + "Failed status updates trigger `fetchProjects()` to restore the server state after optimistic badge changes");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 Closing the Status Update modal clears the stored `statusTarget` project context');
+      throw new Error('Unhandled projects checkpoint: cp-017 ' + "Closing the Status Update modal clears the stored `statusTarget` project context");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 Mutation failures only log to the console; the page shows no toast, inline alert, or dialog-level error message');
+      throw new Error('Unhandled projects checkpoint: cp-018 ' + "Mutation failures only log to the console; the page shows no toast, inline alert, or dialog-level error message");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 `loading` defaults to `true` before the first `getProjects()` call resolves');
+      throw new Error('Unhandled projects checkpoint: cp-019 ' + "`loading` defaults to `true` before the first `getProjects()` call resolves");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 `activeTab` defaults to `all`');
+      throw new Error('Unhandled projects checkpoint: cp-020 ' + "`activeTab` defaults to `all`");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 `search` defaults to an empty string');
+      throw new Error('Unhandled projects checkpoint: cp-021 ' + "`search` defaults to an empty string");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 `statusFilter` defaults to `all`');
+      throw new Error('Unhandled projects checkpoint: cp-022 ' + "`statusFilter` defaults to `all`");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 `viewMode` defaults to `list`');
+      throw new Error('Unhandled projects checkpoint: cp-023 ' + "`viewMode` defaults to `list`");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 `showNewModal` defaults to `false`');
+      throw new Error('Unhandled projects checkpoint: cp-024 ' + "`showNewModal` defaults to `false`");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-025 `showStatusModal` defaults to `false`');
+      throw new Error('Unhandled projects checkpoint: cp-025 ' + "`showStatusModal` defaults to `false`");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-026 Initial page fetch calls `getProjects()` through `fetchProjects()`');
+      throw new Error('Unhandled projects checkpoint: cp-026 ' + "Initial page fetch calls `getProjects()` through `fetchProjects()`");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-027 Initial fetch failure logs `Failed to load projects:` to the console');
+      throw new Error('Unhandled projects checkpoint: cp-027 ' + "Initial fetch failure logs `Failed to load projects:` to the console");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-028 While `loading` is true, the page shows only a centered `SpinnerGap` icon');
+      throw new Error('Unhandled projects checkpoint: cp-028 ' + "While `loading` is true, the page shows only a centered `SpinnerGap` icon");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-029 Header count badge displays `projects.length`, not `filtered.length`');
+      throw new Error('Unhandled projects checkpoint: cp-029 ' + "Header count badge displays `projects.length`, not `filtered.length`");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-030 List/Grid toggle is rendered as a two-button segmented control');
+      throw new Error('Unhandled projects checkpoint: cp-030 ' + "List/Grid toggle is rendered as a two-button segmented control");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-031 List toggle is the selected button on first render');
+      throw new Error('Unhandled projects checkpoint: cp-031 ' + "List toggle is the selected button on first render");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-032 Selected view button uses `bg-surface-raised text-ink`');
+      throw new Error('Unhandled projects checkpoint: cp-032 ' + "Selected view button uses `bg-surface-raised text-ink`");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-033 Unselected view button uses `text-ink-muted` with hover text-color change');
+      throw new Error('Unhandled projects checkpoint: cp-033 ' + "Unselected view button uses `text-ink-muted` with hover text-color change");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('projects / spec-005', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-034 Clicking `New Project` sets `showNewModal` to `true`');
+      throw new Error('Unhandled projects checkpoint: cp-034 ' + "Clicking `New Project` sets `showNewModal` to `true`");
     }
 
 

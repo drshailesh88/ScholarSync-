@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for deep-research/spec-001
  * Source: e2e/specs/deep-research/spec-001.md
- * Generated: 2026-03-14T18:31:45.742Z
+ * Generated: 2026-03-15T15:11:10.911Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-000 Title: "Deep Research" with Microscope icon (blue accent)');
+      throw new Error('Unhandled deep-research checkpoint: cp-000 ' + "Title: \"Deep Research\" with Microscope icon (blue accent)");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-001 Subtitle: "Multi-perspective literature synthesis"');
+      throw new Error('Unhandled deep-research checkpoint: cp-001 ' + "Subtitle: \"Multi-perspective literature synthesis\"");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-002 Sticky top positioning');
+      throw new Error('Unhandled deep-research checkpoint: cp-002 ' + "Sticky top positioning");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-003 Export buttons visible only in `done` state');
+      throw new Error('Unhandled deep-research checkpoint: cp-003 ' + "Export buttons visible only in `done` state");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-004 Save to Library button visible only in `done` state');
+      throw new Error('Unhandled deep-research checkpoint: cp-004 ' + "Save to Library button visible only in `done` state");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-005 Stop button visible in `running` and `plan-preview` states (red accent)');
+      throw new Error('Unhandled deep-research checkpoint: cp-005 ' + "Stop button visible in `running` and `plan-preview` states (red accent)");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-006 Heading: "What would you like to research?"');
+      throw new Error('Unhandled deep-research checkpoint: cp-006 ' + "Heading: \"What would you like to research?\"");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-007 Description: "Enter a research topic and we will synthesize findings from multiple academic perspectives with full citations."');
+      throw new Error('Unhandled deep-research checkpoint: cp-007 ' + "Description: \"Enter a research topic and we will synthesize findings from multiple academic perspectives with full citations.\"");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-008 Text input field with placeholder: "e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management"');
+      throw new Error('Unhandled deep-research checkpoint: cp-008 ' + "Text input field with placeholder: \"e.g., Efficacy of GLP-1 receptor agonists in type 2 diabetes management\"");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-009 Client-side validation only checks for a non-empty trimmed topic; 5–500 character validation is enforced server-side in the plan route');
+      throw new Error('Unhandled deep-research checkpoint: cp-009 ' + "Client-side validation only checks for a non-empty trimmed topic; 5–500 character validation is enforced server-side in the plan route");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-010 Empty input disables "Start Deep Research" button');
+      throw new Error('Unhandled deep-research checkpoint: cp-010 ' + "Empty input disables \"Start Deep Research\" button");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-011 Enter key submits (when topic filled, no Shift key held)');
+      throw new Error('Unhandled deep-research checkpoint: cp-011 ' + "Enter key submits (when topic filled, no Shift key held)");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-012 Default mode pre-selected');
+      throw new Error('Unhandled deep-research checkpoint: cp-012 ' + "Default mode pre-selected");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-013 Clicking a mode highlights it');
+      throw new Error('Unhandled deep-research checkpoint: cp-013 ' + "Clicking a mode highlights it");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-014 Selected mode passed to API on submit');
+      throw new Error('Unhandled deep-research checkpoint: cp-014 ' + "Selected mode passed to API on submit");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-015 Label: "Start Deep Research"');
+      throw new Error('Unhandled deep-research checkpoint: cp-015 ' + "Label: \"Start Deep Research\"");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-016 Disabled when topic is empty');
+      throw new Error('Unhandled deep-research checkpoint: cp-016 ' + "Disabled when topic is empty");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-017 Triggers plan generation on click');
+      throw new Error('Unhandled deep-research checkpoint: cp-017 ' + "Triggers plan generation on click");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-018 Starting research transitions the page into the plan-loading state; the button itself does not show a spinner or loading label');
+      throw new Error('Unhandled deep-research checkpoint: cp-018 ' + "Starting research transitions the page into the plan-loading state; the button itself does not show a spinner or loading label");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-019 "Past Research" label with Clock icon in header (styled uppercase via CSS tracking)');
+      throw new Error('Unhandled deep-research checkpoint: cp-019 ' + "\"Past Research\" label with Clock icon in header (styled uppercase via CSS tracking)");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-020 Fetches from `GET /api/deep-research/sessions` on mount');
+      throw new Error('Unhandled deep-research checkpoint: cp-020 ' + "Fetches from `GET /api/deep-research/sessions` on mount");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-021 Shows up to 20 past sessions (latest first)');
+      throw new Error('Unhandled deep-research checkpoint: cp-021 ' + "Shows up to 20 past sessions (latest first)");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-022 Topic text (truncated)');
+      throw new Error('Unhandled deep-research checkpoint: cp-022 ' + "Topic text (truncated)");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-023 Mode label (capitalized)');
+      throw new Error('Unhandled deep-research checkpoint: cp-023 ' + "Mode label (capitalized)");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-024 Papers found count');
+      throw new Error('Unhandled deep-research checkpoint: cp-024 ' + "Papers found count");
     }
 
 
@@ -1331,7 +1331,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-025 Relative date: "2h ago", "3d ago", "Jan 5"');
+      throw new Error('Unhandled deep-research checkpoint: cp-025 ' + "Relative date: \"2h ago\", \"3d ago\", \"Jan 5\"");
     }
 
 
@@ -1381,7 +1381,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-026 Hover effect with blue icon');
+      throw new Error('Unhandled deep-research checkpoint: cp-026 ' + "Hover effect with blue icon");
     }
 
 
@@ -1431,7 +1431,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-027 ChevronRight icon on hover');
+      throw new Error('Unhandled deep-research checkpoint: cp-027 ' + "ChevronRight icon on hover");
     }
 
 
@@ -1481,7 +1481,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-028 Clicking loads full session in `done` state');
+      throw new Error('Unhandled deep-research checkpoint: cp-028 ' + "Clicking loads full session in `done` state");
     }
 
 
@@ -1531,7 +1531,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-029 Loading spinner while fetching sessions');
+      throw new Error('Unhandled deep-research checkpoint: cp-029 ' + "Loading spinner while fetching sessions");
     }
 
 
@@ -1581,7 +1581,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-030 Hidden if no sessions exist');
+      throw new Error('Unhandled deep-research checkpoint: cp-030 ' + "Hidden if no sessions exist");
     }
 
 
@@ -1631,7 +1631,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-031 Hidden on fetch error (fails silently)');
+      throw new Error('Unhandled deep-research checkpoint: cp-031 ' + "Hidden on fetch error (fails silently)");
     }
 
 
@@ -1681,7 +1681,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-032 Header with Sparkles icon (purple) and "Research Plan" title');
+      throw new Error('Unhandled deep-research checkpoint: cp-032 ' + "Header with Sparkles icon (purple) and \"Research Plan\" title");
     }
 
 
@@ -1731,7 +1731,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-033 Subtitle: "Review and customize the research perspectives before starting"');
+      throw new Error('Unhandled deep-research checkpoint: cp-033 ' + "Subtitle: \"Review and customize the research perspectives before starting\"");
     }
 
 
@@ -1781,7 +1781,7 @@ test.describe('deep-research / spec-001', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled deep-research checkpoint: cp-034 Numbered badges (1, 2, 3, etc.) in blue circles');
+      throw new Error('Unhandled deep-research checkpoint: cp-034 ' + "Numbered badges (1, 2, 3, etc.) in blue circles");
     }
 
 

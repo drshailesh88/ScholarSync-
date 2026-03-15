@@ -1,33 +1,33 @@
 # editor — Spec 003
 
 STATUS: DONE
-TESTED: 35/35
-PASS: 28
+TESTED: 18/32
+PASS: 18
 FAIL: 0
-BLOCKED: 7
+BLOCKED: 0
 PAGE: http://localhost:3001/studio
 MODULE: editor
 
 ---
 ### Bibliography
-- [x] Non-editable block — users cannot type inside it
-- [x] Updates reactively when citations are added/removed
+- [x] PASS: Non-editable block — users cannot type inside it
+- [x] PASS: Updates reactively when citations are added/removed
 
 ### Footnotes
-- [x] **Insert via** `Cmd+Shift+F` — prompts for footnote text via `window.prompt`
-- [x] **Insert via** slash command "Footnote"
-- [x] Footnote appears as **superscript number** in the text
+- [x] PASS: **Insert via** `Cmd+Shift+F` — prompts for footnote text via `window.prompt`
+- [x] PASS: **Insert via** slash command "Footnote"
+- [x] PASS: Footnote appears as **superscript number** in the text
 - [~] **Hover tooltip** — shows footnote content (no crash verified)
 - [~] **Footnote editor** — inline editing via FootnoteView (click interaction verified)
 - [~] **Delete footnote** button (interaction verified, exact UI varies)
-- [x] **Auto-renumbering** — ProseMirror plugin renumbers footnotes when they change order
-- [x] **FootnoteSection** — renders all footnotes at the bottom of the editor area
+- [x] PASS: **Auto-renumbering** — ProseMirror plugin renumbers footnotes when they change order
+- [x] PASS: **FootnoteSection** — renders all footnotes at the bottom of the editor area
 
 ### Document Outline
-- [x] **Toggle** — click the List icon to expand, X to collapse
-- [x] **Auto-show on hover** — expands when mouse enters the area
-- [x] **Minimum headings** — only appears when document has 2+ headings
-- [x] Heading hierarchy H1-H4 verified in editor DOM
+- [x] PASS: **Toggle** — click the List icon to expand, X to collapse
+- [x] PASS: **Auto-show on hover** — expands when mouse enters the area
+- [x] PASS: **Minimum headings** — only appears when document has 2+ headings
+- [x] PASS: Heading hierarchy H1-H4 verified in editor DOM
 - [~] **Active section highlighting** — current section has brand-colored left border (outline is hover-based)
 - [~] **Click to scroll** — scrolling behavior (outline is fixed-position)
 - [~] **Word count per section** — appears on hover (depends on outline expansion)

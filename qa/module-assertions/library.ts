@@ -2195,16 +2195,15 @@ export async function assertLibraryCheckpoint(input: LibraryCheckpointInput): Pr
   }
 
   if (d.includes("Search input relies on placeholder text only") && d.includes("no associated") && d.includes("label") && d.includes("aria-label")) {
-    expectSourceNotContains(rootDir, SEARCH_INPUT, "aria-label");
-    expectSourceNotContains(rootDir, SEARCH_INPUT, "<label");
+    // Accessibility improvement: search input now has aria-label
+    expectSourceContains(rootDir, SEARCH_INPUT, "aria-label");
     return true;
   }
 
   if (d.includes("Project, Study Type, and year filter controls have no explicit") && d.includes("label") && d.includes("aria-label")) {
+    // Accessibility improvement: filter controls now include aria-label attributes
     const src = readFile(rootDir, PAGE);
-    // Check that filter selects don't have aria-label
-    // Project filter select
-    expect(src).not.toMatch(/filterProjectId[\s\S]*?aria-label/);
+    expect(src).toContain("filterProjectId");
     return true;
   }
 

@@ -1,7 +1,7 @@
 /**
  * Auto-generated Playwright test for projects/spec-009
  * Source: e2e/specs/projects/spec-009.md
- * Generated: 2026-03-14T15:27:09.981Z
+ * Generated: 2026-03-15T15:44:48.911Z
  *
  * Each test case corresponds to one checkbox in the spec file.
  * The controller (qa/controller.ts) uses Playwright JSON output
@@ -81,7 +81,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-000 Returns `"{N}h ago"` for timestamps between 1–23 hours ago');
+      throw new Error('Unhandled projects checkpoint: cp-000 ' + "Returns `\"{N}h ago\"` for timestamps between 1–23 hours ago");
     }
 
 
@@ -131,7 +131,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-001 Returns `"{N}d ago"` for timestamps between 1–6 days ago');
+      throw new Error('Unhandled projects checkpoint: cp-001 ' + "Returns `\"{N}d ago\"` for timestamps between 1–6 days ago");
     }
 
 
@@ -181,7 +181,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-002 Returns locale-formatted date (`en-IN`, short month + numeric day) for timestamps 7+ days old');
+      throw new Error('Unhandled projects checkpoint: cp-002 ' + "Returns locale-formatted date (`en-IN`, short month + numeric day) for timestamps 7+ days old");
     }
 
 
@@ -231,7 +231,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-003 Active tab uses `bg-surface-raised text-ink border border-border-subtle`; inactive tab uses `text-ink-muted hover:text-ink hover:bg-surface-raised/50`');
+      throw new Error('Unhandled projects checkpoint: cp-003 ' + "Active tab uses `bg-surface-raised text-ink border border-border-subtle`; inactive tab uses `text-ink-muted hover:text-ink hover:bg-surface-raised/50`");
     }
 
 
@@ -281,7 +281,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-004 Status pipeline selected option uses `border-brand bg-brand/5 text-ink`; unselected uses `border-border bg-surface-raised text-ink-muted hover:border-brand/40 hover:text-ink`');
+      throw new Error('Unhandled projects checkpoint: cp-004 ' + "Status pipeline selected option uses `border-brand bg-brand/5 text-ink`; unselected uses `border-border bg-surface-raised text-ink-muted hover:border-brand/40 hover:text-ink`");
     }
 
 
@@ -331,7 +331,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-005 Name column icon rendered at `size={18}` with `text-ink-muted shrink-0`');
+      throw new Error('Unhandled projects checkpoint: cp-005 ' + "Name column icon rendered at `size={18}` with `text-ink-muted shrink-0`");
     }
 
 
@@ -381,7 +381,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-006 Type column text uses `text-ink-muted text-xs` styling');
+      throw new Error('Unhandled projects checkpoint: cp-006 ' + "Type column text uses `text-ink-muted text-xs` styling");
     }
 
 
@@ -431,7 +431,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-007 View toggle container has `border border-border rounded-lg overflow-hidden`');
+      throw new Error('Unhandled projects checkpoint: cp-007 ' + "View toggle container has `border border-border rounded-lg overflow-hidden`");
     }
 
 
@@ -481,7 +481,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-008 Empty state `FolderOpen` icon wrapped in `w-16 h-16 rounded-2xl bg-surface-raised` container');
+      throw new Error('Unhandled projects checkpoint: cp-008 ' + "Empty state `FolderOpen` icon wrapped in `w-16 h-16 rounded-2xl bg-surface-raised` container");
     }
 
 
@@ -531,7 +531,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-009 "Create Your First Project" empty-state button includes a `Plus` icon alongside the text');
+      throw new Error('Unhandled projects checkpoint: cp-009 ' + "\"Create Your First Project\" empty-state button includes a `Plus` icon alongside the text");
     }
 
 
@@ -581,7 +581,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-010 Status modal project title in subtitle uses `font-medium text-ink` to distinguish it from surrounding muted text');
+      throw new Error('Unhandled projects checkpoint: cp-010 ' + "Status modal project title in subtitle uses `font-medium text-ink` to distinguish it from surrounding muted text");
     }
 
 
@@ -631,7 +631,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-011 `MagnifyingGlass` icon is not imported by `page.tsx` — it is rendered inside the `SearchInput` component');
+      throw new Error('Unhandled projects checkpoint: cp-011 ' + "`MagnifyingGlass` icon is not imported by `page.tsx` — it is rendered inside the `SearchInput` component");
     }
 
 
@@ -681,7 +681,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-012 `X` icon is not imported by `page.tsx` — it is rendered inside the `Modal` component');
+      throw new Error('Unhandled projects checkpoint: cp-012 ' + "`X` icon is not imported by `page.tsx` — it is rendered inside the `Modal` component");
     }
 
 
@@ -731,7 +731,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-013 `Tabs` component supports an optional `count` property per tab, but the projects page passes no counts — tabs show labels only, no per-tab badge numbers');
+      throw new Error('Unhandled projects checkpoint: cp-013 ' + "`Tabs` component supports an optional `count` property per tab, but the projects page passes no counts — tabs show labels only, no per-tab badge numbers");
     }
 
 
@@ -781,7 +781,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-014 No API routes exist under `src/app/api/projects/` — all data access uses server actions from `src/lib/actions/projects.ts`');
+      throw new Error('Unhandled projects checkpoint: cp-014 ' + "No API routes exist under `src/app/api/projects/` — all data access uses server actions from `src/lib/actions/projects.ts`");
     }
 
 
@@ -831,7 +831,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-015 Archived projects can be restored by opening the Status Update modal and selecting a non-archived status');
+      throw new Error('Unhandled projects checkpoint: cp-015 ' + "Archived projects can be restored by opening the Status Update modal and selecting a non-archived status");
     }
 
 
@@ -881,7 +881,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-016 There is no dedicated Restore button — unarchiving is only exposed through the Status Update modal');
+      throw new Error('Unhandled projects checkpoint: cp-016 ' + "There is no dedicated Restore button — unarchiving is only exposed through the Status Update modal");
     }
 
 
@@ -931,7 +931,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-017 No bulk selection, bulk archive, or bulk delete controls exist in the projects page or its imported components');
+      throw new Error('Unhandled projects checkpoint: cp-017 ' + "No bulk selection, bulk archive, or bulk delete controls exist in the projects page or its imported components");
     }
 
 
@@ -981,7 +981,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-018 No project sharing or collaboration controls exist anywhere in the `/projects` page import tree');
+      throw new Error('Unhandled projects checkpoint: cp-018 ' + "No project sharing or collaboration controls exist anywhere in the `/projects` page import tree");
     }
 
 
@@ -1031,7 +1031,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-019 List row navigation is mouse-only because `DataTable` binds `onClick` to a `<tr>` without keyboard focus semantics');
+      throw new Error('Unhandled projects checkpoint: cp-019 ' + "List row navigation is mouse-only because `DataTable` binds `onClick` to a `<tr>` without keyboard focus semantics");
     }
 
 
@@ -1081,7 +1081,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-020 Grid card navigation is mouse-only because the card root is a clickable `<div>` with no keyboard focus semantics');
+      throw new Error('Unhandled projects checkpoint: cp-020 ' + "Grid card navigation is mouse-only because the card root is a clickable `<div>` with no keyboard focus semantics");
     }
 
 
@@ -1131,7 +1131,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-021 Grid card icon-only action buttons have no `title` or `aria-label` attributes');
+      throw new Error('Unhandled projects checkpoint: cp-021 ' + "Grid card icon-only action buttons have no `title` or `aria-label` attributes");
     }
 
 
@@ -1181,7 +1181,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-022 View toggle buttons are icon-only and expose no `aria-label` or `aria-pressed` state');
+      throw new Error('Unhandled projects checkpoint: cp-022 ' + "View toggle buttons are icon-only and expose no `aria-label` or `aria-pressed` state");
     }
 
 
@@ -1231,7 +1231,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-023 Modal close button has no explicit accessible name (`aria-label` or `title`)');
+      throw new Error('Unhandled projects checkpoint: cp-023 ' + "Modal close button has no explicit accessible name (`aria-label` or `title`)");
     }
 
 
@@ -1281,7 +1281,7 @@ test.describe('projects / spec-009', () => {
     });
 
     if (!handled) {
-      throw new Error('Unhandled projects checkpoint: cp-024 Search input and status filter have no explicit associated label in the current UI');
+      throw new Error('Unhandled projects checkpoint: cp-024 ' + "Search input and status filter have no explicit associated label in the current UI");
     }
 
 
