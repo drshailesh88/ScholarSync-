@@ -2173,5 +2173,84 @@ export async function assertSystematicReviewCheckpoint(
     return true;
   }
 
+  // ══════════════════════════════════════════════════════════════════════
+  // Spec 001 — Remaining Hub Page handlers (iteration 2)
+  // ══════════════════════════════════════════════════════════════════════
+
+  // Liveblocks — real-time collaboration via SRRoomProvider
+  if (d.includes("liveblocks") && d.includes("real-time collaboration") && d.includes("srroomProvider")) {
+    expectSourceContains(rootDir, WORKFLOW_PAGE, "SRRoomProvider");
+    return true;
+  }
+
+  // Zustand — state management with systematic-review-store.ts
+  if (d.includes("zustand") && d.includes("state management") && d.includes("systematic-review-store")) {
+    expect(fileExists(rootDir, STORE)).toBe(true);
+    expectSourceContains(rootDir, STORE, "persist");
+    return true;
+  }
+
+  // 15 panel components — one per workflow tab
+  if (d.includes("15 panel components") && d.includes("workflow tab")) {
+    expect(fileExists(rootDir, WORKFLOW_PAGE)).toBe(true);
+    expectSourceContains(rootDir, WORKFLOW_PAGE, "WORKFLOW_TABS");
+    return true;
+  }
+
+  // Loading state — shows loading indicator while projects fetch
+  if (d.includes("loading state") && d.includes("loading indicator") && d.includes("projects")) {
+    expectSourceContains(rootDir, HUB_PAGE, "isLoading");
+    expectSourceContains(rootDir, HUB_PAGE, "CircleNotch");
+    return true;
+  }
+
+  // Empty state — appropriate message when no projects exist
+  if (d.includes("empty state") && d.includes("message") && d.includes("no projects")) {
+    expectSourceContains(rootDir, HUB_PAGE, "projects.length === 0");
+    expectSourceContains(rootDir, HUB_PAGE, "No systematic reviews yet");
+    return true;
+  }
+
+  // Spinner — loading spinner on "Create Review" button during submission
+  if (d.includes("spinner") && d.includes("loading spinner") && d.includes("create review") && d.includes("submission")) {
+    expectSourceContains(rootDir, HUB_PAGE, "isCreating");
+    expectSourceContains(rootDir, HUB_PAGE, "animate-spin");
+    return true;
+  }
+
+  // Success — navigates to newly created project workflow page
+  if (d.includes("success") && d.includes("navigates") && d.includes("newly created")) {
+    expectSourceContains(rootDir, HUB_PAGE, "fetchProjects");
+    expectSourceContains(rootDir, HUB_PAGE, "setShowCreate(false)");
+    return true;
+  }
+
+  // Screening progress — percentage of papers screened
+  if (d.includes("screening progress") && d.includes("percentage") && d.includes("screened")) {
+    expectSourceContains(rootDir, HUB_PAGE, "screeningProgress");
+    expectSourceContains(rootDir, HUB_PAGE, "% screened");
+    return true;
+  }
+
+  // Progress bar — visual bar representing screening completion
+  if (d.includes("progress bar") && d.includes("visual bar") && d.includes("screening")) {
+    expectSourceContains(rootDir, HUB_PAGE, "h-1 bg-surface-raised rounded-full");
+    return true;
+  }
+
+  // Hover state — visual feedback on card hover
+  if (d.includes("hover state") && d.includes("visual feedback") && d.includes("hover")) {
+    expectSourceContains(rootDir, HUB_PAGE, "hover:border-brand");
+    expectSourceContains(rootDir, HUB_PAGE, "group-hover:text-brand");
+    return true;
+  }
+
+  // Progress bar fill — proportional to screening progress percentage
+  if (d.includes("progress bar fill") && d.includes("proportional") && d.includes("screening progress")) {
+    expectSourceContains(rootDir, HUB_PAGE, "screeningProgress");
+    expectSourceMatches(rootDir, HUB_PAGE, /width:.*screeningProgress/);
+    return true;
+  }
+
   return false;
 }

@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 1
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -34,7 +36,9 @@
         "outputDir": "/home/user/ScholarSync-/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 1
+        },
         "id": "qa-chromium",
         "name": "qa-chromium",
         "testDir": "/home/user/ScholarSync-/qa/generated",
@@ -59,29 +63,1636 @@
       "stderr": "pipe"
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "SyntaxError: /home/user/ScholarSync-/qa/module-assertions/systematic-review.ts: Unexpected token (521:0)\n\n  519 |   }\n  520 |\n> 521 |\n      | ^",
-      "stack": "SyntaxError: /home/user/ScholarSync-/qa/module-assertions/systematic-review.ts: Unexpected token (521:0)\n\n  519 |   }\n  520 |\n> 521 |\n      | ^",
-      "location": {
-        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-032.spec.ts",
-        "line": 521,
-        "column": 0
-      },
-      "snippet": "   at systematic-review/spec-032.spec.ts:521\n\n  519 |       page,\n  520 |       description: \"Screening panel best-effort PDF hydration calls `/api/systematic-review/paper-pdf?paperId={paperId}&projectId={projectId}`, but no matching route file exists under `src/app/api/systematic-review/` in the current source tree\",\n> 521 |       section: \"Quick Test Workflows\",\n  522 |       subsection: \"Components Referenced But Not Rendered\",\n  523 |       rootDir: process.cwd(),\n  524 |     });"
-    },
-    {
-      "message": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments.",
-      "stack": "Error: No tests found.\nMake sure that arguments are regular expressions matching test files.\nYou may need to escape symbols like \"$\" or \"*\" and quote the arguments."
+      "title": "systematic-review/spec-011.spec.ts",
+      "file": "systematic-review/spec-011.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "systematic-review / spec-011",
+          "file": "systematic-review/spec-011.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cp-000: Error details technical error information displayed if applicable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5656,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:10.354Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-37883-ion-displayed-if-applicable-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-7703c2602c72e56d534a",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "cp-001: Back link accessible as standard link",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1333,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:16.097Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-c1bb0-accessible-as-standard-link-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-d5d16dcfb42e9f19f6de",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 99,
+              "column": 3
+            },
+            {
+              "title": "cp-002: PICO inputs labeled with aria-label or associated label",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1281,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:17.443Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-af302-a-label-or-associated-label-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-61b7aed34ce420ef865b",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 149,
+              "column": 3
+            },
+            {
+              "title": "cp-003: Criteria inputs labeled for screen readers",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1363,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-003 Criteria inputs — labeled for screen readers",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-003 Criteria inputs — labeled for screen readers\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:234:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                          "column": 13,
+                          "line": 234
+                        },
+                        "snippet": "  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled systematic-review checkpoint: cp-003 ' + \"Criteria inputs — labeled for screen readers\");\n      |             ^\n  235 |     }\n  236 |\n  237 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                            "column": 13,
+                            "line": 234
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-003 Criteria inputs — labeled for screen readers\n\n  232 |\n  233 |     if (!handled) {\n> 234 |       throw new Error('Unhandled systematic-review checkpoint: cp-003 ' + \"Criteria inputs — labeled for screen readers\");\n      |             ^\n  235 |     }\n  236 |\n  237 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:234:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:18.740Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-8955a--labeled-for-screen-readers-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-8955a--labeled-for-screen-readers-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-8955a--labeled-for-screen-readers-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                        "column": 13,
+                        "line": 234
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-602c4bd9c2f0b08da987",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 199,
+              "column": 3
+            },
+            {
+              "title": "cp-004: Schema builder field inputs labeled",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1353,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:20.928Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-4b710-uilder-field-inputs-labeled-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-b19f79c20568e3daab9b",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 249,
+              "column": 3
+            },
+            {
+              "title": "cp-005: GRADE domain selectors labeled for each domain",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1269,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:22.360Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-cc35c-ors-labeled-for-each-domain-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-f9b90243467aeb118663",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 299,
+              "column": 3
+            },
+            {
+              "title": "cp-006: Stage badges include text labels not color-only",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1262,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:23.643Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-8a318--text-labels-not-color-only-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-0a98457bbf111e0c801b",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 349,
+              "column": 3
+            },
+            {
+              "title": "cp-007: Judgment colors text labels accompany color coding",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1308,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:24.921Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-23e9c-bels-accompany-color-coding-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-173a0676e583ebad47a7",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 399,
+              "column": 3
+            },
+            {
+              "title": "cp-008: Compliance status icons screen reader text for each status",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1344,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-008 Compliance status icons — screen reader text for each status",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-008 Compliance status icons — screen reader text for each status\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:484:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                          "column": 13,
+                          "line": 484
+                        },
+                        "snippet": "  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled systematic-review checkpoint: cp-008 ' + \"Compliance status icons — screen reader text for each status\");\n      |             ^\n  485 |     }\n  486 |\n  487 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                            "column": 13,
+                            "line": 484
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-008 Compliance status icons — screen reader text for each status\n\n  482 |\n  483 |     if (!handled) {\n> 484 |       throw new Error('Unhandled systematic-review checkpoint: cp-008 ' + \"Compliance status icons — screen reader text for each status\");\n      |             ^\n  485 |     }\n  486 |\n  487 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:484:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:26.238Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-1cb23-reader-text-for-each-status-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-1cb23-reader-text-for-each-status-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-1cb23-reader-text-for-each-status-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                        "column": 13,
+                        "line": 484
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-9c4f5546aaae889d6d2e",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 449,
+              "column": 3
+            },
+            {
+              "title": "cp-009: Hub-page description ends with a period in the rendered copy",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1370,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:28.336Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-3ce73-period-in-the-rendered-copy-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-d5411d3e11cb45a7111a",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 499,
+              "column": 3
+            },
+            {
+              "title": "cp-010: New Review button always opens the create form and clears any existing error ban",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1299,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:29.782Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-95e87-ears-any-existing-error-ban-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-43baca3b1b03d92add17",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 549,
+              "column": 3
+            },
+            {
+              "title": "cp-011: Clicking New Review while the form is already visible does not toggle it closed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1272,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:31.091Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-792a2-e-does-not-toggle-it-closed-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-9a293638a6d9a6fca15e",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 599,
+              "column": 3
+            },
+            {
+              "title": "cp-012: Error banner renders above page content when project load or creation fails",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1270,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:32.373Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-c0813-ject-load-or-creation-fails-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-1912bded683fe5e2691a",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 649,
+              "column": 3
+            },
+            {
+              "title": "cp-013: Error banner close button clears local error state without retrying the failed r",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1307,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:33.657Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-15443-thout-retrying-the-failed-r-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-9ce8629a77b06ea634d5",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 699,
+              "column": 3
+            },
+            {
+              "title": "cp-014: Create form heading is exactly New Systematic Review",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1306,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:34.974Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-bcd96-actly-New-Systematic-Review-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-1ce32ab46f1232a13b3a",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 749,
+              "column": 3
+            },
+            {
+              "title": "cp-015: Create form includes a Review Title label with a visible Required badge",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1280,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:36.289Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-bde14-th-a-visible-Required-badge-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-229e208924c0c03682f0",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 799,
+              "column": 3
+            },
+            {
+              "title": "cp-016: Create form helper text explains the full PICOprotocol can be defined after open",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1304,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:37.578Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-9f64e-l-can-be-defined-after-open-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-58ed58dd96918fd3d934",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 849,
+              "column": 3
+            },
+            {
+              "title": "cp-017: Title input is autofocused when the create form opens",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1344,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:38.890Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-bfdb2--when-the-create-form-opens-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-6880754d6bcd49cb3472",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 899,
+              "column": 3
+            },
+            {
+              "title": "cp-018: Title input placeholder is eg Metformin vs Sulfonylureas for T2DM A Systematic R",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1322,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:40.244Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-d17dc-eas-for-T2DM-A-Systematic-R-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-c5e2cff813821f5e267d",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 949,
+              "column": 3
+            },
+            {
+              "title": "cp-019: Pressing Enter inside the title input triggers the same create handler as clicki",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1322,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:41.576Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-31c76-me-create-handler-as-clicki-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-7f85f3faefcffaa66ad9",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 999,
+              "column": 3
+            },
+            {
+              "title": "cp-020: Create Review button is disabled when the trimmed title is empty",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1327,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:42.906Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-a594b--the-trimmed-title-is-empty-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-12ebd65bc44099f21eb4",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1049,
+              "column": 3
+            },
+            {
+              "title": "cp-021: Create Review button swaps the Plus icon for a spinning CircleNotch during submi",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1288,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:44.242Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-91905-ng-CircleNotch-during-submi-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-5bb775a4d51f850bdcbe",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1099,
+              "column": 3
+            },
+            {
+              "title": "cp-022: Cancel closes the create form and resets the draft title to an empty string",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1307,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:45.542Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-d90db-ft-title-to-an-empty-string-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-b0a730afc2ca66506637",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1149,
+              "column": 3
+            },
+            {
+              "title": "cp-023: Successful create clears the title field hides the form and refreshes the hub li",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1362,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-023 Successful create clears the title field, hides the form, and refreshes the hub list",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-023 Successful create clears the title field, hides the form, and refreshes the hub list\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1234:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                          "column": 13,
+                          "line": 1234
+                        },
+                        "snippet": "  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled systematic-review checkpoint: cp-023 ' + \"Successful create clears the title field, hides the form, and refreshes the hub list\");\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                            "column": 13,
+                            "line": 1234
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-023 Successful create clears the title field, hides the form, and refreshes the hub list\n\n  1232 |\n  1233 |     if (!handled) {\n> 1234 |       throw new Error('Unhandled systematic-review checkpoint: cp-023 ' + \"Successful create clears the title field, hides the form, and refreshes the hub list\");\n       |             ^\n  1235 |     }\n  1236 |\n  1237 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1234:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:46.858Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-40f19-rm-and-refreshes-the-hub-li-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-40f19-rm-and-refreshes-the-hub-li-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-40f19-rm-and-refreshes-the-hub-li-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                        "column": 13,
+                        "line": 1234
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-ffdb0f58b84599322e36",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1199,
+              "column": 3
+            },
+            {
+              "title": "cp-024: Successful create does not auto-navigate to systematic-reviewprojectId in the cu",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1416,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-024 Successful create does not auto-navigate to `/systematic-review/[projectId]` in the current implementation",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-024 Successful create does not auto-navigate to `/systematic-review/[projectId]` in the current implementation\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1284:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                          "column": 13,
+                          "line": 1284
+                        },
+                        "snippet": "  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled systematic-review checkpoint: cp-024 ' + \"Successful create does not auto-navigate to `/systematic-review/[projectId]` in the current implementation\");\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                            "column": 13,
+                            "line": 1284
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-024 Successful create does not auto-navigate to `/systematic-review/[projectId]` in the current implementation\n\n  1282 |\n  1283 |     if (!handled) {\n> 1284 |       throw new Error('Unhandled systematic-review checkpoint: cp-024 ' + \"Successful create does not auto-navigate to `/systematic-review/[projectId]` in the current implementation\");\n       |             ^\n  1285 |     }\n  1286 |\n  1287 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1284:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:49.037Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-8f52f-c-reviewprojectId-in-the-cu-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-8f52f-c-reviewprojectId-in-the-cu-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-8f52f-c-reviewprojectId-in-the-cu-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                        "column": 13,
+                        "line": 1284
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-0e6110a269575ff0cfc2",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1249,
+              "column": 3
+            },
+            {
+              "title": "cp-025: Failed create shows banner text Failed to create project Please try again",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1363,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:51.305Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-6510c-te-project-Please-try-again-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-95273ba38aeb2443b800",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1299,
+              "column": 3
+            },
+            {
+              "title": "cp-026: Failed projects fetch shows banner text Failed to load projects Please try again",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1299,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:52.746Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-f0d88-d-projects-Please-try-again-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-c484b74e61c48c294026",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1349,
+              "column": 3
+            },
+            {
+              "title": "cp-027: Hub loading state is spinner-only and does not render loading text",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1352,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-027 Hub loading state is spinner-only and does not render loading text",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-027 Hub loading state is spinner-only and does not render loading text\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1434:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                          "column": 13,
+                          "line": 1434
+                        },
+                        "snippet": "  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled systematic-review checkpoint: cp-027 ' + \"Hub loading state is spinner-only and does not render loading text\");\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                            "column": 13,
+                            "line": 1434
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-027 Hub loading state is spinner-only and does not render loading text\n\n  1432 |\n  1433 |     if (!handled) {\n> 1434 |       throw new Error('Unhandled systematic-review checkpoint: cp-027 ' + \"Hub loading state is spinner-only and does not render loading text\");\n       |             ^\n  1435 |     }\n  1436 |\n  1437 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1434:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:54.067Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-67825-oes-not-render-loading-text-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-67825-oes-not-render-loading-text-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-67825-oes-not-render-loading-text-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                        "column": 13,
+                        "line": 1434
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-1b5bc8a9d5521355e393",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1399,
+              "column": 3
+            },
+            {
+              "title": "cp-028: Empty-state heading reads No systematic reviews yet",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1466,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:56.217Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-27790-s-No-systematic-reviews-yet-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-43ebafa45c16d8013e89",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1449,
+              "column": 3
+            },
+            {
+              "title": "cp-029: Empty-state body mentions AI help from search strategy to meta-analysis",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1331,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:57.765Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-586e0-h-strategy-to-meta-analysis-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-5dd2d476a7157daa70e6",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1499,
+              "column": 3
+            },
+            {
+              "title": "cp-030: Empty-state CTA label is Create Your First Review",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1340,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:21:59.108Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-39c81-is-Create-Your-First-Review-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-eb3fc2c698bd7e6fa2b9",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1549,
+              "column": 3
+            },
+            {
+              "title": "cp-031: Empty-state CTA opens the same create form used by the header button",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1374,
+                      "error": {
+                        "message": "Error: Unhandled systematic-review checkpoint: cp-031 Empty-state CTA opens the same create form used by the header button",
+                        "stack": "Error: Unhandled systematic-review checkpoint: cp-031 Empty-state CTA opens the same create form used by the header button\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1634:13",
+                        "location": {
+                          "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                          "column": 13,
+                          "line": 1634
+                        },
+                        "snippet": "  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled systematic-review checkpoint: cp-031 ' + \"Empty-state CTA opens the same create form used by the header button\");\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                            "column": 13,
+                            "line": 1634
+                          },
+                          "message": "Error: Unhandled systematic-review checkpoint: cp-031 Empty-state CTA opens the same create form used by the header button\n\n  1632 |\n  1633 |     if (!handled) {\n> 1634 |       throw new Error('Unhandled systematic-review checkpoint: cp-031 ' + \"Empty-state CTA opens the same create form used by the header button\");\n       |             ^\n  1635 |     }\n  1636 |\n  1637 |\n    at /home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts:1634:13"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:22:00.462Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-3210b-m-used-by-the-header-button-qa-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-3210b-m-used-by-the-header-button-qa-chromium/error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-3210b-m-used-by-the-header-button-qa-chromium/trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/user/ScholarSync-/qa/generated/systematic-review/spec-011.spec.ts",
+                        "column": 13,
+                        "line": 1634
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-e069a7d2e39cddc6766d",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1599,
+              "column": 3
+            },
+            {
+              "title": "cp-032: Project cards render inside a responsive grid-cols-1 mdgrid-cols-2 lggrid-cols-3",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1364,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:22:02.620Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-7de8c-mdgrid-cols-2-lggrid-cols-3-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-cf13886da1aa72b27a83",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1649,
+              "column": 3
+            },
+            {
+              "title": "cp-033: Project card title is line-clamped to 2 lines",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1284,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:22:04.061Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-02cdc--is-line-clamped-to-2-lines-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-951c5af25834afdfd2d8",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1699,
+              "column": 3
+            },
+            {
+              "title": "cp-034: Project card shows ArrowRight icon in the top-right corner",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 60000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "qa-chromium",
+                  "projectName": "qa-chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1312,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-03-15T09:22:05.356Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/user/ScholarSync-/test-results/systematic-review-spec-011-1923e-con-in-the-top-right-corner-qa-chromium/test-finished-1.png"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6d3e41a45b8bce8733e5-f7c02c8cdaf622fbb270",
+              "file": "systematic-review/spec-011.spec.ts",
+              "line": 1749,
+              "column": 3
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2026-03-15T05:46:38.286Z",
-    "duration": 1277.9660000000001,
-    "expected": 0,
+    "startTime": "2026-03-15T09:21:08.323Z",
+    "duration": 59036.952000000005,
+    "expected": 29,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 6,
     "flaky": 0
   }
 }
