@@ -1,67 +1,67 @@
 # systematic-review — Spec 008
 
 STATUS: PARTIAL
-TESTED: 27/35
-PASS: 0
-FAIL: 0
-BLOCKED: 27
+TESTED: 35/35
+PASS: 10
+FAIL: 25
+BLOCKED: 0
 PAGE: http://localhost:3001/systematic-review
 MODULE: systematic-review
 
 ---
 ### Network Meta-Analysis Panel
 #### Network Plot
-- [ ] **Edge thickness** — proportional to number of studies
+- [ ] FAIL: **Edge thickness** — proportional to number of studies
 #### Inconsistency Assessment
-- [ ] **Global inconsistency test** — overall network consistency
-- [ ] **Loop inconsistency** — specific loops with inconsistency detected
-- [ ] **Node-splitting** — local inconsistency assessment
+- [ ] FAIL: **Global inconsistency test** — overall network consistency
+- [ ] FAIL: **Loop inconsistency** — specific loops with inconsistency detected
+- [ ] FAIL: **Node-splitting** — local inconsistency assessment
 #### Rankings
-- [ ] **SUCRA or P-scores** — treatment ranking scores
-- [ ] **Ranking table** — treatments ordered by ranking
-- [ ] **Rankogram** — visual ranking probabilities (if applicable)
+- [ ] FAIL: **SUCRA or P-scores** — treatment ranking scores
+- [ ] FAIL: **Ranking table** — treatments ordered by ranking
+- [ ] FAIL: **Rankogram** — visual ranking probabilities (if applicable)
 #### Export
-- [ ] **CSV export** — league table and rankings downloadable as CSV
+- [x] PASS: **CSV export** — league table and rankings downloadable as CSV
 #### API
-- [ ] `POST /api/systematic-review/nma` — runs network meta-analysis
+- [x] PASS: `POST /api/systematic-review/nma` — runs network meta-analysis
 
 ### GRADE Panel
 #### Domain Ratings
-- [ ] **Per-domain selector** — each domain has a rating selector
-- [ ] **Justification text** — space for written rationale per domain
-- [ ] **Downgrade indicators** — visual cue when domain causes downgrade
+- [ ] FAIL: **Per-domain selector** — each domain has a rating selector
+- [ ] FAIL: **Justification text** — space for written rationale per domain
+- [ ] FAIL: **Downgrade indicators** — visual cue when domain causes downgrade
 #### Overall Certainty
-- [ ] **Auto-calculated** — overall certainty derived from domain ratings
-- [ ] **Visual indicator** — prominent display of overall certainty level
-- [ ] **Upgrade factors** — large effect, dose-response, confounding considered
+- [ ] FAIL: **Auto-calculated** — overall certainty derived from domain ratings
+- [ ] FAIL: **Visual indicator** — prominent display of overall certainty level
+- [ ] FAIL: **Upgrade factors** — large effect, dose-response, confounding considered
 #### Export
-- [ ] **CSV export** — GRADE evidence table downloadable as CSV
-- [ ] **Complete data** — includes all domains, ratings, justifications, and overall certainty
+- [x] PASS: **CSV export** — GRADE evidence table downloadable as CSV
+- [ ] FAIL: **Complete data** — includes all domains, ratings, justifications, and overall certainty
 #### API
-- [ ] `POST /api/systematic-review/grade` — submits GRADE assessment
-- [ ] `GET /api/systematic-review/grade` — retrieves GRADE results + CSV export
+- [x] PASS: `POST /api/systematic-review/grade` — submits GRADE assessment
+- [x] PASS: `GET /api/systematic-review/grade` — retrieves GRADE results + CSV export
 
 ### Manuscript Panel
 #### Section Generation
-- [ ] **5 sections** — all 5 manuscript sections available
-- [ ] **Individual generation** — each section can be generated independently
-- [ ] **"Generate All" button** — generates all 5 sections in sequence
-- [ ] **Custom instructions** — text input for additional instructions per section
-- [ ] **AI-generated content** — sections generated based on review data
+- [ ] FAIL: **5 sections** — all 5 manuscript sections available
+- [ ] FAIL: **Individual generation** — each section can be generated independently
+- [ ] FAIL: **"Generate All" button** — generates all 5 sections in sequence
+- [ ] FAIL: **Custom instructions** — text input for additional instructions per section
+- [x] PASS: **AI-generated content** — sections generated based on review data
 #### Section Editing
-- [ ] **Editable text** — generated sections can be manually edited
-- [ ] **Rich text** — sections support formatting (headings, lists, etc.)
-- [ ] **Auto-save** — edits saved automatically
+- [ ] FAIL: **Editable text** — generated sections can be manually edited
+- [ ] FAIL: **Rich text** — sections support formatting (headings, lists, etc.)
+- [ ] FAIL: **Auto-save** — edits saved automatically
 #### Export
-- [ ] **Copy to clipboard** — individual sections copiable
-- [ ] **Download DOCX** — complete manuscript downloadable as Word document
-- [ ] **Formatting preserved** — headings, references, and structure maintained in export
+- [ ] FAIL: **Copy to clipboard** — individual sections copiable
+- [ ] FAIL: **Download DOCX** — complete manuscript downloadable as Word document
+- [x] PASS: **Formatting preserved** — headings, references, and structure maintained in export
 #### API
-- [ ] `POST /api/systematic-review/manuscript` — generates manuscript section(s)
-- [ ] `GET /api/systematic-review/manuscript` — retrieves saved manuscript content
+- [x] PASS: `POST /api/systematic-review/manuscript` — generates manuscript section(s)
+- [x] PASS: `GET /api/systematic-review/manuscript` — retrieves saved manuscript content
 
 ### Snowballing Panel
 #### Configuration
-- [ ] **Direction selector** — choose snowballing direction:
-- [ ] **Depth setting** — configurable depth (1 or 2 levels)
-- [ ] **Depth 1** — direct citations only
+- [x] PASS: **Direction selector** — choose snowballing direction:
+- [ ] FAIL: **Depth setting** — configurable depth (1 or 2 levels)
+- [ ] FAIL: **Depth 1** — direct citations only

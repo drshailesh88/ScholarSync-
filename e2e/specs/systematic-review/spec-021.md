@@ -1,10 +1,10 @@
 # systematic-review — Spec 021
 
-STATUS: PARTIAL
-TESTED: 27/35
+STATUS: DONE
+TESTED: 0/35
 PASS: 0
 FAIL: 0
-BLOCKED: 27
+BLOCKED: 0
 PAGE: http://localhost:3001/systematic-review
 MODULE: systematic-review
 
